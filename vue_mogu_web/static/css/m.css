@@ -1,0 +1,123 @@
+@charset "gb2312";
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+header { width: 100%; margin: auto; }
+.nav { width: 90% }
+.nav li a { padding: 0 15px }
+.search_bar { display: none }
+article { width: 90%; margin: 100px auto 0 }
+.fader { padding-top: 0; height: 360px }
+.imginfo { bottom: 15% }
+.toppic li i img { height: 170px; }
+.gd { width: 230px }
+.container { width: 90%; margin: 20px auto; }
+.share ul li i { }
+}
+@media screen and (min-width: 960px) and (max-width: 1023px) {
+header { width: 100%; margin: auto; }
+.nav { width: 90% }
+.nav li a { padding: 0 15px }
+.search_bar { display: none }
+article { width: 90%; margin: 100px auto 0 }
+.fader { padding-top: 0; height: 337px }
+.imginfo { bottom: 15% }
+.toppic li i img { height: 160px; }
+.gd { width: 220px }
+.zhuanti p { top: 20% }
+.container { width: 90%; margin: 20px auto; }
+.share ul li i { }
+.timebox li:hover a { padding: 0 30px }
+}
+@media screen and (min-width: 768px) and (max-width: 959px) {
+header, .blogsbox { width: 100%; margin: auto; }
+.menu { width: 90%; display: none; }
+#mnav { display: block; z-index: 99999;  }
+.search_bar { display: none }
+article { width: 90%; margin: 70px auto 0 }
+.imginfo { bottom: 17% }
+.fader { padding-top: 0; height: 279px }
+.toppic li i img { height: 130px; }
+.sidebar { display: none }
+.imginfo { font-size: 22px }
+.news_infos { width: 100% }
+.container { width: 90%; margin: 20px auto; }
+.shareli { margin: 0 5px; }
+.share ul li i { height: 150px }
+.share ul li h2 { padding: 15px 5px; }
+h1.t_nav span { display: none }
+.timebox li { font-size: 15px }
+.timebox li span { margin-right: 30px }
+.timebox:before { left: 100px; }
+.timebox li a:after { left: -26px }
+.timebox li:hover a { padding: 0 30px }
+.infosbox { width: 100% }
+.pagebg {margin-top: 50px;}
+}
+ @media only screen and (min-width: 480px) and (max-width: 767px) {
+header, .blogsbox, .banner { width: 100%; margin: auto; }
+.menu { width: 90%; display: none; }
+#mnav { display: block; z-index: 99999; }
+.search_bar, .toppic { display: none }
+article { width: 90%; margin: 70px auto 0 }
+.bloginfo { width: 100%; clear: both }
+.blogs .blogpic { width: 30%; height: auto }
+.fader { padding-top: 50%; width: 100% }
+.imginfo { font-size: 20px; bottom: 20%; }
+.bloginfo ul li { margin-right: 10px }
+.bplist li img { height: 100px }
+.bplist li { height: 100px }
+.bigpic img { height: auto }
+.blogs .blogtext { margin-top: 10px; }
+.bplist li:nth-child(2) { margin-left: 3px; }
+.sidebar { display: none }
+.news_infos { width: 100% }
+h1.t_nav span { display: none }
+.container { width: 90%; margin: 20px auto; }
+.share ul li { width: 50% }
+.share ul li i { height: 150px }
+.shareli { margin: 0 15px; }
+.share ul li h2 { padding: 15px 15px; }
+.timebox li { font-size: 15px }
+.timebox li span { display: none }
+.timebox:before { display: none }
+.timebox li:hover a { padding: 0 30px }
+.infosbox { width: 100% }
+.pagebg {margin-top: 50px;}
+.diggit{ float:none; margin-left: auto;}
+.dasbox{ display:none}
+}
+@media only screen and (max-width: 479px) {
+header, .blogsbox, .banner { width: 100%; margin: auto; }
+.menu { width: 90%; display: none; }
+#mnav { display: block; z-index: 99999;  }
+.search_bar, .toppic { display: none }
+article { width: 90%; margin: 70px auto 0 }
+.imginfo { font-size: 18px; bottom: 22%; }
+.bloginfo { width: 100%; clear: both; }
+.blogs .blogpic { width: 100%; height: auto; margin-bottom: 10px }
+.fader { padding-top: 60%; width: 100% }
+.bloginfo ul li { margin-right: 10px }
+.bplist li img { height: 100px }
+.bplist li { height: 100px }
+.bigpic img { height: auto }
+.blogs .blogtext { width: 100%; }
+.bloginfo ul li { background-image: none }
+.bloginfo .author, .bloginfo .lmname { display: none }
+.bplist li:nth-child(2) { margin: 0 0 0 2px }
+.sidebar { display: none }
+.news_infos { width: 100% }
+h1.t_nav span { display: none }
+.container { width: 90%; margin: 20px auto; }
+.share ul li { width: 50% }
+.share ul li i { height: 150px }
+.shareli { margin: 0 3%; }
+.share ul li h2 { padding: 15px 15px; }
+footer p { padding: 0 30px }
+.timebox li { font-size: 15px }
+.timebox li span { display: none }
+.timebox:before { display: none }
+.timebox li:hover a { padding: 0 30px }
+.infosbox { width: 100% }
+.pagebg {margin-top: 50px;}
+.diggit{ float:none; margin-left: auto;}
+.dasbox{ display:none}
+}
