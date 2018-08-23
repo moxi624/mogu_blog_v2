@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>moxi</groupId>
+  <groupId>com.moxi</groupId>
   <artifactId>mogu_blog</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>mogu_blog</name>
   <description>a blog web</description>
   
-   <properties>
-     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-     <!-- <spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version> -->
-     <java.version>1.7</java.version>
- </properties>
+   	<properties>
+	     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	     <!-- <spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version> -->
+	     <java.version>1.7</java.version>
+ 	</properties>
  
  <parent>
      <groupId>org.springframework.boot</groupId>
@@ -20,11 +20,136 @@
  </parent>
  
   <modules>
-  	<module>mogu_base</module>
-  	<module>mogu_config</module>
+    <module>mogu_config</module>
   	<module>mogu_utils</module>
+  	<module>mogu_base</module>
   	<module>mogu_xo</module>
   	<module>mogu_admin</module>
   	<module>mogu_web</module>
   </modules>
+  
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+	        <groupId>org.mybatis.spring.boot</groupId>
+	        <artifactId>mybatis-spring-boot-starter</artifactId>
+	        <version>1.1.1</version>
+    	</dependency>
+    	
+        <dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		    <version>1.0.19</version>
+		</dependency>
+		
+		<!-- 分页插件 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+    		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<!--solr客户端solrj的依赖 -->
+        <dependency>  
+            <groupId>org.apache.solr</groupId>  
+            <artifactId>solr-solrj</artifactId>  
+        </dependency>
+        
+		<!-- Redis客户端 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+		
+		<!--solr客户端solrj的依赖 -->
+        <dependency>  
+            <groupId>org.apache.solr</groupId>  
+            <artifactId>solr-solrj</artifactId>    
+        </dependency> 
+		
+		<!-- 格式化对象，方便输出日志 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		
+		<!-- log start -->
+	  	<dependency>
+	        <groupId>org.apache.logging.log4j</groupId>
+	        <artifactId>log4j-api</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.logging.log4j</groupId>
+	        <artifactId>log4j-core</artifactId>
+	    </dependency>
+	    <dependency>
+	        <groupId>log4j</groupId>
+	        <artifactId>log4j</artifactId>
+	        <version>1.2.17</version>
+	    </dependency>
+		<!-- log END -->
+		
+		<!-- email -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4</version>
+		</dependency>
+		
+		<!-- Json需要用到的jar包 -->
+		<dependency>
+	        <groupId>net.sf.json-lib</groupId>
+	        <artifactId>json-lib</artifactId>
+	        <version>2.4</version>
+	        <classifier>jdk15</classifier>
+    	</dependency>
+	</dependencies>
+	
+	<!--指定使用maven打包-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>    <!--默认关掉单元测试 -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

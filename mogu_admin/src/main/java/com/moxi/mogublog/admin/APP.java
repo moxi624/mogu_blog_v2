@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
         HibernateJpaAutoConfiguration.class, //如果用了Hibernate
         DataSourceTransactionManagerAutoConfiguration.class
 })
-@ComponentScan(basePackages = {"com.moxi.mogublog.admin","com.moxi.mogublog.xo","com.moxi.mogublog.base"})
+//@ComponentScan(basePackages = {"com.moxi.mogublog.admin","com.moxi.mogublog.xo","com.moxi.mogublog.base"})
 @MapperScan(basePackages = {"com.moxi.mogublog.xo.dao","com.moxi.mogublog.base.dao"})
 public class APP {
 	

@@ -1,27 +1,8 @@
 package com.moxi.mogublog.admin.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.common.SolrInputDocument;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.global.WebConf;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.service.BlogSO;
 import com.moxi.mougblog.base.controller.BaseController;
-import com.moxi.mougblog.base.enums.EStatus;
 /**
  * 搜索管理Controller
  * @author Administrator

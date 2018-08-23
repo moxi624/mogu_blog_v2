@@ -20,17 +20,4 @@
 		</dependency>
     </dependencies>
 
-	<build>
-	    <finalName>mogu_config</finalName>
-	    <resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-				<include>**/*.properties</include>
-				<include>**/*.yml</include>
-				<include>**/*.xml</include>
-				</includes>
-			</resource>
-	    </resources>
-	</build>
 </project>
