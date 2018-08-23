@@ -1,4 +1,4 @@
-package com.moxi.mougblog.xo;
+package com.moxi.mogublog.xo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
