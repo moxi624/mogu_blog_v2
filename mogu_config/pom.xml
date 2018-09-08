@@ -19,5 +19,31 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
     </dependencies>
+    
+    <build>
+    	<resources>
+            <!--扫描到的mapper配置-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <!--<include>contexts/</include>-->
+                    <!--<include>*.xml</include>-->
+                    <include>*.yml</include>
+                    <include>*.properties</include>
+                    <include>*.xml</include>
+                    <include>enc_pri</include>
+                </includes>
+            </resource>
+            <!--end-->
+        </resources>
+    </build>
 
 </project>

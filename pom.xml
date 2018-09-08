@@ -40,11 +40,16 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<dependency>
-	        <groupId>org.mybatis.spring.boot</groupId>
-	        <artifactId>mybatis-spring-boot-starter</artifactId>
-	        <version>1.1.1</version>
-    	</dependency>
+  		<!-- mp依赖
+  			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
+  		 -->
+        <!-- mybatis-plus begin -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.0-RC1</version>
+        </dependency>
+        <!-- mybatis-plus end -->
     	
         <dependency>
 			<groupId>mysql</groupId>
@@ -53,18 +58,10 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>druid</artifactId>
-		    <version>1.0.19</version>
-		</dependency>
-		
-		<!-- 分页插件 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.1.2</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
-    		
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -94,27 +91,28 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.6</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
 		
-		<!-- log start -->
-	  	<dependency>
-	        <groupId>org.apache.logging.log4j</groupId>
-	        <artifactId>log4j-api</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.apache.logging.log4j</groupId>
-	        <artifactId>log4j-core</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>log4j</groupId>
-	        <artifactId>log4j</artifactId>
-	        <version>1.2.17</version>
-	    </dependency>
-		<!-- log END -->
+		<!-- sfl4j -->
+		 <dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.velocity</groupId>
+		    <artifactId>velocity-engine-core</artifactId>
+		    <version>2.0</version>
+		</dependency>
 		
 		<!-- email -->
 		<dependency>
@@ -132,24 +130,17 @@
     	</dependency>
 	</dependencies>
 	
-	<!--指定使用maven打包-->
+	<!-- 如果mapper.xml是放在src/main/java目录下，需配置以下-->
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skipTests>true</skipTests>    <!--默认关掉单元测试 -->
-				</configuration>
-			</plugin>
-		</plugins>
+	  <resources>
+	      <resource>
+	          <directory>src/main/java</directory>
+	          <filtering>false</filtering>
+	          <includes>
+	              <include>**/mapper/*.xml</include>
+	          </includes>
+	      </resource>
+	  </resources>
 	</build>
+	
 </project>

@@ -1,54 +1,162 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-
-import com.moxi.mougblog.base.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 /**
- * 游客实体类
- * @author xuzhixiang
- * @date 2017年11月3日18:53:16
+ * <p>
+ * 博主表
+ * </p>
  *
+ * @author xuzhixiang
+ * @since 2018-09-08
  */
-@Entity
-public class Visitor extends BaseEntity{
+@TableName("t_visitor")
+public class Visitor extends Model<Visitor> {
 
-	private static final long serialVersionUID = 1161512248235762111L;
-	private String username; //用户名
-	private String email; //邮箱
-	private int logincount; //登录次数
-	private Timestamp lastlogintime; //最后登录时间
-	private String lastloginip; //最后登录ip
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public int getLogincount() {
-		return logincount;
-	}
-	public void setLogincount(int logincount) {
-		this.logincount = logincount;
-	}
-	public Timestamp getLastlogintime() {
-		return lastlogintime;
-	}
-	public void setLastlogintime(Timestamp lastlogintime) {
-		this.lastlogintime = lastlogintime;
-	}
-	public String getLastloginip() {
-		return lastloginip;
-	}
-	public void setLastloginip(String lastloginip) {
-		this.lastloginip = lastloginip;
-	}
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 唯一uid
+     */
+    @TableId(value = "uid", type = IdType.UUID)
+    private String uid;
+
+    /**
+     * 用户名
+     */
+    private String username;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 登录次数
+     */
+    private Integer logincount;
+
+    /**
+     * 最后登录时间
+     */
+    private LocalDateTime lastlogintime;
+
+    /**
+     * 最后登录IP
+     */
+    private String lastloginip;
+
+    /**
+     * 状态
+     */
+    private Boolean status;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createtime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updatetime;
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getLogincount() {
+        return logincount;
+    }
+
+    public void setLogincount(Integer logincount) {
+        this.logincount = logincount;
+    }
+
+    public LocalDateTime getLastlogintime() {
+        return lastlogintime;
+    }
+
+    public void setLastlogintime(LocalDateTime lastlogintime) {
+        this.lastlogintime = lastlogintime;
+    }
+
+    public String getLastloginip() {
+        return lastloginip;
+    }
+
+    public void setLastloginip(String lastloginip) {
+        this.lastloginip = lastloginip;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(LocalDateTime createtime) {
+        this.createtime = createtime;
+    }
+
+    public LocalDateTime getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(LocalDateTime updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return this.uid;
+    }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+        ", uid=" + uid +
+        ", username=" + username +
+        ", email=" + email +
+        ", logincount=" + logincount +
+        ", lastlogintime=" + lastlogintime +
+        ", lastloginip=" + lastloginip +
+        ", status=" + status +
+        ", createtime=" + createtime +
+        ", updatetime=" + updatetime +
+        "}";
+    }
 }

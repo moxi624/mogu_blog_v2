@@ -1,42 +1,120 @@
 package com.moxi.mogublog.xo.entity;
 
-import javax.persistence.Entity;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
-import com.moxi.mougblog.base.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 /**
- * 反馈实体类
- * @author xuzhixiang
- * @date 2017年11月3日18:49:17
+ * <p>
+ * 反馈表
+ * </p>
  *
+ * @author xuzhixiang
+ * @since 2018-09-08
  */
-@Entity
-public class Feedback extends BaseEntity{
+@TableName("t_feedback")
+public class Feedback extends Model<Feedback> {
 
-	private static final long serialVersionUID = -6514316435269586923L;
-	private String useruid; //用户uid
-	private String content; //反馈内容
-	
-	//以下字段不存入数据库，封装为更好使用
-	private String username;
-	
-	public String getUseruid() {
-		return useruid;
-	}
-	public void setUseruid(String useruid) {
-		this.useruid = useruid;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 唯一uid
+     */
+    @TableId(value = "uid", type = IdType.UUID)
+    private String uid;	
+
+    /**
+     * 用户uid
+     */
+    private String useruid;
+
+    /**
+     * 反馈的内容
+     */
+    private String content;
+
+    /**
+     * 状态
+     */
+    private Boolean status;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createtime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updatetime;
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUseruid() {
+        return useruid;
+    }
+
+    public void setUseruid(String useruid) {
+        this.useruid = useruid;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(LocalDateTime createtime) {
+        this.createtime = createtime;
+    }
+
+    public LocalDateTime getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(LocalDateTime updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return this.uid;
+    }
+
+    @Override
+    public String toString() {
+        return "Feedback{" +
+        ", uid=" + uid +
+        ", useruid=" + useruid +
+        ", content=" + content +
+        ", status=" + status +
+        ", createtime=" + createtime +
+        ", updatetime=" + updatetime +
+        "}";
+    }
 }

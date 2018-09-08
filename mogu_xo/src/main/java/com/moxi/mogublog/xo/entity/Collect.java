@@ -1,48 +1,130 @@
 package com.moxi.mogublog.xo.entity;
 
-import javax.persistence.Entity;
-
-import com.moxi.mougblog.base.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import java.io.Serializable;
 
 /**
- * 收藏实体类
- * @author xuzhixiang
- * @date 2017年11月3日18:41:53
+ * <p>
+ * 收藏表
+ * </p>
  *
+ * @author xuzhixiang
+ * @since 2018-09-08
  */
-@Entity
-public class Collect extends BaseEntity{
+@TableName("t_collect")
+public class Collect extends Model<Collect> {
 
-	private static final long serialVersionUID = -4862467942942784295L;
-	private String useruid; //用户uid
-	private String bloguid; //博客uid
-	
-	//以下字段不存入数据库，封装为了更好使用
-	private String username;
-	private String collectname;
-	
-	public String getUseruid() {
-		return useruid;
-	}
-	public void setUseruid(String useruid) {
-		this.useruid = useruid;
-	}
-	public String getBloguid() {
-		return bloguid;
-	}
-	public void setBloguid(String bloguid) {
-		this.bloguid = bloguid;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getCollectname() {
-		return collectname;
-	}
-	public void setCollectname(String collectname) {
-		this.collectname = collectname;
-	}
+    private static final long serialVersionUID = 1L;
+
+    @TableId(value = "oid", type = IdType.AUTO)
+    private Integer oid;
+
+    /**
+     * 唯一uid
+     */
+    private String uid;
+
+    /**
+     * 用户的uid
+     */
+    private String useruid;
+
+    /**
+     * 博客的uid
+     */
+    private String bloguid;
+
+    /**
+     * 状态
+     */
+    private Boolean status;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createtime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updatetime;
+
+
+    public Integer getOid() {
+        return oid;
+    }
+
+    public void setOid(Integer oid) {
+        this.oid = oid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUseruid() {
+        return useruid;
+    }
+
+    public void setUseruid(String useruid) {
+        this.useruid = useruid;
+    }
+
+    public String getBloguid() {
+        return bloguid;
+    }
+
+    public void setBloguid(String bloguid) {
+        this.bloguid = bloguid;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(LocalDateTime createtime) {
+        this.createtime = createtime;
+    }
+
+    public LocalDateTime getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(LocalDateTime updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return this.oid;
+    }
+
+    @Override
+    public String toString() {
+        return "Collect{" +
+        ", oid=" + oid +
+        ", uid=" + uid +
+        ", useruid=" + useruid +
+        ", bloguid=" + bloguid +
+        ", status=" + status +
+        ", createtime=" + createtime +
+        ", updatetime=" + updatetime +
+        "}";
+    }
 }

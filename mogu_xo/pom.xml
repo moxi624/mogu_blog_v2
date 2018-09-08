@@ -12,41 +12,53 @@
 
 	<artifactId>mogu_xo</artifactId>
 	
-		<properties>
+	<properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <mybatis-plus-boot-starter.version>3.0-RC1</mybatis-plus-boot-starter.version>
+        <HikariCP.version>3.2.0</HikariCP.version>
 	</properties>
 	
 	<dependencies>
+
 		<dependency>
-		    <artifactId>mogu_config</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
-		    <artifactId>mogu_utils</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
 		    <artifactId>mogu_base</artifactId>
 		    <groupId>com.moxi</groupId>
 		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>   
+        </dependency>
+        
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+
 	</dependencies>
 	
-	<build>
-	    <finalName>mogu_xo</finalName>
-	    <resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-				<include>**/*.properties</include>
-				<include>**/*.xml</include>
-				</includes>
-			</resource>
-	    </resources>
-	</build>
+ 	<!-- Package as an executable jar -->
+    <build>
+    	<finalName>mogu_xo</finalName>
+		  <resources>
+		   <resource>
+		       <directory>src/main/java</directory>
+		       <includes>
+		           <include>**/*.xml</include>
+		       </includes>
+		   </resource>
+		   <resource>
+		       <directory>src/main/resources</directory>
+		       <includes>
+		           <include>**.*</include>
+		           <include>**/*.*</include><!-- i18n能读取到 -->
+		            <include>**/*/*.*</include>
+		       </includes>
+		   </resource>
+		 </resources>
+    </build>
 	
 </project>

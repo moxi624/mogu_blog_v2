@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moxi.mogublog.xo.mapper.VisitorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Visitor">
+        <id column="uid" property="uid" />
+        <result column="username" property="username" />
+        <result column="email" property="email" />
+        <result column="logincount" property="logincount" />
+        <result column="lastlogintime" property="lastlogintime" />
+        <result column="lastloginip" property="lastloginip" />
+        <result column="status" property="status" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        uid, username, email, logincount, lastlogintime, lastloginip, status, createtime, updatetime
+    </sql>
+
+</mapper>
