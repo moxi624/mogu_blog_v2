@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.moxi.mogublog.xo.entity.Admin;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.moxi.mougblog.base.service.SuperService;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author xuzhixiang
  * @since 2018-09-04
  */
-public interface AdminService extends IService<Admin> {
+public interface AdminService extends SuperService<Admin> {
 
 }

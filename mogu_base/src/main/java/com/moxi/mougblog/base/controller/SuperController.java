@@ -12,7 +12,7 @@ import net.sf.json.JSONObject;
  * @date 2017年9月30日18:12:56
  *
  */
-public class BaseController {
+public class SuperController {
 	
 	/**
 	 * 将map转换成json字符串

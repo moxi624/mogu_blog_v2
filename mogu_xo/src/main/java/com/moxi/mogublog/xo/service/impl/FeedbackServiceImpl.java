@@ -1,10 +1,11 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.moxi.mogublog.xo.entity.Feedback;
 import com.moxi.mogublog.xo.mapper.FeedbackMapper;
 import com.moxi.mogublog.xo.service.FeedbackService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
+import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
  * <p>
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2018-09-08
  */
 @Service
-public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> implements FeedbackService {
+public class FeedbackServiceImpl extends SuperServiceImpl<FeedbackMapper, Feedback> implements FeedbackService {
 
 }

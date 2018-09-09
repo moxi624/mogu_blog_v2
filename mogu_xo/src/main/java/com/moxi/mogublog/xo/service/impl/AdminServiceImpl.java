@@ -1,10 +1,11 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.mapper.AdminMapper;
 import com.moxi.mogublog.xo.service.AdminService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
+import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
  * <p>
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2018-09-04
  */
 @Service
-public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
+public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> implements AdminService {
 
 }

@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.moxi.mogublog.xo.entity.Feedback;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.moxi.mougblog.base.service.SuperService;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author xuzhixiang
  * @since 2018-09-08
  */
-public interface FeedbackService extends IService<Feedback> {
+public interface FeedbackService extends SuperService<Feedback> {
 
 }

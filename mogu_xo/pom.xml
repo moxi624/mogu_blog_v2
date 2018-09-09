@@ -21,7 +21,6 @@
 	</properties>
 	
 	<dependencies>
-
 		<dependency>
 		    <artifactId>mogu_base</artifactId>
 		    <groupId>com.moxi</groupId>

@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.moxi.mogublog.xo.entity.Visitor;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.moxi.mougblog.base.service.SuperService;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author xuzhixiang
  * @since 2018-09-08
  */
-public interface VisitorService extends IService<Visitor> {
+public interface VisitorService extends SuperService<Visitor> {
 
 }

@@ -3,11 +3,11 @@ package com.moxi.mougblog.base.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * Service基类
+ * Service父类
  * @author xuzhixiang
- * @date 2017年9月16日14:42:44
+ * @date 2018年9月9日09:30:13
  * @param <T>
  */
-public interface BaseService<T> extends IService<T>{
+public interface SuperService<T> extends IService<T>{
 
 }

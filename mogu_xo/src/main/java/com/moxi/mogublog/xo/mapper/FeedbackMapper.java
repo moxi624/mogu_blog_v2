@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.mapper;
 
 import com.moxi.mogublog.xo.entity.Feedback;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.moxi.mougblog.base.mapper.SuperMapper;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author xuzhixiang
  * @since 2018-09-08
  */
-public interface FeedbackMapper extends BaseMapper<Feedback> {
+public interface FeedbackMapper extends SuperMapper<Feedback> {
 
 }

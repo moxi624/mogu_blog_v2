@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @SpringBootApplication
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.xo.config",
+        "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.controller",
         "com.moxi.mogublog.xo.service"})
 public class APP {

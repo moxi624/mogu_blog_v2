@@ -1,4 +1,4 @@
-package com.moxi.mogublog.xo.config;
+package com.moxi.mogublog.admin.config;
 
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;

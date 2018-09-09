@@ -1,10 +1,11 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.mapper.TagMapper;
 import com.moxi.mogublog.xo.service.TagService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
+import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
  * <p>
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2018-09-08
  */
 @Service
-public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
+public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements TagService {
 
 }

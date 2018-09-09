@@ -2,10 +2,10 @@ package com.moxi.mogublog.xo.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.mapper.BlogMapper;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
  * <p>
@@ -16,6 +16,6 @@ import com.moxi.mogublog.xo.service.BlogService;
  * @since 2018-09-08
  */
 @Service
-public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements BlogService {
+public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implements BlogService {
 
 }

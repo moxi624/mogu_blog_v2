@@ -61,14 +61,14 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-           
+                <artifactId>spring-boot-maven-plugin</artifactId>           
             <configuration>
-	             <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+	             <fork>true</fork> 
+	             <!-- 如果没有该配置，devtools不会生效 -->
 	            <!-- 指定该Main Class为全局的唯一入口 -->
-	            <mainClass>com.moxi.mogublog.APP</mainClass>
+	            <mainClass>com.moxi.mogublog.admin.APP</mainClass>
 	            <layout>ZIP</layout>
-          </configuration>
+          	</configuration>
           <executions>
             <execution>
               <goals>
@@ -80,6 +80,4 @@
         </plugins>
         <finalName>mogu_admin</finalName>
     </build>
-
-
 </project>
