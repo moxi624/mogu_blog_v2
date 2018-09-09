@@ -58,8 +58,6 @@ public final class SysConf extends BaseConf{
 	public final static String newtags = "newtags";
 	public final static String blogcontents = "blogcontents";
 	public final static String hottags = "hottags";
-	public final static String success = "success";
-	public final static String failure = "failure";
 	public final static String orderBy = "orderBy";
 	public final static String order = "order";
 	public final static String by = "by";

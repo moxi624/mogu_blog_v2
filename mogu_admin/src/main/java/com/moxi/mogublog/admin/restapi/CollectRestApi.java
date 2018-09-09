@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.controller;
+package com.moxi.mogublog.admin.restapi;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 收藏表 前端控制器
+ * 收藏表 RestApi
  * </p>
  *
  * @author xuzhixiang
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/collect")
-public class CollectController {
+public class CollectRestApi {
 
 }
 

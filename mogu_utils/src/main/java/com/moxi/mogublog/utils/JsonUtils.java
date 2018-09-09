@@ -1,99 +1,108 @@
 package com.moxi.mogublog.utils;
 
-import java.sql.Timestamp;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.JavaType;
+import org.apache.log4j.Logger;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
+
+
 /**
- * Json工具类
+ * json解析的工具类
  * @author xuzhixiang
- * @date 2017年9月30日16:59:03
- *
+ * 2018年5月7日  下午5:21:23
  */
 public class JsonUtils {
-    // 定义jackson对象
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    /**
-     * 
-    * map转换json.
-    * <br>详细说明
-    * @param map 集合
-    * @return
-    * @return String json字符串
-    * @throws
-    * @author slj
-     */
-    public static String mapToJson(Map<String, String> map) {
-        Set<String> keys = map.keySet();
-        String key = "";
-        String value = "";
-        StringBuffer jsonBuffer = new StringBuffer();
-        jsonBuffer.append("{");
-        for (Iterator<String> it = keys.iterator(); it.hasNext();) {
-            key = (String) it.next();
-            value = map.get(key);
-            jsonBuffer.append(key + ":" +"\""+ value+"\"");
-            if (it.hasNext()) {
-                jsonBuffer.append(",");
-            }
-        }
-        jsonBuffer.append("}");
-        return jsonBuffer.toString();
-    }
-    
-    /**
-     * 将json结果集转化为对象
-     * 
-     * @param jsonData json数据
-     * @param clazz 对象中的object类型
-     * @return
-     */
-    public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
-        try {
-            T t = MAPPER.readValue(jsonData, beanType);
-            return t;
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-        return null;
-    }
-    
-    /**
-     * 将json数据转换成pojo对象list
-     * <p>Title: jsonToList</p>
-     * <p>Description: </p>
-     * @param jsonData
-     * @param beanType
-     * @return
-     */
-    public static <T>List<T> jsonToList(String jsonData, Class<T> beanType) {
-    	JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
-    	try {
-    		List<T> list = MAPPER.readValue(jsonData, javaType);
-    		return list;
-		} catch (Exception e) {
+	
+	public static Logger log = Logger.getLogger(JsonUtils.class);
+
+	/**
+	 * 把对象转换为json数据
+	 * @author xuzhixiang
+	 * 2018年5月7日  下午5:27:16
+	 * @param obj
+	 * @return
+	 */
+	public static String objectToJson(Object obj){
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+		
+			try {
+				String json = gson.toJson(obj);
+				return json;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+	}
+	
+	/**
+	 * 把json字符串转化为对象
+	 * @author xuzhixiang
+	 * 2018年5月7日  下午5:39:43
+	 * @param jsonString
+	 * @param clazz
+	 * @return
+	 */
+	public static Object jsonToObject(String jsonString,Class<?> clazz) {
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+		Object obj = null;
+		try {
+			obj = gson.fromJson(jsonString, clazz);
+		} catch (JsonSyntaxException e) {
+			
 			e.printStackTrace();
 		}
-    	
-    	return null;
-    }
-    
-    /**
-     * 将Pojo转换成Json
-     * @param object
-     * @return
-     */
-    public static JSONObject pojoToJson (Object object) {
-	    JsonConfig config=new JsonConfig();
-	    config.registerJsonValueProcessor(Timestamp.class, new DateJsonValueProcessor("yyyy-MM-dd HH:mm:ss"));
-	    JSONObject json  = JSONObject.fromObject(object, config);
-	    return json;
-    }
+		return obj;
+	}
+	
+	/**
+	 * josn转arrayList
+	 * @author xuzhixiang
+	 * 2018年5月7日  下午5:49:18
+	 * @param jsonArray
+	 * @return
+	 */
+	public static ArrayList<?> jsonArrayToArrayList(String jsonArray) {
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+		ArrayList<?> list = null;
+		try {
+			Type listType = new TypeToken<ArrayList<?>>() {}.getType();
+			
+			list = gson.fromJson(jsonArray, listType);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	/**
+	 * 把json转换为map类型的数据
+	 * @author xuzhixiang
+	 * 2018年5月7日  下午5:54:22
+	 * @param json
+	 * @return
+	 */
+	public static Map<String, Object> jsonToMap(String json) {
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+		Map<String, Object> map = null;
+		try {
+			Type type=new TypeToken<Map<String,Object>>(){}.getType();
+			
+			map = gson.fromJson(json, type);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+	
 }

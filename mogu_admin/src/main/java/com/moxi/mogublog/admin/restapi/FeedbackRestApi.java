@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.controller;
+package com.moxi.mogublog.admin.restapi;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 反馈表 前端控制器
+ * 反馈表 RestApi
  * </p>
  *
  * @author xuzhixiang
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/feedback")
-public class FeedbackController {
+public class FeedbackRestApi {
 
 }
 

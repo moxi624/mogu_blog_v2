@@ -1,19 +1,20 @@
-package com.moxi.mogublog.admin.controller;
+package com.moxi.mogublog.admin.restapi;
+
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 博主表 前端控制器
+ * 评论表 RestApi
  * </p>
  *
  * @author xuzhixiang
  * @since 2018-09-08
  */
 @RestController
-@RequestMapping("/visitor")
-public class VisitorController {
+@RequestMapping("/comment")
+public class CommentRestApi {
 
 }
 
