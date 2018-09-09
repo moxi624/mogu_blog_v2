@@ -5,9 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 
 @EnableTransactionManagement
 @SpringBootApplication
+@EnableSwagger2
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.controller",
