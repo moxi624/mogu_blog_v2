@@ -29,7 +29,7 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: 'Dashboard',
+    name: '首页',
     hidden: true,
     children: [{
       path: 'dashboard',
@@ -40,103 +40,111 @@ export const constantRouterMap = [
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    redirect: '/example/blog',
+    name: '博客管理',
+    meta: { title: '博客管理', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'blog',
+        name: '博客管理',
+        component: () => import('@/views/blog/index'),
+        meta: { title: '博客管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/form',
+    path: '/example',
     component: Layout,
+    redirect: '/example/comment',
+    name: '评论管理',
+    meta: { title: '评论管理', icon: 'example' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'comment',
+        name: '评论管理',
+        component: () => import('@/views/comment/index'),
+        meta: { title: '评论管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/nested',
+    path: '/example',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'nested',
-      icon: 'nested'
-    },
+    redirect: '/example/tag',
+    name: '标签管理',
+    meta: { title: '标签管理', icon: 'example' },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'tag',
+        name: '标签管理',
+        component: () => import('@/views/tag/index'),
+        meta: { title: '标签管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: 'external-link',
+    path: '/example',
     component: Layout,
+    redirect: '/example/feedback',
+    name: '反馈管理',
+    meta: { title: '反馈管理', icon: 'example' },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'externalLink', icon: 'link' }
+        path: 'feedback',
+        name: '反馈管理',
+        component: () => import('@/views/feedback/index'),
+        meta: { title: '反馈管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/user',
+    name: '用户管理',
+    meta: { title: '用户管理', icon: 'example' },
+    children: [
+      {
+        path: 'user',
+        name: '用户管理',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/collect',
+    name: '收藏管理',
+    meta: { title: '收藏管理', icon: 'example' },
+    children: [
+      {
+        path: 'collect',
+        name: '收藏管理',
+        component: () => import('@/views/collect/index'),
+        meta: { title: '收藏管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/visitor',
+    name: '游客管理',
+    meta: { title: '游客管理', icon: 'example' },
+    children: [
+      {
+        path: 'visitor',
+        name: '游客管理',
+        component: () => import('@/views/visitor/index'),
+        meta: { title: '游客管理', icon: 'table' }
       }
     ]
   },
