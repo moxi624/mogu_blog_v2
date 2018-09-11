@@ -1,12 +1,12 @@
 package com.moxi.mogublog.xo.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class Admin extends Model<Admin> {
     /**
      * 性别(1:男2:女)
      */
-    private Boolean gender;
+    private int gender;
 
     /**
      * 个人头像
@@ -55,7 +55,7 @@ public class Admin extends Model<Admin> {
     /**
      * 出生年月日
      */
-    private LocalDate birthday;
+    private Date birthday;
 
     /**
      * 手机
@@ -80,7 +80,7 @@ public class Admin extends Model<Admin> {
     /**
      * 最后登录时间
      */
-    private LocalDateTime lastlogintime;
+    private Date lastlogintime;
 
     /**
      * 最后登录IP
@@ -90,17 +90,17 @@ public class Admin extends Model<Admin> {
     /**
      * 状态
      */
-    private Boolean status;
+    private int status;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatetime;
+    private Date updatetime;
 
 
     public String getUid() {
@@ -127,15 +127,15 @@ public class Admin extends Model<Admin> {
         this.password = password;
     }
 
-    public Boolean getGender() {
-        return gender;
-    }
+    public int getGender() {
+		return gender;
+	}
 
-    public void setGender(Boolean gender) {
-        this.gender = gender;
-    }
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
 
-    public String getAvatar() {
+	public String getAvatar() {
         return avatar;
     }
 
@@ -151,11 +151,11 @@ public class Admin extends Model<Admin> {
         this.email = email;
     }
 
-    public LocalDate getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
@@ -191,11 +191,11 @@ public class Admin extends Model<Admin> {
         this.logincount = logincount;
     }
 
-    public LocalDateTime getLastlogintime() {
+    public Date getLastlogintime() {
         return lastlogintime;
     }
 
-    public void setLastlogintime(LocalDateTime lastlogintime) {
+    public void setLastlogintime(Date lastlogintime) {
         this.lastlogintime = lastlogintime;
     }
 
@@ -207,31 +207,35 @@ public class Admin extends Model<Admin> {
         this.lastloginip = lastloginip;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
+    public int getStatus() {
+		return status;
+	}
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-    public LocalDateTime getCreatetime() {
-        return createtime;
-    }
+	public Date getCreatetime() {
+		return createtime;
+	}
 
-    public void setCreatetime(LocalDateTime createtime) {
-        this.createtime = createtime;
-    }
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
 
-    public LocalDateTime getUpdatetime() {
-        return updatetime;
-    }
+	public Date getUpdatetime() {
+		return updatetime;
+	}
 
-    public void setUpdatetime(LocalDateTime updatetime) {
-        this.updatetime = updatetime;
-    }
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
 
-    @Override
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
     protected Serializable pkVal() {
         return this.uid;
     }

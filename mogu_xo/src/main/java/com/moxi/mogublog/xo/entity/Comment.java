@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -60,18 +60,18 @@ public class Comment extends Model<Comment> {
     /**
      * 状态
      */
-    private Boolean status;
+    private int status;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatetime;
-
+    private Date updatetime;
+    
 
     public String getUid() {
         return uid;
@@ -129,31 +129,35 @@ public class Comment extends Model<Comment> {
         this.bloguid = bloguid;
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
+    public int getStatus() {
+		return status;
+	}
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-    public LocalDateTime getCreatetime() {
-        return createtime;
-    }
+	public Date getCreatetime() {
+		return createtime;
+	}
 
-    public void setCreatetime(LocalDateTime createtime) {
-        this.createtime = createtime;
-    }
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
 
-    public LocalDateTime getUpdatetime() {
-        return updatetime;
-    }
+	public Date getUpdatetime() {
+		return updatetime;
+	}
 
-    public void setUpdatetime(LocalDateTime updatetime) {
-        this.updatetime = updatetime;
-    }
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
 
-    @Override
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
     protected Serializable pkVal() {
         return this.uid;
     }

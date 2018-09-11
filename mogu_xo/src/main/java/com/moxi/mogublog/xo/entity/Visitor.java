@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -45,7 +45,7 @@ public class Visitor extends Model<Visitor> {
     /**
      * 最后登录时间
      */
-    private LocalDateTime lastlogintime;
+    private Date lastlogintime;
 
     /**
      * 最后登录IP
@@ -55,17 +55,17 @@ public class Visitor extends Model<Visitor> {
     /**
      * 状态
      */
-    private Boolean status;
+    private int status;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updatetime;
+    private Date updatetime;
 
 
     public String getUid() {
@@ -100,47 +100,51 @@ public class Visitor extends Model<Visitor> {
         this.logincount = logincount;
     }
 
-    public LocalDateTime getLastlogintime() {
-        return lastlogintime;
-    }
+    public Date getLastlogintime() {
+		return lastlogintime;
+	}
 
-    public void setLastlogintime(LocalDateTime lastlogintime) {
-        this.lastlogintime = lastlogintime;
-    }
+	public void setLastlogintime(Date lastlogintime) {
+		this.lastlogintime = lastlogintime;
+	}
 
-    public String getLastloginip() {
-        return lastloginip;
-    }
+	public String getLastloginip() {
+		return lastloginip;
+	}
 
-    public void setLastloginip(String lastloginip) {
-        this.lastloginip = lastloginip;
-    }
+	public void setLastloginip(String lastloginip) {
+		this.lastloginip = lastloginip;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
 
-    public Boolean getStatus() {
-        return status;
-    }
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+	public Date getCreatetime() {
+		return createtime;
+	}
 
-    public LocalDateTime getCreatetime() {
-        return createtime;
-    }
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
 
-    public void setCreatetime(LocalDateTime createtime) {
-        this.createtime = createtime;
-    }
+	public Date getUpdatetime() {
+		return updatetime;
+	}
 
-    public LocalDateTime getUpdatetime() {
-        return updatetime;
-    }
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
 
-    public void setUpdatetime(LocalDateTime updatetime) {
-        this.updatetime = updatetime;
-    }
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
-    @Override
+	@Override
     protected Serializable pkVal() {
         return this.uid;
     }
