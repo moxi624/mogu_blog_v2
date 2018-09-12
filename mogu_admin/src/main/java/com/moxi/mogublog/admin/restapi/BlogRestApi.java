@@ -1,7 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,8 +93,6 @@ public class BlogRestApi {
 		blog.setClickcount(0);
 		blog.setPhoto(photo);
 		blog.setStatus(EStatus.ENABLE);
-		blog.setCreatetime(new Date());
-		blog.setUpdatetime(new Date());
 		blog.insert();
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
@@ -121,7 +118,6 @@ public class BlogRestApi {
 		blog.setTaguid(taguid);
 		blog.setPhoto(photo);
 		blog.setStatus(EStatus.ENABLE);
-		blog.setUpdatetime(new Date());
 		blog.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
@@ -135,7 +131,6 @@ public class BlogRestApi {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		Blog blog = blogService.getById(uid);
-		blog.setUpdatetime(new Date());
 		blog.setStatus(EStatus.DISABLED);		
 		blog.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
