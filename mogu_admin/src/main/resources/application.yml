@@ -12,21 +12,27 @@ spring:
   datasource:
     username: root
     password: root
-    filters: mergeStat,wall,logback
+    url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false    
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
     initialSize: 5
-    maxActive: 50
     minIdle: 5
-    maxWait: 6000
-    testOnBorrow: true
-    testOnReturn: true
-    testWhileIdle: true
+    maxActive: 20
+    maxWait: 60000
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
-    removeAbandoned: true
-    removeAbandonedTimeout: 1800
-    logAbandoned: true
-    url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false
-
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+    
 
 #mybatis
 mybatis-plus:
