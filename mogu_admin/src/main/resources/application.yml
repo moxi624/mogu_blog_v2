@@ -4,9 +4,15 @@ server:
 
 #spring
 spring:
+  thymeleaf:
+    cache: true   #关闭缓存
   devtools:
     restart:
-      enabled: false
+      enabled: true #启动热部署
+      additional-paths:
+      - src/main/java #设置重启的目录，添加哪个目录文件需要restart
+      
+      
 
   # H2 DATABASE CONFIG
   datasource:
