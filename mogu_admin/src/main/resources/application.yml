@@ -14,7 +14,7 @@ spring:
       
       
 
-  # H2 DATABASE CONFIG
+  # DATABASE CONFIG
   datasource:
     username: root
     password: root

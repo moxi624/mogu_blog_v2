@@ -1,5 +1,5 @@
 /**
- * Created by jiachenpan on 16/11/18.
+ * WebUtil常用的一些工具类
  */
 
 export function formatData(arr) {
@@ -9,4 +9,3 @@ export function formatData(arr) {
   }
   return params
 }
-

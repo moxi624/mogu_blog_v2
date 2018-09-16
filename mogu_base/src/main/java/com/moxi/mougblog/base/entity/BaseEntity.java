@@ -3,8 +3,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
@@ -75,6 +73,7 @@ public class BaseEntity<T extends Model> extends Model<T> {
 	public void setUpdatetime(Timestamp updatetime) {
 		this.updatetime = updatetime;
 	}
+	
 	public static String getUUID() {
 		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 		return uuid;

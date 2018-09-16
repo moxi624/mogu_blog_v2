@@ -21,29 +21,29 @@
 	      </template>
 	    </el-table-column>
 		    
-	    <el-table-column label="博客标题" width="160">
+	    <el-table-column label="标题" width="160">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.title }}</span>
 	      </template>
 	    </el-table-column>
 		    
-	    <el-table-column label="博客简介" width="250">
+	    <el-table-column label="简介" width="250">
 	      <template slot-scope="scope">
 	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="点击数" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.clickcount }}</span>
 	      </template>
 	    </el-table-column>
 	    
 	   	<el-table-column label="标签" width="100">
 	      <template slot-scope="scope">
 	      	<template>		
-	      	  <span >{{ scope.row.taguid }}</span>		
+	      	  <el-tag type="warning"  v-if="item" :key="index" v-for="(item, index) in scope.row.tagList">{{item.content}}</el-tag>		
 	      	</template>
+	      </template>
+	    </el-table-column>
+
+			<el-table-column label="点击数" width="100">
+	      <template slot-scope="scope">
+	        <span>{{ scope.row.clickcount }}</span>
 	      </template>
 	    </el-table-column>
 	    
@@ -75,6 +75,17 @@
 	    </el-table-column>     	    
 	  </el-table>
 
+		    <!--分页-->
+    <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+    </div>
+
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
@@ -87,20 +98,28 @@
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-		    <el-form-item label="博客标题" :label-width="formLabelWidth">
+		    <el-form-item label="博客标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.title" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-        <el-form-item label="博客简介" :label-width="formLabelWidth">
+        <el-form-item label="博客简介" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="博客内容" :label-width="formLabelWidth">
+        <el-form-item label="博客内容" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="标签UID" :label-width="formLabelWidth">
-		      <el-input v-model="form.taguid" auto-complete="off"></el-input>
+				<el-form-item label="博客标签" :label-width="formLabelWidth" required>
+				<el-select v-model="tagValue" multiple  size="small" placeholder="请选择" filterable >
+					<el-option
+				      v-for="item in tagData"
+				      :key="item.uid"
+				      :label="item.content"
+				      :value="item.uid">
+				    </el-option>
+				</el-select>
+				<!--<p v-if="labelValue.length > 2" style="color: red;">最多选择两个标签</p>-->
 		    </el-form-item>
 
         <el-form-item label="标题图" :label-width="formLabelWidth">
@@ -119,14 +138,18 @@
 
 <script>
 import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
+import { getTagList } from "@/api/tag";
 import { formatData } from '@/utils/webUtils'
 export default {
   data() {
     return {
-      tableData: [],
+			tableData: [], //博客数据
+			tagData: [], //标签数据
+			tagValue: [], //保存选中标签id(编辑时)
       keyword: "",
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
+      total: 0, //总数量
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: '120px',
@@ -148,9 +171,17 @@ export default {
     params.append("currentPage", this.currentPage);
     params.append("pageSize", this.pageSize);
     getBlogList(params).then(response => {
-      this.tableData = response.data;
-      console.log(response);
-    });
+      this.tableData = response.data.records;
+      this.currentPage = response.data.current;
+      this.pageSize = response.data.size;
+      this.total = response.data.total;
+		});
+		
+		var tagParams = new URLSearchParams();
+		getTagList(tagParams).then(response => {
+			this.tagData = response.data.records;      
+			console.log(response);
+		});
   },
   methods: {
 		blogList: function() {
@@ -159,7 +190,10 @@ export default {
 			params.append("currentPage", this.currentPage);
 			params.append("pageSize", this.pageSize);
 			getBlogList(params).then(response => {
-				this.tableData = response.data;      
+				this.tableData = response.data.records;
+				this.currentPage = response.data.current;
+				this.pageSize = response.data.size;
+				this.total = response.data.total;     
 			});
 		},
 		getFormObject: function() {
@@ -183,14 +217,23 @@ export default {
       console.log("点击了添加博客");
 			this.dialogFormVisible = true;
 			this.form = this.getFormObject();
+			this.tagValue = [];
 			this.isEditForm = false;
     },
     handleEdit: function(row) {
-			console.log("点击了编辑");
+			console.log("点击了编辑");		
+			this.form = row;
+			this.tagValue = [];
+			var json = row.tagList;
+      for (var i = 0, l = json.length; i < l; i++) {
+        if (json[i] != null) {
+          this.tagValue.push(json[i]["uid"]);
+        }
+			}
+			console.log(this.tagValue, "编辑的tagValue");
 			this.dialogFormVisible = true;
 			this.isEditForm = true;
-			console.log(row);
-			this.form = row;
+			
     },
     handleDelete: function(row) {
 			console.log("点击了删除");
@@ -199,12 +242,24 @@ export default {
 			params.append("uid", row.uid);
 			deleteBlog(params).then(response=> {
 					console.log(response);
+					this.$message({
+              type: "success",
+              message: response.data
+          });
 					that.blogList();
 			})
 		},
+		handleCurrentChange: function(val) {
+      console.log("点击了换页");
+      this.currentPage = val;
+      this.blogList();
+    },
 		submitForm: function() {
-			console.log("点击了提交表单");
+			
+			this.form.taguid = this.tagValue.join(",");
+			console.log(this.form);
 			var params = formatData(this.form);
+			console.log("点击了提交表单", params);
 			if(this.isEditForm) {
 				editBlog(params).then(response=> {
 						console.log(response);
