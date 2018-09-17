@@ -82,7 +82,7 @@ public class HttpRequestUtil {
      */
     public static String sendGet(String url, String param,String token) {
     	
-    	if(StringUtils.isEntity(token)) {
+    	if(StringUtils.isEmpty(token)) {
     		return sendGet(url, param);
     	}
     	

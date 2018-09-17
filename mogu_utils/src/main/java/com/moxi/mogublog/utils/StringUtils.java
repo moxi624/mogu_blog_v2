@@ -28,7 +28,7 @@ public class StringUtils {
 	public static long getLong(String str,Long defaultData) {
 		Long lnum = defaultData;
 		
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			return lnum;
 		}
 		try {
@@ -42,7 +42,7 @@ public class StringUtils {
 	public static Boolean getBoolean(String str,Boolean defaultData) {
 		Boolean lnum = defaultData;
 		
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			return lnum;
 		}
 		try {
@@ -62,7 +62,7 @@ public class StringUtils {
 	public static int getInt(String str,Integer defaultData) {
 		int inum = defaultData;
 		
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			return inum;
 		}
 		
@@ -81,7 +81,7 @@ public class StringUtils {
 	 */
 	public static double getDouble(String str,Double defaultData) {
 		double dnum = defaultData;
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			return dnum;
 		}
 		try {
@@ -99,7 +99,7 @@ public class StringUtils {
 	 */
 	public static float getFloat(String str,Float defaultData) {
 		float dnum = defaultData;
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			return dnum;
 		}
 		try {
@@ -115,19 +115,29 @@ public class StringUtils {
 	 * @param s
 	 * @return
 	 */
-	public static Boolean isEntity(String s) {
+	public static Boolean isEmpty(String s) {
 		  if(s == null || s.length() <= 0) {
 			  return true;
 		  }
 		return false;
 	}
+	
+	/**
+	 * 判断字符串是否为空
+	 * @param str
+	 * @return
+	 */
+    public static boolean isNotEmpty(String str) {
+        return !StringUtils.isEmpty(str);
+    }
+    
 	/**
 	 * 按code截取字符串
 	 * @return
 	 */
 	public static String[] split(String str,String code) {
 		String[] split;
-		if(isEntity(str)) {
+		if(isEmpty(str)) {
 			split = null;
 		}else {
 			split = str.split(code);
@@ -144,7 +154,7 @@ public class StringUtils {
 		String[] split = split(str, code);
 		List<Long> lnums =  new ArrayList<>();
 		for(String s: split) {
-			if(!isEntity(s)) {
+			if(!isEmpty(s)) {
 				long lnum = getLong(s, 0l);
 				lnums.add(lnum);
 			}
@@ -244,5 +254,54 @@ public class StringUtils {
 	    }
 	    return s;
 	}
+	
+    public static boolean isNotBlank(String str) {
+        return !StringUtils.isBlank(str);
+    }
 
+    public static boolean isBlank(String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if ((Character.isWhitespace(str.charAt(i)) == false)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static boolean contains(String str, String searchChar) {
+        if (isEmpty(str)) {
+            return false;
+        }
+        return str.indexOf(searchChar) >= 0;
+    }
+    
+    /**
+     * 切割字符串
+     * @param str
+     * @param start
+     * @return
+     */
+    public static String substring(String str, int start) {
+        if (str == null) {
+            return null;
+        }
+
+        // handle negatives, which means last n characters
+        if (start < 0) {
+            start = str.length() + start; // remember start is negative
+        }
+
+        if (start < 0) {
+            start = 0;
+        }
+        if (start > str.length()) {
+            return "";
+        }
+
+        return str.substring(start);
+    }
 }

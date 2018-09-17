@@ -1,12 +1,9 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
  * <p>
@@ -17,25 +14,19 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
  * @since 2018-09-04
  */
 @TableName("t_admin")
-public class Admin extends Model<Admin> {
+public class Admin extends SuperEntity<Admin> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 唯一uid
-     */
-    @TableId(value = "uid", type = IdType.UUID)
-    private String uid;
-
-    /**
      * 用户名
      */
-    private String username;
+    private String userName;
 
     /**
      * 密码
      */
-    private String password;
+    private String passWord;
 
     /**
      * 性别(1:男2:女)
@@ -65,7 +56,7 @@ public class Admin extends Model<Admin> {
     /**
      * 邮箱验证码
      */
-    private String validcode;
+    private String validCode;
 
     /**
      * 自我简介最多150字
@@ -75,59 +66,35 @@ public class Admin extends Model<Admin> {
     /**
      * 登录次数
      */
-    private Integer logincount;
+    private Integer loginCount;
 
     /**
      * 最后登录时间
      */
-    private Date lastlogintime;
+    private Date lastLoginTime;
 
     /**
      * 最后登录IP
      */
-    private String lastloginip;
+    private String lastLoginIp;
 
-    /**
-     * 状态
-     */
-    private int status;
+	public String getUserName() {
+		return userName;
+	}
 
-    /**
-     * 创建时间
-     */
-    private Date createtime;
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    /**
-     * 更新时间
-     */
-    private Date updatetime;
+	public String getPassWord() {
+		return passWord;
+	}
 
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
 
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public int getGender() {
+	public int getGender() {
 		return gender;
 	}
 
@@ -136,129 +103,79 @@ public class Admin extends Model<Admin> {
 	}
 
 	public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getValidcode() {
-        return validcode;
-    }
-
-    public void setValidcode(String validcode) {
-        this.validcode = validcode;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public Integer getLogincount() {
-        return logincount;
-    }
-
-    public void setLogincount(Integer logincount) {
-        this.logincount = logincount;
-    }
-
-    public Date getLastlogintime() {
-        return lastlogintime;
-    }
-
-    public void setLastlogintime(Date lastlogintime) {
-        this.lastlogintime = lastlogintime;
-    }
-
-    public String getLastloginip() {
-        return lastloginip;
-    }
-
-    public void setLastloginip(String lastloginip) {
-        this.lastloginip = lastloginip;
-    }
-
-    public int getStatus() {
-		return status;
+		return avatar;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public Date getUpdatetime() {
-		return updatetime;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setUpdatetime(Date updatetime) {
-		this.updatetime = updatetime;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getValidCode() {
+		return validCode;
+	}
+
+	public void setValidCode(String validCode) {
+		this.validCode = validCode;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public Integer getLoginCount() {
+		return loginCount;
+	}
+
+	public void setLoginCount(Integer loginCount) {
+		this.loginCount = loginCount;
+	}
+
+	public Date getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(Date lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	public String getLastLoginIp() {
+		return lastLoginIp;
+	}
+
+	public void setLastLoginIp(String lastLoginIp) {
+		this.lastLoginIp = lastLoginIp;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	@Override
-    protected Serializable pkVal() {
-        return this.uid;
-    }
-
-    @Override
-    public String toString() {
-        return "Admin{" +
-        ", uid=" + uid +
-        ", username=" + username +
-        ", password=" + password +
-        ", gender=" + gender +
-        ", avatar=" + avatar +
-        ", email=" + email +
-        ", birthday=" + birthday +
-        ", mobile=" + mobile +
-        ", validcode=" + validcode +
-        ", summary=" + summary +
-        ", logincount=" + logincount +
-        ", lastlogintime=" + lastlogintime +
-        ", lastloginip=" + lastloginip +
-        ", status=" + status +
-        ", createtime=" + createtime +
-        ", updatetime=" + updatetime +
-        "}";
-    }
 }

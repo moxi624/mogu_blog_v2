@@ -12,7 +12,7 @@ public class IpUtils {
 	
 	public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if(!StringUtils.isEntity(ip) && !"unKnown".equalsIgnoreCase(ip)){
+        if(!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
             //多次反向代理后会有多个ip值，第一个ip才是真实ip
             int index = ip.indexOf(",");
             if(index != -1){
@@ -22,7 +22,7 @@ public class IpUtils {
             }
         }
         ip = request.getHeader("X-Real-IP");
-        if(!StringUtils.isEntity(ip)  && !"unKnown".equalsIgnoreCase(ip)){
+        if(!StringUtils.isEmpty(ip)  && !"unKnown".equalsIgnoreCase(ip)){
             return ip;
         }
         return request.getRemoteAddr();

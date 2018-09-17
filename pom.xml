@@ -26,6 +26,7 @@
   	<module>mogu_xo</module>
   	<module>mogu_admin</module>
   	<module>mogu_web</module>
+  	<module>mogu_picture</module>
   </modules>
   
 	<dependencies>

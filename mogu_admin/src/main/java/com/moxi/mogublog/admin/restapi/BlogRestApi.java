@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.SQLConf;
+import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
@@ -26,8 +28,6 @@ import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.SysConf;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -61,24 +61,24 @@ public class BlogRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
-		if(!StringUtils.isEntity(keyword)) {
-			queryWrapper.like(SysConf.title, keyword);
+		if(!StringUtils.isEmpty(keyword)) {
+			queryWrapper.like(SQLConf.TITLE, keyword);
 		}
 		
-		//分页插件还没导入，暂时分页没用
+		//分页 
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		
-		queryWrapper.eq(SysConf.status, EStatus.ENABLE);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		
-		queryWrapper.orderByDesc(SysConf.createtime);
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
 		for(Blog item : list) {
-			if(item != null && !StringUtils.isEntity(item.getTaguid())) {
-				String uids[] = item.getTaguid().split(",");
+			if(item != null && !StringUtils.isEmpty(item.getTagUid())) {
+				String uids[] = item.getTagUid().split(",");
 				List<Tag> tagList = new ArrayList<Tag>();
 				for(String uid : uids) {
 					Tag  tag = tagService.getById(uid);
@@ -100,22 +100,23 @@ public class BlogRestApi {
 			@ApiParam(name = "title", value = "博客标题",required = true) @RequestParam(name = "title", required = true) String title,
 			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
 			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "taguid", value = "标签uid",required = false) @RequestParam(name = "taguid", required = false) String taguid,			
-			@ApiParam(name = "photo", value = "标题图",required = false) @RequestParam(name = "photo", required = false) String photo	) {
+			@ApiParam(name = "tagUid", value = "标签uid",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
+			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
+			@ApiParam(name = "fileUid", value = "标题图Uid",required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
 		
-		if(StringUtils.isEntity(title) || StringUtils.isEntity(content)) {
+		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		Blog blog = new Blog();
 		blog.setTitle(title);
 		blog.setSummary(summary);
-		blog.setContent(content);
-		blog.setTaguid(taguid);
-		blog.setClickcount(0);
-		blog.setPhoto(photo);
+		blog.setContent(content);		
+		blog.setTagUid(tagUid);
+		blog.setClickCount(clickCount);
+		blog.setFileUid(fileUid);
 		blog.setStatus(EStatus.ENABLE);
-		blog.setCreatetime(new Date());
-		blog.setUpdatetime(new Date());
+		blog.setCreateTime(new Date());
+		blog.setUpdateTime(new Date());
 		blogService.save(blog);
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
@@ -127,18 +128,20 @@ public class BlogRestApi {
 			@ApiParam(name = "title", value = "博客标题",required = false) @RequestParam(name = "title", required = false) String title,
 			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
 			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "taguid", value = "标签UID",required = false) @RequestParam(name = "taguid", required = false) String taguid,			
-			@ApiParam(name = "photo", value = "标题图",required = false) @RequestParam(name = "photo", required = false) String photo ) {
+			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
+			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
+			@ApiParam(name = "fileUid", value = "标题图UID",required = false) @RequestParam(name = "fileUid", required = false) String fileUid ) {
 		
-		if(StringUtils.isEntity(uid)) {
+		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		Blog blog = blogService.getById(uid);
 		blog.setTitle(title);
 		blog.setSummary(summary);
 		blog.setContent(content);
-		blog.setTaguid(taguid);
-		blog.setPhoto(photo);
+		blog.setTagUid(tagUid);
+		blog.setFileUid(fileUid);
+		blog.setClickCount(clickCount);
 		blog.setStatus(EStatus.ENABLE);
 		blog.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
@@ -149,7 +152,7 @@ public class BlogRestApi {
 	public String delete(HttpServletRequest request,
 			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
 		
-		if(StringUtils.isEntity(uid)) {
+		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		Blog blog = blogService.getById(uid);

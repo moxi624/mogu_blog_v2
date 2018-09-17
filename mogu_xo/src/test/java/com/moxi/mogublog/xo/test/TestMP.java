@@ -22,7 +22,7 @@ public class TestMP {
 		GlobalConfig config = new GlobalConfig();
 		config.setActiveRecord(true) // 是否支持AR模式
 			  .setAuthor("xuzhixiang") // 作者
-			  .setOutputDir("G:\\study_work_space\\mywork4\\mogu_blog_v2\\mogu_xo\\src\\main\\java") // 生成路径
+			  .setOutputDir("G:\\study_work_space\\mywork6\\mogu_picture\\src\\main\\java") // 生成路径
 			  .setFileOverride(true)  // 文件覆盖
 			  .setIdType(IdType.UUID) // 主键策略
 			  .setServiceName("%sService")  // 设置生成的service接口的名字的首字母是否为I
@@ -34,7 +34,7 @@ public class TestMP {
 		DataSourceConfig  dsConfig  = new DataSourceConfig();
 		dsConfig.setDbType(DbType.MYSQL)  // 设置数据库类型
 				.setDriverName("com.mysql.jdbc.Driver")
-				.setUrl("jdbc:mysql://localhost:3306/mogu_blog")
+				.setUrl("jdbc:mysql://localhost:3306/mogu_picture")
 				.setUsername("root")
 				.setPassword("root");
 		 
@@ -44,11 +44,11 @@ public class TestMP {
 				.setDbColumnUnderline(true)  // 指定表名 字段名是否使用下划线
 				.setNaming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
 				.setTablePrefix("t_")
-				.setInclude("t_visitor");  // 生成的表
+				.setInclude("t_file");  // 生成的表
 		
 		//4. 包名策略配置 
 		PackageConfig pkConfig = new PackageConfig();
-		pkConfig.setParent("com.moxi.mogublog.xo")
+		pkConfig.setParent("com.moxi.mogublog.picture")
 				.setMapper("mapper")
 				.setService("service")
 				.setController("controller")

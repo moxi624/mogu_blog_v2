@@ -17,7 +17,7 @@
 	    
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
-	      	<span>{{scope.row.photo}}</span>
+	      	<span>{{scope.row.fileUid}}</span>
 	      </template>
 	    </el-table-column>
 		    
@@ -43,13 +43,13 @@
 
 			<el-table-column label="点击数" width="100">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.clickcount }}</span>
+	        <span>{{ scope.row.clickCount }}</span>
 	      </template>
 	    </el-table-column>
 	    
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
-	        <span >{{ scope.row.createtime }}</span>
+	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 	    
@@ -97,20 +97,24 @@
 		   	<el-form-item v-if="isEditForm == false" label="博客UID" :label-width="formLabelWidth" style="display: none;">
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
+
+				<el-form-item label="标题图" :label-width="formLabelWidth">
+		      <el-input v-model="form.fileUid" auto-complete="off"></el-input>
+		    </el-form-item>
 		    
-		    <el-form-item label="博客标题" :label-width="formLabelWidth" required>
+		    <el-form-item label="标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.title" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-        <el-form-item label="博客简介" :label-width="formLabelWidth" required>
+        <el-form-item label="简介" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="博客内容" :label-width="formLabelWidth" required>
+        <el-form-item label="内容" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
-				<el-form-item label="博客标签" :label-width="formLabelWidth" required>
+				<el-form-item label="标签" :label-width="formLabelWidth" required>
 				<el-select v-model="tagValue" multiple  size="small" placeholder="请选择" filterable >
 					<el-option
 				      v-for="item in tagData"
@@ -122,8 +126,8 @@
 				<!--<p v-if="labelValue.length > 2" style="color: red;">最多选择两个标签</p>-->
 		    </el-form-item>
 
-        <el-form-item label="标题图" :label-width="formLabelWidth">
-		      <el-input v-model="form.photo" auto-complete="off"></el-input>
+				<el-form-item label="点击数" :label-width="formLabelWidth" required>
+		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
 		    </el-form-item>
 
 		  </el-form>
@@ -159,8 +163,8 @@ export default {
         title: null,
         summary: null,
         content: null,
-        taguid: null,
-        photo: null,
+        tagUid: null,
+        fileUid: null,
       }
     };
   },
@@ -202,8 +206,8 @@ export default {
         title: null,
         summary: null,
         content: null,
-        taguid: null,
-        photo: null,				
+        tagUid: null,
+        fileUid: null,				
       };
       return formObject;
     },
@@ -256,17 +260,25 @@ export default {
     },
 		submitForm: function() {
 			
-			this.form.taguid = this.tagValue.join(",");
+			this.form.tagUid = this.tagValue.join(",");
 			console.log(this.form);
 			var params = formatData(this.form);
 			console.log("点击了提交表单", params);
 			if(this.isEditForm) {
 				editBlog(params).then(response=> {
 						console.log(response);
-						this.$message({
-              type: "success",
-              message: response.data
-            });
+						if(response.code == "success") {
+							this.$message({
+								type: "success",
+								message: response.data
+							});
+						} else {
+							this.$message({
+								type: "error",
+								message: response.data
+            	});
+						}
+						
 						this.dialogFormVisible = false;
 						this.blogList();						
 				})				

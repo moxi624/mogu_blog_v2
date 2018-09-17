@@ -1,6 +1,6 @@
 #app
 server:
-    port: 8080
+    port: 8601
 
 #spring
 spring:

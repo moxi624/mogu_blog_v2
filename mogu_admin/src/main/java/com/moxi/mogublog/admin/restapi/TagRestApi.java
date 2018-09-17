@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.SQLConf;
+import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.SysConf;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -51,16 +52,16 @@ public class TagRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
-		if(!StringUtils.isEntity(keyword)) {
-			queryWrapper.like(SysConf.content, keyword);
+		if(!StringUtils.isEmpty(keyword)) {
+			queryWrapper.like(SQLConf.CONTENT, keyword);
 		}
 		
 		//分页插件还没导入，暂时分页没用
 		Page<Tag> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
-		queryWrapper.eq(SysConf.status, EStatus.ENABLE);		
-		queryWrapper.orderByDesc(SysConf.createtime);		
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		IPage<Tag> pageList = tagService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -70,17 +71,17 @@ public class TagRestApi {
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
 			@ApiParam(name = "content", value = "标签正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "clickcount", value = "标签点击数",required = false) @RequestParam(name = "clickcount", required = false, defaultValue="0") Integer clickcount) {
+			@ApiParam(name = "clickCount", value = "标签点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue="0") Integer clickCount) {
 		
-		if(StringUtils.isEntity(content)) {
+		if(StringUtils.isEmpty(content)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		Tag tag = new Tag();
 		tag.setContent(content);
-		tag.setClickcount(0);
+		tag.setClickCount(0);
 		tag.setStatus(EStatus.ENABLE);
-		tag.setCreatetime(new Date());
-		tag.setUpdatetime(new Date());
+		tag.setCreateTime(new Date());
+		tag.setUpdateTime(new Date());
 		tag.insert();
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
@@ -90,15 +91,15 @@ public class TagRestApi {
 	public String edit(HttpServletRequest request,
 			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid,
 			@ApiParam(name = "content", value = "标签正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "clickcount", value = "标签点击数",required = false) @RequestParam(name = "clickcount", required = false, defaultValue="0") Integer clickcount	) {
+			@ApiParam(name = "clickCount", value = "标签点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue="0") Integer clickCount	) {
 		
-		if(StringUtils.isEntity(uid)) {
+		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
 		
 		Tag tag = tagService.getById(uid);
 		tag.setContent(content);
-		tag.setClickcount(clickcount);
+		tag.setClickCount(clickCount);
 		tag.setStatus(EStatus.ENABLE);
 		tag.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
@@ -109,7 +110,7 @@ public class TagRestApi {
 	public String delete(HttpServletRequest request,
 			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
 		
-		if(StringUtils.isEntity(uid)) {
+		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		Tag tag = tagService.getById(uid);

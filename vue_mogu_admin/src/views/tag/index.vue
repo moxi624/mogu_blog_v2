@@ -23,13 +23,13 @@
 	    
 	    <el-table-column label="点击数" width="100">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.clickcount }}</span>
+	        <span>{{ scope.row.clickCount }}</span>
 	      </template>
 	    </el-table-column>
 	    
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
-	        <span >{{ scope.row.createtime }}</span>
+	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 	    
@@ -83,7 +83,7 @@
 		    </el-form-item>
 		    
 		    <el-form-item label="标签点击数" :label-width="formLabelWidth">
-		      <el-input v-model="form.clickcount" auto-complete="off"></el-input>
+		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
 		    </el-form-item>
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
@@ -112,8 +112,8 @@ export default {
       isEditForm: false ,
       form: {
         uid: null,
-        content: null,
-        clickcount: null,
+        content: "",
+        clickCount: 0,
       }
     };
   },
@@ -145,7 +145,7 @@ export default {
       var formObject = {
 				uid: null,
         content: null,
-        clickcount: null,				
+        clickCount: null,				
       };
       return formObject;
     },		
@@ -179,8 +179,8 @@ export default {
       this.tagList();
     },
 		submitForm: function() {
-			console.log("点击了提交表单");
-			var params = formatData(this.form);
+			console.log("点击了提交表单", this.form);
+			var params = formatData(this.form);			
 			if(this.isEditForm) {
 				editTag(params).then(response=> {
 						console.log(response);
@@ -194,10 +194,18 @@ export default {
 			} else {
 				addTag(params).then(response=> {
 						console.log(response);
-						this.$message({
-              type: "success",
-              message: response.data
-            });
+						if(response.code == "success") {
+							this.$message({
+								type: "success",
+								message: response.data
+							});
+						} else {
+							this.$message({
+								type: "error",
+								message: response.data
+							});
+						}
+						
 						this.dialogFormVisible = false;
 						this.tagList();						
 				})

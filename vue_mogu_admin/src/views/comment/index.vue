@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-      博客管理
+      评论管理
   </div>
 </template>
 

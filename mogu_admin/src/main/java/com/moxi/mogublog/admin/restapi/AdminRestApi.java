@@ -70,12 +70,12 @@ public class AdminRestApi {
 			@ApiParam(name = "username", value = "用户名", required = true) @RequestParam(name = "username", required = true) String username,
 			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password) {
 		
-		if(StringUtils.isEntity(username) || StringUtils.isEntity(password)) {
+		if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
 		}		
 		if(username.equals("admin") && password.equals("admin")) {
 			Map<String, Object> result = new HashMap<>();
-			result.put("token", "admin");
+			result.put(SysConf.TOKEN, "admin");
 			return ResultUtil.result(SysConf.SUCCESS, result);
 		}
 		return ResultUtil.result(SysConf.ERROR, "error");
@@ -85,8 +85,8 @@ public class AdminRestApi {
 	@GetMapping(value = "/info")
 	public String info(@ApiParam(name = "token", value = "token令牌",required = false) @RequestParam(name = "token", required = false) String token) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("name", "admin");
-		map.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+		map.put(SysConf.TOKEN, "admin");
+		map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
 		List<String> list = new ArrayList<String>();
 		list.add("admin");
 		map.put("roles", list);		
