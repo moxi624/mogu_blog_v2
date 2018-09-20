@@ -27,6 +27,7 @@
   	<module>mogu_admin</module>
   	<module>mogu_web</module>
   	<module>mogu_picture</module>
+	<module>mogu_eureka</module>
   </modules>
   
 	<dependencies>

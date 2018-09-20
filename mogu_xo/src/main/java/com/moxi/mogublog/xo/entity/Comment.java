@@ -1,12 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
  * <p>
@@ -17,35 +12,29 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
  * @since 2018-09-08
  */
 @TableName("t_comment")
-public class Comment extends Model<Comment> {
+public class Comment extends SuperEntity<Comment> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 唯一uid
-     */
-    @TableId(value = "uid", type = IdType.UUID)
-    private String uid;
-
-    /**
      * 用户uid
      */
-    private String useruid;
+    private String user_uid;
 
     /**
      * 回复某条评论的uid
      */
-    private String touid;
+    private String to_uid;
 
     /**
      * 回复某个人的uid
      */
-    private String touseruid;
+    private String to_user_uid;
 
     /**
      * 用户名
      */
-    private String username;
+    private String user_name;
 
     /**
      * 评论内容
@@ -55,126 +44,58 @@ public class Comment extends Model<Comment> {
     /**
      * 博客uid
      */
-    private String bloguid;
+    private String blog_uid;
 
-    /**
-     * 状态
-     */
-    private int status;
-
-    /**
-     * 创建时间
-     */
-    private Date createtime;
-
-    /**
-     * 更新时间
-     */
-    private Date updatetime;
-    
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUseruid() {
-        return useruid;
-    }
-
-    public void setUseruid(String useruid) {
-        this.useruid = useruid;
-    }
-
-    public String getTouid() {
-        return touid;
-    }
-
-    public void setTouid(String touid) {
-        this.touid = touid;
-    }
-
-    public String getTouseruid() {
-        return touseruid;
-    }
-
-    public void setTouseruid(String touseruid) {
-        this.touseruid = touseruid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getBloguid() {
-        return bloguid;
-    }
-
-    public void setBloguid(String bloguid) {
-        this.bloguid = bloguid;
-    }
-
-    public int getStatus() {
-		return status;
+	public String getUser_uid() {
+		return user_uid;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setUser_uid(String user_uid) {
+		this.user_uid = user_uid;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
+	public String getTo_uid() {
+		return to_uid;
 	}
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setTo_uid(String to_uid) {
+		this.to_uid = to_uid;
 	}
 
-	public Date getUpdatetime() {
-		return updatetime;
+	public String getTo_user_uid() {
+		return to_user_uid;
 	}
 
-	public void setUpdatetime(Date updatetime) {
-		this.updatetime = updatetime;
+	public void setTo_user_uid(String to_user_uid) {
+		this.to_user_uid = to_user_uid;
+	}
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getBlog_uid() {
+		return blog_uid;
+	}
+
+	public void setBlog_uid(String blog_uid) {
+		this.blog_uid = blog_uid;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	@Override
-    protected Serializable pkVal() {
-        return this.uid;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-        ", uid=" + uid +
-        ", useruid=" + useruid +
-        ", touid=" + touid +
-        ", touseruid=" + touseruid +
-        ", username=" + username +
-        ", content=" + content +
-        ", bloguid=" + bloguid +
-        ", status=" + status +
-        ", createtime=" + createtime +
-        ", updatetime=" + updatetime +
-        "}";
-    }
 }
