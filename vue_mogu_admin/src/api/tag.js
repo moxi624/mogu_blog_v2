@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getTagList(params) {
   return request({
-    url: '/tag/getList',
+    url: process.env.ADMIN_API + '/tag/getList',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getTagList(params) {
 
 export function addTag(params) {
   return request({
-    url: '/tag/add',
+    url: process.env.ADMIN_API + '/tag/add',
     method: 'post',
     params
   })
@@ -18,7 +18,7 @@ export function addTag(params) {
 
 export function editTag(params) {
   return request({
-    url: '/tag/edit',
+    url: process.env.ADMIN_API + '/tag/edit',
     method: 'post',
     params
   })
@@ -26,7 +26,7 @@ export function editTag(params) {
 
 export function deleteTag(params) {
   return request({
-    url: '/tag/delete',
+    url: process.env.ADMIN_API + '/tag/delete',
     method: 'post',
     params
   })

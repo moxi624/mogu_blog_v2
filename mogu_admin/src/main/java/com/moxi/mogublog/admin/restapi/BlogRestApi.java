@@ -2,7 +2,6 @@ package com.moxi.mogublog.admin.restapi;
 
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +27,7 @@ import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -115,8 +115,6 @@ public class BlogRestApi {
 		blog.setClickCount(clickCount);
 		blog.setFileUid(fileUid);
 		blog.setStatus(EStatus.ENABLE);
-		blog.setCreateTime(new Date());
-		blog.setUpdateTime(new Date());
 		blogService.save(blog);
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getBlogList(params) {
   return request({
-    url: '/blog/getList',
+    url: process.env.ADMIN_API + '/blog/getList',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getBlogList(params) {
 
 export function addBlog(params) {
   return request({
-    url: '/blog/add',
+    url: process.env.ADMIN_API + '/blog/add',
     method: 'post',
     params
   })
@@ -18,7 +18,7 @@ export function addBlog(params) {
 
 export function editBlog(params) {
   return request({
-    url: '/blog/edit',
+    url: process.env.ADMIN_API + '/blog/edit',
     method: 'post',
     params
   })
@@ -26,7 +26,7 @@ export function editBlog(params) {
 
 export function deleteBlog(params) {
   return request({
-    url: '/blog/delete',
+    url: process.env.ADMIN_API + '/blog/delete',
     method: 'post',
     params
   })

@@ -2,7 +2,9 @@ package com.moxi.mougblog.base.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
@@ -25,7 +27,14 @@ public class SuperEntity<T extends Model> extends Model<T> {
 	private String uid; // 唯一uid	
 	
 	private int status; // 0 失效  1 生效
+	
+	/**
+	 * @TableField 配置需要填充的字段
+	 */
+	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private Date createTime; //创建时间
+	
+	@TableField(fill = FieldFill.INSERT_UPDATE)
 	private Date updateTime; //更新时间
 	
 	public SuperEntity() {

@@ -8,7 +8,7 @@ data:
     url: http://localhost:8800/
 file:
   upload:
-    path: E:/break_store/data/
+    path: E:/mogu_blog/data/
 
 #spring
 spring:

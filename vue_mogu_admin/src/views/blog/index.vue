@@ -225,15 +225,18 @@ export default {
 			this.isEditForm = false;
     },
     handleEdit: function(row) {
-			console.log("点击了编辑");		
+			console.log("点击了编辑");
+			console.log(row);		
 			this.form = row;
 			this.tagValue = [];
-			var json = row.tagList;
-      for (var i = 0, l = json.length; i < l; i++) {
-        if (json[i] != null) {
-          this.tagValue.push(json[i]["uid"]);
-        }
-			}
+			if(row.tagList) {
+				var json = row.tagList;
+				for (var i = 0, l = json.length; i < l; i++) {
+					if (json[i] != null) {
+						this.tagValue.push(json[i]["uid"]);
+					}
+				}
+			}			
 			console.log(this.tagValue, "编辑的tagValue");
 			this.dialogFormVisible = true;
 			this.isEditForm = true;

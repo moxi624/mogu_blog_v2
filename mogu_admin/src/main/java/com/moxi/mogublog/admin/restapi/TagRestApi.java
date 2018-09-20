@@ -1,8 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
@@ -80,8 +78,6 @@ public class TagRestApi {
 		tag.setContent(content);
 		tag.setClickCount(clickCount);
 		tag.setStatus(EStatus.ENABLE);
-		tag.setCreateTime(new Date());
-		tag.setUpdateTime(new Date());
 		tag.insert();
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}

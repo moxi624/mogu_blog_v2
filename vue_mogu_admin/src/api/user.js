@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/user/getList',
+    url: process.env.ADMIN_API + '/user/getList',
     method: 'get',
     params
   })

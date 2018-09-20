@@ -228,8 +228,14 @@ public class FileRestApi {
 	 * @param request
 	 * @return
 	 */
-
-	@RequestMapping("/getPicture")
+	
+	@ApiOperation(value="通过fileIds获取图片信息接口", notes="获取图片信息接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")			
+	})
+	
+	@GetMapping("/getPicture")
 	public Object getPicture(HttpServletResponse response,HttpServletRequest request ) {
 		String fileIds = request.getParameter("fileIds");
 		String code = request.getParameter("code");
@@ -268,8 +274,11 @@ public class FileRestApi {
 	 * @param request
 	 * @param response
 	 */
-
-	@RequestMapping("downloadFile")
+	@ApiOperation(value="图片下载接口", notes="图片下载接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String")
+	})
+	@GetMapping("downloadFile")
 	public Object downloadFile( HttpServletRequest request ,HttpServletResponse response) {
 		String fileId = request.getParameter("fileId");
 		
@@ -338,7 +347,15 @@ public class FileRestApi {
 	 * @param request
 	 * @return 
 	 */
-	@RequestMapping("/pictures")
+	@ApiOperation(value="多图片上传接口", notes="多图片上传接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "filedatas", value = "文件数据", required = true),
+			@ApiImplicitParam(name = "userId", value = "用户UID", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "sysUserId", value = "管理员UID", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "projectName", value = "项目名", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "sortName", value = "模块名", required = false, dataType = "String")
+	})
+	@GetMapping("/pictures")
 	public synchronized Object uploadPics(HttpServletResponse response,HttpServletRequest request, List<MultipartFile> filedatas) {
 		//上传者id    
 		String userId = request.getParameter("userId");

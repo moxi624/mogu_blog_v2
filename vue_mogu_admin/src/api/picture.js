@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getPictureList(params) {
   return request({
-    url: '/picture/getList',
+    url: process.env.ADMIN_API + '/picture/getList',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getPictureList(params) {
 
 export function addPicture(params) {
   return request({
-    url: '/picture/add',
+    url: process.env.ADMIN_API + '/picture/add',
     method: 'post',
     params
   })
@@ -18,7 +18,7 @@ export function addPicture(params) {
 
 export function editPicture(params) {
   return request({
-    url: '/picture/edit',
+    url: process.env.ADMIN_API + '/picture/edit',
     method: 'post',
     params
   })
@@ -26,7 +26,7 @@ export function editPicture(params) {
 
 export function deletPicture(params) {
   return request({
-    url: '/picture/delete',
+    url: process.env.ADMIN_API + '/picture/delete',
     method: 'post',
     params
   })

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(param) {
   return request({
-    url: '/admin/login',
+    url: process.env.ADMIN_API + '/admin/login',
     method: 'post',
     data: param
   })
@@ -10,7 +10,7 @@ export function login(param) {
 
 export function getInfo(token) {
   return request({
-    url: '/admin/info',
+    url: process.env.ADMIN_API + '/admin/info',
     method: 'get',
     params: { token }
   })
@@ -18,7 +18,7 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/admin/logout',
+    url: process.env.ADMIN_API + '/admin/logout',
     method: 'post'
   })
 }
