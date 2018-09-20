@@ -1,12 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
  * <p>
@@ -17,108 +12,39 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
  * @since 2018-09-08
  */
 @TableName("t_feedback")
-public class Feedback extends Model<Feedback> {
+public class Feedback extends SuperEntity<Feedback> {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 唯一uid
-     */
-    @TableId(value = "uid", type = IdType.UUID)
-    private String uid;	
 
     /**
      * 用户uid
      */
-    private String useruid;
+    private String user_uid;
 
     /**
      * 反馈的内容
      */
     private String content;
 
-    /**
-     * 状态
-     */
-    private int status;
-
-    /**
-     * 创建时间
-     */
-    private Date createtime;
-
-    /**
-     * 更新时间
-     */
-    private Date updatetime;
-
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getUseruid() {
-        return useruid;
-    }
-
-    public void setUseruid(String useruid) {
-        this.useruid = useruid;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    
-    public int getStatus() {
-		return status;
+	public String getUser_uid() {
+		return user_uid;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setUser_uid(String user_uid) {
+		this.user_uid = user_uid;
 	}
 
-	public Date getCreatetime() {
-		return createtime;
+	public String getContent() {
+		return content;
 	}
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
-
-	public Date getUpdatetime() {
-		return updatetime;
-	}
-
-	public void setUpdatetime(Date updatetime) {
-		this.updatetime = updatetime;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	@Override
-    protected Serializable pkVal() {
-        return this.uid;
-    }
-
-    @Override
-    public String toString() {
-        return "Feedback{" +
-        ", uid=" + uid +
-        ", useruid=" + useruid +
-        ", content=" + content +
-        ", status=" + status +
-        ", createtime=" + createtime +
-        ", updatetime=" + updatetime +
-        "}";
-    }
 }

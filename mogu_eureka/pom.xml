@@ -8,8 +8,8 @@
 	    <version>0.0.1-SNAPSHOT</version>
     </parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>mogu_picture</artifactId>
-	<name>mogu_picture</name>
+	<artifactId>mogu_eureka</artifactId>
+	<name>mogu_eureka</name>
 	<description>Demo project for Spring Boot</description>
 
 
@@ -32,26 +32,20 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
+		<!-- 添加eureka相关依赖 -->
 		<dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-        
-        <!-- 引入druid数据源 -->
-		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>druid</artifactId>
-		    <version>1.1.8</version>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka-server</artifactId>
+			<version>1.4.5.RELEASE</version>
 		</dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
-        </dependency>	
-        
+		
+		<!-- 添加spring security安全框架 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
         <!-- 热部署
         	devtolls可以实现页面热部署(即页面修改后会立即生效)，这个可以直接在application.properties文件中配置        	  
         	spring.thymeleaf.cache=false来实现 -->
@@ -59,7 +53,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>	
+        </dependency>
+        	
 	</dependencies>
 
 	
@@ -89,7 +84,7 @@
 	             <fork>true</fork> 
 	             <!-- 如果没有该配置，devtools不会生效 -->
 	            <!-- 指定该Main Class为全局的唯一入口 -->
-	            <mainClass>com.moxi.mogublog.picture.APP</mainClass>
+	            <mainClass>com.moxi.mogublog.eureka.APP</mainClass>
 	            <layout>ZIP</layout>
           	</configuration>
           <executions>
@@ -101,6 +96,6 @@
           </executions>
           </plugin>
         </plugins>
-        <finalName>mogu_picture</finalName>
+        <finalName>mogu_eureka</finalName>
     </build>
 </project>

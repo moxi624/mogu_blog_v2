@@ -22,15 +22,15 @@ public class File extends SuperEntity<File> {
 
     private Long fileSortId;
 
-    private String picExpandedName;
+    private String picExpandedName; // 图片扩展名
 
-    private String picName;
+    private String picName; //图片名称
 
-    private String picUrl;
+    private String picUrl; //图片url地址
 
-    private String sysUserId;
+    private String adminUid;
 
-    private String userId;
+    private String userUid;
 
 
     public String getFileOldName() {
@@ -81,20 +81,24 @@ public class File extends SuperEntity<File> {
         this.picUrl = picUrl;
     }
 
-    public String getSysUserId() {
-        return sysUserId;
-    }
+	public String getAdminUid() {
+		return adminUid;
+	}
 
-    public void setSysUserId(String sysUserId) {
-        this.sysUserId = sysUserId;
-    }
+	public void setAdminUid(String adminUid) {
+		this.adminUid = adminUid;
+	}
 
-    public String getUserId() {
-        return userId;
-    }
+	public String getUserUid() {
+		return userUid;
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public void setUserUid(String userUid) {
+		this.userUid = userUid;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }

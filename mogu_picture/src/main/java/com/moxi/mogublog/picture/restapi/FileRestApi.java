@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +36,11 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * <p>
  *  图片上传RestApi
@@ -46,6 +51,7 @@ import com.moxi.mougblog.base.enums.EStatus;
  */
 @RestController
 @RequestMapping("/file")
+@Api(value="文件RestApi",tags={"FileRestApi"})
 public class FileRestApi {
 	
 
@@ -71,9 +77,19 @@ public class FileRestApi {
 	 * @param request
 	 * @return file对象
 	 */
-	@ResponseBody
-	@RequestMapping("/picture")
-	public Object uploadPic(@RequestParam("filedata")MultipartFile filedata,HttpServletResponse response,HttpServletRequest request) {
+	
+	@ApiOperation(value="上传图片接口", notes="上传图片接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "filedata", value = "文件", required = true, dataType = "MultipartFile"),
+			@ApiImplicitParam(name = "userId", value = "用户UID", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "sysUserId", value = "管理员UID", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "projectName", value = "项目名", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "sortName", value = "模块名", required = false, dataType = "String")
+	})
+
+	@GetMapping("/picture")
+	public Object uploadPic(HttpServletResponse response, HttpServletRequest request, 
+			@RequestParam("filedata")MultipartFile filedata) {
 		//上传者id
 		String userId = request.getParameter("userId");
 		String sysUserId = request.getParameter("sysUserId");
@@ -171,8 +187,8 @@ public class FileRestApi {
     	 file.setPicName(newFileName);
     	 file.setPicUrl(picurl);
     	 file.setStatus(1);
-    	 file.setUserId(userId);
-    	 file.setSysUserId(sysUserId);
+    	 file.setUserUid(userId);
+    	 file.setAdminUid(sysUserId);
 
     	Boolean save = fileService.save(file);
     	if(save) {
@@ -212,7 +228,7 @@ public class FileRestApi {
 	 * @param request
 	 * @return
 	 */
-	@ResponseBody
+
 	@RequestMapping("/getPicture")
 	public Object getPicture(HttpServletResponse response,HttpServletRequest request ) {
 		String fileIds = request.getParameter("fileIds");
@@ -252,7 +268,7 @@ public class FileRestApi {
 	 * @param request
 	 * @param response
 	 */
-	//@ResponseBody
+
 	@RequestMapping("downloadFile")
 	public Object downloadFile( HttpServletRequest request ,HttpServletResponse response) {
 		String fileId = request.getParameter("fileId");
@@ -423,8 +439,8 @@ public class FileRestApi {
 				file.setPicName(newFileName);
 				file.setPicUrl(picurl);
 				file.setStatus(EStatus.ENABLE);
-				file.setUserId(userId);
-				file.setSysUserId(sysUserId);
+				file.setUserUid(userId);
+				file.setAdminUid(sysUserId);
 				fileService.save(file);//保存完的数据
 				lists.add(file);		    	 
 			}

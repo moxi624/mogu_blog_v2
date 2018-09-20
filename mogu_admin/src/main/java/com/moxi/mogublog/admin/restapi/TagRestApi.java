@@ -78,7 +78,7 @@ public class TagRestApi {
 		}
 		Tag tag = new Tag();
 		tag.setContent(content);
-		tag.setClickCount(0);
+		tag.setClickCount(clickCount);
 		tag.setStatus(EStatus.ENABLE);
 		tag.setCreateTime(new Date());
 		tag.setUpdateTime(new Date());
