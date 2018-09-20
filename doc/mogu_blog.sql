@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v12.09 (64 bit)
-MySQL - 10.1.32-MariaDB : Database - mogu_blog
+MySQL - 10.1.35-MariaDB : Database - mogu_blog
 *********************************************************************
 */
 
@@ -40,6 +40,9 @@ CREATE TABLE `t_admin` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员表';
 
+/*Data for the table `t_admin` */
+
+insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`valid_code`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`) values ('5821462bc29a4570ad80e87f3aa3f02d','admin','21232f297a57a5a743894a0e4a801fc3',1,'测试头像','xzx19950624@qq.com','2018-09-20','1597531973','123465789','测试表情',1,'2018-09-20 14:49:00','127.0.0.1',1,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 /*Table structure for table `t_blog` */
 
@@ -50,7 +53,7 @@ CREATE TABLE `t_blog` (
   `title` varchar(200) DEFAULT NULL COMMENT '博客标题',
   `summary` varchar(200) DEFAULT NULL COMMENT '博客简介',
   `content` longtext COMMENT '博客内容',
-  `tag_uid` varchar(36) NOT NULL COMMENT '标签uid',
+  `tag_uid` varchar(36) DEFAULT NULL COMMENT '标签uid',
   `click_count` int(11) DEFAULT '0' COMMENT '博客点击数',
   `collect_count` int(11) DEFAULT '0' COMMENT '博客收藏数',
   `file_uid` varchar(36) DEFAULT NULL COMMENT '标题图片uid',
@@ -60,6 +63,9 @@ CREATE TABLE `t_blog` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='博客表';
 
+/*Data for the table `t_blog` */
+
+insert  into `t_blog`(`uid`,`title`,`summary`,`content`,`tag_uid`,`click_count`,`collect_count`,`file_uid`,`status`,`create_time`,`update_time`) values ('1caabfedccc44916aef97ea636470118','测试2','测试简介','测试内容',NULL,1,0,NULL,1,'2018-09-20 15:51:49','2018-09-20 15:51:49'),('5354ece1473f408cad1847fe2d55c9a1','测试3','测试3','测试3','a9a747d944c24845815356f72723ef8e',1,0,NULL,1,'2018-09-20 16:42:16','2018-09-20 16:42:16'),('5821462bc29a4570ad80e87f3aa3f02d','测试博客','测试简介','测试内容','a9a747d944c24845815356f72723ef8e',12,0,NULL,1,'2018-09-20 14:47:53','2018-09-20 14:47:53');
 
 /*Table structure for table `t_collect` */
 
@@ -95,6 +101,7 @@ CREATE TABLE `t_comment` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论表';
 
+/*Data for the table `t_comment` */
 
 /*Table structure for table `t_feedback` */
 
@@ -110,6 +117,44 @@ CREATE TABLE `t_feedback` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='反馈表';
 
+/*Data for the table `t_feedback` */
+
+/*Table structure for table `t_picture` */
+
+DROP TABLE IF EXISTS `t_picture`;
+
+CREATE TABLE `t_picture` (
+  `uid` varchar(36) NOT NULL COMMENT '唯一uid',
+  `file_uid` varchar(36) DEFAULT NULL COMMENT '图片uid',
+  `pic_name` varchar(255) DEFAULT NULL COMMENT '图片名',
+  `picture_sort_uid` varchar(36) DEFAULT NULL COMMENT '分类uid',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片表';
+
+/*Data for the table `t_picture` */
+
+/*Table structure for table `t_picture_sort` */
+
+DROP TABLE IF EXISTS `t_picture_sort`;
+
+CREATE TABLE `t_picture_sort` (
+  `uid` varchar(36) NOT NULL COMMENT '唯一uid',
+  `file_uid` varchar(36) DEFAULT NULL COMMENT '分类图片uid',
+  `name` varchar(255) DEFAULT NULL COMMENT '分类名',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  `parent_uid` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片分类表';
+
+/*Data for the table `t_picture_sort` */
+
+insert  into `t_picture_sort`(`uid`,`file_uid`,`name`,`status`,`create_time`,`update_time`,`parent_uid`) values ('5a281aa35fa9408bb07c2fc9a990701f','发顺丰的','法式沙发',1,'2018-09-20 20:04:47','2018-09-20 20:04:47',NULL),('dd6728afaec34b64a12f560ca9931a7b','bbbb','测试',1,'2018-09-20 19:34:40','2018-09-20 19:34:40',NULL);
+
 /*Table structure for table `t_tag` */
 
 DROP TABLE IF EXISTS `t_tag`;
@@ -123,6 +168,10 @@ CREATE TABLE `t_tag` (
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='标签表';
+
+/*Data for the table `t_tag` */
+
+insert  into `t_tag`(`uid`,`content`,`status`,`click_count`,`create_time`,`update_time`) values ('a9a747d944c24845815356f72723ef8e','测试标签',1,2,'2018-09-20 14:51:39','2018-09-20 14:51:39');
 
 /*Table structure for table `t_user` */
 
@@ -147,6 +196,9 @@ CREATE TABLE `t_user` (
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+/*Data for the table `t_user` */
+
 /*Table structure for table `t_visitor` */
 
 DROP TABLE IF EXISTS `t_visitor`;
@@ -164,32 +216,7 @@ CREATE TABLE `t_visitor` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游客表';
 
-
-DROP TABLE IF EXISTS `t_picture`;
-
-CREATE TABLE `t_picture` (
-  `uid` varchar(36) NOT NULL COMMENT '唯一uid',
-  `file_uid` varchar(36) DEFAULT NULL COMMENT '图片uid',
-  `pic_name` varchar(255) DEFAULT NULL COMMENT '图片名',
-  `picture_sort_uid` varchar(36) DEFAULT NULL COMMENT '分类uid',  
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
-  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
-  PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片表';
-
-
-DROP TABLE IF EXISTS `t_picture_sort`;
-
-CREATE TABLE `t_picture_sort` (
-  `uid` varchar(36) NOT NULL COMMENT '唯一uid',
-  `file_uid` varchar(36) DEFAULT NULL COMMENT '分类图片uid',
-  `name` varchar(255) DEFAULT NULL COMMENT '分类名',  
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
-  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
-  PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片分类表';
+/*Data for the table `t_visitor` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
