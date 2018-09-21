@@ -20,7 +20,7 @@ public class File extends SuperEntity<File> {
 
     private Long fileSize;
 
-    private Long fileSortId;
+    private String fileSortUid;
 
     private String picExpandedName; // 图片扩展名
 
@@ -49,15 +49,15 @@ public class File extends SuperEntity<File> {
         this.fileSize = fileSize;
     }
 
-    public Long getFileSortId() {
-        return fileSortId;
-    }
+    public String getFileSortUid() {
+		return fileSortUid;
+	}
 
-    public void setFileSortId(Long fileSortId) {
-        this.fileSortId = fileSortId;
-    }
+	public void setFileSortUid(String fileSortUid) {
+		this.fileSortUid = fileSortUid;
+	}
 
-    public String getPicExpandedName() {
+	public String getPicExpandedName() {
         return picExpandedName;
     }
 

@@ -184,7 +184,7 @@ export default {
       var that = this;
       console.log(`当前页: ${val}`);
       this.currentPage = val; //改变当前所指向的页数
-      this.startGetList();
+      this.pictureSortList();
     },
     //点击新增
     handleAdd: function() {

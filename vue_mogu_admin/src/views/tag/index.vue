@@ -2,6 +2,8 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入博客名"></el-input>
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加标签</el-button>	              
 	    </div>
 
@@ -148,7 +150,10 @@ export default {
         clickCount: null,				
       };
       return formObject;
-    },		
+		},
+		handleFind: function() {
+			this.tagList();
+		},			
     handleAdd: function() {
 			this.dialogFormVisible = true;
 			this.form = this.getFormObject();
@@ -184,12 +189,21 @@ export default {
 			if(this.isEditForm) {
 				editTag(params).then(response=> {
 						console.log(response);
-						this.$message({
-              type: "success",
-              message: response.data
-            });
-						this.dialogFormVisible = false;
-						this.tagList();						
+						if(response.code == "success") {
+							this.$message({
+								type: "success",
+								message: response.data
+							});
+							this.dialogFormVisible = false;
+							this.tagList();		
+						} else {
+							this.$message({
+								type: "success",
+								message: response.data
+							});
+						}
+						
+										
 				})				
 			} else {
 				addTag(params).then(response=> {
@@ -199,17 +213,17 @@ export default {
 								type: "success",
 								message: response.data
 							});
+							this.dialogFormVisible = false;
+							this.tagList();	
 						} else {
 							this.$message({
 								type: "error",
 								message: response.data
 							});
 						}
-						
-						this.dialogFormVisible = false;
-						this.tagList();						
+								
 				})
-				
+	
 			}
 
 		},

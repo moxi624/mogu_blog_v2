@@ -19,8 +19,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,139 +68,7 @@ public class FileRestApi {
 	private String path;
 	
 	Logger log = Logger.getLogger(FileRestApi.class);
-	/**
-	 * 上传图片接口   传入 userId sysUserId ,有那个传哪个，记录是谁传的
-	 * 	projectName 传入的项目名称如 cfw 默认是cfw 
-	 * 	sortName 传入的模块名， 如 shop ，user ,等，不在数据库中记录的是不会上传的
-	 * @param filedata
-	 * @param response
-	 * @param request
-	 * @return file对象
-	 */
-	
-	@ApiOperation(value="上传图片接口", notes="上传图片接口")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "filedata", value = "文件", required = true, dataType = "MultipartFile"),
-			@ApiImplicitParam(name = "userId", value = "用户UID", required = false, dataType = "String"),
-			@ApiImplicitParam(name = "sysUserId", value = "管理员UID", required = false, dataType = "String"),
-			@ApiImplicitParam(name = "projectName", value = "项目名", required = false, dataType = "String"),
-			@ApiImplicitParam(name = "sortName", value = "模块名", required = false, dataType = "String")
-	})
 
-	@GetMapping("/picture")
-	public Object uploadPic(HttpServletResponse response, HttpServletRequest request, 
-			@RequestParam("filedata")MultipartFile filedata) {
-		//上传者id
-		String userId = request.getParameter("userId");
-		String sysUserId = request.getParameter("sysUserId");
-		String projectName = request.getParameter("projectName");//项目名   
-		String sortName = request.getParameter("sortName");//模块名
-		
-		//projectName现在默认cfw
-		if(StringUtils.isEmpty(projectName)) {
-			projectName = "cfw";
-		}
-
-		//不登录就不让上传，先不做要求
-		/*if(userId>0) {//用户登录的，去数据不？？？？service不在一起不好取
-			
-		}else{
-			if(sysUserId>0) {//
-			}else {//没登录，不能上传
-				msg = "请登录";
-				return ResultUtil.result(SysConf.ERROR, msg);
-			}
-		}*/
-		log.info("====fileSorts====" + projectName + " ###### " + sortName);
-		QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq(SQLConf.SORT_NAME, sortName);
-		queryWrapper.eq(SQLConf.PROJECT_NAME, projectName);
-		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-		List<FileSort> fileSorts = fileSortService.list(queryWrapper);	
-				
-		System.out.println("fileSorts"+JsonUtils.objectToJson(fileSorts));
-		FileSort fileSort = null;
-		if(fileSorts.size()>0) {
-			fileSort = fileSorts.get(0);
-			log.info("====fileSort===="+JsonUtils.objectToJson(fileSort));
-		}
-		
-		if(fileSort!= null) {
-			
-		}else {
-			return ResultUtil.result(SysConf.ERROR, "文件不被允许上传");
-		}
-		
-		String sortUrl = fileSort.getUrl();
-		//String 
-		if(StringUtils.isEmpty(sortUrl)) {
-			sortUrl = "cfw/common/";
-		}else {
-			sortUrl =fileSort.getUrl(); 
-		}
-		String oldName = filedata.getOriginalFilename();
-		long size = filedata.getSize();
-		//以前的文件名
-		log.info("上传文件====："+oldName);
-		//文件大小
-    	log.info("文件大小====："+size);
-    	//获取扩展名，默认是jpg
-    	String picExpandedName =getPicExpandedName(oldName);
-		//获取新文件名
-    	String newFileName=String.valueOf(System.currentTimeMillis()+"."+picExpandedName);
-		
-    	//文件路径问题
-    	log.info("path===="+path);
-    	log.info("sortUrl===="+sortUrl);
-    	
-    	String newPath = path +sortUrl+"/"+picExpandedName+"/"+DateUtil.getYears()+"/"+DateUtil.getMonth()+"/" +DateUtil.getDay()+"/";
-    	//path = path.replaceAll("//", "/");
-    	
-    	String picurl = sortUrl+"/"+picExpandedName+"/"+DateUtil.getYears()+"/"+DateUtil.getMonth()+"/" +DateUtil.getDay()+"/"+newFileName;
-    	log.info("newPath===="+newPath);
-    	
-    	String saveUrl = newPath +newFileName;
-    	
-    	File file1=new File(newPath);
-		  if(!file1.exists()){
-			 file1.mkdirs();
-		  }
-    	
-    	 try {
-			File saveFile = new File(saveUrl); 
-			saveFile.createNewFile();
-			 filedata.transferTo(saveFile);
-		} catch (Exception e) {
-			log.info("==上传文件异常===url:"+saveUrl+"-----");
-			e.printStackTrace();
-			return ResultUtil.result(SysConf.ERROR, "文件上传失败");
-		}
-    	
-    	 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
-    	
-    	 file.setCreateTime(new Date(System.currentTimeMillis()));
-    	 //file.setFileSortId(fileSort.getFileSortId());
-    	 file.setFileSortId(1l);
-    	 file.setFileOldName(oldName);
-    	 file.setFileSize(size);
-    	 file.setPicExpandedName(picExpandedName);
-    	 file.setPicName(newFileName);
-    	 file.setPicUrl(picurl);
-    	 file.setStatus(1);
-    	 file.setUserUid(userId);
-    	 file.setAdminUid(sysUserId);
-
-    	Boolean save = fileService.save(file);
-    	if(save) {
-    		return ResultUtil.result(SysConf.SUCCESS, file);	
-    	} else {
-    		return ResultUtil.result(SysConf.ERROR, "上传失败");
-    	}
-		
-		
-	}
-	
-	
 	/**
 	 * 获取后缀名
 	 * @param fileName
@@ -340,7 +208,7 @@ public class FileRestApi {
 	/**
 	 * 多文件上传
 	 * 上传图片接口   传入 userId sysUserId ,有那个传哪个，记录是谁传的,
-	 * 	projectName 传入的项目名称如 cfw 默认是cfw 
+	 * 	projectName 传入的项目名称如 base 默认是base 
 	 * 	sortName 传入的模块名， 如 shop ，user ,等，不在数据库中记录的是不会上传的
 	 * @param filedata
 	 * @param response
@@ -350,34 +218,30 @@ public class FileRestApi {
 	@ApiOperation(value="多图片上传接口", notes="多图片上传接口")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "filedatas", value = "文件数据", required = true),
-			@ApiImplicitParam(name = "userId", value = "用户UID", required = false, dataType = "String"),
+			@ApiImplicitParam(name = "userUid", value = "用户UID", required = false, dataType = "String"),
 			@ApiImplicitParam(name = "sysUserId", value = "管理员UID", required = false, dataType = "String"),
 			@ApiImplicitParam(name = "projectName", value = "项目名", required = false, dataType = "String"),
 			@ApiImplicitParam(name = "sortName", value = "模块名", required = false, dataType = "String")
 	})
-	@GetMapping("/pictures")
+	@PostMapping("/pictures")
 	public synchronized Object uploadPics(HttpServletResponse response,HttpServletRequest request, List<MultipartFile> filedatas) {
 		//上传者id    
-		String userId = request.getParameter("userId");
-		String sysUserId = request.getParameter("sysUserId");
+		String userUid = request.getParameter("userUid"); //如果是用户上传，则包含用户uid
+		String adminUid = request.getParameter("adminUid"); //如果是管理员上传，则包含管理员uid
 		String projectName = request.getParameter("projectName");//项目名   
 		String sortName = request.getParameter("sortName");//模块名
 		
-		//projectName现在默认cfw
+		//projectName现在默认base
 		if(StringUtils.isEmpty(projectName)) {
-			projectName = "cfw";
+			projectName = "base";
 		}
 		
-		//不登录就不让上传，先不做要求
-		/*if(userId>0) {//用户登录的，去数据不？？？？service不在一起不好取
-			
+		//这里可以检测用户上传，如果不是网站的用户或会员就不能调用
+		if(StringUtils.isEmpty(userUid) && StringUtils.isEmpty(adminUid)) {
+			return ResultUtil.result(SysConf.ERROR, "请先注册");
 		}else{
-			if(sysUserId>0) {//
-			}else {//没登录，不能上传
-				msg = "请登录";
-				return ResultUtil.result(SysConf.ERROR, msg);
-			}
-		}*/
+
+		}
 		log.info("####### fileSorts" + projectName + " ###### " + sortName);
 		
 		QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
@@ -387,22 +251,20 @@ public class FileRestApi {
 		List<FileSort> fileSorts = fileSortService.list(queryWrapper);	
 		
 		System.out.println("fileSorts"+JsonUtils.objectToJson(fileSorts));
+		
 		FileSort fileSort = null;
-		if(fileSorts.size()>0) {
+		if(fileSorts.size() > 0) {
 			fileSort = fileSorts.get(0);
 			log.info("====fileSort===="+JsonUtils.objectToJson(fileSort));
-		}
-		
-		if(fileSort!= null) {
-			
-		}else {
+		} else {
 			return ResultUtil.result(SysConf.ERROR, "文件不被允许上传");
-		}
+		}		
 		
 		String sortUrl = fileSort.getUrl();
-		//String 
+		
+		//判断url是否为空，如果为空，使用默认
 		if(StringUtils.isEmpty(sortUrl)) {
-			sortUrl = "cfw/common/";
+			sortUrl = "base/common/";
 		}else {
 			sortUrl =fileSort.getUrl(); 
 		}
@@ -425,7 +287,6 @@ public class FileRestApi {
 				log.info(newFileName+":"+oldName);
 				//文件路径问题
 				log.info("path====" + path);
-				log.info("sortUrl====" + sortUrl);
 				String newPath = path + sortUrl + "/" + picExpandedName + "/" + DateUtil.getYears() + "/"
 						+ DateUtil.getMonth() + "/" + DateUtil.getDay() + "/";
 				//path = path.replaceAll("//", "/");
@@ -448,17 +309,16 @@ public class FileRestApi {
 				}
 				com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
 				file.setCreateTime(new Date(System.currentTimeMillis()));
-				//file.setFileSortId(fileSort.getFileSortId());
-				file.setFileSortId(1l);
+				file.setFileSortUid(fileSort.getUid());				
 				file.setFileOldName(oldName);
 				file.setFileSize(size);
 				file.setPicExpandedName(picExpandedName);
 				file.setPicName(newFileName);
 				file.setPicUrl(picurl);
 				file.setStatus(EStatus.ENABLE);
-				file.setUserUid(userId);
-				file.setAdminUid(sysUserId);
-				fileService.save(file);//保存完的数据
+				file.setUserUid(userUid);
+				file.setAdminUid(adminUid);
+				fileService.save(file);
 				lists.add(file);		    	 
 			}
 			 //保存成功返回数据

@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.restapi;
 
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,21 +70,24 @@ public class PictureRestApi {
 	@ApiOperation(value="增加图片", notes="增加图片", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
-			@ApiParam(name = "fileUid", value = "图片UID",required = false) @RequestParam(name = "fileUid", required = false) String fileUid,
-			@ApiParam(name = "picName", value = "图片名称",required = false) @RequestParam(name = "picName", required = false) String picName,
+			@ApiParam(name = "fileUids", value = "图片UIDs",required = false) @RequestParam(name = "fileUids", required = false) String fileUids,			
 			@ApiParam(name = "pictureSortUid", value = "图片分类UID",required = false) @RequestParam(name = "pictureSortUid", required = false) String pictureSortUid) {
 		
-		if(StringUtils.isEmpty(fileUid) || StringUtils.isEmpty(pictureSortUid)) {
+		if(StringUtils.isEmpty(fileUids) || StringUtils.isEmpty(pictureSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
-		Picture picture = new Picture();
-		picture.setFileUid(fileUid);
-		picture.setPicName(picName);
-		picture.setPictureSortUid(pictureSortUid);
-		picture.setStatus(EStatus.ENABLE);
-		picture.setCreateTime(new Date());
-		picture.setUpdateTime(new Date());
-		picture.insert();
+		List<String> list = StringUtils.changeStringToString(fileUids, ",");
+		if(list.size() > 0) {
+			for(String fileUid : list) {
+				Picture picture = new Picture();
+				picture.setFileUid(fileUid);			
+				picture.setPictureSortUid(pictureSortUid);
+				picture.setStatus(EStatus.ENABLE);
+				picture.insert();	
+			}				
+		}
+		
+		
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
