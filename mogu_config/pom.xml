@@ -13,10 +13,12 @@
 	<artifactId>mogu_config</artifactId>
 	<name>mogu_config</name>
 	<dependencies> 
-        <!-- 引入jdbc相关依赖 -->
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
+
+		<!-- 引入druid数据源 -->
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>druid</artifactId>
+		    <version>1.1.8</version>
 		</dependency>
     </dependencies>
     

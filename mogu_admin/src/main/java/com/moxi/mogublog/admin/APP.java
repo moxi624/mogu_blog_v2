@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.admin.config",
+        "com.moxi.mogublog.config",
         "com.moxi.mogublog.admin.restapi",
         "com.moxi.mogublog.xo.service"})
 public class APP {

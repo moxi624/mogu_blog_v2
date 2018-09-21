@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.config;
+package com.moxi.mogublog.config.mybatis;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.config;
+package com.moxi.mogublog.config.mybatis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
