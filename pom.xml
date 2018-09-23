@@ -30,145 +30,17 @@
 	<module>mogu_eureka</module>
   </modules>
   
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-				
-		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-  		<!-- mp依赖
-  			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
-  		 -->
-        <!-- mybatis-plus begin -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.0-RC1</version>
-        </dependency>
-        <!-- mybatis-plus end -->
-    	
-        <dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		
-		<dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-        </dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-		
-		<!--solr客户端solrj的依赖 -->
-        <dependency>  
-            <groupId>org.apache.solr</groupId>  
-            <artifactId>solr-solrj</artifactId>  
-        </dependency>
-        
-		<!-- Redis客户端 -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-		
-		<!--solr客户端solrj的依赖 -->
-        <dependency>  
-            <groupId>org.apache.solr</groupId>  
-            <artifactId>solr-solrj</artifactId>    
-        </dependency> 
-		
-		<!-- 格式化对象，方便输出日志 -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.6</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-		
-		<!-- sfl4j -->
-		 <dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.apache.velocity</groupId>
-		    <artifactId>velocity-engine-core</artifactId>
-		    <version>2.0</version>
-		</dependency>
-		
-		<!-- email -->
-		<dependency>
-		    <groupId>javax.mail</groupId>
-		    <artifactId>mail</artifactId>
-		    <version>1.4</version>
-		</dependency>
-		
-		<!-- 引入Json相关 -->
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.4</version>
-			<classifier>jdk15</classifier>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		
-		<dependency>
-    		<groupId>commons-codec</groupId>
-    		<artifactId>commons-codec</artifactId>
-		</dependency>
-
-		<!-- spring-security 和 jwt -->  
-       <!--  <dependency>  
-            <groupId>org.springframework.boot</groupId>  
-           <artifactId>spring-boot-starter-security</artifactId>  
-       </dependency> -->
-      <dependency>  
-           <groupId>io.jsonwebtoken</groupId>  
-           <artifactId>jjwt</artifactId>  
-            <version>0.7.0</version>  
-      </dependency>
-      				    
-	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Camden.SR3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	
 	<!-- 如果mapper.xml是放在src/main/java目录下，需配置以下-->
 	<build>

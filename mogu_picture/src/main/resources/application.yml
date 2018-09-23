@@ -5,15 +5,17 @@ server:
 #Data image url
 data:
   image:
-    url: http://localhost:8800/
+    url: http://localhost:8600/
 file:
   upload:
-    path: E:/mogu_blog/data/
+    path: D:/mogu_blog/data/
 
 #spring
 spring:
   thymeleaf:
     cache: true   #关闭缓存
+  application:
+    name: mogu-picture
   devtools:
     restart:
       enabled: true #启动热部署
@@ -46,7 +48,20 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
     
-
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
+    metadata-map:
+      zone: ABC      # eureka可以理解的元数据
+      lilizhou: BBC  # 不会影响客户端行为
+    lease-renewal-interval-in-seconds: 5
+    
 #mybatis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

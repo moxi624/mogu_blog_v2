@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -24,6 +25,12 @@ public class Picture extends SuperEntity<Picture>{
 	private String picName; //图片名称
 
 	private String pictureSortUid; //所属相册分类id
+	
+    /**
+     * 以下字段不存入数据库，封装为了方便使用 
+     */
+    @TableField(exist = false)
+    private String pictureUrl;  //图片路径
 
 
 	public String getFileUid() {
@@ -54,4 +61,12 @@ public class Picture extends SuperEntity<Picture>{
 		return serialVersionUID;
 	}
 
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+	
 }

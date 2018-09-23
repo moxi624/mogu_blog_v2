@@ -1,5 +1,9 @@
 package com.moxi.mogublog.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -34,5 +38,26 @@ public class WebUtils {
         input = input.replaceAll("\n", "<br/>");  //不能把\n的过滤放在前面，因为还要对<和>过滤，这样就会导致<br/>失效了
         return input;
     }
+    
+    /**
+     * 格式化数据获取图片列表
+     * @param result
+     * @return
+     */
+	@SuppressWarnings("unchecked")
+	public static List<String> getPicture(String result) {
+
+		List<String> picUrls = new ArrayList<>();
+		Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+		if("success".equals(picMap.get("code"))) {
+			List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
+			if(picData.size() > 0) {
+				for(int i = 0;i<picData.size();i++) {
+					picUrls.add((String) picData.get(i).get("url"));
+				}
+			}
+		}
+		return picUrls;
+	}
 
 }

@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +42,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * <p>
@@ -62,13 +65,17 @@ public class FileRestApi {
 	private FileSortService fileSortService;
 	
 	@Value(value="${data.image.url}")
-	private String img_host;
+	private String imgHost;
 	
 	@Value(value="${file.upload.path}") //获取上传路径
 	private String path;
 	
 	Logger log = Logger.getLogger(FileRestApi.class);
-
+	
+	@RequestMapping(value = "/hello", method=RequestMethod.GET)
+	public String hello() {
+		return "hello";
+	}
 	/**
 	 * 获取后缀名
 	 * @param fileName
@@ -98,15 +105,11 @@ public class FileRestApi {
 	 */
 	
 	@ApiOperation(value="通过fileIds获取图片信息接口", notes="获取图片信息接口")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
-			@ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")			
-	})
-	
 	@GetMapping("/getPicture")
-	public Object getPicture(HttpServletResponse response,HttpServletRequest request ) {
-		String fileIds = request.getParameter("fileIds");
-		String code = request.getParameter("code");
+	public String getPicture(
+			@ApiParam(name = "fileIds", value = "文件ids",required = false) @RequestParam(name = "fileIds", required = false) String fileIds,
+			@ApiParam(name = "code", value = "切割符",required = false) @RequestParam(name = "code", required = false) String code) {
+
 		if(StringUtils.isEmpty(code)) {
 			code = ",";
 		}

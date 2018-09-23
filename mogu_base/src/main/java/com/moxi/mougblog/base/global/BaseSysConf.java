@@ -13,5 +13,8 @@ public class BaseSysConf {
 	public final static String STATUS = "status";
 	public final static String CREATE_TIME = "createTime";
 	public final static String TOKEN = "token";
+	
+	public final static String CODE = "code";
+	public final static String DATA = "data";
 		
 }

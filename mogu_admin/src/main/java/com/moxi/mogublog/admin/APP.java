@@ -2,6 +2,8 @@ package com.moxi.mogublog.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -15,8 +17,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableTransactionManagement
 @SpringBootApplication
 @EnableSwagger2
+@EnableEurekaClient
+@EnableFeignClients("com.moxi.mogublog.admin.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
+        "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",
         "com.moxi.mogublog.xo.service"})
 public class APP {

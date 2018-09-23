@@ -1,11 +1,21 @@
 #app
 server:
     port: 8601
+    
+#Data image url
+data:
+  image:
+    url: http://localhost:8600/
+file:
+  upload:
+    path: D:/mogu_blog/data/    
 
 #spring
 spring:
   thymeleaf:
     cache: true   #关闭缓存
+  application:
+    name: mogu-admin
   devtools:
     restart:
       enabled: true #启动热部署
@@ -39,6 +49,23 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
     
+#eureka相关配置
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
+    metadata-map:
+      zone: ABC      # eureka可以理解的元数据
+      lilizhou: BBC  # 不会影响客户端行为
+    lease-renewal-interval-in-seconds: 5
+    
+# 或者：
+feign.hystrix.enabled: false ## 索性禁用feign的hystrix支持    
 
 #mybatis
 mybatis-plus:
