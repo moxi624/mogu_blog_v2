@@ -19,7 +19,7 @@
 	    
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
-	      	<span>{{scope.row.fileUid}}</span>
+	      	<img  v-if="scope.row.photoList" :src="scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
 	      </template>
 	    </el-table-column>
 		    
@@ -100,10 +100,16 @@
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
 
-				<el-form-item label="标题图" :label-width="formLabelWidth">
-		      <el-input v-model="form.fileUid" auto-complete="off"></el-input>
+					<el-form-item label="图片" :label-width="formLabelWidth">
+	    		<div class="imgBody" v-if="form.photoList">
+	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="showIcon"></i>
+	    			<img @mouseover="showIcon" @mouseout="hideIcon" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    		</div>
+	    		<div v-else class="uploadImgBody" @click="checkPhoto">
+ 		 			<i class="el-icon-plus avatar-uploader-icon"></i>
+		    	</div>				
 		    </el-form-item>
-		    
+
 		    <el-form-item label="标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.title" auto-complete="off"></el-input>
 		    </el-form-item>
@@ -139,6 +145,13 @@
 		  </div>
 		</el-dialog>
 
+		<!--
+        	作者：xzx19950624@qq.com
+        	时间：2018年9月23日16:16:09
+         描述：图片选择器
+        -->
+		<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
+
   </div>
 </template>
 
@@ -146,7 +159,11 @@
 import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { formatData } from '@/utils/webUtils'
+import CheckPhoto from "../../components/CheckPhoto";
 export default {
+	components: {  
+    CheckPhoto
+  },
   data() {
     return {
 			tableData: [], //博客数据
@@ -159,14 +176,18 @@ export default {
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: '120px',
-      isEditForm: false ,
+			isEditForm: false ,
+			photoVisible: false, //控制图片选择器的显示
+			photoList: [],
+			fileIds: "",
+			icon: false, //控制删除图标的显示
       form: {
         uid: null,
         title: null,
         summary: null,
         content: null,
         tagUid: null,
-        fileUid: null,
+				fileUid: null,				        
       }
     };
   },
@@ -177,6 +198,7 @@ export default {
     params.append("currentPage", this.currentPage);
     params.append("pageSize", this.pageSize);
     getBlogList(params).then(response => {
+			console.log("博客列表", response);
       this.tableData = response.data.records;
       this.currentPage = response.data.current;
       this.pageSize = response.data.size;
@@ -212,6 +234,41 @@ export default {
         fileUid: null,				
       };
       return formObject;
+		},
+		//弹出选择图片框
+    checkPhoto: function() {
+      console.log(this.photoVisible);
+      console.log("点击了选择图");
+      this.photoVisible = true;
+      console.log(this.photoVisible);
+    },
+    getChooseData(data) {
+      var that = this;
+      this.photoVisible = false;
+      this.photoList = data.photoList;
+      this.fileIds = data.fileIds;
+      var fileId = this.fileIds.replace(",", "");
+      if (this.photoList.length >= 1) {
+        this.form.fileUid = fileId;
+        this.form.photoUrl = this.photoList[0];
+      }
+    },
+    //关闭模态框
+    cancelModel() {
+      this.photoVisible = false;
+		},
+		deletePhoto: function() {
+			console.log("点击了删除图片");
+		},
+		showIcon: function() {
+			console.log("显示图标");
+		},
+		hideIcon: function() {
+			console.log("隐藏图标");
+		},
+		checkPhoto() {
+      this.photoList = [];
+      this.photoVisible = true;
     },
 		submitStr: function(str, index) {
 			if(str.length > index) {
@@ -231,8 +288,9 @@ export default {
 			this.isEditForm = false;
     },
     handleEdit: function(row) {
-			console.log("点击了编辑");
-			console.log(row);		
+      if (row.photoList == undefined) {
+        row.photoList = [];
+      }
 			this.form = row;
 			this.tagValue = [];
 			if(row.tagList) {
@@ -310,3 +368,49 @@ export default {
   }
 };
 </script>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  margin: 0, 0, 0, 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+}
+.imgBody {
+  width: 150px;
+  height: 150px;
+  border: solid 2px #ffffff;
+  float: left;
+  position: relative;
+}
+.uploadImgBody {
+  margin-left: 5px;
+  width: 150px;
+  height: 150px;
+  border: dashed 1px #c0c0c0;
+  float: left;
+  position: relative;
+}
+.uploadImgBody :hover {
+  border: dashed 1px #00ccff;
+}
+.inputClass {
+  position: absolute;
+}
+.img {
+  width: 100%;
+  height: 100%;
+}
+</style>

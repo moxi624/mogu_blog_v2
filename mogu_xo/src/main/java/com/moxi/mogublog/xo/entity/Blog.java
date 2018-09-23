@@ -60,6 +60,9 @@ public class Blog extends SuperEntity<Blog> {
      */
     @TableField(exist = false)
     private List<Tag> tagList; //标签,一篇博客对应多个标签
+    
+    @TableField(exist = false)
+    private List<String> photoList; //标题图
 
 
 	public String getTitle() {
@@ -145,5 +148,15 @@ public class Blog extends SuperEntity<Blog> {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-    
+
+
+	public List<String> getPhotoList() {
+		return photoList;
+	}
+
+
+	public void setPhotoList(List<String> photoList) {
+		this.photoList = photoList;
+	}
+
 }

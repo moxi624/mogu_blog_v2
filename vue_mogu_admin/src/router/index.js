@@ -90,13 +90,13 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/pictureSort',
     name: '图片管理',
-    meta: { title: '图片类别管理', icon: 'example' },
+    meta: { title: '图片管理', icon: 'example' },
     children: [
       {
         path: 'pictureSort',
         name: '图片类别管理',
         component: () => import('@/views/picture/pictureSort'),
-        meta: { title: '图片类别管理', icon: 'table' }
+        meta: { title: '图片管理', icon: 'table' }
       },
       {
         path: 'picture',

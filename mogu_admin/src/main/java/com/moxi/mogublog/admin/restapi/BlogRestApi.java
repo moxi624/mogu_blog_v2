@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
@@ -51,6 +54,12 @@ public class BlogRestApi {
 	@Autowired
 	TagService tagService;
 	
+	@Autowired
+	private PictureFeignClient pictureFeignClient;
+	
+	@Value(value="${data.image.url}")
+	private String IMG_HOST;
+	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
 	@ApiOperation(value="获取博客列表", notes="获取博客列表", response = String.class)	
@@ -76,7 +85,9 @@ public class BlogRestApi {
 		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
+		
 		for(Blog item : list) {
+			//获取标签
 			if(item != null && !StringUtils.isEmpty(item.getTagUid())) {
 				String uids[] = item.getTagUid().split(",");
 				List<Tag> tagList = new ArrayList<Tag>();
@@ -88,6 +99,17 @@ public class BlogRestApi {
 				}
 				item.setTagList(tagList);
 			}
+			
+			//获取标题图片
+			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
+				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
+				List<String> picList = WebUtils.getPicture(result);
+				log.info("##### picList: #######" + picList);
+				if(picList != null && picList.size() > 0) {
+					item.setPhotoList(picList); 
+				}
+			}
+			
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);

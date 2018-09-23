@@ -86,7 +86,7 @@ public class PictureRestApi {
 			List<String> picList = WebUtils.getPicture(result);
 			log.info("##### picList: #######" + picList);
 			if(picList != null && picList.size() > 0) {
-				picture.setPictureUrl(IMG_HOST + picList.get(0)); //获取一张图片
+				picture.setPictureUrl(picList.get(0)); //获取一张图片
 			}
 		}
 
