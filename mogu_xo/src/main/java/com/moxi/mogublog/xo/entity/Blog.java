@@ -38,6 +38,11 @@ public class Blog extends SuperEntity<Blog> {
      * 标签uid
      */
     private String tagUid;
+    
+    /**
+     * 博客分类UID
+     */
+    private String blogSortUid;
 
     /**
      * 博客点击数
@@ -53,8 +58,27 @@ public class Blog extends SuperEntity<Blog> {
      * 标题图片UID
      */
     private String fileUid;
+    
+    /**
+     * 管理员UID
+     */
+    private String adminUid;
+    
+    /**
+     * 是否原创
+     */
+    private String isOriginal;
+    
+    /**
+     * 如果原创，作者为管理员名
+     */
+    private String author;
 
-   
+    /**
+     * 文章出处
+     */
+    private String articlesPart;
+    
     /**
      * 以下字段不存入数据库，封装为了方便使用 
      */
@@ -63,6 +87,9 @@ public class Blog extends SuperEntity<Blog> {
     
     @TableField(exist = false)
     private List<String> photoList; //标题图
+    
+    @TableField(exist = false)
+    private BlogSort blogSort; //博客分类
 
 
 	public String getTitle() {
@@ -159,4 +186,63 @@ public class Blog extends SuperEntity<Blog> {
 		this.photoList = photoList;
 	}
 
+
+	public String getAdminUid() {
+		return adminUid;
+	}
+
+
+	public void setAdminUid(String adminUid) {
+		this.adminUid = adminUid;
+	}
+
+	public String getIsOriginal() {
+		return isOriginal;
+	}
+
+
+	public void setIsOriginal(String isOriginal) {
+		this.isOriginal = isOriginal;
+	}
+
+
+	public String getAuthor() {
+		return author;
+	}
+
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+
+	public String getArticlesPart() {
+		return articlesPart;
+	}
+
+
+	public void setArticlesPart(String articlesPart) {
+		this.articlesPart = articlesPart;
+	}
+
+
+	public String getBlogSortUid() {
+		return blogSortUid;
+	}
+
+
+	public void setBlogSortUid(String blogSortUid) {
+		this.blogSortUid = blogSortUid;
+	}
+
+
+	public BlogSort getBlogSort() {
+		return blogSort;
+	}
+
+
+	public void setBlogSort(BlogSort blogSort) {
+		this.blogSort = blogSort;
+	}
+	
 }

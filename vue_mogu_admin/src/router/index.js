@@ -49,6 +49,24 @@ export const constantRouterMap = [
         name: '博客管理',
         component: () => import('@/views/blog/index'),
         meta: { title: '博客管理', icon: 'table' }
+      },
+      {
+        path: 'tag',
+        name: '标签管理',
+        component: () => import('@/views/tag/index'),
+        meta: { title: '标签管理', icon: 'table' }
+      },
+      {
+        path: 'blogSort',
+        name: '分类管理',
+        component: () => import('@/views/blogSort/index'),
+        meta: { title: '分类管理', icon: 'table' }
+      },
+      {
+        path: 'collect',
+        name: '收藏管理',
+        component: () => import('@/views/collect/index'),
+        meta: { title: '收藏管理', icon: 'table' }
       }
     ]
   },
@@ -57,30 +75,20 @@ export const constantRouterMap = [
     path: '/example',
     component: Layout,
     redirect: '/example/comment',
-    name: '评论管理',
-    meta: { title: '评论管理', icon: 'example' },
+    name: '消息管理',
+    meta: { title: '消息管理', icon: 'example' },
     children: [
       {
         path: 'comment',
         name: '评论管理',
         component: () => import('@/views/comment/index'),
         meta: { title: '评论管理', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/tag',
-    name: '标签管理',
-    meta: { title: '标签管理', icon: 'example' },
-    children: [
+      },
       {
-        path: 'tag',
-        name: '标签管理',
-        component: () => import('@/views/tag/index'),
-        meta: { title: '标签管理', icon: 'table' }
+        path: 'feedback',
+        name: '反馈管理',
+        component: () => import('@/views/feedback/index'),
+        meta: { title: '反馈管理', icon: 'table' }
       }
     ]
   },
@@ -111,22 +119,6 @@ export const constantRouterMap = [
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/feedback',
-    name: '反馈管理',
-    meta: { title: '反馈管理', icon: 'example' },
-    children: [
-      {
-        path: 'feedback',
-        name: '反馈管理',
-        component: () => import('@/views/feedback/index'),
-        meta: { title: '反馈管理', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
     redirect: '/example/user',
     name: '用户管理',
     meta: { title: '用户管理', icon: 'example' },
@@ -136,33 +128,7 @@ export const constantRouterMap = [
         name: '用户管理',
         component: () => import('@/views/user/index'),
         meta: { title: '用户管理', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/collect',
-    name: '收藏管理',
-    meta: { title: '收藏管理', icon: 'example' },
-    children: [
-      {
-        path: 'collect',
-        name: '收藏管理',
-        component: () => import('@/views/collect/index'),
-        meta: { title: '收藏管理', icon: 'table' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/visitor',
-    name: '游客管理',
-    meta: { title: '游客管理', icon: 'example' },
-    children: [
+      },
       {
         path: 'visitor',
         name: '游客管理',

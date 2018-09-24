@@ -28,18 +28,43 @@
 	        <span>{{ scope.row.title }}</span>
 	      </template>
 	    </el-table-column>
+
+			<el-table-column label="作者" width="100">
+	      <template slot-scope="scope">
+	        <span>{{ scope.row.author }}</span>
+	      </template>
+	    </el-table-column>
+
+			<el-table-column label="是否原创" width="100">
+	      <template slot-scope="scope">
+					<el-tag v-if="scope.row.isOriginal==0" type="success">是</el-tag>
+	        <el-tag v-if="scope.row.isOriginal==1" type="danger">否</el-tag>
+	      </template>
+	    </el-table-column>
+
+			<el-table-column label="文章出处" width="150">
+	      <template slot-scope="scope">
+	        <span >{{scope.row.articlesPart}}</span>					
+	      </template>
+	    </el-table-column>
 		    
-	    <el-table-column label="简介" width="250">
+	    <!-- <el-table-column label="简介" width="250">
 	      <template slot-scope="scope">
 	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
 	      </template>
-	    </el-table-column>
+	    </el-table-column> -->
 	    
 	   	<el-table-column label="标签" width="100">
 	      <template slot-scope="scope">
 	      	<template>		
 	      	  <el-tag type="warning"  v-if="item" :key="index" v-for="(item, index) in scope.row.tagList">{{item.content}}</el-tag>		
 	      	</template>
+	      </template>
+	    </el-table-column>
+
+      <el-table-column label="分类" width="100">
+	      <template slot-scope="scope">
+	        <span>{{ scope.row.blogSort.sortName }}</span>
 	      </template>
 	    </el-table-column>
 
@@ -92,15 +117,15 @@
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
 		  	
-		    <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
+		    <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
 		    </el-form-item>
 		    
 		   	<el-form-item v-if="isEditForm == false" label="博客UID" :label-width="formLabelWidth" style="display: none;">
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
-		    </el-form-item>
+		    </el-form-item> -->
 
-				<el-form-item label="图片" :label-width="formLabelWidth">
+				<el-form-item label="标题图" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
 	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
@@ -122,6 +147,17 @@
 		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
+        <el-form-item label="商品单位" :label-width="formLabelWidth" required>
+          <el-select v-model="form.blogSortUid" size="small" placeholder="请选择">
+            <el-option
+                v-for="item in blogSortData"
+                :key="item.uid"
+                :label="item.sortName"
+                :value="item.uid">
+              </el-option>
+          </el-select>				
+		    </el-form-item>
+
 				<el-form-item label="标签" :label-width="formLabelWidth" required>
 				<el-select v-model="tagValue" multiple  size="small" placeholder="请选择" filterable >
 					<el-option
@@ -136,6 +172,21 @@
 
 				<el-form-item label="点击数" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
+		    </el-form-item>
+
+				<el-form-item label="作者" :label-width="formLabelWidth" required>
+		      <el-input v-model="form.author" auto-complete="off"></el-input>
+		    </el-form-item>
+
+				<el-form-item label="是否原创" :label-width="formLabelWidth" required>
+		      <el-radio-group v-model="form.isOriginal" size="small">
+							<el-radio label="1" border>是</el-radio>
+							<el-radio label="0" border>否</el-radio>
+					</el-radio-group>
+		    </el-form-item>
+
+				<el-form-item label="文章出处" :label-width="formLabelWidth">
+		      <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
 		    </el-form-item>
 
 		  </el-form>
@@ -158,36 +209,41 @@
 <script>
 import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
-import { formatData } from '@/utils/webUtils'
+import { getBlogSortList } from "@/api/blogSort";
+import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
 export default {
-	components: {  
+  components: {
     CheckPhoto
   },
   data() {
     return {
-			tableData: [], //博客数据
-			tagData: [], //标签数据
-			tagValue: [], //保存选中标签id(编辑时)
+      tableData: [], //博客数据
+      tagData: [], //标签数据
+      tagValue: [], //保存选中标签id(编辑时)
+      blogSortData: [],
       keyword: "",
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
-      formLabelWidth: '120px',
-			isEditForm: false ,
-			photoVisible: false, //控制图片选择器的显示
-			photoList: [],
-			fileIds: "",
-			icon: false, //控制删除图标的显示
+      formLabelWidth: "120px",
+      isEditForm: false,
+      photoVisible: false, //控制图片选择器的显示
+      photoList: [],
+      fileIds: "",
+      icon: false, //控制删除图标的显示
       form: {
         uid: null,
         title: null,
         summary: null,
         content: null,
         tagUid: null,
-				fileUid: null,				        
+				fileUid: null,
+				isOriginal: null, //是否原创
+				author: null, //作者
+				articlesPart: null, //文章出处
       }
     };
   },
@@ -198,44 +254,53 @@ export default {
     params.append("currentPage", this.currentPage);
     params.append("pageSize", this.pageSize);
     getBlogList(params).then(response => {
-			console.log("博客列表", response);
+      console.log("博客列表", response);
       this.tableData = response.data.records;
       this.currentPage = response.data.current;
       this.pageSize = response.data.size;
       this.total = response.data.total;
-		});
-		
-		var tagParams = new URLSearchParams();
-		getTagList(tagParams).then(response => {
-			this.tagData = response.data.records;      
-			console.log(response);
-		});
+    });
+
+    var tagParams = new URLSearchParams();
+    getTagList(tagParams).then(response => {
+      this.tagData = response.data.records;
+      console.log(response);
+    });
+
+    var blogSortParams = new URLSearchParams();
+    getBlogSortList(blogSortParams).then(response => {
+      this.blogSortData = response.data.records;
+      console.log(response);
+    });
   },
   methods: {
-		blogList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
-			getBlogList(params).then(response => {
-				this.tableData = response.data.records;
-				this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;     
-			});
-		},
-		getFormObject: function() {
+    blogList: function() {
+      var params = new URLSearchParams();
+      params.append("keyword", this.keyword);
+      params.append("currentPage", this.currentPage);
+      params.append("pageSize", this.pageSize);
+      getBlogList(params).then(response => {
+        this.tableData = response.data.records;
+        this.currentPage = response.data.current;
+        this.pageSize = response.data.size;
+        this.total = response.data.total;
+      });
+    },
+    getFormObject: function() {
       var formObject = {
-				uid: null,
+        uid: null,
         title: null,
         summary: null,
         content: null,
         tagUid: null,
-        fileUid: null,				
+				fileUid: null,
+				isOriginal: "1", //是否原创
+				author: null, //作者
+				articlesPart: null, //文章出处
       };
       return formObject;
-		},
-		//弹出选择图片框
+    },
+    //弹出选择图片框
     checkPhoto: function() {
       console.log(this.photoVisible);
       console.log("点击了选择图");
@@ -256,108 +321,101 @@ export default {
     //关闭模态框
     cancelModel() {
       this.photoVisible = false;
-		},
-		deletePhoto: function() {
-			console.log("点击了删除图片");
-			this.form.photoList = null;
+    },
+    deletePhoto: function() {
+      console.log("点击了删除图片");
+      this.form.photoList = null;
       this.form.fileUid = "";
-		},
-		checkPhoto() {
+    },
+    checkPhoto() {
       this.photoList = [];
       this.photoVisible = true;
     },
-		submitStr: function(str, index) {
-			if(str.length > index) {
-				return str.slice(0, index) + "...";
-			}
-			return str;
-		},
-		handleFind: function() {
+    submitStr: function(str, index) {
+      if (str.length > index) {
+        return str.slice(0, index) + "...";
+      }
+      return str;
+    },
+    handleFind: function() {
       this.blogList();
-		},		
+    },
     handleAdd: function() {
       console.log("点击了添加博客");
-			this.dialogFormVisible = true;
-			this.form = this.getFormObject();
-			this.tagValue = [];
-			this.isEditForm = false;
+      this.dialogFormVisible = true;
+      this.form = this.getFormObject();
+      this.tagValue = [];
+      this.isEditForm = false;
     },
     handleEdit: function(row) {
-
-			this.form = row;
-			this.tagValue = [];
-			if(row.tagList) {
-				var json = row.tagList;
-				for (var i = 0, l = json.length; i < l; i++) {
-					if (json[i] != null) {
-						this.tagValue.push(json[i]["uid"]);
-					}
-				}
-			}			
-			console.log(row, "点击了编辑");
-			this.dialogFormVisible = true;
-			this.isEditForm = true;
-			
+      this.form = row;
+      this.tagValue = [];
+      if (row.tagList) {
+        var json = row.tagList;
+        for (var i = 0, l = json.length; i < l; i++) {
+          if (json[i] != null) {
+            this.tagValue.push(json[i]["uid"]);
+          }
+        }
+      }
+      console.log(row, "点击了编辑");
+      this.dialogFormVisible = true;
+      this.isEditForm = true;
     },
     handleDelete: function(row) {
-			console.log("点击了删除");
-			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
-			deleteBlog(params).then(response=> {
-					console.log(response);
-					this.$message({
-              type: "success",
-              message: response.data
-          });
-					that.blogList();
-			})
-		},
-		handleCurrentChange: function(val) {
+      console.log("点击了删除");
+      var that = this;
+      let params = new URLSearchParams();
+      params.append("uid", row.uid);
+      deleteBlog(params).then(response => {
+        console.log(response);
+        this.$message({
+          type: "success",
+          message: response.data
+        });
+        that.blogList();
+      });
+    },
+    handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
       this.blogList();
     },
-		submitForm: function() {
-			
-			this.form.tagUid = this.tagValue.join(",");
-			console.log(this.form);
-			var params = formatData(this.form);
-			console.log("点击了提交表单", params);
-			if(this.isEditForm) {
-				editBlog(params).then(response=> {
-						console.log(response);
-						if(response.code == "success") {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-						} else {
-							this.$message({
-								type: "error",
-								message: response.data
-            	});
-						}
-						
-						this.dialogFormVisible = false;
-						this.blogList();						
-				})				
-			} else {
-				addBlog(params).then(response=> {
-						console.log(response);
-						this.$message({
+    submitForm: function() {
+      this.form.tagUid = this.tagValue.join(",");
+      console.log(this.form);
+      var params = formatData(this.form);
+      console.log("点击了提交表单", params);
+      if (this.isEditForm) {
+        editBlog(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.$message({
               type: "success",
               message: response.data
             });
-						this.dialogFormVisible = false;
-						this.blogList();						
-				})
-				
-			}
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            });
+          }
 
-		},
-		
-		
+          this.dialogFormVisible = false;
+          this.blogList();
+        });
+      } else {
+        addBlog(params).then(response => {
+          console.log(response);
+          this.$message({
+            type: "success",
+            message: response.data
+          });
+          this.dialogFormVisible = false;
+          this.blogList();
+        });
+      }
+    }
   }
 };
 </script>

@@ -26,8 +26,10 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
 
@@ -53,6 +55,9 @@ public class BlogRestApi {
 	
 	@Autowired
 	TagService tagService;
+	
+	@Autowired
+	BlogSortService blogSortService;
 	
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
@@ -100,6 +105,13 @@ public class BlogRestApi {
 				item.setTagList(tagList);
 			}
 			
+			//获取标签
+			if(item != null && !StringUtils.isEmpty(item.getBlogSortUid())) {
+				
+				BlogSort blogSort = blogSortService.getById(item.getBlogSortUid());
+				item.setBlogSort(blogSort);
+			}
+			
 			//获取标题图片
 			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
 				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
@@ -123,10 +135,15 @@ public class BlogRestApi {
 			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
 			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
 			@ApiParam(name = "tagUid", value = "标签uid",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
+			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue = "1") Integer clickCount,
+			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
+			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
+			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
+			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
+			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "fileUid", value = "标题图Uid",required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
 		
-		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content)) {
+		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(author)|| StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		Blog blog = new Blog();
@@ -134,8 +151,14 @@ public class BlogRestApi {
 		blog.setSummary(summary);
 		blog.setContent(content);		
 		blog.setTagUid(tagUid);
+		blog.setBlogSortUid(blogSortUid);
 		blog.setClickCount(clickCount);
+		blog.setCollectCount(collectCount);
 		blog.setFileUid(fileUid);
+		blog.setAuthor(author);
+		blog.setArticlesPart(articlesPart);
+		blog.setIsOriginal(isOriginal);
+
 		blog.setStatus(EStatus.ENABLE);
 		blogService.save(blog);
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
@@ -149,7 +172,12 @@ public class BlogRestApi {
 			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
 			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
 			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
+			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
+			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
+			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
+			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
+			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
 			@ApiParam(name = "fileUid", value = "标题图UID",required = false) @RequestParam(name = "fileUid", required = false) String fileUid ) {
 		
 		if(StringUtils.isEmpty(uid)) {
@@ -160,8 +188,13 @@ public class BlogRestApi {
 		blog.setSummary(summary);
 		blog.setContent(content);
 		blog.setTagUid(tagUid);
+		blog.setBlogSortUid(blogSortUid);
 		blog.setFileUid(fileUid);
 		blog.setClickCount(clickCount);
+		blog.setCollectCount(collectCount);
+		blog.setAuthor(author);
+		blog.setIsOriginal(isOriginal);
+		blog.setArticlesPart(articlesPart);
 		blog.setStatus(EStatus.ENABLE);
 		blog.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
