@@ -197,11 +197,6 @@ CREATE TABLE `t_picture_sort` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片分类表';
 
--- ----------------------------
--- Records of t_picture_sort
--- ----------------------------
-INSERT INTO `t_picture_sort` VALUES ('5a281aa35fa9408bb07c2fc9a990701f', '发顺丰的', '法式沙发', '1', '2018-09-20 20:04:47', '2018-09-20 20:04:47', null);
-INSERT INTO `t_picture_sort` VALUES ('dd6728afaec34b64a12f560ca9931a7b', 'bbbb', '测试', '1', '2018-09-20 19:34:40', '2018-09-20 19:34:40', null);
 
 -- ----------------------------
 -- Table structure for t_role
@@ -253,7 +248,6 @@ CREATE TABLE `t_tag` (
 -- ----------------------------
 -- Records of t_tag
 -- ----------------------------
-INSERT INTO `t_tag` VALUES ('a9a747d944c24845815356f72723ef8e', '测试标签', '1', '2', '2018-09-20 14:51:39', '2018-09-20 14:51:39');
 
 -- ----------------------------
 -- Table structure for t_user
