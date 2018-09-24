@@ -413,6 +413,7 @@
 <script>
 import BlogHead from '../components/BlogHead';
 import BlogFooter from '../components/BlogFooter';
+import { getIndex} from "../api/index";
 export default {
   name: 'index',
   data () {
@@ -424,11 +425,21 @@ export default {
   	//注册组件
   	BlogHead,
   	BlogFooter,
-  }
+  },
+  created() {
+  	console.log("测试", process.env.WEB_API);
+    var that = this;
+    var params = new URLSearchParams();
+    params.append("currentPage", 0);
+    params.append("pageSize", 5);
+    getIndex(params).then(response => {
+      console.log("博客列表", response);
+    });
+  },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style>
 
 

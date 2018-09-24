@@ -18,48 +18,83 @@
 	</properties>
 
 	<dependencies>
-	
-		<!-- 引入mogu_xo相关 -->
-		<dependency>
-			<groupId>com.moxi</groupId>
-			<artifactId>mogu_xo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<!-- 引入mogu_utils相关 -->
-		<dependency>
-			<groupId>com.moxi</groupId>
-			<artifactId>mogu_utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<!-- 引入mogu_config相关 -->
-		<dependency>
-			<groupId>com.moxi</groupId>
-			<artifactId>mogu_config</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
+			<dependency>
+		    <artifactId>mogu_xo</artifactId>
+		    <groupId>com.moxi</groupId>
+		    <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+  
+        <!-- 热部署
+        	devtolls可以实现页面热部署(即页面修改后会立即生效)，这个可以直接在application.properties文件中配置        	  
+        	spring.thymeleaf.cache=false来实现 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        
+        <!-- 添加Eureka相关依赖 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	<!--spring boot打包的话需要指定一个唯一的入门-->
+    <build>
+		  <resources>
+		   <resource>
+		       <directory>src/main/java</directory>
+		       <includes>
+		           <include>**/*.xml</include>
+		       </includes>
+		   </resource>
+		   <resource>
+		       <directory>src/main/resources</directory>
+		       <includes>
+		           <include>**.*</include>
+		           <include>**/*.*</include><!-- i18n能读取到 -->
+		            <include>**/*/*.*</include>
+		       </includes>
+		   </resource>
+		 </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>           
+            <configuration>
+	             <fork>true</fork> 
+	             <!-- 如果没有该配置，devtools不会生效 -->
+	            <!-- 指定该Main Class为全局的唯一入口 -->
+	            <mainClass>com.moxi.mogublog.web.APP</mainClass>
+	            <layout>ZIP</layout>
+          	</configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+              </goals>
+            </execution>
+          </executions>
+          </plugin>
+        </plugins>
+        <finalName>mogu_web</finalName>
+    </build>
 
 
 </project>
