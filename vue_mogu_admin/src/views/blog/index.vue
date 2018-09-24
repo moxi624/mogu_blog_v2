@@ -100,10 +100,10 @@
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
 
-					<el-form-item label="图片" :label-width="formLabelWidth">
+				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
-	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="showIcon"></i>
-	    			<img @mouseover="showIcon" @mouseout="hideIcon" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -250,7 +250,7 @@ export default {
       var fileId = this.fileIds.replace(",", "");
       if (this.photoList.length >= 1) {
         this.form.fileUid = fileId;
-        this.form.photoUrl = this.photoList[0];
+        this.form.photoList = this.photoList;
       }
     },
     //关闭模态框
@@ -259,12 +259,8 @@ export default {
 		},
 		deletePhoto: function() {
 			console.log("点击了删除图片");
-		},
-		showIcon: function() {
-			console.log("显示图标");
-		},
-		hideIcon: function() {
-			console.log("隐藏图标");
+			this.form.photoList = null;
+      this.form.fileUid = "";
 		},
 		checkPhoto() {
       this.photoList = [];
@@ -277,7 +273,6 @@ export default {
 			return str;
 		},
 		handleFind: function() {
-
       this.blogList();
 		},		
     handleAdd: function() {
@@ -288,9 +283,7 @@ export default {
 			this.isEditForm = false;
     },
     handleEdit: function(row) {
-      if (row.photoList == undefined) {
-        row.photoList = [];
-      }
+
 			this.form = row;
 			this.tagValue = [];
 			if(row.tagList) {
@@ -301,7 +294,7 @@ export default {
 					}
 				}
 			}			
-			console.log(this.tagValue, "编辑的tagValue");
+			console.log(row, "点击了编辑");
 			this.dialogFormVisible = true;
 			this.isEditForm = true;
 			

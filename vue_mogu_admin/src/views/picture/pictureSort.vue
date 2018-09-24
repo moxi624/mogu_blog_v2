@@ -18,7 +18,7 @@
 	    
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
-	      	<span>{{scope.row.fileUid}}</span>
+	      	<img  v-if="scope.row.photoList" :src="scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
 	      </template>
 	    </el-table-column>
 		    
@@ -80,8 +80,14 @@
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
 
-				<el-form-item label="标题图" :label-width="formLabelWidth">
-		      <el-input v-model="form.fileUid" auto-complete="off"></el-input>
+				<el-form-item label="图片" :label-width="formLabelWidth">
+	    		<div class="imgBody" v-if="form.photoList">
+	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    		</div>
+	    		<div v-else class="uploadImgBody" @click="checkPhoto">
+ 		 			<i class="el-icon-plus avatar-uploader-icon"></i>
+		    	</div>				
 		    </el-form-item>
 		    
 		    <el-form-item label="标题" :label-width="formLabelWidth" required>
@@ -94,6 +100,13 @@
 		    <el-button type="primary" @click="submitForm">确 定</el-button>
 		  </div>
 		</el-dialog>
+    		<!--
+        	作者：xzx19950624@qq.com
+        	时间：2018年9月23日16:16:09
+         描述：图片选择器
+        -->
+		<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
+
   </div>
 </template>
 
@@ -106,10 +119,13 @@ import {
 } from "@/api/pictureSort";
 
 import { formatData } from '@/utils/webUtils'
-
+import CheckPhoto from "../../components/CheckPhoto";
 import { Loading } from "element-ui";
 
 export default {
+  components: {  
+    CheckPhoto
+  },
   created() {
     var that = this;
     	var params = new URLSearchParams();
@@ -143,7 +159,11 @@ export default {
       title: "增加分类",
       formLabelWidth: "120px", //弹框的label边框
       dialogFormVisible: false,
-      isEditForm: false
+      isEditForm: false,
+      photoVisible: false, //控制图片选择器的显示
+			photoList: [],
+			fileIds: "",
+			icon: false, //控制删除图标的显示
     };
   },
   methods: {
@@ -178,6 +198,37 @@ export default {
         fileUid: null
       };
       return formObject;
+    },
+    		//弹出选择图片框
+    checkPhoto: function() {
+      console.log(this.photoVisible);
+      console.log("点击了选择图");
+      this.photoVisible = true;
+      console.log(this.photoVisible);
+    },
+    getChooseData(data) {
+      var that = this;
+      this.photoVisible = false;
+      this.photoList = data.photoList;
+      this.fileIds = data.fileIds;
+      var fileId = this.fileIds.replace(",", "");
+      if (this.photoList.length >= 1) {
+        this.form.fileUid = fileId;
+        this.form.photoList = this.photoList;
+      }
+    },
+    //关闭模态框
+    cancelModel() {
+      this.photoVisible = false;
+		},
+		deletePhoto: function() {
+      console.log("点击了删除图片");
+      			
+			this.form.photoList = null;
+      this.form.fileUid = "";
+		},		
+		checkPhoto() {
+      this.photoVisible = true;
     },
     //改变页码
     handleCurrentChange(val) {
@@ -237,3 +288,49 @@ export default {
   }
 };
 </script>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  margin: 0, 0, 0, 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+}
+.imgBody {
+  width: 150px;
+  height: 150px;
+  border: solid 2px #ffffff;
+  float: left;
+  position: relative;
+}
+.uploadImgBody {
+  margin-left: 5px;
+  width: 150px;
+  height: 150px;
+  border: dashed 1px #c0c0c0;
+  float: left;
+  position: relative;
+}
+.uploadImgBody :hover {
+  border: dashed 1px #00ccff;
+}
+.inputClass {
+  position: absolute;
+}
+.img {
+  width: 100%;
+  height: 100%;
+}
+</style>

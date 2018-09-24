@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.restapi;
 
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -39,8 +42,12 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/pictureSort")
 public class PictureSortRestApi {
+	
 	@Autowired
 	PictureSortService pictureSortService;
+	
+	@Autowired
+	PictureFeignClient pictureFeignClient;
 	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
@@ -63,6 +70,20 @@ public class PictureSortRestApi {
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		IPage<PictureSort> pageList = pictureSortService.page(page, queryWrapper);
+		List<PictureSort> list = pageList.getRecords();
+		
+		for(PictureSort item : list) {	
+			//获取分类图片
+			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
+				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
+				List<String> picList = WebUtils.getPicture(result);
+				log.info("##### picList: #######" + picList);
+				if(picList != null && picList.size() > 0) {
+					item.setPhotoList(picList); 
+				}
+			}
+			
+		}
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}

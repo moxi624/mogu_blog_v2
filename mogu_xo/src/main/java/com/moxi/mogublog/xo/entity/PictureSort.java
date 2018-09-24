@@ -1,5 +1,8 @@
 package com.moxi.mogublog.xo.entity;
 
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -22,6 +25,9 @@ public class PictureSort extends SuperEntity<PictureSort>{
 	private String name; //分类名
 	
 	private String fileUid;//分类图片Uid
+	
+    @TableField(exist = false)
+    private List<String> photoList; //分类图
 
 	public String getParentUid() {
 		return parentUid;
@@ -51,4 +57,12 @@ public class PictureSort extends SuperEntity<PictureSort>{
 		return serialVersionUID;
 	}
 
+	public List<String> getPhotoList() {
+		return photoList;
+	}
+
+	public void setPhotoList(List<String> photoList) {
+		this.photoList = photoList;
+	}
+	
 }
