@@ -147,7 +147,7 @@
 		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="商品单位" :label-width="formLabelWidth" required>
+        <el-form-item label="分类" :label-width="formLabelWidth" required>
           <el-select v-model="form.blogSortUid" size="small" placeholder="请选择">
             <el-option
                 v-for="item in blogSortData"

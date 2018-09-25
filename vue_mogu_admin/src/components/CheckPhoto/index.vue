@@ -216,7 +216,8 @@ export default {
     clickTab(e) {
       var that = this;
       var index = this.activeName;
-      var pictureSortUid = this.pictureSorts[index].pictureSortUid;
+      var pictureSortUid = this.pictureSorts[index].uid;
+      console.log("选中的分类UID", this.pictureSorts[index]);
       var name = this.pictureSorts[index].name;
       var params = new URLSearchParams();
       params.append("pictureSortUid", pictureSortUid);

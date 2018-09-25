@@ -3,17 +3,17 @@
   <!--menu begin-->
   <div class="menu">
     <nav class="nav" id="topnav">
-      <h1 class="logo"><a href="http://localhost:8500/">蘑菇博客</a></h1>
-      <li><a href="http://localhost:8500/">网站首页</a> </li>
-      <li><a href="http://localhost:8500/#/about">关于我</a> </li>
-      <li><a href="http://localhost:8500/#/share">模板分享</a>
+      <h1 class="logo"><a href="http://localhost:9527/">蘑菇博客</a></h1>
+      <li><a href="http://localhost:9527/">网站首页</a> </li>
+      <li><a href="http://localhost:9527/#/about">关于我</a> </li>
+      <li><a href="http://localhost:9527/#/share">模板分享</a>
         <ul class="sub-nav">
-          <li><a href="http://localhost:8500/#/#/share">个人博客模板</a></li>
-          <li><a href="http://localhost:8500/#/share">国外Html5模板</a></li>
-          <li><a href="http://localhost:8500/#/share">企业网站模板</a></li>
+          <li><a href="http://localhost:9527/#/#/share">个人博客模板</a></li>
+          <li><a href="http://localhost:9527/#/share">国外Html5模板</a></li>
+          <li><a href="http://localhost:9527/#/share">企业网站模板</a></li>
         </ul>
       </li>
-      <li><a href="http://localhost:8500/#/list">学无止境</a>
+      <li><a href="http://localhost:9527/#/list">学无止境</a>
         <ul class="sub-nav">
           <li><a href="/list">心得笔记</a></li>
           <li><a href="/list">CSS3|Html5</a></li>
@@ -22,7 +22,7 @@
           <li><a href="/list">JS实例索引</a></li>
         </ul>
       </li>
-      <li><a href="http://localhost:8500/#/life">慢生活</a>
+      <li><a href="http://localhost:9527/#/life">慢生活</a>
         <ul class="sub-nav">
           <li><a href="/life">日记</a></li>
           <li><a href="/life">欣赏</a></li>
@@ -30,9 +30,9 @@
           <li><a href="/life">经典语录</a></li>
         </ul>
       </li>
-      <li><a href="http://localhost:8500/#/time">时间轴</a> </li>
-      <li><a href="http://localhost:8500/#/gbook">留言</a> </li>
-      <li><a href="http://localhost:8500/#/info">内容页</a> </li>
+      <li><a href="http://localhost:9527/#/time">时间轴</a> </li>
+      <li><a href="http://localhost:9527/#/gbook">留言</a> </li>
+      <li><a href="http://localhost:9527/#/info">内容页</a> </li>
       <!--search begin-->
       <div id="search_bar" class="search_bar">
         <form  id="searchform" action="[!--news.url--]e/search/index.php" method="post" name="searchform">
