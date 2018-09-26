@@ -13,7 +13,7 @@
 	<artifactId>mogu_config</artifactId>
 	<name>mogu_config</name>
 	<dependencies> 
-				<dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>

@@ -20,9 +20,7 @@
  <div class="picsbox"> 
   <div class="banner">
     <div id="banner" class="fader">
-      
       <li v-for="item in bannerData" :key="item.uid" class="slide" ><a href="/" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
-
       <div class="fader_controls">
         <div class="page prev" data-target="prev">&lsaquo;</div>
         <div class="page next" data-target="next">&rsaquo;</div>
@@ -119,7 +117,8 @@
     <div class="cloud">
       <h2 class="hometitle">标签云</h2>
       <ul>
-        <a href="/">陌上花开</a> <a href="/">校园生活</a> <a href="/">html5</a> <a href="/">SumSung</a> <a href="/">青春</a> <a href="/">温暖</a> <a href="/">阳光</a> <a href="/">三星</a><a href="/">索尼</a> <a href="/">华维荣耀</a> <a href="/">三星</a> <a href="/">索尼</a>
+
+        <a v-for="item in hotTagData" :key="item.uid" href="/">{{item.content}}</a>
       </ul>
     </div>
     <div class="links">
@@ -157,34 +156,33 @@
 </template>
 
 <script>
-import BlogHead from '../components/BlogHead';
-import BlogFooter from '../components/BlogFooter';
-import { getBanner, getTopic, getNewBlog} from "../api/index";
+import BlogHead from "../components/BlogHead";
+import BlogFooter from "../components/BlogFooter";
+import { getBanner, getTopic, getNewBlog, getHotTag } from "../api/index";
 export default {
-  name: 'index',
-  data () {
-  	return {
-  		
-    };
+  name: "index",
+  data() {
+    return {};
   },
   components: {
-  	//注册组件
-  	BlogHead,
-  	BlogFooter,
+    //注册组件
+    BlogHead,
+    BlogFooter
   },
   data() {
-  	return{
-  		bannerData: [], //；轮播图数据
-  		topicData: [], //顶部推荐
+    return {
+      bannerData: [], //；轮播图数据
+      topicData: [], //顶部推荐
       newBlogData: [], //最新文章
-  		keyword: "",
-      	currentPage: 1,
-      	pageSize: 10,
-      	total: 0, //总数量
-  	}
+      hotTagData: [], //最新文章
+      keyword: "",
+      currentPage: 1,
+      pageSize: 10,
+      total: 0 //总数量
+    };
   },
   created() {
-  	console.log("测试", process.env.WEB_API);
+    console.log("测试", process.env.WEB_API);
     var that = this;
     var params = new URLSearchParams();
     params.append("currentPage", 0);
@@ -196,7 +194,7 @@ export default {
       this.pageSize = response.data.size;
       this.total = response.data.total;
     });
-    
+
     var topicParams = new URLSearchParams();
     topicParams.append("currentPage", 0);
     topicParams.append("pageSize", 2);
@@ -212,12 +210,17 @@ export default {
       console.log("博客列表", response);
       this.newBlogData = response.data.records;
     });
-  },
-}
+
+    var tagParams = new URLSearchParams();
+    getHotTag(tagParams).then(response => {
+      console.log("标签列表", response);
+      this.hotTagData = response.data.records;
+    });
+
+  }
+};
 </script>
 
 
 <style>
-
-
 </style>

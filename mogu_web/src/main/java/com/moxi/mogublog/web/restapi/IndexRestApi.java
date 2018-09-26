@@ -21,6 +21,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -55,7 +56,7 @@ public class IndexRestApi {
 	
 	@Autowired
 	BlogSortService blogSortService;
-	
+		
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
 	
@@ -205,6 +206,22 @@ public class IndexRestApi {
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
+	}
+	
+	@ApiOperation(value="获取最热标签", notes="获取最热标签")
+	@GetMapping("/getHotTag")
+	public String getHotTag (HttpServletRequest request,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		
+		QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+		Page<Tag> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+		IPage<Tag> pageList = tagService.page(page, queryWrapper);
+		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
