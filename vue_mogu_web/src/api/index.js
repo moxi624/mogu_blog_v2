@@ -31,3 +31,11 @@ export function getHotTag (params) {
     params
   })
 }
+
+export function getLink (params) {
+  return request({
+    url: process.env.WEB_API + '/index/getLink',
+    method: 'get',
+    params
+  })
+}

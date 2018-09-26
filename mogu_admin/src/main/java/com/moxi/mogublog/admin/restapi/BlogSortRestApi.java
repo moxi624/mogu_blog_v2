@@ -55,7 +55,6 @@ public class BlogSortRestApi {
 			queryWrapper.like(SQLConf.CONTENT, keyword);
 		}
 		
-		//分页插件还没导入，暂时分页没用
 		Page<BlogSort> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		

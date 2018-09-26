@@ -249,17 +249,8 @@ export default {
   },
   created() {
     var that = this;
-    var params = new URLSearchParams();
-    params.append("keyword", this.keyword);
-    params.append("currentPage", this.currentPage);
-    params.append("pageSize", this.pageSize);
-    getBlogList(params).then(response => {
-      console.log("博客列表", response);
-      this.tableData = response.data.records;
-      this.currentPage = response.data.current;
-      this.pageSize = response.data.size;
-      this.total = response.data.total;
-    });
+    
+    this.blogList(); //获取博客列表
 
     var tagParams = new URLSearchParams();
     getTagList(tagParams).then(response => {
@@ -348,6 +339,7 @@ export default {
       this.isEditForm = false;
     },
     handleEdit: function(row) {
+      this.title = "编辑博客",
       this.form = row;
       this.tagValue = [];
       if (row.tagList) {

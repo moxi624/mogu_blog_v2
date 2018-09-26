@@ -63,7 +63,6 @@ public class PictureSortRestApi {
 			queryWrapper.like(SQLConf.NAME, keyword);
 		}
 		
-		//分页插件还没导入，暂时分页没用
 		Page<PictureSort> page = new Page<PictureSort>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		

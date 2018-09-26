@@ -12,6 +12,8 @@
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统；
 - mogu_admin: 是admin端API接口服务；
 - mogu_web: 是web端API接口服务；
+- mogu_eureka: 服务发现服务器；
+- mogu_picture: 图片服务器，用于图片上传和下载；
 - mogu_utils: 是常用工具类；
 - mogu_xo: 是存放 Entity，Service，Dao层的
 - mogu_base: 是一些Base基类

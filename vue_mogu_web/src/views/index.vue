@@ -124,9 +124,7 @@
     <div class="links">
       <h2 class="hometitle">友情链接</h2>
       <ul>
-        <li><a href="http://www.yangqq.com" target="_blank">蘑菇博客</a></li>
-        <li><a href="http://www.yangqq.com" target="_blank">D设计师博客</a></li>
-        <li><a href="http://www.yangqq.com" target="_blank">优秀个人博客</a></li>
+          <li v-for="item in linkData" :key="item.uid"><a :href="item.url" target="_blank">{{item.title}}</a></li>
       </ul>
     </div>
     <div class="guanzhu" id="follow-us">
@@ -158,7 +156,7 @@
 <script>
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBanner, getTopic, getNewBlog, getHotTag } from "../api/index";
+import { getBanner, getTopic, getNewBlog, getHotTag, getLink } from "../api/index";
 export default {
   name: "index",
   data() {
@@ -175,6 +173,7 @@ export default {
       topicData: [], //顶部推荐
       newBlogData: [], //最新文章
       hotTagData: [], //最新文章
+      linkData: [], //友情链接
       keyword: "",
       currentPage: 1,
       pageSize: 10,
@@ -215,6 +214,12 @@ export default {
     getHotTag(tagParams).then(response => {
       console.log("标签列表", response);
       this.hotTagData = response.data.records;
+    });
+
+    var linkParams = new URLSearchParams();
+    getLink(linkParams).then(response => {
+      console.log("友情链接列表", response);
+      this.linkData = response.data.records;
     });
 
   }

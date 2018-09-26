@@ -25,9 +25,11 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
+import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
+import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
 
@@ -56,6 +58,9 @@ public class IndexRestApi {
 	
 	@Autowired
 	BlogSortService blogSortService;
+	
+	@Autowired
+	LinkService linkService;
 		
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
@@ -221,6 +226,22 @@ public class IndexRestApi {
 		page.setSize(pageSize);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		IPage<Tag> pageList = tagService.page(page, queryWrapper);
+		log.info("返回结果");
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
+	}
+	
+	@ApiOperation(value="获取友情链接", notes="获取友情链接")
+	@GetMapping("/getLink")
+	public String getLink (HttpServletRequest request,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		
+		QueryWrapper<Link> queryWrapper = new QueryWrapper<Link>();
+		Page<Link> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+		IPage<Link> pageList = linkService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}

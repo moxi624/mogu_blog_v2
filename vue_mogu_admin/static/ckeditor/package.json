@@ -1,0 +1,55 @@
+{
+  "_from": "ckeditor",
+  "_id": "ckeditor@4.10.1",
+  "_inBundle": false,
+  "_integrity": "sha512-T6y4BH9ml+0F1cuSqjOWSZJtNuunVm/IbZl0KWNgRUsWEiwQQxhzA0mvSVLzujjsQkTMn9oTGcDd31/eozCAWg==",
+  "_location": "/ckeditor",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "ckeditor",
+    "name": "ckeditor",
+    "escapedName": "ckeditor",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ckeditor/-/ckeditor-4.10.1.tgz",
+  "_shasum": "e0230b05a5470ef070be9ab9ba444fea418ebc78",
+  "_spec": "ckeditor",
+  "_where": "E:\\study_work_space\\mywork6\\mogu_blog_v2\\vue_mogu_admin",
+  "author": {
+    "name": "CKSource",
+    "url": "http://cksource.com/"
+  },
+  "bugs": {
+    "url": "http://dev.ckeditor.com"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "JavaScript WYSIWYG web text editor.",
+  "homepage": "http://ckeditor.com",
+  "keywords": [
+    "ckeditor",
+    "fckeditor",
+    "editor",
+    "wysiwyg",
+    "html",
+    "richtext",
+    "text",
+    "javascript"
+  ],
+  "license": "(GPL-2.0 OR LGPL-2.1 OR MPL-1.1)",
+  "main": "ckeditor.js",
+  "name": "ckeditor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckeditor/ckeditor-releases.git"
+  },
+  "version": "4.10.1"
+}

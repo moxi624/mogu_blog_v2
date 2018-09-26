@@ -63,6 +63,12 @@ export const constantRouterMap = [
         meta: { title: '分类管理', icon: 'table' }
       },
       {
+        path: 'link',
+        name: '友链管理',
+        component: () => import('@/views/link/index'),
+        meta: { title: '友链管理', icon: 'table' }
+      },
+      {
         path: 'collect',
         name: '收藏管理',
         component: () => import('@/views/collect/index'),

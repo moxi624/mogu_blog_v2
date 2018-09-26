@@ -120,18 +120,7 @@ export default {
     };
   },
   created() {
-    var that = this;
-    var params = new URLSearchParams();
-    params.append("keyword", this.keyword);
-    params.append("currentPage", this.currentPage);
-    params.append("pageSize", this.pageSize);
-    getTagList(params).then(response => {
-      this.tableData = response.data.records;
-      this.currentPage = response.data.current;
-      this.pageSize = response.data.size;
-      this.total = response.data.total;
-      console.log(response);      
-    });
+    this.tagList();
   },
   methods: {
 		tagList: function() {
@@ -140,7 +129,11 @@ export default {
 			params.append("currentPage", this.currentPage);
 			params.append("pageSize", this.pageSize);
 			getTagList(params).then(response => {
-				this.tableData = response.data.records;      
+				this.tableData = response.data.records;
+				this.currentPage = response.data.current;
+				this.pageSize = response.data.size;
+				this.total = response.data.total;
+				console.log(response);       
 			});
 		},
 		getFormObject: function() {
@@ -160,6 +153,7 @@ export default {
 			this.isEditForm = false;
     },
     handleEdit: function(row) {
+			this.title =  "编辑标签";
 			this.dialogFormVisible = true;
 			this.isEditForm = true;
 			console.log(row);

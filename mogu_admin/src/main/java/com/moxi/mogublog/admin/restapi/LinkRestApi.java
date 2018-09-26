@@ -54,7 +54,6 @@ public class LinkRestApi {
 			queryWrapper.like(SQLConf.CONTENT, keyword);
 		}
 		
-		//分页插件还没导入，暂时分页没用
 		Page<Link> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
