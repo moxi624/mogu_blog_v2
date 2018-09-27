@@ -13,6 +13,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +60,7 @@ public class SearchRestApi {
 	private static Logger log = LogManager.getLogger(SearchRestApi.class);
 	
 	@ApiOperation(value="导入solr索引", notes="导入solr索引")
-	@GetMapping("/initindex")
+	@PostMapping("/initindex")
 	public String initIndex(HttpServletRequest request) throws SolrServerException, IOException{
 		
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
