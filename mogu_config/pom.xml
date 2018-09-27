@@ -39,6 +39,12 @@
             <version>3.0-RC1</version>
         </dependency>
         <!-- mybatis-plus end -->
+        
+       	<!-- spring data solr -->
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-solr</artifactId>
+		</dependency>
     	
         <dependency>
 			<groupId>mysql</groupId>
@@ -67,24 +73,12 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.6.1</version>
         </dependency>
-		
-		<!--solr客户端solrj的依赖 -->
-        <dependency>  
-            <groupId>org.apache.solr</groupId>  
-            <artifactId>solr-solrj</artifactId>  
-        </dependency>
         
 		<!-- Redis客户端 -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
 		</dependency>
-		
-		<!--solr客户端solrj的依赖 -->
-        <dependency>  
-            <groupId>org.apache.solr</groupId>  
-            <artifactId>solr-solrj</artifactId>    
-        </dependency> 
 		
 		<!-- 格式化对象，方便输出日志 -->
 		<dependency>

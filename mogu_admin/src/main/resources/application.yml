@@ -49,6 +49,14 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
     
+  #Solr
+  data:
+    solr:
+      host: http://localhost:8080/solr
+      core: collection1
+      repositories:
+        enabled: true
+    
 #eureka相关配置
 eureka:
   client:
