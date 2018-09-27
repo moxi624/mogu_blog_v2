@@ -24,7 +24,7 @@ export function editPictureSort(params) {
   })
 }
 
-export function deletPictureSort(params) {
+export function deletePictureSort(params) {
   return request({
     url: process.env.ADMIN_API + '/pictureSort/delete',
     method: 'post',

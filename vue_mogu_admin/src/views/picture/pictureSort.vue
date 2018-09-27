@@ -115,7 +115,7 @@ import {
   getPictureSortList,
   addPictureSort,
   editPictureSort,
-  deletPictureSort
+  deletePictureSort
 } from "@/api/pictureSort";
 
 import { formatData } from '@/utils/webUtils'
@@ -251,6 +251,32 @@ export default {
       console.log(row);
       this.form = row;
       console.log("点击编辑", this.form);
+    },
+    handleDelete: function(row) {
+
+      this.$confirm('此操作将会把分类下全部图片删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let params = new URLSearchParams();
+        params.append("uid", row.uid);
+        deletePictureSort(params).then(response => {
+          console.log(response);
+          if(response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.getPictureSortList();
+          }          
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });          
+      });
     },
     submitForm: function() {
       console.log("提交表单", this.form);
