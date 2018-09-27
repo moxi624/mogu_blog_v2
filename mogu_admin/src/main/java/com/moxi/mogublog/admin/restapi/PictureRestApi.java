@@ -139,14 +139,17 @@ public class PictureRestApi {
 	@ApiOperation(value="删除图片", notes="删除图片", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid) {
 		
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
-		Picture picture = pictureService.getById(uid);
-		picture.setStatus(EStatus.DISABLED);		
-		picture.updateById();
+		}
+		List<String> uids = StringUtils.changeStringToString(uid, ",");
+		for(String item : uids) {
+			Picture picture = pictureService.getById(item);
+			picture.setStatus(EStatus.DISABLED);		
+			picture.updateById();
+		}				
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
 }

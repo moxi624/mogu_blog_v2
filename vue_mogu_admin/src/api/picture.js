@@ -24,7 +24,7 @@ export function editPicture(params) {
   })
 }
 
-export function deletPicture(params) {
+export function deletePicture(params) {
   return request({
     url: process.env.ADMIN_API + '/picture/delete',
     method: 'post',

@@ -3,11 +3,14 @@
 	    <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
-        <el-button class="filter-item" type="info" @click="handleReturn" icon="el-icon-refresh">返回</el-button>	      
+        <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
+        <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>        	      
+        <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
       <div class= "imgAll">
         <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" @click="checked(picture)">
+              <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0">
               <img class= "img" :src="picture.pictureUrl"/>
         </div>
         <div class= "removeFloat"></div>      
@@ -45,7 +48,7 @@ import {
   getPictureList,
   addPicture,
   editPicture,
-  deletPicture
+  deletePicture
 } from "@/api/picture";
 
 import { formatData } from "@/utils/webUtils";
@@ -53,6 +56,30 @@ import { formatData } from "@/utils/webUtils";
 import { Loading } from "element-ui";
 
 export default {
+  data() {
+    return {
+      tableData: [],
+      uploadPictureHost: null,
+      fileList: [],
+      pictureSortUid: "",
+      pictureUids: [], //图片uid集合
+      chooseTitle: "全选",
+      isCheckedAll: false, //是否全选
+      form: {
+        uid: null,
+        fileUid: null,
+        picName: null,
+        pictureSortUid: null
+      },
+      loading: true,
+      currentPage: 1,
+      total: null,
+      pageSize: 10,
+      title: "增加图片",
+      dialogFormVisible: false,
+      keyword: ""
+    };
+  },
   created() {
     //传递过来的pictureSordUid
     this.pictureSortUid = this.$route.query.pictureSortUid;
@@ -84,27 +111,6 @@ export default {
       adminUid: "uid00000000000000000000000000000000",
       projectName: "blog",
       sortName: "admin"
-    };
-  },
-  data() {
-    return {
-      tableData: [],
-      uploadPictureHost: null,
-      fileList: [],
-      pictureSortUid: "",
-      form: {
-        uid: null,
-        fileUid: null,
-        picName: null,
-        pictureSortUid: null
-      },
-      loading: true,
-      currentPage: 1,
-      total: null,
-      pageSize: 10,
-      title: "增加图片",
-      dialogFormVisible: false,
-      keyword: ""
     };
   },
   methods: {
@@ -139,10 +145,65 @@ export default {
     },
     //点击单选
     checked: function(data) {
-      console.log("点击了选择");
+      console.log("点击单选", data);
+      let idIndex = this.pictureUids.indexOf(data.uid);
+      if (idIndex >= 0) {
+        //选过了
+        this.pictureUids.splice(idIndex, 1);
+      } else {
+        this.pictureUids.push(data.uid);
+      }
+      console.log(this.pictureUids);
     },
     checkAll: function() {
+      //如果是全选
+      if(this.isCheckedAll) {
+        this.pictureUids = [];
+        this.isCheckedAll = false;
+        this.chooseTitle = "全选";
+      } else {
+        this.pictureUids = [];
+        this.tableData.forEach(function(picture) {
+          this.pictureUids.push(picture.uid);
+        }, this);
+        this.isCheckedAll = true;
+        this.chooseTitle = "取消全选";
+      }
       console.log("点击了全选");
+
+    },
+    handleDelete: function() {
+      if(this.pictureUids.length <=0 ) {
+          this.$message({
+            type: "error",
+            message: "请先选中图片！"
+          })
+      }
+
+      this.$confirm('是否删除选中图片？, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let params = new URLSearchParams();
+        params.append("uid", this.pictureUids.join(",")); //将数组变成,组成
+        deletePicture(params).then(response => {
+          console.log(response);
+          if(response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.pictureList();
+          }          
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });          
+      });
+
     },
     handleReturn: function() {
       this.$router.push({
@@ -211,11 +272,9 @@ export default {
   margin: 30px;
   position: relative;
 }
-
 .removeFloat {
   clear: both;
 }
-
 .imgAll {
   width: 98%;
   overflow-y: auto;
@@ -224,5 +283,8 @@ export default {
   height: 50px;
   margin-left: 30%;
   margin-top: 50px;
+}
+.inputClass {
+  position: absolute;
 }
 </style>

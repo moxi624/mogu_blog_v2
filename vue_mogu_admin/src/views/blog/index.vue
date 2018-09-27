@@ -42,9 +42,9 @@
 	      </template>
 	    </el-table-column>
 
-			<el-table-column label="文章出处" width="150">
+      <el-table-column label="分类" width="100">
 	      <template slot-scope="scope">
-	        <span >{{scope.row.articlesPart}}</span>					
+	        <span>{{ scope.row.blogSort.sortName }}</span>
 	      </template>
 	    </el-table-column>
 		    
@@ -62,9 +62,9 @@
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="分类" width="100">
+      <el-table-column label="文章出处" width="150">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.blogSort.sortName }}</span>
+	        <span >{{scope.row.articlesPart}}</span>					
 	      </template>
 	    </el-table-column>
 
@@ -139,12 +139,8 @@
 		      <el-input v-model="form.title" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-        <el-form-item label="简介" :label-width="formLabelWidth" required>
+        <el-form-item label="简介" :label-width="formLabelWidth">
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
-		    </el-form-item>
-
-        <el-form-item label="内容" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
         <el-form-item label="分类" :label-width="formLabelWidth" required>
@@ -170,7 +166,7 @@
 				<!--<p v-if="labelValue.length > 2" style="color: red;">最多选择两个标签</p>-->
 		    </el-form-item>
 
-				<el-form-item label="点击数" :label-width="formLabelWidth" required>
+				<el-form-item label="点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
 		    </el-form-item>
 
@@ -187,6 +183,10 @@
 
 				<el-form-item label="文章出处" :label-width="formLabelWidth">
 		      <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
+		    </el-form-item>
+
+        <el-form-item label="内容" :label-width="formLabelWidth" required>
+		      <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
 		    </el-form-item>
 
 		  </el-form>
@@ -212,12 +212,15 @@ import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
 import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
+import CKEditor from "../../components/CKEditor";
 export default {
   components: {
-    CheckPhoto
+    CheckPhoto,
+    CKEditor
   },
   data() {
     return {
+       CKEditorData: null,
       tableData: [], //博客数据
       tagData: [], //标签数据
       tagValue: [], //保存选中标签id(编辑时)
@@ -285,11 +288,20 @@ export default {
         content: null,
         tagUid: null,
 				fileUid: null,
-				isOriginal: "1", //是否原创
+        isOriginal: "1", //是否原创
+        clickCount: 0,
 				author: null, //作者
-				articlesPart: null, //文章出处
+				articlesPart: "蘑菇博客", //文章出处
       };
       return formObject;
+    },
+    getCkEditorData: function(data) {
+      this.CKEditorData = data;
+      console.log("获取内容", data);
+      
+    },
+    emptyCkEditorData: function(data) {
+      console.log(data);
     },
     //弹出选择图片框
     checkPhoto: function() {
@@ -332,6 +344,13 @@ export default {
       this.blogList();
     },
     handleAdd: function() {
+      var that = this;
+      try {
+        that.$refs.ckeditor.initData(); //清空CKEditor中内容            
+      } catch (error) {
+        // 第一次还未加载的时候，可能会报错，不过不影响使用
+        // 暂时还没有想到可能解决的方法
+      }        
       console.log("点击了添加博客");
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
@@ -374,6 +393,7 @@ export default {
       this.blogList();
     },
     submitForm: function() {
+      this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容 
       this.form.tagUid = this.tagValue.join(",");
       console.log(this.form);
       var params = formatData(this.form);
