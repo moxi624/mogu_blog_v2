@@ -4,15 +4,19 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Blog">
-        <id column="oid" property="oid" />
-        <result column="uid" property="uid" />
+        <id column="uid" property="uid" />
         <result column="title" property="title" />
         <result column="summary" property="summary" />
         <result column="content" property="content" />
         <result column="taguid" property="taguid" />
+        <result column="blogsortuid" property="blogsortuid" />
         <result column="clickcount" property="clickcount" />
         <result column="collectcount" property="collectcount" />
-        <result column="photo" property="photo" />
+        <result column="fileuid" property="fileuid"/>
+        <result column="adminuid" property="adminuid"/>
+        <result column="isoriginal" property="isoriginal"/>
+        <result column="author" property="author"/>
+        <result column="articlespart" property="articlespart"/>
         <result column="status" property="status" />
         <result column="createtime" property="createtime" />
         <result column="updatetime" property="updatetime" />
@@ -20,7 +24,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        oid, uid, title, summary, content, taguid, clickcount, collectcount, photo, status, createtime, updatetime
+        uid, title, summary, content, taguid, blogsortuid, clickcount, collectcount, fileuid, adminuid, isoriginal, author, articlespart, status, createtime, updatetime
     </sql>
 
 </mapper>

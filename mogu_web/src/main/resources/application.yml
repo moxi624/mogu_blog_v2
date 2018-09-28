@@ -49,6 +49,7 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
     
+    
 #eureka相关配置
 eureka:
   client:

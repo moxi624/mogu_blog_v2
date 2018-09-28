@@ -18,14 +18,14 @@ public class BlogSort extends SuperEntity<BlogSort> {
 
 
     /**
-     * 分类介绍
+     * 分类内容
      */
     private String content;
     
     /**
-     * 分类名
+     * 分类简介
      */
-    private String sortName;
+    private String doc;
 
 	public String getContent() {
 		return content;
@@ -35,12 +35,13 @@ public class BlogSort extends SuperEntity<BlogSort> {
 		this.content = content;
 	}
 
-	public String getSortName() {
-		return sortName;
+
+	public String getDoc() {
+		return doc;
 	}
 
-	public void setSortName(String sortName) {
-		this.sortName = sortName;
+	public void setDoc(String doc) {
+		this.doc = doc;
 	}
 
 	public static long getSerialversionuid() {
