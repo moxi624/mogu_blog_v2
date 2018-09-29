@@ -4,120 +4,114 @@ import java.util.Date;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-
 /**
- * <p>
  * 用于建立solr索引实体类
- * </p>
- *
- * @author limbo
- * @since 2018-09-28
+ * @author limboy
+ * @create 2018-09-29 16:12
  */
 public class SolrIndex {
-	
-	/**
-	 * 博客uid
-	 */
-	@Field("id")
-	private String uid;
-	
-	/**
+    /**
+     * 博客uid
+     */
+    @Field("id")
+    private String uid;
+
+    /**
      * 博客标题
      */
-	@Field("blog_title")
+    @Field("blog_title")
     private String title;
 
     /**
      * 博客简介
      */
-	@Field("blog_summary")
+    @Field("blog_summary")
     private String summary;
 
     /**
      * 标签uid
      */
-	@Field("blog_tag")
+    @Field("blog_tag")
     private String tag;
-    
+
     /**
      * 博客分类UID
      */
-	@Field("blog_sort")
+    @Field("blog_sort")
     private String blogSort;
-    
+
     /**
      * 如果原创，作者为管理员名
      */
-	@Field("blog_author")
+    @Field("blog_author")
     private String author;
 
     /**
      * 文章更新时间
      */
-	@Field("blog_updateTime")
+    @Field("blog_updateTime")
     private Date updateTime;
-	
-	public String getUid() {
-		return uid;
-	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+    public String getUid() {
+        return uid;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getSummary() {
-		return summary;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
+    public String getSummary() {
+        return summary;
+    }
 
-	public String getTag() {
-		return tag;
-	}
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
+    public String getTag() {
+        return tag;
+    }
 
-	public String getBlogSort() {
-		return blogSort;
-	}
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
-	public void setBlogSort(String blogSort) {
-		this.blogSort = blogSort;
-	}
+    public String getBlogSort() {
+        return blogSort;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public void setBlogSort(String blogSort) {
+        this.blogSort = blogSort;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-	@Override
-	public String toString() {
-		return "SolrIndex [uid=" + uid + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
-				+ blogSort + ", author=" + author + ", updateTime=" + updateTime + "]";
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
+    @Override
+    public String toString() {
+        return "SolrIndex [uid=" + uid + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
+                + blogSort + ", author=" + author + ", updateTime=" + updateTime + "]";
+    }
 
 }

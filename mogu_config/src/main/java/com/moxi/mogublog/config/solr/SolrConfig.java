@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.convert.SolrJConverter;
 
-
+/**
+ * @author limboy
+ * @create 2018-09-29 16:09
+ */
 @Configuration
 public class SolrConfig {
     @Value("${spring.data.solr.host}")
@@ -28,4 +31,3 @@ public class SolrConfig {
         return template;
     }
 }
-

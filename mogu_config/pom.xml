@@ -28,6 +28,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- spring data solr -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-solr</artifactId>
+		</dependency>
 		
   		<!-- mp依赖
   			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
@@ -39,12 +45,6 @@
             <version>3.0-RC1</version>
         </dependency>
         <!-- mybatis-plus end -->
-        
-       	<!-- spring data solr -->
-        <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-solr</artifactId>
-		</dependency>
     	
         <dependency>
 			<groupId>mysql</groupId>

@@ -68,15 +68,15 @@ public class BlogSortRestApi {
 	@ApiOperation(value="增加博客分类", notes="增加博客分类", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
-			@ApiParam(name = "doc", value = "分类名",required = false) @RequestParam(name = "doc", required = false) String doc,
+			@ApiParam(name = "sortName", value = "分类名",required = false) @RequestParam(name = "sortName", required = false) String sortName,
 			@ApiParam(name = "content", value = "分类介绍",required = false) @RequestParam(name = "content", required = false) String content) {
 		
-		if(StringUtils.isEmpty(doc)) {
+		if(StringUtils.isEmpty(sortName)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		BlogSort blogSort = new BlogSort();
 		blogSort.setContent(content);
-		blogSort.setDoc(doc);
+		blogSort.setSortName(sortName);
 		blogSort.setStatus(EStatus.ENABLE);
 		blogSort.insert();
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
@@ -86,7 +86,7 @@ public class BlogSortRestApi {
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
 			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid,
-			@ApiParam(name = "doc", value = "分类名",required = false) @RequestParam(name = "doc", required = false) String doc,
+			@ApiParam(name = "sortName", value = "分类名",required = false) @RequestParam(name = "sortName", required = false) String sortName,
 			@ApiParam(name = "content", value = "分类介绍",required = false) @RequestParam(name = "content", required = false) String content	) {
 		
 		if(StringUtils.isEmpty(uid)) {
@@ -95,7 +95,7 @@ public class BlogSortRestApi {
 		
 		BlogSort blogSort = new BlogSort();
 		blogSort.setContent(content);
-		blogSort.setDoc(doc);
+		blogSort.setSortName(sortName);
 		blogSort.setStatus(EStatus.ENABLE);
 		blogSort.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");

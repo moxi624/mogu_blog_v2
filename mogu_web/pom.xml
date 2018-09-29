@@ -53,7 +53,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
 		</dependency>
-		
 	</dependencies>
 
 	<!--spring boot打包的话需要指定一个唯一的入门-->
