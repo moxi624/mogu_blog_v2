@@ -1,10 +1,13 @@
 package com.moxi.mogublog.admin.restapi;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +37,7 @@ public class SolrIndexRestApi {
 
     private static Logger log = LogManager.getLogger(SolrIndexRestApi.class);
 
-    /*@ApiOperation(value="搜索Blog", notes="搜索Blog")
+    @ApiOperation(value="搜索Blog", notes="搜索Blog")
     @GetMapping("/searchBlog")
     public String searchBlog(HttpServletRequest request,
                              @ApiParam(name = "keywords", value = "关键字",required = true)@RequestParam(required=true)String keywords) {
@@ -43,7 +46,6 @@ public class SolrIndexRestApi {
         return ResultUtil.result(SysConf.SUCCESS, map);
 
     }
-    */
 
     @ApiOperation(value="初始化solr索引", notes="初始化solr索引")
     @PostMapping("/initIndex")

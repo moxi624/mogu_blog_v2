@@ -144,6 +144,22 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/solrIndex',
+    name: '系统管理',
+    meta: { title: '系统管理', icon: 'example' },
+    children: [
+      {
+        path: 'solrIndex',
+        name: '索引管理',
+        component: () => import('@/views/solrIndex/index'),
+        meta: { title: '索引管理', icon: 'table' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
