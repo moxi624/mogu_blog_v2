@@ -1,25 +1,24 @@
 /*
-SQLyog Ultimate v12.09 (64 bit)
-MySQL - 10.1.35-MariaDB : Database - mogu_blog
-*********************************************************************
-*/
+Navicat MySQL Data Transfer
 
-/*!40101 SET NAMES utf8 */;
+Source Server         : mysql
+Source Server Version : 50527
+Source Host           : localhost:3306
+Source Database       : mogu_blog
 
-/*!40101 SET SQL_MODE=''*/;
+Target Server Type    : MYSQL
+Target Server Version : 50527
+File Encoding         : 65001
 
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`mogu_blog` /*!40100 DEFAULT CHARACTER SET utf8 */;
+Date: 2018-09-29 19:29:52
+*/
 
-USE `mogu_blog`;
+SET FOREIGN_KEY_CHECKS=0;
 
-/*Table structure for table `t_admin` */
-
+-- ----------------------------
+-- Table structure for t_admin
+-- ----------------------------
 DROP TABLE IF EXISTS `t_admin`;
-
 CREATE TABLE `t_admin` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_name` varchar(255) NOT NULL COMMENT '用户名',
@@ -40,10 +39,34 @@ CREATE TABLE `t_admin` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员表';
 
-/*Table structure for table `t_blog` */
+-- ----------------------------
+-- Records of t_admin
+-- ----------------------------
+INSERT INTO `t_admin` VALUES ('1f01cd1d2f474743b241d74008b12333', '王五', '123456', '1', '1', '315606094@qq.com', '2018-09-29', '13855481824', null, null, '0', '2018-09-29 19:03:45', '127.0.0.1', '1', '2018-09-01 19:05:05', '2018-09-01 19:05:08');
+INSERT INTO `t_admin` VALUES ('1f01cd1d2f474743b241d74008b12334', '张三', '123456', '0', '1', '196430606@qq.com', '2018-09-04', '14798521755', null, null, '0', '2018-09-07 19:04:53', '127.0.0.1', '1', '2018-09-04 19:05:12', '2018-09-04 19:05:16');
+INSERT INTO `t_admin` VALUES ('1f01cd1d2f474743b241d74008b12335', '赵六', '123456', '1', '1', '460929265@qq.com', '2018-09-19', '26151631845', null, null, '0', '2018-09-07 19:06:03', '127.0.0.1', '1', '2018-08-07 19:06:11', '2018-08-07 19:06:17');
 
+-- ----------------------------
+-- Table structure for t_admin_role
+-- ----------------------------
+DROP TABLE IF EXISTS `t_admin_role`;
+CREATE TABLE `t_admin_role` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `admin_uid` varchar(32) NOT NULL COMMENT '管理员id',
+  `role_uid` varchar(32) NOT NULL COMMENT '角色id',
+  `creat_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_admin_role
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_blog
+-- ----------------------------
 DROP TABLE IF EXISTS `t_blog`;
-
 CREATE TABLE `t_blog` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `title` varchar(200) DEFAULT NULL COMMENT '博客标题',
@@ -64,10 +87,17 @@ CREATE TABLE `t_blog` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='博客表';
 
-/*Table structure for table `t_blog_sort` */
+-- ----------------------------
+-- Records of t_blog
+-- ----------------------------
+INSERT INTO `t_blog` VALUES ('1f01cd1d2f474743b241d74008bcdbea', '测试1', '测试简介1', '这是一篇测试博客1', '1f01cd1d2f474743b241d74008bcdbe2', '26', '1232', '1f01cd1d2f474743b241d74008bcdb12', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1f01cd1d2f474743b241d74008b12334', '1', '七七', '蘑菇博客', '1f01cd1d2f474743b241d74008bcd125');
+INSERT INTO `t_blog` VALUES ('1f01cd1d2f474743b241d74008bcdbec', '测试博客', '测试简介', '这是一篇测试博客', '1f01cd1d2f474743b241d74008bcdbe1', '312312', '1321312', '1f01cd1d2f474743b241d74008bcdb11', '1', '2018-09-29 18:48:58', '2018-09-29 18:48:58', '1f01cd1d2f474743b241d74008b12333', '1', '哈哈', '蘑菇博客', '1f01cd1d2f474743b241d74008bcd124');
+INSERT INTO `t_blog` VALUES ('1f01cd1d2f474743b241d74008bcdbee', '测试2', '测试简介2', '这是一篇测试博客2', '1f01cd1d2f474743b241d74008bcdbe3', '5416', '640', '1f01cd1d2f474743b241d74008bcdb13', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1f01cd1d2f474743b241d74008b12335', '1', '巴巴', '蘑菇博客', '1f01cd1d2f474743b241d74008bcd126');
 
+-- ----------------------------
+-- Table structure for t_blog_sort
+-- ----------------------------
 DROP TABLE IF EXISTS `t_blog_sort`;
-
 CREATE TABLE `t_blog_sort` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `sort_name` varchar(255) DEFAULT NULL COMMENT '分类内容',
@@ -78,10 +108,17 @@ CREATE TABLE `t_blog_sort` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='博客分类表';
 
-/*Table structure for table `t_collect` */
+-- ----------------------------
+-- Records of t_blog_sort
+-- ----------------------------
+INSERT INTO `t_blog_sort` VALUES ('1f01cd1d2f474743b241d74008bcd124', '慢生活', '诗和远方', '2018-09-29 18:59:09', '2018-09-29 18:59:11', '1');
+INSERT INTO `t_blog_sort` VALUES ('1f01cd1d2f474743b241d74008bcd125', '随想', '哈哈吧看你', '2018-09-29 18:59:54', '2018-09-29 18:59:57', '1');
+INSERT INTO `t_blog_sort` VALUES ('1f01cd1d2f474743b241d74008bcd126', '读者', '散文', '2018-09-19 19:00:34', '2018-09-25 19:00:37', '1');
 
+-- ----------------------------
+-- Table structure for t_collect
+-- ----------------------------
 DROP TABLE IF EXISTS `t_collect`;
-
 CREATE TABLE `t_collect` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_uid` varchar(32) NOT NULL COMMENT '用户的uid',
@@ -92,10 +129,14 @@ CREATE TABLE `t_collect` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏表';
 
-/*Table structure for table `t_comment` */
+-- ----------------------------
+-- Records of t_collect
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_comment
+-- ----------------------------
 DROP TABLE IF EXISTS `t_comment`;
-
 CREATE TABLE `t_comment` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_uid` varchar(32) DEFAULT NULL COMMENT '用户uid',
@@ -110,10 +151,14 @@ CREATE TABLE `t_comment` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论表';
 
-/*Table structure for table `t_feedback` */
+-- ----------------------------
+-- Records of t_comment
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_feedback
+-- ----------------------------
 DROP TABLE IF EXISTS `t_feedback`;
-
 CREATE TABLE `t_feedback` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_uid` varchar(32) NOT NULL COMMENT '用户uid',
@@ -124,10 +169,14 @@ CREATE TABLE `t_feedback` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='反馈表';
 
-/*Table structure for table `t_link` */
+-- ----------------------------
+-- Records of t_feedback
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_link
+-- ----------------------------
 DROP TABLE IF EXISTS `t_link`;
-
 CREATE TABLE `t_link` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `title` varchar(255) DEFAULT NULL COMMENT '友情链接标题',
@@ -140,10 +189,14 @@ CREATE TABLE `t_link` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='友情链接表';
 
-/*Table structure for table `t_permission` */
+-- ----------------------------
+-- Records of t_link
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_permission
+-- ----------------------------
 DROP TABLE IF EXISTS `t_permission`;
-
 CREATE TABLE `t_permission` (
   `uid` varchar(32) NOT NULL COMMENT '权限id',
   `name` varchar(255) NOT NULL COMMENT '权限名',
@@ -155,10 +208,14 @@ CREATE TABLE `t_permission` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `t_picture` */
+-- ----------------------------
+-- Records of t_permission
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_picture
+-- ----------------------------
 DROP TABLE IF EXISTS `t_picture`;
-
 CREATE TABLE `t_picture` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `file_uid` varchar(32) DEFAULT NULL COMMENT '图片uid',
@@ -170,10 +227,14 @@ CREATE TABLE `t_picture` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片表';
 
-/*Table structure for table `t_picture_sort` */
+-- ----------------------------
+-- Records of t_picture
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_picture_sort
+-- ----------------------------
 DROP TABLE IF EXISTS `t_picture_sort`;
-
 CREATE TABLE `t_picture_sort` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `file_uid` varchar(32) DEFAULT NULL COMMENT '分类图片uid',
@@ -185,10 +246,14 @@ CREATE TABLE `t_picture_sort` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片分类表';
 
-/*Table structure for table `t_role` */
+-- ----------------------------
+-- Records of t_picture_sort
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_role
+-- ----------------------------
 DROP TABLE IF EXISTS `t_role`;
-
 CREATE TABLE `t_role` (
   `uid` varchar(32) NOT NULL COMMENT '角色id',
   `name` varchar(255) NOT NULL COMMENT '角色名',
@@ -198,10 +263,14 @@ CREATE TABLE `t_role` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `t_role_permission` */
+-- ----------------------------
+-- Records of t_role
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_role_permission
+-- ----------------------------
 DROP TABLE IF EXISTS `t_role_permission`;
-
 CREATE TABLE `t_role_permission` (
   `uid` varchar(32) NOT NULL COMMENT '主键',
   `role_uid` varchar(32) NOT NULL COMMENT '角色id',
@@ -212,10 +281,14 @@ CREATE TABLE `t_role_permission` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Table structure for table `t_tag` */
+-- ----------------------------
+-- Records of t_role_permission
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_tag
+-- ----------------------------
 DROP TABLE IF EXISTS `t_tag`;
-
 CREATE TABLE `t_tag` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `content` varchar(1000) DEFAULT NULL COMMENT '标签内容',
@@ -226,10 +299,17 @@ CREATE TABLE `t_tag` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='标签表';
 
-/*Table structure for table `t_user` */
+-- ----------------------------
+-- Records of t_tag
+-- ----------------------------
+INSERT INTO `t_tag` VALUES ('1f01cd1d2f474743b241d74008bcdbe1', 'java', '1', '0', '2018-09-29 19:06:58', '2018-09-29 19:07:00');
+INSERT INTO `t_tag` VALUES ('1f01cd1d2f474743b241d74008bcdbe2', 'spring', '1', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `t_tag` VALUES ('1f01cd1d2f474743b241d74008bcdbe3', 'vue', '1', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
+-- ----------------------------
+-- Table structure for t_user
+-- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
-
 CREATE TABLE `t_user` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_name` varchar(255) NOT NULL COMMENT '用户名',
@@ -250,10 +330,14 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
-/*Table structure for table `t_visitor` */
+-- ----------------------------
+-- Records of t_user
+-- ----------------------------
 
+-- ----------------------------
+-- Table structure for t_visitor
+-- ----------------------------
 DROP TABLE IF EXISTS `t_visitor`;
-
 CREATE TABLE `t_visitor` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_name` varchar(255) DEFAULT NULL COMMENT '用户名',
@@ -267,7 +351,6 @@ CREATE TABLE `t_visitor` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游客表';
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+-- ----------------------------
+-- Records of t_visitor
+-- ----------------------------
