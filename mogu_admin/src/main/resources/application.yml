@@ -52,7 +52,7 @@ spring:
   #Solr
   data:
     solr:
-      host: http://localhost:8604/solr
+      host: http://localhost:8080/solr
       core: collection1
       repositories:
         enabled: true
