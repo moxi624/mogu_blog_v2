@@ -254,6 +254,22 @@ public class StringUtils {
 	    }
 	    return s;
 	}
+
+	/**
+	 * 按code把list的数组转换成字符串
+	 * @param stringList
+	 * @return
+	 */
+	public static String listTranformString(List<String> list,String code){
+
+
+		String s = "";
+		if(list==null||list.size()<=0) {
+			return s;
+		}
+		s = String.join(code, list);
+		return s;
+	}
 	
     public static boolean isNotBlank(String str) {
         return !StringUtils.isBlank(str);
