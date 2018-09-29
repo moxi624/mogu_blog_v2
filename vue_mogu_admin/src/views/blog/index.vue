@@ -210,9 +210,10 @@
 import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
-import { formatData } from "@/utils/webUtils";
+import { formatData, formatDataToJson, formatDataToForm } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
+var querystring = require('querystring');
 export default {
   components: {
     CheckPhoto,
@@ -397,7 +398,7 @@ export default {
       this.form.tagUid = this.tagValue.join(",");
       console.log(this.form);
       var params = formatData(this.form);
-      console.log("点击了提交表单", params);
+      
       if (this.isEditForm) {
         editBlog(params).then(response => {
           console.log(response);
@@ -412,12 +413,11 @@ export default {
               message: response.data
             });
           }
-
           this.dialogFormVisible = false;
           this.blogList();
         });
       } else {
-        addBlog(params).then(response => {
+        addBlog(this.form).then(response => {
           console.log(response);
           this.$message({
             type: "success",
