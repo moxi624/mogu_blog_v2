@@ -80,6 +80,16 @@ public class Blog extends SuperEntity<Blog> {
     private String articlesPart;
     
     /**
+     *	推荐级别，用于首页推荐
+     *	0：正常
+     *	1：一级推荐(轮播图)
+     *	2：二级推荐(top)
+     *	3：三级推荐 ()
+     *	4：四级 推荐 (特别推荐)
+     */
+    private Integer level;
+    
+    /**
      * 以下字段不存入数据库，封装为了方便使用 
      */
     @TableField(exist = false)
@@ -244,5 +254,13 @@ public class Blog extends SuperEntity<Blog> {
 	public void setBlogSort(BlogSort blogSort) {
 		this.blogSort = blogSort;
 	}
-	
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
 }

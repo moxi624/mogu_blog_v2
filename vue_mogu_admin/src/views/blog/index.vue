@@ -62,9 +62,13 @@
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="文章出处" width="150">
+      <el-table-column label="推荐等级" width="150">
 	      <template slot-scope="scope">
-	        <span >{{scope.row.articlesPart}}</span>					
+	        <span v-if="scope.row.level==0">正常</span>
+          <span v-if="scope.row.level==1">一级推荐</span>
+          <span v-if="scope.row.level==2">二级推荐</span>
+          <span v-if="scope.row.level==3">三级推荐</span>
+          <span v-if="scope.row.level==4">四级推荐</span>					
 	      </template>
 	    </el-table-column>
 
@@ -166,6 +170,17 @@
 				<!--<p v-if="labelValue.length > 2" style="color: red;">最多选择两个标签</p>-->
 		    </el-form-item>
 
+        <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
+				<el-select v-model="form.level" size="small" placeholder="请选择">
+					<el-option
+				      v-for="item in blogLevelList"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				</el-select>
+		    </el-form-item>
+
 				<el-form-item label="点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
 		    </el-form-item>
@@ -238,6 +253,13 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
+      blogLevelList: [
+        { label: "正常", value: 0 },
+        { label: "一级推荐", value: 1 },
+        { label: "二级推荐", value: 2 },
+        { label: "三级推荐", value: 3 },
+        { label: "四级推荐", value: 4 },
+      ],
       form: {
         uid: null,
         title: null,
@@ -291,7 +313,8 @@ export default {
 				fileUid: null,
         isOriginal: "1", //是否原创
         clickCount: 0,
-				author: null, //作者
+        author: null, //作者
+        level: 0, //推荐等级，默认是正常
 				articlesPart: "蘑菇博客", //文章出处
       };
       return formObject;

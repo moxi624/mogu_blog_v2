@@ -136,6 +136,7 @@ public class BlogRestApi {
 			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
 			@ApiParam(name = "tagUid", value = "标签uid",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
 			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue = "1") Integer clickCount,
+			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
 			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
 			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
 			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
@@ -155,10 +156,10 @@ public class BlogRestApi {
 		blog.setClickCount(clickCount);
 		blog.setCollectCount(collectCount);
 		blog.setFileUid(fileUid);
+		blog.setLevel(level);
 		blog.setAuthor(author);
 		blog.setArticlesPart(articlesPart);
 		blog.setIsOriginal(isOriginal);
-
 		blog.setStatus(EStatus.ENABLE);
 		blogService.save(blog);
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
@@ -174,6 +175,7 @@ public class BlogRestApi {
 			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
 			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
+			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
 			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
 			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
 			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
@@ -191,6 +193,7 @@ public class BlogRestApi {
 		blog.setBlogSortUid(blogSortUid);
 		blog.setFileUid(fileUid);
 		blog.setClickCount(clickCount);
+		blog.setLevel(level);
 		blog.setCollectCount(collectCount);
 		blog.setAuthor(author);
 		blog.setIsOriginal(isOriginal);
