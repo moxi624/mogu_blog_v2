@@ -10,7 +10,7 @@
    	<properties>
 	     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	     <!-- <spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version> -->
-	     <java.version>1.7</java.version>
+	     <java.version>1.8</java.version>
  	</properties>
  
  <parent>

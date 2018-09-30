@@ -16,16 +16,16 @@ public class BlogSort extends SuperEntity<BlogSort> {
 
     private static final long serialVersionUID = 1L;
 
-
-    /**
-     * 分类介绍
-     */
-    private String content;
     
     /**
      * 分类名
      */
     private String sortName;
+    
+    /**
+     * 分类介绍
+     */
+    private String content;    
 
 	public String getContent() {
 		return content;

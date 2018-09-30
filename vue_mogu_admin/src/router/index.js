@@ -160,6 +160,34 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/adminRestApi',
+    name: '接口管理',
+    meta: { title: '接口管理', icon: 'example' },
+    children: [
+      {
+        path: 'adminRestApi',
+        name: 'Admin接口',
+        component: () => import('@/views/restapi/adminRestApi'),
+        meta: { title: 'Admin接口', icon: 'table' }
+      },
+      {
+        path: 'pictureRestApi',
+        name: 'Picture接口',
+        component: () => import('@/views/restapi/pictureRestApi'),
+        meta: { title: 'Picture接口', icon: 'table' }
+      },
+      {
+        path: 'webRestApi',
+        name: 'Web接口',
+        component: () => import('@/views/restapi/webRestApi'),
+        meta: { title: 'Web接口', icon: 'table' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

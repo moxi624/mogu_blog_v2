@@ -64,6 +64,9 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     //初始化索引
     @Override
     public void initIndex() {
+    	
+    	this.deleteAllIndex(); //清除所有索引
+    	
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
 
         queryWrapper.eq(BaseSysConf.STATUS, EStatus.ENABLE);
