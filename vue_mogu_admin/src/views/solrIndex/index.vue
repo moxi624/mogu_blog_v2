@@ -4,21 +4,23 @@
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-button class= "button" type="success"  @click="handInit" icon="el-icon-refresh">初始化索引</el-button>        	      
     </div>
-    <iframe src="http://localhost:8080/solr" width="100%" height="650px;"></iframe>
+    <iframe :src="solrServiceUrl" width="100%" height="650px;"></iframe>
   </div>
 </template>
 
 <script>
+import { initIndex } from "@/api/solrIndex";
 export default {
   data() {
     return {
-      solrServiceUrl: process.env.SOLR_SERVICEE
+      solrServiceUrl:  process.env.SOLR_API
     };
   },
+  beforeCreate() {
+
+  },
   created() {
-    console.log(process.env.SOLR_SERVICE);
-    this.solrServiceUrl = process.env.SOLR_SERVICEE;
-    console.log(this.solrServiceUrl);
+    
   },
   methods: {
     handInit: function() {
@@ -28,10 +30,15 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "初始化成功!"
-          });
+          initIndex().then(response => {
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: "初始化成功!"
+              });
+            }
+          })
+
         })
         .catch(() => {
           this.$message({

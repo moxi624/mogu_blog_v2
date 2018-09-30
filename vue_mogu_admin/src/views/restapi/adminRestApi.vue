@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <iframe src="http://localhost:8601/swagger-ui.html" width="100%" height="660px;"></iframe>
+    <iframe :src="adminSwaggerUrl" width="100%" height="660px;"></iframe>
   </div>
 </template>
 
@@ -10,13 +10,11 @@ export default {
 
   data() {
     return {
-      solrServiceUrl: process.env.SOLR_SERVICEE,
+      adminSwaggerUrl: process.env.ADMIN_API + "/swagger-ui.html",
     }
   },
   created() {
-    console.log(process.env.SOLR_SERVICE);
-    this.solrServiceUrl = process.env.SOLR_SERVICEE;
-    console.log(this.solrServiceUrl);
+    
   },
   methods: {
 
