@@ -42,17 +42,4 @@
 		</dependencies>
 	</dependencyManagement>
 	
-	<!-- 如果mapper.xml是放在src/main/java目录下，需配置以下-->
-	<build>
-	  <resources>
-	      <resource>
-	          <directory>src/main/java</directory>
-	          <filtering>false</filtering>
-	          <includes>
-	              <include>**/mapper/*.xml</include>
-	          </includes>
-	      </resource>
-	  </resources>
-	</build>
-	
 </project>

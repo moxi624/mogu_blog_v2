@@ -1,6 +1,9 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  // BASE_API: '"https://easy-mock.com/mock/5950a2419adc231f356a6636/vue-admin"',
-  BASE_API: '"http://localhost:8080"',
+  
+  ADMIN_API: '"http://120.79.70.126:8601"',
+  PICTURE_API: '"http://120.79.70.126:8602"',
+  WEB_API: '"http://120.79.70.126:8603"',
+  SOLR_API: '"http://120.79.70.126:8080/solr"'
 }
