@@ -20,7 +20,7 @@
  <div class="picsbox"> 
   <div class="banner">
     <div id="banner" class="fader">
-      <li v-for="item in bannerData" :key="item.uid" class="slide" ><a href="/" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
+      <li v-for="item in firstData" :key="item.uid" class="slide" ><a href="/" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
       <div class="fader_controls">
         <div class="page prev" data-target="prev">&lsaquo;</div>
         <div class="page next" data-target="next">&rsaquo;</div>
@@ -30,14 +30,17 @@
     </div>
   </div>
   <!--banner end-->
+
+  <!-- 二级推荐 -->
   <div class="toppic">
-    <li v-for="item in topicData" :key="item.uid"> <a href="/" target="_blank"> <i><img :src="item.photoList[0]"></i>
+    <li v-for="item in secondData" :key="item.uid"> <a href="/" target="_blank"> <i><img :src="item.photoList[0]"></i>
       <h2>{{item.title}}</h2>
       <span>{{item.blogSort.sortName}}</span> </a> 
     </li>
   </div>
   </div>
   <div class="blank"></div>
+
   <!--blogsbox begin-->
   <div class="blogsbox">
     	<div v-for="item in newBlogData" :key="item.uid" class="blogs" data-scroll-reveal="enter bottom over 1s" >	  
@@ -57,40 +60,30 @@
   </div>
   <!--blogsbox end-->
   
+  <!-- 三级推荐 -->
   <div class="sidebar">
     <div class="zhuanti">
       <h2 class="hometitle">特别推荐</h2>
       <ul>
-        <li> <i><img src="../../static/images/banner03.jpg"></i>
-          <p>帝国cms调用方法 <span><a href="/">阅读</a></span> </p>
-        </li>
-        <li> <i><img src="../../static/images/b04.jpg"></i>
-          <p>5.20 我想对你说 <span><a href="/">阅读</a></span></p>
-        </li>
-        <li> <i><img src="../../static/images/b05.jpg"></i>
-          <p>个人博客，属于我的小世界！ <span><a href="/">阅读</a></span></p>
+        <li v-for="item in thirdData" :key="item.uid"> <i><img :src="item.photoList[0]"></i>
+          <p>{{item.title}} <span><a href="/">阅读</a></span> </p>
         </li>
       </ul>
     </div>
     <div class="tuijian">
       <h2 class="hometitle">推荐文章</h2>
-      <ul class="tjpic">
-        <i><img src="../../static/images/toppic01.jpg"></i>
-        <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
+      <ul class="tjpic" v-if="fourthData[0]">
+        <i><img :src="fourthData[0].photoList[0]"></i>
+        <p><a href="/">{{fourthData[0].title}}</a></p>
       </ul>
+
       <ul class="sidenews">
-        <li> <i><img src="../../static/images/toppic01.jpg"></i>
-          <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/toppic02.jpg"></i>
-          <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/v1.jpg"></i>
-          <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/v2.jpg"></i>
-          <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-          <span>2018-05-13</span> </li>
+
+        <li v-for="(item, index) in fourthData" v-if="index != 0" :key="item.uid">
+          <i><img :src="item.photoList[0]"></i>
+          <p><a href="/">{{item.title}}</a></p>
+          <span>{{item.createTime}}</span> 
+        </li>
       </ul>
     </div>
     <div class="tuijian">
@@ -156,7 +149,7 @@
 <script>
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBanner, getTopic, getNewBlog, getHotTag, getLink } from "../api/index";
+import { getBlogByLevel, getNewBlog, getHotTag, getLink } from "../api/index";
 export default {
   name: "index",
   data() {
@@ -169,10 +162,12 @@ export default {
   },
   data() {
     return {
-      bannerData: [], //；轮播图数据
-      topicData: [], //顶部推荐
+      firstData: [], //；一级推荐数据
+      secondData: [], //；二级级推荐数据
+      thirdData: [], //三级推荐
+      fourthData: [], //四级推按
       newBlogData: [], //最新文章
-      hotTagData: [], //最新文章
+      hotTagData: [], //最新标签
       linkData: [], //友情链接
       keyword: "",
       currentPage: 1,
@@ -184,29 +179,45 @@ export default {
     console.log("测试", process.env.WEB_API);
     var that = this;
     var params = new URLSearchParams();
-    params.append("currentPage", 0);
-    params.append("pageSize", 5);
-    getBanner(params).then(response => {
-      console.log("博客列表", response);
-      this.bannerData = response.data.records;
-      this.currentPage = response.data.current;
-      this.pageSize = response.data.size;
-      this.total = response.data.total;
+    params.append("level", 1);    
+    getBlogByLevel(params).then(response => {
+      console.log("一级推荐", response);
+      this.firstData = response.data.records;      
     });
 
-    var topicParams = new URLSearchParams();
-    topicParams.append("currentPage", 0);
-    topicParams.append("pageSize", 2);
-    getTopic(topicParams).then(response => {
-      console.log("博客列表", response);
-      this.topicData = response.data.records;
+
+    var secondParams = new URLSearchParams();
+    secondParams.append("currentPage", 0);
+    secondParams.append("pageSize", 2);
+    secondParams.append("level", 2);    
+    getBlogByLevel(secondParams).then(response => {
+      console.log("二级推荐", response);
+      this.secondData = response.data.records;
+    });
+
+    var thirdParams = new URLSearchParams();
+    thirdParams.append("currentPage", 0);
+    thirdParams.append("pageSize", 3);
+    thirdParams.append("level", 3);    
+    getBlogByLevel(thirdParams).then(response => {
+      console.log("三级推荐", response);
+      this.thirdData = response.data.records;
+    });
+
+    var fourthParams = new URLSearchParams();
+    fourthParams.append("currentPage", 0);
+    fourthParams.append("pageSize", 5);
+    fourthParams.append("level", 4);    
+    getBlogByLevel(fourthParams).then(response => {
+      console.log("四级推荐", response);
+      this.fourthData = response.data.records;
     });
 
     var newBlogParams = new URLSearchParams();
     newBlogParams.append("currentPage", 0);
     newBlogParams.append("pageSize", 30);
-    getTopic(newBlogParams).then(response => {
-      console.log("博客列表", response);
+    getNewBlog(newBlogParams).then(response => {
+      console.log("最新博客", response);
       this.newBlogData = response.data.records;
     });
 

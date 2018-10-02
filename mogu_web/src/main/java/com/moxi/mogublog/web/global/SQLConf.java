@@ -18,6 +18,7 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String PICTURE_SORT_UID = "picture_sort_uid";
 	
 	public final static String CLICK_COUNT = "click_count";
+	public static final String LEVEL = "level";
 	
 	
 }

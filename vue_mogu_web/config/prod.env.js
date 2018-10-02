@@ -3,6 +3,7 @@ module.exports = {
   NODE_ENV: '"production"',
   
   //配置线上环境
- 	PICTURE_API: '"http://localhost:8602"',
-	WEB_API: '"http://localhost:8603"',
+  BASE_BLOG_API: '"http://120.79.70.126:9527"',
+  PICTURE_API: '"http://120.79.70.126:8602"',
+  WEB_API: '"http://120.79.70.126:8603"',
 }

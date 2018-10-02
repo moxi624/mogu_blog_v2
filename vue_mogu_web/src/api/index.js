@@ -1,16 +1,8 @@
 import request from '@/utils/request'
 
-export function getBanner (params) {
+export function getBlogByLevel (params) {
   return request({
-    url: process.env.WEB_API + '/index/getBanner',
-    method: 'get',
-    params
-  })
-}
-
-export function getTopic (params) {
-  return request({
-    url: process.env.WEB_API + '/index/getTopic',
+    url: process.env.WEB_API + '/index/getBlogByLevel',
     method: 'get',
     params
   })

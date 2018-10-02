@@ -1,7 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +25,6 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
@@ -93,35 +90,19 @@ public class BlogRestApi {
 		
 		for(Blog item : list) {
 			//获取标签
-			if(item != null && !StringUtils.isEmpty(item.getTagUid())) {
-				String uids[] = item.getTagUid().split(",");
-				List<Tag> tagList = new ArrayList<Tag>();
-				for(String uid : uids) {
-					Tag  tag = tagService.getById(uid);
-					if(tag != null && tag.getStatus() != EStatus.DISABLED) {
-						tagList.add(tag);						
-					}
-				}
-				item.setTagList(tagList);
-			}
+			blogService.setTagByBlog(item);
 			
-			//获取标签
-			if(item != null && !StringUtils.isEmpty(item.getBlogSortUid())) {
-				
-				BlogSort blogSort = blogSortService.getById(item.getBlogSortUid());
-				item.setBlogSort(blogSort);
-			}
+			//获取分类
+			blogService.setSortByBlog(item);
 			
 			//获取标题图片
 			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
 				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
-				List<String> picList = WebUtils.getPicture(result);
-				log.info("##### picList: #######" + picList);
+				List<String> picList = WebUtils.getPicture(result);				
 				if(picList != null && picList.size() > 0) {
 					item.setPhotoList(picList); 
 				}
-			}
-			
+			}			
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);
