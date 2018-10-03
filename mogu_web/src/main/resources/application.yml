@@ -8,7 +8,17 @@ data:
     url: http://localhost:8600/
 file:
   upload:
-    path: D:/mogu_blog/data/      
+    path: D:/mogu_blog/data/
+
+#博客相关配置
+BLOG:
+  HOT_COUNT: 5 #热门博客数量
+  NEW_COUNT: 10 #最新博客数据
+  FIRST_COUNT: 5 #一级推荐
+  SECOND_COUNT: 2 #二级推荐
+  THIRD_COUNT: 3 #三级推荐
+  FOURTH_COUNT: 5 #四级推荐
+        
 
 #spring
 spring:

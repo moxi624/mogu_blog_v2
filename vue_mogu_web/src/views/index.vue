@@ -20,7 +20,7 @@
  <div class="picsbox"> 
   <div class="banner">
     <div id="banner" class="fader">
-      <li v-for="item in firstData" :key="item.uid" class="slide" ><a href="/" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
+      <li v-for="item in firstData" :key="item.uid" class="slide"  @click="goToInfo(item.uid)"><a href="javascript:void(0);" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
       <div class="fader_controls">
         <div class="page prev" data-target="prev">&lsaquo;</div>
         <div class="page next" data-target="next">&rsaquo;</div>
@@ -33,7 +33,7 @@
 
   <!-- 二级推荐 -->
   <div class="toppic">
-    <li v-for="item in secondData" :key="item.uid"> <a href="/" target="_blank"> <i><img :src="item.photoList[0]"></i>
+    <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)"> <a href="javascript:void(0);" target="_blank"> <i><img :src="item.photoList[0]"></i>
       <h2>{{item.title}}</h2>
       <span>{{item.blogSort.sortName}}</span> </a> 
     </li>
@@ -172,11 +172,11 @@ export default {
       keyword: "",
       currentPage: 1,
       pageSize: 10,
-      total: 0 //总数量
+      total: 0, //总数量
     };
   },
   created() {
-    console.log("测试", process.env.WEB_API);
+
     var that = this;
     var params = new URLSearchParams();
     params.append("level", 1);    
@@ -184,7 +184,6 @@ export default {
       console.log("一级推荐", response);
       this.firstData = response.data.records;      
     });
-
 
     var secondParams = new URLSearchParams();
     secondParams.append("currentPage", 0);
@@ -221,18 +220,23 @@ export default {
       this.newBlogData = response.data.records;
     });
 
-    var tagParams = new URLSearchParams();
-    getHotTag(tagParams).then(response => {
+    getHotTag().then(response => {
       console.log("标签列表", response);
       this.hotTagData = response.data.records;
     });
 
-    var linkParams = new URLSearchParams();
-    getLink(linkParams).then(response => {
+    getLink().then(response => {
       console.log("友情链接列表", response);
       this.linkData = response.data.records;
     });
 
+  },
+  methods: {
+    //跳转到文章详情
+    goToInfo(uid) {
+      console.log("跳转到文章详情");
+      this.$router.push({ path: '/info', query: { blogUid: uid }});
+    }
   }
 };
 </script>
