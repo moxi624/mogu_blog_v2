@@ -88,23 +88,16 @@
     </div>
     <div class="tuijian">
       <h2 class="hometitle">点击排行</h2>
-      <ul class="tjpic">
-        <i><img src="../../static/images/toppic01.jpg"></i>
-        <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
+      <ul class="tjpic" v-if="hotBlogData[0]">
+        <i><img :src="hotBlogData[0].photoList[0]"></i>
+        <p><a href="/">{{hotBlogData[0].title}}</a></p>
       </ul>
       <ul class="sidenews">
-        <li> <i><img src="../../static/images/toppic01.jpg"></i>
-          <p><a href="/">别让这些闹心的套路</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/toppic02.jpg"></i>
-          <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/v1.jpg"></i>
-          <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-          <span>2018-05-13</span> </li>
-        <li> <i><img src="../../static/images/v2.jpg"></i>
-          <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-          <span>2018-05-13</span> </li>
+        <li v-for="(item, index) in hotBlogData" v-if="index != 0" :key="item.uid"> 
+          <i><img :src="item.photoList[0]"></i>
+          <p><a href="/">{{item.title}}</a></p>
+          <span>{{item.createTime}}</span> 
+        </li>
       </ul>
     </div>
     <div class="cloud">
@@ -149,7 +142,7 @@
 <script>
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBlogByLevel, getNewBlog, getHotTag, getLink } from "../api/index";
+import { getBlogByLevel, getNewBlog, getHotBlog,  getHotTag, getLink } from "../api/index";
 export default {
   name: "index",
   data() {
@@ -167,6 +160,7 @@ export default {
       thirdData: [], //三级推荐
       fourthData: [], //四级推按
       newBlogData: [], //最新文章
+      hotBlogData: [], //最热文章
       hotTagData: [], //最新标签
       linkData: [], //友情链接
       keyword: "",
@@ -210,6 +204,11 @@ export default {
     getBlogByLevel(fourthParams).then(response => {
       console.log("四级推荐", response);
       this.fourthData = response.data.records;
+    });
+
+    getHotBlog().then(response => {
+      console.log("最热博客排行", response);
+      this.hotBlogData = response.data.records;
     });
 
     var newBlogParams = new URLSearchParams();

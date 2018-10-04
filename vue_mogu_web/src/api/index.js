@@ -16,6 +16,14 @@ export function getNewBlog (params) {
   })
 }
 
+export function getHotBlog (params) {
+  return request({
+    url: process.env.WEB_API + '/index/getHotBlog',
+    method: 'get',
+    params
+  })
+}
+
 export function getHotTag (params) {
   return request({
     url: process.env.WEB_API + '/index/getHotTag',
