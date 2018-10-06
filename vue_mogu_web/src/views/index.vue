@@ -19,7 +19,8 @@
   <!--banner begin-->
  <div class="picsbox"> 
   <div class="banner">
-    <div id="banner" class="fader">
+  	<FirstRecommend></FirstRecommend>
+    <!--<div id="banner" class="fader">
       <li v-for="item in firstData" :key="item.uid" class="slide"  @click="goToInfo(item.uid)"><a href="javascript:void(0);" target="_blank"><img :src="item.photoList[0]"><span class="imginfo">{{item.title}}</span></a></li>
       <div class="fader_controls">
         <div class="page prev" data-target="prev">&lsaquo;</div>
@@ -27,7 +28,7 @@
         <ul class="pager_list">
         </ul>
       </div>
-    </div>
+    </div>-->
   </div>
   <!--banner end-->
 
@@ -142,6 +143,7 @@
 <script>
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
+import FirstRecommend from '../components/FirstRecommend';
 import { getBlogByLevel, getNewBlog, getHotBlog,  getHotTag, getLink } from "../api/index";
 export default {
   name: "index",
@@ -151,7 +153,8 @@ export default {
   components: {
     //注册组件
     BlogHead,
-    BlogFooter
+    BlogFooter,
+    FirstRecommend,
   },
   data() {
     return {
