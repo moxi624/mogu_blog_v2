@@ -1,0 +1,30 @@
+<template>
+  <div class="cloud">
+    <h2 class="hometitle">标签云</h2>
+    <ul>
+      <a v-for="item in hotTagData" :key="item.uid" href="/">{{item.content}}</a>
+    </ul>
+  </div>
+</template>
+
+<script>
+import { getHotTag } from "../../api/index";
+export default {
+  name: "TagCloud",
+  data() {
+    return {
+      hotTagData: [] //标签列表
+    };
+  },
+  created() {
+    getHotTag().then(response => {
+      console.log("标签列表", response);
+      this.hotTagData = response.data.records;
+    });
+  },
+  methods: {}
+};
+</script>
+
+<style>
+</style>

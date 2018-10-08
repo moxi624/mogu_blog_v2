@@ -3,17 +3,17 @@
   <!--menu begin-->
   <div class="menu">
     <nav class="nav" id="topnav">
-      <h1 class="logo"><a href="http://localhost:9527/">蘑菇博客</a></h1>
-      <li><a href="http://localhost:9527/">网站首页</a> </li>
-      <li><a href="http://localhost:9527/#/about">关于我</a> </li>
-      <li><a href="http://localhost:9527/#/share">模板分享</a>
+      <h1 class="logo"><a href="javascript:void(0);" @click="goTo('/')">蘑菇博客</a></h1>
+      <li><a href="javascript:void(0);" @click="goTo('/')">网站首页</a> </li>
+      <li><a href="javascript:void(0);" @click="goTo('/about')">关于我</a> </li>
+      <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a>
         <ul class="sub-nav">
-          <li><a href="http://localhost:9527/#/#/share">个人博客模板</a></li>
-          <li><a href="http://localhost:9527/#/share">国外Html5模板</a></li>
-          <li><a href="http://localhost:9527/#/share">企业网站模板</a></li>
+          <li><a href="http://localhost:9527/#/#/share">Java学习教程</a></li>
+          <li><a href="http://localhost:9527/#/share">前端学习</a></li>
+          <li><a href="http://localhost:9527/#/share">Linux学习</a></li>
         </ul>
       </li>
-      <li><a href="http://localhost:9527/#/list">学无止境</a>
+      <li><a href="javascript:void(0);" @click="goTo('/list')">学无止境</a>
         <ul class="sub-nav">
           <li><a href="/list">心得笔记</a></li>
           <li><a href="/list">CSS3|Html5</a></li>
@@ -22,17 +22,9 @@
           <li><a href="/list">JS实例索引</a></li>
         </ul>
       </li>
-      <li><a href="http://localhost:9527/#/life">慢生活</a>
-        <ul class="sub-nav">
-          <li><a href="/life">日记</a></li>
-          <li><a href="/life">欣赏</a></li>
-          <li><a href="/life">程序人生</a></li>
-          <li><a href="/life">经典语录</a></li>
-        </ul>
-      </li>
-      <li><a href="http://localhost:9527/#/time">时间轴</a> </li>
-      <li><a href="http://localhost:9527/#/gbook">留言</a> </li>
-      <li><a href="http://localhost:9527/#/info">内容页</a> </li>
+
+      <li><a href="javascript:void(0);" @click="goTo('/time')">时间轴</a> </li>
+
       <!--search begin-->
       <div id="search_bar" class="search_bar">
         <form  id="searchform" action="[!--news.url--]e/search/index.php" method="post" name="searchform">
@@ -47,7 +39,8 @@
       <!--search end--> 
     </nav>
   </div>
-  <!--menu end--> 
+  <!--menu end-->
+
   <!--mnav begin-->
   <div id="mnav">
     <h2><a href="http://www.yangqq.com" class="mlogo">蘑菇博客</a><span class="navicon"></span></h2>
@@ -82,7 +75,6 @@
         </ul>
       </dd>
       <dt class="list_dt"> <a href="time.html">时间轴</a> </dt>
-      <dt class="list_dt"> <a href="gbook.html">留言</a> </dt>
     </dl>
   </div>
   <!--mnav end--> 
@@ -101,6 +93,20 @@ export default {
   	return {
 			BaseBlog: BASE_BLOG_API  		
     };
+  },
+  methods: {
+    goTo: function(url) {
+      switch(url) {
+        case "/" : { this.$router.push({ path: '/'}); }; break;
+        case "/about" : { this.$router.push({ path: '/about'}); }; break;
+        case "/study" : { this.$router.push({ path: '/share'}); }; break;
+        case "/list" : { this.$router.push({ path: '/list'}); }; break;
+        case "/time" : { this.$router.push({ path: '/time'}); }; break;
+      }
+
+      console.log("点击了goto");
+      
+    }
   }
 }
 </script>
