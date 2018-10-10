@@ -356,6 +356,7 @@ export default {
     },
     checkPhoto() {
       this.photoList = [];
+      this.fileIds = "";
       this.photoVisible = true;
     },
     submitStr: function(str, index) {
