@@ -8,5 +8,5 @@ module.exports = merge(prodEnv, {
  	BASE_BLOG_API: '"http://localhost:9527"',
  	PICTURE_API: '"http://localhost:8602"',
 	WEB_API: '"http://localhost:8603"',
-	
+
 })

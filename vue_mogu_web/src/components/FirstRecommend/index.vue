@@ -5,7 +5,7 @@
         <transition-group tag="ul" class='slide-ul' name="list">
           <li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex" @mouseenter="stop" @mouseleave="go">
             <a href="javascript:void(0);"  >
-              <img :src="list.photoList[0]" :alt="list.title" @click="goToInfo(list.uid)">
+              <img v-if="list.photoList" :src="list.photoList[0]" :alt="list.title" @click="goToInfo(list.uid)">
             </a>
             <div class="carousel-title">
               <span>{{list.title}}</span>
