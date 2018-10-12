@@ -1,11 +1,11 @@
 # 蘑菇博客
 
 #### 项目介绍
-个人学习用的博客项目，前台使用Vue +Element , 后端使用spring boot + Mybatis-plus进行开发
+个人学习用的博客项目，前台使用Vue +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合自己的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
-- 现在挺多是SSM或者SSH的博客管理系统，现在我想用spring boot + mybatis-plus  + vue 进行开发
-- 由于原来做过vue + element-ui 做过管理系统，所以现在打算一套自己的、基于当前最新技术栈、前后端分离的博客系统。
+- 现在挺多是SSM或者SSH的博客管理系统，现在我想用spring boot + spring cloud  + vue 的微服务架构
+- 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 
 #### 项目介绍
 
@@ -23,8 +23,8 @@
 
 #### 技术架构
 
-- 后端采用的技术：SpringBoot、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger
-- 前端采用的技术： Vue， Element， ES6
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger
+- 前端采用的技术： Vue， Element， ES6， CKEditor
 
 #### 项目特点
 
@@ -33,3 +33,8 @@
 - 页面交互使用Vue2.x，极大的提高了开发效率
 - 引入swagger文档支持，方便编写API接口文档
 
+#### 致谢
+
+- 感谢杨青小姐姐的博客模板，http://www.yangqq.com/
+- Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
+- 感谢苞米豆提供的Mybatis-plus框架：http://mp.baomidou.com/

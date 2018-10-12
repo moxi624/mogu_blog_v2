@@ -41,7 +41,7 @@
       <div class="bloginfo">
         <ul>
           <li class="author"><a href="/">{{item.author}}</a></li>
-          <li class="lmname"><a href="/">{{item.blogSort.sortName}}</a></li>
+          <li class="lmname" v-if="item.blogSort"><a href="/">{{item.blogSort.sortName}}</a></li>
           <li class="timer">{{item.createTime}}</li>
           <li class="view"><span>{{item.clickCount}}</span></li>
           <li class="like">{{item.collectCount}}</li>
@@ -94,13 +94,19 @@
 <script>
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import FirstRecommend from '../components/FirstRecommend';
-import ThirdRecommend from '../components/ThirdRecommend';
-import FourthRecommend from '../components/FourthRecommend';
-import TagCloud from '../components/TagCloud';
-import HotBlog from '../components/HotBlog';
-import FollowUs from '../components/FollowUs';
-import { getBlogByLevel, getNewBlog, getHotBlog,  getHotTag, getLink } from "../api/index";
+import FirstRecommend from "../components/FirstRecommend";
+import ThirdRecommend from "../components/ThirdRecommend";
+import FourthRecommend from "../components/FourthRecommend";
+import TagCloud from "../components/TagCloud";
+import HotBlog from "../components/HotBlog";
+import FollowUs from "../components/FollowUs";
+import {
+  getBlogByLevel,
+  getNewBlog,
+  getHotBlog,
+  getHotTag,
+  getLink
+} from "../api/index";
 export default {
   name: "index",
   components: {
@@ -112,7 +118,7 @@ export default {
     ThirdRecommend,
     TagCloud,
     HotBlog,
-    FollowUs,
+    FollowUs
   },
   data() {
     return {
@@ -126,42 +132,72 @@ export default {
       linkData: [], //友情链接
       keyword: "",
       currentPage: 1,
-      pageSize: 10,
-      total: 0, //总数量
+      startIndex: 1,
+      pageSize: 15,
+      total: 0 //总数量
     };
   },
-  created() {
-
+  mounted() {
+    // 注册scroll事件并监听
     var that = this;
-
+    window.addEventListener("scroll", function() {
+      let scrollTop = document.documentElement.scrollTop; //当前的的位置
+      let scrollHeight = document.documentElement.scrollHeight; //最高的位置
+      if (scrollTop >= 0.7 * scrollHeight) {
+        that.currentPage = that.currentPage + 1;        
+        var params = new URLSearchParams();
+        params.append("currentPage", that.currentPage);
+        params.append("pageSize", that.pageSize);
+        getNewBlog(params).then(response => {
+          console.log(response);
+          if(response.code == "success" && response.data.records.length > 0) {
+            var newData = that.newBlogData.concat(response.data.records);
+            that.newBlogData = newData;            
+            that.total = response.data.total;
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current;                      
+          }
+          
+        });
+      }
+    });
+  },
+  created() {
     var secondParams = new URLSearchParams();
-    secondParams.append("currentPage", 0);
-    secondParams.append("pageSize", 2);
-    secondParams.append("level", 2);    
+    secondParams.append("level", 2);
     getBlogByLevel(secondParams).then(response => {
       console.log("二级推荐", response);
       this.secondData = response.data.records;
     });
 
-    var newBlogParams = new URLSearchParams();
-    newBlogParams.append("currentPage", 0);
-    newBlogParams.append("pageSize", 30);
-    getNewBlog(newBlogParams).then(response => {
-      console.log("最新博客", response);
-      this.newBlogData = response.data.records;
-    });
+    // 获取最新博客
+    this.newBlogList();
 
     getLink().then(response => {
       console.log("友情链接列表", response);
       this.linkData = response.data.records;
     });
-
   },
   methods: {
     //跳转到文章详情
     goToInfo(uid) {
       console.log("跳转到文章详情");
-      this.$router.push({ path: '/info', query: { blogUid: uid }});
+      this.$router.push({ path: "/info", query: { blogUid: uid } });
+    },
+    //最新博客列表
+    newBlogList() {
+      var params = new URLSearchParams();
+      params.append("currentPage", this.currentPage);
+      params.append("pageSize", this.pageSize);
+      getNewBlog(params).then(response => {
+        console.log("最新博客", response);
+        if(response.code == "success") {
+          this.newBlogData = response.data.records;
+          this.total = response.data.total;
+          this.pageSize = response.data.size;
+          this.currentPage = response.data.current;
+        }        
+      });
     }
   }
 };
