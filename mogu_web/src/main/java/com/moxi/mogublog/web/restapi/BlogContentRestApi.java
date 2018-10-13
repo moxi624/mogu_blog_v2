@@ -23,8 +23,6 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.Link;
-import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
@@ -75,16 +73,44 @@ public class BlogContentRestApi {
 		Blog blog = blogService.getById(uid);
 		
 		if(blog != null) {
-			blogService.setTagByBlog(blog);	
-			
+			blogService.setTagByBlog(blog);				
 			//获取分类
-			blogService.setSortByBlog(blog);	
-			
+			blogService.setSortByBlog(blog);				
 			//设置博客标题图
 			setPhotoListByBlog(blog);	
 		}
 		log.info("返回结果");		
 		return ResultUtil.result(SysConf.SUCCESS, blog);
+	}
+	
+	@ApiOperation(value="根据标签获取相关的博客", notes="根据标签获取相关的博客")
+	@GetMapping("/getSameBlog")
+	public String getNewBlog (HttpServletRequest request,
+			@ApiParam(name = "tagUid", value = "博客标签UID",required = true) @RequestParam(name = "tagUid", required = true) String tagUid,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		if(StringUtils.isEmpty(tagUid)) {
+			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
+		} 
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		queryWrapper.eq(SQLConf.TagUid, tagUid);
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();		
+		for(Blog item : list) {
+			//获取标签
+			blogService.setTagByBlog(item);		
+			//获取分类
+			blogService.setSortByBlog(item);			
+			//设置博客标题图
+			setPhotoListByBlog(item);			
+		}
+		log.info("返回结果");
+		pageList.setRecords(list);
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 
 
@@ -103,8 +129,6 @@ public class BlogContentRestApi {
 				blog.setPhotoList(picList); 
 			}
 		}
-	}
-	
-	
+	}	
 }
 

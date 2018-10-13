@@ -30,10 +30,10 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name: '首页',
-    hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '仪表盘', icon: 'dashboard' }
     }]
   },
 
@@ -42,7 +42,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/blog',
     name: '博客管理',
-    meta: { title: '博客管理', icon: 'example' },
+    meta: { title: '博客管理', icon: 'edit' },
     children: [
       {
         path: 'blog',
@@ -82,7 +82,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/comment',
     name: '消息管理',
-    meta: { title: '消息管理', icon: 'example' },
+    meta: { title: '消息管理', icon: 'message1' },
     children: [
       {
         path: 'comment',
@@ -110,14 +110,14 @@ export const constantRouterMap = [
         path: 'pictureSort',
         name: '图片类别管理',
         component: () => import('@/views/picture/pictureSort'),
-        meta: { title: '图片管理', icon: 'table' }
+        meta: { title: '图片管理', icon: 'picture' }
       },
       {
         path: 'picture',
         name: '图片管理',
         hidden: true,
         component: () => import('@/views/picture/picture'),
-        meta: { title: '图片管理', icon: 'table' }
+        meta: { title: '图片管理', icon: 'picture' }
       }
     ]
   },
@@ -127,7 +127,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/user',
     name: '用户管理',
-    meta: { title: '用户管理', icon: 'example' },
+    meta: { title: '用户管理', icon: 'user1' },
     children: [
       {
         path: 'user',
@@ -149,13 +149,13 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/solrIndex',
     name: '系统管理',
-    meta: { title: '系统管理', icon: 'example' },
+    meta: { title: '系统管理', icon: 'system' },
     children: [
       {
         path: 'solrIndex',
         name: '索引管理',
         component: () => import('@/views/solrIndex/index'),
-        meta: { title: '索引管理', icon: 'table' }
+        meta: { title: '索引管理', icon: 'index' }
       }
     ]
   },
@@ -165,7 +165,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/example/adminRestApi',
     name: '接口管理',
-    meta: { title: '接口管理', icon: 'example' },
+    meta: { title: '接口管理', icon: 'restapi' },
     children: [
       {
         path: 'adminRestApi',

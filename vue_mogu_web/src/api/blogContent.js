@@ -7,3 +7,11 @@ export function getBlogByUid (params) {
     params
   })
 }
+
+export function getSameBlog (params) {
+  return request({
+    url: process.env.WEB_API + '/content/getSameBlog',
+    method: 'get',
+    params
+  })
+}

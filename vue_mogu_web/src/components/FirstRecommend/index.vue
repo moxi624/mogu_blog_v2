@@ -66,8 +66,8 @@ export default {
     },
     //跳转到文章详情
     goToInfo(uid) {
-      console.log("跳转到文章详情");
-      this.$router.push({ path: "/info", query: { blogUid: uid } });
+      let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
+      window.open(routeData.href, '_blank');
     }
   }
 };

@@ -50,4 +50,5 @@ public interface BlogService extends SuperService<Blog> {
 	 * @return
 	 */
 	public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level);
+		
 }

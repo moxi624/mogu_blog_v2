@@ -19,22 +19,22 @@ public class Comment extends SuperEntity<Comment> {
     /**
      * 用户uid
      */
-    private String user_uid;
+    private String userUid;
 
     /**
      * 回复某条评论的uid
      */
-    private String to_uid;
+    private String toUid;
 
     /**
      * 回复某个人的uid
      */
-    private String to_user_uid;
+    private String toUserUid;
 
     /**
      * 用户名
      */
-    private String user_name;
+    private String userName;
 
     /**
      * 评论内容
@@ -44,38 +44,38 @@ public class Comment extends SuperEntity<Comment> {
     /**
      * 博客uid
      */
-    private String blog_uid;
+    private String blogUid;
 
-	public String getUser_uid() {
-		return user_uid;
+	public String getUserUid() {
+		return userUid;
 	}
 
-	public void setUser_uid(String user_uid) {
-		this.user_uid = user_uid;
+	public void setUserUid(String userUid) {
+		this.userUid = userUid;
 	}
 
-	public String getTo_uid() {
-		return to_uid;
+	public String getToUid() {
+		return toUid;
 	}
 
-	public void setTo_uid(String to_uid) {
-		this.to_uid = to_uid;
+	public void setToUid(String toUid) {
+		this.toUid = toUid;
 	}
 
-	public String getTo_user_uid() {
-		return to_user_uid;
+	public String getToUserUid() {
+		return toUserUid;
 	}
 
-	public void setTo_user_uid(String to_user_uid) {
-		this.to_user_uid = to_user_uid;
+	public void setToUserUid(String toUserUid) {
+		this.toUserUid = toUserUid;
 	}
 
-	public String getUser_name() {
-		return user_name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getContent() {
@@ -86,12 +86,12 @@ public class Comment extends SuperEntity<Comment> {
 		this.content = content;
 	}
 
-	public String getBlog_uid() {
-		return blog_uid;
+	public String getBlogUid() {
+		return blogUid;
 	}
 
-	public void setBlog_uid(String blog_uid) {
-		this.blog_uid = blog_uid;
+	public void setBlogUid(String blogUid) {
+		this.blogUid = blogUid;
 	}
 
 	public static long getSerialversionuid() {

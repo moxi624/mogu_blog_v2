@@ -157,14 +157,11 @@ public class IndexRestApi {
 		List<Blog> list = pageList.getRecords();		
 		for(Blog item : list) {
 			//获取标签
-			blogService.setTagByBlog(item);
-			
+			blogService.setTagByBlog(item);		
 			//获取分类
-			blogService.setSortByBlog(item);
-			
+			blogService.setSortByBlog(item);			
 			//设置博客标题图
-			setPhotoListByBlog(item);
-			
+			setPhotoListByBlog(item);			
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);
@@ -218,7 +215,6 @@ public class IndexRestApi {
 			}
 		}
 	}
-	
 	
 }
 

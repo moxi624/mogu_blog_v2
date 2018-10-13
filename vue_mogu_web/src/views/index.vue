@@ -48,6 +48,10 @@
         </ul>
       </div>
     </div>
+    <div class="isEnd">
+      <span v-if="!isEnd">下拉加载更多~</span>  
+      <span v-else>我也是有底线的~</span>  
+    </div>
   </div>
   <!--blogsbox end-->
   
@@ -134,7 +138,8 @@ export default {
       currentPage: 1,
       startIndex: 1,
       pageSize: 15,
-      total: 0 //总数量
+      total: 0, //总数量
+      isEnd: false, //是否到底底部了
     };
   },
   mounted() {
@@ -143,21 +148,22 @@ export default {
     window.addEventListener("scroll", function() {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
       let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-      if (scrollTop >= 0.7 * scrollHeight) {
+      if (scrollTop >= 0.7 * scrollHeight && !that.isEnd) {
         that.currentPage = that.currentPage + 1;        
         var params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
-        getNewBlog(params).then(response => {
-          console.log(response);
+        getNewBlog(params).then(response => {                  
           if(response.code == "success" && response.data.records.length > 0) {
+            that.isEnd = false;
             var newData = that.newBlogData.concat(response.data.records);
             that.newBlogData = newData;            
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current;                      
-          }
-          
+          } else {
+            that.isEnd = true;
+          }          
         });
       }
     });
@@ -182,7 +188,8 @@ export default {
     //跳转到文章详情
     goToInfo(uid) {
       console.log("跳转到文章详情");
-      this.$router.push({ path: "/info", query: { blogUid: uid } });
+      let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
+      window.open(routeData.href, '_blank');
     },
     //最新博客列表
     newBlogList() {
@@ -205,4 +212,10 @@ export default {
 
 
 <style>
+.isEnd {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
 </style>
