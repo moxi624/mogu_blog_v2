@@ -11,6 +11,8 @@ public final class SQLConf extends BaseSQLConf{
 	
 
 	//FileSort表
+	public final static String BLOG_SORT_UID = "blog_sort_uid";
+	public final static String TAG_UID = "tag_uid";
 	public final static String CONTENT = "content";
 	public final static String TITLE = "title";
 	public final static String NAME = "name";

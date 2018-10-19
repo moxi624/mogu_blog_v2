@@ -3,6 +3,38 @@
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入博客名"></el-input>
+        <el-select
+          v-model="sortKeyword"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入分类名"
+          :remote-method="sortRemoteMethod"
+          :loading="loading">
+          <el-option
+            v-for="item in sortOptions"
+            :key="item.uid"
+            :label="item.sortName"
+            :value="item.uid">
+          </el-option>
+        </el-select>
+        <el-select
+          v-model="tagKeyword"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入标签名"
+          :remote-method="tagRemoteMethod"
+          :loading="loading">
+          <el-option
+            v-for="item in tagOptions"
+            :key="item.uid"
+            :label="item.content"
+            :value="item.uid">
+          </el-option>
+        </el-select>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>	              
 	    </div>
@@ -225,10 +257,14 @@
 import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
-import { formatData, formatDataToJson, formatDataToForm } from "@/utils/webUtils";
+import {
+  formatData,
+  formatDataToJson,
+  formatDataToForm
+} from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
-var querystring = require('querystring');
+var querystring = require("querystring");
 export default {
   components: {
     CheckPhoto,
@@ -236,12 +272,17 @@ export default {
   },
   data() {
     return {
-       CKEditorData: null,
+      tagOptions: [], //标签候选框
+      sortOptions: [], //分类候选框
+      loading: false, //搜索框加载状态
+      CKEditorData: null,
       tableData: [], //博客数据
       tagData: [], //标签数据
       tagValue: [], //保存选中标签id(编辑时)
       blogSortData: [],
       keyword: "",
+      tagKeyword: "", //标签搜索
+      sortKeyword: "", //分类搜索
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -258,7 +299,7 @@ export default {
         { label: "一级推荐", value: 1 },
         { label: "二级推荐", value: 2 },
         { label: "三级推荐", value: 3 },
-        { label: "四级推荐", value: 4 },
+        { label: "四级推荐", value: 4 }
       ],
       form: {
         uid: null,
@@ -266,16 +307,16 @@ export default {
         summary: null,
         content: null,
         tagUid: null,
-				fileUid: null,
-				isOriginal: null, //是否原创
-				author: null, //作者
-				articlesPart: null, //文章出处
+        fileUid: null,
+        isOriginal: null, //是否原创
+        author: null, //作者
+        articlesPart: null //文章出处
       }
     };
   },
   created() {
     var that = this;
-    
+
     this.blogList(); //获取博客列表
 
     var tagParams = new URLSearchParams();
@@ -294,6 +335,8 @@ export default {
     blogList: function() {
       var params = new URLSearchParams();
       params.append("keyword", this.keyword);
+      params.append("blogSortUid", this.sortKeyword);
+      params.append("tagUid", this.tagKeyword);
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getBlogList(params).then(response => {
@@ -310,22 +353,47 @@ export default {
         summary: null,
         content: null,
         tagUid: null,
-				fileUid: null,
+        fileUid: null,
         isOriginal: "1", //是否原创
         clickCount: 0,
         author: null, //作者
         level: 0, //推荐等级，默认是正常
-				articlesPart: "蘑菇博客", //文章出处
+        articlesPart: "蘑菇博客" //文章出处
       };
       return formObject;
     },
     getCkEditorData: function(data) {
       this.CKEditorData = data;
       console.log("获取内容", data);
-      
     },
     emptyCkEditorData: function(data) {
       console.log(data);
+    },
+    //标签远程搜索函数
+    tagRemoteMethod: function(query) {
+      if (query !== "") {
+        var params = new URLSearchParams();
+        params.append("keyword", query);
+        getTagList(params).then(response => {
+          console.log(response);
+          this.tagOptions = response.data.records;
+        });
+      } else {
+        this.tagOptions = [];
+      }
+    },
+    //标签远程搜索函数
+    sortRemoteMethod: function(query) {
+      if (query !== "") {
+        var params = new URLSearchParams();
+        params.append("keyword", query);
+        getBlogSortList(params).then(response => {
+          console.log(response);
+          this.sortOptions = response.data.records;
+        });
+      } else {
+        this.sortOptions = [];
+      }
     },
     //弹出选择图片框
     checkPhoto: function() {
@@ -371,11 +439,11 @@ export default {
     handleAdd: function() {
       var that = this;
       try {
-        that.$refs.ckeditor.initData(); //清空CKEditor中内容            
+        that.$refs.ckeditor.initData(); //清空CKEditor中内容
       } catch (error) {
         // 第一次还未加载的时候，可能会报错，不过不影响使用
         // 暂时还没有想到可能解决的方法
-      }        
+      }
       console.log("点击了添加博客");
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
@@ -383,8 +451,7 @@ export default {
       this.isEditForm = false;
     },
     handleEdit: function(row) {
-      this.title = "编辑博客",
-      this.form = row;
+      (this.title = "编辑博客"), (this.form = row);
       this.tagValue = [];
       if (row.tagList) {
         var json = row.tagList;
@@ -418,11 +485,11 @@ export default {
       this.blogList();
     },
     submitForm: function() {
-      this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容 
+      this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
       this.form.tagUid = this.tagValue.join(",");
       console.log(this.form);
       var params = formatData(this.form);
-      
+
       if (this.isEditForm) {
         editBlog(params).then(response => {
           console.log(response);

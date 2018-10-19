@@ -68,6 +68,8 @@ public class BlogRestApi {
 	@RequestMapping(value = "/getList", method = RequestMethod.GET)
 	public String getList(HttpServletRequest request,
 			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
+			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
+			@ApiParam(name = "blogSortUid", value = "分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
@@ -75,7 +77,12 @@ public class BlogRestApi {
 		if(!StringUtils.isEmpty(keyword)) {
 			queryWrapper.like(SQLConf.TITLE, keyword);
 		}
-		
+		if(!StringUtils.isEmpty(tagUid)) {
+			queryWrapper.like(SQLConf.TAG_UID, tagUid);
+		}
+		if(!StringUtils.isEmpty(blogSortUid)) {
+			queryWrapper.like(SQLConf.BLOG_SORT_UID, blogSortUid);
+		}
 		//分页 
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
