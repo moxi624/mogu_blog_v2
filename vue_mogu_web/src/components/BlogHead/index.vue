@@ -6,13 +6,7 @@
       <h1 class="logo"><a href="javascript:void(0);" @click="goTo('/')">蘑菇博客</a></h1>
       <li><a href="javascript:void(0);" @click="goTo('/')">网站首页</a> </li>
       <li><a href="javascript:void(0);" @click="goTo('/about')">关于我</a> </li>
-      <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a>
-        <ul class="sub-nav">
-          <li><a href="http://localhost:9527/#/#/share">Java学习教程</a></li>
-          <li><a href="http://localhost:9527/#/share">前端学习</a></li>
-          <li><a href="http://localhost:9527/#/share">Linux学习</a></li>
-        </ul>
-      </li>
+      <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li>
       <li><a href="javascript:void(0);" @click="goTo('/list')">学无止境</a>
         <ul class="sub-nav">
           <li><a href="/list">心得笔记</a></li>

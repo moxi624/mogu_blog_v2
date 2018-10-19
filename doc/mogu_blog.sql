@@ -218,6 +218,37 @@ CREATE TABLE `t_picture_sort` (
 
 insert  into `t_picture_sort`(`uid`,`file_uid`,`name`,`status`,`create_time`,`update_time`,`parent_uid`) values ('5a281aa35fa9408bb07c2fc9a990701f','290a1ee600ce40908604b3a5f7dfe57a','用户头像',0,'2018-09-20 20:04:47','2018-09-20 20:04:47',NULL),('dd6728afaec34b64a12f560ca9931a7b','35e191c4bfcd45bca64d3b21533ca6b6','博客封面图',1,'2018-09-20 19:34:40','2018-09-20 19:34:40',NULL);
 
+
+CREATE TABLE `t_resource_sort` (
+  `uid` varchar(32) NOT NULL COMMENT '唯一uid',
+  `file_uid` varchar(32) DEFAULT NULL COMMENT '分类图片uid',
+  `sort_name` varchar(255) DEFAULT NULL COMMENT '分类名',
+  `content` varchar(255) DEFAULT NULL COMMENT '分类介绍',
+  `click_count` varchar(255) DEFAULT NULL COMMENT '点击数',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  `parent_uid` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资源分类表';
+
+
+CREATE TABLE `t_study_video` (
+  `uid` varchar(32) NOT NULL COMMENT '唯一uid',
+  `file_uid` varchar(32) DEFAULT NULL COMMENT '视频封面图片uid',
+  `resource_sort_uid` varchar(255) DEFAULT NULL COMMENT '资源分类UID',
+  `name` varchar(255) DEFAULT NULL COMMENT '视频名称',
+  `summary` varchar(255) DEFAULT NULL COMMENT '视频简介',
+  `content` varchar(255) DEFAULT NULL COMMENT '分类介绍',
+  `baiduPath` varchar(255) DEFAULT NULL COMMENT '百度云完整路径',
+  `click_count` varchar(255) DEFAULT NULL COMMENT '点击数',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  `parent_uid` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学习视频表';
+
 /*Table structure for table `t_role` */
 
 DROP TABLE IF EXISTS `t_role`;
