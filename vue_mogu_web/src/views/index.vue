@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="isEnd">
-      <span v-if="!isEnd">下拉加载更多~</span>  
+      <span v-if="!isEnd">正在加载中~</span>  
       <span v-else>我也是有底线的~</span>  
     </div>
   </div>

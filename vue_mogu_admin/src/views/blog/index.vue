@@ -489,7 +489,6 @@ export default {
       this.form.tagUid = this.tagValue.join(",");
       console.log(this.form);
       var params = formatData(this.form);
-
       if (this.isEditForm) {
         editBlog(params).then(response => {
           console.log(response);

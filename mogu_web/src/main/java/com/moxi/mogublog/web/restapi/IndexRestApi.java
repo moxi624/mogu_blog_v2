@@ -168,6 +168,32 @@ public class IndexRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@ApiOperation(value="按时间戳获取博客", notes="按时间戳获取博客")
+	@GetMapping("/getBlogByTime")
+	public String getBlogByTime (HttpServletRequest request,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();		
+		for(Blog item : list) {
+			//获取标签
+			blogService.setTagByBlog(item);		
+			//获取分类
+			blogService.setSortByBlog(item);			
+			//设置博客标题图
+			setPhotoListByBlog(item);			
+		}
+		log.info("返回结果");
+		pageList.setRecords(list);
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
+	}
+	
 	@ApiOperation(value="获取最热标签", notes="获取最热标签")
 	@GetMapping("/getHotTag")
 	public String getHotTag (HttpServletRequest request,

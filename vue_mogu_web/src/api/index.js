@@ -16,6 +16,14 @@ export function getNewBlog (params) {
   })
 }
 
+export function getBlogByTime (params) {
+  return request({
+    url: process.env.WEB_API + '/index/getBlogByTime',
+    method: 'get',
+    params
+  })
+}
+
 export function getHotBlog (params) {
   return request({
     url: process.env.WEB_API + '/index/getHotBlog',
