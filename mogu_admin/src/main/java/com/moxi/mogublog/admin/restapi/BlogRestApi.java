@@ -132,7 +132,7 @@ public class BlogRestApi {
 			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "fileUid", value = "标题图Uid",required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
 		
-		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(author)|| StringUtils.isEmpty(blogSortUid)) {
+ 		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(author)|| StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		Blog blog = new Blog();

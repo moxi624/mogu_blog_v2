@@ -88,7 +88,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	@Override
 	public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level) {
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq("level", level);		
+		queryWrapper.eq("level", level);
+		queryWrapper.eq("status", EStatus.ENABLE);
 		return blogMapper.selectPage(page, queryWrapper);
 	}
 

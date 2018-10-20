@@ -38,71 +38,71 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/example',
+    path: '/blog',
     component: Layout,
-    redirect: '/example/blog',
+    redirect: '/blog/blog',
     name: '博客管理',
     meta: { title: '博客管理', icon: 'edit' },
     children: [
       {
         path: 'blog',
         name: '博客管理',
-        component: () => import('@/views/blog/index'),
+        component: () => import('@/views/blog/blog'),
         meta: { title: '博客管理', icon: 'table' }
       },
       {
-        path: 'tag',
+        path: 'blogTag',
         name: '标签管理',
-        component: () => import('@/views/tag/index'),
+        component: () => import('@/views/blog/blogTag'),
         meta: { title: '标签管理', icon: 'table' }
       },
       {
         path: 'blogSort',
         name: '分类管理',
-        component: () => import('@/views/blogSort/index'),
+        component: () => import('@/views/blog/blogSort'),
         meta: { title: '分类管理', icon: 'table' }
       },
       {
-        path: 'link',
+        path: 'blogLink',
         name: '友链管理',
-        component: () => import('@/views/link/index'),
+        component: () => import('@/views/blog/blogLink'),
         meta: { title: '友链管理', icon: 'table' }
       },
       {
         path: 'collect',
         name: '收藏管理',
-        component: () => import('@/views/collect/index'),
+        component: () => import('@/views/blog/collect'),
         meta: { title: '收藏管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/example',
+    path: '/message',
     component: Layout,
-    redirect: '/example/comment',
+    redirect: '/message/comment',
     name: '消息管理',
     meta: { title: '消息管理', icon: 'message1' },
     children: [
       {
         path: 'comment',
         name: '评论管理',
-        component: () => import('@/views/comment/index'),
+        component: () => import('@/views/message/comment'),
         meta: { title: '评论管理', icon: 'table' }
       },
       {
         path: 'feedback',
         name: '反馈管理',
-        component: () => import('@/views/feedback/index'),
+        component: () => import('@/views/message/feedback'),
         meta: { title: '反馈管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/example',
+    path: '/picture',
     component: Layout,
-    redirect: '/example/pictureSort',
+    redirect: '/picture/pictureSort',
     name: '图片管理',
     meta: { title: '图片管理', icon: 'example' },
     children: [
@@ -123,47 +123,47 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/example',
+    path: '/user',
     component: Layout,
-    redirect: '/example/user',
+    redirect: '/user/user',
     name: '用户管理',
     meta: { title: '用户管理', icon: 'user1' },
     children: [
       {
         path: 'user',
         name: '用户管理',
-        component: () => import('@/views/user/index'),
+        component: () => import('@/views/user/user'),
         meta: { title: '用户管理', icon: 'table' }
       },
       {
         path: 'visitor',
         name: '游客管理',
-        component: () => import('@/views/visitor/index'),
+        component: () => import('@/views/user/visitor'),
         meta: { title: '游客管理', icon: 'table' }
       }
     ]
   },
 
   {
-    path: '/example',
+    path: '/system',
     component: Layout,
-    redirect: '/example/solrIndex',
+    redirect: '/system/solrIndex',
     name: '系统管理',
     meta: { title: '系统管理', icon: 'system' },
     children: [
       {
         path: 'solrIndex',
         name: '索引管理',
-        component: () => import('@/views/solrIndex/index'),
+        component: () => import('@/views/system/solrIndex'),
         meta: { title: '索引管理', icon: 'index' }
       }
     ]
   },
 
   {
-    path: '/example',
+    path: '/restapi',
     component: Layout,
-    redirect: '/example/adminRestApi',
+    redirect: '/restapi/adminRestApi',
     name: '接口管理',
     meta: { title: '接口管理', icon: 'restapi' },
     children: [

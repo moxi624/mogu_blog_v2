@@ -487,7 +487,16 @@ export default {
     submitForm: function() {
       this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
       this.form.tagUid = this.tagValue.join(",");
-      console.log(this.form);
+
+      if(this.form.title == null || this.form.tagUid == null) {
+        this.$message({
+          type: "error",
+          message: "必填项不能为空",
+        })
+        return;
+      }
+      
+      console.log("这是form中的内容", this.form);
       var params = formatData(this.form);
       if (this.isEditForm) {
         editBlog(params).then(response => {
@@ -507,7 +516,7 @@ export default {
           this.blogList();
         });
       } else {
-        addBlog(this.form).then(response => {
+        addBlog(params).then(response => {
           console.log(response);
           this.$message({
             type: "success",

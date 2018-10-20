@@ -31,6 +31,7 @@ import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.ELevel;
+import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -123,6 +124,7 @@ public class IndexRestApi {
 		Page<Blog> page = new Page<>();
 		page.setCurrent(0);
 		page.setSize(BLOG_HOT_COUNT);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		
@@ -152,6 +154,7 @@ public class IndexRestApi {
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		
@@ -178,6 +181,7 @@ public class IndexRestApi {
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		
