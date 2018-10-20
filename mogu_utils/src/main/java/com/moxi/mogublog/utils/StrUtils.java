@@ -6,7 +6,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 /**
  * String工具类
- * @author 许志翔
+ * @author xzx19950624@qq.com
  * @date 2017年9月21日21:41:28
  *
  */

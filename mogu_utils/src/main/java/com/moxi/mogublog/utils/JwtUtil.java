@@ -17,7 +17,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * jwt生成接口
- * @author admin
+ * @author xzx19950624@qq.com
  *
  */
 public class JwtUtil {

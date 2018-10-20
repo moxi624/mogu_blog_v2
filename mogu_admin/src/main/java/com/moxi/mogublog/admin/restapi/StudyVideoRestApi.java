@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiParam;
  * 视频表 RestApi
  * </p>
  *
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @since 2018年10月19日21:35:55
  */
 @RestController

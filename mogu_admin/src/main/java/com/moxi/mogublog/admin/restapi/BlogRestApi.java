@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiParam;
  * 博客表 RestApi
  * </p>
  *
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @since 2018-09-08
  */
 @RestController

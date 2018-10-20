@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * 校验工具类
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @date 2018年2月8日17:21:50
  *
  */

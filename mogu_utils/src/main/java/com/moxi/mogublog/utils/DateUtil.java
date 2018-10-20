@@ -1,7 +1,7 @@
 package com.moxi.mogublog.utils;
 /**
  * 对时间的操作的工具类
- * @author wangqiang
+ * @author xzx19950624@qq.com
  * 2018年5月8日  上午9:20:33
  */
 
@@ -24,7 +24,7 @@ public class DateUtil {
 	private DateUtil() {}
 	/**
 	 * 获取现在的时间 yyyy-MM-dd HH:mm:ss
-	 * @author wangqiang
+	 * @author xzx19950624@qq.com
 	 * 2018年5月8日  上午9:28:12
 	 * @return
 	 */
@@ -37,7 +37,7 @@ public class DateUtil {
 	/**
 	 * 
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月14日
 	 */
 	public static String getNowTimeFormat() {
@@ -47,7 +47,7 @@ public class DateUtil {
 	}
 	/**
 	 * 获取今天开始的时间
-	 * @author wangqiang
+	 * @author xzx19950624@qq.com
 	 * 2018年5月8日  上午9:40:53
 	 * @return
 	 */
@@ -59,7 +59,7 @@ public class DateUtil {
 	
 	/**
 	 * 获取今天结束的时间
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * 2018年6月12日
 	 * @return
 	 */
@@ -71,7 +71,7 @@ public class DateUtil {
 	
 	/**
 	 * 获取昨天开始的时间
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * 2018年6月11日
 	 * @return
 	 */
@@ -84,7 +84,7 @@ public class DateUtil {
 	/**
 	 * 获取昨天结束的时间
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月11日
 	 */
 	public static String getYestodayEndTime() {
@@ -96,7 +96,7 @@ public class DateUtil {
 	/**
 	 * 获取本周开始的时间
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static Date getWeekStartTime() {
@@ -111,7 +111,7 @@ public class DateUtil {
 	 * 将  String 转换成  date
 	 * @param dateTime
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月19日
 	 */
 	public static Date strToDateTime(String dateTime) {
@@ -130,7 +130,7 @@ public class DateUtil {
 	 * 将  date 转换成  时间戳
 	 * @param dateTime
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月26日
 	 */
     public static Long dateToStamp(String s) throws ParseException{
@@ -145,7 +145,7 @@ public class DateUtil {
 	 * Date 转换成  String
 	 * @param dateTime
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月19日
 	 */
 	public static String dateTimeToStr(Date dateTime) {
@@ -157,7 +157,7 @@ public class DateUtil {
 	/**
 	 * 获取本周开始的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getWeekStartTimeStr() {
@@ -172,7 +172,7 @@ public class DateUtil {
 	/**
 	 * 获取本周结束的时间
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static Date getWeekEndTime() {
@@ -185,7 +185,7 @@ public class DateUtil {
 	/**
 	 * 获取本周结束的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getWeekEndTimeStr() {
@@ -199,7 +199,7 @@ public class DateUtil {
 	/**
 	 * 获取上周开始的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getLastWeekStartTimeStr() {
@@ -215,7 +215,7 @@ public class DateUtil {
 	/**
 	 * 获取上周结束的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getLastWeekEndTimeStr() {
@@ -231,7 +231,7 @@ public class DateUtil {
 	/**
 	 * 获取本月开始的时间
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static Date getMonthStartTime() {
@@ -244,7 +244,7 @@ public class DateUtil {
 	/**
 	 * 获取本月开始的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getMonthStartTimeStr() {
@@ -258,7 +258,7 @@ public class DateUtil {
 	/**
 	 * 获取本月结束的时间
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static Date getMonthEndTime() {
@@ -272,7 +272,7 @@ public class DateUtil {
 	/**
 	 * 获取本月结束的时间的字符串
 	 * @return
-	 * @author 许志翔
+	 * @author xzx19950624@qq.com
 	 * @date 2018年6月13日
 	 */
 	public static String getMonthEndTimeStr() {
@@ -316,7 +316,7 @@ public class DateUtil {
      * @param dateTime
      * @return
      * @throws ParseException
-     * @author 许志翔
+     * @author xzx19950624@qq.com
      * @date 2018年6月13日
      */
     public static int getDaysByWeek(String dateTime) throws ParseException {
@@ -337,7 +337,7 @@ public class DateUtil {
      * @param dateTime
      * @return
      * @throws ParseException
-     * @author 许志翔
+     * @author xzx19950624@qq.com
      * @date 2018年6月14日
      */
     public static int getDaysByMonth(String dateTime) throws ParseException {
@@ -366,7 +366,7 @@ public class DateUtil {
     
 	/**
 	 * 获取当前的年
-	 * @author wangqiang
+	 * @author xzx19950624@qq.com
 	 * 2018年5月8日  上午9:36:12
 	 * @return
 	 */
@@ -379,7 +379,7 @@ public class DateUtil {
 	
 	/**
 	 * 获取当前的月
-	 * @author wangqiang
+	 * @author xzx19950624@qq.com
 	 * 2018年5月8日  上午9:37:37
 	 * @return
 	 */
@@ -391,7 +391,7 @@ public class DateUtil {
 	}
 	/**
 	 * 获取当前天
-	 * @author wangqiang
+	 * @author xzx19950624@qq.com
 	 * 2018年5月8日  上午10:31:37
 	 * @return
 	 */

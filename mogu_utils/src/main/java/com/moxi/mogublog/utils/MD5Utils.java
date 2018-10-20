@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 /**
  * MD5工具类
- * @author xuzhxiang
+ * @author xzx19950624@qq.com
  * @date 2017年9月24日16:40:20
  *
  */

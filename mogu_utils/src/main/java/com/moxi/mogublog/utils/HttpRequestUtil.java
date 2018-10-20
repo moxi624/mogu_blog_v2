@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 发送http请求的工具类
- * @author wq
+ * @author xzx19950624@qq.com
  *
  */
 public class HttpRequestUtil {

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 获取用户访问的ip
- * @author 许志翔
+ * @author xzx19950624@qq.com
  *
  */
 public class IpUtils {

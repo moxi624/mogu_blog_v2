@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * web有关的工具类
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @date 2017年9月24日23:27:03
  *
  */

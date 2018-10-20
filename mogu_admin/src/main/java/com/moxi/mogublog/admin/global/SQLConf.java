@@ -4,7 +4,8 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 
 /**
  * SQL字段常量
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
+ * @date 2018年10月20日15:13:09
  *
  */
 public final class SQLConf extends BaseSQLConf{

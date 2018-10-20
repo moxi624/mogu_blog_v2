@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiParam;
  * 评论表 RestApi
  * </p>
  *
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @since 2018年10月13日16:06:46
  */
 @RestController

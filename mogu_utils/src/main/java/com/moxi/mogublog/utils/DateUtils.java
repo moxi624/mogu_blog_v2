@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 时间日期工具类
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  * @date 2017年9月24日16:33:29
  *
  */

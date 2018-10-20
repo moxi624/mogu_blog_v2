@@ -13,6 +13,11 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * 邮件Util
+ * @author xzx19950624@qq.com
+ * @date 2018年10月20日下午3:18:25
+ */
 public class SendMailUtils {  
 	  
     public static final String HOST = "smtp.163.com";  

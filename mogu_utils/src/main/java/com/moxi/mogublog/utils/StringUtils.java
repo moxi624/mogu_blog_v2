@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 对字符串转换的一些操作
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  *
  */
 public class StringUtils {

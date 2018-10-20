@@ -9,7 +9,7 @@ import com.moxi.mogublog.admin.config.FeignConfiguration;
 
 /**
  * mogu_picture相关接口
- * @author xuzhixiang
+ * @author xzx19950624@qq.com
  *
  */
 
