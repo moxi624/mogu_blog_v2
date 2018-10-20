@@ -78,6 +78,28 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/resource',
+    component: Layout,
+    redirect: '/resource/resourceSort',
+    name: '资源管理',
+    meta: { title: '资源管理', icon: 'resource' },
+    children: [
+      {
+        path: 'resourceSort',
+        name: '分类管理',
+        component: () => import('@/views/resource/resourceSort'),
+        meta: { title: '分类管理', icon: 'table' }
+      },
+      {
+        path: 'studyVideo',
+        name: '视频管理',
+        component: () => import('@/views/resource/studyVideo'),
+        meta: { title: '视频管理', icon: 'table' }
+      },
+    ]
+  },
+
+  {
     path: '/message',
     component: Layout,
     redirect: '/message/comment',
