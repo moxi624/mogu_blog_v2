@@ -43,31 +43,31 @@
 
 - ### admin端
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\login.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/login.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\bashboard.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/bashboard.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\blog.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blog.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\blogEdit.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogEdit.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\addPicture.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/addPicture.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\blogSort.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogSort.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\solrIndex.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/solrIndex.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\admin\swagger.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/swagger.png)
 
 
 
 - Web端
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\web\index.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\web\index2.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index2.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\web\about.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/about.png)
 
-  ![image text](E:\study_work_space\mywork6\UploadImage\mogublog\web\time.png)
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/time.png)
 
