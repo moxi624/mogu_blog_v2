@@ -17,35 +17,18 @@
 
 <div class="pagebg sh"></div>
 <div class="container">
-  <h1 class="t_nav"><span>好咖啡要和朋友一起品尝，好“模板”也要和同样喜欢它的人一起分享。 </span><a href="/" class="n1">网站首页</a><a href="/" class="n2">模板分享</a></h1>
+  <h1 class="t_nav"><span>好咖啡要和朋友一起品尝，好“资料”也要和同样喜欢它的人一起分享。 </span><a href="/" class="n1">网站首页</a><a href="/" class="n2">学习教程</a></h1>
 
 
 <div class="share">
 <ul>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/toppic01.jpg"></i>
-      <h2><b>别让这些闹心的套路，毁了你的网页设计!</b></h2>
-      <span>喜欢 | 190</span> </a></div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/toppic02.jpg"></i>
-      <h2><b>陌上花开，可缓缓归矣</b></h2>
-      <span>喜欢 | 190</span> </a></div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/banner01.jpg"></i>
-      <h2><b>网页中图片属性固定宽度，如何用js改变大小</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/text01.jpg"></i>
-      <h2><b>个人博客，属于我的小世界！</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/text02.jpg"></i>
-      <h2><b>html5个人博客模板《黑色格调》</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/banner02.jpg"></i>
-      <h2><b>帝国cms 首页或者列表无图，不使用默认图片的方法</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
-       <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/text02.jpg"></i>
-      <h2><b>十条设计原则教你学会如何设计网页布局!</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
- <li> <div class="shareli"><a href="/" target="_blank"> <i><img src="../../static/images/banner02.jpg"></i>
-      <h2><b>html5个人博客模板主题《清雅》</b></h2>
-      <span>喜欢 | 190</span> </a> </div> </li>
+ <li v-for="item in studyVideoData" :key="item.uid"> 
+   <div class="shareli"><a href="/" target="_blank"> 
+    <i><img class="resImg" :src="item.photoList[0]"></i>
+    <h2><b>{{item.name}}</b></h2>
+    <span>{{item.resourceSort.sortName}}</span> </a>
+    </div> 
+</li>
 </ul>
 </div>
 
@@ -66,25 +49,45 @@
 </template>
 
 <script>
-import BlogHead from '../components/BlogHead';
-import BlogFooter from '../components/BlogFooter';
+import BlogHead from "../components/BlogHead";
+import BlogFooter from "../components/BlogFooter";
+
+import { getStudyVideoBySort } from "../api/resource";
+
 export default {
-  name: 'share',
-  data () {
-  	return {
-  		
+  name: "share",
+  data() {
+    return {
+      studyVideoData: [],
+      currentPage: 1,
+      pageSize: 8,
+      total: 0 //总数量
     };
   },
   components: {
-  	//注册组件
-  	BlogHead,
-  	BlogFooter,  	
+    //注册组件
+    BlogHead,
+    BlogFooter
+  },
+  created() {
+    getStudyVideoBySort().then(response => {
+      console.log(response);
+      if (response.code == "success") {
+        this.studyVideoData = response.data.records;
+        this.total = response.data.total;
+        this.pageSize = response.data.size;
+        this.currentPage = response.data.current;
+      }
+    });
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
-
+.resImg {
+  max-height: 100%;
+  max-width:100%;
+  vertical-align: middle;
+}
 </style>

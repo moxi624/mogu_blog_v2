@@ -84,7 +84,7 @@ export default {
     //传递过来的pictureSordUid
     this.pictureSortUid = this.$route.query.pictureSortUid;
 
-    var that = this;    
+    var that = this;
     var params = new URLSearchParams();
     params.append("pictureSortUid", this.pictureSortUid);
     getPictureList(params).then(response => {
@@ -119,7 +119,7 @@ export default {
       params.append("keyword", this.keyword);
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
-      params.append("pictureSortUid", this.pictureSortUid);      
+      params.append("pictureSortUid", this.pictureSortUid);
       getPictureList(params).then(response => {
         if (response.code == "success") {
           this.tableData = response.data.records;
@@ -157,7 +157,7 @@ export default {
     },
     checkAll: function() {
       //如果是全选
-      if(this.isCheckedAll) {
+      if (this.isCheckedAll) {
         this.pictureUids = [];
         this.isCheckedAll = false;
         this.chooseTitle = "全选";
@@ -170,40 +170,40 @@ export default {
         this.chooseTitle = "取消全选";
       }
       console.log("点击了全选");
-
     },
     handleDelete: function() {
-      if(this.pictureUids.length <=0 ) {
-          this.$message({
-            type: "error",
-            message: "请先选中图片！"
-          })
+      if (this.pictureUids.length <= 0) {
+        this.$message({
+          type: "error",
+          message: "请先选中图片！"
+        });
       }
 
-      this.$confirm('是否删除选中图片？, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        let params = new URLSearchParams();
-        params.append("uid", this.pictureUids.join(",")); //将数组变成,组成
-        deletePicture(params).then(response => {
-          console.log(response);
-          if(response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.pictureList();
-          }          
+      this.$confirm("是否删除选中图片？, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", this.pictureUids.join(",")); //将数组变成,组成
+          deletePicture(params).then(response => {
+            console.log(response);
+            if (response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              this.pictureList();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });          
-      });
-
     },
     handleReturn: function() {
       this.$router.push({
@@ -261,13 +261,14 @@ export default {
 
 <style scoped>
 .img {
-  width: 100%;
-  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  vertical-align: middle;
 }
 .imgBody {
   width: 150px;
   height: 150px;
-  border: solid 1px #8080ff;
+  /* border: solid 1px #8080ff; */
   float: left;
   margin: 30px;
   position: relative;
@@ -277,6 +278,8 @@ export default {
 }
 .imgAll {
   width: 98%;
+  line-height: 150px;
+  text-align: center;
   overflow-y: auto;
 }
 .imgLimit {

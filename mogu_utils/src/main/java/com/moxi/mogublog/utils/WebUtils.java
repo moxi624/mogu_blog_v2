@@ -1,6 +1,7 @@
 package com.moxi.mogublog.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,32 @@ public class WebUtils {
 			}
 		}
 		return picUrls;
+	}
+	
+	/**
+	 * 获取图片，返回Map
+	 * @author xzx19950624@qq.com
+	 * @date 2018年10月21日下午12:55:18
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Map<String, Object>> getPictureMap (String result) {
+		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+		if("success".equals(picMap.get("code"))) {
+			List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");			
+			if(picData.size() > 0) {
+				for(int i = 0;i<picData.size();i++) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					if(StringUtils.isEmpty(picData.get(i).get("url")) || StringUtils.isEmpty(picData.get(i).get("uid"))) {
+						continue;
+					}
+					map.put("url", (String) picData.get(i).get("url"));					
+					map.put("uid", (String) picData.get(i).get("uid"));
+					resultList.add(map);
+				}				
+			}
+		}
+		return resultList;
 	}
 
 }

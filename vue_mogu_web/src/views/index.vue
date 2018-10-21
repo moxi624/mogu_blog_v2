@@ -131,7 +131,6 @@ export default {
       hotTagData: [], //最新标签
       keyword: "",
       currentPage: 1,
-      startIndex: 1,
       pageSize: 15,
       total: 0, //总数量
       isEnd: false, //是否到底底部了

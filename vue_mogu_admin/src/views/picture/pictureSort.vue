@@ -333,29 +333,34 @@ export default {
   line-height: 150px;
   text-align: center;
 }
+.img {
+  max-height: 100%;
+  max-width: 100%;
+  vertical-align: middle;
+}
 .imgBody {
   width: 150px;
   height: 150px;
-  border: solid 2px #ffffff;
+  /* border: solid 1px #8080ff; */
   float: left;
+  margin: 30px;
   position: relative;
 }
-.uploadImgBody {
-  margin-left: 5px;
-  width: 150px;
-  height: 150px;
-  border: dashed 1px #c0c0c0;
-  float: left;
-  position: relative;
+.removeFloat {
+  clear: both;
 }
-.uploadImgBody :hover {
-  border: dashed 1px #00ccff;
+.imgAll {
+  width: 98%;
+  line-height: 150px;
+  text-align: center;
+  overflow-y: auto;
+}
+.imgLimit {
+  height: 50px;
+  margin-left: 30%;
+  margin-top: 50px;
 }
 .inputClass {
   position: absolute;
-}
-.img {
-  width: 100%;
-  height: 100%;
 }
 </style>

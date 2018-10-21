@@ -128,7 +128,7 @@ public class FileRestApi {
 						remap.put("url", imgHost + file.getPicUrl());//，地址
 						remap.put("expandedName", file.getPicExpandedName());//后缀名，也就是类型
 						remap.put("name", file.getPicName());//名称
-						remap.put("fileId", file.getUid());
+						remap.put("uid", file.getUid());
 						list.add(remap);
 					}	
 				}					
@@ -310,7 +310,7 @@ public class FileRestApi {
 					e.printStackTrace();
 					return ResultUtil.result(SysConf.ERROR, "文件上传失败");
 				}
-				com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
+				com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();				
 				file.setCreateTime(new Date(System.currentTimeMillis()));
 				file.setFileSortUid(fileSort.getUid());				
 				file.setFileOldName(oldName);
