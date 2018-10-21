@@ -24,10 +24,13 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.entity.StudyVideo;
+import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -41,10 +44,14 @@ import io.swagger.annotations.ApiParam;
  */
 @RestController
 @RequestMapping("/studyVideo")
+@Api(value="视频RestApi", tags={"StudyVideoRestApi"})
 public class StudyVideoRestApi {
 	
 	@Autowired
 	StudyVideoService studyVideoService;
+	
+	@Autowired
+	ResourceSortService resourceSortService;
 	
 	@Autowired
 	PictureFeignClient pictureFeignClient;
@@ -82,6 +89,10 @@ public class StudyVideoRestApi {
 				}
 			}
 			
+			if(StringUtils.isNotEmpty(item.getResourceSortUid())) {
+				ResourceSort resourceSort = resourceSortService.getById(item.getResourceSortUid());
+				item.setResourceSort(resourceSort);
+			}
 		}
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);

@@ -32,13 +32,15 @@ export default {
     getData: function() {
       return this.editor.getData();
     }, 
+    setData: function(data) {
+      return this.editor.setData(data);
+    }, 
     initData: function() {      
       try {
         this.editor.setData("");  
       } catch (error) {
         console.log("CKEditor还未加载");
-      }     
-        
+      }             
     }
   }
 }

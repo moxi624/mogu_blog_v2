@@ -14,7 +14,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018年10月19日20:46:51
  */
-@TableName("t_resource_sort")
+@TableName("t_study_video")
 public class StudyVideo extends SuperEntity<StudyVideo> {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +58,9 @@ public class StudyVideo extends SuperEntity<StudyVideo> {
     @TableField(exist = false)
     private List<String> photoList; //学习视频标题图
 
+    @TableField(exist = false)
+    private ResourceSort resourceSort; //学习视频标题图
+    
 	public String getName() {
 		return name;
 	}
@@ -124,5 +127,13 @@ public class StudyVideo extends SuperEntity<StudyVideo> {
 
 	public void setPhotoList(List<String> photoList) {
 		this.photoList = photoList;
+	}
+
+	public ResourceSort getResourceSort() {
+		return resourceSort;
+	}
+
+	public void setResourceSort(ResourceSort resourceSort) {
+		this.resourceSort = resourceSort;
 	}
 }

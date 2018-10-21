@@ -198,8 +198,7 @@
 				      :label="item.content"
 				      :value="item.uid">
 				    </el-option>
-				</el-select>
-				<!--<p v-if="labelValue.length > 2" style="color: red;">最多选择两个标签</p>-->
+				</el-select>				
 		    </el-form-item>
 
         <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
@@ -362,13 +361,6 @@ export default {
       };
       return formObject;
     },
-    getCkEditorData: function(data) {
-      this.CKEditorData = data;
-      console.log("获取内容", data);
-    },
-    emptyCkEditorData: function(data) {
-      console.log(data);
-    },
     //标签远程搜索函数
     tagRemoteMethod: function(query) {
       if (query !== "") {
@@ -382,7 +374,7 @@ export default {
         this.tagOptions = [];
       }
     },
-    //标签远程搜索函数
+    //分类远程搜索函数
     sortRemoteMethod: function(query) {
       if (query !== "") {
         var params = new URLSearchParams();
@@ -451,7 +443,15 @@ export default {
       this.isEditForm = false;
     },
     handleEdit: function(row) {
-      (this.title = "编辑博客"), (this.form = row);
+      this.title = "编辑博客";
+      this.form = row;
+      var that = this;
+      try {
+        that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
+      } catch (error) {
+        // 第一次还未加载的时候，可能会报错，不过不影响使用
+        // 暂时还没有想到可能解决的方法
+      }
       this.tagValue = [];
       if (row.tagList) {
         var json = row.tagList;

@@ -59,7 +59,7 @@ public class ResourceSortRestApi {
 		
 		QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<ResourceSort>();
 		if(!StringUtils.isEmpty(keyword)) {
-			queryWrapper.like(SQLConf.NAME, keyword);
+			queryWrapper.like(SQLConf.SORT_NAME, keyword);
 		}
 		
 		Page<ResourceSort> page = new Page<ResourceSort>();
