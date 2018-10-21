@@ -1,5 +1,5 @@
 <template>
-    <div class="tuijian">
+    <div class="tuijian" v-if="hotBlogData.length > 0">
       <h2 class="hometitle">点击排行</h2>
       <ul class="tjpic" v-if="hotBlogData[0]">
         <i><img v-if="hotBlogData[0].photoList" :src="hotBlogData[0].photoList[0]" @click="goToInfo(hotBlogData[0].uid)"></i>

@@ -70,12 +70,7 @@
     <!--点击排行-->
     <HotBlog></HotBlog>
 
-    <div class="links">
-      <h2 class="hometitle">友情链接</h2>
-      <ul>
-          <li v-for="item in linkData" :key="item.uid"><a :href="item.url" target="_blank">{{item.title}}</a></li>
-      </ul>
-    </div>
+    <Link></Link>
 
     <!--关注我们-->
     <FollowUs></FollowUs>
@@ -104,12 +99,12 @@ import FourthRecommend from "../components/FourthRecommend";
 import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
+import Link from "../components/Link";
 import {
   getBlogByLevel,
   getNewBlog,
   getHotBlog,
   getHotTag,
-  getLink
 } from "../api/index";
 export default {
   name: "index",
@@ -122,7 +117,8 @@ export default {
     ThirdRecommend,
     TagCloud,
     HotBlog,
-    FollowUs
+    FollowUs,
+    Link
   },
   data() {
     return {
@@ -133,7 +129,6 @@ export default {
       newBlogData: [], //最新文章
       hotBlogData: [], //最热文章
       hotTagData: [], //最新标签
-      linkData: [], //友情链接
       keyword: "",
       currentPage: 1,
       startIndex: 1,
@@ -179,10 +174,6 @@ export default {
     // 获取最新博客
     this.newBlogList();
 
-    getLink().then(response => {
-      console.log("友情链接列表", response);
-      this.linkData = response.data.records;
-    });
   },
   methods: {
     //跳转到文章详情

@@ -1,5 +1,5 @@
 <template>
-  <div class="zhuanti">
+  <div class="zhuanti" v-if="thirdData.length > 0">
     <h2 class="hometitle">特别推荐</h2>
     <ul>
       <li  v-for="item in thirdData" :key="item.uid"> <i><img v-if="item.photoList" :src="item.photoList[0]"></i>

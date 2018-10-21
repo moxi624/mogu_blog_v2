@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud">
+  <div class="cloud" v-if="hotTagData.length > 0">
     <h2 class="hometitle">标签云</h2>
     <ul>
       <a v-for="item in hotTagData" :key="item.uid" href="/">{{item.content}}</a>

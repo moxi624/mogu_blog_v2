@@ -1,5 +1,5 @@
 <template>
-    <div class="tuijian">
+    <div class="tuijian" v-if="fourthData.length > 0">
       <h2 class="hometitle">推荐文章</h2>
       <ul class="tjpic" v-if="fourthData[0]">
         <i><img v-if="fourthData[0].photoList" :src="fourthData[0].photoList[0]"></i>

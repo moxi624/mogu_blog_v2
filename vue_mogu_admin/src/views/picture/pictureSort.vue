@@ -201,10 +201,9 @@ export default {
     },
     		//弹出选择图片框
     checkPhoto: function() {
-      console.log(this.photoVisible);
-      console.log("点击了选择图");
+      this.photoList = [];
+      this.fileIds = "";
       this.photoVisible = true;
-      console.log(this.photoVisible);
     },
     getChooseData(data) {
       var that = this;
