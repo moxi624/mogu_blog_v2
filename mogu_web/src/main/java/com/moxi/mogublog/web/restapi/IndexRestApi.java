@@ -208,6 +208,7 @@ public class IndexRestApi {
 		Page<Tag> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		IPage<Tag> pageList = tagService.page(page, queryWrapper);
 		log.info("返回结果");
@@ -224,6 +225,7 @@ public class IndexRestApi {
 		Page<Link> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		IPage<Link> pageList = linkService.page(page, queryWrapper);
 		log.info("返回结果");
