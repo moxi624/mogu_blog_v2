@@ -18,6 +18,7 @@ import com.moxi.mogublog.xo.mapper.BlogSortMapper;
 import com.moxi.mogublog.xo.mapper.TagMapper;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
@@ -80,7 +81,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	@Override
 	public List<Blog> getBlogListByLevel(Integer level) {
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq("level", level);
+		queryWrapper.eq(BaseSQLConf.LEVEL, level);
 		List<Blog> list = blogMapper.selectList(queryWrapper);		
 		return list;
 	}
@@ -88,9 +89,16 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	@Override
 	public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level) {
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq("level", level);
-		queryWrapper.eq("status", EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.LEVEL, level);
+		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
 		return blogMapper.selectPage(page, queryWrapper);
+	}
+
+	@Override
+	public Integer getBlogCount(Integer status) {
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+		return blogMapper.selectCount(queryWrapper);
 	}
 
 }

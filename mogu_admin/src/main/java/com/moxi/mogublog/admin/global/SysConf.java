@@ -14,4 +14,10 @@ public final class SysConf extends BaseSysConf{
 	public final static String NAME = "name";
 	public final static String CONTENT = "content";
 	public final static String AVATAR = "avatar";
+	
+	//统计
+	public final static String BLOG_COUNT = "blogCount";
+	public final static String USER_COUNT = "userCount";
+	public final static String COMMENT_COUNT = "commentCount";
+	public final static String VISIT_COUNT = "visitCount";
 }

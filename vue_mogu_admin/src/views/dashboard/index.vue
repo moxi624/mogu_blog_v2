@@ -55,6 +55,7 @@
 <script>
 import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
+import { init } from "@/api/index";
 export default {  
   name: "dashboard",
   computed: {
@@ -68,8 +69,17 @@ export default {
       visitAddTotal: 6,
       userTotal: 50,
       commentTotal: 15,
-      blogTotal: 20
+      blogTotal: 20,
     }
+  },
+  created() {
+    init().then(response => {
+        console.log(response);
+        if(response.code == "success") {
+          this.blogTotal = response.data.blogCount;
+          this.commentTotal = response.data.commentCount;
+        }
+    })
   }
 };
 </script>

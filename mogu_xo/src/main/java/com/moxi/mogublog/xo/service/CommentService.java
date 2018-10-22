@@ -13,4 +13,11 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface CommentService extends SuperService<Comment> {
 
+	/**
+	 * 获取评论数目
+	 * @author xzx19950624@qq.com
+	 * @date 2018年10月22日下午3:43:38
+	 */
+	public Integer getCommentCount(int status);
+
 }
