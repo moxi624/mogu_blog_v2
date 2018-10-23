@@ -1,109 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	<parent>
-	    <artifactId>mogu_blog</artifactId>
-	    <groupId>com.moxi</groupId>
-	    <version>0.0.1-SNAPSHOT</version>
-    </parent>
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>mogu_admin</artifactId>
-	<name>mogu_admin</name>
-	<description>Demo project for Spring Boot</description>
-
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-
-	<dependencies>
-	
-		<dependency>
-		    <artifactId>mogu_xo</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.moxi</groupId>
+  <artifactId>mogu_blog</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>mogu_blog</name>
+  <description>a blog web</description>
   
-        <!-- 热部署
-        	devtolls可以实现页面热部署(即页面修改后会立即生效)，这个可以直接在application.properties文件中配置        	  
-        	spring.thymeleaf.cache=false来实现 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        
-        <!-- 添加Eureka相关依赖 -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-feign</artifactId>
-		</dependency>
-		
-		<!-- RabbitMq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-			
-	</dependencies>
-
+   	<properties>
+	     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	     <!-- <spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version> -->
+	     <java.version>1.8</java.version>
+ 	</properties>
+ 
+ <parent>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-parent</artifactId>
+     <version>1.4.0.RELEASE</version>
+ </parent>
+ 
+  <modules>
+    <module>mogu_config</module>
+  	<module>mogu_utils</module>
+  	<module>mogu_base</module>
+  	<module>mogu_xo</module>
+  	<module>mogu_admin</module>
+  	<module>mogu_web</module>
+  	<module>mogu_picture</module>
+	<module>mogu_eureka</module>
+	<module>mogu_sms</module>
+  </modules>
+  
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Camden.SR3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	
-	<!--spring boot打包的话需要指定一个唯一的入门-->
-    <build>
-		  <resources>
-		   <resource>
-		       <directory>src/main/java</directory>
-		       <includes>
-		           <include>**/*.xml</include>
-		       </includes>
-		   </resource>
-		   <resource>
-		       <directory>src/main/resources</directory>
-		       <includes>
-		           <include>**.*</include>
-		           <include>**/*.*</include><!-- i18n能读取到 -->
-		            <include>**/*/*.*</include>
-		       </includes>
-		   </resource>
-		 </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>           
-            <configuration>
-	             <fork>true</fork> 
-	             <!-- 如果没有该配置，devtools不会生效 -->
-	            <!-- 指定该Main Class为全局的唯一入口 -->
-	            <mainClass>com.moxi.mogublog.admin.APP</mainClass>
-	            <layout>ZIP</layout>
-          	</configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
-              </goals>
-            </execution>
-          </executions>
-          </plugin>
-        </plugins>
-        <finalName>mogu_admin</finalName>
-    </build>
 </project>
