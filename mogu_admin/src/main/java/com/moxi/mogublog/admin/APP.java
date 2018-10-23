@@ -1,7 +1,10 @@
 package com.moxi.mogublog.admin;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -15,15 +18,19 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @EnableTransactionManagement
-@SpringBootApplication
+@SpringBootApplication(exclude = VelocityAutoConfiguration.class)//redis和velocity的包会起冲突
 @EnableSwagger2
 @EnableEurekaClient
+@EnableCaching
+@EnableRabbit
 @EnableFeignClients("com.moxi.mogublog.admin.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",
-        "com.moxi.mogublog.xo.service"})
+        "com.moxi.mogublog.xo.service",
+        "com.moxi.mogublog.utils"
+        })
 public class APP {
 
 	public static void main(String[] args) {

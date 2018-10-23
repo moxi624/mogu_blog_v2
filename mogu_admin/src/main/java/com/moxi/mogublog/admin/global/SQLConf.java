@@ -18,10 +18,20 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String TITLE = "title";
 	public final static String NAME = "name";
 	public final static String PIC_NAME = "pic_name";
-	public final static String PICTURE_SORT_UID = "picture_sort_uid";
-	
-	
+	public final static String PICTURE_SORT_UID = "picture_sort_uid";	
 	public final static String SORT_NAME = "sort_name";
-	
+	public final static String UID = "uid";
+	public final static String ADMINUID = "admin_uid";
+	public final static String ROLEUID = "role_uid";
+	public final static String PERMISSIONUID = "permission_uid";
+	public final static String ROLENAEM = "role_name";
+	public final static String PERMISSIONNAME = "permission_name";
+	public final static String PARENTID = "parent_id";
+	public final static String USERNAEM = "user_name";	
+	public final static String ADMIN = "admin";
+	public final static String ROLE = "role";
+	public final static String EMAIL = "email";
+	public final static String MOBILE = "mobile";
+	public final static String CLAIMS = "claims";
 	
 }

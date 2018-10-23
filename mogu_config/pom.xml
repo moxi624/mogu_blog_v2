@@ -34,7 +34,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-solr</artifactId>
 		</dependency>
-		
+
+		<!-- spring data redis -->
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        
+        
+        <!-- RabbitMq 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        -->
+        
   		<!-- mp依赖
   			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
   		 -->
@@ -98,13 +112,15 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-
+		
+		
+		
 		<dependency>
 		    <groupId>org.apache.velocity</groupId>
 		    <artifactId>velocity-engine-core</artifactId>
 		    <version>2.0</version>
 		</dependency>
-		
+
 		<!-- email -->
 		<dependency>
 		    <groupId>javax.mail</groupId>
@@ -135,14 +151,14 @@
            <artifactId>spring-boot-starter-security</artifactId>  
        </dependency> -->
        
-      <dependency>  
+        <dependency>  
            <groupId>io.jsonwebtoken</groupId>  
            <artifactId>jjwt</artifactId>  
             <version>0.7.0</version>  
-      </dependency>
+        </dependency>
       
 		<!-- 引入druid数据源 -->
-		<dependency>
+	    <dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>druid</artifactId>
 		    <version>1.1.8</version>

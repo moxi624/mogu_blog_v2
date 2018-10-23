@@ -2,6 +2,10 @@
 server:
     port: 8601
     
+#阿里大于
+templateCode: SMS_XXXXXX #短信模板编号
+signName: 蘑菇博客
+    
 #Data image url
 data:
   image:
@@ -56,7 +60,17 @@ spring:
       core: collection1
       repositories:
         enabled: true
-    
+  #redis
+  redis:
+    host: 192.168.25.130 #redis的主机ip
+    port: 6379
+        
+  rabbitmq:
+    host: 127.0.0.1 #rabbitmq的主机ip
+    port: 5672
+    username: guest
+    password: guest
+
 #eureka相关配置
 eureka:
   client:
@@ -101,6 +115,13 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+
+##jwt配置
+audience:
+  clientId: f528764d624db129b32c21fbca0cb8d6
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  name: mogublog
+  expiresSecond: 172800
 ##logging
 #logging:
 #  level: warn
