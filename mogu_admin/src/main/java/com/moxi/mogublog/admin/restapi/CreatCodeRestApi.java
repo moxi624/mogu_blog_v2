@@ -45,6 +45,8 @@ public class CreatCodeRestApi {
 	@Value(value="${signName}")
 	private String signName;
 	
+	@Value(value="${moguBlog.email}")
+	private String moguBlogEmail;
 
 	@ApiOperation(value="生成验证码", notes="生成验证码")
 	@PostMapping("/validCode")
@@ -75,7 +77,7 @@ public class CreatCodeRestApi {
 				"<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" + 
 				"<div class=\"container\">\r\n" + 
 				"<div class=\"logo\">\r\n" + 
-				"<img src=\"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1058444513,2491195822&fm=26&gp=0.jpg\",height=\"100\" width=\"100\">\r\n" + 
+				"<img src=\"http://120.79.70.126:8600//blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" + 
 				"</div>\r\n" + 
 				"<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" + 
 				"<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" + 
@@ -83,9 +85,9 @@ public class CreatCodeRestApi {
 				"\r\n" + 
 				"</div>\r\n" + 
 				"<div class=\"panel-body\">\r\n" + 
-				"<p>您好 <a href=\"mailto:315696012@qq.com\" rel=\"noopener\" target=\"_blank\">315696012@qq<wbr>.com</a>！</p>\r\n" + 
-				"<p>欢迎注册码云，请将验证码填写到注册页面。</p>\r\n" + 
-				"<p>验证码：395217</p>\r\n" + 
+				"<p>您好 <a href=\"mailto:"+ moguBlogEmail +"\" rel=\"noopener\" target=\"_blank\">"+ info+"<wbr></a>！</p>\r\n" + 
+				"<p>欢迎注册蘑菇博客，请将验证码填写到注册页面。</p>\r\n" + 
+				"<p>验证码："+ code + "</p>\r\n" + 
 				"\r\n" + 
 				"</div>\r\n" + 
 				"</div>\r\n" + 
