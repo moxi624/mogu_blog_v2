@@ -2,6 +2,7 @@ package com.moxi.mogublog.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableTransactionManagement
-@SpringBootApplication
+@SpringBootApplication(exclude = VelocityAutoConfiguration.class)//redis和velocity的包会起冲突
 @EnableSwagger2
 @EnableEurekaClient
 @EnableFeignClients("com.moxi.mogublog.web.feign")

@@ -24,6 +24,6 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
   @Override
   public void updateFill(MetaObject metaObject) {
 	  log.info("更新方法填充");
-	  setFieldValByName(SysConf.CREATE_TIME, new Date(), metaObject);
+	  setFieldValByName(SysConf.UPDATE_TIME, new Date(), metaObject);
   }
 }
