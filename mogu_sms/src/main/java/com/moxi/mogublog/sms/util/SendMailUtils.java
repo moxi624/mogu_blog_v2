@@ -20,8 +20,9 @@ public class SendMailUtils {
     @Autowired
     private JavaMailSenderImpl mailSender;
     
-    //public static final String SENDER = "mogublog@163.com";
-    public static final String SENDER = "404032194@qq.com";
+    public static final String SENDER = "mogublog@163.com";
+    
+    //public static final String SENDER = "404032194@qq.com";
     
      /** 
       * 发送邮件 

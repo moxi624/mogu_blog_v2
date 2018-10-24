@@ -62,7 +62,7 @@ spring:
         enabled: true
   #redis
   redis:
-    host: 192.168.25.130 #redis的主机ip
+    host: 127.0.0.1 #redis的主机ip
     port: 6379
         
   rabbitmq:

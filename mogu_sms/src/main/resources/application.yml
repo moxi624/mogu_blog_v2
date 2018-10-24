@@ -28,12 +28,17 @@ spring:
     
     #mail
   mail:
-    username: 404032194@qq.com
-    password: wsftqbrbuiydbhig #授权码开启SMTP服务里设置
-    host: smtp.qq.com
+    username: mogublog@163.com
+    password: a1313375 #授权码开启SMTP服务里设置
+    host: smtp.163.com
+    
     properties:
       mail:
         smtp: 
+          auth: true
+          starttls:
+            enable: true
+            required: true
           ssl:
             enable: true
     
