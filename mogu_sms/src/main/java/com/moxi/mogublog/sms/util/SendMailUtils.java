@@ -4,6 +4,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,9 @@ public class SendMailUtils {
     @Autowired
     private JavaMailSenderImpl mailSender;
     
-    public static final String SENDER = "mogublog@163.com";
-    
-    //public static final String SENDER = "404032194@qq.com";
-    
+    @Value(value="${spring.mail.username}")
+    public String SENDER;
+ 
      /** 
       * 发送邮件 
       * @param receiver 

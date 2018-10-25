@@ -24,7 +24,7 @@ public class SendMailUtils {
     public static final String PROTOCOL = "smtp";  
     public static final int PORT = 25;  
     public static final String SENDER = "mogublog@163.com";//  
-    public static final String SENDERPWD = "w1313375";  
+    public static final String SENDERPWD = "a1313375";  
       
     /** 
      * 获取用于发送邮件的Session 

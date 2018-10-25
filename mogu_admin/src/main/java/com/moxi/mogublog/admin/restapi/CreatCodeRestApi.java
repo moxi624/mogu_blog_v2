@@ -101,16 +101,16 @@ public class CreatCodeRestApi {
 				" </body>\r\n" + 
 				"</html>";
 				
-		//存入缓存
-		stringRedisTemplate.opsForValue().append(info,code);
 		
 		Map<String, String> map = new HashMap<>();
 		
 		if(CheckUtils.checkEmail(info)) {
 			map.put("receiver", info);
 			map.put("text", text);
+			
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct","mogu.email",map);
+						
 		}
 		if(CheckUtils.checkMobileNumber(info)) {
 			//code是我们申请模板时写的参数
@@ -121,6 +121,9 @@ public class CreatCodeRestApi {
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct","mogu.sms",map);
 		}
+		
+		//存入缓存
+		stringRedisTemplate.opsForValue().set("SMS:" + info, code);
 		
 		return ResultUtil.result(SysConf.SUCCESS, "生成验证码成功");
 	}
