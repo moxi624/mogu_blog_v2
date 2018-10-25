@@ -84,9 +84,9 @@
 		      <el-input v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-		    <el-form-item label="标签点击数" :label-width="formLabelWidth">
+		    <!-- <el-form-item label="标签点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-		    </el-form-item>
+		    </el-form-item> -->
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -115,7 +115,7 @@ export default {
       form: {
         uid: null,
         content: "",
-        clickCount: 0,
+        clickCount: null,
       }
     };
   },
@@ -140,7 +140,7 @@ export default {
       var formObject = {
 				uid: null,
         content: null,
-        clickCount: null,				
+        clickCount: 0,				
       };
       return formObject;
 		},
@@ -160,17 +160,31 @@ export default {
 			this.form = row;
     },
     handleDelete: function(row) {
+
 			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
-			deleteTag(params).then(response=> {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-					that.tagList();
+      this.$confirm("此操作将把标签删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+			.then(() => {
+				let params = new URLSearchParams();
+				params.append("uid", row.uid);
+				deleteTag(params).then(response=> {
+						console.log(response);
+						this.$message({
+							type: "success",
+							message: response.data
+						});
+						that.tagList();
+				})
 			})
+			.catch(() => {
+				this.$message({
+					type: "info",
+					message: "已取消删除"
+				});
+			});
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");

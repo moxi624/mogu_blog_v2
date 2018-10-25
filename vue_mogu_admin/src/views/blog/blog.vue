@@ -69,8 +69,8 @@
 
 			<el-table-column label="是否原创" width="100">
 	      <template slot-scope="scope">
-					<el-tag v-if="scope.row.isOriginal==0" type="success">是</el-tag>
-	        <el-tag v-if="scope.row.isOriginal==1" type="danger">否</el-tag>
+					<el-tag v-if="scope.row.isOriginal==1" type="success">是</el-tag>
+	        <el-tag v-if="scope.row.isOriginal==0" type="danger">否</el-tag>
 	      </template>
 	    </el-table-column>
 
@@ -212,9 +212,9 @@
 				</el-select>
 		    </el-form-item>
 
-				<el-form-item label="点击数" :label-width="formLabelWidth">
+				<!-- <el-form-item label="点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-		    </el-form-item>
+		    </el-form-item> -->
 
 				<el-form-item label="作者" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.author" auto-complete="off"></el-input>
@@ -309,6 +309,7 @@ export default {
         fileUid: null,
         isOriginal: null, //是否原创
         author: null, //作者
+        clickCount: 0,
         articlesPart: null //文章出处
       }
     };
@@ -465,18 +466,30 @@ export default {
       this.dialogFormVisible = true;
       this.isEditForm = true;
     },
-    handleDelete: function(row) {
-      console.log("点击了删除");
+    handleDelete: function(row) {            
       var that = this;
-      let params = new URLSearchParams();
-      params.append("uid", row.uid);
-      deleteBlog(params).then(response => {
-        console.log(response);
-        this.$message({
-          type: "success",
-          message: response.data
+      this.$confirm("此操作将把博客删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+      .then(() => {
+        let params = new URLSearchParams();
+        params.append("uid", row.uid);
+        deleteBlog(params).then(response => {
+          console.log(response);
+          this.$message({
+            type: "success",
+            message: response.data
+          });
+          that.blogList();
         });
-        that.blogList();
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消删除"
+        });
       });
     },
     handleCurrentChange: function(val) {
@@ -488,14 +501,14 @@ export default {
       this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
       this.form.tagUid = this.tagValue.join(",");
 
-      if(this.form.title == null || this.form.tagUid == null) {
+      if (this.form.title == null || this.form.tagUid == null) {
         this.$message({
           type: "error",
-          message: "必填项不能为空",
-        })
+          message: "必填项不能为空"
+        });
         return;
       }
-      
+
       console.log("这是form中的内容", this.form);
       var params = formatData(this.form);
       if (this.isEditForm) {

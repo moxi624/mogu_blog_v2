@@ -104,9 +104,9 @@
 		      <el-input v-model="form.url" auto-complete="off"></el-input>
 		    </el-form-item>
 		    
-		    <el-form-item label="友链点击数" :label-width="formLabelWidth">
+		    <!-- <el-form-item label="友链点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-		    </el-form-item>
+		    </el-form-item> -->
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -119,7 +119,7 @@
 
 <script>
 import { getLinkList, addLink, editLink, deleteLink } from "@/api/link";
-import { formatData } from '@/utils/webUtils'
+import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
@@ -130,12 +130,12 @@ export default {
       total: 0, //总数量
       title: "增加友链",
       dialogFormVisible: false, //控制弹出框
-      formLabelWidth: '120px',
-      isEditForm: false ,
+      formLabelWidth: "120px",
+      isEditForm: false,
       form: {
         uid: null,
         content: "",
-        clickCount: 0,
+        clickCount: 0
       }
     };
   },
@@ -143,106 +143,113 @@ export default {
     this.linkList();
   },
   methods: {
-		linkList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
-			getLinkList(params).then(response => {				
-				this.tableData = response.data.records;
-				this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;      
-			});
-		},
-		getFormObject: function() {
+    linkList: function() {
+      var params = new URLSearchParams();
+      params.append("keyword", this.keyword);
+      params.append("currentPage", this.currentPage);
+      params.append("pageSize", this.pageSize);
+      getLinkList(params).then(response => {
+        this.tableData = response.data.records;
+        this.currentPage = response.data.current;
+        this.pageSize = response.data.size;
+        this.total = response.data.total;
+      });
+    },
+    getFormObject: function() {
       var formObject = {
-				uid: null,
-				title: null,
-				summary: null,
-				url: null,
-        clickCount: null,				
+        uid: null,
+        title: null,
+        summary: null,
+        url: null,
+        clickCount: 0
       };
       return formObject;
-		},
-		handleFind: function() {
-			this.linkList();
-		},			
+    },
+    handleFind: function() {
+      this.linkList();
+    },
     handleAdd: function() {
-			this.dialogFormVisible = true;
-			this.form = this.getFormObject();
-			this.isEditForm = false;
+      this.dialogFormVisible = true;
+      this.form = this.getFormObject();
+      this.isEditForm = false;
     },
     handleEdit: function(row) {
-			title: "编辑友链";
-			this.dialogFormVisible = true;
-			this.isEditForm = true;
-			console.log(row);
-			this.form = row;
+      title: "编辑友链";
+      this.dialogFormVisible = true;
+      this.isEditForm = true;
+      console.log(row);
+      this.form = row;
     },
     handleDelete: function(row) {
-			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
-			deleteLink(params).then(response=> {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
+      var that = this;
+      this.$confirm("此操作将把友链删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+			.then(() => {
+				let params = new URLSearchParams();
+				params.append("uid", row.uid);
+				deleteLink(params).then(response => {
+					console.log(response);
+					this.$message({
+						type: "success",
+						message: response.data
+					});
 					that.linkList();
+				});
 			})
+			.catch(() => {
+				this.$message({
+					type: "info",
+					message: "已取消删除"
+				});
+			});
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
       this.linkList();
     },
-		submitForm: function() {
-			console.log("点击了提交表单", this.form);
-			var params = formatData(this.form);			
-			if(this.isEditForm) {
-				editLink(params).then(response=> {
-						console.log(response);
-						if(response.code == "success") {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-							this.dialogFormVisible = false;
-							this.linkList();		
-						} else {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-						}
-						
-										
-				})				
-			} else {
-				addLink(params).then(response=> {
-						console.log(response);
-						if(response.code == "success") {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-							this.dialogFormVisible = false;
-							this.linkList();	
-						} else {
-							this.$message({
-								type: "error",
-								message: response.data
-							});
-						}
-								
-				})
-	
-			}
-
-		},
-		
+    submitForm: function() {
+      console.log("点击了提交表单", this.form);
+      var params = formatData(this.form);
+      if (this.isEditForm) {
+        editLink(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.dialogFormVisible = false;
+            this.linkList();
+          } else {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+          }
+        });
+      } else {
+        addLink(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.dialogFormVisible = false;
+            this.linkList();
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            });
+          }
+        });
+      }
+    }
   }
 };
 </script>

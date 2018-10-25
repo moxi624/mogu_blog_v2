@@ -132,9 +132,9 @@
 		      <el-input type="textarea" v-model="form.summary" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="点击数" :label-width="formLabelWidth">
+        <!-- <el-form-item label="点击数" :label-width="formLabelWidth">
 		      <el-input  v-model="form.clickCount" auto-complete="off"></el-input>
-		    </el-form-item>
+		    </el-form-item> -->
 
         <el-form-item label="百度云路径" :label-width="formLabelWidth">
 		      <el-input type="textarea" v-model="form.baiduPath" auto-complete="off"></el-input>

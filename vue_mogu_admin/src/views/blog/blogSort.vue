@@ -157,17 +157,31 @@ export default {
 			this.form = row;
     },
     handleDelete: function(row) {
+
 			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
-			deleteBlogSort(params).then(response=> {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-					that.blogSortList();
+      this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+			.then(() => {
+				let params = new URLSearchParams();
+				params.append("uid", row.uid);
+				deleteBlogSort(params).then(response=> {
+						console.log(response);
+						this.$message({
+							type: "success",
+							message: response.data
+						});
+						that.blogSortList();
+				})
 			})
+			.catch(() => {
+				this.$message({
+					type: "info",
+					message: "已取消删除"
+				});
+			});
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");
