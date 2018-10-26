@@ -1,7 +1,11 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +29,8 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.BlogSort;
+import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
@@ -95,21 +101,75 @@ public class BlogRestApi {
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
 		
+		final StringBuffer fileUids = new StringBuffer();
+		List<String> sortUids = new ArrayList<String>();
+		List<String> tagUids = new ArrayList<String>();
+
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				fileUids.append(item.getFileUid() + ",");
+			}
+			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
+				sortUids.add(item.getBlogSortUid());
+			}
+			if(StringUtils.isNotEmpty(item.getTagUid())) {
+				tagUids.add(item.getTagUid());
+			}
+		});
+		String pictureList = null;
+		
+		if(fileUids != null) {
+			pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+		}
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);				
+		Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);		
+		Collection<Tag> tagList = tagService.listByIds(tagUids);
+		
+		Map<String, BlogSort> sortMap = new HashMap<String, BlogSort> ();
+		Map<String, Tag> tagMap = new HashMap<String, Tag>();
+		Map<String, String> pictureMap = new HashMap<String, String>();
+		
+		sortList.forEach(item -> {
+			sortMap.put(item.getUid(), item);
+		});
+		
+		tagList.forEach(item -> {
+			tagMap.put(item.getUid(), item);
+		});
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
+		
 		for(Blog item : list) {
+			
+			//设置分类			
+			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
+				item.setBlogSort(sortMap.get(item.getBlogSortUid()));	
+			}
+						
 			//获取标签
-			blogService.setTagByBlog(item);
+			if(StringUtils.isNotEmpty(item.getTagUid())) {
+				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+				List<Tag> tagListTemp = new ArrayList<Tag>();
+				
+				tagUidsTemp.forEach(tag -> {
+					tagListTemp.add(tagMap.get(tag));
+				});
+				item.setTagList(tagListTemp);	
+			}
 			
-			//获取分类
-			blogService.setSortByBlog(item);
-			
-			//获取标题图片
-			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
-				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
-				List<String> picList = WebUtils.getPicture(result);				
-				if(picList != null && picList.size() > 0) {
-					item.setPhotoList(picList); 
-				}
-			}			
+			//获取图片
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+				List<String> pictureListTemp = new ArrayList<String>();
+				
+				pictureUidsTemp.forEach(picture -> {
+					pictureListTemp.add(pictureMap.get(picture));
+				});
+				item.setPhotoList(pictureListTemp);
+			}		
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);
