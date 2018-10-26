@@ -1,7 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -78,16 +81,34 @@ public class StudyVideoRestApi {
 		IPage<StudyVideo> pageList = studyVideoService.page(page, queryWrapper);
 		List<StudyVideo> list = pageList.getRecords();
 		
+		final StringBuffer fileUids = new StringBuffer();
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				fileUids.append(item.getFileUid() + ",");
+			}
+		});		
+		String pictureResult = null;
+		Map<String, String> pictureMap = new HashMap<String, String>();
+		
+		if(fileUids != null) {
+			pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+		}
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
 		for(StudyVideo item : list) {	
 			//获取分类资源
-			if(item != null && !StringUtils.isEmpty(item.getFileUid())) {				
-				String result = this.pictureFeignClient.getPicture(item.getFileUid(), ",");
-				List<String> picList = WebUtils.getPicture(result);
-				log.info("##### picList: #######" + picList);
-				if(picList != null && picList.size() > 0) {
-					item.setPhotoList(picList); 
-				}
-			}
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+				List<String> pictureListTemp = new ArrayList<String>();				
+				pictureUidsTemp.forEach(picture -> {
+					pictureListTemp.add(pictureMap.get(picture));
+				});
+				item.setPhotoList(pictureListTemp);
+			}	
 			
 			if(StringUtils.isNotEmpty(item.getResourceSortUid())) {
 				ResourceSort resourceSort = resourceSortService.getById(item.getResourceSortUid());

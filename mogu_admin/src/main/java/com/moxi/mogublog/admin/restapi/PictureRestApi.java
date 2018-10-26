@@ -1,7 +1,9 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -78,15 +80,30 @@ public class PictureRestApi {
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		IPage<Picture> pageList = pictureService.page(page, queryWrapper);
 		List<Picture> pictureList = pageList.getRecords();
+
+		final StringBuffer fileUids = new StringBuffer();
+		pictureList.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				fileUids.append(item.getFileUid() + ",");
+			}
+		});
 		
-		//TODO 以下代码以后需要优化，应该是将全部的id拼接，然后在调用图片接口
+		String pictureResult = null;
+		Map<String, String> pictureMap = new HashMap<String, String>();
 		
-		for(Picture picture : pictureList) {
-			String result = this.pictureFeignClient.getPicture(picture.getFileUid(), ",");
-			List<String> picList = WebUtils.getPicture(result);
-			log.info("##### picList: #######" + picList);
-			if(picList != null && picList.size() > 0) {
-				picture.setPictureUrl(picList.get(0)); //获取一张图片
+		if(fileUids != null) {
+			pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+		}
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
+		for(Picture item : pictureList) {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				log.info(pictureMap.get(item.getFileUid()));
+				item.setPictureUrl(pictureMap.get(item.getFileUid()));
 			}
 		}
 
