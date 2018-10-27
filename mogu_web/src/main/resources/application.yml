@@ -66,6 +66,12 @@ spring:
       core: collection1
       repositories:
         enabled: true
+  
+  #redis
+  redis:
+    host: 127.0.0.1 #redis的主机ip
+    port: 6379
+
 #eureka相关配置
 eureka:
   client:

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  */
 @SuppressWarnings("rawtypes")
-public class SuperEntity<T extends Model> extends Model<T> {
+public class SuperEntity<T extends Model> extends Model<T>{
 
 	/**
 	 * 

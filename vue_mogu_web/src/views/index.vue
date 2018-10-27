@@ -188,7 +188,7 @@ export default {
       params.append("pageSize", this.pageSize);
       getNewBlog(params).then(response => {
         console.log("最新博客", response);
-        if(response.code == "success") {
+        if(response.code == "success") {          
           this.newBlogData = response.data.records;
           this.total = response.data.total;
           this.pageSize = response.data.size;

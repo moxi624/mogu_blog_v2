@@ -1,5 +1,6 @@
 package com.moxi.mogublog.utils;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class JsonUtils {
 	 * @param clazz
 	 * @return
 	 */
-	public static Object jsonToObject(String jsonString,Class<?> clazz) {
+	public static Object jsonToObject(String jsonString, Class<?> clazz) {
 		
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
 		Object obj = null;
@@ -71,13 +72,39 @@ public class JsonUtils {
 	 * @return
 	 */
 	public static ArrayList<?> jsonArrayToArrayList(String jsonArray) {
-		
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create(); 
+				
+		Gson gson = new GsonBuilder()
+	            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+	            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+	            .serializeNulls()
+	            .create();
 		ArrayList<?> list = null;
 		try {
 			Type listType = new TypeToken<ArrayList<?>>() {}.getType();
 			
 			list = gson.fromJson(jsonArray, listType);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	/**
+	 * JSON 转 ArrayList
+	 * @author xzx19950624@qq.com
+	 * @date 2018年10月27日下午4:43:25
+	 */
+	public static ArrayList<?> jsonArrayToArrayList(String jsonArray, Class<?> clazz) {
+		
+		Gson gson = new GsonBuilder()
+	            .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+	            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+	            .serializeNulls()
+	            .create();
+		ArrayList<?> list = null;
+		try {
+		
+			list = (ArrayList<?>) gson.fromJson(jsonArray, clazz);
 		} catch (JsonSyntaxException e) {
 			e.printStackTrace();
 		}
