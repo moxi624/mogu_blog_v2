@@ -1,7 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,11 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.utils.DateJsonValueProcessor;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.TimestampMorpher;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -106,8 +103,10 @@ public class IndexRestApi {
 			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage) {
 		
+		//从Redis中获取内容
 		String jsonResult = stringRedisTemplate.opsForValue().get("BOLG_LEVEL:" + level);
 		
+		//判断redis中是否有文章
 		if(StringUtils.isNotEmpty(jsonResult)) {
 			List list = JsonUtils.jsonArrayToArrayList(jsonResult);
 			IPage pageList = new Page();

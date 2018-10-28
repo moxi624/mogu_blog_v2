@@ -4,6 +4,8 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
@@ -31,8 +33,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.xo.service",
         "com.moxi.mogublog.utils"
         })
-public class APP {
-
+public class APP extends SpringBootServletInitializer{
+	
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+	    return application.sources(APP.class);
+	}	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(APP.class, args);
 	}

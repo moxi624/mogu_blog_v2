@@ -3,6 +3,8 @@ package com.moxi.mogublog.picture;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,8 +24,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.picture.config",
         "com.moxi.mogublog.picture.restapi",
         "com.moxi.mogublog.picture.service"})
-public class APP {
-
+public class APP extends SpringBootServletInitializer {
+	
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+	    return application.sources(APP.class);
+	}
+	
 	public static void main(String[] args) {
 		SpringApplication.run(APP.class, args);
 	}

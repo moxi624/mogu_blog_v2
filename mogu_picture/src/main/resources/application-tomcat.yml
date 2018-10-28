@@ -1,4 +1,7 @@
-
+#app
+server:
+    port: 8602
+    
 #Data image url
 data:
   image:
@@ -9,8 +12,6 @@ file:
 
 #spring
 spring:
-  jmx:
-    default-domain: mogu_picture
   thymeleaf:
     cache: true   #关闭缓存
   application:
