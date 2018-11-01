@@ -35,6 +35,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.utils"
         })
 public class APP extends SpringBootServletInitializer{
+	
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(APP.class);
