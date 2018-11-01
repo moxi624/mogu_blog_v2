@@ -1,4 +1,7 @@
-
+#app
+server:
+    port: 8080
+    
 #Data image url
 data:
   image:
@@ -20,7 +23,6 @@ spring:
       enabled: true #启动热部署
       additional-paths:
       - src/main/java #设置重启的目录，添加哪个目录文件需要restart
-      
       
   # DATABASE CONFIG
   datasource:
@@ -87,6 +89,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-##logging
+##logging(配置在logback_spring.xml中)
 #logging:
 #  level: warn

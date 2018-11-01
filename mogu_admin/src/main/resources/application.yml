@@ -1,6 +1,6 @@
 #app
 server:
-    port: 8601
+    port: 8080
     
 #阿里大于
 templateCode: SMS_XXXXXX #短信模板编号
@@ -30,8 +30,6 @@ spring:
       enabled: true #启动热部署
       additional-paths:
       - src/main/java #设置重启的目录，添加哪个目录文件需要restart
-      
-      
 
   # DATABASE CONFIG
   datasource:
@@ -127,6 +125,11 @@ audience:
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
   name: mogublog
   expiresSecond: 172800
-##logging
-#logging:
-#  level: warn
+
+##logging(配置在logback_spring.xml中)
+#logging: 
+  #path: /springboot/log
+  #日志输出级别
+  #level: 
+    #root: warn
+  

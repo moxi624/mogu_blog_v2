@@ -1,6 +1,6 @@
 #app
 server:
-    port: 8603
+    port: 8080
     
 #Data image url
 data:
@@ -22,6 +22,8 @@ BLOG:
 
 #spring
 spring:
+  jmx:
+    default-domain: mogu_web
   thymeleaf:
     cache: true   #关闭缓存
   application:
@@ -78,7 +80,7 @@ eureka:
     healthcheck:
       enabled: true
     serviceUrl:
-      defaultZone: http://user:password123@localhost:8761/eureka
+      defaultZone: http://user:password123@localhost:8080/mogu_eureka/eureka
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
@@ -116,6 +118,6 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-##logging
+##logging(配置在logback_spring.xml中)
 #logging:
 #  level: warn

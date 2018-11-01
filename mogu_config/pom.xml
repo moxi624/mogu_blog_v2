@@ -13,15 +13,39 @@
 	<artifactId>mogu_config</artifactId>
 	<name>mogu_config</name>
 	<dependencies> 
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 				
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-web</artifactId>
+	        <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
+	         <exclusions>  
+	             <exclusion>  
+	                 <groupId>org.springframework.boot</groupId>  
+	                 <artifactId>spring-boot-starter-tomcat</artifactId>  
+	             </exclusion>  
+	         </exclusions> 
+    	</dependency>
+    	
+    	
+    	<!-- <dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>servlet-api</artifactId>
+		    <version>3.0-alpha-1</version>
+    		<scope>provided</scope>
+		</dependency> -->
+		
+		
+		<dependency>
+		    <groupId>org.apache.tomcat</groupId>
+		    <artifactId>tomcat-servlet-api</artifactId>
+		    <version>8.0.36</version>
+		    <scope>provided</scope>
+		</dependency>
         
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -42,12 +66,12 @@
         </dependency>
         
         
-        <!-- RabbitMq 
+        <!-- RabbitMq  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-        -->
+       
         
   		<!-- mp依赖
   			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
@@ -88,12 +112,6 @@
             <version>2.6.1</version>
         </dependency>
         
-		<!-- Redis客户端 -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-		
 		<!-- 格式化对象，方便输出日志 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
