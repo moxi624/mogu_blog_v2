@@ -126,10 +126,10 @@ audience:
   name: mogublog
   expiresSecond: 172800
 
-##logging(配置在logback_spring.xml中)
-#logging: 
-  #path: /springboot/log
-  #日志输出级别
-  #level: 
-    #root: warn
+####### 日志输出 #########
+logging:
+  file: D:/mogu_blog/logs/admin/admin.log
+  level:
+    root: info
+    org.springframework.web: DEBUG
   

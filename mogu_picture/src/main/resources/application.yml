@@ -89,6 +89,10 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-##logging(配置在logback_spring.xml中)
-#logging:
-#  level: warn
+    
+####### 日志输出 #########
+logging:
+  file: D:/mogu_blog/logs/picture/picture.log
+  level:
+    root: info
+    org.springframework.web: DEBUG

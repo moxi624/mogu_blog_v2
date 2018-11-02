@@ -59,6 +59,9 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     
 
-##logging(配置在logback_spring.xml中)
-#logging:
-#  level: warn
+####### 日志输出 #########
+logging:
+  file: D:/mogu_blog/logs/sms/sms.log
+  level:
+    root: info
+    org.springframework.web: DEBUG

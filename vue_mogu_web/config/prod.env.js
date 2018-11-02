@@ -10,5 +10,5 @@ module.exports = {
   //配置线上环境
   BASE_BLOG_API: '"http://120.79.70.126:8080/mogu_blog"',
   PICTURE_API: '"http://120.79.70.126:8080/mogu_picture"',
-  WEB_API: '"http://120.79.70.126:8603/mogu_web"',
+  WEB_API: '"http://120.79.70.126:8080/mogu_web"',
 }

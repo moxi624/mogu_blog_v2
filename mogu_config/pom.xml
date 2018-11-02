@@ -23,23 +23,14 @@
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-web</artifactId>
 	        <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
-	         <exclusions>  
+	        <exclusions>  
 	             <exclusion>  
 	                 <groupId>org.springframework.boot</groupId>  
 	                 <artifactId>spring-boot-starter-tomcat</artifactId>  
 	             </exclusion>  
-	         </exclusions> 
+	         </exclusions>
     	</dependency>
     	
-    	
-    	<!-- <dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>servlet-api</artifactId>
-		    <version>3.0-alpha-1</version>
-    		<scope>provided</scope>
-		</dependency> -->
-		
-		
 		<dependency>
 		    <groupId>org.apache.tomcat</groupId>
 		    <artifactId>tomcat-servlet-api</artifactId>
