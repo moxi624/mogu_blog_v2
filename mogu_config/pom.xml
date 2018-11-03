@@ -155,10 +155,10 @@
 		</dependency>
 
 		<!-- spring-security 和 jwt -->  
-       <!--  <dependency>  
-            <groupId>org.springframework.boot</groupId>  
+       <dependency>  
+           <groupId>org.springframework.boot</groupId>  
            <artifactId>spring-boot-starter-security</artifactId>  
-       </dependency> -->
+       </dependency>
        
         <dependency>  
            <groupId>io.jsonwebtoken</groupId>  

@@ -12,5 +12,5 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
  * @since 2018-09-04
  */
 public interface AdminMapper extends SuperMapper<Admin> {
-
+	
 }

@@ -19,6 +19,9 @@ moguBlog:
 
 #spring
 spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
   jmx:
     default-domain: mogu_admin
   thymeleaf:
@@ -121,7 +124,7 @@ mybatis-plus:
 
 ##jwt配置
 audience:
-  clientId: f528764d624db129b32c21fbca0cb8d6
+  clientId: 098f6bcd4621d373cade4e832627b4f6
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
   name: mogublog
   expiresSecond: 172800

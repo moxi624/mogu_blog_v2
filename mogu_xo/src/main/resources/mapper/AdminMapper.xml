@@ -4,28 +4,28 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Admin">
-        <id column="oid" property="oid" />
-        <result column="uid" property="uid" />
-        <result column="username" property="username" />
+        <id column="uid" property="uid" />
+        <result column="userName" property="userName" />
         <result column="password" property="password" />
         <result column="gender" property="gender" />
         <result column="avatar" property="avatar" />
         <result column="email" property="email" />
         <result column="birthday" property="birthday" />
         <result column="mobile" property="mobile" />
-        <result column="validcode" property="validcode" />
+        <result column="validCode" property="validCode" />
         <result column="summary" property="summary" />
-        <result column="logincount" property="logincount" />
-        <result column="lastlogintime" property="lastlogintime" />
-        <result column="lastloginip" property="lastloginip" />
+        <result column="loginCount" property="loginCount" />
+        <result column="lastLoginTime" property="lastLoginTime" />
+        <result column="lastLoginIp" property="lastLoginIp" />
         <result column="status" property="status" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+        <result column="administrators" property="administrators" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        oid, uid, username, password, gender, avatar, email, birthday, mobile, validcode, summary, logincount, lastlogintime, lastloginip, status, createtime, updatetime
+        uid, userName, passWord, gender, avatar, email, birthday, mobile, validCode, summary, loginCount, lastLoginTime, lastLoginIp, administrators,status, createTime, updateTime
     </sql>
-
+    
 </mapper>
