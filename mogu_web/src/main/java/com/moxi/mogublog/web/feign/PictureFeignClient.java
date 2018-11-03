@@ -14,7 +14,7 @@ import com.moxi.mogublog.web.config.FeignConfiguration;
  *
  */
 
-@FeignClient(name = "mogu-picture", url = "http://localhost:8080/mogu_picture/", configuration = FeignConfiguration.class)
+@FeignClient(name = "mogu-picture", url = "http://localhost:8602/", configuration = FeignConfiguration.class)
 public interface PictureFeignClient {
 	
 

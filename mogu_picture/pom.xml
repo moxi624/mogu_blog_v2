@@ -9,7 +9,7 @@
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mogu_picture</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>mogu_picture</name>
 	<description>Demo project for Spring Boot</description>
 

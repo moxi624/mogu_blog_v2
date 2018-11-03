@@ -1,6 +1,6 @@
 #app
 server:
-    port: 8080
+    port: 8601
     
 #阿里大于
 templateCode: SMS_XXXXXX #短信模板编号
@@ -80,7 +80,7 @@ eureka:
     healthcheck:
       enabled: true
     serviceUrl:
-      defaultZone: http://user:password123@localhost:8080/mogu_eureka/eureka
+      defaultZone: http://user:password123@localhost:8761/eureka
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
