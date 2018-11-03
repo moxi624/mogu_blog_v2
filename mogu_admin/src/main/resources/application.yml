@@ -15,7 +15,16 @@ file:
     path: D:/mogu_blog/data/
 
 moguBlog:
-   email: mogublog@163.com    
+   email: mogublog@163.com
+   
+#博客相关配置
+BLOG:
+  HOT_COUNT: 5 #热门博客数量
+  NEW_COUNT: 15 #最新博客数据
+  FIRST_COUNT: 5 #一级推荐
+  SECOND_COUNT: 2 #二级推荐
+  THIRD_COUNT: 3 #三级推荐
+  FOURTH_COUNT: 5 #四级推荐
 
 #spring
 spring:

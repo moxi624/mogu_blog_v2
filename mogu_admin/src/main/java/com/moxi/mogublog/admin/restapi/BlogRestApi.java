@@ -34,6 +34,7 @@ import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
+import com.moxi.mougblog.base.enums.ELevel;
 import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
@@ -68,6 +69,18 @@ public class BlogRestApi {
 	@Value(value="${data.image.url}")
 	private String IMG_HOST;
 	
+	@Value(value="${BLOG.FIRST_COUNT}")
+	private Integer BLOG_FIRST_COUNT;
+	
+	@Value(value="${BLOG.SECOND_COUNT}")
+	private Integer BLOG_SECOND_COUNT;
+	
+	@Value(value="${BLOG.THIRD_COUNT}")
+	private Integer BLOG_THIRD_COUNT;
+	
+	@Value(value="${BLOG.FOURTH_COUNT}")
+	private Integer BLOG_FOURTH_COUNT;
+	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
 	@ApiOperation(value="获取博客列表", notes="获取博客列表", response = String.class)	
@@ -76,6 +89,7 @@ public class BlogRestApi {
 			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
 			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
 			@ApiParam(name = "blogSortUid", value = "分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
+			@ApiParam(name = "levelKeyword", value = "博客等级",required = false) @RequestParam(name = "levelKeyword", required = false) String levelKeyword,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
@@ -89,6 +103,10 @@ public class BlogRestApi {
 		if(!StringUtils.isEmpty(blogSortUid)) {
 			queryWrapper.like(SQLConf.BLOG_SORT_UID, blogSortUid);
 		}
+		if(!StringUtils.isEmpty(levelKeyword)) {
+			queryWrapper.eq(SQLConf.LEVEL, levelKeyword);
+		}
+		
 		//分页 
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
@@ -195,6 +213,37 @@ public class BlogRestApi {
  		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(author)|| StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
+ 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+ 		queryWrapper.eq(SQLConf.LEVEL, level);
+ 		Integer count = blogService.count(queryWrapper);
+ 		
+ 		//添加的时候进行判断
+		switch(level) {
+
+			case ELevel.FIRST: { 
+				if(count >= BLOG_FIRST_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.SECOND: {
+				if(count >= BLOG_SECOND_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.THIRD: {
+				if(count >= BLOG_THIRD_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.FOURTH: { 
+				if(count >= BLOG_FOURTH_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
+				}
+			} break;
+		}
 		Blog blog = new Blog();
 		blog.setTitle(title);
 		blog.setSummary(summary);
@@ -232,7 +281,38 @@ public class BlogRestApi {
 		
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
+		}
+ 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+ 		queryWrapper.eq(SQLConf.LEVEL, level);
+ 		Integer count = blogService.count(queryWrapper);
+ 		
+ 		//添加的时候进行判断
+		switch(level) {
+
+			case ELevel.FIRST: { 
+				if(count >= BLOG_FIRST_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.SECOND: {
+				if(count >= BLOG_SECOND_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.THIRD: {
+				if(count >= BLOG_THIRD_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
+				}
+			} break;
+			
+			case ELevel.FOURTH: { 
+				if(count >= BLOG_FOURTH_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
+				}
+			} break;
+		}
 		Blog blog = blogService.getById(uid);
 		blog.setTitle(title);
 		blog.setSummary(summary);

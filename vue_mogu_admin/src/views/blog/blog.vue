@@ -3,6 +3,7 @@
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入博客名"></el-input>
+        
         <el-select
           v-model="sortKeyword"
           filterable
@@ -19,6 +20,7 @@
             :value="item.uid">
           </el-option>
         </el-select>
+
         <el-select
           v-model="tagKeyword"
           filterable
@@ -35,6 +37,16 @@
             :value="item.uid">
           </el-option>
         </el-select>
+
+        <el-select v-model="levelKeyword" clearable  placeholder="推荐等级">
+					<el-option
+				      v-for="item in blogLevelList"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				</el-select>
+
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>	              
 	    </div>
@@ -282,6 +294,7 @@ export default {
       keyword: "",
       tagKeyword: "", //标签搜索
       sortKeyword: "", //分类搜索
+      levelKeyword: "", //等级搜索
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -337,6 +350,7 @@ export default {
       params.append("keyword", this.keyword);
       params.append("blogSortUid", this.sortKeyword);
       params.append("tagUid", this.tagKeyword);
+      params.append("levelKeyword", this.levelKeyword);
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getBlogList(params).then(response => {
