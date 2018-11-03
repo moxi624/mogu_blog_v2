@@ -16,5 +16,16 @@ public class BaseSysConf {
 	
 	public final static String CODE = "code";
 	public final static String DATA = "data";
+	public final static String UID = "uid";
+	
+	//Blog
+	public final static String BLOG_UID = "blogUid";
+	public final static String LEVEL = "level";
+	
+	//RabbitMQ的命令操作
+	public final static String COMMAND = "command";
+	public final static String EDIT = "edit";
+	public final static String ADD = "add";
+	public final static String DELETE = "delete";
 		
 }

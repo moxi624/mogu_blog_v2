@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,6 +66,9 @@ public class BlogRestApi {
 	
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
+	
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
 	
 	@Value(value="${data.image.url}")
 	private String IMG_HOST;
@@ -258,7 +262,18 @@ public class BlogRestApi {
 		blog.setArticlesPart(articlesPart);
 		blog.setIsOriginal(isOriginal);
 		blog.setStatus(EStatus.ENABLE);
-		blogService.save(blog);
+		Boolean save = blogService.save(blog);
+		
+		//保存成功后，需要发送消息到solr 和 redis
+		if(save) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(SysConf.COMMAND, SysConf.ADD);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+		}
+
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
@@ -327,7 +342,17 @@ public class BlogRestApi {
 		blog.setIsOriginal(isOriginal);
 		blog.setArticlesPart(articlesPart);
 		blog.setStatus(EStatus.ENABLE);
-		blog.updateById();
+		Boolean save = blog.updateById();
+		//保存成功后，需要发送消息到solr 和 redis
+		if(save) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(SysConf.COMMAND, SysConf.EDIT);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+		}
+		
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
@@ -341,7 +366,17 @@ public class BlogRestApi {
 		}		
 		Blog blog = blogService.getById(uid);
 		blog.setStatus(EStatus.DISABLED);		
-		blog.updateById();
+		Boolean save = blog.updateById();
+		
+		//保存成功后，需要发送消息到solr 和 redis
+		if(save) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(SysConf.COMMAND, SysConf.DELETE);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+		}
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
 	
