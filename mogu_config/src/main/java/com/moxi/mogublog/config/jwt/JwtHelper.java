@@ -57,6 +57,7 @@ public class JwtHelper {
         JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT")
         		.claim("adminUid", adminUid)
         		.claim("role", roleName)
+        		.claim("creatTime", now)
                 .setSubject(userName)
                 .setIssuer(issuer)
                 .setAudience(audience)
@@ -93,4 +94,56 @@ public class JwtHelper {
         return  parseJWT(token,base64Security).getSubject();
     }
 	
+    //从token中获取audience
+    public static String getAudience(String token , String base64Security){
+        return  parseJWT(token,base64Security).getAudience();
+    }
+    
+    //从token中获取issuer
+    public static String getIssuer(String token , String base64Security){
+        return  parseJWT(token,base64Security).getIssuer();
+    }
+    
+    //从token中获取issuer
+    public static Date getExpiration(String token , String base64Security){
+        return  parseJWT(token,base64Security).getExpiration();
+    }
+    
+    //token是否可以更新
+    public static Boolean canTokenBeRefreshed(String token,String base64Security) {
+        return !isExpiration(token,base64Security);
+    }
+    
+    //更新token
+    public static String refreshToken(String token,String base64Security,long TTLMillis) {
+        String refreshedToken;
+        try {
+        	 SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+             long nowMillis = System.currentTimeMillis();
+             Date now = new Date(nowMillis);
+             //生成签名密钥
+             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Security);
+             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        	
+             final Claims claims = parseJWT(token,base64Security);
+             claims.put("creatDate", new Date());
+             JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT")
+                    .setClaims(claims)
+                    .setSubject(getUsername(token,base64Security))
+                    .setIssuer(getIssuer(token , base64Security))
+                    .setAudience(getAudience(token , base64Security))
+                    .signWith(signatureAlgorithm, signingKey);//签名;
+	            //添加Token过期时间
+	            if (TTLMillis >= 0) {
+	                long expMillis = nowMillis + TTLMillis;
+	                Date exp = new Date(expMillis);
+	                builder.setExpiration(exp).setNotBefore(now);
+	            }
+	        refreshedToken = builder.compact(); 
+        } catch (Exception e) {
+            refreshedToken = null;
+        }
+        return refreshedToken;
+    }
+
 }

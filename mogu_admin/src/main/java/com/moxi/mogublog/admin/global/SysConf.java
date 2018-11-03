@@ -24,5 +24,6 @@ public final class SysConf extends BaseSysConf{
 	
 	public final static String ADMINUIDS = "adminUids";
 	public final static String ROLEUIDS = "roleUids";
+	public final static String CLAIMS = "claims";
 
 }

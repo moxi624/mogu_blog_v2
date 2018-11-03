@@ -112,7 +112,7 @@ public class RoleRestApi {
 			getRole.setRoleName(roleName);
 			getRole.setUpdateTime(new Date());
 			UpdateWrapper<Role> updateWrapper = new UpdateWrapper<>();
-			updateWrapper.eq(SysConf.UID, uid);
+			updateWrapper.eq(SQLConf.UID, uid);
 			roleService.update(getRole, updateWrapper);
 			return ResultUtil.result(SysConf.SUCCESS, "更新角色信息成功");
 			
