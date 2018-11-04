@@ -78,11 +78,6 @@ public class Admin extends SuperEntity<Admin> {
      */
     private String lastLoginIp;
     
-    /**
-     * 是否为超级管理员(1为是,0为不是)
-     */
-    private int administrators;
-
 
 	public String getUserName() {
 		return userName;
@@ -180,14 +175,6 @@ public class Admin extends SuperEntity<Admin> {
 		this.lastLoginIp = lastLoginIp;
 	}
 	
-	public int getAdministrators() {
-		return administrators;
-	}
-
-	public void setAdministrators(int administrators) {
-		this.administrators = administrators;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

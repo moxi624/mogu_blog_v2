@@ -20,12 +20,11 @@
         <result column="status" property="status" />
         <result column="createTime" property="createTime" />
         <result column="updateTime" property="updateTime" />
-        <result column="administrators" property="administrators" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, userName, passWord, gender, avatar, email, birthday, mobile, validCode, summary, loginCount, lastLoginTime, lastLoginIp, administrators,status, createTime, updateTime
+        uid, userName, passWord, gender, avatar, email, birthday, mobile, validCode, summary, loginCount, lastLoginTime, lastLoginIp, status, createTime, updateTime
     </sql>
     
 </mapper>

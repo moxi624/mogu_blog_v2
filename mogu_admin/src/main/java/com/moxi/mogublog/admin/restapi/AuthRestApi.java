@@ -78,10 +78,12 @@ public class AuthRestApi {
 			}
 			
 			//手机号为空时为邮箱注册
-			if(StringUtils.isEmpty(mobile)) {
+			if(StringUtils.isEmpty(mobile) && CheckUtils.checkEmail(email)) {
 				validCode = stringRedisTemplate.opsForValue().get(email);//从redis中获取验证码
-			}else {
+			}else if(StringUtils.isEmpty(email) && CheckUtils.checkMobileNumber(mobile)){
 				validCode = stringRedisTemplate.opsForValue().get(mobile);//从redis中获取验证码
+			}else {
+				return ResultUtil.result(SysConf.ERROR, "邮箱或手机号格式有误");
 			}
 			if(validCode.isEmpty()) {
 				return ResultUtil.result(SysConf.ERROR, "验证码已过期");
@@ -106,7 +108,6 @@ public class AuthRestApi {
 					return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
 				}
 				registered.setValidCode(validCode);//将验证码保存到数据库
-				registered.setAdministrators(0);//设置为非超级管理员
 				registered.setStatus(0);//设置为未审核状态
 				PasswordEncoder encoder = new BCryptPasswordEncoder();
 				registered.setPassWord(encoder.encode(registered.getPassWord()));
