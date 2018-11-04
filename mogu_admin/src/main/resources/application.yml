@@ -123,6 +123,9 @@ mybatis-plus:
     cache-enabled: false
 
 ##jwt配置
+tokenHead: bearer;
+tokenHeader: Authorization
+
 audience:
   clientId: 098f6bcd4621d373cade4e832627b4f6
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
@@ -134,5 +137,5 @@ logging:
   file: D:/mogu_blog/logs/admin/admin.log
   level:
     root: info
-    org.springframework.web: DEBUG
+    org.springframework.web: info
   

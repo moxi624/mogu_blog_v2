@@ -49,10 +49,12 @@ public final class SecurityUserFactory {
     }
 	
     public static SecurityUser create(Admin admin) {
-        return new SecurityUser(
+    	boolean enabled = (admin.getStatus()==1)?true:false;
+    	return new SecurityUser(
                 admin.getUid(),
                 admin.getUserName(),
                 admin.getPassWord(),
+                enabled,
                 mapToGrantedAuthorities(getRolesByAdmin(admin))
         );
     }

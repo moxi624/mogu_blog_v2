@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,6 @@ import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 
-import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,8 +53,8 @@ import io.swagger.annotations.ApiParam;
 @Api(value="管理员RestApi",tags={"AdminRestApi"})
 public class AdminRestApi {
 	
-//	@Autowired
-//	private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 	
 	@Autowired
 	private AdminService adminService;
@@ -137,7 +137,7 @@ public class AdminRestApi {
 //		return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
 //	}
 	
-	@PreAuthorize("hasRole('超级管理员')")
+	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="获取管理员列表", notes="获取管理员列表")
 	@GetMapping("/getList")
 	public String getList(HttpServletRequest request,
@@ -154,7 +154,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	
-	@PreAuthorize("hasRole('管理员')")
+	@PreAuthorize("hasRole('administrator')")
 	@ApiOperation(value="更新管理员基本信息", notes="更新管理员基本信息")
 	@PostMapping("/update")
 	public String update(HttpServletRequest request,
@@ -217,20 +217,28 @@ public class AdminRestApi {
 //		return ResultUtil.result(SysConf.ERROR, "旧密码错误");
 //	}
 	
-	@PreAuthorize("hasRole('管理员')")
+	@PreAuthorize("hasRole('administrator')")
 	@ApiOperation(value="更新管理员邮箱或手机号", notes="更新管理员邮箱或手机号")
 	@PostMapping("/updateEmail")
 	public String updateEmail(HttpServletRequest request,
+			@ApiParam(name = "newInfo",value ="管理员uid",required = true) @RequestParam(name = "adminUid" ,required = true )String adminUid,
 			@ApiParam(name = "newInfo",value ="管理员新邮箱或新手机号",required = true) @RequestParam(name = "newInfo" ,required = true )String newInfo,
 			@ApiParam(name = "validCode",value ="验验码",required = true) @RequestParam(name = "validCode" ,required = true )String validCode){
 		
-		Claims claims = (Claims) request.getAttribute(SysConf.CLAIMS);
-		String uid = claims.get("adminUid", String.class);
-		Admin admin = adminService.getById(uid);
+//		Claims claims = (Claims) request.getAttribute(SysConf.CLAIMS);
+//		String uid = claims.get("adminUid", String.class);
+		Admin admin = adminService.getById(adminUid);
 		if (admin == null) {
 			return ResultUtil.result(SysConf.ERROR, "管理员不存在");
 		}
-		String checkValidCode = "123456";//TODO 需整合消息中间件获取验证码
+		
+		String checkValidCode = stringRedisTemplate.opsForValue().get(newInfo);//从redis中获取验证码
+		if(checkValidCode.isEmpty()) {
+			return ResultUtil.result(SysConf.ERROR, "验证码已过期");
+		}
+		if(!checkValidCode.equals(validCode)) {
+			return ResultUtil.result(SysConf.ERROR, "验证码不正确");
+		}
 		if(checkValidCode.equals(validCode)) {
 			if(CheckUtils.checkEmail(newInfo)) {
 				admin.setEmail(newInfo);
@@ -241,12 +249,13 @@ public class AdminRestApi {
 			}
 			admin.setUpdateTime(new Date());
 			adminService.updateById(admin);
+			stringRedisTemplate.delete(newInfo);//删除缓存中的验证码
 			return ResultUtil.result(SysConf.SUCCESS, "更新成功");
 		}
 		return ResultUtil.result(SysConf.ERROR, "验证码错误");
 	}
 	
-	@PreAuthorize("hasRole('超级管理员')")
+	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="删除部分管理员信息", notes="删除部分管理员信息")
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -260,7 +269,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "删除管理员成功");
 	}
 	
-	@PreAuthorize("hasRole('超级管理员')")
+	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="分配用户角色信息列表", notes="分配用户角色信息列表")
 	@PostMapping("/assign")
 	public String assign(HttpServletRequest request,
@@ -297,7 +306,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS,map);
 	}
 	
-	@PreAuthorize("hasRole('超级管理员')")
+	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="管理员角色分配", notes="管理员角色分配")
 	@PostMapping("/doAssign")
 	public String doAssign(HttpServletRequest request,
@@ -326,7 +335,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "分配管理员角色成功");
 	}
 	
-	@PreAuthorize("hasRole('超级管理员')")
+	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="取消管理员角色分配", notes="取消管理员角色分配")
 	@PostMapping("/doUnassign")
 	public String doUnassign(HttpServletRequest request,

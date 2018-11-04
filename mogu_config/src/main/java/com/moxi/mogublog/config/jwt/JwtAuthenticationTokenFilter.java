@@ -24,10 +24,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import io.jsonwebtoken.Claims;
 
 public class JwtAuthenticationTokenFilter extends GenericFilter{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
@@ -41,6 +38,9 @@ public class JwtAuthenticationTokenFilter extends GenericFilter{
 	
 	@Value(value="${tokenHead}")
 	private String tokenHead;
+	
+	@Value(value="${tokenHeader}")
+	private String tokenHeader;
 	/**
 	 *  Reserved claims（保留），它的含义就像是编程语言的保留字一样，属于JWT标准里面规定的一些claim。JWT标准里面定好的claim有：
 	 iss(Issuser)：代表这个JWT的签发主体；
@@ -62,7 +62,7 @@ public class JwtAuthenticationTokenFilter extends GenericFilter{
 		final HttpServletRequest request = (HttpServletRequest) req;
 		final HttpServletResponse response = (HttpServletResponse) res;
 		//得到请求头信息authorization信息
-		final String authHeader = request.getHeader("Authorization");
+		final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 		if ("OPTIONS".equals(request.getMethod())) {
 			//OPTIONS请求旨在发送一种“探测”请求以确定针对某个目标地址的请求必须具有怎样的约束，然后根据其约束发送真正的请求。用于跨域
 			response.setStatus(HttpServletResponse.SC_OK);

@@ -64,16 +64,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	                // 允许对于网站静态资源的无授权访问
 	                .antMatchers(
-	                        HttpMethod.GET
-//	                        "/",
-//	                        "/*.html",
-//	                        "/favicon.ico",
-//	                        "/**/*.html",
-//	                        "/**/*.css",
-//	                        "/**/*.js"
+	                        HttpMethod.GET,
+	                        "/",
+	                        "/*.html",
+	                        "/favicon.ico",
+	                        "/**/*.html",
+	                        "/**/*.css",
+	                        "/**/*.js",
+	                        "/static/**"
+	                ).permitAll()
+	                .antMatchers(
+	                		"/v2/api-docs",
+	                		"/configuration/ui",
+	                		"/swagger-resources",
+	                		"/configuration/security",
+	                		"/swagger-ui.html", "/webjars/**",
+	                		"/swagger-resources/configuration/ui",
+	                		"/swagge‌​r-ui.html"
 	                ).permitAll()
 	                // 对于获取token的rest api要允许匿名访问
-	                .antMatchers("/login/**").permitAll()
+	                .antMatchers("/login/**",
+	                			 "/auth/**",
+	                			 "/creatCode/**"
+	                		).permitAll()
 	                // 除上面外的所有请求全部需要鉴权认证
 	                .anyRequest().authenticated();
 	        

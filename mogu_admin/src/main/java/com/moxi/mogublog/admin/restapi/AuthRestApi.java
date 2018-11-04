@@ -1,17 +1,12 @@
 package com.moxi.mogublog.admin.restapi;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,16 +25,11 @@ import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.AdminRole;
-import com.moxi.mogublog.xo.entity.Role;
-import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
-import com.moxi.mogublog.xo.service.RoleService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import redis.clients.jedis.Jedis;
 
 /**
  * <p>
@@ -60,90 +50,10 @@ public class AuthRestApi {
 	private AdminService adminService;
 	
 	@Autowired
-	private RoleService roleService;
-	
-	@Autowired
-	private AdminRoleService adminRoleService;
-	
-	@Autowired
 	private Audience audience;
-	
-	@Autowired
-	private Jedis jedis;
 	
 	@Value(value="${tokenHead}")
 	private String tokenHead;
-	
-	@Value(value="${base64Security}")
-	private String base64Security;
-	
-	@Value(value="${expiresSecond}")
-	private String expiresSecond;
-	
-	
-	@ApiOperation(value="用户登录", notes="用户登录")
-	@PostMapping("/login")
-	public String login(HttpServletRequest request, 
-			@ApiParam(name = "usernameOrEmailOrMobile", value = "用户名或邮箱或手机号", required = true) @RequestParam(name = "usernameOrEmailOrMobile", required = true) String usernameOrEmailOrMobile,
-			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password) {
-		
-		if(StringUtils.isEmpty(usernameOrEmailOrMobile) || StringUtils.isEmpty(password)) {
-			return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
-		}		
-		  Boolean isEmail = CheckUtils.checkEmail(usernameOrEmailOrMobile);
-		  Boolean isMobile = CheckUtils.checkMobileNumber(usernameOrEmailOrMobile);
-	      QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
-	      if (isEmail) {
-	    	  queryWrapper.eq(SQLConf.EMAIL,usernameOrEmailOrMobile);
-	      } else if(isMobile){
-	    	  queryWrapper.eq(SQLConf.MOBILE,usernameOrEmailOrMobile);
-	      }else {
-	    	  queryWrapper.eq(SQLConf.USERNAEM,usernameOrEmailOrMobile);
-	      }
-	      Admin admin = adminService.getOne(queryWrapper);
-	      if (admin == null) {
-	          return ResultUtil.result(SysConf.ERROR, "管理员账号不存在");
-	      }
-	      //验证密码
-	      PasswordEncoder encoder = new BCryptPasswordEncoder();
-	      boolean isPassword = encoder.matches(password, admin.getPassWord());
-	      if (!isPassword) {
-	          //密码错误，返回提示
-	          return ResultUtil.result(SysConf.ERROR, "密码错误");
-	      }
-	      //根据admin获取账户拥有的角色uid集合
-	      QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-	      wrapper.eq(SQLConf.ADMINUID,admin.getUid());
-	      List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
-	      List<String> roleUids = new ArrayList<>();
-	      for (AdminRole adminRole : adminRoleList) {
-			String roleUid = adminRole.getRoleUid();
-			roleUids.add(roleUid);
-	      }
-	      
-	      List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
-	      String roleNames = null;
-	      for (Role role : roles) {
-			roleNames+=(role.getRoleName()+",");
-		  }
-	      String roleName = roleNames.substring(0, roleNames.length()-2);
-	      String jwtToken = JwtHelper.createJWT(admin.getUserName(),
-	    		 							   admin.getUid(),
-	    		 							   roleName.toString(),
-	    		 							   audience.getClientId(),
-	    		 							   audience.getName(),
-	    		 							   audience.getExpiresSecond()*1000,
-	    		 							   audience.getBase64Secret());
-	      String token = tokenHead + jwtToken;
-		return ResultUtil.result(SysConf.SUCCESS, token);
-	}
-	
-	@ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
-	@PostMapping(value = "/logout")
-	public String logout(@ApiParam(name = "token", value = "token令牌",required = false) @RequestParam(name = "token", required = false) String token) {	
-		String destroyToken = null;
-		return ResultUtil.result(SysConf.SUCCESS, destroyToken);
-	}
 	
 	@ApiOperation(value="注册管理员", notes="注册管理员")
 	@PostMapping("/register")
@@ -203,9 +113,9 @@ public class AuthRestApi {
 				adminService.save(registered);
 				//清楚redis中的缓存
 				if(StringUtils.isEmpty(mobile)) {
-					jedis.del(email);
+					stringRedisTemplate.delete(email);
 				}else {
-					jedis.del(mobile);
+					stringRedisTemplate.delete(mobile);
 				}
 				return ResultUtil.result(SysConf.SUCCESS, "注册成功");
 			}
@@ -256,8 +166,8 @@ public class AuthRestApi {
     public String refreshToken(String oldToken) {
         
 		final String token = oldToken.substring(tokenHead.length());
-        if (JwtHelper.canTokenBeRefreshed(token,base64Security)){
-            return JwtHelper.refreshToken(token, base64Security,Long.parseLong(expiresSecond));
+        if (JwtHelper.canTokenBeRefreshed(token,audience.getBase64Secret())){
+            return JwtHelper.refreshToken(token,audience.getBase64Secret(),audience.getExpiresSecond());
         }
         return null;
     }

@@ -15,15 +15,18 @@ public class SecurityUser implements UserDetails{
 	private final String uid;
     private final String username;
     private final String password;
+    private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
     public SecurityUser(
             String uid,
             String username,
             String password,
+            boolean enabled,
             Collection<? extends GrantedAuthority> authorities) {
         this.uid = uid;
         this.username = username;
         this.password = password;
+        this.enabled = enabled;
         this.authorities = authorities;
     }
     //返回分配给用户的角色列表
@@ -46,6 +49,13 @@ public class SecurityUser implements UserDetails{
 	public String getUsername() {
 		return username;
 	}
+	
+	// 账户是否激活
+    @JsonIgnore
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
     // 账户是否未过期
     @JsonIgnore
@@ -63,12 +73,6 @@ public class SecurityUser implements UserDetails{
     @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
-    }
-    // 账户是否激活
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
         return true;
     }
     

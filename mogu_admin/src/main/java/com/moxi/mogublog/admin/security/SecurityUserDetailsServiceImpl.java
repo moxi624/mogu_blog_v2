@@ -6,17 +6,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.xo.entity.Admin;
+import com.moxi.mogublog.xo.service.AdminService;
 
 @Service
 public class SecurityUserDetailsServiceImpl implements UserDetailsService{
 	
 	@Autowired
-    private SecurityUserRepository securityUserRepository;
+    private AdminService adminService;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		 Admin admin = securityUserRepository.findByUsername(username);
+		QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+		queryWrapper.eq(SQLConf.USERNAEM, username);
+		Admin admin = adminService.getOne(queryWrapper);
 		 
 	        if (admin == null) {
 	            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
