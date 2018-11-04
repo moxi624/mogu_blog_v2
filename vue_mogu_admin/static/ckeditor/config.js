@@ -26,17 +26,24 @@ CKEDITOR.editorConfig = function (config) {
 		{ name: 'about' }
 	];
 
-	// Remove some buttons provided by the standard plugins, which are
-	// not needed in the Standard(s) toolbar.
+	//删除标准插件提供的一些按钮
+	//标准工具栏中不需要。
 	config.removeButtons = 'Underline,Subscript,Superscript';
 
 	// Set the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
 
+	//添加插件，多个插件用逗号隔开
+	config.extraPlugins = 'codesnippet';
+	codeSnippet_theme: 'zenburn';
+
+    //使用zenburn的代码高亮风格样式 PS:zenburn效果就是黑色背景
+    //如果不设置着默认风格为default
+    
 	//设置语言
 	config.language = 'zh-cn';
 
-	// Simplify the dialog windows.
+	// 简化对话框窗口。
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
 	//开启工具栏“图像”中文件上传功能，后面的url为待会要上传action要指向的的action或servlet
