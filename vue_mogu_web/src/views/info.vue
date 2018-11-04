@@ -34,7 +34,7 @@
         <a v-if="blogData.tagList" v-for="item in blogData.tagList" :key="item.uid" href="/" target="_blank">{{item.content}}</a>         
       </div>
       <div class="news_about"><strong>简介</strong>{{blogData.summary}}</div>
-      <div class="news_con" v-html="blogData.content"> 
+      <div class="news_con" v-html="blogData.content" v-highlight> 
         {{blogData.content}} 
       </div>
     </div>

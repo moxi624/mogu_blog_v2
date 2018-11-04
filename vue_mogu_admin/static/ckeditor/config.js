@@ -34,7 +34,10 @@ CKEDITOR.editorConfig = function (config) {
 	config.format_tags = 'p;h1;h2;h3;pre';
 
 	//添加插件，多个插件用逗号隔开
+	// codesnippet: 代码块   ， uploadimage: 上传图片
 	config.extraPlugins = 'codesnippet';
+	
+	//配置代码块风格
 	codeSnippet_theme: 'zenburn';
 
     //使用zenburn的代码高亮风格样式 PS:zenburn效果就是黑色背景

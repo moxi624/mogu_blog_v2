@@ -9,7 +9,8 @@ import CKEDITOR from 'CKEDITOR';
 export default {
   props: ["content"],
   mounted() {
-    CKEDITOR.replace('editor', {height: '400px', width: '100%', toolbar: 'toolbar_Full'});
+    //设置代码块风格为 zenburn
+    CKEDITOR.replace('editor', {height: '400px', width: '100%', toolbar: 'toolbar_Full', extraPlugins: 'codesnippet',codeSnippet_theme: 'zenburn'});
     this.editor = CKEDITOR.instances.editor;
     this.editor.setData(this.content); //初始化内容
   },

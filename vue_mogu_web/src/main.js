@@ -17,6 +17,13 @@ import mCss from  '../static/css/m.css';
 
 Vue.config.productionTip = false
 
+Vue.directive('highlight', function (el) {
+  let blocks = el.querySelectorAll('pre code');
+  blocks.forEach((block)=>{
+    hljs.highlightBlock(block)
+  })
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
