@@ -225,25 +225,25 @@ public class BlogRestApi {
 		switch(level) {
 
 			case ELevel.FIRST: { 
-				if(count >= BLOG_FIRST_COUNT) {
+				if(count > BLOG_FIRST_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.SECOND: {
-				if(count >= BLOG_SECOND_COUNT) {
+				if(count > BLOG_SECOND_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.THIRD: {
-				if(count >= BLOG_THIRD_COUNT) {
+				if(count > BLOG_THIRD_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.FOURTH: { 
-				if(count >= BLOG_FOURTH_COUNT) {
+				if(count > BLOG_FOURTH_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
 				}
 			} break;
@@ -297,38 +297,44 @@ public class BlogRestApi {
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
+		Blog blog = blogService.getById(uid);
  		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
  		queryWrapper.eq(SQLConf.LEVEL, level);
  		Integer count = blogService.count(queryWrapper);
- 		
+ 		if(blog != null) {
+ 			//传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
+ 			if(blog.getLevel() != level) {
+ 				count += 1;
+ 			}
+ 		}
  		//添加的时候进行判断
 		switch(level) {
 
 			case ELevel.FIRST: { 
-				if(count >= BLOG_FIRST_COUNT) {
+				if(count > BLOG_FIRST_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.SECOND: {
-				if(count >= BLOG_SECOND_COUNT) {
+				if(count > BLOG_SECOND_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.THIRD: {
-				if(count >= BLOG_THIRD_COUNT) {
+				if(count > BLOG_THIRD_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
 				}
 			} break;
 			
 			case ELevel.FOURTH: { 
-				if(count >= BLOG_FOURTH_COUNT) {
+				if(count > BLOG_FOURTH_COUNT) {
 					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
 				}
 			} break;
 		}
-		Blog blog = blogService.getById(uid);
+		
 		blog.setTitle(title);
 		blog.setSummary(summary);
 		blog.setContent(content);

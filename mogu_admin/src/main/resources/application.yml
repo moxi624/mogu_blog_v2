@@ -140,5 +140,5 @@ logging:
   file: D:/mogu_blog/logs/admin/admin.log
   level:
     root: info
-    org.springframework.web: DEBUG
+    org.springframework.web: info
   
