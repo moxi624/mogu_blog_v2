@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.moxi.mogublog.config.security.SecurityUser;
 
@@ -15,12 +16,13 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Component
 public class JwtHelper {
 
 	 /**
      * 解析jwt
      */
-    public static Claims parseJWT(String token, String base64Security){
+    public  Claims parseJWT(String token, String base64Security){
         try
         {
             Claims claims = Jwts.parser()
@@ -44,7 +46,7 @@ public class JwtHelper {
      * @param base64Security 加密方式
      * @return
      */
-    public static String createJWT(String userName, String adminUid, String roleName,
+    public  String createJWT(String userName, String adminUid, String roleName,
                                    String audience, String issuer, long TTLMillis, String base64Security)
     {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -73,13 +75,13 @@ public class JwtHelper {
     }
     
     // 判断token是否已过期
-    public static boolean isExpiration(String token, String base64Security){
+    public  boolean isExpiration(String token, String base64Security){
         return parseJWT(token,base64Security).getExpiration().before(new Date());
     }
     
     
     //效验token
-    public static Boolean validateToken(String token, UserDetails userDetails, String base64Security) {
+    public  Boolean validateToken(String token, UserDetails userDetails, String base64Security) {
         SecurityUser SecurityUser = (SecurityUser) userDetails;
         final String username = getUsername(token,base64Security);
         final boolean expiration = isExpiration(token,base64Security);
@@ -90,32 +92,32 @@ public class JwtHelper {
     
    
 	//从token中获取用户名
-    public static String getUsername(String token , String base64Security){
+    public  String getUsername(String token , String base64Security){
         return  parseJWT(token,base64Security).getSubject();
     }
 	
     //从token中获取audience
-    public static String getAudience(String token , String base64Security){
+    public  String getAudience(String token , String base64Security){
         return  parseJWT(token,base64Security).getAudience();
     }
     
     //从token中获取issuer
-    public static String getIssuer(String token , String base64Security){
+    public  String getIssuer(String token , String base64Security){
         return  parseJWT(token,base64Security).getIssuer();
     }
     
     //从token中获取issuer
-    public static Date getExpiration(String token , String base64Security){
+    public  Date getExpiration(String token , String base64Security){
         return  parseJWT(token,base64Security).getExpiration();
     }
     
     //token是否可以更新
-    public static Boolean canTokenBeRefreshed(String token,String base64Security) {
+    public Boolean canTokenBeRefreshed(String token,String base64Security) {
         return !isExpiration(token,base64Security);
     }
     
     //更新token
-    public static String refreshToken(String token,String base64Security,long TTLMillis) {
+    public  String refreshToken(String token,String base64Security,long TTLMillis) {
         String refreshedToken;
         try {
         	 SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;

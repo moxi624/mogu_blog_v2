@@ -50,6 +50,9 @@ public class AuthRestApi {
 	private AdminService adminService;
 	
 	@Autowired
+	private JwtHelper jwtHelper;
+	
+	@Autowired
 	private Audience audience;
 	
 	@Value(value="${tokenHead}")
@@ -167,8 +170,8 @@ public class AuthRestApi {
     public String refreshToken(String oldToken) {
         
 		final String token = oldToken.substring(tokenHead.length());
-        if (JwtHelper.canTokenBeRefreshed(token,audience.getBase64Secret())){
-            return JwtHelper.refreshToken(token,audience.getBase64Secret(),audience.getExpiresSecond());
+        if (jwtHelper.canTokenBeRefreshed(token,audience.getBase64Secret())){
+            return jwtHelper.refreshToken(token,audience.getBase64Secret(),audience.getExpiresSecond());
         }
         return null;
     }

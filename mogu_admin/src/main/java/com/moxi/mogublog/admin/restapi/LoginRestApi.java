@@ -53,6 +53,9 @@ public class LoginRestApi {
 	private RoleService roleService;
 	
 	@Autowired
+	private JwtHelper jwtHelper;
+	
+	@Autowired
 	private AdminRoleService adminRoleService;
 	
 	@Autowired
@@ -107,7 +110,7 @@ public class LoginRestApi {
 			roleNames+=(role.getRoleName()+",");
 		  }
 	      String roleName = roleNames.substring(0, roleNames.length()-2);
-	      String jwtToken = JwtHelper.createJWT(admin.getUserName(),
+	      String jwtToken = jwtHelper.createJWT(admin.getUserName(),
 	    		 							   admin.getUid(),
 	    		 							   roleName.toString(),
 	    		 							   audience.getClientId(),

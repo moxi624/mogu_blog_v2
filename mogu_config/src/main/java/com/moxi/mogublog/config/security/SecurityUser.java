@@ -17,6 +17,7 @@ public class SecurityUser implements UserDetails{
     private final String password;
     private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
+    
     public SecurityUser(
             String uid,
             String username,
