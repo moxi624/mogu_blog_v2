@@ -74,12 +74,77 @@ export default {
 </script>
 
 <style>
-.carousel-wrap {
-  height: 453px;
-  width: 100%;
-  overflow: hidden;
-  background-color: #fff;
+
+  .carousel-wrap {
+    height: 453px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .carousel-title span {
+    color: white;
+    font-size: 22px;
+    display: inline-block;
+  }
+
+@media only screen and (max-width: 1100px){
+
+  .carousel-wrap {
+    height: 380px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .carousel-title span {
+    color: white;
+    font-size: 20px;
+    display: inline-block;
+  }
 }
+
+@media only screen and (max-width: 900px){
+
+  .carousel-wrap {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .carousel-title span {
+    color: white;
+    font-size: 18px;
+    display: inline-block;
+  }
+}
+
+@media only screen and (max-width: 700px){
+
+  .carousel-wrap {
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .carousel-title span {
+    color: white;
+    font-size: 16px;
+    display: inline-block;
+  }
+}
+
+@media only screen and (max-width: 500px){
+  .carousel-wrap {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #fff;
+  }
+}
+
 
 .slide-ul {
   position: relative;
@@ -95,7 +160,7 @@ export default {
 
 img {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 .carousel-title {
   position: absolute;
@@ -107,11 +172,7 @@ img {
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
 }
-.carousel-title span {
-  color: white;
-  font-size: 22px;
-  display: inline-block;
-}
+
 .carousel-items {
   position: absolute;
   z-index: 10;
