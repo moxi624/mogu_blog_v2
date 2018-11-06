@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.jwt;
+package com.moxi.mogublog.admin.security;
 
 import java.io.IOException;
 
@@ -17,6 +17,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.moxi.mogublog.config.jwt.Audience;
+import com.moxi.mogublog.config.jwt.JwtHelper;
+
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 	
@@ -24,7 +27,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 	private Audience audience;
 	
 	@Autowired
-    private UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 	
 	@Autowired
 	private JwtHelper jwtHelper;

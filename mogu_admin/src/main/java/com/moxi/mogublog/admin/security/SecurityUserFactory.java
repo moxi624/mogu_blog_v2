@@ -1,9 +1,8 @@
 package com.moxi.mogublog.admin.security;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -55,14 +54,18 @@ public final class SecurityUserFactory {
                 admin.getUserName(),
                 admin.getPassWord(),
                 enabled,
-                mapToGrantedAuthorities(getRolesByAdmin(admin))
+                getAuthorities(admin)
         );
     }
  
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<String> authorities) {
-        return authorities.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    private static Collection<? extends GrantedAuthority> getAuthorities(Admin admin) {
+    	Collection<GrantedAuthority> authorities  = new ArrayList<GrantedAuthority>();
+    	List<String> roleNames = getRolesByAdmin(admin);
+    	for (String roleName : roleNames) {
+    		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+    		authorities.add(authority);
+		}
+		return authorities;
     }
 
 }

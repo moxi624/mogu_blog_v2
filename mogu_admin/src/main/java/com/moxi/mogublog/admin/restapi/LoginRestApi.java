@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiParam;
  * @since 2018-10-14
  */
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 @Api(value="登录管理RestApi",tags={"loginRestApi"})
 public class LoginRestApi {
 	
@@ -64,12 +64,16 @@ public class LoginRestApi {
 	@Value(value="${tokenHead}")
 	private String tokenHead;
 	
+	@Value(value="${isRememberMeExpiresSecond}")
+	private int longExpiresSecond;
+	
 	@ApiOperation(value="用户登录", notes="用户登录")
 	@PostMapping("/login")
 	public String login(HttpServletRequest request, 
 			@ApiParam(name = "usernameOrEmailOrMobile", value = "用户名或邮箱或手机号", required = true) @RequestParam(name = "usernameOrEmailOrMobile", required = true) String usernameOrEmailOrMobile,
-			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password) {
-		
+			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password,
+			@ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = false) @RequestParam(name = "isRememberMe", required = false) int isRememberMe){
+			
 		if(StringUtils.isEmpty(usernameOrEmailOrMobile) || StringUtils.isEmpty(password)) {
 			return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
 		}		
@@ -110,12 +114,13 @@ public class LoginRestApi {
 			roleNames+=(role.getRoleName()+",");
 		  }
 	      String roleName = roleNames.substring(0, roleNames.length()-2);
+	      long expiration = isRememberMe==1 ? longExpiresSecond : audience.getExpiresSecond();
 	      String jwtToken = jwtHelper.createJWT(admin.getUserName(),
 	    		 							   admin.getUid(),
 	    		 							   roleName.toString(),
 	    		 							   audience.getClientId(),
 	    		 							   audience.getName(),
-	    		 							   audience.getExpiresSecond()*1000,
+	    		 							   expiration*1000,
 	    		 							   audience.getBase64Secret());
 	      String token = tokenHead + jwtToken;
 		return ResultUtil.result(SysConf.SUCCESS, token);
