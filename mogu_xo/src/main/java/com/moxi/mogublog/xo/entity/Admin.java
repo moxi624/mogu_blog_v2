@@ -1,7 +1,9 @@
 package com.moxi.mogublog.xo.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -92,7 +94,14 @@ public class Admin extends SuperEntity<Admin> {
      * 最后登录IP
      */
     private String lastLoginIp;
-
+    
+    
+    /**
+     * 以下字段不存入数据库
+     */
+    @TableField(exist = false)
+    private List<String> photoList; //用户头像
+    
 	public String getUserName() {
 		return userName;
 	}
@@ -215,6 +224,14 @@ public class Admin extends SuperEntity<Admin> {
 
 	public void setOccupation(String occupation) {
 		this.occupation = occupation;
+	}
+
+	public List<String> getPhotoList() {
+		return photoList;
+	}
+
+	public void setPhotoList(List<String> photoList) {
+		this.photoList = photoList;
 	}
 
 }

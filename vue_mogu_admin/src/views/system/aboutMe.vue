@@ -57,6 +57,8 @@
       <span slot="label"><i class="el-icon-setting"></i> 显示配置</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px">
         
+        <el-tag style="font-size: 15px; margin:10px 0 10px 0;" type="warning" >这里主要是控制web前端，关于我页面中，一些个人信息的显示</el-tag>
+
         <el-form-item label="职业">
           <el-switch v-model="form.delivery"></el-switch>
         </el-form-item>
@@ -120,6 +122,7 @@
 <script>
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
+import {getMe} from "@/api/system";
 export default {
   data() {
     return {
@@ -131,7 +134,7 @@ export default {
         weChat: "moxi624",
         occupation: "Java开发工程师",
         summary:
-          "一个95后！一直潜心研究和学习Java后端技术，一边工作一边积累经验"
+          "一个95后！一直潜心研究和学习Java后端技术，一边学习一边积累经验"
       },
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
@@ -143,9 +146,17 @@ export default {
     CheckPhoto,
     CKEditor
   },
-  beforeCreate() {},
-  created() {},
+  created() {
+    var tagParams = new URLSearchParams();
+    getMe(tagParams).then(response => {
+      console.log(response);
+      if(response.code == "success") {
+        this.form = response.data;
+      }      
+    });
+  },
   methods: {
+    
     //弹出选择图片框
     checkPhoto: function() {
       console.log(this.photoVisible);

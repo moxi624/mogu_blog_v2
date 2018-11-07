@@ -31,12 +31,10 @@
       <p class="abposition">Java开发工程师</p>
       <p class="abtext"> 一个95后！一直潜心研究和学习Java后端技术，一边工作一边积累经验</p>
     </div>
-    <div class="weixin">
-      <h2 class="hometitle">微信关注</h2>
-      <ul>
-        <img src="../../static/images/wx.jpg">
-      </ul>
-    </div>
+  <!--
+    关注我们
+  -->
+  <follow-us></follow-us>
   </div>
 </div>
 
@@ -55,6 +53,7 @@
 <script>
 import BlogHead from '../components/BlogHead';
 import BlogFooter from '../components/BlogFooter';
+import FollowUs from "../components/FollowUs";
 export default {
   name: 'about',
   data () {
@@ -66,6 +65,7 @@ export default {
   	//注册组件
   	BlogHead,
   	BlogFooter,
+    FollowUs,
   }
 }
 </script>
