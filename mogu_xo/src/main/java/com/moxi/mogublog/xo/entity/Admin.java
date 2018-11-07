@@ -27,7 +27,12 @@ public class Admin extends SuperEntity<Admin> {
      * 密码
      */
     private String passWord;
-
+    
+    /**
+     * 昵称
+     */
+    private String nickName;
+    
     /**
      * 性别(1:男2:女)
      */
@@ -52,12 +57,22 @@ public class Admin extends SuperEntity<Admin> {
      * 手机
      */
     private String mobile;
-
+    
     /**
-     * 邮箱验证码
+     * QQ号
      */
-    private String validCode;
-
+    private String qqNumber;
+    
+    /**
+     * 微信号
+     */
+    private String weChat;
+    
+    /**
+     * 职业
+     */
+    private String occupation;   
+    
     /**
      * 自我简介最多150字
      */
@@ -134,14 +149,6 @@ public class Admin extends SuperEntity<Admin> {
 		this.mobile = mobile;
 	}
 
-	public String getValidCode() {
-		return validCode;
-	}
-
-	public void setValidCode(String validCode) {
-		this.validCode = validCode;
-	}
-
 	public String getSummary() {
 		return summary;
 	}
@@ -176,6 +183,38 @@ public class Admin extends SuperEntity<Admin> {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getQqNumber() {
+		return qqNumber;
+	}
+
+	public void setQqNumber(String qqNumber) {
+		this.qqNumber = qqNumber;
+	}
+
+	public String getWeChat() {
+		return weChat;
+	}
+
+	public void setWeChat(String weChat) {
+		this.weChat = weChat;
+	}
+
+	public String getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
 	}
 
 }

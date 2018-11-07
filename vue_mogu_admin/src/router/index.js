@@ -95,7 +95,7 @@ export const constantRouterMap = [
         name: '视频管理',
         component: () => import('@/views/resource/studyVideo'),
         meta: { title: '视频管理', icon: 'table' }
-      },
+      }
     ]
   },
 
@@ -173,6 +173,12 @@ export const constantRouterMap = [
     name: '系统管理',
     meta: { title: '系统管理', icon: 'system' },
     children: [
+      {
+        path: 'aboutMe',
+        name: '关于我',
+        component: () => import('@/views/system/aboutMe'),
+        meta: { title: '关于我', icon: 'index' }
+      },
       {
         path: 'solrIndex',
         name: '索引管理',
