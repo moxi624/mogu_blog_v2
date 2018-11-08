@@ -28,6 +28,9 @@ BLOG:
 
 #spring
 spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
   jmx:
     default-domain: mogu_admin
   thymeleaf:
@@ -39,6 +42,7 @@ spring:
       enabled: true #启动热部署
       additional-paths:
       - src/main/java #设置重启的目录，添加哪个目录文件需要restart
+  
 
   # DATABASE CONFIG
   datasource:
@@ -129,11 +133,14 @@ mybatis-plus:
     cache-enabled: false
 
 ##jwt配置
+tokenHead: bearer;
+tokenHeader: Authorization
+isRememberMeExpiresSecond: 259200 #记住账号为3天有效
 audience:
-  clientId: f528764d624db129b32c21fbca0cb8d6
+  clientId: 098f6bcd4621d373cade4e832627b4f6
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
   name: mogublog
-  expiresSecond: 172800
+  expiresSecond: 3600  #1个小时
 
 ####### 日志输出 #########
 logging:

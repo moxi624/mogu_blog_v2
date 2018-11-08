@@ -39,11 +39,12 @@ export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
         callback()
-      }
+      // if (!isvalidUsername(value)) {
+      //   callback(new Error('请输入正确的用户名'))
+      // } else {
+      //   callback()
+      // }
     }
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
@@ -83,13 +84,18 @@ export default {
       }
     },
     handleLogin() {
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(response => {
-            console.log("反馈", response);
+            if(response.code == "success") {
+              this.$router.push({ path: this.redirect || '/' })
+            } else {
+              this.$message.error(response.data);
+            }            
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+            
           }).catch(() => {
             this.loading = false
           })

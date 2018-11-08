@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,7 +16,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableScheduling
 @EnableTransactionManagement
 @SpringBootApplication(exclude = VelocityAutoConfiguration.class)//redis和velocity的包会起冲突
 @EnableSwagger2
@@ -27,6 +25,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients("com.moxi.mogublog.admin.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
+        "com.moxi.mogublog.admin.security",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",
         "com.moxi.mogublog.xo.service",

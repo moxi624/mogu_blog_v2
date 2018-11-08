@@ -24,7 +24,7 @@ CREATE TABLE `t_admin` (
   `uid` varchar(32) NOT NULL COMMENT '唯一uid',
   `user_name` varchar(255) NOT NULL COMMENT '用户名',
   `pass_word` varchar(32) NOT NULL COMMENT '密码',
-  `gender` tinyint(1) unsigned DEFAULT NULL COMMENT '性别(1:男2:女)',
+  `gender` varchar(1) DEFAULT NULL COMMENT '性别(1:男2:女)',
   `avatar` varchar(100) DEFAULT NULL COMMENT '个人头像',
   `email` varchar(255) NOT NULL COMMENT '邮箱',
   `birthday` date DEFAULT NULL COMMENT '出生年月日',
@@ -36,15 +36,16 @@ CREATE TABLE `t_admin` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
-  `nickName` varchar(255) DEFAULT NULL COMMENT '昵称',
-  `qqNumber` varchar(255) DEFAULT NULL COMMENT 'QQ号',
-  `weChat` varchar(255) DEFAULT NULL COMMENT '微信号',
+  `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
+  `qq_number` varchar(255) DEFAULT NULL COMMENT 'QQ号',
+  `we_chat` varchar(255) DEFAULT NULL COMMENT '微信号',
+  `occupation` varchar(255) DEFAULT NULL COMMENT '职业',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员表';
 
 /*Data for the table `t_admin` */
 
-insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nickName`,`qqNumber`,`weChat`) values ('5821462bc29a4570ad80e87f3aa3f02d','admin','21232f297a57a5a743894a0e4a801fc3',1,'测试头像','xzx19950624@qq.com','2018-09-20','1597531973','测试表情',1,'2018-09-20 14:49:00','127.0.0.1',1,'0000-00-00 00:00:00','0000-00-00 00:00:00',NULL,NULL,NULL);
+insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nick_name`,`qq_number`,`we_chat`,`occupation`) values ('1f01cd1d2f474743b241d74008b12333','admin','$2a$10$9pqg.81VheZ5E/V1kBKsbea.j','1',NULL,'315606094@qq.com','2018-11-08','13855481824',NULL,0,'2018-11-08 16:59:23','127.0.0.1',1,'2018-11-08 16:59:27','2018-11-08 16:59:29',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `t_admin_role` */
 
@@ -275,6 +276,8 @@ CREATE TABLE `t_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `t_role` */
+
+insert  into `t_role`(`uid`,`name`,`creat_time`,`update_time`,`status`) values ('434994947c5a4ee3a710cd277357c7c3','ROLE_Administrator','2018-10-14 15:56:26','2018-10-14 15:56:35',1),('434994947c5a4ee3a710cd277357c7c4','ROLE_Administrators','2018-10-14 15:56:21','2018-10-14 15:56:23',1);
 
 /*Table structure for table `t_role_permission` */
 

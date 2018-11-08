@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiParam;
  * @author limboy
  * @create 2018-09-29 16:25
  */
+@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/search")
 @Api(value="索引维护RestApi",tags={"solrIndexRestApi"})

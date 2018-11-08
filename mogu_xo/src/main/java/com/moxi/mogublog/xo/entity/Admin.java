@@ -2,9 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -109,6 +107,21 @@ public class Admin extends SuperEntity<Admin> {
     @TableField(exist = false)
     private List<String> photoList; //用户头像
     
+    /**
+     * 所拥有的角色
+     */
+    @TableField(exist = false)
+    private List<String> roleNames;
+
+	
+    public List<String> getRoleNames() {
+		return roleNames;
+	}
+
+	public void setRoleNames(List<String> roleNames) {
+		this.roleNames = roleNames;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
@@ -196,7 +209,7 @@ public class Admin extends SuperEntity<Admin> {
 	public void setLastLoginIp(String lastLoginIp) {
 		this.lastLoginIp = lastLoginIp;
 	}
-
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

@@ -95,4 +95,4 @@ logging:
   file: D:/mogu_blog/logs/picture/picture.log
   level:
     root: info
-    org.springframework.web: DEBUG
+    org.springframework.web: info

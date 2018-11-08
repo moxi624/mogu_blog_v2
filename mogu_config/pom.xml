@@ -87,11 +87,6 @@
         </dependency>
 		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>2.6.1</version>
@@ -154,11 +149,12 @@
     		<artifactId>commons-codec</artifactId>
 		</dependency>
 
-		<!-- spring-security 和 jwt -->  
-       <!--  <dependency>  
-            <groupId>org.springframework.boot</groupId>  
-           <artifactId>spring-boot-starter-security</artifactId>  
-       </dependency> -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
        
         <dependency>  
            <groupId>io.jsonwebtoken</groupId>  
