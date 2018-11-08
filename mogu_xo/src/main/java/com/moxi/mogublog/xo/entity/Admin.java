@@ -1,7 +1,9 @@
 package com.moxi.mogublog.xo.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -78,6 +80,20 @@ public class Admin extends SuperEntity<Admin> {
      */
     private String lastLoginIp;
     
+    /**
+     * 所拥有的角色
+     */
+    @TableField(exist = false)
+    private List<String> roleNames;
+
+	
+    public List<String> getRoleNames() {
+		return roleNames;
+	}
+
+	public void setRoleNames(List<String> roleNames) {
+		this.roleNames = roleNames;
+	}
 
 	public String getUserName() {
 		return userName;

@@ -46,6 +46,9 @@ import io.swagger.annotations.ApiParam;
 @Api(value="登录管理RestApi",tags={"loginRestApi"})
 public class LoginRestApi {
 	
+//	private AuthenticationManager authenticationManager;
+//    private UserDetailsService userDetailsService;
+	
 	@Autowired
 	private AdminService adminService;
 	
@@ -72,7 +75,7 @@ public class LoginRestApi {
 	public String login(HttpServletRequest request, 
 			@ApiParam(name = "usernameOrEmailOrMobile", value = "用户名或邮箱或手机号", required = true) @RequestParam(name = "usernameOrEmailOrMobile", required = true) String usernameOrEmailOrMobile,
 			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password,
-			@ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = false) @RequestParam(name = "isRememberMe", required = false) int isRememberMe){
+			@ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = true) @RequestParam(name = "isRememberMe", required = true) int isRememberMe){
 			
 		if(StringUtils.isEmpty(usernameOrEmailOrMobile) || StringUtils.isEmpty(password)) {
 			return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
@@ -125,6 +128,27 @@ public class LoginRestApi {
 	      String token = tokenHead + jwtToken;
 		return ResultUtil.result(SysConf.SUCCESS, token);
 	}
+	
+//	@ApiOperation(value="用户登录", notes="用户登录")
+//	@PostMapping("/login")
+//	public String login(HttpServletRequest request, 
+//			@ApiParam(name = "username", value = "用户名或邮箱或手机号", required = true) @RequestParam(name = "username", required = true) String username,
+//			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password){
+//		
+//		UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password); 	
+//		final Authentication authentication = authenticationManager.authenticate(upToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        
+//        // Reload password post-security so we can generate token
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//        final String token = jwtHelper.createJWT(userDetails.getUsername(),
+//												 userDetails.getAuthorities(),
+//												 audience.getClientId(),
+//												 audience.getName(),
+//												 audience.getExpiresSecond()*1000,
+//												 audience.getBase64Secret());
+//        return token;
+//	}
 	
 	@ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
 	@PostMapping(value = "/logout")
