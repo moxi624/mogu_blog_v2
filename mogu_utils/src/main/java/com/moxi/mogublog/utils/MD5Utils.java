@@ -66,4 +66,5 @@ public class MD5Utils {
         logger.debug("MD5加密的二次加密的字符串的调试日志-->>" + string);
         return string;
     }
+    
 }

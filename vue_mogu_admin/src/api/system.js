@@ -16,3 +16,10 @@ export function editMe(params) {
   })
 }
 
+export function changePwd(params) {
+  return request({
+    url: process.env.ADMIN_API + '/system/changePwd',
+    method: 'post',
+    data: params
+  })
+}

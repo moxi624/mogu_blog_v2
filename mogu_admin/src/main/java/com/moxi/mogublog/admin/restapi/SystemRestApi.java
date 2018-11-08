@@ -1,5 +1,7 @@
 package com.moxi.mogublog.admin.restapi;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.utils.MD5Utils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -19,6 +23,7 @@ import com.moxi.mogublog.xo.service.AdminService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * 系统设置RestApi
@@ -66,6 +71,37 @@ public class SystemRestApi {
 		Boolean save = adminService.updateById(admin);
 		return ResultUtil.result(SysConf.SUCCESS, save);
 	}
+		
+	@ApiOperation(value="修改密码", notes="修改密码")
+	@PostMapping("/changePwd")
+	public String changePwd(HttpServletRequest request,
+			@ApiParam(name = "oldPwd", value = "旧密码",required = false) @RequestParam(name = "oldPwd", required = false) String oldPwd,
+			@ApiParam(name = "newPwd", value = "新密码",required = false) @RequestParam(name = "newPwd", required = false) String newPwd) throws NoSuchAlgorithmException {
+		
+		if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)) {
+			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+		}
+		/*
+		 * TODO
+		 * 这里需要从request中获取到用户信息，
+		 * 然后在从用户信息中，获取登录的用户，判断密码是否正确
+		 */
+		Admin admin = adminService.getById("5821462bc29a4570ad80e87f3aa3f02d"); // 这里就先模拟一下request获取的用户
+		System.out.println(MD5Utils.string2MD5(oldPwd));
+		System.out.println(admin.getPassWord());
+		if(MD5Utils.string2MD5(oldPwd).equals(admin.getPassWord())) {
+			admin.setPassWord(MD5Utils.string2MD5(newPwd));
+			admin.updateById();
+			return ResultUtil.result(SysConf.SUCCESS, "修改成功");
+		} else {
+			return ResultUtil.result(SysConf.ERROR, "输入密码错误");
+		}
+		
+	}
+	
+	
+	
+	
 	
 	
 }

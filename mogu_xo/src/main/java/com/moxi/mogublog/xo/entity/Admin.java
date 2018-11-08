@@ -3,8 +3,11 @@ package com.moxi.mogublog.xo.entity;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
@@ -53,6 +56,8 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * 出生年月日
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date birthday;
 
     /**
@@ -88,6 +93,8 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * 最后登录时间
      */
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
 
     /**

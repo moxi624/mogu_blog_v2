@@ -4,7 +4,7 @@
     <el-tabs type="border-card">
       <el-tab-pane label="关于我">
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
-        <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px">
+        <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像">
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
@@ -51,8 +51,8 @@
           </el-form-item>
           
           <el-form-item>
-            <el-button type="primary" @click="submitForm">保 存</el-button>
-            <el-button @click="cancel">重 置</el-button>            
+            <el-button type="primary" @click="submitForm('changeAdminForm')">保 存</el-button>
+            <el-button @click="cancel('changeAdminForm')">重 置</el-button>            
           </el-form-item>
 
         </el-form>
@@ -92,22 +92,22 @@
 
       <el-tab-pane label="修改密码" name="third">
         <span slot="label"><i class="el-icon-edit"></i> 修改密码</span>
-        <el-form style="margin-left: 20px;" label-position="left" :model="form"  label-width="80px">
-          <el-form-item label="旧密码">
-            <el-input v-model="form.nickName" style="width: 400px"></el-input>
+        <el-form :rules="rules" style="margin-left: 20px;" label-position="left" :model="changePwdForm"  label-width="80px" ref="changePwdForm">
+          <el-form-item label="旧密码" prop="oldPwd">
+            <el-input type="password" v-model="changePwdForm.oldPwd" style="width: 400px"></el-input>
           </el-form-item>
           
-          <el-form-item label="新密码">
-            <el-input v-model="form.qqNumber" style="width: 400px"></el-input>
+          <el-form-item label="新密码" prop="newPwd1">
+            <el-input type="password" v-model="changePwdForm.newPwd1" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="重复输入">
-            <el-input v-model="form.weChat" style="width: 400px"></el-input>
+          <el-form-item label="重复输入" prop="newPwd2">
+            <el-input type="password" v-model="changePwdForm.newPwd2" style="width: 400px"></el-input>
           </el-form-item>
           
           <el-form-item>
-            <el-button type="primary" @click="submitForm">保 存</el-button>
-            <el-button @click="cancel">重 置</el-button>          
+            <el-button type="primary" @click="submitForm('changePwdForm')">保 存</el-button>
+            <el-button @click="cancel('changePwdForm')">重 置</el-button>          
           </el-form-item>
 
         </el-form>
@@ -127,25 +127,35 @@
 <script>
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
-import { getMe, editMe } from "@/api/system";
+import { getMe, editMe, changePwd } from "@/api/system";
 export default {
   data() {
     return {
-      form: {
-        photoList: ["http://localhost:9527/static/img/avatar.222da78.jpg"],
-        nickName: "陌溪_",
-        mobile: "17679074120",
-        qqNumber: "1595833114",
-        weChat: "moxi624",
-        occupation: "Java开发工程师",
-        avatar: "",
-        summary:
-          "一个95后！一直潜心研究和学习Java后端技术，一边学习一边积累经验"
+      form: {},
+      changePwdForm: {
+        oldPwd: "",
+        newPwd1: "",
+        newPwd2: ""
       },
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
       fileIds: "",
-      icon: false //控制删除图标的显示
+      icon: false, //控制删除图标的显示
+
+      //定义规则
+      rules: {
+        oldPwd: [
+          { required: true, message: "请输入原来密码", trigger: "blur" }
+        ],
+        newPwd1: [
+          { required: true, message: "请输入新密码", trigger: "blur" },
+          { min: 5, message: "密码长度需要大于等于 5 个字符", trigger: "blur" }
+        ],
+        newPwd2: [
+          { required: true, message: "请再次输入新密码", trigger: "blur" },
+          { min: 5, message: "密码长度需要大于等于 5 个字符", trigger: "blur" }
+        ]
+      }
     };
   },
   components: {
@@ -194,15 +204,79 @@ export default {
       this.fileIds = "";
       this.photoVisible = true;
     },
-    cancel: function() {
-      console.log("点击了取消");
+
+    submitForm: function(type) {
+      switch (type) {
+        // 1、改变用户信息
+        case "changeAdminForm":
+          {
+            this.form.avatar = this.fileIds;
+            console.log("提交的内容", this.form);
+            editMe(this.form).then(response => {
+              console.log(response);
+              this.$notify({
+                title: "成功",
+                message: "保存成功！",
+                type: "success"
+              });
+            });
+          }
+          break;
+
+        //3、改变密码
+        case "changePwdForm":
+          {
+            this.$refs[type].validate(valid => {
+              if (valid) {
+                if (this.changePwdForm.newPwd1 != this.changePwdForm.newPwd2) {
+                  this.$notify.error({
+                    title: "警告",
+                    message: "两次输入密码不一致"
+                  });
+                  return false;
+                }
+                if (this.changePwdForm.oldPwd == this.changePwdForm.newPwd2) {
+                  this.$notify.error({
+                    title: "警告",
+                    message: "新密码不能和旧密码一致"
+                  });
+                  return false;
+                }
+                var params = new URLSearchParams();
+                params.append("oldPwd", this.changePwdForm.oldPwd);
+                params.append("newPwd", this.changePwdForm.newPwd1);
+                changePwd(params).then(response => {
+                  console.log(response);
+                  if (response.code == "success") {
+                    this.$notify({
+                      title: "成功",
+                      message: response.data,
+                      type: "success"
+                    });
+                    this.cancel(type);
+                  } else {
+                    this.$notify.error({
+                      title: "警告",
+                      message: response.data
+                    });
+                  }
+                });
+              } else {
+                console.log("error submit!!");
+                return false;
+              }
+            });
+          }
+          break;
+      }
     },
-    submitForm: function() {
-      this.form.avatar = this.fileIds;
-      console.log("提交的内容", this.form);
-      editMe(this.form).then(response => {
-        console.log(response);
-      })
+    cancel: function(type) {      
+      switch(type) {        
+        case "changePwdForm" : {
+          this.$refs[type].resetFields();
+        };break;
+      }
+
     }
   }
 };
