@@ -38,7 +38,7 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * 性别(1:男2:女)
      */
-    private int gender;
+    private String gender;
 
     /**
      * 个人头像
@@ -118,11 +118,11 @@ public class Admin extends SuperEntity<Admin> {
 		this.passWord = passWord;
 	}
 
-	public int getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(int gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 

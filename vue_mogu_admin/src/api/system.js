@@ -12,7 +12,7 @@ export function editMe(params) {
   return request({
     url: process.env.ADMIN_API + '/system/editMe',
     method: 'post',
-    params
+    data: params
   })
 }
 

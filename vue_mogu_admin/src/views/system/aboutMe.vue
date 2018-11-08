@@ -18,6 +18,11 @@
           <el-form-item label="昵称">
             <el-input v-model="form.nickName" style="width: 400px"></el-input>
           </el-form-item>
+
+            <el-form-item label="性别">
+              <el-radio v-model="form.gender" label="1" border size="medium">男</el-radio>
+              <el-radio v-model="form.gender" label="2" border size="medium">女</el-radio>
+            </el-form-item>
           
           <el-form-item label="手机号">
             <el-input v-model="form.mobile" style="width: 400px"></el-input>
@@ -122,7 +127,7 @@
 <script>
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
-import {getMe} from "@/api/system";
+import { getMe, editMe } from "@/api/system";
 export default {
   data() {
     return {
@@ -133,6 +138,7 @@ export default {
         qqNumber: "1595833114",
         weChat: "moxi624",
         occupation: "Java开发工程师",
+        avatar: "",
         summary:
           "一个95后！一直潜心研究和学习Java后端技术，一边学习一边积累经验"
       },
@@ -150,13 +156,12 @@ export default {
     var tagParams = new URLSearchParams();
     getMe(tagParams).then(response => {
       console.log(response);
-      if(response.code == "success") {
+      if (response.code == "success") {
         this.form = response.data;
-      }      
+      }
     });
   },
   methods: {
-    
     //弹出选择图片框
     checkPhoto: function() {
       console.log(this.photoVisible);
@@ -193,7 +198,11 @@ export default {
       console.log("点击了取消");
     },
     submitForm: function() {
-      console.log("点击了提交");
+      this.form.avatar = this.fileIds;
+      console.log("提交的内容", this.form);
+      editMe(this.form).then(response => {
+        console.log(response);
+      })
     }
   }
 };
