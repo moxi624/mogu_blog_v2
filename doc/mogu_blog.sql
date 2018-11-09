@@ -46,7 +46,7 @@ CREATE TABLE `t_admin` (
 
 /*Data for the table `t_admin` */
 
-insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`valid_code`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nick_name`,`qq_number`,`we_chat`,`occupation`) values ('1f01cd1d2f474743b241d74008b12333','admin','$2a$10$35zz.A5pE/DxMa4U/geZyO8coE7k.tdMIzAof.OHFnTcStgzDbeR2','1','1','315606094@qq.com','2018-09-29','13855481824',NULL,NULL,0,'2018-09-29 19:03:45','127.0.0.1',1,'2018-09-01 19:05:05','2018-11-07 14:47:00',NULL,NULL,NULL,NULL),('1f01cd1d2f474743b241d74008b12334','张三','$2a$10$fzNZ9M/twQ16Hr.4EegYAenJfwNt0omOcYz9h8k8lX/vRMalDVTj.','0','1','196430606@qq.com','2018-09-04','14798521755',NULL,NULL,0,'2018-09-07 19:04:53','127.0.0.1',1,'2018-09-04 19:05:12','2018-11-08 11:18:16',NULL,NULL,NULL,NULL),('1f01cd1d2f474743b241d74008b12335','赵六','$2a$10$xw37/WuRgBJaR06U6aynvOJtItlsxyKPo5hwaL1ZgQmXgtjD0EKla','1','1','460929265@qq.com','2018-09-19','26151631845',NULL,NULL,0,'2018-09-07 19:06:03','127.0.0.1',1,'2018-08-07 19:06:11','2018-08-07 19:06:17',NULL,NULL,NULL,NULL),('434994947c5a4ee3a710cd277357c7c5','巴拉巴拉','$2a$10$TdvL8GnIMdddF7PDToTkU.y9NRPOGYSsIwhDu4aDjJR8q0hccYptu','2','1','404033544@qq.com','2018-10-14','13803544785',NULL,'我是魔法师',0,NULL,'127.0.0.1',0,'2018-10-14 11:55:43','2018-10-14 11:55:43',NULL,NULL,NULL,NULL),('b1cf10413a60446cbf22cbc8c8f6d4dc','噜啦啦','$2a$10$xw37/WuRgBJaR06U6aynvOJtItlsxyKPo5hwaL1ZgQmXgtjD0EKla','1',NULL,'345678941@qq.com','2018-10-12','15078211234',NULL,NULL,0,'2018-10-12 19:45:42','string',1,'2018-10-12 19:51:37','2018-10-12 19:51:37',NULL,NULL,NULL,NULL);
+insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`valid_code`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nick_name`,`qq_number`,`we_chat`,`occupation`) values ('1f01cd1d2f474743b241d74008b12333','admin','$2a$10$kMixTzQXkqKWURKD.lzH3OfkVRz27b1w/9hM5Cn2yhOt0M1k7XQCq','1',',1720e3da8054434180032e3891b283dc','315606094@qq.com','2018-09-29','17679074120',NULL,'一个95后！一直潜心研究和学习Java后端技术，一边学习一边积累经验',0,'2018-10-02 19:03:45','127.0.0.1',1,'2018-09-04 19:05:05','2018-11-10 14:47:00','陌溪_','1595833114','moxi624','Java开发'),('1f01cd1d2f474743b241d74008b12334','张三','$2a$10$fzNZ9M/twQ16Hr.4EegYAenJfwNt0omOcYz9h8k8lX/vRMalDVTj.','0','','196430606@qq.com','2018-09-04','14798521755',NULL,NULL,0,'2018-09-07 19:04:53','127.0.0.1',1,'2018-09-04 19:05:12','2018-11-08 11:18:16',NULL,NULL,NULL,NULL),('1f01cd1d2f474743b241d74008b12335','赵六','$2a$10$xw37/WuRgBJaR06U6aynvOJtItlsxyKPo5hwaL1ZgQmXgtjD0EKla','1','','460929265@qq.com','2018-09-19','26151631845',NULL,NULL,0,'2018-09-07 19:06:03','127.0.0.1',1,'2018-08-07 19:06:11','2018-08-07 19:06:17',NULL,NULL,NULL,NULL),('434994947c5a4ee3a710cd277357c7c5','巴拉巴拉','$2a$10$TdvL8GnIMdddF7PDToTkU.y9NRPOGYSsIwhDu4aDjJR8q0hccYptu','2','','404033544@qq.com','2018-10-14','13803544785',NULL,'我是魔法师',0,NULL,'127.0.0.1',0,'2018-10-14 11:55:43','2018-10-14 11:55:43',NULL,NULL,NULL,NULL),('b1cf10413a60446cbf22cbc8c8f6d4dc','噜啦啦','$2a$10$xw37/WuRgBJaR06U6aynvOJtItlsxyKPo5hwaL1ZgQmXgtjD0EKla','1',NULL,'345678941@qq.com','2018-10-12','15078211234',NULL,NULL,0,'2018-10-12 19:45:42','string',1,'2018-10-12 19:51:37','2018-10-12 19:51:37',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `t_admin_role` */
 
@@ -93,7 +93,7 @@ CREATE TABLE `t_blog` (
 
 /*Data for the table `t_blog` */
 
-insert  into `t_blog`(`uid`,`title`,`summary`,`content`,`tag_uid`,`click_count`,`collect_count`,`file_uid`,`status`,`create_time`,`update_time`,`admin_uid`,`is_original`,`author`,`articles_part`,`blog_sort_uid`,`level`) values ('1f01cd1d2f474743b241d74008bcdbea','测试1','测试简介1','这是一篇测试博客1','1f01cd1d2f474743b241d74008bcdbe2',26,1232,'1f01cd1d2f474743b241d74008bcdb12',1,'0000-00-00 00:00:00','0000-00-00 00:00:00','1f01cd1d2f474743b241d74008b12334','1','七七','蘑菇博客','1f01cd1d2f474743b241d74008bcd125',NULL),('1f01cd1d2f474743b241d74008bcdbec','测试博客','测试简介','这是一篇测试博客','1f01cd1d2f474743b241d74008bcdbe1',312312,1321312,'1f01cd1d2f474743b241d74008bcdb11',1,'2018-09-29 18:48:58','2018-09-29 18:48:58','1f01cd1d2f474743b241d74008b12333','1','哈哈','蘑菇博客','1f01cd1d2f474743b241d74008bcd124',NULL),('1f01cd1d2f474743b241d74008bcdbee','测试2','测试简介2','这是一篇测试博客2','1f01cd1d2f474743b241d74008bcdbe3',5416,640,'1f01cd1d2f474743b241d74008bcdb13',1,'0000-00-00 00:00:00','0000-00-00 00:00:00','1f01cd1d2f474743b241d74008b12335','1','巴巴','蘑菇博客','1f01cd1d2f474743b241d74008bcd126',NULL);
+insert  into `t_blog`(`uid`,`title`,`summary`,`content`,`tag_uid`,`click_count`,`collect_count`,`file_uid`,`status`,`create_time`,`update_time`,`admin_uid`,`is_original`,`author`,`articles_part`,`blog_sort_uid`,`level`) values ('1f01cd1d2f474743b241d74008bcdbea','测试1','测试简介1','<p>这是一篇测试博客1</p>\n','1f01cd1d2f474743b241d74008bcdbe2',26,1232,'1720e3da8054434180032e3891b283dc',1,'2018-11-09 12:39:57','2018-11-09 12:39:57','1f01cd1d2f474743b241d74008b12334','1','七七','蘑菇博客','1f01cd1d2f474743b241d74008bcd125',0),('1f01cd1d2f474743b241d74008bcdbec','测试博客','测试简介','<p>这是一篇测试博客</p>\n','1f01cd1d2f474743b241d74008bcdbe1',312312,1321312,'3de09539e8154cafaabe4d3876d04963',1,'2018-09-29 18:48:58','2018-09-29 18:48:58','1f01cd1d2f474743b241d74008b12333','1','哈哈','蘑菇博客','1f01cd1d2f474743b241d74008bcd124',0),('1f01cd1d2f474743b241d74008bcdbee','测试2','测试简介2','这是一篇测试博客2','1f01cd1d2f474743b241d74008bcdbe3',5416,640,'1f01cd1d2f474743b241d74008bcdb13',1,'0000-00-00 00:00:00','0000-00-00 00:00:00','1f01cd1d2f474743b241d74008b12335','1','巴巴','蘑菇博客','1f01cd1d2f474743b241d74008bcd126',NULL);
 
 /*Table structure for table `t_blog_sort` */
 
@@ -220,6 +220,8 @@ CREATE TABLE `t_picture` (
 
 /*Data for the table `t_picture` */
 
+insert  into `t_picture`(`uid`,`file_uid`,`pic_name`,`picture_sort_uid`,`status`,`create_time`,`update_time`) values ('ade13958bb37482c8ada589d5f0d7fb0','3de09539e8154cafaabe4d3876d04963',NULL,'18628ad2216a478292fdce27e8707543',1,'2018-11-09 12:39:36','2018-11-09 12:39:36'),('ba535b5ef1e74d299ee77fb186d2d76c','1720e3da8054434180032e3891b283dc',NULL,'18628ad2216a478292fdce27e8707543',1,'2018-11-09 12:39:36','2018-11-09 12:39:36');
+
 /*Table structure for table `t_picture_sort` */
 
 DROP TABLE IF EXISTS `t_picture_sort`;
@@ -236,6 +238,8 @@ CREATE TABLE `t_picture_sort` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片分类表';
 
 /*Data for the table `t_picture_sort` */
+
+insert  into `t_picture_sort`(`uid`,`file_uid`,`name`,`status`,`create_time`,`update_time`,`parent_uid`) values ('18628ad2216a478292fdce27e8707543','null','cc',1,'2018-11-09 11:03:11','2018-11-09 11:03:11',NULL),('99f4a679b21649288ce6150ebe3a521d','null','cc',0,'2018-11-09 11:03:10','2018-11-09 11:03:10',NULL);
 
 /*Table structure for table `t_resource_sort` */
 
