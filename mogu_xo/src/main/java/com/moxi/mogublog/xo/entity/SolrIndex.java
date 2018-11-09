@@ -14,7 +14,7 @@ public class SolrIndex {
      * 博客uid
      */
     @Field("id")
-    private String uid;
+    private String id;
 
     /**
      * 博客标题
@@ -52,12 +52,12 @@ public class SolrIndex {
     @Field("blog_updateTime")
     private Date updateTime;
 
-    public String getUid() {
-        return uid;
+    public String getId() {
+        return id;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -110,7 +110,7 @@ public class SolrIndex {
 
     @Override
     public String toString() {
-        return "SolrIndex [uid=" + uid + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
+        return "SolrIndex [id=" + id + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
                 + blogSort + ", author=" + author + ", updateTime=" + updateTime + "]";
     }
 

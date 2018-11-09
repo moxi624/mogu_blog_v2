@@ -76,7 +76,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
         for(Blog blog : blogList) {
             SolrIndex solrIndex = new SolrIndex();
-            solrIndex.setUid(blog.getUid());
+            solrIndex.setId(blog.getUid());
             solrIndex.setTitle(blog.getTitle());
             solrIndex.setSummary(blog.getSummary());
             solrIndex.setTag(getTagByBlog(blog));
@@ -102,10 +102,10 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //添加索引
     @Override
-    public void addIndex(String uid, String title, String summary, String tagUid, String blogSortUid, String author) {
+    public void addIndex(String id, String title, String summary, String tagUid, String blogSortUid, String author) {
 
         SolrIndex solrIndex = new SolrIndex();
-        solrIndex.setUid(uid);
+        solrIndex.setId(id);
         solrIndex.setTitle(title);
         solrIndex.setSummary(summary);
         solrIndex.setTag(getTagbyTagUid(tagUid));
@@ -119,11 +119,11 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //更新索引
     @Override
-    public void updateIndex(String uid, String title, String summary, String tagUid, String blogSortUid,
+    public void updateIndex(String id, String title, String summary, String tagUid, String blogSortUid,
                             String author) {
 
-        SolrIndex solrIndex = solrTemplate.getById(uid, SolrIndex.class);
-        solrIndex.setUid(uid);
+        SolrIndex solrIndex = solrTemplate.getById(id, SolrIndex.class);
+        solrIndex.setId(id);
         solrIndex.setTitle(title);
         solrIndex.setSummary(summary);
         solrIndex.setTag(getTagbyTagUid(tagUid));

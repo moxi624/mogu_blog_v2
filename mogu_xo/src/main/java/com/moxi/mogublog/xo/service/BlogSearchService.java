@@ -27,7 +27,7 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void addIndex(String uid, String title, String summary, String tagUid, String blogSortUid,
+    public void addIndex(String id, String title, String summary, String tagUid, String blogSortUid,
                          String author);
 
     /**
