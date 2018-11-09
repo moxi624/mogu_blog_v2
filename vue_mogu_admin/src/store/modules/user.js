@@ -28,7 +28,7 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
-      const password = userInfo.username.trim()
+      const password = userInfo.password.trim()
       return new Promise((resolve, reject) => {
         var params = new URLSearchParams()
         params.append('username', username)

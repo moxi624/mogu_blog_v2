@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.utils.MD5Utils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -50,10 +51,14 @@ public class SystemRestApi {
 	
 	@ApiOperation(value="获取我的信息", notes="获取我的信息")
 	@GetMapping("/getMe")
-	public String getMe() {
-				
-		Admin admin = adminService.getById("5821462bc29a4570ad80e87f3aa3f02d");
-		admin.setPassWord(""); //清空密码，防止泄露
+	public String getMe(HttpServletRequest request) {
+		
+		if(request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
+			return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
+		}
+		
+		Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+		admin.setPassWord(null); //清空密码，防止泄露
 		
 		//获取图片
 		if(StringUtils.isNotEmpty(admin.getAvatar())) {
@@ -69,6 +74,7 @@ public class SystemRestApi {
 	public String editMe(HttpServletRequest request, @RequestBody Admin admin) {
 		
 		Boolean save = adminService.updateById(admin);
+		
 		return ResultUtil.result(SysConf.SUCCESS, save);
 	}
 		
@@ -78,19 +84,21 @@ public class SystemRestApi {
 			@ApiParam(name = "oldPwd", value = "旧密码",required = false) @RequestParam(name = "oldPwd", required = false) String oldPwd,
 			@ApiParam(name = "newPwd", value = "新密码",required = false) @RequestParam(name = "newPwd", required = false) String newPwd) throws NoSuchAlgorithmException {
 		
+		if(request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
+			return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
+		}
 		if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
-		/*
-		 * TODO
-		 * 这里需要从request中获取到用户信息，
-		 * 然后在从用户信息中，获取登录的用户，判断密码是否正确
-		 */
-		Admin admin = adminService.getById("5821462bc29a4570ad80e87f3aa3f02d"); // 这里就先模拟一下request获取的用户
-		System.out.println(MD5Utils.string2MD5(oldPwd));
-		System.out.println(admin.getPassWord());
-		if(MD5Utils.string2MD5(oldPwd).equals(admin.getPassWord())) {
-			admin.setPassWord(MD5Utils.string2MD5(newPwd));
+
+		Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+		
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+	    boolean isPassword = encoder.matches(oldPwd, admin.getPassWord());
+	    
+		if(isPassword) {
+			admin.setPassWord(encoder.encode(newPwd));
 			admin.updateById();
 			return ResultUtil.result(SysConf.SUCCESS, "修改成功");
 		} else {

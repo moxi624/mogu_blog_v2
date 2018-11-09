@@ -95,6 +95,11 @@ public class JwtHelper {
     public  String getUsername(String token , String base64Security){
         return  parseJWT(token,base64Security).getSubject();
     }
+    
+	//从token中获取用户UID
+    public  String getUserUid(String token , String base64Security){
+        return  parseJWT(token,base64Security).get("adminUid", String.class);
+    }
 	
     //从token中获取audience
     public  String getAudience(String token , String base64Security){

@@ -168,6 +168,8 @@ export default {
       console.log(response);
       if (response.code == "success") {
         this.form = response.data;
+        this.fileIds = this.form.avatar;
+        this.photoList = this.form.photoList;
       }
     });
   },

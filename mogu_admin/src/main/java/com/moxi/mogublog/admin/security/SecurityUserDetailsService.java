@@ -48,7 +48,7 @@ public class SecurityUserDetailsService implements UserDetailsService{
 		    for (AdminRole adminRole : adminRoleList) {
 				String roleUid = adminRole.getRoleUid();
 				roleUids.add(roleUid);
-		      }
+		    }
 		    List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
 			List<String> roleNames = new ArrayList<String>();
 			for (Role role : roles) {

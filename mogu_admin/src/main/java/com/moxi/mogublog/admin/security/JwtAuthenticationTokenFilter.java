@@ -44,6 +44,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 	
 	@Value(value="${tokenHeader}")
 	private String tokenHeader;
+	
+	@Value(value="${audience.expiresSecond}")
+	private Long expiresSecond;
+	
 	/**
 	 *  Reserved claims（保留），它的含义就像是编程语言的保留字一样，属于JWT标准里面规定的一些claim。JWT标准里面定好的claim有：
 	 iss(Issuser)：代表这个JWT的签发主体；
@@ -127,8 +131,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 			final String token = authHeader.substring(tokenHead.length());
 			
 			String username = jwtHelper.getUsername(token,audience.getBase64Secret());
+			String adminUid = jwtHelper.getUserUid(token,audience.getBase64Secret());
 			
-			logger.info("checking authentication : " + username);
+			//把adminUid存储到request中
+			request.setAttribute("adminUid", adminUid);
+			
+			//刷新token过期时间
+			jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
+			
+			logger.info("解析出来用户 : " + username);
+			logger.info("解析出来的用户Uid : " + adminUid);
 			
 			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 		        
