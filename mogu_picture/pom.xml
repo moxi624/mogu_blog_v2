@@ -21,7 +21,8 @@
 	</properties>
 
 	<dependencies>
-	
+		
+		<!-- 因为 这里暂时不需要用到spring security所以需要排除掉 -->
         <dependency>
 		    <artifactId>mogu_base</artifactId>
 		    <groupId>com.moxi</groupId>

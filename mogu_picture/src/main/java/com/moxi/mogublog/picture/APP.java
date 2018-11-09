@@ -20,6 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.picture.config",
+        "com.moxi.mogublog.picture.security",
         "com.moxi.mogublog.picture.restapi",
         "com.moxi.mogublog.picture.service"})
 public class APP {

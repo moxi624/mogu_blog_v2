@@ -3,6 +3,11 @@ package com.moxi.mogublog.config.jwt;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * JWT相关配置
+ * @author xzx19950624@qq.com
+ * @date 2018年11月9日下午12:47:36
+ */
 @ConfigurationProperties(prefix = "audience")
 @Component
 public class Audience {

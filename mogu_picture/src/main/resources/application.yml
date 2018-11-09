@@ -10,6 +10,14 @@ file:
   upload:
     path: D:/mogu_blog/data/
 
+#启动Basic验证    
+security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password123    
+
 #spring
 spring:
   jmx:
@@ -89,6 +97,16 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+
+##jwt配置
+tokenHead: bearer;
+tokenHeader: Authorization
+isRememberMeExpiresSecond: 259200 #记住账号为3天有效
+audience:
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  name: mogublog
+  expiresSecond: 3600  #1个小时
     
 ####### 日志输出 #########
 logging:
