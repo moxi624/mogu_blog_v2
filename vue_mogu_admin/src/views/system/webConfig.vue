@@ -91,6 +91,8 @@ export default {
       if (response.code == "success") {
         if (response.data) {
           this.form = response.data;
+          this.fileIds = this.form.logo;
+          this.photoList = this.form.photoList;
         }
       }
     });
