@@ -185,6 +185,12 @@ export const constantRouterMap = [
         name: '友情链接',
         component: () => import('@/views/system/blogLink'),
         meta: { title: '友情链接', icon: 'table' }
+      },
+      {
+        path: 'webConfig',
+        name: '网站配置',
+        component: () => import('@/views/system/webConfig'),
+        meta: { title: '网站配置', icon: 'table' }
       }
     ]
   },
