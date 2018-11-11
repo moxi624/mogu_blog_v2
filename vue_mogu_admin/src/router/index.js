@@ -62,12 +62,7 @@ export const constantRouterMap = [
         component: () => import('@/views/blog/blogSort'),
         meta: { title: '分类管理', icon: 'table' }
       },
-      {
-        path: 'blogLink',
-        name: '友链管理',
-        component: () => import('@/views/blog/blogLink'),
-        meta: { title: '友链管理', icon: 'table' }
-      },
+
       {
         path: 'collect',
         name: '收藏管理',
@@ -184,6 +179,12 @@ export const constantRouterMap = [
         name: '索引管理',
         component: () => import('@/views/system/solrIndex'),
         meta: { title: '索引管理', icon: 'index' }
+      },
+      {
+        path: 'blogLink',
+        name: '友情链接',
+        component: () => import('@/views/system/blogLink'),
+        meta: { title: '友情链接', icon: 'table' }
       }
     ]
   },

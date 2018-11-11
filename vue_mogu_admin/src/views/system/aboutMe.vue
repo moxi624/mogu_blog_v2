@@ -52,21 +52,17 @@
           
           <el-form-item>
             <el-button type="primary" @click="submitForm('changeAdminForm')">保 存</el-button>
-            <el-button @click="cancel('changeAdminForm')">重 置</el-button>            
+            <!-- <el-button @click="cancel('changeAdminForm')">重 置</el-button>             -->
           </el-form-item>
 
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane label="显示配置" name="second">
+      <!-- <el-tab-pane label="显示配置" name="second">
       <span slot="label"><i class="el-icon-setting"></i> 显示配置</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px">
         
         <el-tag style="font-size: 15px; margin:10px 0 10px 0;" type="warning" >这里主要是控制web前端，关于我页面中，一些个人信息的显示</el-tag>
-
-        <el-form-item label="职业">
-          <el-switch v-model="form.delivery"></el-switch>
-        </el-form-item>
 
         <el-form-item label="手机">
           <el-switch v-model="form.delivery"></el-switch>
@@ -80,15 +76,18 @@
           <el-switch v-model="form.delivery"></el-switch>
         </el-form-item>
 
+        <el-form-item label="职业">
+          <el-switch v-model="form.delivery"></el-switch>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="submitForm">保 存</el-button>
           <el-button @click="cancel">重 置</el-button>          
         </el-form-item>
-
+        
         </el-form>
         
-        
-      </el-tab-pane>
+      </el-tab-pane> -->
 
       <el-tab-pane label="修改密码" name="third">
         <span slot="label"><i class="el-icon-edit"></i> 修改密码</span>
@@ -272,13 +271,9 @@ export default {
           break;
       }
     },
-    cancel: function(type) {      
-      switch(type) {        
-        case "changePwdForm" : {
-          this.$refs[type].resetFields();
-        };break;
-      }
-
+    cancel: function(type) {
+      console.log("点击了重置", type);      
+      this.$refs[type].resetFields();
     }
   }
 };

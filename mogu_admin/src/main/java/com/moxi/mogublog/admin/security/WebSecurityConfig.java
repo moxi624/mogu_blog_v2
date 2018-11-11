@@ -60,12 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	    @Override
 	    protected void configure(HttpSecurity httpSecurity) throws Exception {
-	        httpSecurity
+	        
+	    	//原因是因为springSecurty使用X-Frame-Options防止网页被Frame。所以需要关闭为了让后端的接口管理的swagger页面正常显示
+	    	httpSecurity.headers().frameOptions().disable();
+	    	
+	    	httpSecurity	        		
 	                // 由于使用的是JWT，我们这里不需要csrf
 			        .cors()//新加入,允许跨域
 			        .and()
-	                .csrf().disable()
-	                
+	                .csrf().disable()	                
 	                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
 	                // 基于token，所以不需要session
