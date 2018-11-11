@@ -39,7 +39,7 @@ public class SystemRestApi {
 	
 	@Autowired
 	AdminService adminService;
-	
+		
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
 	
@@ -106,10 +106,5 @@ public class SystemRestApi {
 		}
 		
 	}
-	
-	
-	
-	
-	
 	
 }

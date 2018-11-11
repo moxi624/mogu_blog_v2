@@ -199,6 +199,7 @@ export default {
       console.log("点击了删除图片");
       this.form.photoList = null;
       this.form.fileUid = "";
+      this.icon = false;
     },
     checkPhoto() {
       this.photoList = [];
