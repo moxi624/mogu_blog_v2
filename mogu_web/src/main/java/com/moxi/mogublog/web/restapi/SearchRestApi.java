@@ -35,20 +35,12 @@ public class SearchRestApi {
     
     private static Logger log = LogManager.getLogger(SearchRestApi.class);
 
-    @SuppressWarnings("unchecked")
 	@ApiOperation(value="搜索Blog", notes="搜索Blog")
     @GetMapping("/searchBlog")
     public String searchBlog(HttpServletRequest request,
                              @ApiParam(name = "keywords", value = "关键字",required = true)@RequestParam(required=true)String keywords) {
 
-        Map<String,Object> map = blogSearchService.search(keywords);
-//        List<SolrIndex> list = (List<SolrIndex>) JsonUtils.jsonArrayToArrayList(map.get("rows").toString());
-//        for(SolrIndex solrIndex : list) {
-//        	if(StringUtils.isNotEmpty(solrIndex.getPhotoList())) {
-//        		StringUtils.changeStringToString(solrIndex.getPhotoList(), ",");
-//        	}
-//        }
-        
+        Map<String,Object> map = blogSearchService.search(keywords);  
         return ResultUtil.result(SysConf.SUCCESS, map);
 
     }

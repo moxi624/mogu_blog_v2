@@ -36,8 +36,14 @@
       </div>
     </div>
     <div class="isEnd">
-      <span v-if="!isEnd">正在加载中~</span>  
-      <span v-else>我也是有底线的~</span>  
+      <span v-if="blogData.length> 0">
+        <span v-if="!isEnd">正在加载中~</span>  
+        <span v-else>我也是有底线的~</span>    
+      </span>
+      <span v-else>
+        <span>空空如也~</span>    
+      </span>      
+      
     </div>
   </div>
   <!--blogsbox end-->
@@ -146,6 +152,7 @@ export default {
           }
           this.blogData = blogData;
         }
+        console.log("blogData", this.blogData);
       });
     }
   }

@@ -7,16 +7,6 @@
       <li><a href="javascript:void(0);" @click="goTo('/')">网站首页</a> </li>
       <li><a href="javascript:void(0);" @click="goTo('/about')">关于我</a> </li>
       <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li>
-      <li><a href="javascript:void(0);" @click="goTo('/list')">学无止境</a>
-        <ul class="sub-nav">
-          <li><a href="/list">心得笔记</a></li>
-          <li><a href="/list">CSS3|Html5</a></li>
-          <li><a href="/list">网站建设</a></li>
-          <li><a href="/list">推荐工具</a></li>
-          <li><a href="/list">JS实例索引</a></li>
-        </ul>
-      </li>
-
       <li><a href="javascript:void(0);" @click="goTo('/time')">时间轴</a> </li>
 
                 <!-- <input />
@@ -24,7 +14,7 @@
 
       <!--search begin-->
       <div id="search_bar" class="search_bar search_open">
-          <input class="input" placeholder="想搜点什么呢..." type="text" v-model="keyword" >
+          <input class="input" placeholder="想搜点什么呢..." type="text" v-model="keyword" v-on:keyup.enter="search">
           <span class="search_ico" @click="search()"></span>
         <div>
         </div>
@@ -94,7 +84,6 @@ export default {
         case "/" : { this.$router.push({ path: '/'}); }; break;
         case "/about" : { this.$router.push({ path: '/about'}); }; break;
         case "/study" : { this.$router.push({ path: '/share'}); }; break;
-        case "/list" : { this.$router.push({ path: '/list'}); }; break;
         case "/time" : { this.$router.push({ path: '/time'}); }; break;
       } 
     },
