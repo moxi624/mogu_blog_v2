@@ -19,16 +19,15 @@
 
       <li><a href="javascript:void(0);" @click="goTo('/time')">时间轴</a> </li>
 
+                <!-- <input />
+          <img src="../../../static/images/searchbg.png"/>z -->
+
       <!--search begin-->
-      <div id="search_bar" class="search_bar">
-        <form  id="searchform" action="[!--news.url--]e/search/index.php" method="post" name="searchform">
-          <input class="input" placeholder="想搜点什么呢..." type="text" name="keyboard" id="keyboard">
-          <input type="hidden" name="show" value="title" />
-          <input type="hidden" name="tempid" value="1" />
-          <input type="hidden" name="tbname" value="news">
-          <input type="hidden" name="Submit" value="搜索" />
-          <span class="search_ico"></span>
-        </form>
+      <div id="search_bar" class="search_bar search_open">
+          <input class="input" placeholder="想搜点什么呢..." type="text" v-model="keyword" >
+          <span class="search_ico" @click="search()"></span>
+        <div>
+        </div>
       </div>
       <!--search end--> 
     </nav>
@@ -85,7 +84,8 @@ export default {
   },
   data () {
   	return {
-			BaseBlog: BASE_BLOG_API  		
+      BaseBlog: BASE_BLOG_API,
+      keyword: "",  		
     };
   },
   methods: {
@@ -96,11 +96,16 @@ export default {
         case "/study" : { this.$router.push({ path: '/share'}); }; break;
         case "/list" : { this.$router.push({ path: '/list'}); }; break;
         case "/time" : { this.$router.push({ path: '/time'}); }; break;
-      }
-
-      console.log("点击了goto");
+      } 
+    },
+    search: function() {
       
-    }
+      if(this.keyword == "") {
+        alert("关键字不能为空");
+        return;
+      }
+      this.$router.push({ path: "/list", query: { keyword: this.keyword } })
+    },
   }
 }
 </script>

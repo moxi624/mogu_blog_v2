@@ -1,5 +1,4 @@
 <template>
-<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -21,15 +20,15 @@
   <h1 class="t_nav"><span>你，我生命中一个重要的过客，我们之所以是过客，因为你未曾会为我停留。</span><a href="/" class="n1">网站首页</a><a href="/" class="n2">留言</a></h1>
   <div class="news_infos">
     <ul>
-      此处安装评论插件
+      <ChangYan></ChangYan>
     </ul>
   </div>
   <div class="sidebar">
     <div class="about">
-      <p class="avatar"> <img src="../../static/images/avatar.jpg" alt=""> </p>
-      <p class="abname">Moxi | 陌溪</p>
-      <p class="abposition">Java开发工程师</p>
-      <p class="abtext"> 一个95后！一直潜心研究和学习Java后端技术，一边工作一边积累经验</p>
+      <p class="avatar" v-if="info.photoList"> <img :src="info.photoList[0]" alt=""> </p>
+      <p class="abname">{{info.nickName}}</p>
+      <p class="abposition">{{info.occupation}}</p>
+      <p class="abtext"> {{info.summary}}</p>
     </div>
   <!--
     关注我们
@@ -54,11 +53,15 @@
 import BlogHead from '../components/BlogHead';
 import BlogFooter from '../components/BlogFooter';
 import FollowUs from "../components/FollowUs";
+import ChangYan from "../components/ChangYan";
+
+import { getMe } from "../api/about";
+
 export default {
   name: 'about',
   data () {
   	return {
-  		
+  		info: {}
     };
   },
   components: {
@@ -66,6 +69,14 @@ export default {
   	BlogHead,
   	BlogFooter,
     FollowUs,
+    ChangYan,
+  },
+  created() {
+    getMe().then(response => {      
+      if(response.code == "success") {
+        this.info = response.data;
+      }
+    })
   }
 }
 </script>

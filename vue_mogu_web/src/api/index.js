@@ -47,3 +47,11 @@ export function getLink (params) {
     params
   })
 }
+
+export function getWebConfig (params) {
+  return request({
+    url: process.env.WEB_API + '/index/getWebConfig',
+    method: 'get',
+    params
+  })
+}

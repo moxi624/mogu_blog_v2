@@ -1,6 +1,9 @@
 package com.moxi.mogublog.xo.service;
 
+import java.util.List;
 import java.util.Map;
+
+import com.moxi.mogublog.xo.entity.Blog;
 
 /**
  * solr索引维护
@@ -20,7 +23,7 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void initIndex();
+    public void initIndex(List<Blog> blogList);
 
     /**
      * 添加索引

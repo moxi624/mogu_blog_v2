@@ -9,16 +9,18 @@
     }, function () {
         $(this).children('ul').stop(true, true).hide(400);
     });
+
     /*search*/
-    $('.search_ico').click(function () {
-        $('.search_bar').toggleClass('search_open');
-        if ($('#keyboard').val().length > 2) {
-            $('#keyboard').val('');
-            $('#searchform').submit();
-        } else {
-            return false;
-        }
-    });
+    // $('.search_ico').click(function () {
+    //     $('.search_bar').toggleClass('search_open');
+    //     if ($('#keyboard').val().length > 2) {
+    //         $('#keyboard').val('');
+    //         $('#searchform').submit();
+    //     } else {
+    //         return false;
+    //     }
+    // });
+
     /*banner*/
     $('#banner').easyFader();
 

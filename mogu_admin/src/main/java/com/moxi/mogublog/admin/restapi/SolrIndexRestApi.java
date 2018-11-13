@@ -1,5 +1,8 @@
 package com.moxi.mogublog.admin.restapi;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.service.BlogSearchService;
+import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.BaseSysConf;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +47,12 @@ public class SolrIndexRestApi {
 
     @Autowired
     private BlogSearchService blogSearchService;
+    
+    @Autowired
+    private BlogService blogService;
+    
+	@Autowired
+	private PictureFeignClient pictureFeignClient;
 
     private static Logger log = LogManager.getLogger(SolrIndexRestApi.class);
 
@@ -52,8 +69,49 @@ public class SolrIndexRestApi {
     @ApiOperation(value="初始化solr索引", notes="初始化solr索引")
     @PostMapping("/initIndex")
     public String initIndex(HttpServletRequest request){
+    	
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
 
-        blogSearchService.initIndex();
+        queryWrapper.eq(BaseSysConf.STATUS, EStatus.ENABLE);
+
+        List<Blog> blogList = blogService.list(queryWrapper);
+        
+        final StringBuffer fileUids = new StringBuffer();
+    	
+        blogList.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				fileUids.append(item.getFileUid() + ",");
+			}
+		});
+        
+        String pictureList = null;
+        
+		if(fileUids != null) {
+			pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+		}
+		
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+
+		Map<String, String> pictureMap = new HashMap<String, String>();
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
+		for(Blog item : blogList) {
+			
+			//获取图片
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+				List<String> pictureListTemp = new ArrayList<String>();
+				
+				pictureUidsTemp.forEach(picture -> {
+					pictureListTemp.add(pictureMap.get(picture));
+				});
+				item.setPhotoList(pictureListTemp);
+			}		
+		}
+        blogSearchService.initIndex(blogList);
         log.info("初始化索引成功");
         return ResultUtil.result(SysConf.SUCCESS,"初始化索引成功");
 

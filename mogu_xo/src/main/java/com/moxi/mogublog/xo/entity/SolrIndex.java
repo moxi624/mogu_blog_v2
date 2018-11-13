@@ -15,6 +15,12 @@ public class SolrIndex {
      */
     @Field("id")
     private String id;
+    
+    /**
+     * 图片Uid
+     */
+    @Field("file_uid")
+    private String fileUid;
 
     /**
      * 博客标题
@@ -29,13 +35,13 @@ public class SolrIndex {
     private String summary;
 
     /**
-     * 标签uid
+     * 标签名
      */
     @Field("blog_tag")
     private String tag;
 
     /**
-     * 博客分类UID
+     * 博客分类名
      */
     @Field("blog_sort")
     private String blogSort;
@@ -51,6 +57,13 @@ public class SolrIndex {
      */
     @Field("blog_updateTime")
     private Date updateTime;
+    
+    /**
+     * 以下字段不存入solr索引库中
+     * 
+     */
+    @Field("photo_list")
+    private String photoList; //标题图
 
     public String getId() {
         return id;
@@ -107,8 +120,24 @@ public class SolrIndex {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+    
+    public String getFileUid() {
+		return fileUid;
+	}
 
-    @Override
+	public void setFileUid(String fileUid) {
+		this.fileUid = fileUid;
+	}
+
+	public String getPhotoList() {
+		return photoList;
+	}
+
+	public void setPhotoList(String photoList) {
+		this.photoList = photoList;
+	}
+
+	@Override
     public String toString() {
         return "SolrIndex [id=" + id + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
                 + blogSort + ", author=" + author + ", updateTime=" + updateTime + "]";

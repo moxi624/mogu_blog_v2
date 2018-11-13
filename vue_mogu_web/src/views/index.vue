@@ -200,7 +200,6 @@ export default {
 };
 </script>
 
-
 <style>
 .isEnd {
   width: 100%;

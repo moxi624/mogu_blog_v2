@@ -17,18 +17,15 @@ import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.SolrIndex;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogSearchService;
-import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.BaseSysConf;
 
 /**
  * solr索引维护实现
@@ -40,9 +37,6 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     @Autowired
     private SolrTemplate solrTemplate;
-
-    @Autowired
-    private BlogService blogService;
 
     @Autowired
     private TagService tagService;
@@ -63,19 +57,23 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //初始化索引
     @Override
-    public void initIndex() {
+    public void initIndex(List<Blog> blogList)  {
     	
     	this.deleteAllIndex(); //清除所有索引
     	
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
-
-        queryWrapper.eq(BaseSysConf.STATUS, EStatus.ENABLE);
-
-        List<Blog> blogList = blogService.list(queryWrapper);
         List<SolrIndex> solrIndexs = new ArrayList<>();
 
         for(Blog blog : blogList) {
             SolrIndex solrIndex = new SolrIndex();
+            solrIndex.setFileUid(blog.getFileUid());
+            //将图片存放索引中
+            if(blog.getPhotoList() != null) {
+            	String str = "";
+            	for(String s : blog.getPhotoList()) {
+            		str = str + s + ",";
+            	}
+            	solrIndex.setPhotoList(str);	
+            }            
             solrIndex.setId(blog.getUid());
             solrIndex.setTitle(blog.getTitle());
             solrIndex.setSummary(blog.getSummary());
@@ -158,8 +156,8 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     private String getBlogSort(String blogSortUid) {
         BlogSort blogSort = blogSortService.getById(blogSortUid);
-        String blogSortContent = blogSort.getContent();
-        return blogSortContent;
+        String blogSortName = blogSort.getSortName();
+        return blogSortName;
     }
 
     private String getTagByBlog(Blog blog) {
@@ -188,8 +186,8 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
         HighlightQuery query = new SimpleHighlightQuery();
         HighlightOptions highlightOptions = new HighlightOptions().addField("blog_title");
-        highlightOptions.setSimplePrefix("<em style = 'color:red')");//高亮前缀
-        highlightOptions.setSimplePostfix("</em>");//高亮后缀
+        highlightOptions.setSimplePrefix("<span style = 'color:red'>");//高亮前缀
+        highlightOptions.setSimplePostfix("</span>");//高亮后缀
         query.setHighlightOptions(highlightOptions);
 
         //添加查询条件

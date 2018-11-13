@@ -33,10 +33,12 @@ import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
+import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mougblog.base.enums.ELevel;
 import com.moxi.mougblog.base.enums.EStatus;
 
@@ -75,6 +77,9 @@ public class IndexRestApi {
 	
 	@Autowired
 	private StringRedisTemplate stringRedisTemplate;
+	
+	@Autowired
+	private WebConfigService webConfigService;
 	
 	@Value(value="${BLOG.HOT_COUNT}")
 	private Integer BLOG_HOT_COUNT;
@@ -508,6 +513,21 @@ public class IndexRestApi {
 		IPage<Link> pageList = linkService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
+	}
+	
+	@ApiOperation(value="获取网站配置", notes="获取友情链接")
+	@GetMapping("/getWebConfig")
+	public String getWebConfig (HttpServletRequest request) {
+		
+		QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();		
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		WebConfig webConfig = webConfigService.getOne(queryWrapper);
+		
+		if(StringUtils.isNotEmpty(webConfig.getLogo())) {
+			String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), ",");
+			webConfig.setPhotoList(WebUtils.getPicture(pictureList));
+		}
+		return ResultUtil.result(SysConf.SUCCESS, webConfig);
 	}
 	
 }
