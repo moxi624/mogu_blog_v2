@@ -64,7 +64,7 @@
     <div class="news_pl">
       <h2>文章评论</h2>
       <ul>
-        <div class="gbko"> </div>
+        <ChangYan></ChangYan>
       </ul>
     </div>
   </div>
@@ -116,6 +116,7 @@ import FourthRecommend from "../components/FourthRecommend";
 import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
+import ChangYan from "../components/ChangYan";
 export default {
   name: "info",
   data() {
@@ -134,7 +135,8 @@ export default {
     ThirdRecommend,
     TagCloud,
     HotBlog,
-    FollowUs
+    FollowUs,
+    ChangYan,
   },
   created() {
     getLink().then(response => {

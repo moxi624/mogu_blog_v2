@@ -1,5 +1,5 @@
 @charset "gb2312";
-@media screen and (min-width: 1024px) and (max-width: 1199px) {
+@media screen and (min-width: 1024px) and (max-width: 1090px) {
 header { width: 100%; margin: auto; }
 .nav { width: 90% }
 .nav li a { padding: 0 15px }
@@ -7,7 +7,7 @@ header { width: 100%; margin: auto; }
 article { width: 90%; margin: 100px auto 0 }
 .fader { padding-top: 0; height: 360px }
 .imginfo { bottom: 15% }
-.toppic li i img { height: 170px; }
+.toppic li i img { height: 180px; }
 .gd { width: 230px }
 .container { width: 90%; margin: 20px auto; }
 .share ul li i { }
