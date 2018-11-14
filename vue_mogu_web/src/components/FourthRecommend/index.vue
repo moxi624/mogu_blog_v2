@@ -2,13 +2,13 @@
     <div class="tuijian" v-if="fourthData.length > 0">
       <h2 class="hometitle">推荐文章</h2>
       <ul class="tjpic" v-if="fourthData[0]">
-        <i><img v-if="fourthData[0].photoList" :src="fourthData[0].photoList[0]"></i>
+        <i><img v-if="fourthData[0].photoList" style="cursor:pointer"  @click="goToInfo(fourthData[0].uid)" :src="fourthData[0].photoList[0]"></i>
         <p><a href="javascript:void(0);" @click="goToInfo(fourthData[0].uid)">{{fourthData[0].title}}</a></p>
       </ul>
       
       <ul class="sidenews">
         <li v-for="(item, index) in fourthData" v-if="index != 0" :key="item.uid">
-          <i><img v-if="item.photoList" :src="item.photoList[0]"></i>
+          <i><img style="cursor:pointer" v-if="item.photoList" @click="goToInfo(fourthData[0].uid)" :src="item.photoList[0]"></i>
           <p><a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a></p>
           <span>{{item.createTime}}</span> 
         </li>

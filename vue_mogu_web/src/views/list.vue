@@ -22,8 +22,8 @@
   <!--blogsbox begin-->
   <div class="blogsbox">
     	<div v-for="item in blogData" :key="item.uid" class="blogs" data-scroll-reveal="enter bottom over 1s" >	  
-      <h3 class="blogtitle"><a href="javascript:void(0);" @click="goToInfo(item.uid)" target="_blank" v-html="item.title">{{item.title}}</a></h3>
-      <span class="blogpic"><a href="javascript:void(0);" @click="goToInfo(item.uid)" title=""><img v-if="item.photoList" :src="item.photoList[0]" alt=""></a></span>
+      <h3 class="blogtitle"><a href="javascript:void(0);" @click="goToInfo(item.id)" target="_blank" v-html="item.title">{{item.title}}</a></h3>
+      <span class="blogpic"><a href="javascript:void(0);" @click="goToInfo(item.id)" title=""><img v-if="item.photoList" :src="item.photoList[0]" alt=""></a></span>
       <p class="blogtext" v-html="item.summary">{{item.summary}}</p>
       <div class="bloginfo">
         <ul>
