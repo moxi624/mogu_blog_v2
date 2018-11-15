@@ -138,7 +138,7 @@ export default {
       var params = new URLSearchParams();
       params.append("pageSize", "500");
       getPictureSortList(params).then(function(response) {
-        console.log("加载数据", response);
+        console.log("加载数据图片：", response);
         if (response.code == "success") {
           //成功
           var pictureSorts = response.data.records; 
@@ -177,7 +177,7 @@ export default {
           message: "分类名称不能为空!"
         });
         return;
-      }
+      }      
       var params = new URLSearchParams();
       params.append("pageSize", "500");
       params.append("keyword", this.keyword);
@@ -217,18 +217,20 @@ export default {
       var that = this;
       var index = this.activeName;
       var pictureSortUid = this.pictureSorts[index].uid;
-      console.log("选中的分类UID", this.pictureSorts[index]);
+      console.log("选中的分类UID", this.pictureSorts[index].name);
       var name = this.pictureSorts[index].name;
       var params = new URLSearchParams();
       params.append("pictureSortUid", pictureSortUid);
       getPictureList(params).then(function(response) {
-        if (response.code == "success") {
-          var newObject = {
-            pictureSortUid: pictureSortUid,
-            name: name,
-            pictures: response.data.records
-          };
-          Vue.set(that.pictureSorts, index, newObject);
+        if (response.code == "success") {          
+          if(response.data.records.length > 0 ) {
+            var newObject = {
+              pictureSortUid: pictureSortUid,
+              name: name,
+              pictures: response.data.records
+            };
+            Vue.set(that.pictureSorts, index, newObject);
+          }                  
         } else {
           this.$message({ type: "error", message: response.data });
         }
@@ -335,7 +337,7 @@ export default {
            * 跳转到图片上传
            */
           this.$router.push({
-            path: "/example/picture",
+            path: "/picture/picture",
             query: { pictureSortUid: pictureSortUid }
           });
         })
