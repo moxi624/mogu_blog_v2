@@ -26,7 +26,12 @@ public class BlogSort extends SuperEntity<BlogSort> {
      * 分类介绍
      */
     private String content;    
-
+    
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private int sort;
+    
 	public String getContent() {
 		return content;
 	}
@@ -46,5 +51,12 @@ public class BlogSort extends SuperEntity<BlogSort> {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-    
+
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
 }

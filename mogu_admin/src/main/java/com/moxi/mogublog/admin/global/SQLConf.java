@@ -32,6 +32,7 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String ROLE = "role";
 	public final static String EMAIL = "email";
 	public final static String MOBILE = "mobile";
+	public final static String SORT = "sort";
 	
 	
 }

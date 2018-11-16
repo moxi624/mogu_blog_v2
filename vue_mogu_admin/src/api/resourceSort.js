@@ -31,3 +31,12 @@ export function deleteResourceSort(params) {
     params
   })
 }
+
+export function stickResourceSort(params) {
+  return request({
+    url: process.env.ADMIN_API + '/resourceSort/stick',
+    method: 'post',
+    params
+  })
+}
+

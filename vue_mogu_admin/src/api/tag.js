@@ -31,3 +31,11 @@ export function deleteTag(params) {
     params
   })
 }
+
+export function stickTag(params) {
+  return request({
+    url: process.env.ADMIN_API + '/tag/stick',
+    method: 'post',
+    params
+  })
+}

@@ -28,6 +28,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.PictureSort;
+import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 
@@ -71,7 +72,7 @@ public class PictureSortRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
+		queryWrapper.orderByDesc(SQLConf.SORT);		
 		IPage<PictureSort> pageList = pictureSortService.page(page, queryWrapper);
 		List<PictureSort> list = pageList.getRecords();
 		
@@ -161,6 +162,37 @@ public class PictureSortRestApi {
 		pictureSort.setStatus(EStatus.DISABLED);		
 		pictureSort.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+	}
+	
+	@ApiOperation(value="置顶分类", notes="置顶分类", response = String.class)
+	@PostMapping("/stick")
+	public String stick(HttpServletRequest request,
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}		
+		PictureSort pictureSort = pictureSortService.getById(uid);
+		
+		//查找出最大的那一个
+		QueryWrapper<PictureSort> queryWrapper = new QueryWrapper<>();
+		queryWrapper.orderByDesc(SQLConf.SORT);		
+		PictureSort  maxSort = pictureSortService.getOne(queryWrapper);
+		
+		if(StringUtils.isEmpty(maxSort.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
+		}
+		if(maxSort.getUid().equals(pictureSort.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+		}
+		
+		Integer sortCount = maxSort.getSort() + 1;
+		
+		pictureSort.setSort(sortCount);
+			
+		pictureSort.updateById();
+		
+		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
 	}
 }
 

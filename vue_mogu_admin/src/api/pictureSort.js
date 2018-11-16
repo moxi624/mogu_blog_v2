@@ -31,3 +31,11 @@ export function deletePictureSort(params) {
     params
   })
 }
+
+export function stickPictureSort(params) {
+  return request({
+    url: process.env.ADMIN_API + '/pictureSort/stick',
+    method: 'post',
+    params
+  })
+}

@@ -27,6 +27,11 @@ public class Tag extends SuperEntity<Tag> {
      * 标签简介
      */
     private  int clickCount;
+    
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private int sort;
 
 
 	public String getContent() {
@@ -53,4 +58,14 @@ public class Tag extends SuperEntity<Tag> {
 		return serialVersionUID;
 	}
 
+
+	public int getSort() {
+		return sort;
+	}
+
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	
 }

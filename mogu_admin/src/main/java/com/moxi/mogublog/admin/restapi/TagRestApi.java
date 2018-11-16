@@ -60,7 +60,7 @@ public class TagRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
+		queryWrapper.orderByDesc(SQLConf.SORT);		
 		IPage<Tag> pageList = tagService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -101,7 +101,7 @@ public class TagRestApi {
 		tag.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
-	
+		
 	@ApiOperation(value="删除标签", notes="删除标签", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -114,6 +114,37 @@ public class TagRestApi {
 		tag.setStatus(EStatus.DISABLED);		
 		tag.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+	}
+	
+	@ApiOperation(value="置顶标签", notes="置顶标签", response = String.class)
+	@PostMapping("/stick")
+	public String stick(HttpServletRequest request,
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}		
+		Tag tag = tagService.getById(uid);
+		
+		//查找出最大的那一个
+		QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+		queryWrapper.orderByDesc(SQLConf.SORT);		
+		Tag  maxTag = tagService.getOne(queryWrapper);
+		
+		if(StringUtils.isEmpty(maxTag.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
+		}
+		if(maxTag.getUid().equals(tag.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "该标签已经在顶端");
+		}
+		
+		Integer sortCount = maxTag.getSort() + 1;
+		
+		tag.setSort(sortCount);
+			
+		tag.updateById();
+		
+		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
 	}
 }
 

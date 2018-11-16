@@ -56,7 +56,8 @@
 	    </el-table-column>
 	    
 	    <el-table-column label="操作" fixed="right" min-width="150"> 
-	      <template slot-scope="scope" >          
+	      <template slot-scope="scope" >
+          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>          
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
@@ -117,7 +118,8 @@ import {
   getResourceSortList,
   addResourceSort,
   editResourceSort,
-  deleteResourceSort
+  deleteResourceSort,
+  stickResourceSort
 } from "@/api/resourceSort";
 
 import { formatData } from "@/utils/webUtils";
@@ -184,8 +186,8 @@ export default {
     //弹出选择图片框
     checkPhoto: function() {
       this.photoList = [];
-      this.fileIds = "";      
-      this.photoVisible = true;      
+      this.fileIds = "";
+      this.photoVisible = true;
     },
     getChooseData(data) {
       var that = this;
@@ -232,6 +234,37 @@ export default {
       console.log(row);
       this.form = row;
       console.log("点击编辑", this.form);
+    },
+    handleStick: function(row) {
+      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          stickResourceSort(params).then(response => {
+            if (response.code == "success") {
+              this.resourceSortList();
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消置顶"
+          });
+        });
     },
     handleDelete: function(row) {
       this.$confirm("此操作将会把分类下全部图片删除, 是否继续?", "提示", {

@@ -26,6 +26,11 @@ public class PictureSort extends SuperEntity<PictureSort>{
 	
 	private String fileUid;//分类图片Uid
 	
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private int sort;
+	
     @TableField(exist = false)
     private List<String> photoList; //分类图
 
@@ -63,6 +68,14 @@ public class PictureSort extends SuperEntity<PictureSort>{
 
 	public void setPhotoList(List<String> photoList) {
 		this.photoList = photoList;
+	}
+
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
 	}
 	
 }

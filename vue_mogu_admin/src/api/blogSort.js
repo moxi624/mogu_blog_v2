@@ -31,3 +31,11 @@ export function deleteBlogSort(params) {
     params
   })
 }
+
+export function stickBlogSort(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blogSort/stick',
+    method: 'post',
+    params
+  })
+}

@@ -61,7 +61,7 @@ public class BlogSortRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
+		queryWrapper.orderByDesc(SQLConf.SORT);		
 		IPage<BlogSort> pageList = blogSortService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -115,6 +115,37 @@ public class BlogSortRestApi {
 		blogSort.setStatus(EStatus.DISABLED);		
 		blogSort.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+	}
+	
+	@ApiOperation(value="置顶分类", notes="置顶分类", response = String.class)
+	@PostMapping("/stick")
+	public String stick(HttpServletRequest request,
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}		
+		BlogSort blogSort = blogSortService.getById(uid);
+		
+		//查找出最大的那一个
+		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
+		queryWrapper.orderByDesc(SQLConf.SORT);		
+		BlogSort  maxSort = blogSortService.getOne(queryWrapper);
+		
+		if(StringUtils.isEmpty(maxSort.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
+		}
+		if(maxSort.getUid().equals(blogSort.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+		}
+		
+		Integer sortCount = maxSort.getSort() + 1;
+		
+		blogSort.setSort(sortCount);
+			
+		blogSort.updateById();
+		
+		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
 	}
 }
 

@@ -50,6 +50,7 @@
 	    
 	    <el-table-column label="操作" fixed="right" min-width="150"> 
 	      <template slot-scope="scope" >
+					<el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
@@ -97,8 +98,14 @@
 </template>
 
 <script>
-import { getBlogSortList, addBlogSort, editBlogSort, deleteBlogSort } from "@/api/blogSort";
-import { formatData } from '@/utils/webUtils'
+import {
+  getBlogSortList,
+  addBlogSort,
+  editBlogSort,
+  deleteBlogSort,
+  stickBlogSort
+} from "@/api/blogSort";
+import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
@@ -109,12 +116,12 @@ export default {
       total: 0, //总数量
       title: "增加分类",
       dialogFormVisible: false, //控制弹出框
-      formLabelWidth: '120px',
-      isEditForm: false ,
+      formLabelWidth: "120px",
+      isEditForm: false,
       form: {
         uid: null,
         content: "",
-        sortName: "",
+        sortName: ""
       }
     };
   },
@@ -122,115 +129,141 @@ export default {
     this.blogSortList();
   },
   methods: {
-		blogSortList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
-			getBlogSortList(params).then(response => {
-				this.tableData = response.data.records;
-				this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;      
-			});
-		},
-		getFormObject: function() {
+    blogSortList: function() {
+      var params = new URLSearchParams();
+      params.append("keyword", this.keyword);
+      params.append("currentPage", this.currentPage);
+      params.append("pageSize", this.pageSize);
+      getBlogSortList(params).then(response => {
+        this.tableData = response.data.records;
+        this.currentPage = response.data.current;
+        this.pageSize = response.data.size;
+        this.total = response.data.total;
+      });
+    },
+    getFormObject: function() {
       var formObject = {
-				uid: null,
+        uid: null,
         content: null,
-        sortName: null,				
+        sortName: null
       };
       return formObject;
-		},
-		handleFind: function() {
-			this.blogSortList();
-		},			
+    },
+    handleFind: function() {
+      this.blogSortList();
+    },
     handleAdd: function() {
-			this.dialogFormVisible = true;
-			this.form = this.getFormObject();
-			this.isEditForm = false;
+      this.dialogFormVisible = true;
+      this.form = this.getFormObject();
+      this.isEditForm = false;
     },
     handleEdit: function(row) {
-			this.dialogFormVisible = true;
-			this.isEditForm = true;
-			console.log(row);
-			this.form = row;
+      this.dialogFormVisible = true;
+      this.isEditForm = true;
+      console.log(row);
+      this.form = row;
+    },
+    handleStick: function(row) {
+      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          stickBlogSort(params).then(response => {
+            if (response.code == "success") {
+              this.blogSortList();
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消置顶"
+          });
+        });
     },
     handleDelete: function(row) {
-
-			var that = this;
+      var that = this;
       this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
-			.then(() => {
-				let params = new URLSearchParams();
-				params.append("uid", row.uid);
-				deleteBlogSort(params).then(response=> {
-						console.log(response);
-						this.$message({
-							type: "success",
-							message: response.data
-						});
-						that.blogSortList();
-				})
-			})
-			.catch(() => {
-				this.$message({
-					type: "info",
-					message: "已取消删除"
-				});
-			});
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          deleteBlogSort(params).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.blogSortList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
       this.blogSortList();
     },
-		submitForm: function() {
-			console.log("点击了提交表单", this.form);
-			var params = formatData(this.form);			
-			if(this.isEditForm) {
-				editBlogSort(params).then(response=> {
-						console.log(response);
-						if(response.code == "success") {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-							this.dialogFormVisible = false;
-							this.blogSortList();		
-						} else {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-						}																
-				})				
-			} else {
-				addBlogSort(params).then(response=> {
-						console.log(response);
-						if(response.code == "success") {
-							this.$message({
-								type: "success",
-								message: response.data
-							});
-							this.dialogFormVisible = false;
-							this.blogSortList();	
-						} else {
-							this.$message({
-								type: "error",
-								message: response.data
-							});
-						}
-								
-				})
-	
-			}
-
-		},
-		
+    submitForm: function() {
+      console.log("点击了提交表单", this.form);
+      var params = formatData(this.form);
+      if (this.isEditForm) {
+        editBlogSort(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.dialogFormVisible = false;
+            this.blogSortList();
+          } else {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+          }
+        });
+      } else {
+        addBlogSort(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.dialogFormVisible = false;
+            this.blogSortList();
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            });
+          }
+        });
+      }
+    }
   }
 };
 </script>

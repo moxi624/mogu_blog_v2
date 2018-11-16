@@ -51,6 +51,7 @@
 	    <el-table-column label="操作" fixed="right" min-width="150"> 
 	      <template slot-scope="scope" >
           <el-button @click="handleManager(scope.row)" type="success" size="small">管理图片</el-button>
+          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
@@ -115,34 +116,34 @@ import {
   getPictureSortList,
   addPictureSort,
   editPictureSort,
-  deletePictureSort
+  deletePictureSort,
+  stickPictureSort
 } from "@/api/pictureSort";
 
-import { formatData } from '@/utils/webUtils'
+import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
 import { Loading } from "element-ui";
 
 export default {
-  components: {  
+  components: {
     CheckPhoto
   },
   created() {
     var that = this;
-    	var params = new URLSearchParams();
-			getPictureSortList(params).then(response => {
-        console.log("初始化数据", response);
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;         
-			});
+    var params = new URLSearchParams();
+    getPictureSortList(params).then(response => {
+      console.log("初始化数据", response);
+      this.tableData = response.data.records;
+      this.currentPage = response.data.current;
+      this.pageSize = response.data.size;
+      this.total = response.data.total;
+    });
     // var loadingInstance = Loading.service({
     //   target: "#table",
     //   text: "增加中"
     // });
   },
   data() {
-
     return {
       tableData: [],
       form: {
@@ -161,24 +162,24 @@ export default {
       dialogFormVisible: false,
       isEditForm: false,
       photoVisible: false, //控制图片选择器的显示
-			photoList: [],
-			fileIds: "",
-			icon: false, //控制删除图标的显示
+      photoList: [],
+      fileIds: "",
+      icon: false //控制删除图标的显示
     };
   },
   methods: {
     pictureSortList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
-			getPictureSortList(params).then(response => {
+      var params = new URLSearchParams();
+      params.append("keyword", this.keyword);
+      params.append("currentPage", this.currentPage);
+      params.append("pageSize", this.pageSize);
+      getPictureSortList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;         
-			});
-		},
+        this.pageSize = response.data.size;
+        this.total = response.data.total;
+      });
+    },
     handleFind: function() {
       console.log(this.keyword);
       this.pictureSortList();
@@ -199,7 +200,7 @@ export default {
       };
       return formObject;
     },
-    		//弹出选择图片框
+    //弹出选择图片框
     checkPhoto: function() {
       this.photoList = [];
       this.fileIds = "";
@@ -219,14 +220,14 @@ export default {
     //关闭模态框
     cancelModel() {
       this.photoVisible = false;
-		},
-		deletePhoto: function() {
+    },
+    deletePhoto: function() {
       console.log("点击了删除图片");
-      			
-			this.form.photoList = null;
+
+      this.form.photoList = null;
       this.form.fileUid = "";
-		},		
-		checkPhoto() {
+    },
+    checkPhoto() {
       this.photoVisible = true;
     },
     //改变页码
@@ -251,31 +252,63 @@ export default {
       this.form = row;
       console.log("点击编辑", this.form);
     },
-    handleDelete: function(row) {
-
-      this.$confirm('此操作将会把分类下全部图片删除, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        let params = new URLSearchParams();
-        params.append("uid", row.uid);
-        deletePictureSort(params).then(response => {
-          console.log(response);
-          if(response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.getPictureSortList();
-          }          
+    handleStick: function(row) {
+      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          stickPictureSort(params).then(response => {
+            if (response.code == "success") {
+              this.pictureSortList();
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消置顶"
+          });
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });          
-      });
+    },
+    handleDelete: function(row) {
+      this.$confirm("此操作将会把分类下全部图片删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          deletePictureSort(params).then(response => {
+            console.log(response);
+            if (response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              this.pictureSortList();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     submitForm: function() {
       console.log("提交表单", this.form);
