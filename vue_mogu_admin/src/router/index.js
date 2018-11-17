@@ -48,19 +48,19 @@ export const constantRouterMap = [
         path: 'blog',
         name: '博客管理',
         component: () => import('@/views/blog/blog'),
-        meta: { title: '博客管理', icon: 'table' }
+        meta: { title: '博客管理', icon: 'blog' }
       },
       {
         path: 'blogTag',
         name: '标签管理',
         component: () => import('@/views/blog/blogTag'),
-        meta: { title: '标签管理', icon: 'table' }
+        meta: { title: '标签管理', icon: 'tag' }
       },
       {
         path: 'blogSort',
         name: '分类管理',
         component: () => import('@/views/blog/blogSort'),
-        meta: { title: '分类管理', icon: 'table' }
+        meta: { title: '分类管理', icon: 'sort' }
       },
 
       {
@@ -68,6 +68,34 @@ export const constantRouterMap = [
         name: '收藏管理',
         component: () => import('@/views/blog/collect'),
         meta: { title: '收藏管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/authority',
+    component: Layout,
+    redirect: '/authority/admin',
+    name: '权限管理',
+    meta: { title: '权限管理', icon: 'authority' },
+    children: [
+      {
+        path: 'admin',
+        name: '管理员管理',
+        component: () => import('@/views/authority/admin'),
+        meta: { title: '管理员管理', icon: 'user' }
+      },
+      {
+        path: 'role',
+        name: '角色管理',
+        component: () => import('@/views/authority/role'),
+        meta: { title: '角色管理', icon: 'peoples' }
+      },
+      {
+        path: 'authority',
+        name: '权限管理',
+        component: () => import('@/views/authority/authority'),
+        meta: { title: '权限管理', icon: 'adminRole' }
       }
     ]
   },
@@ -172,7 +200,7 @@ export const constantRouterMap = [
         path: 'aboutMe',
         name: '关于我',
         component: () => import('@/views/system/aboutMe'),
-        meta: { title: '关于我', icon: 'index' }
+        meta: { title: '关于我', icon: 'aboutMe' }
       },
       {
         path: 'solrIndex',
@@ -184,13 +212,13 @@ export const constantRouterMap = [
         path: 'blogLink',
         name: '友情链接',
         component: () => import('@/views/system/blogLink'),
-        meta: { title: '友情链接', icon: 'table' }
+        meta: { title: '友情链接', icon: 'blogLink' }
       },
       {
         path: 'webConfig',
         name: '网站配置',
         component: () => import('@/views/system/webConfig'),
-        meta: { title: '网站配置', icon: 'table' }
+        meta: { title: '网站配置', icon: 'web' }
       }
     ]
   },

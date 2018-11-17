@@ -20,6 +20,11 @@ public class Role extends SuperEntity<Role>{
      * 角色名称
      */
     private String roleName;
+    
+    /**
+     * 介绍
+     */
+    private String summary;
 
 	public String getRoleName() {
 		return roleName;
@@ -33,4 +38,11 @@ public class Role extends SuperEntity<Role>{
 		return serialVersionUID;
 	}
 
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 }
