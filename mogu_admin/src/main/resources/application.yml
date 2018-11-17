@@ -16,6 +16,8 @@ file:
 
 moguBlog:
    email: mogublog@163.com
+
+DEFAULE_PWD: mogublog
    
 #博客相关配置
 BLOG:

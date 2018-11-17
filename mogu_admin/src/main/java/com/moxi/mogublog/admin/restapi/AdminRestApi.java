@@ -12,8 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,19 +25,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.AdminRole;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,79 +71,15 @@ public class AdminRestApi {
 	@Autowired
 	private AdminRoleService adminRoleService;
 	
-//	@Autowired
-//	private Jedis jedis;
+	@Autowired
+	private PictureFeignClient pictureFeignClient;
+	
+	@Value(value="${DEFAULE_PWD}")
+	private String DEFAULE_PWD;
 
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
-//	@ApiOperation(value="注册管理员", notes="注册管理员")
-//	@PostMapping("/register")
-//	public String register(HttpServletRequest request,
-//			@ApiParam(name = "assignbody",value ="管理员注册对象",required = true) @RequestBody(required = true) Admin registered) {
-//			
-//			String mobile = registered.getMobile();
-//			String code = registered.getValidCode();
-//			String userName = registered.getUserName();
-//			String email = registered.getEmail();
-//			String passWord = registered.getPassWord();
-//			String validCode = null;
-//			
-//			if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(passWord)) {
-//				return ResultUtil.result(SysConf.ERROR, "用户名或密码不能为空");
-//			}
-//			if(StringUtils.isEmpty(code)) {
-//				return ResultUtil.result(SysConf.ERROR, "验证码不能为空");
-//			}
-//			if(StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
-//				return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
-//			}
-//			
-//			//手机号为空时为邮箱注册
-//			if(StringUtils.isEmpty(mobile)) {
-//				validCode = stringRedisTemplate.opsForValue().get(email);//从redis中获取验证码
-//			}else {
-//				validCode = stringRedisTemplate.opsForValue().get(mobile);//从redis中获取验证码
-//			}
-//			if(validCode.isEmpty()) {
-//				return ResultUtil.result(SysConf.ERROR, "验证码已过期");
-//			}
-//			if(!code.equals(validCode)) {
-//				return ResultUtil.result(SysConf.ERROR, "验证码不正确");
-//			}
-//			
-//			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-//			queryWrapper.eq(SQLConf.USERNAEM, userName);
-//			Admin admin = adminService.getOne(queryWrapper);
-//			
-//			QueryWrapper<Admin> wrapper= new QueryWrapper<Admin>();
-//			if (admin == null) {
-//				if(StringUtils.isNotEmpty(email)) {
-//					wrapper.eq(SQLConf.EMAIL, email);
-//				}else{
-//					wrapper.eq(SQLConf.MOBILE, mobile);
-//				}
-//				
-//				if(adminService.getOne(wrapper)!= null ) {
-//					return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
-//				}
-//				registered.setValidCode(validCode);//将验证码保存到数据库
-//				registered.setAdministrators(0);//设置为非超级管理员
-//				registered.setStatus(0);//设置为未审核状态
-//				PasswordEncoder encoder = new BCryptPasswordEncoder();
-//				registered.setPassWord(encoder.encode(registered.getPassWord()));
-//				adminService.save(registered);
-//				//清楚redis中的缓存
-//				if(StringUtils.isEmpty(mobile)) {
-//					jedis.del(email);
-//				}else {
-//					jedis.del(mobile);
-//				}
-//				return ResultUtil.result(SysConf.SUCCESS, "注册成功");
-//			}
-//		return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
-//	}
-	
-	@PreAuthorize("hasRole('Administrators')")
+
 	@ApiOperation(value="获取管理员列表", notes="获取管理员列表")
 	@GetMapping("/getList")
 	public String getList(HttpServletRequest request,
@@ -145,78 +87,131 @@ public class AdminRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+		String pictureResult = null;
 		Page<Admin> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		IPage<Admin> pageList = adminService.page(page, queryWrapper);
 		List<Admin> list = pageList.getRecords();
-		log.info(list.toString());
-		return ResultUtil.result(SysConf.SUCCESS, list);
+		
+		final StringBuffer fileUids = new StringBuffer();
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getAvatar())) {
+				fileUids.append(item.getAvatar() + ",");
+			}
+		});
+
+		Map<String, String> pictureMap = new HashMap<String, String>();
+		
+		if(fileUids != null) {
+			pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+		}
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
+		for(Admin item : list) {
+			//获取图片
+			if(StringUtils.isNotEmpty(item.getAvatar())) {
+				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), ",");
+				List<String> pictureListTemp = new ArrayList<String>();				
+				pictureUidsTemp.forEach(picture -> {
+					if(pictureMap.get(picture) != null && pictureMap.get(picture) != "") {
+						pictureListTemp.add(pictureMap.get(picture));	
+					}					
+				});
+				item.setPhotoList(pictureListTemp);
+			}	
+		}
+		
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
-	@PreAuthorize("hasRole('administrator')")
-	@ApiOperation(value="更新管理员基本信息", notes="更新管理员基本信息")
-	@PostMapping("/update")
-	public String update(HttpServletRequest request,
-			@ApiParam(name = "updateBody",value ="管理员对象",required = true) @RequestBody(required = true) Admin updateBody){
-		String uid = updateBody.getUid();
-		Admin admin = adminService.getById(uid);
-		if (admin == null) {
-			return ResultUtil.result(SysConf.ERROR, "管理员不存在");
+	@ApiOperation(value="重置用户密码", notes="重置用户密码")
+	@PostMapping("/restPwd")
+	public String restPwd(HttpServletRequest request,
+			@ApiParam(name = "uid",value ="管理员uid",required = true) @RequestParam(name = "uid" ,required = false )String uid){
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
-		admin.setUserName(updateBody.getUserName());
-		admin.setGender(updateBody.getGender());
-		admin.setAvatar(updateBody.getAvatar());
-		admin.setSummary(updateBody.getSummary());
-		admin.setBirthday(updateBody.getBirthday());
-		admin.setUpdateTime(new Date());
 		
+		Admin admin = adminService.getById(uid);
 		
-		UpdateWrapper<Admin> updateWrapper = new UpdateWrapper<>();
-		updateWrapper.eq(SQLConf.UID,uid);
-		adminService.update(admin, updateWrapper);
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		admin.setPassWord(encoder.encode(DEFAULE_PWD));
+		admin.updateById();
+
+		return ResultUtil.result(SysConf.SUCCESS, "重置成功");
+	}
+	
+	@ApiOperation(value="注册管理员", notes="注册管理员")
+	@PostMapping("/add")
+	public String add(HttpServletRequest request,
+			@ApiParam(name = "assignbody",value ="管理员注册对象",required = true) @RequestBody(required = true) Admin registered) {
+			
+			String mobile = registered.getMobile();
+			String userName = registered.getUserName();
+			String email = registered.getEmail();
+		
+			if(StringUtils.isEmpty(userName)) {
+				return ResultUtil.result(SysConf.ERROR, "用户名不能为空");
+			}
+
+			if(StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
+				return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
+			}
+				
+			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+			queryWrapper.eq(SQLConf.USERNAEM, userName);
+			Admin admin = adminService.getOne(queryWrapper);
+			
+			QueryWrapper<Admin> wrapper= new QueryWrapper<Admin>();
+			if (admin == null) {
+				if(StringUtils.isNotEmpty(email)) {
+					wrapper.eq(SQLConf.EMAIL, email);
+				}else{
+					wrapper.eq(SQLConf.MOBILE, mobile);
+				}
+				
+				if(adminService.getOne(wrapper)!= null ) {
+					return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
+				}
+
+				registered.setStatus(EStatus.ENABLE);// 设置为未审核状态
+				
+				PasswordEncoder encoder = new BCryptPasswordEncoder();
+				
+				//设置默认密码
+				registered.setPassWord(encoder.encode(DEFAULE_PWD));
+				
+				adminService.save(registered);
+				
+				//这里需要通过SMS模块，发送邮件告诉初始密码
+				
+				return ResultUtil.result(SysConf.SUCCESS, "注册成功");
+			}
+		return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
+	}
+
+	
+	@ApiOperation(value="更新管理员基本信息", notes="更新管理员基本信息")
+	@PostMapping("/edit")
+	public String edit(HttpServletRequest request,
+			@ApiParam(name = "updateBody",value ="管理员对象",required = true) @RequestBody(required = true) Admin updateBody){
+		
+		if(StringUtils.isEmpty(updateBody.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+		}
+		updateBody.setPassWord(null);		
+		updateBody.updateById();
+		
 		return ResultUtil.result(SysConf.SUCCESS, "更新管理员成功");
 	}
 	
-//	@ApiOperation(value="更新管理员密码", notes="更新管理员密码")
-//	@PostMapping("/updatePassWord")
-//	public String updatePassWord(HttpServletRequest request,
-//			@ApiParam(name = "userInfo",value ="管理员账户名",required = true) @RequestParam(name = "userInfo" ,required = true )String userInfo,
-//			@ApiParam(name = "passWord",value ="管理员旧密码",required = true) @RequestParam(name = "passWord" ,required = true )String passWord,
-//			@ApiParam(name = "newPassWord",value ="管理员新密码",required = true) @RequestParam(name = "newPassWord" ,required = true )String newPassWord){
-//		QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
-//		if(CheckUtils.checkEmail(userInfo)) {
-//			queryWrapper.eq(SQLConf.EMAIL, userInfo);
-//		}else if(CheckUtils.checkMobileNumber(userInfo)) {
-//			queryWrapper.eq(SQLConf.MOBILE, userInfo);
-//		}else {
-//			queryWrapper.eq(SQLConf.USERNAEM, userInfo);
-//		}
-//		Admin admin = adminService.getOne(queryWrapper);
-//		if (admin == null) {
-//			return ResultUtil.result(SysConf.ERROR, "管理员不存在");
-//		}
-//		if(StringUtils.isEmpty(passWord)) {
-//			return ResultUtil.result(SysConf.ERROR, "旧密码不能为空");
-//		}
-//		if(StringUtils.isEmpty(newPassWord)) {
-//			return ResultUtil.result(SysConf.ERROR, "新密码不能为空");
-//		}
-//		String uid = admin.getUid();
-//		
-//		PasswordEncoder encoder = new BCryptPasswordEncoder();
-//	    boolean isPassword = encoder.matches(passWord, admin.getPassWord());
-//	    if (isPassword) {
-//			admin.setPassWord(encoder.encode(newPassWord));
-//			UpdateWrapper<Admin> updateWrapper = new UpdateWrapper<>();
-//			updateWrapper.eq(SQLConf.UID,uid);
-//			admin.setUpdateTime(new Date());
-//			adminService.update(admin, updateWrapper);
-//			return ResultUtil.result(SysConf.SUCCESS, "密码更新成功");
-//		}
-//		return ResultUtil.result(SysConf.ERROR, "旧密码错误");
-//	}
-	
+
 	@PreAuthorize("hasRole('administrator')")
 	@ApiOperation(value="更新管理员邮箱或手机号", notes="更新管理员邮箱或手机号")
 	@PostMapping("/updateEmail")
@@ -225,8 +220,7 @@ public class AdminRestApi {
 			@ApiParam(name = "newInfo",value ="管理员新邮箱或新手机号",required = true) @RequestParam(name = "newInfo" ,required = true )String newInfo,
 			@ApiParam(name = "validCode",value ="验验码",required = true) @RequestParam(name = "validCode" ,required = true )String validCode){
 		
-//		Claims claims = (Claims) request.getAttribute(SysConf.CLAIMS);
-//		String uid = claims.get("adminUid", String.class);
+
 		Admin admin = adminService.getById(adminUid);
 		if (admin == null) {
 			return ResultUtil.result(SysConf.ERROR, "管理员不存在");

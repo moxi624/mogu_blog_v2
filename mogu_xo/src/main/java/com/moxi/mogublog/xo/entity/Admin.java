@@ -112,6 +112,12 @@ public class Admin extends SuperEntity<Admin> {
      */
     @TableField(exist = false)
     private List<String> roleNames;
+    
+    /**
+     * 所拥有的角色
+     */
+    @TableField(exist = false)
+    private String validCode;
 
 	
     public List<String> getRoleNames() {
@@ -254,4 +260,12 @@ public class Admin extends SuperEntity<Admin> {
 		this.photoList = photoList;
 	}
 
+	public String getValidCode() {
+		return validCode;
+	}
+
+	public void setValidCode(String validCode) {
+		this.validCode = validCode;
+	}
+	
 }
