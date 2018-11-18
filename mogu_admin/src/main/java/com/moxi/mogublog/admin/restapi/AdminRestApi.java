@@ -30,6 +30,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -79,6 +80,7 @@ public class AdminRestApi {
 
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
+	@OperationLogger(value="获取管理员列表")
 	@ApiOperation(value="获取管理员列表", notes="获取管理员列表")
 	@GetMapping("/getList")
 	public String getList(HttpServletRequest request,
@@ -130,6 +132,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="重置用户密码")
 	@ApiOperation(value="重置用户密码", notes="重置用户密码")
 	@PostMapping("/restPwd")
 	public String restPwd(HttpServletRequest request,
@@ -147,6 +150,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "重置成功");
 	}
 	
+	@OperationLogger(value="注册管理员")
 	@ApiOperation(value="注册管理员", notes="注册管理员")
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -196,7 +200,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
 	}
 
-	
+	@OperationLogger(value="更新管理员基本信息")
 	@ApiOperation(value="更新管理员基本信息", notes="更新管理员基本信息")
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -211,7 +215,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "更新管理员成功");
 	}
 	
-
+	@OperationLogger(value="更新管理员邮箱或手机号")
 	@PreAuthorize("hasRole('administrator')")
 	@ApiOperation(value="更新管理员邮箱或手机号", notes="更新管理员邮箱或手机号")
 	@PostMapping("/updateEmail")
@@ -249,6 +253,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.ERROR, "验证码错误");
 	}
 	
+	@OperationLogger(value="删除部分管理员信息")
 	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="删除部分管理员信息", notes="删除部分管理员信息")
 	@PostMapping("/delete")
@@ -263,6 +268,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "删除管理员成功");
 	}
 	
+	@OperationLogger(value="分配用户角色信息列表")
 	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="分配用户角色信息列表", notes="分配用户角色信息列表")
 	@PostMapping("/assign")
@@ -300,6 +306,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS,map);
 	}
 	
+	@OperationLogger(value="管理员角色分配")
 	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="管理员角色分配", notes="管理员角色分配")
 	@PostMapping("/doAssign")
@@ -329,6 +336,7 @@ public class AdminRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "分配管理员角色成功");
 	}
 	
+	@OperationLogger(value="取消管理员角色分配")
 	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="取消管理员角色分配", notes="取消管理员角色分配")
 	@PostMapping("/doUnassign")

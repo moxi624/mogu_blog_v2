@@ -1,0 +1,169 @@
+package com.moxi.mogublog.admin.log;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.JoinPointInfoUtil;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.xo.entity.ExceptionLog;
+import com.moxi.mogublog.xo.entity.SysLog;
+import com.moxi.mogublog.xo.service.ExceptionLogService;
+import com.moxi.mogublog.xo.service.SysLogService;
+
+/**
+ * 日志切面
+ */
+@Aspect
+@Component
+public class LoggerAspect {
+	
+	  private SysLog sysLog;
+	  
+	  private ExceptionLog exceptionLog;
+	  
+	  @Autowired
+	  private SysLogService SysLogService;
+	  
+	  @Autowired
+	  private ExceptionLogService ExceptionLogService;
+	  
+	  @Autowired
+	  private HttpServletRequest request;
+	  
+	  @Pointcut(value = "@annotation(operationLogger)")
+      public void pointcut(OperationLogger operationLogger){
+		  
+	  }
+	  
+	  /**
+	   * 前置通知
+	   * @param joinPoint
+	   * @param operationLogger
+	   */
+	  @Before(value = "pointcut(operationLogger)")
+	  public void doBefore (JoinPoint  joinPoint, OperationLogger operationLogger) {
+		  sysLog = new SysLog();
+		  
+		  //获取切入点参数
+//		  Map<String, Object> joinPointInfo = JoinPointInfoUtil.getJoinPointInfoMap(joinPoint);
+		  //获取ip地址
+		  String ip = IpUtils.getIpAddr(request);
+		  //设置请求信息
+		  sysLog.setIp(ip);
+		  //设置调用的类
+		  sysLog.setClassPath(joinPoint.getTarget().getClass().getName());
+		  //设置调用的方法
+		  sysLog.setMethod(joinPoint.getSignature().getName());
+		  //设置Request的请求方式 GET POST
+		  sysLog.setType(request.getMethod());
+		  Object [] o = joinPoint.getArgs();
+		  String params = "";
+		  for(int a = 0; a< o.length; a++) {
+			  params = params + "参数" + (a + 1) + ":" + o[a] + ", ";
+		  }
+		  sysLog.setParams(params);
+		  
+		  sysLog.setUrl(request.getRequestURI().toString());
+		  
+		  sysLog.setOperation(operationLogger.value());
+	  }
+	  
+	  @AfterReturning(value = "pointcut(operationLogger)")
+	  public void doAfterReturning(OperationLogger operationLogger) {
+		  sysLog.setLogDate(new Date());
+		  String name=SecurityContextHolder.getContext()
+				  .getAuthentication().getName();//从security中取得用户名
+		  sysLog.setUserName(name);
+		  SysLogService.save(sysLog);
+	  }
+	  
+	  @AfterThrowing(value = "pointcut(operationLogger)",throwing = "e")
+	  public void doAfterThrowing(OperationLogger operationLogger,Throwable e) {
+		  exceptionLog = new ExceptionLog();
+		  //设置异常信息
+		  Date happenTime = new Date();
+		  exceptionLog.setHappenTime(happenTime);
+		  exceptionLog.setExceptionJson(JSON.toJSONString(e, 
+				SerializerFeature.DisableCircularReferenceDetect,
+				SerializerFeature.WriteMapNullValue));
+		  exceptionLog.setExceptionMessage(e.getMessage());
+		  
+		  //保存异常日志信息
+		  ExceptionLogService.save(exceptionLog);
+	  }
+	  
+	  
+	  
+
+//    @Autowired
+//    private SysLogService SysLogService;
+//
+//    @Pointcut("@annotation(com.moxi.mogublog.admin.log.Logger)")
+//    public void pointcut(){}
+//
+//    @Around("pointcut()")
+//    public void around(ProceedingJoinPoint joinPoint){
+//        try {
+//            joinPoint.proceed(); // 执行方法
+//        }catch (Throwable e){
+//        }
+//        saveSysLog(joinPoint);
+//    }
+//
+//    private void saveSysLog(ProceedingJoinPoint joinPoint){
+//        SysLog sysLog = getSysLog(joinPoint);
+//        SysLogService.save(sysLog);
+//    }
+//
+//    private SysLog getSysLog(ProceedingJoinPoint joinPoint) {
+//        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+//        // 方法
+//        Method method = methodSignature.getMethod();
+//        // 方法上的注解
+//        Logger loggerAnnotation = method.getAnnotation(Logger.class);
+//
+//        SysLog sysLog = new SysLog();
+//
+//        if (loggerAnnotation != null){
+//            // 注解上的描述
+//            sysLog.setOperation(loggerAnnotation.value());
+//        }
+//        // 方法名
+//        String className = joinPoint.getTarget().getClass().getName();
+//        String methonName = methodSignature.getName();
+//        sysLog.setMethod(className + "." + methonName + "()");
+//
+//        // 方法参数值
+//        Object[] args = joinPoint.getArgs();
+//        // 方法参数名
+//        LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
+//        String[] paramNames = discoverer.getParameterNames(method);
+//        if (args != null && paramNames != null){
+//            String params = "";
+//            for (int i = 0; i < args.length; i++){
+//                params += " " + paramNames[i] + ": " + args[i];
+//            }
+//            sysLog.setParams(params);
+//        }
+//        sysLog.setUserName("admin");
+//        sysLog.setLogDate(new Date());
+//        return sysLog;
+//    }
+	
+	
+}
