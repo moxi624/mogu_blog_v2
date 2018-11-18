@@ -91,7 +91,7 @@ public class AuthRestApi {
 
 			
 			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-			queryWrapper.eq(SQLConf.USERNAEM, userName);
+			queryWrapper.eq(SQLConf.USER_NAME, userName);
 			Admin admin = adminService.getOne(queryWrapper);
 			
 			QueryWrapper<Admin> wrapper= new QueryWrapper<Admin>();
@@ -133,7 +133,7 @@ public class AuthRestApi {
 		}else if(CheckUtils.checkMobileNumber(userInfo)) {
 			queryWrapper.eq(SQLConf.MOBILE, userInfo);
 		}else {
-			queryWrapper.eq(SQLConf.USERNAEM, userInfo);
+			queryWrapper.eq(SQLConf.USER_NAME, userInfo);
 		}
 		Admin admin = adminService.getOne(queryWrapper);
 		if (admin == null) {

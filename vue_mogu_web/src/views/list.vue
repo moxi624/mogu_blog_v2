@@ -94,14 +94,17 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 
-import { searchBlog } from "../api/search";
+import { searchBlog, searchBlogByTag, searchBlogBySort } from "../api/search";
+
 export default {
   name: "list",
   data() {
     return {
       blogData: [],
       isEnd: true,
-      keywords: ""
+      keywords: "",
+      tagUid: "",
+      sortUid: ""
     };
   },
   components: {
@@ -116,13 +119,20 @@ export default {
   },
   created() {
     this.keywords = this.$route.query.keyword;
-    console.log(this.keywords);
+    this.tagUid = this.$route.query.tagUid;
+    this.sortUid = this.$route.query.sortUid;
+
+    console.log("keywords", this.keywords);
+    console.log("tagUid", this.tagUid);
+    console.log("sortUid", this.sortUid);
     this.search();
   },
   watch: {
-    $route(to, from){
+    $route(to, from) {
       console.log(to, from);
       this.keywords = this.$route.query.keyword;
+      this.tagUid = this.$route.query.tagUid;
+      this.sortUid = this.$route.query.sortUid;
       this.search();
     }
   },
@@ -136,24 +146,61 @@ export default {
       window.open(routeData.href, "_blank");
     },
     search: function() {
-      var params = new URLSearchParams();
-      params.append("keywords", this.keywords);
-      searchBlog(params).then(response => {
-        console.log(response);
-        if (response.code == "success") {
-          var blogData = response.data.rows;
-          for(var i = 0; i < blogData.length; i ++) {
-            if(blogData[i].photoList) {
-              var tempList =  blogData[i].photoList.split(",");
-              blogData[i].photoList = tempList;
-            } else {
-              blogData[i].photoList = [];
+      if (this.keywords != undefined) {
+        var params = new URLSearchParams();
+        params.append("keywords", this.keywords);
+        searchBlog(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            var blogData = response.data.rows;
+            for (var i = 0; i < blogData.length; i++) {
+              if (blogData[i].photoList) {
+                var tempList = blogData[i].photoList.split(",");
+                blogData[i].photoList = tempList;
+              } else {
+                blogData[i].photoList = [];
+              }
             }
+            this.blogData = blogData;
           }
-          this.blogData = blogData;
-        }
-        console.log("blogData", this.blogData);
-      });
+          console.log("blogData", this.blogData);
+        });
+      } else if (this.tagUid != undefined) {
+
+        var params = new URLSearchParams();
+        params.append("tagUid", this.tagUid);
+        searchBlogByTag(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            console.log("根据标签查找", response);
+            var blogData = response.data;
+            for (var i = 0; i < blogData.length; i++) {
+              // console.log(blogData[i].blogSort);
+              blogData[i].blogSort = blogData[i].blogSort.sortName;
+            }
+            this.blogData = blogData;
+          }
+          console.log("blogData", this.blogData);
+        });
+
+      } else if(this.sortUid != undefined) {
+
+        var params = new URLSearchParams();
+        params.append("blogSortUid", this.sortUid);
+        searchBlogBySort(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            console.log("根据分类查找", response);
+            var blogData = response.data;
+            for (var i = 0; i < blogData.length; i++) {
+              blogData[i].blogSort = blogData[i].blogSort.sortName;
+            }
+            this.blogData = blogData;
+          }
+          console.log("blogData", this.blogData);
+        });
+
+      }
     }
   }
 };

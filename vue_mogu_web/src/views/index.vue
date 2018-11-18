@@ -41,7 +41,7 @@
       <div class="bloginfo">
         <ul>
           <li class="author"><a href="/">{{item.author}}</a></li>
-          <li class="lmname" v-if="item.blogSort"><a href="/">{{item.blogSort.sortName}}</a></li>
+          <li class="lmname" v-if="item.blogSort"><a href="javascript:void(0);" @click="goToList(item.blogSort.uid)">{{item.blogSort.sortName}}</a></li>
           <li class="timer">{{item.createTime}}</li>
           <li class="view"><span>{{item.clickCount}}</span></li>
           <li class="like">{{item.collectCount}}</li>
@@ -175,12 +175,20 @@ export default {
 
   },
   methods: {
+    
     //跳转到文章详情
     goToInfo(uid) {
       console.log("跳转到文章详情");
       let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
       window.open(routeData.href, '_blank');
     },
+
+    //跳转到搜索详情页
+    goToList(uid) {
+      let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
+      window.open(routeData.href, '_blank');
+    },
+
     //最新博客列表
     newBlogList() {
       var params = new URLSearchParams();

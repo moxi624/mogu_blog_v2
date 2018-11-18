@@ -27,7 +27,9 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String ROLENAEM = "role_name";
 	public final static String PERMISSIONNAME = "permission_name";
 	public final static String PARENTID = "parent_id";
-	public final static String USERNAEM = "user_name";	
+	public final static String USER_NAME = "user_name";	
+	public final static String NICK_NAME = "nick_name";	
+	
 	public final static String ADMIN = "admin";
 	public final static String ROLE = "role";
 	public final static String EMAIL = "email";

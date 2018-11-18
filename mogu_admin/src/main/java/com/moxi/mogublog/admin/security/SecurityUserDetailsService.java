@@ -34,7 +34,7 @@ public class SecurityUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-		queryWrapper.eq(SQLConf.USERNAEM, username);
+		queryWrapper.eq(SQLConf.USER_NAME, username);
 		Admin admin = adminService.getOne(queryWrapper);
 		
 		if(admin == null) {

@@ -2,12 +2,14 @@ package com.moxi.mogublog.web.restapi;
 
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -60,24 +63,50 @@ public class BlogContentRestApi {
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
 	
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+	
 	private static Logger log = LogManager.getLogger(BlogContentRestApi.class);
 	
 	@ApiOperation(value="通过Uid获取博客内容", notes="通过Uid获取博客内容")
 	@GetMapping("/getBlogByUid")
 	public String getBlogByUid (HttpServletRequest request,
 			@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid			) {
+		
+		String ip = IpUtils.getIpAddr(request);
+				
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "UID不能为空");
 		}
-
+	
 		Blog blog = blogService.getById(uid);
+			
 		
 		if(blog != null) {
+			
+			//设置博客标签
 			blogService.setTagByBlog(blog);				
+			
 			//获取分类
 			blogService.setSortByBlog(blog);				
+			
 			//设置博客标题图
-			setPhotoListByBlog(blog);	
+			setPhotoListByBlog(blog);
+			
+			//从Redis取出数据，判断该用户是否点击过
+			String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + uid);
+			
+			if(StringUtils.isEmpty(jsonResult)) {
+				//给博客点击数增加
+				blogService.addBlogClickCount(blog);
+				
+			    //将该用户点击记录存储到redis中, 24小时后过期	
+				stringRedisTemplate.opsForValue().set("BLOG_CLICK:" + ip + "#" + uid, blog.getClickCount().toString(),
+						24, TimeUnit.HOURS);
+			}
+			
+
+			
 		}
 		log.info("返回结果");		
 		return ResultUtil.result(SysConf.SUCCESS, blog);

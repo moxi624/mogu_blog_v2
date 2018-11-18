@@ -17,7 +17,7 @@
 <BlogHead></BlogHead>
 
 <article>
-  <h1 class="t_nav"><span>您现在的位置是：首页 > 慢生活 > 程序人生</span><a href="/" class="n1">网站首页</a><a href="/" class="n2">慢生活</a></h1>
+  <h1 class="t_nav"><span>您现在的位置是：首页 > 慢生活 </span><a href="/" class="n1">网站首页</a><a href="/" class="n2">慢生活</a></h1>
   <div class="infosbox">
     <div class="newsview">
       <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>

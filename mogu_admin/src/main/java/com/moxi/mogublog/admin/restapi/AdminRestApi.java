@@ -79,21 +79,22 @@ public class AdminRestApi {
 
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
-
 	@ApiOperation(value="获取管理员列表", notes="获取管理员列表")
 	@GetMapping("/getList")
 	public String getList(HttpServletRequest request,
+			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-		String pictureResult = null;
+		String pictureResult = null;		
+		queryWrapper.like(SQLConf.USER_NAME, keyword).or().like(SQLConf.NICK_NAME, keyword);
 		Page<Admin> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		IPage<Admin> pageList = adminService.page(page, queryWrapper);
 		List<Admin> list = pageList.getRecords();
-		
+		log.info(list);
 		final StringBuffer fileUids = new StringBuffer();
 		list.forEach( item -> {
 			if(StringUtils.isNotEmpty(item.getAvatar())) {
@@ -138,8 +139,7 @@ public class AdminRestApi {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		
-		Admin admin = adminService.getById(uid);
-		
+		Admin admin = adminService.getById(uid);		
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		admin.setPassWord(encoder.encode(DEFAULE_PWD));
 		admin.updateById();
@@ -165,7 +165,7 @@ public class AdminRestApi {
 			}
 				
 			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
-			queryWrapper.eq(SQLConf.USERNAEM, userName);
+			queryWrapper.eq(SQLConf.USER_NAME, userName);
 			Admin admin = adminService.getOne(queryWrapper);
 			
 			QueryWrapper<Admin> wrapper= new QueryWrapper<Admin>();

@@ -91,7 +91,7 @@ public class LoginRestApi {
 	      } else if(isMobile){
 	    	  queryWrapper.eq(SQLConf.MOBILE,username);
 	      }else {
-	    	  queryWrapper.eq(SQLConf.USERNAEM,username);
+	    	  queryWrapper.eq(SQLConf.USER_NAME,username);
 	      }
 	      Admin admin = adminService.getOne(queryWrapper);
 	      if (admin == null) {

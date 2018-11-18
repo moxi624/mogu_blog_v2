@@ -91,6 +91,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(BaseSQLConf.LEVEL, level);
 		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+		
+		//因为首页并不需要显示内容，所以需要排除掉内容字段		
+		queryWrapper.excludeColumns(Blog.class, "content");
+		
 		return blogMapper.selectPage(page, queryWrapper);
 	}
 
@@ -99,6 +103,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
 		return blogMapper.selectCount(queryWrapper);
+	}
+
+	@Override
+	public void addBlogClickCount(Blog blog) {
+		
+		Integer clickCount = blog.getClickCount() + 1;
+		blog.setClickCount(clickCount);	
+		blog.updateById();
 	}
 
 }

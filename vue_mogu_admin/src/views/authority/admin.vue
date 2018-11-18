@@ -264,7 +264,7 @@ export default {
       return formObject;
     },
     handleFind: function() {
-      this.tagList();
+      this.adminList();
     },
     handleAdd: function() {
       this.dialogFormVisible = true;
@@ -325,7 +325,7 @@ export default {
               type: "success",
               message: response.data
             });
-            that.tagList();
+            that.adminList();
           });
         })
         .catch(() => {
@@ -338,7 +338,7 @@ export default {
     handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
-      this.tagList();
+      this.adminList();
     },
     submitForm: function() {
       console.log("点击了提交表单", this.form);
@@ -352,7 +352,7 @@ export default {
               message: response.data
             });
             this.dialogFormVisible = false;
-            this.tagList();
+            this.adminList();
           } else {
             this.$message({
               type: "success",

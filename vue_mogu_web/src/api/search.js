@@ -7,3 +7,19 @@ export function searchBlog (params) {
     params
   })
 }
+
+export function searchBlogByTag (params) {
+  return request({
+    url: process.env.WEB_API + '/search/searchBlogByTag',
+    method: 'get',
+    params
+  })
+}
+
+export function searchBlogBySort (params) {
+  return request({
+    url: process.env.WEB_API + '/search/searchBlogBySort',
+    method: 'get',
+    params
+  })
+}
