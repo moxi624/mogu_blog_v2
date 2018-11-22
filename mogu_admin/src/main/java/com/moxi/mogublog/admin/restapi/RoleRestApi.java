@@ -1,6 +1,5 @@
 package com.moxi.mogublog.admin.restapi;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
@@ -60,9 +58,8 @@ public class RoleRestApi {
 			page.setCurrent(currentPage);
 			page.setSize(pageSize);
 			IPage<Role> pageList = roleService.page(page, queryWrapper);
-			List<Role> list = pageList.getRecords();
-			log.info(list.toString());
-			return ResultUtil.result(SysConf.SUCCESS, list);
+			log.info("返回结果");
+			return ResultUtil.result(SysConf.SUCCESS, pageList);
 		}
 		
 		@ApiOperation(value="新增角色信息", notes="新增角色信息")
@@ -83,25 +80,14 @@ public class RoleRestApi {
 		@ApiOperation(value="更新角色信息", notes="更新角色信息")
 		@PostMapping("/update")
 		public String update(HttpServletRequest request,
-				@ApiParam(name = "role",value ="角色信息",required = true) @RequestBody(required = true)Role role) {
+				@ApiParam(name = "role",value ="角色信息",required = false) @RequestBody(required = false )Role role) {
 			
 			String uid = role.getUid();
 			Role getRole = roleService.getById(uid);
 			if (getRole == null) {
 				return ResultUtil.result(SysConf.ERROR, "角色不存在");
 			}
-			String roleName = role.getRoleName();
-			QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-			queryWrapper.eq(SQLConf.ROLENAEM,roleName);
-			Role roleInfo = roleService.getOne(queryWrapper);
-			if(roleInfo!= null) {
-				return ResultUtil.result(SysConf.ERROR, "角色已存在");
-			}
-			getRole.setRoleName(roleName);
-			getRole.setUpdateTime(new Date());
-			UpdateWrapper<Role> updateWrapper = new UpdateWrapper<>();
-			updateWrapper.eq(SQLConf.UID, uid);
-			roleService.update(getRole, updateWrapper);
+			role.updateById();
 			return ResultUtil.result(SysConf.SUCCESS, "更新角色信息成功");
 			
 		}

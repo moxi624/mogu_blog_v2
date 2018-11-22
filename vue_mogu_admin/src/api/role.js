@@ -1,0 +1,34 @@
+import request from '@/utils/request'
+
+export function getRoleList(params) {
+  return request({
+    url: process.env.ADMIN_API + '/role/getList',
+    method: 'get',
+    params
+  })
+}
+
+export function addRole(params) {
+  return request({
+    url: process.env.ADMIN_API + '/role/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export function editRole(params) {
+  return request({
+    url: process.env.ADMIN_API + '/role/update',
+    method: 'post',
+    data: params
+  })
+}
+
+export function deleteRole(params) {
+  return request({
+    url: process.env.ADMIN_API + '/role/delete',
+    method: 'post',
+    params
+  })
+}
+
