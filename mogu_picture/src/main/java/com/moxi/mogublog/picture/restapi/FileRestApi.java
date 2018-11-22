@@ -32,7 +32,7 @@ import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
-import com.moxi.mogublog.utils.DateUtil;
+import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -290,11 +290,11 @@ public class FileRestApi {
 				log.info(newFileName+":"+oldName);
 				//文件路径问题
 				log.info("path====" + path);
-				String newPath = path + sortUrl + "/" + picExpandedName + "/" + DateUtil.getYears() + "/"
-						+ DateUtil.getMonth() + "/" + DateUtil.getDay() + "/";
+				String newPath = path + sortUrl + "/" + picExpandedName + "/" + DateUtils.getYears() + "/"
+						+ DateUtils.getMonth() + "/" + DateUtils.getDay() + "/";
 				//path = path.replaceAll("//", "/");
-				String picurl = sortUrl + "/" + picExpandedName + "/" + DateUtil.getYears() + "/"
-						+ DateUtil.getMonth() + "/" + DateUtil.getDay() + "/" + newFileName;
+				String picurl = sortUrl + "/" + picExpandedName + "/" + DateUtils.getYears() + "/"
+						+ DateUtils.getMonth() + "/" + DateUtils.getDay() + "/" + newFileName;
 				log.info("newPath====" + newPath);
 				String saveUrl = newPath + newFileName;
 				File file1 = new File(newPath);

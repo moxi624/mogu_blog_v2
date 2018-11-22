@@ -24,6 +24,7 @@ import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -36,6 +37,7 @@ import io.swagger.annotations.ApiParam;
  * @since 2018-09-08
  */
 @PreAuthorize("hasRole('Administrator')")
+@Api(value="标签RestApi",tags={"TagRestApi"})
 @RestController
 @RequestMapping("/tag")
 public class TagRestApi {

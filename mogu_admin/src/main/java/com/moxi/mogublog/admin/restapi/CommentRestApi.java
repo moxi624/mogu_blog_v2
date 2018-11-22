@@ -25,6 +25,7 @@ import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.service.CommentService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -37,6 +38,7 @@ import io.swagger.annotations.ApiParam;
  * @since 2018年10月13日16:06:46
  */
 @PreAuthorize("hasRole('Administrator')")
+@Api(value="评论RestApi", tags={"CommentRestApi"})
 @RestController
 @RequestMapping("/comment")
 public class CommentRestApi {

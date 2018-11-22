@@ -31,6 +31,7 @@ import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -43,6 +44,7 @@ import io.swagger.annotations.ApiParam;
  * @since 2018年10月19日21:36:02
  */
 @PreAuthorize("hasRole('Administrator')")
+@Api(value="资源分类RestApi",tags={"ResourceSortRestApi"})
 @RestController
 @RequestMapping("/resourceSort")
 public class ResourceSortRestApi {

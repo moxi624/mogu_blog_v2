@@ -23,6 +23,7 @@ import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -35,6 +36,7 @@ import io.swagger.annotations.ApiParam;
  * @since 2018-09-08
  */
 @RestController
+@Api(value="友链RestApi",tags={"LinkRestApi"})
 @RequestMapping("/link")
 public class LinkRestApi {
 	@Autowired

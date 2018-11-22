@@ -30,6 +30,8 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String USER_NAME = "user_name";	
 	public final static String NICK_NAME = "nick_name";	
 	
+	public final static String OPERATION = "operation";	
+	
 	public final static String ADMIN = "admin";
 	public final static String ROLE = "role";
 	public final static String EMAIL = "email";

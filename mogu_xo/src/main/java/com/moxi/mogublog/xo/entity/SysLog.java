@@ -1,15 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.moxi.mougblog.base.entity.SuperEntity;
 
 
 /**
@@ -21,15 +13,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @since 2018-09-04
  */
 @TableName("t_sys_log")
-@SuppressWarnings("rawtypes")
-public class SysLog extends Model{
+public class SysLog extends SuperEntity<SysLog>{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4851055162892178225L;
-	
-	@TableId(value = "uid", type = IdType.UUID)
-	private String uid; // 唯一uid
 	
 	private String userName;//操作账户名
 	
@@ -47,22 +35,6 @@ public class SysLog extends Model{
 
     private String operation;//描述
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date logDate;//操作时间
-    
-	public String getUid() {
-		return uid;
-	}
-
-
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-
-
 	public String getUserName() {
 		return userName;
 	}
@@ -155,25 +127,6 @@ public class SysLog extends Model{
 
 	public void setOperation(String operation) {
 		this.operation = operation;
-	}
-
-
-
-	public Date getLogDate() {
-		return logDate;
-	}
-
-
-
-	public void setLogDate(Date logDate) {
-		this.logDate = logDate;
-	}
-
-
-
-	@Override
-	protected Serializable pkVal() {
-		return this.uid;
 	}
 
 }

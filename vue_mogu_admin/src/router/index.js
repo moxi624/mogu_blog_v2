@@ -224,6 +224,28 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/log',
+    component: Layout,
+    redirect: '/log/log',
+    name: '日志管理',
+    meta: { title: '日志管理', icon: 'system' },
+    children: [
+      {
+        path: 'aboutMe',
+        name: '操作日志',
+        component: () => import('@/views/log/log'),
+        meta: { title: '操作日志', icon: 'log' }
+      },
+      {
+        path: 'solrIndex',
+        name: '异常日志',
+        component: () => import('@/views/log/exceptionLog'),
+        meta: { title: '异常日志', icon: 'exception' }
+      }
+    ]
+  },
+
+  {
     path: '/restapi',
     component: Layout,
     redirect: '/restapi/adminRestApi',

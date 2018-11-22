@@ -31,6 +31,7 @@ import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -43,6 +44,7 @@ import io.swagger.annotations.ApiParam;
  * @since 22018年9月17日16:37:13
  */
 @PreAuthorize("hasRole('Administrator')")
+@Api(value="图片分类RestApi",tags={"PictureSortRestApi"})
 @RestController
 @RequestMapping("/pictureSort")
 public class PictureSortRestApi {

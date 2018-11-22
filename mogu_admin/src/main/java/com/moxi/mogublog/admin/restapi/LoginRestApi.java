@@ -49,9 +49,6 @@ import io.swagger.annotations.ApiParam;
 @Api(value="登录管理RestApi",tags={"loginRestApi"})
 public class LoginRestApi {
 	
-//	private AuthenticationManager authenticationManager;
-//    private UserDetailsService userDetailsService;
-	
 	@Autowired
 	private AdminService adminService;
 	

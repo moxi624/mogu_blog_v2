@@ -1,7 +1,6 @@
 package com.moxi.mogublog.admin.log;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JoinPointInfoUtil;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.xo.entity.ExceptionLog;
 import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mogublog.xo.service.ExceptionLogService;
@@ -60,7 +57,7 @@ public class LoggerAspect {
 		  sysLog = new SysLog();
 		  
 		  //获取切入点参数
-//		  Map<String, Object> joinPointInfo = JoinPointInfoUtil.getJoinPointInfoMap(joinPoint);
+
 		  //获取ip地址
 		  String ip = IpUtils.getIpAddr(request);
 		  //设置请求信息
@@ -85,7 +82,7 @@ public class LoggerAspect {
 	  
 	  @AfterReturning(value = "pointcut(operationLogger)")
 	  public void doAfterReturning(OperationLogger operationLogger) {
-		  sysLog.setLogDate(new Date());
+		  sysLog.setCreateTime(new Date());
 		  String name=SecurityContextHolder.getContext()
 				  .getAuthentication().getName();//从security中取得用户名
 		  sysLog.setUserName(name);
@@ -96,8 +93,7 @@ public class LoggerAspect {
 	  public void doAfterThrowing(OperationLogger operationLogger,Throwable e) {
 		  exceptionLog = new ExceptionLog();
 		  //设置异常信息
-		  Date happenTime = new Date();
-		  exceptionLog.setHappenTime(happenTime);
+		  exceptionLog.setCreateTime(new Date());
 		  exceptionLog.setExceptionJson(JSON.toJSONString(e, 
 				SerializerFeature.DisableCircularReferenceDetect,
 				SerializerFeature.WriteMapNullValue));

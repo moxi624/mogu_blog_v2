@@ -21,6 +21,7 @@ import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.WebConfigService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -32,6 +33,7 @@ import io.swagger.annotations.ApiOperation;
  * @since 2018年11月11日15:19:28
  */
 @PreAuthorize("hasRole('Administrator')")
+@Api(value="系统配置RestApi",tags={"WebConfigRestApi"})
 @RestController
 @RequestMapping("/webConfig")
 public class WebConfigRestApi {
