@@ -60,6 +60,7 @@ export default {
     if (!that.havePictureSorts) {
       console.log("开始加载数据");
       var params = new URLSearchParams();
+      params.append("pageSize", "500");
       getPictureSortList(params).then(function(response) {
         console.log("加载数据", response);
         if (response.code == "success") {
