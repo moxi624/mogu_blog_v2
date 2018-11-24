@@ -10,6 +10,7 @@
       <el-table :data="tableData"  style="width: 100%">
       
       <el-table-column type="selection"></el-table-column>
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
@@ -19,6 +20,13 @@
 	    <el-table-column label="菜单名称" width="100">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.name }}</span>
+	      </template>
+	    </el-table-column>
+
+      <el-table-column label="菜单级别" width="100">
+	      <template slot-scope="scope">
+	        <el-tag v-if="scope.row.menuLevel == 1" type="success">一级菜单</el-tag>
+          <el-tag v-if="scope.row.menuLevel == 2" type="warring">二级菜单</el-tag>
 	      </template>
 	    </el-table-column>
 	    
@@ -84,19 +92,30 @@
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
 		  	  
-        <el-form-item label="菜单名称" :label-width="formLabelWidth">
+        <el-form-item label="菜单名称" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
+
+        <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
+				<el-select v-model="form.menuLevel" size="small" placeholder="请选择">
+					<el-option
+				      v-for="item in menuLevelList"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				</el-select>
+		    </el-form-item>
 		    
-		    <el-form-item label="菜单介绍" :label-width="formLabelWidth">
+		    <el-form-item label="菜单介绍" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="ICON" :label-width="formLabelWidth">
+        <el-form-item label="ICON" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.icon" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="URL" :label-width="formLabelWidth">
+        <el-form-item label="URL" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.url" auto-complete="off"></el-input>
 		    </el-form-item>
 
@@ -131,13 +150,17 @@ export default {
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
+      menuLevelList: [
+        { label: "一级菜单", value: 1 },
+        { label: "二级菜单", value: 2 },
+      ],
       form: {
         uid: null,
         name: "",
         summary: "",
         icon: "",
         url: "",
-        sort: "",
+        sort: ""
       }
     };
   },
@@ -164,7 +187,7 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: "",
+        sort: ""
       };
       return formObject;
     },

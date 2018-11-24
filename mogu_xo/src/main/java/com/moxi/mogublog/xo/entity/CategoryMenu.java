@@ -22,6 +22,11 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
     private String name;
     
     /**
+     * 菜单级别 （一级分类，二级分类）
+     */
+    private Integer menuLevel;
+    
+    /**
      * 介绍
      */
     private String summary;
@@ -92,6 +97,14 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
 
 	public void setSort(Integer sort) {
 		this.sort = sort;
+	}
+
+	public Integer getMenuLevel() {
+		return menuLevel;
+	}
+
+	public void setMenuLevel(Integer menuLevel) {
+		this.menuLevel = menuLevel;
 	}
 
 	public static long getSerialversionuid() {
