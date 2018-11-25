@@ -2,9 +2,18 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名"></el-input>
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入菜单名称"></el-input>
+        <el-select v-model="menuLevel" placeholder="菜单等级" clearable>
+					<el-option
+				      v-for="item in menuLevelList"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+			  </el-select>
+		    
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加分类</el-button>	              
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加菜单</el-button>	              
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
@@ -29,8 +38,14 @@
           <el-tag v-if="scope.row.menuLevel == 2" type="warring">二级菜单</el-tag>
 	      </template>
 	    </el-table-column>
+
+      <el-table-column label="父菜单名" width="100">
+	      <template slot-scope="scope">
+          <span v-if="scope.row.parentCategoryMenu" >{{ scope.row.parentCategoryMenu.name }}</span>
+	      </template>
+	    </el-table-column>
 	    
-	    <el-table-column label="菜单简介" width="250">
+	    <el-table-column label="菜单简介" width="200">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.summary }}</span>
 	      </template>
@@ -68,7 +83,7 @@
 	   	  </template>
 	    </el-table-column>
 	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+	    <el-table-column label="操作" fixed="right" min-width="230"> 
 	      <template slot-scope="scope" >
 					<el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
@@ -96,7 +111,7 @@
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
+        <el-form-item label="菜单等级" :label-width="formLabelWidth" required>
 				<el-select v-model="form.menuLevel" size="small" placeholder="请选择">
 					<el-option
 				      v-for="item in menuLevelList"
@@ -106,6 +121,25 @@
 				    </el-option>
 				</el-select>
 		    </el-form-item>
+
+        <el-form-item v-if="form.menuLevel == 2" label="父菜单名" :label-width="formLabelWidth" required>
+          <el-select
+            v-model="form.parentUid"
+            filterable
+            clearable
+            remote
+            reserve-keyword
+            placeholder="请输入父菜单名"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in menuOptions"
+              :key="item.uid"
+              :label="item.name"
+              :value="item.uid">
+            </el-option>
+          </el-select>
+        </el-form-item>        
 		    
 		    <el-form-item label="菜单介绍" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
@@ -143,6 +177,7 @@ export default {
     return {
       tableData: [],
       keyword: "",
+      menuLevel: "",
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -152,7 +187,7 @@ export default {
       isEditForm: false,
       menuLevelList: [
         { label: "一级菜单", value: 1 },
-        { label: "二级菜单", value: 2 },
+        { label: "二级菜单", value: 2 }
       ],
       form: {
         uid: null,
@@ -161,7 +196,9 @@ export default {
         icon: "",
         url: "",
         sort: ""
-      }
+      },
+      loading: false,
+      menuOptions: [] //一级菜单候选项
     };
   },
   created() {
@@ -171,13 +208,19 @@ export default {
     menuList: function() {
       var params = new URLSearchParams();
       params.append("keyword", this.keyword);
+      params.append("menuLevel", this.menuLevel);
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getMenuList(params).then(response => {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        console.log(response);
+        if(response.code == "success") {
+          
+          this.tableData = response.data.data.records;
+          this.currentPage = response.data.data.current;
+          this.pageSize = response.data.data.size;
+          this.total = response.data.data.total;
+          this.menuOptions = response.data.otherData;
+        }        
       });
     },
     getFormObject: function() {
@@ -261,6 +304,24 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    //分类远程搜索函数
+    remoteMethod: function(query) {
+      if (query !== "") {
+        //这里只搜索一级菜单出来
+        var params = new URLSearchParams();
+        params.append("keyword", query);
+        params.append("menuLevel", 1);
+        params.append("pageSize", 100);
+        getMenuList(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            this.menuOptions = response.data.data.records;
+          }
+        });
+      } else {
+        this.menuOptions = [];
+      }
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");

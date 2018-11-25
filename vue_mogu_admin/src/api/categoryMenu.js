@@ -24,7 +24,7 @@ export function editMenu(params) {
   })
 }
 
-export function deletetMenu(params) {
+export function deleteMenu(params) {
   return request({
     url: process.env.ADMIN_API + '/categoryMenu/delete',
     method: 'post',

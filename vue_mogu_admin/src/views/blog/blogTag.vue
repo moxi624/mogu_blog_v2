@@ -49,7 +49,7 @@
 	   	  </template>
 	    </el-table-column>
 	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+	    <el-table-column label="操作" fixed="right" min-width="230"> 
 	      <template slot-scope="scope" >
 					<el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>

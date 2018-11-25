@@ -48,7 +48,7 @@ export const constantRouterMap = [
         path: 'blog',
         name: '博客管理',
         component: () => import('@/views/blog/blog'),
-        meta: { title: '博客管理', icon: 'blog' }
+        meta: { title: '博客管理', icon: 'edit' }
       },
       {
         path: 'blogTag',
@@ -101,7 +101,7 @@ export const constantRouterMap = [
         path: 'categoryMenu',
         name: '菜单管理',
         component: () => import('@/views/authority/categoryMenu'),
-        meta: { title: '菜单管理', icon: 'adminRole' }
+        meta: { title: '菜单管理', icon: 'authority' }
       }
     ]
   },
@@ -233,8 +233,8 @@ export const constantRouterMap = [
     path: '/log',
     component: Layout,
     redirect: '/log/log',
-    name: '日志管理',
-    meta: { title: '日志管理', icon: 'system' },
+    name: '操作日志',
+    meta: { title: '操作日志', icon: 'log' },
     children: [
       {
         path: 'aboutMe',

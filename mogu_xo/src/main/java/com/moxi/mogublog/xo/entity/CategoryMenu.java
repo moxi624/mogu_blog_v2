@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -50,6 +51,12 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
      * 排序字段(越大越靠前)
      */
     private Integer sort;
+    
+    /**
+     * 父菜单
+     */
+    @TableField(exist = false)
+    private CategoryMenu parentCategoryMenu;
 
 	public String getName() {
 		return name;
@@ -110,4 +117,13 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	public CategoryMenu getParentCategoryMenu() {
+		return parentCategoryMenu;
+	}
+
+	public void setParentCategoryMenu(CategoryMenu parentCategoryMenu) {
+		this.parentCategoryMenu = parentCategoryMenu;
+	}
+	
 }

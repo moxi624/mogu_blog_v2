@@ -1,6 +1,12 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
@@ -50,12 +56,18 @@ public class CategoryMenuRestApi {
 	@RequestMapping(value = "/getList", method = RequestMethod.GET)
 	public String getList(HttpServletRequest request,
 			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
+			@ApiParam(name = "menuLevel", value = "菜单级别",required = false) @RequestParam(name = "menuLevel", required = false, defaultValue = "0") Integer menuLevel,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<CategoryMenu>();
 		if(!StringUtils.isEmpty(keyword)) {
-			queryWrapper.like(SQLConf.CONTENT, keyword);
+			queryWrapper.like(SQLConf.NAME, keyword);
+		}
+		
+		if(menuLevel != 0) {
+			queryWrapper.eq(SQLConf.MENU_LEVEL, menuLevel);
 		}
 		
 		Page<CategoryMenu> page = new Page<>();
@@ -64,8 +76,37 @@ public class CategoryMenuRestApi {
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
 		queryWrapper.orderByDesc(SQLConf.SORT);		
 		IPage<CategoryMenu> pageList = categoryMenuService.page(page, queryWrapper);
+		List<CategoryMenu> list = pageList.getRecords();
+		
+		List<String> ids = new ArrayList<String>();
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getParentUid())) {
+				ids.add(item.getParentUid());	
+			}			
+		});
+		
+		if(ids.size() > 0) {
+			Collection<CategoryMenu> parentList = categoryMenuService.listByIds(ids);
+			
+			Map<String, CategoryMenu> map = new HashMap<String, CategoryMenu>();
+			parentList.forEach(item -> {
+				map.put(item.getUid(), item);
+			});
+			
+			list.forEach(item -> {
+				if(StringUtils.isNotEmpty(item.getParentUid())) {
+					item.setParentCategoryMenu(map.get(item.getParentUid()));				
+				}
+			});	
+			
+			resultMap.put(SysConf.OTHER_DATA, parentList);
+		}
+		
+		pageList.setRecords(list);
 		log.info("返回结果");
-		return ResultUtil.result(SysConf.SUCCESS, pageList);
+
+		resultMap.put(SysConf.DATA, pageList);
+		return ResultUtil.result(SysConf.SUCCESS, resultMap);
 	}
 	
 	@ApiOperation(value="增加菜单", notes="增加菜单", response = String.class)	
@@ -75,6 +116,10 @@ public class CategoryMenuRestApi {
 		
 		if(StringUtils.isEmpty(categoryMenu.getName()) || StringUtils.isEmpty(categoryMenu.getUrl())) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+		}
+		//如果是一级菜单，将父ID清空
+		if(categoryMenu.getMenuLevel() == 1) {
+			categoryMenu.setParentUid("");
 		}
 		categoryMenu.insert();
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
@@ -133,7 +178,7 @@ public class CategoryMenuRestApi {
 		categoryMenu.setSort(sortCount);
 			
 		categoryMenu.updateById();
-		
+
 		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
 	}
 	

@@ -38,5 +38,8 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String MOBILE = "mobile";
 	public final static String SORT = "sort";
 	
+	//t_category_meun表
+	public final static String MENU_LEVEL = "menu_level";
+	
 	
 }
