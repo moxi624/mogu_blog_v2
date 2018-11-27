@@ -24,7 +24,7 @@ export function editComment(params) {
   })
 }
 
-export function deleteCommentk(params) {
+export function deleteComment(params) {
   return request({
     url: process.env.ADMIN_API + '/comment/delete',
     method: 'post',

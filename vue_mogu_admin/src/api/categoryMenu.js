@@ -8,6 +8,14 @@ export function getMenuList(params) {
   })
 }
 
+export function getAllMenu(params) {
+  return request({
+    url: process.env.ADMIN_API + '/categoryMenu/getAll',
+    method: 'get',
+    params
+  })
+}
+
 export function addMenu(params) {
   return request({
     url: process.env.ADMIN_API + '/categoryMenu/add',

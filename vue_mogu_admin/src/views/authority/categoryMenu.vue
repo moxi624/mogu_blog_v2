@@ -169,7 +169,7 @@ import {
   addMenu,
   editMenu,
   deleteMenu,
-  stickMenu
+  stickMenu,  
 } from "@/api/categoryMenu";
 import { formatData } from "@/utils/webUtils";
 export default {

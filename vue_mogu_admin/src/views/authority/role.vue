@@ -76,6 +76,18 @@
 		    <el-form-item label="角色介绍" :label-width="formLabelWidth">
 		      <el-input v-model="form.summary" auto-complete="off"></el-input>
 		    </el-form-item>
+
+        <el-form-item label="访问菜单" :label-width="formLabelWidth">
+          <el-tree
+            ref="tree"
+            :data="categoryMenuList"
+            show-checkbox
+            node-key="uid"            
+            :props="defaultProps"
+            :default-checked-keys="form.categoryMenuUids">
+          </el-tree>
+        </el-form-item>
+
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -87,12 +99,10 @@
 </template>
 
 <script>
-import {
-  getRoleList,
-  addRole,
-  editRole,
-  deleteRole
-} from "@/api/role";
+import { getRoleList, addRole, editRole, deleteRole } from "@/api/role";
+
+import { getAllMenu } from "@/api/categoryMenu";
+
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
@@ -108,15 +118,48 @@ export default {
       isEditForm: false,
       form: {
         uid: null,
-        content: "",
-        sortName: ""
-      }
+        roleName: "",
+        summary: "",
+        categoryMenuUids: [],
+      },
+
+      //分类菜单列表
+      categoryMenuList: [],
+      
+      // tree配置项
+      defaultProps: {
+        children: "childCategoryMenu",
+        label: "name"
+      },
+
+      //默认选中的key
+      defaultCheckedKeys: [],
     };
   },
   created() {
+
+    this.allMenuList();
     this.roleList();
   },
+  watch: {
+    'form': {
+      handler (newVal, oldVal) {
+        console.log("value changed ", newVal, oldVal);
+      },
+      deep: true,
+    }
+  },
   methods: {
+
+    allMenuList: function() {
+      getAllMenu().then(response => {
+        console.log(response);
+        if (response.code == "success") {
+          let data = response.data;        
+          this.categoryMenuList = data;        
+        }
+      });
+    },
     roleList: function() {
       var params = new URLSearchParams();
       params.append("keyword", this.keyword);
@@ -124,17 +167,30 @@ export default {
       params.append("pageSize", this.pageSize);
       getRoleList(params).then(response => {
         console.log(response);
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        if(response.code == "success") {
+          var data = response.data.records;
+          
+          //初始化菜单UID
+          for( let a=0; a< data.length; a++) {
+            if(data[a].categoryMenuUids) {
+              data[a].categoryMenuUids = eval("(" + data[a].categoryMenuUids + ")");
+            } else {
+              data[a].categoryMenuUids = [];
+            }            
+          }
+          this.tableData = data;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        } 
+        
       });
     },
     getFormObject: function() {
       var formObject = {
         uid: null,
-        content: null,
-        sortName: null
+        roleName: null,
+        summary: null
       };
       return formObject;
     },
@@ -146,10 +202,18 @@ export default {
     },
 
     handleEdit: function(row) {
+      
       this.dialogFormVisible = true;
       this.isEditForm = true;
       console.log(row);
       this.form = row;
+
+      console.log("选中的初始化", this.form.categoryMenuUids);
+      
+      setTimeout(() => {
+        this.$refs.tree.setCheckedKeys(this.form.categoryMenuUids);
+      }, 0);
+      
     },
 
     handleDelete: function(row) {
@@ -185,8 +249,20 @@ export default {
     },
     submitForm: function() {
       console.log("点击了提交表单", this.form);
+      
       // var params = formatData(this.form);
+      console.log(this.$refs.tree.getCheckedKeys());
+      
+      //得到选中树的UID
+      var categoryMenuUids = this.$refs.tree.getCheckedKeys();     
+      // let ids = "";
+      // for(let a=0; a < categoryMenuUids.length; a++) {
+      //   ids = ids + categoryMenuUids[a] + ",";
+      // }
+      this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);   
+
       if (this.isEditForm) {
+        console.log("form", this.form);
         editRole(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
@@ -204,7 +280,7 @@ export default {
           }
         });
       } else {
-        addRole(this.isEditForm).then(response => {
+        addRole(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({

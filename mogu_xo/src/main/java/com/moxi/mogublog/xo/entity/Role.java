@@ -25,6 +25,11 @@ public class Role extends SuperEntity<Role>{
      * 介绍
      */
     private String summary;
+    
+    /**
+     * 该角色所能管辖的区域
+     */
+    private String categoryMenuUids;
 
 	public String getRoleName() {
 		return roleName;
@@ -44,5 +49,13 @@ public class Role extends SuperEntity<Role>{
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public String getCategoryMenuUids() {
+		return categoryMenuUids;
+	}
+
+	public void setCategoryMenuUids(String categoryMenuUids) {
+		this.categoryMenuUids = categoryMenuUids;
 	}
 }

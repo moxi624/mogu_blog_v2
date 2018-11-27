@@ -1,5 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
@@ -57,6 +59,12 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
      */
     @TableField(exist = false)
     private CategoryMenu parentCategoryMenu;
+    
+    /**
+     * 子菜单
+     */
+    @TableField(exist = false)
+    private List<CategoryMenu> childCategoryMenu;
 
 	public String getName() {
 		return name;
@@ -125,5 +133,12 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
 	public void setParentCategoryMenu(CategoryMenu parentCategoryMenu) {
 		this.parentCategoryMenu = parentCategoryMenu;
 	}
-	
+
+	public List<CategoryMenu> getChildCategoryMenu() {
+		return childCategoryMenu;
+	}
+
+	public void setChildCategoryMenu(List<CategoryMenu> childCategoryMenu) {
+		this.childCategoryMenu = childCategoryMenu;
+	}
 }

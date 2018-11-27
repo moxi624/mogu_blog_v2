@@ -109,6 +109,42 @@ public class CategoryMenuRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, resultMap);
 	}
 	
+	@ApiOperation(value="获取所有菜单列表", notes="获取所有列表", response = String.class)	
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
+	public String getAll(HttpServletRequest request) {
+		
+		QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.MENU_LEVEL, "1");
+		List<CategoryMenu> list = categoryMenuService.list(queryWrapper);
+		
+		//获取所有的ID，去寻找他的子目录
+		List<String> ids = new ArrayList<String>();
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getUid())) {
+				ids.add(item.getUid());	
+			}			
+		});
+				
+		QueryWrapper<CategoryMenu> childWrapper = new QueryWrapper<>();
+		childWrapper.in(SQLConf.PARENT_UID, ids);
+		Collection<CategoryMenu> childList = categoryMenuService.list(childWrapper);
+		for(CategoryMenu parentItem : list) {
+			
+			List<CategoryMenu> tempList = new ArrayList<>();
+			
+			for(CategoryMenu item : childList) {
+				
+				if(item.getParentUid().equals(parentItem.getUid())) {
+					tempList.add(item);
+				}							
+			}
+			parentItem.setChildCategoryMenu(tempList);
+		}
+		
+		return ResultUtil.result(SysConf.SUCCESS, list);
+	}
+	
+	
 	@ApiOperation(value="增加菜单", notes="增加菜单", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
