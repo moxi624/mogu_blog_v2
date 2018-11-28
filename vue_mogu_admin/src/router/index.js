@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
+import { mapGetters } from "vuex";
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
@@ -282,8 +284,65 @@ export const constantRouterMap = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-export default new Router({
+const router = new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+  // to: Route: 即将要进入的目标 路由对象
+  // from: Route: 当前导航正要离开的路由
+  // next: Function: 一定要调用该方法来 resolve 这个钩子。执行效果依赖 next 方法的调用参数。
+
+  // if (to.path === '/login') {
+  //   next()
+  // }
+  // if (to.path === '/404') {
+  //   next()
+  // }
+
+  // if (store.getters.menu.sonList) {
+  //   let sonList = store.getters.menu.sonList
+  //   console.log("我进来了", sonList);
+
+  //   for (let a = 0; a < sonList.length; a++) {
+  //     if (to.path === sonList[a].url) {
+  //       next()
+  //     }
+  //   }
+  //   next({ path: '/404' })
+  // }
+  next()
+  // store.dispatch('FedLogOut').then(() => {
+  //   next({ path: '/' })
+  // })
+
+  // else {
+  //   store.dispatch('FedLogOut').then(() => {
+  //     next({ path: '/' })
+  //   })
+  // }
+
+  // if (to.path === '/login') {
+  //   next({ path: '/' })
+  // }
+
+  // store.dispatch('GetMenu').then(response => {
+  //   console.log("come");
+  //   if(response.code == "success") {
+  //     const sonList = response.data.sonList
+  //     for (let a = 0; a < sonList.length; a++) {
+  //       if (to.path === sonList[a].url) {
+  //         next()
+  //       }
+  //     }
+  //   }
+  // })
+  // next({ path: '/login' })
+
+  // 未登录状态；当路由到nextRoute指定页时，跳转至login
+})
+
+export default router

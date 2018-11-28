@@ -6,7 +6,18 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login'] // 不重定向白名单
+let activeList = ["/", "/dashboard"]
+
 router.beforeEach((to, from, next) => {
+
+  //像白名单中添加内容
+  if (store.getters.menu.sonList) {
+    let sonList = store.getters.menu.sonList
+    for (var a = 0; a < sonList.length; a++) {
+      activeList.push(sonList[a].url)
+    }
+  }
+
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
@@ -22,8 +33,24 @@ router.beforeEach((to, from, next) => {
             next({ path: '/' })
           })
         })
+
+        // store.dispatch('GetMenu').then(res => { // 菜单信息
+        //   next()
+        // }).catch((err) => {
+        //   store.dispatch('FedLogOut').then(() => {
+        //     Message.error(err || 'Verification failed, please login again')
+        //     next({ path: '/' })
+        //   })
+        // })
+
       } else {
-        next()
+        if (activeList.indexOf(to.path) !== -1) {
+          next()
+        } else {
+          store.dispatch('FedLogOut').then(() => {
+            next({ path: '/' })
+          })
+        }
       }
     }
   } else {

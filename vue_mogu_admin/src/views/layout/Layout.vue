@@ -2,7 +2,7 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
 
-    <sidebar class="sidebar-container" :items = "items"></sidebar>
+    <sidebar class="sidebar-container" :items="items"></sidebar>
 
     <div class="main-container">
       <navbar/>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { Navbar, Sidebar, AppMain } from "./components";
 import ResizeMixin from "./mixin/ResizeHandler";
 import { getMenu } from "@/api/login";
@@ -25,10 +26,11 @@ export default {
   mixins: [ResizeMixin],
   data() {
     return {
-      items: [],
+      items: []
     };
   },
   computed: {
+    ...mapGetters(["menu"]),
     sidebar() {
       return this.$store.state.app.sidebar;
     },
@@ -46,7 +48,8 @@ export default {
   },
   created() {
     var that = this;
-    getMenu().then(response => {
+
+    this.$store.dispatch("GetMenu").then(response => {
       if (response.code == "success") {
         var parentList = response.data.parentList;
         var sonList = response.data.sonList;
@@ -62,9 +65,7 @@ export default {
             var sonItem = [];
 
             for (var index1 = 0; index1 < sonList.length; index1++) {
-              if (
-                sonList[index1].parentUid == parentList[index].uid
-              ) {
+              if (sonList[index1].parentUid == parentList[index].uid) {
                 sonItem.push(sonList[index1]);
               }
             }
@@ -77,6 +78,38 @@ export default {
         that.items = items;
       }
     });
+
+    // getMenu().then(response => {
+    //   if (response.code == "success") {
+    //     var parentList = response.data.parentList;
+    //     var sonList = response.data.sonList;
+    //     var items = [];
+    //     if (
+    //       parentList &&
+    //       parentList.length > 0 &&
+    //       sonList &&
+    //       sonList.length > 0
+    //     ) {
+    //       for (var index = 0; index < parentList.length; index++) {
+    //         var newObject = { parent: parentList[index] };
+    //         var sonItem = [];
+
+    //         for (var index1 = 0; index1 < sonList.length; index1++) {
+    //           if (
+    //             sonList[index1].parentUid == parentList[index].uid
+    //           ) {
+    //             sonItem.push(sonList[index1]);
+    //           }
+    //         }
+    //         //jiaru
+    //         newObject.sonItem = sonItem;
+    //         items.push(newObject);
+    //       }
+    //     }
+
+    //     that.items = items;
+    //   }
+    // });
   },
   methods: {
     handleClickOutside() {
