@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
  * @author xzx19950624@qq.com
  * @date 2018年10月22日下午3:27:24
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/index")
 @Api(value="首页RestApi", tags={"IndexRestApi"})

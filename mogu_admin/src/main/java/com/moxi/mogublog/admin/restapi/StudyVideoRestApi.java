@@ -46,7 +46,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018年10月19日21:35:55
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/studyVideo")
 @Api(value="视频RestApi", tags={"StudyVideoRestApi"})

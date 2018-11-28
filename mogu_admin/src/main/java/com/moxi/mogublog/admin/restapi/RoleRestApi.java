@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +35,7 @@ import io.swagger.annotations.ApiParam;
  * @author xuzhixiang
  * @since 2018-09-04
  */
-@PreAuthorize("hasRole('Administrators')")
+//@PreAuthorize("hasRole('Administrators')")
 @RestController
 @RequestMapping("/role")
 @Api(value="角色管理RestApi",tags={"RoleRestApi"})

@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018年10月19日21:36:02
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @Api(value="资源分类RestApi",tags={"ResourceSortRestApi"})
 @RestController
 @RequestMapping("/resourceSort")

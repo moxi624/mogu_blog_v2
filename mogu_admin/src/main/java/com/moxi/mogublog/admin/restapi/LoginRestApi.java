@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.restapi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.jwt.Audience;
@@ -25,11 +27,14 @@ import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.AdminRole;
+import com.moxi.mogublog.xo.entity.CategoryMenu;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
+import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
 
 import io.swagger.annotations.Api;
@@ -62,6 +67,9 @@ public class LoginRestApi {
 	private AdminRoleService adminRoleService;
 	
 	@Autowired
+	private CategoryMenuService categoryMenuService;
+	
+	@Autowired
 	private Audience audience;
 	
 	@Value(value="${tokenHead}")
@@ -69,6 +77,9 @@ public class LoginRestApi {
 	
 	@Value(value="${isRememberMeExpiresSecond}")
 	private int longExpiresSecond;
+	
+	@Autowired
+	private PictureFeignClient pictureFeignClient;
 	
 	@ApiOperation(value="用户登录", notes="用户登录")
 	@PostMapping("/login")
@@ -133,36 +144,114 @@ public class LoginRestApi {
 	
 	@ApiOperation(value = "用户信息", notes = "用户信息", response = String.class)
 	@GetMapping(value = "/info")
-	public String info(@ApiParam(name = "token", value = "token令牌",required = false) @RequestParam(name = "token", required = false) String token) {
+	public String info(HttpServletRequest request, 
+			@ApiParam(name = "token", value = "token令牌",required = false) @RequestParam(name = "token", required = false) String token) {
+		
+		if(request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
+			return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(SysConf.TOKEN, "admin");
-		map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-		List<String> list = new ArrayList<String>();
-		list.add("Administrator");
-		map.put("roles", list);		
+		
+		Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+		map.put(SysConf.TOKEN, token);
+		//获取图片
+		if(StringUtils.isNotEmpty(admin.getAvatar())) {
+			String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
+			admin.setPhotoList(WebUtils.getPicture(pictureList));
+			
+			List<String> list = WebUtils.getPicture(pictureList);
+			
+			if(list.size() > 0) {
+				map.put(SysConf.AVATAR, list.get(0));	
+			} else {
+				map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+			}
+			
+			
+		}
+		
+		QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>();
+		queryWrapper.eq(SQLConf.ADMINUID, admin.getUid());
+		List<AdminRole> adminRoleList = adminRoleService.list(queryWrapper);
+		
+		//加载这些角色所能访问的菜单页面列表
+		
+		//1)获取该管理员所有角色
+		List<String> roleUid = new ArrayList<String>();
+		for(AdminRole adminRole : adminRoleList) {
+			if(adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
+				roleUid.add(adminRole.getRoleUid());	
+			}			
+		}
+		
+		Collection<Role> roleList = roleService.listByIds(roleUid);
+		
+		map.put("roles", roleList);		
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}
 	
-//	@ApiOperation(value="用户登录", notes="用户登录")
-//	@PostMapping("/login")
-//	public String login(HttpServletRequest request, 
-//			@ApiParam(name = "username", value = "用户名或邮箱或手机号", required = true) @RequestParam(name = "username", required = true) String username,
-//			@ApiParam(name = "password", value = "密码", required = true) @RequestParam(name = "password", required = true) String password){
-//		
-//		UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password); 	
-//		final Authentication authentication = authenticationManager.authenticate(upToken);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        
-//        // Reload password post-security so we can generate token
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        final String token = jwtHelper.createJWT(userDetails.getUsername(),
-//												 userDetails.getAuthorities(),
-//												 audience.getClientId(),
-//												 audience.getName(),
-//												 audience.getExpiresSecond()*1000,
-//												 audience.getBase64Secret());
-//        return token;
-//	}
+	@ApiOperation(value = "获取当前用户的菜单", notes = "获取当前用户的菜单", response = String.class)
+	@GetMapping(value = "/getMenu")
+	public String getMenu(HttpServletRequest request) {
+		
+		if(request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
+			return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+
+		QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>();
+		queryWrapper.eq(SQLConf.ADMINUID, admin.getUid());
+		List<AdminRole> adminRoleList = adminRoleService.list(queryWrapper);
+		
+		//加载这些角色所能访问的菜单页面列表
+		
+		//1)获取该管理员所有角色
+		List<String> roleUid = new ArrayList<String>();
+		for(AdminRole adminRole : adminRoleList) {
+			if(adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
+				roleUid.add(adminRole.getRoleUid());	
+			}			
+		}
+		
+		Collection<Role> roleList = roleService.listByIds(roleUid);
+		
+		List<String> categoryMenuUids = new ArrayList<String>();
+		
+		roleList.forEach(item -> {
+			String caetgoryMenuUids = item.getCategoryMenuUids();
+			String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
+			for(int a=0; a<uids.length; a++) {
+				categoryMenuUids.add(uids[a]);
+			}
+			
+		});
+		
+		Collection<CategoryMenu> categoryMenuList =  categoryMenuService.listByIds(categoryMenuUids);
+		
+		List<CategoryMenu> childCategoryMenuList = new ArrayList<CategoryMenu>();
+		List<String> parentCategoryMenuUids = new ArrayList<String>();
+		
+		categoryMenuList.forEach(item -> {
+			
+			//选出所有的二级分类
+			if(item.getMenuLevel() == 2) {
+				
+				if(StringUtils.isNotEmpty(item.getParentUid())) {
+					parentCategoryMenuUids.add(item.getParentUid());	
+				}				
+				childCategoryMenuList.add(item);
+			}
+			
+		});
+		
+		Collection<CategoryMenu> parentCategoryMenuList = categoryMenuService.listByIds(parentCategoryMenuUids);
+		
+		map.put("parentList", parentCategoryMenuList);
+		map.put("sonList", childCategoryMenuList);	
+		return ResultUtil.result(SysConf.SUCCESS, map);
+	}
 	
 	@ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
 	@PostMapping(value = "/logout")

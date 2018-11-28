@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018年9月17日16:21:43
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/picture")
 public class PictureRestApi {

@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018年10月13日16:06:46
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @Api(value="评论RestApi", tags={"CommentRestApi"})
 @RestController
 @RequestMapping("/comment")

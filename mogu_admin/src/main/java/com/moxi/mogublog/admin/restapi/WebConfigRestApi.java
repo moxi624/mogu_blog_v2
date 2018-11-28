@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
  * @author xzx19950624@qq.com
  * @since 2018年11月11日15:19:28
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @Api(value="系统配置RestApi",tags={"WebConfigRestApi"})
 @RestController
 @RequestMapping("/webConfig")

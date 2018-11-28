@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiParam;
  * @author limboy
  * @create 2018-09-29 16:25
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/search")
 @Api(value="索引维护RestApi",tags={"solrIndexRestApi"})

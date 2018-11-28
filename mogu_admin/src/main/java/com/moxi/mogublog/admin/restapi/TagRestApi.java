@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018-09-08
  */
-@PreAuthorize("hasRole('Administrator')")
+//@PreAuthorize("hasRole('Administrator')")
 @Api(value="标签RestApi",tags={"TagRestApi"})
 @RestController
 @RequestMapping("/tag")

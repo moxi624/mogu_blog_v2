@@ -1,15 +1,15 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
+  <el-scrollbar wrapClass="scrollbar-wrapper">
     <el-menu
+      mode="vertical"
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
-      mode="vertical"
       background-color="#304156"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
-      <sidebar-item v-for="route in routes" :key="route.name" :item="route" :base-path="route.path"/>
+      <sidebar-item :routes="routes" :items="items"></sidebar-item>
     </el-menu>
   </el-scrollbar>
 </template>
@@ -27,8 +27,14 @@ export default {
     routes() {
       return this.$router.options.routes
     },
+
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  props:{
+    items:{
+      type:Array
     }
   }
 }

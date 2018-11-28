@@ -16,6 +16,13 @@ export function getInfo(token) {
   })
 }
 
+export function getMenu() {
+  return request({
+    url: process.env.ADMIN_API + '/auth/getMenu',
+    method: 'get'
+  })
+}
+
 export function logout() {
   return request({
     url: process.env.ADMIN_API + '/auth/logout',

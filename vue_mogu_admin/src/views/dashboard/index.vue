@@ -80,6 +80,8 @@ export default {
           this.commentTotal = response.data.commentCount;
         }
     })
+
+    console.log("role", this.roles);
   }
 };
 </script>

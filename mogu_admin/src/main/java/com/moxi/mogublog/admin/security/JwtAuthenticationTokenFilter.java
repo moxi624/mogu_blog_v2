@@ -136,8 +136,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 			//把adminUid存储到request中
 			request.setAttribute("adminUid", adminUid);
 			
-			//刷新token过期时间
-			jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
+			//判断token是否过期
+			if (!jwtHelper.isExpiration(token, audience.getBase64Secret())) {
+				
+				//刷新token过期时间
+				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);	
+			} 
+			
 			
 			logger.info("解析出来用户 : " + username);
 			logger.info("解析出来的用户Uid : " + adminUid);
