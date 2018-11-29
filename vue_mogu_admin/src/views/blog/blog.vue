@@ -333,12 +333,14 @@ export default {
     this.blogList(); //获取博客列表
 
     var tagParams = new URLSearchParams();
+    tagParams.append("pageSize", 100);
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
       console.log(response);
     });
 
     var blogSortParams = new URLSearchParams();
+    blogSortParams.append("pageSize", 100);
     getBlogSortList(blogSortParams).then(response => {
       this.blogSortData = response.data.records;
       console.log(response);
@@ -380,7 +382,7 @@ export default {
     tagRemoteMethod: function(query) {
       if (query !== "") {
         var params = new URLSearchParams();
-        params.append("keyword", query);
+        params.append("keyword", query);        
         getTagList(params).then(response => {
           console.log(response);
           this.tagOptions = response.data.records;

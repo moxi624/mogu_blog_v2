@@ -239,13 +239,13 @@ export const constantRouterMap = [
     meta: { title: '操作日志', icon: 'log' },
     children: [
       {
-        path: 'aboutMe',
+        path: 'log',
         name: '操作日志',
         component: () => import('@/views/log/log'),
         meta: { title: '操作日志', icon: 'log' }
       },
       {
-        path: 'solrIndex',
+        path: 'exceptionLog',
         name: '异常日志',
         component: () => import('@/views/log/exceptionLog'),
         meta: { title: '异常日志', icon: 'exception' }
