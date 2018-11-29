@@ -46,11 +46,11 @@ router.beforeEach((to, from, next) => {
       } else {
         console.log(to.path)
         if (activeList.indexOf(to.path) !== -1) {
-          console.log("在", activeList)
+          // console.log("在", activeList)
           next()
         } else {
           store.dispatch('FedLogOut').then(() => {
-            console.log("不在", activeList)
+            // console.log("不在", activeList)
             next({ path: '/' })
           })
         }

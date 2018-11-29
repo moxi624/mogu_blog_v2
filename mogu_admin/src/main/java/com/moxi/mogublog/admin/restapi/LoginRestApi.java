@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.restapi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,8 +248,11 @@ public class LoginRestApi {
 		});
 		
 		Collection<CategoryMenu> parentCategoryMenuList = categoryMenuService.listByIds(parentCategoryMenuUids);
+		List<CategoryMenu> list = new ArrayList<CategoryMenu>(parentCategoryMenuList);
+		//对parent进行排序
+		Collections.sort(list);
 		
-		map.put("parentList", parentCategoryMenuList);
+		map.put("parentList", list);
 		map.put("sonList", childCategoryMenuList);	
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}

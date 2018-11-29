@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiParam;
  * @author xzx19950624@qq.com
  * @since 2018年9月24日15:45:18
  */
-//@PreAuthorize("hasRole('Administrator')")
+
 @RestController
 @RequestMapping("/categoryMenu")
 public class CategoryMenuRestApi {
@@ -186,6 +186,11 @@ public class CategoryMenuRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
 	
+	/**
+	 * 如果是一级菜单，直接置顶在最前面，二级菜单，就在一级菜单内置顶
+	 * @author xzx19950624@qq.com
+	 * @date 2018年11月29日上午9:22:59
+	 */
 	@ApiOperation(value="置顶菜单", notes="置顶菜单", response = String.class)
 	@PostMapping("/stick")
 	public String stick(HttpServletRequest request,

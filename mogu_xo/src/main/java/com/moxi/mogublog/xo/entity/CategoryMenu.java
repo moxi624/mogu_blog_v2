@@ -15,7 +15,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @since 2018年11月23日10:35:03
  */
 @TableName("t_category_menu")
-public class CategoryMenu extends SuperEntity<CategoryMenu>{
+public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparable<CategoryMenu>{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -140,5 +140,14 @@ public class CategoryMenu extends SuperEntity<CategoryMenu>{
 
 	public void setChildCategoryMenu(List<CategoryMenu> childCategoryMenu) {
 		this.childCategoryMenu = childCategoryMenu;
+	}
+
+	@Override
+	public int compareTo(CategoryMenu o) {
+		
+		if(this.sort >= o.getSort()){
+			return 1;
+		}
+		return -1;
 	}
 }
