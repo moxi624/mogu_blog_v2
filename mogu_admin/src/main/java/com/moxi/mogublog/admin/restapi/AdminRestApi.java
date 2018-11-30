@@ -79,7 +79,6 @@ public class AdminRestApi {
 
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
-	@OperationLogger(value="获取管理员列表")
 	@ApiOperation(value="获取管理员列表", notes="获取管理员列表")
 	@GetMapping("/getList")
 	public String getList(HttpServletRequest request,
@@ -215,7 +214,6 @@ public class AdminRestApi {
 	}
 	
 	@OperationLogger(value="更新管理员邮箱或手机号")
-//	@PreAuthorize("hasRole('administrator')")
 	@ApiOperation(value="更新管理员邮箱或手机号", notes="更新管理员邮箱或手机号")
 	@PostMapping("/updateEmail")
 	public String updateEmail(HttpServletRequest request,
@@ -253,7 +251,6 @@ public class AdminRestApi {
 	}
 	
 	@OperationLogger(value="删除部分管理员信息")
-//	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="删除部分管理员信息", notes="删除部分管理员信息")
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -268,7 +265,6 @@ public class AdminRestApi {
 	}
 	
 	@OperationLogger(value="分配用户角色信息列表")
-//	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="分配用户角色信息列表", notes="分配用户角色信息列表")
 	@PostMapping("/assign")
 	public String assign(HttpServletRequest request,
@@ -306,7 +302,6 @@ public class AdminRestApi {
 	}
 	
 	@OperationLogger(value="管理员角色分配")
-//	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="管理员角色分配", notes="管理员角色分配")
 	@PostMapping("/doAssign")
 	public String doAssign(HttpServletRequest request,
@@ -336,7 +331,6 @@ public class AdminRestApi {
 	}
 	
 	@OperationLogger(value="取消管理员角色分配")
-//	@PreAuthorize("hasRole('Administrators')")
 	@ApiOperation(value="取消管理员角色分配", notes="取消管理员角色分配")
 	@PostMapping("/doUnassign")
 	public String doUnassign(HttpServletRequest request,

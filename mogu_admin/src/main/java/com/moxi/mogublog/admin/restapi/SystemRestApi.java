@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -69,6 +70,7 @@ public class SystemRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, admin);
 	}
 	
+	@OperationLogger(value="编辑我的信息")
 	@ApiOperation(value="编辑我的信息", notes="获取我的信息")
 	@PostMapping("/editMe")
 	public String editMe(HttpServletRequest request, @RequestBody Admin admin) {

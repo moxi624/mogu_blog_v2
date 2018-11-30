@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -65,6 +66,7 @@ public class SolrIndexRestApi {
 
     }
 
+    @OperationLogger(value="初始化solr索引")
     @ApiOperation(value="初始化solr索引", notes="初始化solr索引")
     @PostMapping("/initIndex")
     public String initIndex(HttpServletRequest request){
@@ -116,6 +118,7 @@ public class SolrIndexRestApi {
 
     }
 
+    @OperationLogger(value="添加solr索引")
     @ApiOperation(value="添加solr索引", notes="添加solr索引")
     @PostMapping("/addIndex")
     public String addIndex(HttpServletRequest request,
@@ -132,7 +135,7 @@ public class SolrIndexRestApi {
 
     }
 
-
+    @OperationLogger(value="更新solr索引")
     @ApiOperation(value="更新solr索引", notes="更新solr索引")
     @PostMapping("/updateIndex")
     public String updateIndex(HttpServletRequest request,
@@ -150,6 +153,7 @@ public class SolrIndexRestApi {
 
     }
 
+    @OperationLogger(value="删除solr索引")
     @ApiOperation(value="删除solr索引", notes="删除solr索引")
     @PostMapping("/deleteIndex")
     public String deleteIndex(HttpServletRequest request,
@@ -161,6 +165,7 @@ public class SolrIndexRestApi {
 
     }
 
+    @OperationLogger(value="删除全部solr索引")
     @ApiOperation(value="删除全部solr索引", notes="删除全部solr索引")
     @PostMapping("/deleteAllIndex")
     public String deleteAllIndex(HttpServletRequest request){

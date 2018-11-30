@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.RoleService;
@@ -61,6 +62,7 @@ public class RoleRestApi {
 			return ResultUtil.result(SysConf.SUCCESS, pageList);
 		}
 		
+		@OperationLogger(value="新增角色信息")
 		@ApiOperation(value="新增角色信息", notes="新增角色信息")
 		@PostMapping("/add")
 		public String add(HttpServletRequest request,
@@ -76,6 +78,7 @@ public class RoleRestApi {
 			return ResultUtil.result(SysConf.ERROR, "角色已存在");
 		}
 		
+		@OperationLogger(value="更新角色信息")
 		@ApiOperation(value="更新角色信息", notes="更新角色信息")
 		@PostMapping("/update")
 		public String update(HttpServletRequest request,
@@ -91,6 +94,7 @@ public class RoleRestApi {
 			
 		}
 		
+		@OperationLogger(value="删除角色信息")
 		@ApiOperation(value="删除角色信息", notes="删除角色信息")
 		@PostMapping("/delete")
 		public String delete(HttpServletRequest request,

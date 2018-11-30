@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Tag;
@@ -67,6 +68,7 @@ public class TagRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="增加标签")
 	@ApiOperation(value="增加标签", notes="增加标签", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -84,6 +86,7 @@ public class TagRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
+	@OperationLogger(value="编辑标签")
 	@ApiOperation(value="编辑标签", notes="编辑标签", response = String.class)
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -102,7 +105,8 @@ public class TagRestApi {
 		tag.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
-		
+	
+	@OperationLogger(value="删除标签")
 	@ApiOperation(value="删除标签", notes="删除标签", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -117,6 +121,7 @@ public class TagRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
 	
+	@OperationLogger(value="置顶标签")
 	@ApiOperation(value="置顶标签", notes="置顶标签", response = String.class)
 	@PostMapping("/stick")
 	public String stick(HttpServletRequest request,

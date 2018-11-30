@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -66,6 +67,7 @@ public class BlogSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="增加博客分类")
 	@ApiOperation(value="增加博客分类", notes="增加博客分类", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -83,6 +85,7 @@ public class BlogSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
+	@OperationLogger(value="编辑博客分类")
 	@ApiOperation(value="编辑博客分类", notes="编辑博客分类", response = String.class)
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -94,7 +97,10 @@ public class BlogSortRestApi {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
 		
-		BlogSort blogSort = new BlogSort();
+		BlogSort blogSort = blogSortService.getById(uid);
+		if(blogSort == null ) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
 		blogSort.setContent(content);
 		blogSort.setSortName(sortName);
 		blogSort.setStatus(EStatus.ENABLE);
@@ -102,6 +108,7 @@ public class BlogSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
+	@OperationLogger(value="删除博客分类")
 	@ApiOperation(value="删除博客分类", notes="删除博客分类", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,

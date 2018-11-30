@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import io.swagger.annotations.Api;
@@ -48,6 +49,7 @@ public class CreatCodeRestApi {
 	@Value(value="${moguBlog.email}")
 	private String moguBlogEmail;
 
+	@OperationLogger(value="生成验证码")
 	@ApiOperation(value="生成验证码", notes="生成验证码")
 	@PostMapping("/validCode")
 	public String validCode(HttpServletRequest request,

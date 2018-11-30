@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -111,6 +112,7 @@ public class PictureSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="增加图片分类")
 	@ApiOperation(value="增加图片分类", notes="增加图片分类", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -130,6 +132,7 @@ public class PictureSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
+	@OperationLogger(value="编辑图片分类")
 	@ApiOperation(value="编辑图片分类", notes="编辑图片分类", response = String.class)
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -150,6 +153,7 @@ public class PictureSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
+	@OperationLogger(value="删除图片分类")
 	@ApiOperation(value="删除图片分类", notes="删除图片分类", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -164,6 +168,7 @@ public class PictureSortRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
 	
+	@OperationLogger(value="置顶分类")
 	@ApiOperation(value="置顶分类", notes="置顶分类", response = String.class)
 	@PostMapping("/stick")
 	public String stick(HttpServletRequest request,

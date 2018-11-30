@@ -146,8 +146,8 @@ public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparabl
 	public int compareTo(CategoryMenu o) {
 		
 		if(this.sort >= o.getSort()){
-			return 1;
+			return -1;
 		}
-		return -1;
+		return 1;
 	}
 }

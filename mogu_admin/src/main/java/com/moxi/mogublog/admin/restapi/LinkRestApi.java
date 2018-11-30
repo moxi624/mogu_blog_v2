@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Link;
@@ -66,6 +67,7 @@ public class LinkRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="增加友链")
 	@ApiOperation(value="增加友链", notes="增加友链", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -87,6 +89,7 @@ public class LinkRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
+	@OperationLogger(value="编辑友链")
 	@ApiOperation(value="编辑友链", notes="编辑友链", response = String.class)
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -109,6 +112,7 @@ public class LinkRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
+	@OperationLogger(value="删除友链")
 	@ApiOperation(value="删除友链", notes="删除友链", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,

@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.CheckUtils;
@@ -58,6 +59,7 @@ public class AuthRestApi {
 	@Value(value="${tokenHead}")
 	private String tokenHead;
 	
+	@OperationLogger(value="注册管理员")
 	@ApiOperation(value="注册管理员", notes="注册管理员")
 	@PostMapping("/register")
 	public String register(HttpServletRequest request,
@@ -121,6 +123,7 @@ public class AuthRestApi {
 		return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
 	}
 	
+	@OperationLogger(value="更新管理员密码")
 	@ApiOperation(value="更新管理员密码", notes="更新管理员密码")
 	@PostMapping("/updatePassWord")
 	public String updatePassWord(HttpServletRequest request,
@@ -160,6 +163,7 @@ public class AuthRestApi {
 		return ResultUtil.result(SysConf.ERROR, "旧密码错误");
 	}
 	
+	@OperationLogger(value="更新token")
 	@ApiOperation(value="更新token", notes="更新token")
 	@PostMapping("/refreshToken")
     public String refreshToken(String oldToken) {

@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -60,6 +61,7 @@ public class WebConfigRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, webConfig);		
 	}
 	
+	@OperationLogger(value="修改网站配置")
 	@ApiOperation(value="修改网站配置", notes="修改网站配置")
 	@PostMapping("/editWebConfig")
 	public String editWebConfig(HttpServletRequest request, @RequestBody WebConfig webConfig) {

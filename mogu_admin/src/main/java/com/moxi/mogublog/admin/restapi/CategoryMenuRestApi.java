@@ -24,6 +24,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.CategoryMenu;
@@ -143,7 +144,7 @@ public class CategoryMenuRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	
-	
+	@OperationLogger(value="增加菜单")
 	@ApiOperation(value="增加菜单", notes="增加菜单", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -172,6 +173,7 @@ public class CategoryMenuRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
+	@OperationLogger(value="删除菜单")
 	@ApiOperation(value="删除菜单", notes="删除菜单", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
@@ -191,6 +193,7 @@ public class CategoryMenuRestApi {
 	 * @author xzx19950624@qq.com
 	 * @date 2018年11月29日上午9:22:59
 	 */
+	@OperationLogger(value="置顶菜单")
 	@ApiOperation(value="置顶菜单", notes="置顶菜单", response = String.class)
 	@PostMapping("/stick")
 	public String stick(HttpServletRequest request,

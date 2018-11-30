@@ -6,7 +6,7 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login'] // 不重定向白名单
-let activeList = ["/", "/dashboard"]
+let activeList = ["/", "/dashboard", "/picture/picture"] 
 
 router.beforeEach((to, from, next) => {
 

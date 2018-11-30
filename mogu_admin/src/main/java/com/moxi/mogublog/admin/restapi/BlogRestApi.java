@@ -26,6 +26,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -87,7 +88,7 @@ public class BlogRestApi {
 	private Integer BLOG_FOURTH_COUNT;
 	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
-	
+		
 	@ApiOperation(value="获取博客列表", notes="获取博客列表", response = String.class)	
 	@RequestMapping(value = "/getList", method = RequestMethod.GET)
 	public String getList(HttpServletRequest request,
@@ -199,6 +200,7 @@ public class BlogRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
+	@OperationLogger(value="增加博客")
 	@ApiOperation(value="增加博客", notes="增加博客", response = String.class)	
 	@PostMapping("/add")
 	public String add(HttpServletRequest request,
@@ -278,6 +280,7 @@ public class BlogRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
 	
+	@OperationLogger(value="编辑博客")
 	@ApiOperation(value="编辑博客", notes="编辑博客", response = String.class)
 	@PostMapping("/edit")
 	public String edit(HttpServletRequest request,
@@ -363,6 +366,7 @@ public class BlogRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	
+	@OperationLogger(value="删除博客")
 	@ApiOperation(value="删除博客", notes="删除博客", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
