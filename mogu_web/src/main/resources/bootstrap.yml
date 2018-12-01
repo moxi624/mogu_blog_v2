@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: web
+      profile: dev
+      label: master
+      uri: http://127.0.0.1:8605
