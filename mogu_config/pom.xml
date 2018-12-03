@@ -69,13 +69,6 @@
 		    <artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		
-		<!--spring切面aop依赖-->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-       
-        
   		<!-- mp依赖
   			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
   		 -->

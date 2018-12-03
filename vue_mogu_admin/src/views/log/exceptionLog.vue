@@ -26,11 +26,11 @@
 	    </el-table-column>
 	    
 
-      <el-table-column label="异常Json格式" width="300">
+      <!-- <el-table-column label="异常Json格式" width="300">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.exceptionJson }}</span>
 	      </template>
-	    </el-table-column>
+	    </el-table-column> -->
 
       <el-table-column label="异常内容" width="300">
 	      <template slot-scope="scope">

@@ -42,5 +42,8 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String MENU_LEVEL = "menu_level";
 	public final static String PARENT_UID = "parent_uid";
 	
+	//t_exception_log
+	public final static String EXCEPTION_JSON = "exceptionJson";
+	
 	
 }
