@@ -9,7 +9,7 @@ spring:
     config:
       server:
         git:
-          uri: https://gitee.com/HuoXuYeWuSuoWei/mogu_configuration.git
+          uri: https://gitee.com/moxi159753/mogu_configuration.git
   rabbitmq:
     host: 127.0.0.1 #rabbitmq的主机ip
     port: 5672
