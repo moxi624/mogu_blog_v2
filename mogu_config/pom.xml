@@ -69,6 +69,21 @@
 		    <artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-bus</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+        </dependency>
+
   		<!-- mp依赖
   			 mybatisPlus 会自动的维护Mybatis 以及MyBatis-spring相关的依赖
   		 -->
@@ -121,7 +136,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		
 		
 		
 		<dependency>
