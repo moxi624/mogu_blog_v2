@@ -50,10 +50,12 @@ public class RoleRestApi {
 		@ApiOperation(value="获取角色信息列表", notes="获取角色信息列表")
 		@GetMapping("/getList")
 		public String getList(HttpServletRequest request,
+				@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
 				@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 				@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 			
 			QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
+			queryWrapper.like(SQLConf.ROLENAEM, keyword);
 			Page<Role> page = new Page<>();
 			page.setCurrent(currentPage);
 			page.setSize(pageSize);

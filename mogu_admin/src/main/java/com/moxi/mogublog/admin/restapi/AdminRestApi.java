@@ -95,11 +95,12 @@ public class AdminRestApi {
 		IPage<Admin> pageList = adminService.page(page, queryWrapper);
 		List<Admin> list = pageList.getRecords();
 		log.info(list);
+
 		final StringBuffer fileUids = new StringBuffer();
 		list.forEach( item -> {
 			if(StringUtils.isNotEmpty(item.getAvatar())) {
 				fileUids.append(item.getAvatar() + ",");
-			}
+			}			
 		});
 
 		Map<String, String> pictureMap = new HashMap<String, String>();
@@ -114,6 +115,23 @@ public class AdminRestApi {
 		});
 		
 		for(Admin item : list) {
+			//清空密码
+			item.setPassWord("");
+			
+			//查询出角色信息封装到admin中
+		    QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
+		    wrapper.eq(SQLConf.ADMINUID, item.getUid());
+		    List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
+		    List<String> roleUids = new ArrayList<>();
+		    for (AdminRole adminRole : adminRoleList) {
+				String roleUid = adminRole.getRoleUid();
+				roleUids.add(roleUid);
+		    }
+		    if(roleUids.size() > 0) {
+		    	List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
+			    item.setRoleList(roles);	
+		    }		    
+			
 			//获取图片
 			if(StringUtils.isNotEmpty(item.getAvatar())) {
 				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), ",");
@@ -124,7 +142,9 @@ public class AdminRestApi {
 					}					
 				});
 				item.setPhotoList(pictureListTemp);
-			}	
+			}
+			
+			
 		}
 		
 		return ResultUtil.result(SysConf.SUCCESS, pageList);

@@ -2,7 +2,9 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加分类</el-button>	              
+        <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入角色名称"></el-input>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加角色</el-button>	              
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
@@ -159,6 +161,9 @@ export default {
           this.categoryMenuList = data;        
         }
       });
+    },
+    handleFind: function() {
+      this.roleList();
     },
     roleList: function() {
       var params = new URLSearchParams();

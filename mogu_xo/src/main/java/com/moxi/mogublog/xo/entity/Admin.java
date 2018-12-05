@@ -108,7 +108,7 @@ public class Admin extends SuperEntity<Admin> {
     private List<String> photoList; //用户头像
     
     /**
-     * 所拥有的角色
+     * 所拥有的角色名
      */
     @TableField(exist = false)
     private List<String> roleNames;
@@ -117,10 +117,24 @@ public class Admin extends SuperEntity<Admin> {
      * 所拥有的角色
      */
     @TableField(exist = false)
+    private List<Role> roleList;
+    
+    /**
+     * 验证码
+     */
+    @TableField(exist = false)
     private String validCode;
 
-	
-    public List<String> getRoleNames() {
+    
+    public List<Role> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<Role> roleList) {
+		this.roleList = roleList;
+	}
+
+	public List<String> getRoleNames() {
 		return roleNames;
 	}
 
