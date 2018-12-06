@@ -218,6 +218,10 @@ public class IndexRestApi {
 		page.setSize(BLOG_HOT_COUNT);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+		
+		//因为首页并不需要显示内容，所以需要排除掉内容字段		
+		queryWrapper.excludeColumns(Blog.class, "content");
+		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		
 		final StringBuffer fileUids = new StringBuffer();
@@ -307,6 +311,10 @@ public class IndexRestApi {
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		
+		//因为首页并不需要显示内容，所以需要排除掉内容字段		
+		queryWrapper.excludeColumns(Blog.class, "content");
+		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
 		
@@ -402,6 +410,10 @@ public class IndexRestApi {
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		
+		//因为首页并不需要显示内容，所以需要排除掉内容字段		
+		queryWrapper.excludeColumns(Blog.class, "content");
+		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
 		

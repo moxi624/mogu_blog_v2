@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.CheckUtils;
+import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -140,6 +142,14 @@ public class LoginRestApi {
 		String token = tokenHead + jwtToken;
 		Map<String, Object> result = new HashMap<>();
 		result.put(SysConf.TOKEN, token);
+		
+		//进行登录相关操作
+		Integer count = admin.getLoginCount() + 1;
+		admin.setLoginCount(count);
+		admin.setLastLoginIp(IpUtils.getIpAddr(request));
+		admin.setLastLoginTime(new Date());
+		admin.updateById();
+		
 		return ResultUtil.result(SysConf.SUCCESS, result);
 	}
 	

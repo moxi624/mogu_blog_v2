@@ -17,21 +17,21 @@
 <BlogHead></BlogHead>
 
 <article>
-  <h1 class="t_nav"><span>您现在的位置是：首页 > 慢生活 </span><a href="/" class="n1">网站首页</a><a href="/" class="n2">慢生活</a></h1>
+  <h1 class="t_nav"><a href="/" class="n1">网站首页</a><a href="/" class="n2">{{blogData.blogSort.sortName}}</a></h1>
   <div class="infosbox">
     <div class="newsview">
       <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
       <div class="bloginfo">
         <ul>
           <li class="author"><a href="/">{{blogData.author}}</a></li>
-          <li class="lmname"><a href="/">{{blogData.blogSort.sortName}}</a></li>
+          <li class="lmname"><a href="javascript:void(0);" @click="goToSortList(blogData.blogSort.uid)">{{blogData.blogSort.sortName}}</a></li>
           <li class="timer">{{blogData.createTime}}</li>
           <li class="view">{{blogData.clickCount}}</li>
           <li class="like">{{blogData.collectCount}}</li>
         </ul>
       </div>
       <div class="tags">        
-        <a v-if="blogData.tagList" v-for="item in blogData.tagList" :key="item.uid" href="/" target="_blank">{{item.content}}</a>         
+        <a v-if="blogData.tagList" v-for="item in blogData.tagList" :key="item.uid" href="javascript:void(0);" @click="goToList(item.uid)" target="_blank">{{item.content}}</a>         
       </div>
       <div class="news_about"><strong>简介</strong>{{blogData.summary}}</div>
       <div class="news_con" v-html="blogData.content" v-highlight> 
@@ -167,7 +167,17 @@ export default {
     goToInfo(uid) {
       let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
       window.open(routeData.href, '_blank');
-    }
+    },
+    //跳转到搜索详情页
+    goToList(uid) {
+      let routeData = this.$router.resolve({ path: "/list", query: { tagUid: uid } });
+      window.open(routeData.href, '_blank');
+    },
+    //跳转到搜索详情页
+    goToSortList(uid) {
+      let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
+      window.open(routeData.href, '_blank');
+    },
   }
 };
 </script>
