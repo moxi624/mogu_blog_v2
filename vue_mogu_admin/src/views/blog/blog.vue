@@ -336,7 +336,7 @@ export default {
     tagParams.append("pageSize", 100);
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
-      console.log(response);
+      console.log("标签列表", response);
     });
 
     var blogSortParams = new URLSearchParams();
