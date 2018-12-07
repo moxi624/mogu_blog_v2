@@ -1,128 +1,191 @@
 <template>
   <div class="app-container">
-      <!-- 查询和其他操作 -->
-	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入菜单名称"></el-input>
-        <el-select v-model="menuLevel" placeholder="菜单等级" clearable>
-					<el-option
-				      v-for="item in menuLevelList"
-				      :key="item.value"
-				      :label="item.label"
-				      :value="item.value">
-				    </el-option>
-			  </el-select>
-		    
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加菜单</el-button>	              
-	    </div>
-
-      <el-table :data="tableData"  style="width: 100%">
-      
-      <el-table-column type="selection"></el-table-column>
-
-      <el-table-column label="序号" width="60">
-	      <template slot-scope="scope">
-	        <span >{{scope.$index + 1}}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="菜单名称" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.name }}</span>
-	      </template>
-	    </el-table-column>
-
-      <el-table-column label="菜单级别" width="100">
-	      <template slot-scope="scope">
-	        <el-tag v-if="scope.row.menuLevel == 1" type="success">一级菜单</el-tag>
-          <el-tag v-if="scope.row.menuLevel == 2" type="warring">二级菜单</el-tag>
-	      </template>
-	    </el-table-column>
-
-      <el-table-column label="父菜单名" width="100">
-	      <template slot-scope="scope">
-          <span v-if="scope.row.parentCategoryMenu" >{{ scope.row.parentCategoryMenu.name }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="菜单简介" width="200">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.summary }}</span>
-	      </template>
-	    </el-table-column>
-
-      <el-table-column label="ICON" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.icon }}</span>
-	      </template>
-	    </el-table-column>
-
-      <el-table-column label="URL" width="150">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.url }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="创建时间" width="160">
-	      <template slot-scope="scope">
-	        <span >{{ scope.row.createTime }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	   	<el-table-column label="状态" width="100">
-	   	  <template slot-scope="scope">
-		   	  <template v-if="scope.row.status == 1">
-		        <span>正常</span>
-		      </template>
-		      <template v-if="scope.row.status == 2">
-		        <span>推荐</span>
-		      </template>
-		      <template v-if="scope.row.status == 0">
-		        <span>已删除</span>
-		      </template>
-	   	  </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="230"> 
-	      <template slot-scope="scope" >
-					<el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
-	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
-	      </template>
-	    </el-table-column>     	    
-	  </el-table>
-
-    <!--分页-->
-    <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
+    <!-- 查询和其他操作 -->
+    <div class="filter-container" style="margin: 10px 0 10px 0;">
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加菜单</el-button>
     </div>
 
-	  <!-- 添加或修改对话框 -->
-		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-		  <el-form :model="form">
-		  	  
+    <el-table :data="tableData" style="width: 100%">
+
+      <el-table-column type="expand">
+        <template slot-scope="scope">
+          <el-form label-position="left" inline class="demo-table-expand">
+
+            <el-table :data="scope.row.childCategoryMenu" :show-header="showHeader" style="width: 100%">
+              <el-table-column label width="60">
+                <template slot-scope="scope_child">
+                  <span>{{scope_child.$index + 1}}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="100">
+                <template slot-scope="scope_child">
+                  <span>{{ scope_child.row.name }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="100">
+                <template slot-scope="scope_child">
+                  <el-tag v-if="scope_child.row.menuLevel == 1" type="success">一级菜单</el-tag>
+                  <el-tag v-if="scope_child.row.menuLevel == 2" type="warring">二级菜单</el-tag>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="100">
+                <template slot-scope="scope_child">
+                  <span
+                    v-if="scope_child.row.parentCategoryMenu"
+                  >{{ scope_child.row.parentCategoryMenu.name }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="200">
+                <template slot-scope="scope_child">
+                  <span>{{ scope_child.row.summary }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="100">
+                <template slot-scope="scope_child">
+                  <span>{{ scope_child.row.icon }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="150">
+                <template slot-scope="scope_child">
+                  <span>{{ scope_child.row.url }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="160">
+                <template slot-scope="scope_child">
+                  <span>{{ scope_child.row.createTime }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="100">
+                <template slot-scope="scope_child">
+                  <template v-if="scope_child.row.status == 1">
+                    <span>正常</span>
+                  </template>
+                  <template v-if="scope_child.row.status == 2">
+                    <span>推荐</span>
+                  </template>
+                  <template v-if="scope_child.row.status == 0">
+                    <span>已删除</span>
+                  </template>
+                </template>
+              </el-table-column>
+
+              <el-table-column fixed="right" min-width="230">
+                <template slot-scope="scope_child">
+                  <el-button @click="handleStick(scope_child.row)" type="warning" size="small">置顶</el-button>
+                  <el-button @click="handleEdit(scope_child.row)" type="primary" size="small">编辑</el-button>
+                  <el-button @click="handleDelete(scope_child.row)" type="danger" size="small">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-form>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="序号" width="60">
+        <template slot-scope="scope">
+          <span>{{scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="菜单名称" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="菜单级别" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.menuLevel == 1" type="success">一级菜单</el-tag>
+          <el-tag v-if="scope.row.menuLevel == 2" type="warring">二级菜单</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="父菜单名" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.parentCategoryMenu">{{ scope.row.parentCategoryMenu.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="菜单简介" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.summary }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="ICON" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.icon }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="URL" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.url }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" width="100">
+        <template slot-scope="scope">
+          <template v-if="scope.row.status == 1">
+            <span>正常</span>
+          </template>
+          <template v-if="scope.row.status == 2">
+            <span>推荐</span>
+          </template>
+          <template v-if="scope.row.status == 0">
+            <span>已删除</span>
+          </template>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" fixed="right" min-width="230">
+        <template slot-scope="scope">
+          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+
+    <!-- 添加或修改对话框 -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
         <el-form-item label="菜单名称" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.name" auto-complete="off"></el-input>
-		    </el-form-item>
+          <el-input v-model="form.name" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="菜单等级" :label-width="formLabelWidth" required>
-				<el-select v-model="form.menuLevel" size="small" placeholder="请选择">
-					<el-option
-				      v-for="item in menuLevelList"
-				      :key="item.value"
-				      :label="item.label"
-				      :value="item.value">
-				    </el-option>
-				</el-select>
-		    </el-form-item>
+          <el-select v-model="form.menuLevel" size="small" placeholder="请选择">
+            <el-option
+              v-for="item in menuLevelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
 
-        <el-form-item v-if="form.menuLevel == 2" label="父菜单名" :label-width="formLabelWidth" required>
+        <el-form-item
+          v-if="form.menuLevel == 2"
+          label="父菜单名"
+          :label-width="formLabelWidth"
+          required
+        >
           <el-select
             v-model="form.parentUid"
             filterable
@@ -131,50 +194,51 @@
             reserve-keyword
             placeholder="请输入父菜单名"
             :remote-method="remoteMethod"
-            :loading="loading">
+            :loading="loading"
+          >
             <el-option
               v-for="item in menuOptions"
               :key="item.uid"
               :label="item.name"
-              :value="item.uid">
-            </el-option>
+              :value="item.uid"
+            ></el-option>
           </el-select>
-        </el-form-item>        
-		    
-		    <el-form-item label="菜单介绍" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.summary" auto-complete="off"></el-input>
-		    </el-form-item>
+        </el-form-item>
+
+        <el-form-item label="菜单介绍" :label-width="formLabelWidth" required>
+          <el-input v-model="form.summary" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="ICON" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.icon" auto-complete="off"></el-input>
-		    </el-form-item>
+          <el-input v-model="form.icon" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="URL" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.url" auto-complete="off"></el-input>
-		    </el-form-item>
-
-		  </el-form>
-		  <div slot="footer" class="dialog-footer">
-		    <el-button @click="dialogFormVisible = false">取 消</el-button>
-		    <el-button type="primary" @click="submitForm">确 定</el-button>
-		  </div>
-		</el-dialog>
-
+          <el-input v-model="form.url" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
   getMenuList,
+  getAllMenu,
   addMenu,
   editMenu,
   deleteMenu,
-  stickMenu,  
+  stickMenu
 } from "@/api/categoryMenu";
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
+      showHeader: false, //是否显示表头
       tableData: [],
       keyword: "",
       menuLevel: "",
@@ -206,21 +270,12 @@ export default {
   },
   methods: {
     menuList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("menuLevel", this.menuLevel);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
-      getMenuList(params).then(response => {
+
+      getAllMenu().then(response => {
         console.log(response);
-        if(response.code == "success") {
-          
-          this.tableData = response.data.data.records;
-          this.currentPage = response.data.data.current;
-          this.pageSize = response.data.data.size;
-          this.total = response.data.data.total;
-          this.menuOptions = response.data.otherData;
-        }        
+        if (response.code == "success") {
+          this.tableData = response.data;
+        }
       });
     },
     getFormObject: function() {
@@ -323,11 +378,7 @@ export default {
         this.menuOptions = [];
       }
     },
-    handleCurrentChange: function(val) {
-      console.log("点击了换页");
-      this.currentPage = val;
-      this.menuList();
-    },
+
     submitForm: function() {
       console.log("点击了提交表单", this.form);
       if (this.isEditForm) {

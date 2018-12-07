@@ -69,7 +69,26 @@ export default {
                 sonItem.push(sonList[index1]);
               }
             }
-            //jiaru
+            console.log("sonItem", sonItem);
+            //对子目录进行排序
+            for(var a=0; a<sonItem.length; a++) {
+              for(var b=0; b< sonItem.length -a - 1 ; b++) {
+                var tag = false;
+                if(sonItem[b].sort < sonItem[b+1].sort) {
+                   var temp = sonItem[b];
+                   sonItem[b] = sonItem[b+1];
+                   sonItem[b+1] = temp;
+                   tag = true;
+                }
+                // if(!tag) {
+                //   return;
+                // }
+              }
+            }
+
+            console.log("sonItem排序后", sonItem);
+
+            //加入
             newObject.sonItem = sonItem;
             items.push(newObject);
           }

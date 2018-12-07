@@ -3,6 +3,8 @@ package com.moxi.mogublog.admin.restapi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +117,7 @@ public class CategoryMenuRestApi {
 		
 		QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(SQLConf.MENU_LEVEL, "1");
+		queryWrapper.orderByDesc(SQLConf.SORT);
 		List<CategoryMenu> list = categoryMenuService.list(queryWrapper);
 		
 		//获取所有的ID，去寻找他的子目录
@@ -138,6 +141,28 @@ public class CategoryMenuRestApi {
 					tempList.add(item);
 				}							
 			}
+			Collections.sort(tempList, new Comparator<CategoryMenu>(){
+				
+	            /*
+	             * int compare(CategoryMenu p1, CategoryMenu p2) 返回一个基本类型的整型，
+	             * 返回负数表示：p1 小于p2，
+	             * 返回0 表示：p1和p2相等，
+	             * 返回正数表示：p1大于p2
+	             */
+				@Override
+				public int compare(CategoryMenu o1, CategoryMenu o2) {
+					
+	                //按照CategoryMenu的Sort进行降序排列
+	                if(o1.getSort() > o2.getSort()){
+	                    return -1;
+	                }
+	                if(o1.getSort() == o2.getSort()){
+	                    return 0;
+	                }
+	                return 1;
+				}
+	  
+	        });
 			parentItem.setChildCategoryMenu(tempList);
 		}
 		
@@ -199,23 +224,33 @@ public class CategoryMenuRestApi {
 	public String stick(HttpServletRequest request,
 			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid) {
 		
-		if(StringUtils.isEmpty(uid)) {
-			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
+				
 		CategoryMenu categoryMenu = categoryMenuService.getById(uid);
+		
+		if(categoryMenu == null) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
 		
 		//查找出最大的那一个
 		QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
+		
+		//如果是二级目录，就在当前的兄弟中，找出最大的一个
+		if(categoryMenu.getMenuLevel() == 2) {
+			
+			queryWrapper.eq(SQLConf.PARENT_UID, categoryMenu.getParentUid());
+			
+		}
+		
+		queryWrapper.eq(SQLConf.MENU_LEVEL, categoryMenu.getMenuLevel());
+		
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		
 		CategoryMenu  maxSort = categoryMenuService.getOne(queryWrapper);
 		
 		if(StringUtils.isEmpty(maxSort.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
 		}
-		if(maxSort.getUid().equals(categoryMenu.getUid())) {
-			return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
-		}
-		
+
 		Integer sortCount = maxSort.getSort() + 1;
 		
 		categoryMenu.setSort(sortCount);
