@@ -51,7 +51,7 @@
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>	              
 	    </div>
 
-      <el-table :data="tableData"  style="width: 100%">
+      <el-table :data="tableData" @cell-click="onClick" style="width: 100%">
       
       <el-table-column type="selection"></el-table-column>
   		
@@ -283,6 +283,8 @@ export default {
   },
   data() {
     return {
+      WEB_API: process.env.WEB_API,
+
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框
       loading: false, //搜索框加载状态
@@ -377,6 +379,10 @@ export default {
         articlesPart: "蘑菇博客" //文章出处
       };
       return formObject;
+    },
+    onClick: function(row) {
+      // this.WEB_API = this.WEB_API + "/info?blogUid=" + row.uid;
+      console.log("点击了标题", this.WEB_API);
     },
     //标签远程搜索函数
     tagRemoteMethod: function(query) {

@@ -22,13 +22,13 @@
   <!--blogsbox begin-->
   <div class="blogsbox">
     	<div v-for="item in blogData" :key="item.uid" class="blogs" data-scroll-reveal="enter bottom over 1s" >	  
-      <h3 class="blogtitle"><a href="javascript:void(0);" @click="goToInfo(item.id)" target="_blank" v-html="item.title">{{item.title}}</a></h3>
-      <span class="blogpic"><a href="javascript:void(0);" @click="goToInfo(item.id)" title=""><img v-if="item.photoList" :src="item.photoList[0]" alt=""></a></span>
+      <h3 class="blogtitle"><a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" target="_blank" v-html="item.title">{{item.title}}</a></h3>
+      <span class="blogpic"><a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" title=""><img v-if="item.photoList" :src="item.photoList[0]" alt=""></a></span>
       <p class="blogtext" v-html="item.summary">{{item.summary}}</p>
       <div class="bloginfo">
         <ul>
           <li class="author"><a href="/">{{item.author}}</a></li>
-          <li class="lmname" v-if="item.blogSort"><a href="/">{{item.blogSort}}</a></li>
+          <li class="lmname" v-if="item.blogSort"><a href="javascript:void(0);" @click="goToList(item.blogSortUid)">{{item.blogSort}}</a></li>
           <li class="timer">{{item.updateTime}}</li>
           <li class="view"><span>{{item.clickCount}}</span></li>
           <li class="like">{{item.collectCount}}</li>
@@ -144,6 +144,12 @@ export default {
         query: { blogUid: uid }
       });
       window.open(routeData.href, "_blank");
+    },
+    //点击了分类
+    goToList(uid) {
+      console.log("点击了跳转", uid);
+      let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });      
+      window.open(routeData.href, '_blank');
     },
     search: function() {
       if (this.keywords != undefined) {

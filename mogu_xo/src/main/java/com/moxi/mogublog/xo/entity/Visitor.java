@@ -7,7 +7,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
  * <p>
- * 博主表
+ * 游客表
  * </p>
  *
  * @author xuzhixiang

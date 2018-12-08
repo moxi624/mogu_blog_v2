@@ -79,6 +79,8 @@ public class BlogSearchServiceImpl implements BlogSearchService {
             solrIndex.setSummary(blog.getSummary());
             solrIndex.setTag(getTagByBlog(blog));
             solrIndex.setBlogSort(getBlogSortbyBlog(blog));
+            solrIndex.setBlogTagUid(blog.getTagUid());
+            solrIndex.setBlogSortUid(blog.getBlogSortUid());
             solrIndex.setAuthor(blog.getAuthor());
             solrIndex.setUpdateTime(blog.getUpdateTime());
             solrIndexs.add(solrIndex);

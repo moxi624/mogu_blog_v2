@@ -45,6 +45,18 @@ public class SolrIndex {
      */
     @Field("blog_sort")
     private String blogSort;
+    
+    /**
+     * 博客标签UID
+     */
+    @Field("blog_tag_uid")
+    private String blogTagUid;
+    
+    /**
+     * 博客分类UID
+     */
+    @Field("blog_sort_uid")
+    private String blogSortUid;
 
     /**
      * 如果原创，作者为管理员名
@@ -135,6 +147,22 @@ public class SolrIndex {
 
 	public void setPhotoList(String photoList) {
 		this.photoList = photoList;
+	}
+	
+	public String getBlogTagUid() {
+		return blogTagUid;
+	}
+
+	public void setBlogTagUid(String blogTagUid) {
+		this.blogTagUid = blogTagUid;
+	}
+
+	public String getBlogSortUid() {
+		return blogSortUid;
+	}
+
+	public void setBlogSortUid(String blogSortUid) {
+		this.blogSortUid = blogSortUid;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -23,6 +24,8 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.WebVisitService;
+import com.moxi.mougblog.base.enums.EBehavior;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +44,9 @@ public class SearchRestApi {
 	
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
+	
+	@Autowired
+	private WebVisitService webVisitService;
     
     private static Logger log = LogManager.getLogger(SearchRestApi.class);
 
@@ -53,7 +59,11 @@ public class SearchRestApi {
 			return ResultUtil.result(SysConf.ERROR, "关键字不能为空");
 		}
 		
-        Map<String,Object> map = blogSearchService.search(keywords);  
+        Map<String,Object> map = blogSearchService.search(keywords);
+        
+		//增加记录（可以考虑使用AOP）
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SEARCH, null, keywords);
+        
         return ResultUtil.result(SysConf.SUCCESS, map);
 
     }
@@ -80,7 +90,10 @@ public class SearchRestApi {
 			setPhotoListByBlog(item);			
 		}
 		log.info("返回结果");
-
+		
+		//增加记录（可以考虑使用AOP）
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG, tagUid, null);
+		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	
@@ -106,7 +119,10 @@ public class SearchRestApi {
 			setPhotoListByBlog(item);			
 		}
 		log.info("返回结果");
-
+		
+		//增加记录（可以考虑使用AOP）
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT, blogSortUid, null);
+		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	

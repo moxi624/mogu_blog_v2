@@ -30,6 +30,8 @@ import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
+import com.moxi.mogublog.xo.service.WebVisitService;
+import com.moxi.mougblog.base.enums.EBehavior;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,8 +66,11 @@ public class BlogContentRestApi {
 	private PictureFeignClient pictureFeignClient;
 	
 	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
+	private WebVisitService webVisitService;
 	
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+
 	private static Logger log = LogManager.getLogger(BlogContentRestApi.class);
 	
 	@ApiOperation(value="通过Uid获取博客内容", notes="通过Uid获取博客内容")
@@ -95,19 +100,22 @@ public class BlogContentRestApi {
 			
 			//从Redis取出数据，判断该用户是否点击过
 			String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + uid);
-			
+						
 			if(StringUtils.isEmpty(jsonResult)) {
+				
 				//给博客点击数增加
 				blogService.addBlogClickCount(blog);
 				
 			    //将该用户点击记录存储到redis中, 24小时后过期	
 				stringRedisTemplate.opsForValue().set("BLOG_CLICK:" + ip + "#" + uid, blog.getClickCount().toString(),
-						24, TimeUnit.HOURS);
+						24, TimeUnit.HOURS);											
 			}
 			
-
+			//增加记录（可以考虑使用AOP）
+	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET, blog.getUid(), null);
 			
 		}
+		
 		log.info("返回结果");		
 		return ResultUtil.result(SysConf.SUCCESS, blog);
 	}
