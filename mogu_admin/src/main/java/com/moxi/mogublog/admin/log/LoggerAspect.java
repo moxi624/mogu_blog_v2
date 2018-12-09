@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.moxi.mogublog.config.security.SecurityUser;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.xo.entity.ExceptionLog;
 import com.moxi.mogublog.xo.entity.SysLog;
@@ -83,9 +84,10 @@ public class LoggerAspect {
 	  @AfterReturning(value = "pointcut(operationLogger)")
 	  public void doAfterReturning(OperationLogger operationLogger) {
 		  sysLog.setCreateTime(new Date());
-		  String name=SecurityContextHolder.getContext()
-				  .getAuthentication().getName();//从security中取得用户名
-		  sysLog.setUserName(name);
+		  sysLog.setUpdateTime(new Date());
+		  SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		  sysLog.setUserName(securityUser.getUsername());
+		  sysLog.setAdminUid(securityUser.getUid());
 		  SysLogService.save(sysLog);
 	  }
 	  

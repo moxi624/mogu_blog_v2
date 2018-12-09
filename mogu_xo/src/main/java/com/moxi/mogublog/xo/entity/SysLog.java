@@ -19,7 +19,9 @@ public class SysLog extends SuperEntity<SysLog>{
 	 */
 	private static final long serialVersionUID = -4851055162892178225L;
 	
-	private String userName;//操作账户名
+	private String userName; //操作用户名
+	
+	private String adminUid; //操作人uid
 	
 	private String ip; //请求IP
     
@@ -35,95 +37,78 @@ public class SysLog extends SuperEntity<SysLog>{
 
     private String operation;//描述
     
+     
+	public String getAdminUid() {
+		return adminUid;
+	}
+
+	public void setAdminUid(String adminUid) {
+		this.adminUid = adminUid;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
-
-
 
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
-
-
 	public String getIp() {
 		return ip;
 	}
-
-
 
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
-
-
 	public String getUrl() {
 		return url;
 	}
-
-
 
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-
-
 	public String getType() {
 		return type;
 	}
-
-
 
 	public void setType(String type) {
 		this.type = type;
 	}
 
-
-
 	public String getClassPath() {
 		return classPath;
 	}
-
-
 
 	public void setClassPath(String classPath) {
 		this.classPath = classPath;
 	}
 
-
-
 	public String getMethod() {
 		return method;
 	}
-
-
 
 	public void setMethod(String method) {
 		this.method = method;
 	}
 
-
-
 	public String getParams() {
 		return params;
 	}
-
-
 
 	public void setParams(String params) {
 		this.params = params;
 	}
 
-
-
 	public String getOperation() {
 		return operation;
 	}
-
-
 
 	public void setOperation(String operation) {
 		this.operation = operation;
