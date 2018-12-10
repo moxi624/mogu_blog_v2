@@ -123,18 +123,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 		//得到请求头信息authorization信息
 		final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 		
-		log.error("######## 传递过来的token为: " + authHeader + "###########");
+		log.error("######## 传递过来的token为: " + authHeader);
 		
 		//请求头 'Authorization': tokenHead + token
 		if (authHeader != null && authHeader.startsWith(tokenHead)) {
 		
 			final String token = authHeader.substring(tokenHead.length());
-			
-			String username = jwtHelper.getUsername(token,audience.getBase64Secret());
-			String adminUid = jwtHelper.getUserUid(token,audience.getBase64Secret());
-			
-			//把adminUid存储到request中
-			request.setAttribute("adminUid", adminUid);
 			
 			//判断token是否过期
 			if (!jwtHelper.isExpiration(token, audience.getBase64Secret())) {
@@ -143,7 +137,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);	
 			} 
 			
+			String username = jwtHelper.getUsername(token,audience.getBase64Secret());
+			String adminUid = jwtHelper.getUserUid(token,audience.getBase64Secret());
 			
+			//把adminUid存储到request中
+			request.setAttribute("adminUid", adminUid);
+			
+
 			logger.info("解析出来用户 : " + username);
 			logger.info("解析出来的用户Uid : " + adminUid);
 			
