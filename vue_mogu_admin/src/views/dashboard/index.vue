@@ -1,54 +1,56 @@
 <template>
-  <div class="dashboard-container">
-    	<el-row class="panel-group" :gutter="40">
+  <div class="dashboard-editor-container">
+    
+    <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"></github-corner>
 
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="eye" class-name="card-panel-icon" />
+    <el-row class="panel-group" :gutter="40">
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="eye" class-name="card-panel-icon"/>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">今日访问量：</div>
+            <count-to class="card-panel-num" :startVal="0" :endVal="visitAddTotal" :duration="3200"></count-to>
+          </div>
         </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">今日访问量：</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="visitAddTotal" :duration="3200"></count-to>
+      </el-col>
+
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-people">
+            <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">用户数:</div>
+            <count-to class="card-panel-num" :startVal="0" :endVal="userTotal" :duration="2600"></count-to>
+          </div>
         </div>
-      </div>
-    </el-col>
-    
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class='card-panel'>
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+      </el-col>
+
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-message">
+            <svg-icon icon-class="message" class-name="card-panel-icon"/>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">评论数：</div>
+            <count-to class="card-panel-num" :startVal="0" :endVal="commentTotal" :duration="3000"></count-to>
+          </div>
         </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">用户数:</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="userTotal" :duration="2600"></count-to>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-shoppingCard">
+            <svg-icon icon-class="form" class-name="card-panel-icon"/>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">文章数:</div>
+            <count-to class="card-panel-num" :startVal="0" :endVal="blogTotal" :duration="3600"></count-to>
+          </div>
         </div>
-      </div>
-    </el-col>
-    
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" >
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">评论数：</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="commentTotal" :duration="3000"></count-to>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-shoppingCard">
-          <svg-icon icon-class="form" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">文章数:</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="blogTotal" :duration="3600"></count-to>
-        </div>
-      </div>
-    </el-col>
- </el-row>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -56,12 +58,14 @@
 import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
 import { init } from "@/api/index";
-export default {  
+import GithubCorner from '@/components/GithubCorner'
+export default {
   name: "dashboard",
   computed: {
     ...mapGetters(["name", "roles"])
   },
   components: {
+    GithubCorner,
     CountTo
   },
   data() {
@@ -69,17 +73,17 @@ export default {
       visitAddTotal: 6,
       userTotal: 50,
       commentTotal: 15,
-      blogTotal: 20,
-    }
+      blogTotal: 20
+    };
   },
   created() {
     init().then(response => {
-        console.log(response);
-        if(response.code == "success") {
-          this.blogTotal = response.data.blogCount;
-          this.commentTotal = response.data.commentCount;
-        }
-    })
+      console.log(response);
+      if (response.code == "success") {
+        this.blogTotal = response.data.blogCount;
+        this.commentTotal = response.data.commentCount;
+      }
+    });
 
     console.log("role", this.roles);
   }
@@ -87,6 +91,15 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+  }
+}
 .btn {
   width: 80px;
   height: 40px;
@@ -182,7 +195,7 @@ export default {
       font-weight: bold;
       margin: 26px 70px 0 0;
       .card-panel-text {
-        line-height: 18px;;
+        line-height: 18px;
         color: rgba(0, 0, 0, 0.45);
         font-size: 16px;
         margin-bottom: 12px;

@@ -6,6 +6,7 @@
 
     <div class="main-container">
       <navbar/>
+      <tags-view></tags-view>
       <app-main/>
     </div>
   </div>
@@ -13,7 +14,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { Navbar, Sidebar, AppMain } from "./components";
+import { Navbar, Sidebar, AppMain, TagsView } from "./components";
 import ResizeMixin from "./mixin/ResizeHandler";
 import { getMenu } from "@/api/login";
 export default {
@@ -21,7 +22,8 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
+    TagsView
   },
   mixins: [ResizeMixin],
   data() {
@@ -71,14 +73,14 @@ export default {
             }
             console.log("sonItem", sonItem);
             //对子目录进行排序
-            for(var a=0; a<sonItem.length; a++) {
-              for(var b=0; b< sonItem.length -a - 1 ; b++) {
+            for (var a = 0; a < sonItem.length; a++) {
+              for (var b = 0; b < sonItem.length - a - 1; b++) {
                 var tag = false;
-                if(sonItem[b].sort < sonItem[b+1].sort) {
-                   var temp = sonItem[b];
-                   sonItem[b] = sonItem[b+1];
-                   sonItem[b+1] = temp;
-                   tag = true;
+                if (sonItem[b].sort < sonItem[b + 1].sort) {
+                  var temp = sonItem[b];
+                  sonItem[b] = sonItem[b + 1];
+                  sonItem[b + 1] = temp;
+                  tag = true;
                 }
                 // if(!tag) {
                 //   return;
