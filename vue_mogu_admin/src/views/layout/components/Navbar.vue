@@ -1,7 +1,16 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb />
+    <hamburger
+      :toggle-click="toggleSideBar"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+    />
+    <breadcrumb/>
+
+    <el-tooltip effect="dark" :content="menuName" placement="bottom">
+      <screenfull class="screenfull right-menu-item"></screenfull>
+    </el-tooltip>
+
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -9,9 +18,7 @@
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            主页
-          </el-dropdown-item>
+          <el-dropdown-item>主页</el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
           <span style="display:block;" @click="logout">退出</span>
@@ -22,32 +29,36 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
+import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
+    Screenfull,
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return{
+      menuName: "全屏",
+    }
+  },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters(["sidebar", "avatar"])
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+      this.$store.dispatch("ToggleSideBar");
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+      this.$store.dispatch("LogOut").then(() => {
+        location.reload(); // 为了重新实例化vue-router对象 避免bug
+      });
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
