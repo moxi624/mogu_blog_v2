@@ -33,6 +33,7 @@ import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
@@ -86,6 +87,9 @@ public class BlogRestApi {
 	
 	@Value(value="${BLOG.FOURTH_COUNT}")
 	private Integer BLOG_FOURTH_COUNT;
+	
+    @Autowired
+    private BlogSearchService blogSearchService;
 	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 		
@@ -274,7 +278,10 @@ public class BlogRestApi {
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
 			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);	
+			
+			//增加solr索引
+			blogSearchService.addIndex(blog);
 		}
 
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
@@ -360,7 +367,10 @@ public class BlogRestApi {
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
 			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
+			
+			//更新solr索引
+			blogSearchService.updateIndex(blog);
 		}
 		
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
@@ -386,7 +396,10 @@ public class BlogRestApi {
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
 			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);			
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
+			
+			//删除solr索引
+			blogSearchService.deleteIndex(blog.getUid());
 		}
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}

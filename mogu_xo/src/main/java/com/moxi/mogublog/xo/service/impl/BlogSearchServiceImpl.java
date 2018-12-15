@@ -102,15 +102,15 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //添加索引
     @Override
-    public void addIndex(String id, String title, String summary, String tagUid, String blogSortUid, String author) {
+    public void addIndex(Blog blog) {
 
         SolrIndex solrIndex = new SolrIndex();
-        solrIndex.setId(id);
-        solrIndex.setTitle(title);
-        solrIndex.setSummary(summary);
-        solrIndex.setTag(getTagbyTagUid(tagUid));
-        solrIndex.setBlogSort(getBlogSort(blogSortUid));
-        solrIndex.setAuthor(author);
+        solrIndex.setId(blog.getUid());
+        solrIndex.setTitle(blog.getTitle());
+        solrIndex.setSummary(blog.getSummary());
+        solrIndex.setTag(getTagbyTagUid(blog.getTagUid()));
+        solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
+        solrIndex.setAuthor(blog.getAuthor());
         solrIndex.setUpdateTime(new Date());
         solrTemplate.saveBean(solrIndex);
         solrTemplate.commit();
@@ -119,16 +119,15 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //更新索引
     @Override
-    public void updateIndex(String id, String title, String summary, String tagUid, String blogSortUid,
-                            String author) {
+    public void updateIndex(Blog blog) {
 
-        SolrIndex solrIndex = solrTemplate.getById(id, SolrIndex.class);
-        solrIndex.setId(id);
-        solrIndex.setTitle(title);
-        solrIndex.setSummary(summary);
-        solrIndex.setTag(getTagbyTagUid(tagUid));
-        solrIndex.setBlogSort(getBlogSort(blogSortUid));
-        solrIndex.setAuthor(author);
+        SolrIndex solrIndex = solrTemplate.getById(blog.getUid(), SolrIndex.class);
+        solrIndex.setId(blog.getUid());
+        solrIndex.setTitle(blog.getTitle());
+        solrIndex.setSummary(blog.getSummary());
+        solrIndex.setTag(getTagbyTagUid(blog.getTagUid()));
+        solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
+        solrIndex.setAuthor(blog.getAuthor());
         solrIndex.setUpdateTime(new Date());
         solrTemplate.saveBean(solrIndex);
         solrTemplate.commit();

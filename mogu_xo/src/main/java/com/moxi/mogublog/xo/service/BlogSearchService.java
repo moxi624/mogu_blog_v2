@@ -30,16 +30,14 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void addIndex(String id, String title, String summary, String tagUid, String blogSortUid,
-                         String author);
+    public void addIndex(Blog blog);
 
     /**
      * 更新索引
      * @param
      * @return
      */
-    public void updateIndex(String id, String title, String summary, String tagUid, String blogSortUid,
-                            String author);
+    public void updateIndex(Blog blog);
 
     /**
      * 删除索引

@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -121,32 +122,26 @@ public class SolrIndexRestApi {
     @OperationLogger(value="添加solr索引")
     @ApiOperation(value="添加solr索引", notes="添加solr索引")
     @PostMapping("/addIndex")
-    public String addIndex(HttpServletRequest request,
-                           @ApiParam(name="uid", value="博客uid",required=true)@RequestParam(name = "uid", required = true)String uid,
-                           @ApiParam(name = "title", value = "博客标题",required = false) @RequestParam(name = "title", required = false) String title,
-                           @ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
-                           @ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-                           @ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-                           @ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author){
+    public String addIndex(HttpServletRequest request, @RequestBody Blog blog){
 
-        blogSearchService.addIndex(uid, title, summary, tagUid, blogSortUid, author);
+    	if(blog == null || StringUtils.isEmpty(blog.getUid())) {
+    		return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+    	}
+        blogSearchService.addIndex(blog);
         log.info("新建solr索引");
-        return ResultUtil.result(SysConf.SUCCESS,"新建solr索引成功");
+        return ResultUtil.result(SysConf.SUCCESS, "新建solr索引成功");
 
     }
 
     @OperationLogger(value="更新solr索引")
     @ApiOperation(value="更新solr索引", notes="更新solr索引")
     @PostMapping("/updateIndex")
-    public String updateIndex(HttpServletRequest request,
-                              @ApiParam(name="uid", value="博客uid",required=true)@RequestParam(name = "uid", required = true)String uid,
-                              @ApiParam(name = "title", value = "博客标题",required = false) @RequestParam(name = "title", required = false) String title,
-                              @ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
-                              @ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-                              @ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-                              @ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author){
-
-        blogSearchService.updateIndex(uid, title, summary, tagUid, blogSortUid, author);
+    public String updateIndex(HttpServletRequest request, @RequestBody Blog blog){
+    	
+    	if(blog == null || StringUtils.isEmpty(blog.getUid())) {
+    		return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+    	}
+        blogSearchService.updateIndex(blog);
 
         log.info("更新solr索引");
         return ResultUtil.result(SysConf.SUCCESS,"更新solr索引成功");
