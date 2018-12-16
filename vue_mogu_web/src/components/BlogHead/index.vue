@@ -6,7 +6,7 @@
       <h1 class="logo"><a href="javascript:void(0);" @click="goTo('/')">蘑菇博客</a></h1>
       <li><a href="javascript:void(0);" @click="goTo('/')">网站首页</a> </li>
       <li><a href="javascript:void(0);" @click="goTo('/about')">关于我</a> </li>
-      <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li>
+      <!-- <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li> -->
       <li><a href="javascript:void(0);" @click="goTo('/time')">时间轴</a> </li>
 
                 <!-- <input />
@@ -30,7 +30,7 @@
     <dl class="list_dl">
       <dt class="list_dt"> <a href="javascript:void(0);" @click="goTo('/')">网站首页</a> </dt>
       <dt class="list_dt"> <a href="about.html">关于我</a> </dt>
-      <dt class="list_dt"> <a href="javascript:void(0);" @click="goTo('/about')">学习教程</a> </dt>
+      <!-- <dt class="list_dt"> <a href="javascript:void(0);" @click="goTo('/about')">学习教程</a> </dt> -->
       <dt class="list_dt"> <a href="javascript:void(0);" @click="goTo('/time')">时间轴</a> </dt>
     </dl>
   </div>
