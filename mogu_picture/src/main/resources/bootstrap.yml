@@ -1,7 +1,0 @@
-spring:
-  cloud:
-    config:
-      name: picture
-      profile: dev
-      label: master
-      uri: http://127.0.0.1:8605

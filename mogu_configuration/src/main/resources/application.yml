@@ -4,8 +4,10 @@ spring:
   application:
     name: mogu_configuration
   cloud:
-    bus:      enabled: true
-      trace:        enabled: true
+    bus:
+      enabled: true
+      trace:
+        enabled: true
     config:
       server:
         git:
