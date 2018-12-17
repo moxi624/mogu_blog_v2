@@ -223,7 +223,7 @@ export default {
   created() {
 
     this.adminList();
-    this.roleList();
+    // this.roleList();
   },
   methods: {
     adminList: function() {
@@ -341,15 +341,17 @@ export default {
     },
     handleDelete: function(row) {
       var that = this;
-      this.$confirm("此操作将把标签删除, 是否继续?", "提示", {
+      this.$confirm("此操作将该管理员删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
           let params = new URLSearchParams();
-          params.append("uid", row.uid);
-          deleteTag(params).then(response => {
+          var adminUids = [];
+          adminUids.push(row.uid);
+          params.append("adminUids", adminUids);
+          deleteAdmin(params).then(response => {
             console.log(response);
             this.$message({
               type: "success",

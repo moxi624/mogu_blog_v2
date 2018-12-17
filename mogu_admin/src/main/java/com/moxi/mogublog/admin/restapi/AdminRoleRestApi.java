@@ -104,6 +104,8 @@ public class AdminRoleRestApi {
 		Map<String, Role> roleMap = new HashMap<>();
 		
 		adminList.forEach(item -> {
+			//隐藏管理员的密码
+			item.setPassWord("");
 			adminMap.put(item.getUid(), item);
 		});
 		roleList.forEach(item -> {

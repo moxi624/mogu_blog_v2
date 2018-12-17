@@ -220,7 +220,7 @@ public class IndexRestApi {
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		
-		queryWrapper.excludeColumns(Blog.class, "content");
+		queryWrapper.excludeColumns(Blog.class, SysConf.CONTENT);
 		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		

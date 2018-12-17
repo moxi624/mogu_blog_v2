@@ -29,6 +29,7 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String PARENTID = "parent_id";
 	public final static String USER_NAME = "user_name";	
 	public final static String NICK_NAME = "nick_name";	
+	public final static String PASS_WORD = "pass_word";	
 	
 	public final static String OPERATION = "operation";	
 	

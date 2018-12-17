@@ -92,6 +92,7 @@ public class AdminRestApi {
 		Page<Admin> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
+		queryWrapper.excludeColumns(Admin.class, SysConf.PASS_WORD);
 		IPage<Admin> pageList = adminService.page(page, queryWrapper);
 		List<Admin> list = pageList.getRecords();
 		log.info(list);

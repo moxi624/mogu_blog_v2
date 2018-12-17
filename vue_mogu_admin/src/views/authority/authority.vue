@@ -204,7 +204,7 @@ export default {
         this.pageSize = response.data.size;
         this.total = response.data.total;
 
-        //给每个评分参考增加指标 和专业
+        //初始化选项列表
         var data = this.tableData;
         for (let a = 0; a < data.length; a++) {
 
@@ -219,7 +219,7 @@ export default {
 
           this.roleOptions.forEach(element => {
             if (element.uid == data[a].role.uid) {
-              tag1 = true;
+              tag2 = true;
             }
           });
 
@@ -230,6 +230,9 @@ export default {
             this.roleOptions.push(data[a].role);
           }
         }
+
+        console.log("admin", this.adminOptions);
+        console.log("role", this.roleOptions);
       });
     },
     getFormObject: function() {
