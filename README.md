@@ -1,7 +1,7 @@
 # 蘑菇博客
 
 #### 项目介绍
-蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发
+蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合自己的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
 - 现在挺多是SSM或者SSH的博客管理系统，现在我想用spring boot + spring cloud  + vue 的微服务架构
@@ -25,7 +25,7 @@
 
 #### 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼、RabbitMQ
 - 前端采用的技术： Vue， Element， ES6， CKEditor
 
 #### 项目特点
@@ -51,24 +51,50 @@
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/bashboard.png)
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blog.png)
-
+  
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogEdit.png)
-
+  
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/addPicture.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogSort.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogTag.png)
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogSort.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogLink.png)
 
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/aboutMe.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/webConf.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/admin.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/categoryMenu.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/sysLog.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/exception.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/webConf.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/pictureSort.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/picture.png)
+  
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/solrIndex.png)
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/swagger.png)
 
 
 
-- Web端
+- ### Web端
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index.png)
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index2.png)
+  
+  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/content.png)
 
   ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/about.png)
 
