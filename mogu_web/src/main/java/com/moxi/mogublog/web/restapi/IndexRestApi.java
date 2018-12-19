@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -39,6 +40,8 @@ import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mogublog.xo.service.WebConfigService;
+import com.moxi.mogublog.xo.service.WebVisitService;
+import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.ELevel;
 import com.moxi.mougblog.base.enums.EStatus;
 
@@ -80,6 +83,9 @@ public class IndexRestApi {
 	
 	@Autowired
 	private WebConfigService webConfigService;
+	
+	@Autowired
+	private WebVisitService webVisitService;
 	
 	@Value(value="${BLOG.HOT_COUNT}")
 	private Integer BLOG_HOT_COUNT;
@@ -526,6 +532,31 @@ public class IndexRestApi {
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
+	
+	@ApiOperation(value="友情链接点击数", notes="获取友情链接")
+	@GetMapping("/addLinkCount")
+	public String addLinkCount (HttpServletRequest request,
+			@ApiParam(name = "uid", value = "友情链接UID",required = false) @RequestParam(name = "uid", required = false) String uid) {
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
+		Link link = linkService.getById(uid);
+		if(link != null) {
+			
+			//增加记录（可以考虑使用AOP）
+	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.FRIENDSHIP_LINK, uid, null);
+	        
+			int count = link.getClickCount() + 1;
+			link.setClickCount(count);
+			link.updateById();	
+		}  else {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
+				
+		return ResultUtil.result(SysConf.SUCCESS, "更新点击数成功");
+	}
+	
 	
 	@ApiOperation(value="获取网站配置", notes="获取友情链接")
 	@GetMapping("/getWebConfig")

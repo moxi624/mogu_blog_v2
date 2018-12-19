@@ -48,6 +48,14 @@ export function getLink (params) {
   })
 }
 
+export function addLinkCount (params) {
+  return request({
+    url: process.env.WEB_API + '/index/addLinkCount',
+    method: 'get',
+    params
+  })
+}
+
 export function getWebConfig (params) {
   return request({
     url: process.env.WEB_API + '/index/getWebConfig',

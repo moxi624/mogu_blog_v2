@@ -2,14 +2,14 @@
     <div class="links" v-if="linkData.length > 0">
       <h2 class="hometitle">友情链接</h2>
       <ul>
-          <li v-for="item in linkData" :key="item.uid"><a :href="item.url" target="_blank">{{item.title}}</a></li>
+          <li v-for="item in linkData" :key="item.uid"><a  href="javascript:void(0);" @click="goLink(item)">{{item.title}}</a></li>
       </ul>
     </div>
 
 </template>
 
 <script>
-import { getLink } from "../../api/index";
+import { getLink, addLinkCount } from "../../api/index";
 export default {
   name: "TagCloud",
   data() {
@@ -24,6 +24,17 @@ export default {
     });
   },
   methods: {
+    goLink: function(item) {
+      var params = new URLSearchParams();
+      params.append("uid", item.uid);
+      addLinkCount(params).then(response => {
+        if(response.code == "success") {
+          console.log("计数加1，准备跳转");
+          window.location.href = item.url;    
+        }
+      })
+      
+    }
   }
 };
 </script>
