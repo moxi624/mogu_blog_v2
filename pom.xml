@@ -29,7 +29,6 @@
   	<module>mogu_picture</module>
 	<module>mogu_eureka</module>
 	<module>mogu_sms</module>
-	<module>mogu_configuration</module>
   </modules>
   
 	<dependencyManagement>
