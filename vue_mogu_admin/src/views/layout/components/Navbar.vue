@@ -1,37 +1,60 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
-    <hamburger
-      :toggle-click="toggleSideBar"
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-    />
-    <breadcrumb/>
+  <div class="dashboard-editor-container">
+    <el-menu class="navbar" mode="horizontal">
+      <hamburger
+        :toggle-click="toggleSideBar"
+        :is-active="sidebar.opened"
+        class="hamburger-container"
+      />
+      <breadcrumb/>
 
-    <div class="right-menu">
-      <el-tooltip effect="dark" :content="menuName" placement="bottom">
-        <screenfull class="screenfull right-menu-item"></screenfull>
-      </el-tooltip>
+      <div class="right-menu">
+        <el-tooltip effect="dark" :content="menuName" placement="bottom">
+          <screenfull class="screenfull right-menu-item"></screenfull>
+        </el-tooltip>
 
-      <el-tooltip effect="dark" :content="menuName2" placement="bottom">
-        <theme-picker class="theme-switch right-menu-item"></theme-picker>
-      </el-tooltip>
+        <el-tooltip effect="dark" :content="menuName2" placement="bottom">
+          <theme-picker class="theme-switch right-menu-item"></theme-picker>
+        </el-tooltip>
 
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom"/>
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link class="inlineBlock" to="/">
-            <el-dropdown-item>主页</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">退出</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </el-menu>
+        <el-dropdown class="avatar-container" trigger="click">
+          <div class="avatar-wrapper">            
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">            
+            <i class="el-icon-caret-bottom"/>            
+          </div>
+          <el-dropdown-menu slot="dropdown" class="user-dropdown">
+            <router-link class="inlineBlock" to="/">
+              <el-dropdown-item>主页</el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="showLog">更新日志</span>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">退出</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </el-menu>
+
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-row class="panel-group" style="margin-left:20px;" :gutter="40">
+        <el-collapse v-model="activeName" accordion>
+          <el-collapse-item title="2018.12.20 更新" name="1">
+            <div>增加更新日志</div>
+          </el-collapse-item>
+          <el-collapse-item title="2018.12.19 更新" name="2">
+            <div>修改Gitee中readme页面</div>
+            <div>项目地址：https://gitee.com/moxi159753/mogu_blog_v2</div>
+          </el-collapse-item>
+          <el-collapse-item title="2018.12.18 更新" name="3">
+            <div>重新部署了线上环境</div>
+            <div>线上环境地址：http://www.moguit.cn</div>
+          </el-collapse-item>
+        </el-collapse>
+      </el-row>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -51,7 +74,10 @@ export default {
   data() {
     return {
       menuName: "全屏",
-      menuName2: "换肤"
+      menuName2: "换肤",
+      dialogFormVisible: false,
+      title: "更新日志",
+      activeName: "1"
     };
   },
   computed: {
@@ -65,6 +91,10 @@ export default {
       this.$store.dispatch("LogOut").then(() => {
         location.reload(); // 为了重新实例化vue-router对象 避免bug
       });
+    },
+    showLog: function() {
+      console.log("点击了显示日志");
+      this.dialogFormVisible = true;
     }
   }
 };
@@ -81,7 +111,7 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .breadcrumb-container{
+  .breadcrumb-container {
     float: left;
   }
   .errLog-container {
@@ -91,8 +121,8 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
-    &:focus{
-     outline: none;
+    &:focus {
+      outline: none;
     }
     .right-menu-item {
       display: inline-block;
@@ -101,7 +131,7 @@ export default {
     .screenfull {
       height: 20px;
     }
-    .international{
+    .international {
       vertical-align: top;
     }
     .theme-switch {

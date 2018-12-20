@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-editor-container">
-    
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"></github-corner>
 
     <el-row class="panel-group" :gutter="40">
@@ -58,7 +57,7 @@
 import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
 import { init } from "@/api/index";
-import GithubCorner from '@/components/GithubCorner'
+import GithubCorner from "@/components/GithubCorner";
 export default {
   name: "dashboard",
   computed: {
@@ -73,7 +72,7 @@ export default {
       visitAddTotal: 6,
       userTotal: 50,
       commentTotal: 15,
-      blogTotal: 20
+      blogTotal: 20,      
     };
   },
   created() {
