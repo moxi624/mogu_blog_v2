@@ -20,13 +20,17 @@
           <el-form-item label="网站名称" prop="oldPwd">
             <el-input  v-model="form.name" style="width: 400px"></el-input>
           </el-form-item>
-          
-          <el-form-item label="介绍" prop="newPwd1">
-            <el-input  v-model="form.summary" style="width: 400px"></el-input>
+
+          <el-form-item label="标题" prop="newPwd1">
+            <el-input  v-model="form.title" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="关键字" prop="newPwd2">
             <el-input  v-model="form.keyword" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="描述" prop="newPwd1">
+            <el-input  v-model="form.summary" style="width: 400px"></el-input>
           </el-form-item>
           
           <el-form-item label="作者" prop="newPwd2">
@@ -68,13 +72,14 @@ export default {
   data() {
     return {
       form: {
-        name: "蘑菇博客",
-        summary: "一个开源的个人博客",
-        keyword: "蘑菇博客",
-        author: "许志翔",
+        name: "",
+        title: "",        
+        keyword: "",
+        summary: "",
+        author: "",
         logo: "",
-        recordNum: "赣ICP备18014504号",
-        startComment: "1"
+        recordNum: "",
+        startComment: "1",        
       },
       photoVisible: false, //控制图片选择器的显示
       photoList: [],

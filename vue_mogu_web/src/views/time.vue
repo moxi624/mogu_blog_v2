@@ -1,12 +1,8 @@
 <template>
 <html>
-<head>
-<meta charset="utf-8">
-<title>蘑菇博客 - 一个Java开发人员的个人博客网站</title>
-<meta name="keywords" content="个人博客,蘑菇博客" />
-<meta name="description" content="蘑菇博客 - 一个Java开发人员的个人博客网站" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+
+<Head></Head>
+
 <body>
 <!--
 	作者：xzx19950624@qq.com
@@ -44,6 +40,7 @@
 </template>
 
 <script>
+import Head from '../components/Head';
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
 import { getBlogByTime } from "../api/index";
@@ -59,7 +56,8 @@ export default {
   components: {
     //注册组件
     BlogHead,
-    BlogFooter
+    BlogFooter,
+    Head
   },
   mounted() {
     // 注册scroll事件并监听

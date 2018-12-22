@@ -30,9 +30,12 @@ public class WebConfig extends SuperEntity<WebConfig> {
      */
     private String name;
 
-
     /**
-     * 简介
+     * 标题
+     */
+    private String title;
+    /**
+     * 描述
      */
     private  String summary;
 
@@ -130,5 +133,12 @@ public class WebConfig extends SuperEntity<WebConfig> {
 	public void setPhotoList(List<String> photoList) {
 		this.photoList = photoList;
 	}
-    
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}  
 }
