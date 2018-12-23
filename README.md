@@ -36,6 +36,22 @@
 - 引入swagger文档支持，方便编写API接口文档
 - 引入RabbitMQ消息队列，用于邮件和短信发送。
 
+#### 项目环境
+
+- 安装 JDK（1.8+）
+- 安装 Maven (3.3.0+)
+- 安装Redis服务 (3.0+)
+- 安装 MySQL (5.6+)
+- 安装 Solr （7.0+）
+- 安装 RabbitMQ （3.7.4）
+- 安装 Erlang (20.3) （安装RabbitMQ还需要Erlang）
+- 安装 Nginx
+- 安装IDE （推荐安装STS）
+
+#### 启动顺序
+
+mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
+
 #### 致谢
 
 - 感谢杨青小姐姐的博客模板，http://www.yangqq.com/
