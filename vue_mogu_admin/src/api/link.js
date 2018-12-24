@@ -31,3 +31,11 @@ export function deleteLink(params) {
     params
   })
 }
+
+export function stickLink(params) {
+  return request({
+    url: process.env.ADMIN_API + '/link/stick',
+    method: 'post',
+    params
+  })
+}

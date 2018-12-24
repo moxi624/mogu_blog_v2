@@ -61,7 +61,7 @@ public class LinkRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
+		queryWrapper.orderByDesc(SQLConf.SORT);		
 		IPage<Link> pageList = linkService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -125,6 +125,37 @@ public class LinkRestApi {
 		tag.setStatus(EStatus.DISABLED);		
 		tag.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+	}
+	
+	@ApiOperation(value="置顶友链", notes="置顶友链", response = String.class)
+	@PostMapping("/stick")
+	public String stick(HttpServletRequest request,
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}		
+		Link link = linkService.getById(uid);
+		
+		//查找出最大的那一个
+		QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
+		queryWrapper.orderByDesc(SQLConf.SORT);		
+		Link  maxSort = linkService.getOne(queryWrapper);
+		
+		if(StringUtils.isEmpty(maxSort.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
+		}
+		if(maxSort.getUid().equals(link.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+		}
+		
+		Integer sortCount = maxSort.getSort() + 1;
+		
+		link.setSort(sortCount);
+			
+		link.updateById();
+		
+		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
 	}
 }
 

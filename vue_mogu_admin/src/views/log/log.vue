@@ -33,7 +33,7 @@
 	      </template>
 	    </el-table-column>
 	    
-      <el-table-column label="请求接口" width="150">
+      <el-table-column label="请求接口" width="250">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.url }}</span>
 	      </template>

@@ -38,6 +38,7 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String EMAIL = "email";
 	public final static String MOBILE = "mobile";
 	public final static String SORT = "sort";
+	public final static String CLICK_COUNT = "click_count";
 	
 	//t_category_meun表
 	public final static String MENU_LEVEL = "menu_level";

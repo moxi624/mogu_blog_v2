@@ -36,6 +36,11 @@ public class Link extends SuperEntity<Link> {
      * 点击数
      */
     private Integer clickCount;
+    
+    /**
+     * 排序字段
+     */
+    private Integer sort;
 
 	public String getTitle() {
 		return title;
@@ -72,5 +77,12 @@ public class Link extends SuperEntity<Link> {
 	public void setClickCount(Integer clickCount) {
 		this.clickCount = clickCount;
 	}
-	
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
 }
