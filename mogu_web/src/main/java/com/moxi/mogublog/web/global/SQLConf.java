@@ -27,4 +27,7 @@ public final class SQLConf extends BaseSQLConf{
 	//StudyVideo表
 	public static final String RESOURCE_SORT_UID = "resource_sort_uid";
 	
+	public static final String USER_NAME = "user_name";
+	public static final String email = "email";
+	
 }

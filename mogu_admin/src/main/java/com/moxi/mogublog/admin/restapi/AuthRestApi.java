@@ -69,6 +69,7 @@ public class AuthRestApi {
 			String userName = registered.getUserName();
 			String email = registered.getEmail();
 			String passWord = registered.getPassWord();
+			String code = registered.getValidCode();
 			String validCode = null;
 			
 			if(StringUtils.isEmpty(userName) || StringUtils.isEmpty(passWord)) {
@@ -89,6 +90,10 @@ public class AuthRestApi {
 			}
 			if(validCode.isEmpty()) {
 				return ResultUtil.result(SysConf.ERROR, "验证码已过期");
+			}
+			
+			if(code.equals(validCode)) {
+				return ResultUtil.result(SysConf.ERROR, "验证码不正确");
 			}
 
 			
