@@ -280,6 +280,13 @@ public class BlogRestApi {
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);	
 			
+			//获取图片
+			if(StringUtils.isNotEmpty(blog.getFileUid())) {
+				String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");	
+				List<String> picList = WebUtils.getPicture(pictureList);
+				blog.setPhotoList(picList);				
+			}
+						
 			//增加solr索引
 			blogSearchService.addIndex(blog);
 		}

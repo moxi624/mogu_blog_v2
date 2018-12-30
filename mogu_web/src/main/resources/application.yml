@@ -1,6 +1,13 @@
 #app
 server:
     port: 8603
+
+#阿里大于
+templateCode: SMS_XXXXXX #短信模板编号
+signName: 蘑菇博客
+
+moguBlog:
+   email: mogublog@163.com
     
 #Data image url
 data:

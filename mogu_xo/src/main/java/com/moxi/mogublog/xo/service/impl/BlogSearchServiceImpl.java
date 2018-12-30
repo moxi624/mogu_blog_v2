@@ -105,6 +105,14 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     public void addIndex(Blog blog) {
 
         SolrIndex solrIndex = new SolrIndex();
+        //将图片存放索引中
+        if(blog.getPhotoList() != null) {
+        	String str = "";
+        	for(String s : blog.getPhotoList()) {
+        		str = str + s + ",";
+        	}
+        	solrIndex.setPhotoList(str);	
+        }
         solrIndex.setId(blog.getUid());
         solrIndex.setTitle(blog.getTitle());
         solrIndex.setSummary(blog.getSummary());
@@ -122,6 +130,14 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     public void updateIndex(Blog blog) {
 
         SolrIndex solrIndex = solrTemplate.getById(blog.getUid(), SolrIndex.class);
+        //将图片存放索引中
+        if(blog.getPhotoList() != null) {
+        	String str = "";
+        	for(String s : blog.getPhotoList()) {
+        		str = str + s + ",";
+        	}
+        	solrIndex.setPhotoList(str);	
+        }
         solrIndex.setId(blog.getUid());
         solrIndex.setTitle(blog.getTitle());
         solrIndex.setSummary(blog.getSummary());
