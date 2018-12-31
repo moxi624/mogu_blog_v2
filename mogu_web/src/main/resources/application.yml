@@ -50,13 +50,26 @@ spring:
     url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false    
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-
+    
+    # 初始化大小，最小，最大
     initialSize: 5
     minIdle: 5
-    maxActive: 20
+    maxActive: 50
+    
+    #连接等待超时时间
     maxWait: 60000
+    
+    #配置隔多久进行一次检测(检测可以关闭的空闲连接)
     timeBetweenEvictionRunsMillis: 60000
+    
+    #配置连接在池中的最小生存时间
     minEvictableIdleTimeMillis: 300000
+    
+    dbcp:
+      remove-abandoned: true
+      #泄露的连接可以被删除的超时时间（秒），该值应设置为应用程序查询可能执行的最长时间
+      remove-abandoned-timeout: 180
+    
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
