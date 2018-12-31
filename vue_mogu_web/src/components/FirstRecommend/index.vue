@@ -1,8 +1,8 @@
 <template>
   <div class="banner">
-    <div class="carousel-wrap" id="carousel">
-      <div class="left" @click="leftChange"><</div>
-      <div class="right" @click="rightChange">></div>
+    <div class="carousel-wrap" id="carousel"  @mouseenter="inDiv" @mouseleave="outDiv">
+      <span v-show="isShow" class="left" @click="leftChange"><</span>
+      <span v-show="isShow" class="right" @click="rightChange">></span>
       <transition-group tag="ul" class="slide-ul" name="list">
         <li
           v-for="(list,index) in slideList"
@@ -42,6 +42,7 @@ export default {
   name: "FirstRecommend",
   data() {
     return {
+      isShow: false, //控制左右滑动按钮是否显示
       slideList: [],
       currentIndex: 0,
       timer: "",
@@ -72,7 +73,12 @@ export default {
       clearInterval(this.timer);
       this.timer = null;
     },
-
+    inDiv: function() {
+      this.isShow = true;
+    },
+    outDiv: function() {
+      this.isShow = false;
+    },
     leftChange: function() {
       var currentIndex = this.currentIndex - 1;
       if (currentIndex < 0) {
@@ -118,11 +124,16 @@ export default {
   position: relative;
 }
 
+.left:hover {
+  color: rgba(90, 88, 88, 0.8);
+}
+.right:hover {
+  color: rgba(90, 88, 88, 0.9);
+}
+
 .left {
-  font-size: 100px;
+  font-size: 80px;
   color: rgba(223, 219, 219, 0.8);
-  width: 100px;
-  height: 100px;
   position: absolute;
   z-index: 99999;
   cursor: pointer;
@@ -130,10 +141,8 @@ export default {
 }
 
 .right {
-  font-size: 100px;
+  font-size: 80px;
   color: rgba(223, 219, 219, 0.8);
-  width: 100px;
-  height: 100px;
   position: absolute;
   z-index: 99999;
   cursor: pointer;
