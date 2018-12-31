@@ -1,22 +1,39 @@
 <template>
-
-  <div class="banner">    
+  <div class="banner">
     <div class="carousel-wrap" id="carousel">
-        <transition-group tag="ul" class='slide-ul' name="list">
-          <li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex" @mouseenter="stop" @mouseleave="go">
-            <a href="javascript:void(0);"  >
-              <img v-if="list.photoList" :src="list.photoList[0]" :alt="list.title" @click="goToInfo(list.uid)">
-            </a>
-            <div class="carousel-title">
-              <span>{{list.title}}</span>
-            </div>
-          </li>
-        </transition-group>
-        <div class="carousel-items">
-          <span v-for="(item,index) in slideList.length" :key="item.uid" :class="{'active':index===currentIndex}" @mouseover="change(index)"></span>
-        </div>
-    </div>	
-  </div>	
+      <div class="left" @click="leftChange"><</div>
+      <div class="right" @click="rightChange">></div>
+      <transition-group tag="ul" class="slide-ul" name="list">
+        <li
+          v-for="(list,index) in slideList"
+          :key="index"
+          v-show="index===currentIndex"
+          @mouseenter="stop"
+          @mouseleave="go"
+        >
+          <a href="javascript:void(0);">
+            <img
+              v-if="list.photoList"
+              :src="list.photoList[0]"
+              :alt="list.title"
+              @click="goToInfo(list.uid)"
+            >
+          </a>
+          <div class="carousel-title">
+            <span>{{list.title}}</span>
+          </div>
+        </li>
+      </transition-group>
+      <div class="carousel-items">
+        <span
+          v-for="(item,index) in slideList.length"
+          :key="item.uid"
+          :class="{'active':index===currentIndex}"
+          @mouseover="change(index)"
+        ></span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -55,6 +72,26 @@ export default {
       clearInterval(this.timer);
       this.timer = null;
     },
+
+    leftChange: function() {
+      var currentIndex = this.currentIndex - 1;
+      if (currentIndex < 0) {
+        this.currentIndex = this.slideList.length - 1;
+      } else {
+        this.currentIndex = currentIndex;
+      }
+
+      console.log(this.currentIndex);
+    },
+    rightChange: function() {
+      var currentIndex = this.currentIndex + 1;
+      if (currentIndex >= this.slideList.length) {
+        this.currentIndex = 0;
+      } else {
+        this.currentIndex = currentIndex;
+      }
+    },
+
     change(index) {
       this.currentIndex = index;
     },
@@ -66,30 +103,72 @@ export default {
     },
     //跳转到文章详情
     goToInfo(uid) {
-      let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
-      window.open(routeData.href, '_blank');
+      let routeData = this.$router.resolve({
+        path: "/info",
+        query: { blogUid: uid }
+      });
+      window.open(routeData.href, "_blank");
     }
   }
 };
 </script>
 
 <style>
+.carousel-wrap {
+  position: relative;
+}
 
-  .carousel-wrap {
-    height: 453px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
+.left {
+  font-size: 100px;
+  color: rgba(223, 219, 219, 0.8);
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  z-index: 99999;
+  cursor: pointer;
+  top: 28%;
+}
+
+.right {
+  font-size: 100px;
+  color: rgba(223, 219, 219, 0.8);
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  z-index: 99999;
+  cursor: pointer;
+  top: 28%;
+  right: 0%;
+}
+
+.carousel-wrap {
+  height: 453px;
+  width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.carousel-title span {
+  color: white;
+  font-size: 22px;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 1100px) {
+  .left {
+    width: 80px;
+    height: 80px;
+    font-size: 80px;
+    top: 27%;
   }
 
-  .carousel-title span {
-    color: white;
-    font-size: 22px;
-    display: inline-block;
+  .right {
+    width: 80px;
+    height: 80px;
+    font-size: 80px;
+    top: 27%;
+    right: 0%;
   }
-
-@media only screen and (max-width: 1100px){
-
   .carousel-wrap {
     height: 380px;
     width: 100%;
@@ -104,8 +183,7 @@ export default {
   }
 }
 
-@media only screen and (max-width: 900px){
-
+@media only screen and (max-width: 900px) {
   .carousel-wrap {
     height: 300px;
     width: 100%;
@@ -120,8 +198,21 @@ export default {
   }
 }
 
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 700px) {
+  .left {
+    width: 60px;
+    height: 60px;
+    font-size: 60px;
+    top: 27%;
+  }
 
+  .right {
+    width: 60px;
+    height: 60px;
+    font-size: 60px;
+    top: 27%;
+    right: 0%;
+  }
   .carousel-wrap {
     height: 250px;
     width: 100%;
@@ -136,7 +227,22 @@ export default {
   }
 }
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 500px) {
+  .left {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    top: 27%;
+  }
+
+  .right {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    top: 27%;
+    right: 0%;
+  }
+
   .carousel-wrap {
     height: 200px;
     width: 100%;
@@ -144,7 +250,6 @@ export default {
     background-color: #fff;
   }
 }
-
 
 .slide-ul {
   position: relative;
@@ -177,7 +282,7 @@ img {
   position: absolute;
   z-index: 10;
   bottom: 20px;
-  width: 66%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
   font-size: 0;
