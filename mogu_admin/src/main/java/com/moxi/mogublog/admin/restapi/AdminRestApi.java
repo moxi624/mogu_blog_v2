@@ -228,6 +228,27 @@ public class AdminRestApi {
 		if(StringUtils.isEmpty(updateBody.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
+		Admin admin = adminService.getById(updateBody.getUid());
+		if(admin != null) {
+			//判断修改的对象是否是超级管理员，超级管理员不能修改用户名
+			if(admin.getUserName().equals(SysConf.ADMIN) && !updateBody.getUserName().equals(SysConf.ADMIN)) {
+				return ResultUtil.result(SysConf.ERROR, "超级管理员用户名必须为admin");	
+			}
+			
+			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+			queryWrapper.eq(SQLConf.USER_NAME, updateBody.getUserName()).or().eq(SQLConf.EMAIL, updateBody.getEmail()).or().eq(SQLConf.MOBILE, updateBody.getMobile());
+			List<Admin> adminList = adminService.list(queryWrapper);
+			if(adminList != null) {
+				for(Admin item : adminList) {
+					if(item.getUid().equals(updateBody.getUid())) {
+						continue;
+					} else {
+						return ResultUtil.result(SysConf.ERROR, "修改失败：用户名存在，手机号已注册，邮箱已经注册");		
+					}
+				}					
+			}
+			
+		}
 		updateBody.setPassWord(null);		
 		updateBody.updateById();
 		

@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.service.AdminService;
@@ -49,7 +51,9 @@ public class AboutMeRestApi {
 	@GetMapping("/getMe")
 	public String getMe(HttpServletRequest request) {
 				
-		Admin admin = adminService.getById("1f01cd1d2f474743b241d74008b12333");		
+		QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.USER_NAME, SysConf.ADMIN);
+		Admin admin = adminService.getOne(queryWrapper);		
 		admin.setPassWord(null); //清空密码，防止泄露
 		//获取图片
 		if(StringUtils.isNotEmpty(admin.getAvatar())) {

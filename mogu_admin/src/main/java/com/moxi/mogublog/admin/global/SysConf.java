@@ -22,6 +22,7 @@ public final class SysConf extends BaseSysConf{
 	public final static String COMMENT_COUNT = "commentCount";
 	public final static String VISIT_COUNT = "visitCount";
 
+	public final static String ADMIN = "admin";
 	public final static String ADMIN_UID = "adminUid";
 	public final static String ADMINUIDS = "adminUids";
 	public final static String ROLEUIDS = "roleUids";

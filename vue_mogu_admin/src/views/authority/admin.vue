@@ -137,7 +137,7 @@
         </el-form-item>
 
         <el-form-item label="邮箱" :label-width="formLabelWidth">
-          <el-input v-model="form.email" :disabled="isEditForm"></el-input>
+          <el-input v-model="form.email" ></el-input>
         </el-form-item>
 
         <el-form-item label="手机号" :label-width="formLabelWidth">
@@ -387,7 +387,7 @@ export default {
             this.adminList();
           } else {
             this.$message({
-              type: "success",
+              type: "error",
               message: response.data
             });
           }

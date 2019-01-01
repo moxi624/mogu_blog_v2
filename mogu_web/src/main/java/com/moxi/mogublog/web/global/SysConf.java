@@ -14,4 +14,5 @@ public final class SysConf extends BaseSysConf{
 	public final static String CONTENT = "content";
 	public final static String AVATAR = "avatar";
 	public final static String ERROR = "error";
+	public static final Object ADMIN = "admin";
 }
