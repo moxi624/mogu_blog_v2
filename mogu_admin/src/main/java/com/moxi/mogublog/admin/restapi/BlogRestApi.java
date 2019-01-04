@@ -216,6 +216,7 @@ public class BlogRestApi {
 			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
 			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
 			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
+			@ApiParam(name = "isPublish", value = "是否发布",required = false) @RequestParam(name = "isPublish", required = false, defaultValue = "1") String isPublish,
 			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
 			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
 			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
@@ -268,6 +269,7 @@ public class BlogRestApi {
 		blog.setAuthor(author);
 		blog.setArticlesPart(articlesPart);
 		blog.setIsOriginal(isOriginal);
+		blog.setIsPublish(isPublish);
 		blog.setStatus(EStatus.ENABLE);
 		Boolean save = blogService.save(blog);
 		
@@ -308,6 +310,7 @@ public class BlogRestApi {
 			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
 			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
 			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
+			@ApiParam(name = "isPublish", value = "是否发布",required = false) @RequestParam(name = "isPublish", required = false, defaultValue = "1") String isPublish,
 			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
 			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
 			@ApiParam(name = "fileUid", value = "标题图UID",required = false) @RequestParam(name = "fileUid", required = false) String fileUid ) {
@@ -364,6 +367,7 @@ public class BlogRestApi {
 		blog.setCollectCount(collectCount);
 		blog.setAuthor(author);
 		blog.setIsOriginal(isOriginal);
+		blog.setIsPublish(isPublish);
 		blog.setArticlesPart(articlesPart);
 		blog.setStatus(EStatus.ENABLE);
 		Boolean save = blog.updateById();

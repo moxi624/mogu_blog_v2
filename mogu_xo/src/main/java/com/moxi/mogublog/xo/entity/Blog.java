@@ -65,6 +65,11 @@ public class Blog extends SuperEntity<Blog> {
     private String adminUid;
     
     /**
+     * 是否发布
+     */
+    private String isPublish;
+    
+    /**
      * 是否原创
      */
     private String isOriginal;
@@ -261,6 +266,16 @@ public class Blog extends SuperEntity<Blog> {
 
 	public void setLevel(Integer level) {
 		this.level = level;
+	}
+
+
+	public String getIsPublish() {
+		return isPublish;
+	}
+
+
+	public void setIsPublish(String isPublish) {
+		this.isPublish = isPublish;
 	}
 
 }
