@@ -17,6 +17,7 @@ import com.moxi.mogublog.xo.mapper.BlogMapper;
 import com.moxi.mogublog.xo.mapper.BlogSortMapper;
 import com.moxi.mogublog.xo.mapper.TagMapper;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -82,6 +83,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	public List<Blog> getBlogListByLevel(Integer level) {
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(BaseSQLConf.LEVEL, level);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+		
 		List<Blog> list = blogMapper.selectList(queryWrapper);		
 		return list;
 	}
@@ -91,6 +94,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(BaseSQLConf.LEVEL, level);
 		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		
 		queryWrapper.excludeColumns(Blog.class, "content");
@@ -102,6 +106,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	public Integer getBlogCount(Integer status) {
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+		
 		return blogMapper.selectCount(queryWrapper);
 	}
 

@@ -43,7 +43,9 @@ import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.ELevel;
+import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.BaseSQLConf;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -223,6 +225,7 @@ public class IndexRestApi {
 		page.setCurrent(0);
 		page.setSize(BLOG_HOT_COUNT);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		
@@ -316,6 +319,7 @@ public class IndexRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		
@@ -415,6 +419,7 @@ public class IndexRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		

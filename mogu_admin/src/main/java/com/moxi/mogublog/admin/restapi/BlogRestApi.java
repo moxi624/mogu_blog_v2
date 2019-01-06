@@ -274,7 +274,7 @@ public class BlogRestApi {
 		Boolean save = blogService.save(blog);
 		
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save) {
+		if(save && isPublish.equals("1")) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(SysConf.COMMAND, SysConf.ADD);
 			map.put(SysConf.BLOG_UID, blog.getUid());
@@ -372,7 +372,7 @@ public class BlogRestApi {
 		blog.setStatus(EStatus.ENABLE);
 		Boolean save = blog.updateById();
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save) {
+		if(save && isPublish.equals("1")) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(SysConf.COMMAND, SysConf.EDIT);
 			map.put(SysConf.BLOG_UID, blog.getUid());
@@ -382,6 +382,19 @@ public class BlogRestApi {
 			
 			//更新solr索引
 			blogSearchService.updateIndex(blog);
+			
+		} else if(isPublish.equals("0")) {
+			
+			//这是需要做的是，是删除redis中的该条博客数据
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(SysConf.COMMAND, SysConf.EDIT);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
+			
+			//当设置下架状态时，删除博客索引
+			blogSearchService.deleteIndex(blog.getUid());
 		}
 		
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");

@@ -1,266 +1,300 @@
 <template>
   <div class="app-container">
-      <!-- 查询和其他操作 -->
-	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入博客名"></el-input>
-        
-        <el-select
-          v-model="sortKeyword"
-          filterable
-          clearable
-          remote
-          reserve-keyword
-          placeholder="请输入分类名"
-          :remote-method="sortRemoteMethod"
-          :loading="loading">
-          <el-option
-            v-for="item in sortOptions"
-            :key="item.uid"
-            :label="item.sortName"
-            :value="item.uid">
-          </el-option>
-        </el-select>
+    <!-- 查询和其他操作 -->
+    <div class="filter-container" style="margin: 10px 0 10px 0;">
+      <el-input
+        clearable
+        class="filter-item"
+        style="width: 200px;"
+        v-model="keyword"
+        placeholder="请输入博客名"
+      ></el-input>
 
-        <el-select
-          v-model="tagKeyword"
-          filterable
-          clearable
-          remote
-          reserve-keyword
-          placeholder="请输入标签名"
-          :remote-method="tagRemoteMethod"
-          :loading="loading">
-          <el-option
-            v-for="item in tagOptions"
-            :key="item.uid"
-            :label="item.content"
-            :value="item.uid">
-          </el-option>
-        </el-select>
+      <el-select
+        v-model="sortKeyword"
+        filterable
+        clearable
+        remote
+        reserve-keyword
+        placeholder="请输入分类名"
+        :remote-method="sortRemoteMethod"
+        :loading="loading"
+      >
+        <el-option
+          v-for="item in sortOptions"
+          :key="item.uid"
+          :label="item.sortName"
+          :value="item.uid"
+        ></el-option>
+      </el-select>
 
-        <el-select v-model="levelKeyword" clearable  placeholder="推荐等级">
-					<el-option
-				      v-for="item in blogLevelList"
-				      :key="item.value"
-				      :label="item.label"
-				      :value="item.value">
-				    </el-option>
-				</el-select>
+      <el-select
+        v-model="tagKeyword"
+        filterable
+        clearable
+        remote
+        reserve-keyword
+        placeholder="请输入标签名"
+        :remote-method="tagRemoteMethod"
+        :loading="loading"
+      >
+        <el-option
+          v-for="item in tagOptions"
+          :key="item.uid"
+          :label="item.content"
+          :value="item.uid"
+        ></el-option>
+      </el-select>
 
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>	              
-	    </div>
+      <el-select v-model="levelKeyword" clearable placeholder="推荐等级">
+        <el-option
+          v-for="item in blogLevelList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
 
-      <el-table :data="tableData" @cell-click="onClick" style="width: 100%">
-      
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>
+    </div>
+
+    <el-table :data="tableData" @cell-click="onClick" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
-	      <template slot-scope="scope">
-	        <span >{{scope.$index + 1}}</span>
-	      </template>
-	    </el-table-column>
-	    
-	   	<el-table-column label="标题图" width="160">
-	      <template slot-scope="scope">
-	      	<img  v-if="scope.row.photoList" :src="scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
-	      </template>
-	    </el-table-column>
-		    
-	    <el-table-column label="标题" width="160">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.title }}</span>
-	      </template>
-	    </el-table-column>
+        <template slot-scope="scope">
+          <span>{{scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
 
-			<el-table-column label="作者" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.author }}</span>
-	      </template>
-	    </el-table-column>
+      <el-table-column label="标题图" width="160">
+        <template slot-scope="scope">
+          <img
+            v-if="scope.row.photoList"
+            :src="scope.row.photoList[0]"
+            style="width: 100px;height: 100px;"
+          >
+        </template>
+      </el-table-column>
 
-			<el-table-column label="是否原创" width="100">
-	      <template slot-scope="scope">
-					<el-tag v-if="scope.row.isOriginal==1" type="success">是</el-tag>
-	        <el-tag v-if="scope.row.isOriginal==0" type="danger">否</el-tag>
-	      </template>
-	    </el-table-column>
+      <el-table-column label="标题" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.title }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="作者" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.author }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="是否原创" width="100">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isOriginal==1" type="success">是</el-tag>
+          <el-tag v-if="scope.row.isOriginal==0" type="danger">否</el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column label="分类" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.blogSort.sortName }}</span>
-	      </template>
-	    </el-table-column>
-		    
-	    <!-- <el-table-column label="简介" width="250">
+        <template slot-scope="scope">
+          <span>{{ scope.row.blogSort.sortName }}</span>
+        </template>
+      </el-table-column>
+
+      <!-- <el-table-column label="简介" width="250">
 	      <template slot-scope="scope">
 	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
 	      </template>
-	    </el-table-column> -->
-	    
-	   	<el-table-column label="标签" width="100">
-	      <template slot-scope="scope">
-	      	<template>		
-	      	  <el-tag type="warning"  v-if="item" :key="index" v-for="(item, index) in scope.row.tagList">{{item.content}}</el-tag>		
-	      	</template>
-	      </template>
-	    </el-table-column>
+      </el-table-column>-->
+      <el-table-column label="标签" width="100">
+        <template slot-scope="scope">
+          <template>
+            <el-tag
+              type="warning"
+              v-if="item"
+              :key="index"
+              v-for="(item, index) in scope.row.tagList"
+            >{{item.content}}</el-tag>
+          </template>
+        </template>
+      </el-table-column>
 
-      <el-table-column label="推荐等级" width="150">
-	      <template slot-scope="scope">
-	        <span v-if="scope.row.level==0">正常</span>
+      <el-table-column label="推荐等级" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.level==0">正常</span>
           <span v-if="scope.row.level==1">一级推荐</span>
           <span v-if="scope.row.level==2">二级推荐</span>
           <span v-if="scope.row.level==3">三级推荐</span>
-          <span v-if="scope.row.level==4">四级推荐</span>					
-	      </template>
-	    </el-table-column>
+          <span v-if="scope.row.level==4">四级推荐</span>
+        </template>
+      </el-table-column>
 
-			<el-table-column label="点击数" width="100">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.clickCount }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="创建时间" width="160">
-	      <template slot-scope="scope">
-	        <span >{{ scope.row.createTime }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	   	<el-table-column label="状态" width="100">
-	   	  <template slot-scope="scope">
-		   	  <template v-if="scope.row.status == 1">
-		        <span>正常</span>
-		      </template>
-		      <template v-if="scope.row.status == 2">
-		        <span>推荐</span>
-		      </template>
-		      <template v-if="scope.row.status == 0">
-		        <span>已删除</span>
-		      </template>
-	   	  </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
-	      <template slot-scope="scope" >
-	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
-	      </template>
-	    </el-table-column>     	    
-	  </el-table>
+      <el-table-column label="点击数" width="70">
+        <template slot-scope="scope">
+          <span>{{ scope.row.clickCount }}</span>
+        </template>
+      </el-table-column>
 
-		    <!--分页-->
+      <el-table-column label="创建时间" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" width="100">
+        <template slot-scope="scope">
+          <template v-if="scope.row.status == 1 && scope.row.isPublish == 1">
+            <span>已发布</span>
+          </template>
+          <template v-if="scope.row.status == 1 && scope.row.isPublish == 0">
+            <span>已下架</span>
+          </template>
+          <template v-if="scope.row.status == 0">
+            <span>已删除</span>
+          </template>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" fixed="right" min-width="150">
+        <template slot-scope="scope">
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!--分页-->
     <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </div>
 
-	  <!-- 添加或修改对话框 -->
-		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-		  <el-form :model="form">
-		  	
-		    <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
+    <!-- 添加或修改对话框 -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen>
+      <el-form :model="form">
+        <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
 		    </el-form-item>
 		    
 		   	<el-form-item v-if="isEditForm == false" label="博客UID" :label-width="formLabelWidth" style="display: none;">
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
-		    </el-form-item> -->
+        </el-form-item>-->
+        <el-form-item label="标题图" :label-width="formLabelWidth">
+          <div class="imgBody" v-if="form.photoList">
+            <i
+              class="el-icon-error inputClass"
+              v-show="icon"
+              @click="deletePhoto()"
+              @mouseover="icon = true"
+            ></i>
+            <img
+              @mouseover="icon = true"
+              @mouseout="icon = false"
+              v-bind:src="form.photoList[0]"
+              style="display:inline; width: 150px;height: 150px;"
+            >
+          </div>
+          <div v-else class="uploadImgBody" @click="checkPhoto">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </div>
+        </el-form-item>
 
-				<el-form-item label="标题图" :label-width="formLabelWidth">
-	    		<div class="imgBody" v-if="form.photoList">
-	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
-	    		</div>
-	    		<div v-else class="uploadImgBody" @click="checkPhoto">
- 		 			<i class="el-icon-plus avatar-uploader-icon"></i>
-		    	</div>				
-		    </el-form-item>
+        <el-form-item label="标题" :label-width="formLabelWidth" required>
+          <el-input v-model="form.title" auto-complete="off"></el-input>
+        </el-form-item>
 
-		    <el-form-item label="标题" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.title" auto-complete="off"></el-input>
-		    </el-form-item>
-		    
         <el-form-item label="简介" :label-width="formLabelWidth">
-		      <el-input v-model="form.summary" auto-complete="off"></el-input>
-		    </el-form-item>
+          <el-input v-model="form.summary" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="分类" :label-width="formLabelWidth" required>
           <el-select v-model="form.blogSortUid" size="small" placeholder="请选择">
             <el-option
-                v-for="item in blogSortData"
-                :key="item.uid"
-                :label="item.sortName"
-                :value="item.uid">
-              </el-option>
-          </el-select>				
-		    </el-form-item>
+              v-for="item in blogSortData"
+              :key="item.uid"
+              :label="item.sortName"
+              :value="item.uid"
+            ></el-option>
+          </el-select>
+        </el-form-item>
 
-				<el-form-item label="标签" :label-width="formLabelWidth" required>
-				<el-select v-model="tagValue" multiple  size="small" placeholder="请选择" filterable >
-					<el-option
-				      v-for="item in tagData"
-				      :key="item.uid"
-				      :label="item.content"
-				      :value="item.uid">
-				    </el-option>
-				</el-select>				
-		    </el-form-item>
+        <el-form-item label="标签" :label-width="formLabelWidth" required>
+          <el-select v-model="tagValue" multiple size="small" placeholder="请选择" filterable>
+            <el-option
+              v-for="item in tagData"
+              :key="item.uid"
+              :label="item.content"
+              :value="item.uid"
+            ></el-option>
+          </el-select>
+        </el-form-item>
 
         <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
-				<el-select v-model="form.level" size="small" placeholder="请选择">
-					<el-option
-				      v-for="item in blogLevelList"
-				      :key="item.value"
-				      :label="item.label"
-				      :value="item.value">
-				    </el-option>
-				</el-select>
-		    </el-form-item>
+          <el-select v-model="form.level" size="small" placeholder="请选择">
+            <el-option
+              v-for="item in blogLevelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
 
-				<!-- <el-form-item label="点击数" :label-width="formLabelWidth">
+        <!-- <el-form-item label="点击数" :label-width="formLabelWidth">
 		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-		    </el-form-item> -->
+        </el-form-item>-->
+        <el-form-item label="是否发布" :label-width="formLabelWidth" required>
+          <el-radio-group v-model="form.isPublish" size="small">
+            <el-radio label="1" border>是</el-radio>
+            <el-radio label="0" border>否</el-radio>
+          </el-radio-group>
+        </el-form-item>
 
-				<el-form-item label="作者" :label-width="formLabelWidth" required>
-		      <el-input v-model="form.author" auto-complete="off"></el-input>
-		    </el-form-item>
+        <el-form-item label="作者" :label-width="formLabelWidth" required>
+          <el-input v-model="form.author" auto-complete="off"></el-input>
+        </el-form-item>
 
-				<el-form-item label="是否原创" :label-width="formLabelWidth" required>
-		      <el-radio-group v-model="form.isOriginal" size="small">
-							<el-radio label="1" border>是</el-radio>
-							<el-radio label="0" border>否</el-radio>
-					</el-radio-group>
-		    </el-form-item>
+        <el-form-item label="是否原创" :label-width="formLabelWidth" required>
+          <el-radio-group v-model="form.isOriginal" size="small">
+            <el-radio label="1" border>是</el-radio>
+            <el-radio label="0" border>否</el-radio>
+          </el-radio-group>
+        </el-form-item>
 
-				<el-form-item label="文章出处" :label-width="formLabelWidth">
-		      <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
-		    </el-form-item>
+        <el-form-item label="文章出处" :label-width="formLabelWidth">
+          <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" required>
-		      <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
-		    </el-form-item>
+          <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </el-dialog>
 
-		  </el-form>
-		  <div slot="footer" class="dialog-footer">
-		    <el-button @click="dialogFormVisible = false">取 消</el-button>
-		    <el-button type="primary" @click="submitForm">确 定</el-button>
-		  </div>
-		</el-dialog>
-
-		<!--
+    <!--
         	作者：xzx19950624@qq.com
         	时间：2018年9月23日16:16:09
          描述：图片选择器
-        -->
-		<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
-
+    -->
+    <CheckPhoto
+      @choose_data="getChooseData"
+      @cancelModel="cancelModel"
+      :photoVisible="photoVisible"
+      :photos="photoList"
+      :files="fileIds"
+      :limit="1"
+    ></CheckPhoto>
   </div>
 </template>
 
@@ -388,7 +422,7 @@ export default {
     tagRemoteMethod: function(query) {
       if (query !== "") {
         var params = new URLSearchParams();
-        params.append("keyword", query);        
+        params.append("keyword", query);
         getTagList(params).then(response => {
           console.log(response);
           this.tagOptions = response.data.records;
@@ -488,31 +522,31 @@ export default {
       this.dialogFormVisible = true;
       this.isEditForm = true;
     },
-    handleDelete: function(row) {            
+    handleDelete: function(row) {
       var that = this;
       this.$confirm("此操作将把博客删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
-      .then(() => {
-        let params = new URLSearchParams();
-        params.append("uid", row.uid);
-        deleteBlog(params).then(response => {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
+        .then(() => {
+          let params = new URLSearchParams();
+          params.append("uid", row.uid);
+          deleteBlog(params).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.blogList();
           });
-          that.blogList();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
-      })
-      .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消删除"
-        });
-      });
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");

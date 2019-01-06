@@ -130,24 +130,32 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     public void updateIndex(Blog blog) {
 
         SolrIndex solrIndex = solrTemplate.getById(blog.getUid(), SolrIndex.class);
-        //将图片存放索引中
-        if(blog.getPhotoList() != null) {
-        	String str = "";
-        	for(String s : blog.getPhotoList()) {
-        		str = str + s + ",";
-        	}
-        	solrIndex.setPhotoList(str);	
+        
+        //为空表示原来修改发布状态位的时候，删除掉了索引，需要重新添加
+        if(solrIndex == null) {
+        	
+        	addIndex(blog);
+        	
+        } else {
+            //将图片存放索引中
+            if(blog.getPhotoList() != null) {
+            	String str = "";
+            	for(String s : blog.getPhotoList()) {
+            		str = str + s + ",";
+            	}
+            	solrIndex.setPhotoList(str);	
+            }
+            solrIndex.setId(blog.getUid());
+            solrIndex.setTitle(blog.getTitle());
+            solrIndex.setSummary(blog.getSummary());
+            solrIndex.setTag(getTagbyTagUid(blog.getTagUid()));
+            solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
+            solrIndex.setAuthor(blog.getAuthor());
+            solrIndex.setUpdateTime(new Date());
+            solrTemplate.saveBean(solrIndex);
+            solrTemplate.commit();
         }
-        solrIndex.setId(blog.getUid());
-        solrIndex.setTitle(blog.getTitle());
-        solrIndex.setSummary(blog.getSummary());
-        solrIndex.setTag(getTagbyTagUid(blog.getTagUid()));
-        solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
-        solrIndex.setAuthor(blog.getAuthor());
-        solrIndex.setUpdateTime(new Date());
-        solrTemplate.saveBean(solrIndex);
-        solrTemplate.commit();
-
+        
     }
 
     @Override
