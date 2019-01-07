@@ -257,10 +257,6 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="作者" :label-width="formLabelWidth" required>
-          <el-input v-model="form.author" auto-complete="off"></el-input>
-        </el-form-item>
-
         <el-form-item label="是否原创" :label-width="formLabelWidth" required>
           <el-radio-group v-model="form.isOriginal" size="small">
             <el-radio label="1" border>是</el-radio>
@@ -268,7 +264,11 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="文章出处" :label-width="formLabelWidth">
+        <el-form-item label="作者" :label-width="formLabelWidth" required v-if="form.isOriginal==0">
+          <el-input v-model="form.author" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="文章出处" :label-width="formLabelWidth" v-if="form.isOriginal==0">
           <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -310,7 +310,11 @@ import {
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
 var querystring = require("querystring");
+import { mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters(["name", "roles"])
+  },
   components: {
     CheckPhoto,
     CKEditor
@@ -357,6 +361,7 @@ export default {
         tagUid: null,
         fileUid: null,
         isOriginal: null, //是否原创
+        isPublish: null,
         author: null, //作者
         clickCount: 0,
         articlesPart: null //文章出处
@@ -365,7 +370,7 @@ export default {
   },
   created() {
     var that = this;
-
+    console.log("#########", this.role, this.name);
     this.blogList(); //获取博客列表
 
     var tagParams = new URLSearchParams();
@@ -407,10 +412,11 @@ export default {
         tagUid: null,
         fileUid: null,
         isOriginal: "1", //是否原创
+        isPublish: "1", //是否发布
         clickCount: 0,
         author: null, //作者
         level: 0, //推荐等级，默认是正常
-        articlesPart: "蘑菇博客" //文章出处
+        articlesPart: null, //文章出处，默认蘑菇博客
       };
       return formObject;
     },

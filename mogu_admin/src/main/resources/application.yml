@@ -6,6 +6,9 @@ server:
 templateCode: SMS_XXXXXX #短信模板编号
 signName: 蘑菇博客
     
+#项目名称
+PROJECT_NAME: 蘑菇博客
+
 #Data image url
 data:
   image:

@@ -30,9 +30,11 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
@@ -68,6 +70,9 @@ public class BlogRestApi {
 	BlogSortService blogSortService;
 	
 	@Autowired
+	AdminService adminService;
+	
+	@Autowired
 	private PictureFeignClient pictureFeignClient;
 	
 	@Autowired
@@ -75,6 +80,9 @@ public class BlogRestApi {
 	
 	@Value(value="${data.image.url}")
 	private String IMG_HOST;
+	
+	@Value(value="${PROJECT_NAME}")
+	private String PROJECT_NAME;
 	
 	@Value(value="${BLOG.FIRST_COUNT}")
 	private Integer BLOG_FIRST_COUNT;
@@ -222,7 +230,7 @@ public class BlogRestApi {
 			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
 			@ApiParam(name = "fileUid", value = "标题图Uid",required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
 		
- 		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(author)|| StringUtils.isEmpty(blogSortUid)) {
+ 		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
  		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
@@ -265,9 +273,23 @@ public class BlogRestApi {
 		blog.setClickCount(clickCount);
 		blog.setCollectCount(collectCount);
 		blog.setFileUid(fileUid);
-		blog.setLevel(level);
-		blog.setAuthor(author);
+		blog.setLevel(level);		
 		blog.setArticlesPart(articlesPart);
+		
+		//如果是原创，作者为用户的昵称
+		if(isOriginal.equals("1")) {
+			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+			if(admin != null) {
+				blog.setAuthor(admin.getNickName());
+				blog.setAdminUid(admin.getUid());
+			}
+			blog.setArticlesPart(PROJECT_NAME);
+		} else {
+			if(StringUtils.isEmpty(author)) {
+				return ResultUtil.result(SysConf.ERROR, "作者不能为空");
+			}
+			blog.setAuthor(author);
+		}
 		blog.setIsOriginal(isOriginal);
 		blog.setIsPublish(isPublish);
 		blog.setStatus(EStatus.ENABLE);
@@ -364,9 +386,23 @@ public class BlogRestApi {
 		blog.setFileUid(fileUid);
 		blog.setClickCount(clickCount);
 		blog.setLevel(level);
-		blog.setCollectCount(collectCount);
-		blog.setAuthor(author);
-		blog.setIsOriginal(isOriginal);
+		blog.setCollectCount(collectCount);		
+		blog.setIsOriginal(isOriginal);		
+		//如果是原创，作者为用户的昵称
+		if(isOriginal.equals("1")) {
+			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());			
+			if(admin != null) {
+				blog.setAdminUid(admin.getUid());
+				blog.setAuthor(admin.getNickName());
+				blog.setArticlesPart(PROJECT_NAME);
+			}
+		} else {
+			if(StringUtils.isEmpty(author)) {
+				return ResultUtil.result(SysConf.ERROR, "作者名不能为空");
+			}
+			blog.setAuthor(author);
+		}
+		
 		blog.setIsPublish(isPublish);
 		blog.setArticlesPart(articlesPart);
 		blog.setStatus(EStatus.ENABLE);
