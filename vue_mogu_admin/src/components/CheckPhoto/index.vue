@@ -248,10 +248,20 @@ export default {
     },
     before_close(done) {
       console.log("关闭前的回调");
+
+      //取消时，欢迎成开始状态
+      this.form.photoList = this.photos;
+      this.form.fileIds = this.files;
+
       this.$emit("cancelModel", "");
       done();
     },
     cancel() {
+
+      //取消时，还原成开始状态
+      this.form.photoList = this.photos;
+      this.form.fileIds = this.files;
+
       this.$emit("cancelModel", "");
       console.log("点击了取消");
     },
