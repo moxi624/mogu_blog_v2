@@ -50,7 +50,6 @@ export default {
   },
   created() {
     var that = this;
-
     this.$store.dispatch("GetMenu").then(response => {
       if (response.code == "success") {
         var parentList = response.data.parentList;
@@ -82,20 +81,13 @@ export default {
                   sonItem[b + 1] = temp;
                   tag = true;
                 }
-                // if(!tag) {
-                //   return;
-                // }
               }
             }
-
-            console.log("sonItem排序后", sonItem);
-
             //加入
             newObject.sonItem = sonItem;
             items.push(newObject);
           }
         }
-
         that.items = items;
       }
     });
