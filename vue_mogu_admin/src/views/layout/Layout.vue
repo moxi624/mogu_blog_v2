@@ -70,7 +70,6 @@ export default {
                 sonItem.push(sonList[index1]);
               }
             }
-            console.log("sonItem", sonItem);
             //对子目录进行排序
             for (var a = 0; a < sonItem.length; a++) {
               for (var b = 0; b < sonItem.length - a - 1; b++) {

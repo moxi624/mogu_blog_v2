@@ -34,8 +34,8 @@ CKEDITOR.editorConfig = function (config) {
 	config.format_tags = 'p;h1;h2;h3;pre';
 
 	//添加插件，多个插件用逗号隔开
-	// codesnippet: 代码块   ， uploadimage: 上传图片
-	config.extraPlugins = 'codesnippet';
+	// codesnippet: 代码块   ， uploadimage: 上传图片,  colorbutton: 颜色按钮
+	config.extraPlugins = 'codesnippet,colorbutton';
 	
 	//配置代码块风格
 	codeSnippet_theme: 'zenburn';
@@ -60,4 +60,6 @@ CKEDITOR.editorConfig = function (config) {
 
 	//工具栏“图像”中预览区域显示内容 
 	config.image_previewText = ' ';
+
+	config.font_names = '宋体/宋体;黑体/黑体;仿宋/仿宋_GB2312;楷体/楷体_GB2312;隶书/隶书;幼圆/幼圆;雅黑/雅黑;'+ config.font_names ;
 };
