@@ -238,7 +238,7 @@ export default {
 							this.tagList();		
 						} else {
 							this.$message({
-								type: "success",
+								type: "error",
 								message: response.data
 							});
 						}

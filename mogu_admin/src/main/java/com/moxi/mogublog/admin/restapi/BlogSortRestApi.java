@@ -77,6 +77,14 @@ public class BlogSortRestApi {
 		if(StringUtils.isEmpty(sortName)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
+		// 判断添加的分类是否存在
+		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.SORT_NAME, sortName);
+		BlogSort tempSort = blogSortService.getOne(queryWrapper);
+		if(tempSort != null) {
+			return ResultUtil.result(SysConf.ERROR, "该分类已经存在");
+		}
+		
 		BlogSort blogSort = new BlogSort();
 		blogSort.setContent(content);
 		blogSort.setSortName(sortName);
@@ -101,6 +109,16 @@ public class BlogSortRestApi {
 		if(blogSort == null ) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
+		
+		if(!blogSort.getSortName().equals(sortName)) {
+			QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
+			queryWrapper.eq(SQLConf.SORT_NAME, sortName);
+			BlogSort tempSort = blogSortService.getOne(queryWrapper);
+			if(tempSort != null) {
+				return ResultUtil.result(SysConf.ERROR, "该分类已经存在");
+			}
+		}
+		
 		blogSort.setContent(content);
 		blogSort.setSortName(sortName);
 		blogSort.setStatus(EStatus.ENABLE);

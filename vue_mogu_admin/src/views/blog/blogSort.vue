@@ -240,7 +240,7 @@ export default {
             this.blogSortList();
           } else {
             this.$message({
-              type: "success",
+              type: "error",
               message: response.data
             });
           }

@@ -78,6 +78,12 @@ public class TagRestApi {
 		if(StringUtils.isEmpty(content)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
+		QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.CONTENT, content);
+		Tag tempTag = tagService.getOne(queryWrapper);
+		if(tempTag != null) {
+			return ResultUtil.result(SysConf.ERROR, "该标签已经存在");
+		}
 		Tag tag = new Tag();
 		tag.setContent(content);
 		tag.setClickCount(clickCount);
@@ -94,11 +100,21 @@ public class TagRestApi {
 			@ApiParam(name = "content", value = "标签正文",required = false) @RequestParam(name = "content", required = false) String content,
 			@ApiParam(name = "clickCount", value = "标签点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue="0") Integer clickCount	) {
 		
-		if(StringUtils.isEmpty(uid)) {
+		if(StringUtils.isEmpty(uid) || StringUtils.isEmpty(content)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
 		
 		Tag tag = tagService.getById(uid);
+		
+		if(!tag.getContent().equals(content)) {
+			QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+			queryWrapper.eq(SQLConf.CONTENT, content);
+			Tag tempTag = tagService.getOne(queryWrapper);
+			if(tempTag != null) {
+				return ResultUtil.result(SysConf.ERROR, "该标签已经存在");
+			}
+		}
+		
 		tag.setContent(content);
 		tag.setClickCount(clickCount);
 		tag.setStatus(EStatus.ENABLE);
