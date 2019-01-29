@@ -231,8 +231,8 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
     line-height: 40px; padding-left:10px;
     text-align: center; 
    }
-.hide_box { z-index: 999; filter: alpha(opacity=50); background: #666; opacity: 0.5; -moz-opacity: 0.5; left: 0; top: 0; height: 99%; width: 100%; position: fixed; display: none; }
-.shang_box { width: 430px; padding: 40px 10px; background: #fff url(../images/tbg.jpg) no-repeat left top 30px; ; border-radius: 10px; position: fixed; z-index: 1000; left: 50%; top: 50%; margin-left: -280px; margin-top: -280px; border: 1px dotted #dedede; display: none; }
+.hide_box { z-index: 999; filter: alpha(opacity=50); background: #666; opacity: 0.5; -moz-opacity: 0.5; left: 0; top: 0; height: 99%; width: 100%; position: fixed; }
+.shang_box { width: 430px; padding: 40px 10px; background: #fff url(../images/tbg.jpg) no-repeat left top 30px; ; border-radius: 10px; position: fixed; z-index: 1000; left: 50%; top: 50%; margin-left: -280px; margin-top: -280px; border: 1px dotted #dedede; }
 .shang_box img { border: none; border-width: 0; }
 .dasbox a{color: #fff; }
 .shang_close { float: right; display: inline-block; }

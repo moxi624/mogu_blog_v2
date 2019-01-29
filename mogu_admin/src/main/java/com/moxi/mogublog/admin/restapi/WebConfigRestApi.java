@@ -58,6 +58,23 @@ public class WebConfigRestApi {
 			webConfig.setPhotoList(WebUtils.getPicture(pictureList));
 		}
 		
+		//获取支付宝收款二维码
+		if(webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
+			String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), ",");
+			if(WebUtils.getPicture(pictureList).size() > 0) {
+				webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));	
+			}
+			
+		}
+		//获取微信收款二维码
+		if(webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
+			String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), ",");
+			if(WebUtils.getPicture(pictureList).size() > 0) {
+				webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));	
+			}
+			
+		}
+		
 		return ResultUtil.result(SysConf.SUCCESS, webConfig);		
 	}
 	

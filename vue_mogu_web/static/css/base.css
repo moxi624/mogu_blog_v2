@@ -13,15 +13,15 @@ a:hover { text-decoration: none; color: #00A7EB; }
 .f_r { float: right }
 .mt20 { margin-top: 20px }
 header { width: 100%; background: rgba(255,255,255,1); }
-article { width: 1140px; margin: 100px auto 0; overflow: hidden }
+article { width: 1200px; margin: 100px auto 0; overflow: hidden }
 .tophead { width: 1200px; margin: 0 auto 10px; overflow: hidden; }
 header { position: fixed; top: 0; z-index: 99999 }
-.container { width: 1140px; margin: 20px auto }
+.container { width: 1200px; margin: 20px auto }
 /*nav*/
 .logo { float: left; margin-right: 80px; font-size: 26px; }
 .logo a { color: #00A7EB }
 .menu { height: 80px; line-height: 80px; width: 100%; background-color: #000; }
-.nav { height: 80px; width: 1140px; margin: 0 auto; }
+.nav { height: 80px; width: 1200px; margin: 0 auto; }
 .nav li { float: left; position: relative; }
 .nav li a { color: #bdbdbd; padding: 0 20px; display: inline-block; }
 .nav li a:hover { color: #fff; }

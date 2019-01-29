@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     //检测ie 6789
     if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
-        window.scrollReveal = new scrollReveal({reset: true});
+        window.scrollReveal = new scrollReveal({ reset: true });
     }
     /*nav show or hide*/
     $('.nav>li').hover(function () {
@@ -76,24 +76,24 @@
     $back_to_top.on('click', function (event) {
         event.preventDefault();
         $('body,html').animate({
-                scrollTop: 0,
-            }, scroll_top_duration
+            scrollTop: 0,
+        }, scroll_top_duration
         );
     });
-    
+
     //设置固定关注我们
 
-if ($('#follow-us')){
-    // var followUsPosition = $('#follow-us').offset().top;
-    // window.onscroll = function () {
-    //     var nowPosition =  document.documentElement.scrollTop;
-    //     if (nowPosition - followUsPosition > 500 ) {
-    //         setTimeout(function () {
-    //             $('#follow-us').attr('class','guanzhu gd');
-    //         },150);
-    //     }else {
-    //         $('#follow-us').attr('class','guanzhu');
-    //     }
-    // };
-}
+    if ($('#follow-us')) {
+        // var followUsPosition = $('#follow-us').offset().top;
+        // window.onscroll = function () {
+        //     var nowPosition =  document.documentElement.scrollTop;
+        //     if (nowPosition - followUsPosition > 500 ) {
+        //         setTimeout(function () {
+        //             $('#follow-us').attr('class','guanzhu gd');
+        //         },150);
+        //     }else {
+        //         $('#follow-us').attr('class','guanzhu');
+        //     }
+        // };
+    }
 });

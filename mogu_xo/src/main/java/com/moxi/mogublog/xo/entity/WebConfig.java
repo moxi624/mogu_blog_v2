@@ -55,6 +55,16 @@ public class WebConfig extends SuperEntity<WebConfig> {
     private String recordNum;
     
     /**
+     * 支付宝收款码FileId
+     */
+    private String aliPay;
+    
+    /**
+     * 微信收款码FileId
+     */
+    private String weixinPay;
+    
+    /**
      * 是否开启评论(0:否， 1:是)
      */
     private String startComment;
@@ -64,6 +74,12 @@ public class WebConfig extends SuperEntity<WebConfig> {
      */    
     @TableField(exist = false)
     private List<String> photoList; //标题图
+    
+    @TableField(exist = false)
+    private String aliPayPhoto; //支付宝付款码
+    
+    @TableField(exist = false)
+    private String weixinPayPhoto; //标题图
     
 
 	public String getName() {
@@ -140,5 +156,38 @@ public class WebConfig extends SuperEntity<WebConfig> {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}  
+	}
+
+	public String getAliPay() {
+		return aliPay;
+	}
+
+	public void setAliPay(String aliPay) {
+		this.aliPay = aliPay;
+	}
+
+	public String getAliPayPhoto() {
+		return aliPayPhoto;
+	}
+
+	public void setAliPayPhoto(String aliPayPhoto) {
+		this.aliPayPhoto = aliPayPhoto;
+	}
+
+	public String getWeixinPayPhoto() {
+		return weixinPayPhoto;
+	}
+
+	public void setWeixinPayPhoto(String weixinPayPhoto) {
+		this.weixinPayPhoto = weixinPayPhoto;
+	}
+
+	public String getWeixinPay() {
+		return weixinPay;
+	}
+
+	public void setWeixinPay(String weixinPay) {
+		this.weixinPay = weixinPay;
+	}
+	
 }

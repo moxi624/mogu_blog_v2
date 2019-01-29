@@ -27,6 +27,10 @@
           <el-form-item label="手机号">
             <el-input v-model="form.mobile" style="width: 400px"></el-input>
           </el-form-item>
+          
+          <el-form-item label="邮箱">
+            <el-input v-model="form.email" style="width: 400px"></el-input>
+          </el-form-item>
 
           <el-form-item label="QQ号">
             <el-input v-model="form.qqNumber" style="width: 400px"></el-input>

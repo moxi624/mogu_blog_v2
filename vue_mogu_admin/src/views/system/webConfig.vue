@@ -1,44 +1,81 @@
 <template>
   <div class="app-container">
-    
     <el-tabs type="border-card">
       <el-tab-pane>
-        <span slot="label"><i class="el-icon-date"></i> 网站信息 </span>
-        
-        <el-form style="margin-left: 20px;" label-position="left" :model="form"  label-width="80px" ref="from">
-          
+        <span slot="label">
+          <i class="el-icon-date"></i> 网站信息
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="80px"
+          ref="from"
+        >
           <el-form-item label="LOGO">
             <div class="imgBody" v-if="form.photoList">
-                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />	    		 
+              <i
+                class="el-icon-error inputClass"
+                v-show="icon"
+                @click="deletePhoto()"
+                @mouseover="icon = true"
+              ></i>
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]">
             </div>
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
             </div>
           </el-form-item>
-          
+
           <el-form-item label="网站名称" prop="oldPwd">
-            <el-input  v-model="form.name" style="width: 400px"></el-input>
+            <el-input v-model="form.name" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="标题" prop="newPwd1">
-            <el-input  v-model="form.title" style="width: 400px"></el-input>
+            <el-input v-model="form.title" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="关键字" prop="newPwd2">
-            <el-input  v-model="form.keyword" style="width: 400px"></el-input>
+            <el-input v-model="form.keyword" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="描述" prop="newPwd1">
-            <el-input  v-model="form.summary" style="width: 400px"></el-input>
+            <el-input v-model="form.summary" style="width: 400px"></el-input>
           </el-form-item>
-          
+
           <el-form-item label="作者" prop="newPwd2">
-            <el-input  v-model="form.author" style="width: 400px"></el-input>
+            <el-input v-model="form.author" style="width: 400px"></el-input>
           </el-form-item>
-          
+
           <el-form-item label="备案号" prop="newPwd2">
-            <el-input  v-model="form.recordNum" style="width: 400px"></el-input>
+            <el-input v-model="form.recordNum" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="支付宝打赏码">
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadPictureHost"
+              :show-file-list="false"
+              :on-success = "fileSuccess"
+              :auto-upload="false"
+            >
+              <img v-if="form.aliPayPhoto" :src="form.aliPayPhoto" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+
+          <el-form-item label="微信打赏码">
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadPictureHost"
+              :show-file-list="false"
+              :on-success = "fileSuccess"
+              :data="otherData"
+            >
+              <img v-if="form.weixinPayPhoto" :src="form.weixinPayPhoto" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
 
           <el-form-item label="网站评论">
@@ -49,17 +86,20 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">保 存</el-button>         
+            <el-button type="primary" @click="submitForm()">保 存</el-button>
           </el-form-item>
-
         </el-form>
-
       </el-tab-pane>
-
     </el-tabs>
 
-	<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
-
+    <CheckPhoto
+      @choose_data="getChooseData"
+      @cancelModel="cancelModel"
+      :photoVisible="photoVisible"
+      :photos="photoList"
+      :files="fileIds"
+      :limit="1"
+    ></CheckPhoto>
   </div>
 </template>
 
@@ -73,18 +113,22 @@ export default {
     return {
       form: {
         name: "",
-        title: "",        
+        title: "",
         keyword: "",
         summary: "",
         author: "",
         logo: "",
         recordNum: "",
-        startComment: "1",        
+        startComment: "1",
+        aliPayPhoto: "",
+        weixinPayPhoto: ""
       },
+      fileList: [],
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
       fileIds: "",
-      icon: false //控制删除图标的显示
+      icon: false, //控制删除图标的显示
+      otherData: {},
     };
   },
   components: {
@@ -101,6 +145,17 @@ export default {
         }
       }
     });
+
+    //图片上传地址
+    this.uploadPictureHost = process.env.PICTURE_API + "/file/pictures";
+
+    //其它数据
+    this.otherData = {
+      userUid: "uid00000000000000000000000000000000",
+      adminUid: "uid00000000000000000000000000000000",
+      projectName: "blog",
+      sortName: "admin"
+    };
   },
   methods: {
     //弹出选择图片框
@@ -152,6 +207,35 @@ export default {
           });
         }
       });
+    },
+
+    submitNormalUpload: function() {
+      this.$refs.upload.submit();
+    },
+
+    fileSuccess: function(response, file, fileList) {
+      console.log(response);
+      if (response.code == "success") {
+        let fileList = response.data;
+        var fileUids = "";
+        for (let index = 0; index < fileList.length; index++) {
+          fileUids = fileUids + fileList[index].uid + ",";
+        }
+        console.log("开始上传图片");
+        var params = new URLSearchParams();
+        params.append("fileUids", fileUids);
+        params.append("pictureSortUid", this.pictureSortUid);
+        addPicture(params).then(response => {
+          if (response.code == "success") {
+            console.log("上传成功");
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.pictureList();
+          }
+        });
+      }
     }
   }
 };
