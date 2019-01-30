@@ -52,25 +52,29 @@
             <el-input v-model="form.recordNum" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="支付宝打赏码">
+          <el-form-item label="阿里支付">
             <el-upload
               class="avatar-uploader"
+              name="filedatas"
               :action="uploadPictureHost"
+              :file-list="fileList"
               :show-file-list="false"
-              :on-success = "fileSuccess"
-              :auto-upload="false"
+              :on-success="fileSuccess_ali"
+              :data="otherData"
             >
               <img v-if="form.aliPayPhoto" :src="form.aliPayPhoto" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
 
-          <el-form-item label="微信打赏码">
+          <el-form-item label="微信支付">
             <el-upload
               class="avatar-uploader"
+              name="filedatas"
               :action="uploadPictureHost"
+              :file-list="fileList"
               :show-file-list="false"
-              :on-success = "fileSuccess"
+              :on-success="fileSuccess_weixin"
               :data="otherData"
             >
               <img v-if="form.weixinPayPhoto" :src="form.weixinPayPhoto" class="avatar">
@@ -120,6 +124,8 @@ export default {
         logo: "",
         recordNum: "",
         startComment: "1",
+        aliPay: "",
+        weixinPay: "",
         aliPayPhoto: "",
         weixinPayPhoto: ""
       },
@@ -128,8 +134,22 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
-      otherData: {},
+      otherData: {}
     };
+  },
+  watch: {
+    "form.aliPay": {
+      handler(newVal, oldVal) {
+        console.log("value change", oldVal, newVal);
+      },
+      deep: true
+    },
+    "form.weixinPay": {
+      handler(newVal, oldVal) {
+        console.log("value change", oldVal, newVal);
+      },
+      deep: true
+    }
   },
   components: {
     CheckPhoto
@@ -209,32 +229,34 @@ export default {
       });
     },
 
-    submitNormalUpload: function() {
-      this.$refs.upload.submit();
-    },
-
-    fileSuccess: function(response, file, fileList) {
+    fileSuccess_ali: function(response, file, fileList) {
       console.log(response);
       if (response.code == "success") {
         let fileList = response.data;
-        var fileUids = "";
-        for (let index = 0; index < fileList.length; index++) {
-          fileUids = fileUids + fileList[index].uid + ",";
+        if (fileList.length > 0) {
+          this.form.aliPay = fileList[0].uid;
+          this.form.aliPayPhoto =
+            process.env.BASE_IMAGE_URL + fileList[0].picUrl;
+          var tempForm = this.form;
+          this.form = {};
+          this.form = tempForm;
         }
-        console.log("开始上传图片");
-        var params = new URLSearchParams();
-        params.append("fileUids", fileUids);
-        params.append("pictureSortUid", this.pictureSortUid);
-        addPicture(params).then(response => {
-          if (response.code == "success") {
-            console.log("上传成功");
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.pictureList();
-          }
-        });
+      }
+    },
+
+    fileSuccess_weixin: function(response, file, fileList) {
+      console.log(response);
+      if (response.code == "success") {
+        let fileList = response.data;
+        if (fileList.length > 0) {
+          this.form.weixinPay = fileList[0].uid;
+          this.form.weixinPayPhoto =
+            process.env.BASE_IMAGE_URL + fileList[0].picUrl;
+          var tempForm = this.form;
+          this.form = {};
+          this.form = tempForm;
+          console.log(this.form);
+        }
       }
     }
   }

@@ -11,6 +11,7 @@ module.exports = {
     ADMIN_API: '"http://120.79.70.126:8080/mogu_admin"',
     PICTURE_API: '"http://120.79.70.126:8080/mogu_picture"',
     WEB_API: '"http://120.79.70.126:8080/mogu_web"',
-    SOLR_API: '"http://120.79.70.126:8080/solr"'
+    SOLR_API: '"http://120.79.70.126:8080/solr"',
+    BASE_IMAGE_URL: '"http://120.79.70.126:8600"',
     
 }
