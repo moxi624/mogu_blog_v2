@@ -34,22 +34,9 @@
         {{blogData.content}} 
       </div>
     </div>
-    <div class="share">
-      <p class="diggit"><a href="JavaScript:makeRequest('/e/public/digg/?classid=3&amp;id=19&amp;dotop=1&amp;doajax=1&amp;ajaxarea=diggnum','EchoReturnedText','GET','');"> 很赞哦！ </a>(<b id="diggnum">13</b>)</p>
-      <p class="dasbox"><a href="javascript:void(0)" @click="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a></p>
-      <div class="hide_box" v-if="showPay"></div>
-      <div class="shang_box" v-if="showPay"> <a class="shang_close" href="javascript:void(0)" @click="dashangToggle()" title="关闭">关闭</a>
-        <div class="shang_tit">
-          <p>感谢您的支持，我会继续努力的!</p>
-        </div>
-        <div class="shang_payimg"> <img src="../../static/images/alipayimg.jpg" alt="扫码支持" title="扫一扫"> </div>
-        <div class="pay_explain">扫码打赏，你说多少就多少</div>
-        <div class="shang_payselect">
-          <div class="pay_item "  :class="[this.payMethod==1?'checked':'']" data-id="alipay" @click="choosePay('1')"> <span class="radiobox"></span> <span class="pay_logo"><img src="../../static/images/alipay.jpg" alt="支付宝"></span> </div>
-          <div class="pay_item " :class="[this.payMethod==2?'checked':'']" data-id="weipay" @click="choosePay('2')"> <span class="radiobox"></span> <span class="pay_logo"><img src="../../static/images/wechat.jpg" alt="微信"></span> </div>
-        </div>
-      </div>
-    </div>
+
+    <!--付款码和点赞-->
+    <PayCode></PayCode>
 
     <div class="otherlink" v-if="sameBlogData.length > 0">
       <h2>相关文章</h2>
@@ -114,6 +101,8 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import ChangYan from "../components/ChangYan";
+import PayCode from "../components/PayCode";
+
 export default {
   name: "info",
   data() {
@@ -122,8 +111,6 @@ export default {
       blogData: null,
       sameBlogData: [], //相关文章
       linkData: [], //友情链接
-      showPay: false, //是否显示支付
-      payMethod: 1,  // 1: 支付宝  2：微信
     };
   },
   components: {
@@ -137,6 +124,7 @@ export default {
     FollowUs,
     ChangYan,
     Head,
+    PayCode,
   },
   created() {
     getLink().then(response => {
@@ -178,15 +166,6 @@ export default {
       let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
       window.open(routeData.href, '_blank');
     },
-    dashangToggle: function() {
-      console.log("点击了打赏")
-      this.showPay = !this.showPay;
-    },
-    // 支付方式
-    choosePay: function(type) {
-      console.log("点击了选择", type)
-      this.payMethod = type;
-    }
   }
 };
 </script>
