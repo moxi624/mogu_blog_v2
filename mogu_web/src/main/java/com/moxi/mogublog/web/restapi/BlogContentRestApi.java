@@ -120,6 +120,39 @@ public class BlogContentRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, blog);
 	}
 	
+	@ApiOperation(value="通过Uid给博客点赞", notes="通过Uid给博客点赞")
+	@GetMapping("/praiseBlogByUid")
+	public String praiseBlogByUid (HttpServletRequest request,
+			@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid			) {
+		
+		
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+		}
+		
+		Blog blog = blogService.getById(uid);
+		
+		//从Redis取出数据，判断该用户是否点击过
+		String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
+		
+		if(StringUtils.isEmpty(pariseJsonResult)) {
+
+		    //给该博客点赞数置为1
+			stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, "1");
+			
+		} else {
+			Integer count = Integer.valueOf(pariseJsonResult) + 1;
+			
+			//给该博客点赞 +1
+			stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, count.toString());
+		}
+		
+		//增加记录（可以考虑使用AOP）
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET, blog.getUid(), null);
+        
+		return ResultUtil.result(SysConf.SUCCESS, "");
+	}
+	
 	@ApiOperation(value="根据标签获取相关的博客", notes="根据标签获取相关的博客")
 	@GetMapping("/getSameBlog")
 	public String getNewBlog (HttpServletRequest request,
@@ -149,7 +182,9 @@ public class BlogContentRestApi {
 		pageList.setRecords(list);
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
-
+	
+	
+	
 
 	
 	/**
