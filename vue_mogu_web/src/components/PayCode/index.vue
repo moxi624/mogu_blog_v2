@@ -1,10 +1,8 @@
 <template>
   <div class="share">
-    <p class="diggit">
-      <a
-        href="JavaScript:makeRequest('/e/public/digg/?classid=3&amp;id=19&amp;dotop=1&amp;doajax=1&amp;ajaxarea=diggnum','EchoReturnedText','GET','');"
-      >很赞哦！</a>(
-      <b id="diggnum">13</b>)
+    <p class="diggit" @click="praiseBlog(blogUid)">
+      <a href="javascript:void(0);">很赞哦！</a>
+      (<b id="diggnum">13</b>)
     </p>
     <p class="dasbox">
       <a href="javascript:void(0)" @click="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a>
@@ -49,6 +47,7 @@
 
 <script>
 import { getWebConfig } from "../../api/index";
+import { praiseBlogByUid } from "../../api/blogContent";
 export default {
   name: "PayCode",
   data() {
@@ -59,6 +58,7 @@ export default {
       payCode: "", //支付码图片
     };
   },
+  props:["blogUid"],
   created() {
     getWebConfig().then(response => {
       console.log("获取网站配置", response);
@@ -82,7 +82,21 @@ export default {
       } else {
         this.payCode = this.webConfigData.weixinPayPhoto;
       }
-    }
+    },
+    //博客点赞
+    praiseBlog: function(uid) {
+      console.log("开始点赞");
+      var params = new URLSearchParams();
+      params.append("uid", uid);
+      praiseBlogByUid(params).then(response => {
+         console.log(response);
+         if(response.code == "success") {
+          alert("点赞成功！");
+         } else {
+           alert(response.data);
+         }
+      })
+    },
   }
 };
 </script>

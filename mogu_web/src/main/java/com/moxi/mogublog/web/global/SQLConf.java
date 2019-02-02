@@ -28,6 +28,12 @@ public final class SQLConf extends BaseSQLConf{
 	public static final String RESOURCE_SORT_UID = "resource_sort_uid";
 	
 	public static final String USER_NAME = "user_name";
-	public static final String email = "email";
+	public static final String EMAIL = "email";
+	
+	// webVisit表
+	public static final String BEHAVIOR = "behavior";
+	public static final String IP = "ip";
+	public static final String MODULE_UID = "module_uid";
+	
 	
 }

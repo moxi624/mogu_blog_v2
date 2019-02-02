@@ -36,7 +36,7 @@
     </div>
 
     <!--付款码和点赞-->
-    <PayCode></PayCode>
+    <PayCode :blogUid="blogUid"></PayCode>
 
     <div class="otherlink" v-if="sameBlogData.length > 0">
       <h2>相关文章</h2>

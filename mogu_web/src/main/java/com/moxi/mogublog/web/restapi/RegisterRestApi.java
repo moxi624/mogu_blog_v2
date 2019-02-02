@@ -65,7 +65,7 @@ public class RegisterRestApi {
 		}
 		
 		QueryWrapper<User> wrapper = new QueryWrapper<User>();
-		queryWrapper.eq(SQLConf.email, email);
+		queryWrapper.eq(SQLConf.EMAIL, email);
 		if(userService.getOne(wrapper) != null) {
 			return ResultUtil.result(SysConf.ERROR, "该邮箱已被注册"); 
 		};

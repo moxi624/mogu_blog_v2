@@ -15,3 +15,11 @@ export function getSameBlog (params) {
     params
   })
 }
+
+export function praiseBlogByUid (params) {
+  return request({
+    url: process.env.WEB_API + '/content/praiseBlogByUid',
+    method: 'get',
+    params
+  })
+}

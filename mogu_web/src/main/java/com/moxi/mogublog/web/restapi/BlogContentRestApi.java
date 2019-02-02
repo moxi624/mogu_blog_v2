@@ -26,6 +26,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.LinkService;
@@ -125,6 +126,17 @@ public class BlogContentRestApi {
 	public String praiseBlogByUid (HttpServletRequest request,
 			@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid			) {
 		
+		String ip = IpUtils.getIpAddr(request);
+		
+		//判断该IP是否点赞过
+		QueryWrapper<WebVisit> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.IP, ip);
+		queryWrapper.eq(SQLConf.MODULE_UID, uid);
+		queryWrapper.eq(SQLConf.BEHAVIOR, EBehavior.BLOG_PRAISE);
+		WebVisit webVisit = webVisitService.getOne(queryWrapper);
+		if(webVisit != null) {
+			return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！"); 
+		}
 		
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "UID不能为空");
@@ -148,7 +160,7 @@ public class BlogContentRestApi {
 		}
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET, blog.getUid(), null);
+        webVisitService.addWebVisit(null, ip, EBehavior.BLOG_PRAISE, blog.getUid(), null);
         
 		return ResultUtil.result(SysConf.SUCCESS, "");
 	}
