@@ -105,7 +105,10 @@ public class Blog extends SuperEntity<Blog> {
     
     @TableField(exist = false)
     private BlogSort blogSort; //博客分类
-
+    
+    
+    @TableField(exist = false)
+    private Integer praiseCount; //点赞数
 
 	public String getTitle() {
 		return title;
@@ -278,4 +281,12 @@ public class Blog extends SuperEntity<Blog> {
 		this.isPublish = isPublish;
 	}
 
+	public Integer getPraiseCount() {
+		return praiseCount;
+	}
+
+	public void setPraiseCount(Integer praiseCount) {
+		this.praiseCount = praiseCount;
+	}
+	
 }

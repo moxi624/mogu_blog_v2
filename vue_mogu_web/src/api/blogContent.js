@@ -23,3 +23,11 @@ export function praiseBlogByUid (params) {
     params
   })
 }
+
+export function getBlogPraiseCountByUid (params) {
+  return request({
+    url: process.env.WEB_API + '/content/getBlogPraiseCountByUid',
+    method: 'get',
+    params
+  })
+}

@@ -2,7 +2,10 @@
   <div class="share">
     <p class="diggit" @click="praiseBlog(blogUid)">
       <a href="javascript:void(0);">很赞哦！</a>
-      (<b id="diggnum">13</b>)
+      <span v-if="praiseCount!=0">
+        (<b id="diggnum">{{praiseCount}}</b>)
+      </span>
+      
     </p>
     <p class="dasbox">
       <a href="javascript:void(0)" @click="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a>
@@ -47,7 +50,10 @@
 
 <script>
 import { getWebConfig } from "../../api/index";
-import { praiseBlogByUid } from "../../api/blogContent";
+import {
+  praiseBlogByUid,
+  getBlogPraiseCountByUid
+} from "../../api/blogContent";
 export default {
   name: "PayCode",
   data() {
@@ -56,10 +62,13 @@ export default {
       showPay: false, //是否显示支付
       payMethod: 1, // 1: 支付宝  2：微信
       payCode: "", //支付码图片
+      praiseCount: 0
     };
   },
-  props:["blogUid"],
+  props: ["blogUid"],
   created() {
+
+    this.getPraiseCount(this.blogUid);
     getWebConfig().then(response => {
       console.log("获取网站配置", response);
       if (response.code == "success") {
@@ -77,7 +86,7 @@ export default {
     choosePay: function(type) {
       console.log("点击了选择", type);
       this.payMethod = type;
-      if(type == 1) {
+      if (type == 1) {
         this.payCode = this.webConfigData.aliPayPhoto;
       } else {
         this.payCode = this.webConfigData.weixinPayPhoto;
@@ -89,14 +98,25 @@ export default {
       var params = new URLSearchParams();
       params.append("uid", uid);
       praiseBlogByUid(params).then(response => {
-         console.log(response);
-         if(response.code == "success") {
+        console.log(response);
+        if (response.code == "success") {
           alert("点赞成功！");
-         } else {
-           alert(response.data);
-         }
-      })
+              this.getPraiseCount(uid);
+        } else {
+          alert(response.data);
+        }
+      });
     },
+    //获取点赞数
+    getPraiseCount: function(uid) {
+      var params = new URLSearchParams();
+      params.append("uid", uid);
+      getBlogPraiseCountByUid(params).then(response => {
+        if (response.code == "success") {
+          this.praiseCount = response.data;
+        }
+      });
+    }
   }
 };
 </script>

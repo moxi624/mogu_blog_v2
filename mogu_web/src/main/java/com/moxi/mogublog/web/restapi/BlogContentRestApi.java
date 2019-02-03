@@ -101,6 +101,9 @@ public class BlogContentRestApi {
 			
 			//从Redis取出数据，判断该用户是否点击过
 			String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + uid);
+			
+			//从Redis取出用户点赞数据
+			String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
 						
 			if(StringUtils.isEmpty(jsonResult)) {
 				
@@ -112,6 +115,13 @@ public class BlogContentRestApi {
 						24, TimeUnit.HOURS);											
 			}
 			
+			if(!StringUtils.isEmpty(pariseJsonResult)) {
+				Integer pariseCount = Integer.parseInt(pariseJsonResult);
+				blog.setPraiseCount(pariseCount);
+			} else {
+				blog.setPraiseCount(0);
+			}
+			
 			//增加记录（可以考虑使用AOP）
 	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET, blog.getUid(), null);
 			
@@ -119,6 +129,24 @@ public class BlogContentRestApi {
 		
 		log.info("返回结果");		
 		return ResultUtil.result(SysConf.SUCCESS, blog);
+	}
+	
+	@ApiOperation(value="通过Uid获取博客点赞数", notes="通过Uid获取博客点赞数")
+	@GetMapping("/getBlogPraiseCountByUid")
+	public String getBlogPraiseCountByUid (HttpServletRequest request,
+			@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid			) {
+				
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+		}
+
+		//从Redis取出用户点赞数据
+		String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
+		Integer pariseCount = 0;		
+		if(!StringUtils.isEmpty(pariseJsonResult)) {
+			pariseCount = Integer.parseInt(pariseJsonResult);
+		}
+		return ResultUtil.result(SysConf.SUCCESS, pariseCount);
 	}
 	
 	@ApiOperation(value="通过Uid给博客点赞", notes="通过Uid给博客点赞")
