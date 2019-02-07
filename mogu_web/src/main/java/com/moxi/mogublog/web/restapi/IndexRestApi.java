@@ -515,6 +515,7 @@ public class IndexRestApi {
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.orderByDesc(SQLConf.SORT);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 		IPage<Tag> pageList = tagService.page(page, queryWrapper);
 		log.info("返回结果");
