@@ -30,7 +30,7 @@
         <a v-if="blogData.tagList" v-for="item in blogData.tagList" :key="item.uid" href="javascript:void(0);" @click="goToList(item.uid)" target="_blank">{{item.content}}</a>         
       </div>
       <div class="news_about"><strong>简介</strong>{{blogData.summary}}</div>
-      <div class="news_con" v-html="blogData.content" v-highlight> 
+      <div class="news_con" v-html="blogData.content" v-highlight @click="imageChange"> 
         {{blogData.content}} 
       </div>
     </div>
@@ -139,6 +139,21 @@ export default {
       console.log("通过uid获取博客", response);
       if (response.code == "success") {
         this.blogData = response.data;
+        console.log("博客内容", this.blogData.content);
+
+        // this.imgUrls = this.blogData.content.match(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi)
+        // let arrImg = []; //定义空字符串,下面会填充img标签
+        // let srcList = []; //定义空字符串，下面会往里面填充img标签
+        // for(var j = 0; j < this.imgUrls.length; j++) {
+        //   //摘出img标签下src里的内容
+        //   this.imgUrls[j].replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function(match,capture) {
+        //     arrImg.push(capture);
+        //     srcList.push(capture + "?x-oss-process=image/rotate,270")
+        //   })
+        // }
+        // console.log("oldImgList", arrImg);
+        // console.log("newImgList", srcList);
+
         var params1 = new URLSearchParams();
         params1.append("tagUid", response.data.tagUid);
         getSameBlog(params1).then(sameResponse => {
@@ -165,6 +180,14 @@ export default {
     goToSortList(uid) {
       let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
       window.open(routeData.href, '_blank');
+    },
+    imageChange: function(e) {
+      //首先需要判断点击的是否是图片
+      var type = e.target.localName;
+      if(type == "img") {
+        console.log(e.target.currentSrc);
+        window.open(e.target.currentSrc);
+      }
     },
   }
 };
