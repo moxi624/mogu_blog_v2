@@ -58,9 +58,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     
     # 初始化大小，最小，最大
-    initialSize: 5
+    initialSize: 20
     minIdle: 5
-    maxActive: 50
+    maxActive: 200
     
     #连接等待超时时间
     maxWait: 60000

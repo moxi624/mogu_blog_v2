@@ -123,7 +123,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 		//得到请求头信息authorization信息
 		final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 		
-		log.error("######## 传递过来的token为: " + authHeader);
+		log.error("传递过来的token为: " + authHeader);
 		
 		//请求头 'Authorization': tokenHead + token
 		if (authHeader != null && authHeader.startsWith(tokenHead)) {
@@ -135,7 +135,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 				
 				//刷新token过期时间
 				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);	
-			} 
+			}
 			
 			String username = jwtHelper.getUsername(token,audience.getBase64Secret());
 			String adminUid = jwtHelper.getUserUid(token,audience.getBase64Secret());
