@@ -26,6 +26,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
@@ -200,8 +201,23 @@ public class BlogContentRestApi {
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(tagUid)) {
-			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
-		} 
+			return ResultUtil.result(SysConf.ERROR, "标签UID不能为空");
+		}
+		String ip = IpUtils.getIpAddr(request);
+		Tag tag = tagService.getById(tagUid);
+		
+		if(tag == null) {
+			return ResultUtil.result(SysConf.ERROR, "标签不存在");
+		} else {
+			//增加点击次数
+			int clickCount = tag.getClickCount() + 1;
+			tag.setClickCount(clickCount);
+			tag.updateById();
+			
+			//增加记录（可以考虑使用AOP）
+	        webVisitService.addWebVisit(null, ip, EBehavior.BLOG_TAG, tag.getUid(), null);
+		}
+		
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
@@ -222,10 +238,6 @@ public class BlogContentRestApi {
 		pageList.setRecords(list);
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
-	
-	
-	
-
 	
 	/**
 	 * 设置博客标题图
