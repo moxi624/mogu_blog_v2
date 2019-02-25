@@ -132,9 +132,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 			
 			//判断token是否过期
 			if (!jwtHelper.isExpiration(token, audience.getBase64Secret())) {
-				
 				//刷新token过期时间
-				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);	
+				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
+				log.info("token未过期，刷新token");
+			} else {
+				chain.doFilter(request, response);
+				return;
 			}
 			
 			String username = jwtHelper.getUsername(token,audience.getBase64Secret());

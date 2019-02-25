@@ -76,7 +76,11 @@ public class JwtHelper {
     
     // 判断token是否已过期
     public  boolean isExpiration(String token, String base64Security){
-        return parseJWT(token,base64Security).getExpiration().before(new Date());
+    	if (parseJWT(token,base64Security) == null) {
+    		return true;
+    	} else {
+    		return parseJWT(token,base64Security).getExpiration().before(new Date());	
+    	}
     }
     
     
