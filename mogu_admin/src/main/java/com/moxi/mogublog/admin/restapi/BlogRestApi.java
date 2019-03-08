@@ -137,6 +137,10 @@ public class BlogRestApi {
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
 		
+		if(list.size() == 0) {
+			return ResultUtil.result(SysConf.SUCCESS, pageList);
+		}
+		
 		final StringBuffer fileUids = new StringBuffer();
 		List<String> sortUids = new ArrayList<String>();
 		List<String> tagUids = new ArrayList<String>();
