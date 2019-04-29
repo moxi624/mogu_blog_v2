@@ -65,12 +65,14 @@ export default {
       pictureUids: [], //图片uid集合
       chooseTitle: "全选",
       isCheckedAll: false, //是否全选
+      fileUids: "", //上传时候的文件uid
       form: {
         uid: null,
         fileUid: null,
         picName: null,
         pictureSortUid: null
       },
+      count: 0, //计数器，用于记录上传次数
       loading: true,
       currentPage: 1,
       total: null,
@@ -88,7 +90,6 @@ export default {
     var params = new URLSearchParams();
     params.append("pictureSortUid", this.pictureSortUid);
     getPictureList(params).then(response => {
-      console.log("初始化数据", response);
       if (response.code == "success") {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
@@ -145,7 +146,6 @@ export default {
     },
     //点击单选
     checked: function(data) {
-      console.log("点击单选", data);
       let idIndex = this.pictureUids.indexOf(data.uid);
       if (idIndex >= 0) {
         //选过了
@@ -153,7 +153,6 @@ export default {
       } else {
         this.pictureUids.push(data.uid);
       }
-      console.log(this.pictureUids);
     },
     checkAll: function() {
       //如果是全选
@@ -169,7 +168,6 @@ export default {
         this.isCheckedAll = true;
         this.chooseTitle = "取消全选";
       }
-      console.log("点击了全选");
     },
     handleDelete: function() {
       if (this.pictureUids.length <= 0) {
@@ -188,7 +186,6 @@ export default {
           let params = new URLSearchParams();
           params.append("uid", this.pictureUids.join(",")); //将数组变成,组成
           deletePicture(params).then(response => {
-            console.log(response);
             if (response.code == "success") {
               this.$message({
                 type: "success",
@@ -214,46 +211,47 @@ export default {
     //改变页码
     handleCurrentChange(val) {
       var that = this;
-      console.log(`当前页: ${val}`);
       this.currentPage = val; //改变当前所指向的页数
       this.pictureList();
     },
     handleAdd: function() {
       this.dialogFormVisible = true;
-      console.log("点击了新增");
     },
     handlePreview: function() {
-      console.log("1");
+
     },
     handleRemove: function() {
-      console.log("2");
+     
     },
     submitNormalUpload: function() {
+      var that = this;
       this.$refs.upload.submit();
     },
     fileSuccess: function(response, file, fileList) {
-      console.log(response);
+      var that = this;
       if (response.code == "success") {
-        let fileList = response.data;
-        var fileUids = "";
-        for (let index = 0; index < fileList.length; index++) {
-          fileUids = fileUids + fileList[index].uid + ",";
+        let file = response.data;
+        for (let index = 0; index < file.length; index++) {
+          this.fileUids = this.fileUids + file[index].uid + ",";
         }
-        console.log("开始上传图片");
-        var params = new URLSearchParams();
-        params.append("fileUids", fileUids);
-        params.append("pictureSortUid", this.pictureSortUid);
-        addPicture(params).then(response => {
-          if (response.code == "success") {
-            console.log("上传成功");
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.pictureList();
-          }
-        });
+    
+        this.count = this.count + 1;
+        if(this.count % fileList.length == 0) {
+          var params = new URLSearchParams();
+          params.append("fileUids", this.fileUids);
+          params.append("pictureSortUid", this.pictureSortUid);
+          addPicture(params).then(response => {
+            if (response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              that.pictureList();            
+            }
+          });
+        }
       }
+
     }
   }
 };
