@@ -22,6 +22,42 @@
 
 	<dependencies>
 		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-web</artifactId>
+	        <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
+	         <!--  <exclusions>  
+	             <exclusion>  
+	                 <groupId>org.springframework.boot</groupId>  
+	                 <artifactId>spring-boot-starter-tomcat</artifactId>  
+	             </exclusion>  
+	         </exclusions> -->
+    	</dependency>
+    	
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>servlet-api</artifactId>
+		    <version>3.0-alpha-1</version>
+		</dependency>
+
+		<dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+		
 		<!-- 因为 这里暂时不需要用到spring security所以需要排除掉 -->
         <dependency>
 		    <artifactId>mogu_base</artifactId>
@@ -42,10 +78,6 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-eureka</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		
 		<dependency>

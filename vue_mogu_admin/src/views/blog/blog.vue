@@ -370,7 +370,6 @@ export default {
   },
   created() {
     var that = this;
-    console.log("#########", this.role, this.name);
     this.blogList(); //获取博客列表
 
     var tagParams = new URLSearchParams();
@@ -384,7 +383,7 @@ export default {
     blogSortParams.append("pageSize", 100);
     getBlogSortList(blogSortParams).then(response => {
       this.blogSortData = response.data.records;
-      console.log(response);
+      console.log("博客分类", response);
     });
   },
   methods: {
@@ -401,6 +400,7 @@ export default {
         this.currentPage = response.data.current;
         this.pageSize = response.data.size;
         this.total = response.data.total;
+        console.log("博客内容", response.data);
       });
     },
     getFormObject: function() {

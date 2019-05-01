@@ -153,7 +153,10 @@ public class BlogRestApi {
 				sortUids.add(item.getBlogSortUid());
 			}
 			if(StringUtils.isNotEmpty(item.getTagUid())) {
-				tagUids.add(item.getTagUid());
+				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+				for(String itemTagUid : tagUidsTemp) {
+					tagUids.add(itemTagUid);	
+				}				
 			}
 		});
 		String pictureList = null;

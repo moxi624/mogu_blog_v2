@@ -25,6 +25,47 @@
 		    <version>0.0.1-SNAPSHOT</version>
         </dependency>
         
+        <dependency>
+		    <artifactId>mogu_xo</artifactId>
+		    <groupId>com.moxi</groupId>
+		    <version>0.0.1-SNAPSHOT</version>
+	    </dependency>
+	       
+	    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-web</artifactId>
+	        <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
+	         <!--  <exclusions>  
+	             <exclusion>  
+	                 <groupId>org.springframework.boot</groupId>  
+	                 <artifactId>spring-boot-starter-tomcat</artifactId>  
+	             </exclusion>  
+	         </exclusions> -->
+	   	</dependency>
+        
+       <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        
+        <dependency>
+	        <groupId>org.springframework.cloud</groupId>
+	        <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+	    </dependency>
+        
         <!-- 热部署
         	devtolls可以实现页面热部署(即页面修改后会立即生效)，这个可以直接在application.properties文件中配置        	  
         	spring.thymeleaf.cache=false来实现 -->
