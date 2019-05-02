@@ -137,10 +137,12 @@ export default {
   mounted() {
     // 注册scroll事件并监听
     var that = this;
+    var loading = false;
     window.addEventListener("scroll", function() {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
-      let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-      if (scrollTop >= 0.7 * scrollHeight && !that.isEnd) {
+      let scrollHeight = document.documentElement.scrollHeight; //最高的位置      
+      if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !loading) { 
+        loading = true; 
         that.currentPage = that.currentPage + 1;        
         var params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
@@ -155,7 +157,8 @@ export default {
             that.currentPage = response.data.current;                      
           } else {
             that.isEnd = true;
-          }          
+          }
+          loading = false;          
         });
       }
     });
