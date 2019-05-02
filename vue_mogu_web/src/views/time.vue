@@ -62,11 +62,14 @@ export default {
   mounted() {
     // 注册scroll事件并监听
     var that = this;
+    var loading = false;
+
     window.addEventListener("scroll", function() {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
       let scrollHeight = document.documentElement.scrollHeight; //最高的位置
       console.log(scrollTop, scrollHeight);
-      if (scrollTop >= 0.25 * scrollHeight && !that.isEnd) {
+      if (scrollTop >= 0.25 * scrollHeight && !that.isEnd && !loading) {
+        loading = true;
         that.currentPage = that.currentPage + 1;
         var params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
@@ -82,6 +85,7 @@ export default {
           } else {
             that.isEnd = true;
           }
+          loading = false; 
         });
       }
     });
