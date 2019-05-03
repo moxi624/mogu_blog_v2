@@ -35,7 +35,7 @@
         }
         c.appendChild(b);
       };
-      loadJs("http://changyan.sohu.com/upload/changyan.js", function() {
+      loadJs("//120.79.70.126:8600/blog/resource/java/Chanyan/changyan.js", function() {
         window.changyan.api.config({ appid: appid, conf: conf });
       });
     }
