@@ -92,6 +92,9 @@ public class IndexRestApi {
 	@Value(value="${BLOG.HOT_COUNT}")
 	private Integer BLOG_HOT_COUNT;
 	
+	@Value(value="${BLOG.HOT_TAG_COUNT}")
+	private Integer BLOG_HOT_TAG_COUNT;
+	
 	@Value(value="${BLOG.NEW_COUNT}")
 	private Integer BLOG_NEW_COUNT;
 	
@@ -158,8 +161,15 @@ public class IndexRestApi {
 			pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
 		}
 		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);				
-		Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);		
-		Collection<Tag> tagList = tagService.listByIds(tagUids);
+		Collection<BlogSort> sortList = new ArrayList<>();
+		Collection<Tag> tagList = new ArrayList<>();
+		if (sortUids.size() > 0) {
+			sortList = blogSortService.listByIds(sortUids);
+		}
+		if (tagUids.size() > 0) {
+			tagList = tagService.listByIds(tagUids);
+		}				
+		
 		
 		Map<String, BlogSort> sortMap = new HashMap<String, BlogSort> ();
 		Map<String, Tag> tagMap = new HashMap<String, Tag>();
@@ -506,14 +516,12 @@ public class IndexRestApi {
 	
 	@ApiOperation(value="获取最热标签", notes="获取最热标签")
 	@GetMapping("/getHotTag")
-	public String getHotTag (HttpServletRequest request,
-			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+	public String getHotTag (HttpServletRequest request) {
 		
 		QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
 		Page<Tag> page = new Page<>();
-		page.setCurrent(currentPage);
-		page.setSize(pageSize);
+		page.setCurrent(0);
+		page.setSize(BLOG_HOT_TAG_COUNT);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.SORT);
 		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);

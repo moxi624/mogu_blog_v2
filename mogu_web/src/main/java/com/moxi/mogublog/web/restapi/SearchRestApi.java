@@ -75,9 +75,8 @@ public class SearchRestApi {
 		if(StringUtils.isEmpty(tagUid)) {
 			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
 		} 
-		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-
-		queryWrapper.eq(SQLConf.TagUid, tagUid);
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();		
+		queryWrapper.like(SQLConf.TagUid, tagUid);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.excludeColumns(Blog.class, "content");
 		List<Blog> list = blogService.list(queryWrapper);		

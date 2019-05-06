@@ -27,7 +27,9 @@ export default {
       thirdParams.append("level", 3);    
       getBlogByLevel(thirdParams).then(response => {
         console.log("三级推荐", response);
-        this.thirdData = response.data.records;
+        if (response.code == "success") {
+          this.thirdData = response.data.records;
+        }        
       });
     },
     methods: {
