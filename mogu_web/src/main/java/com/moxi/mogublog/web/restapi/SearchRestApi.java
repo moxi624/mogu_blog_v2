@@ -26,6 +26,7 @@ import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -77,7 +78,8 @@ public class SearchRestApi {
 		} 
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();		
 		queryWrapper.like(SQLConf.TagUid, tagUid);
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		queryWrapper.excludeColumns(Blog.class, "content");
 		List<Blog> list = blogService.list(queryWrapper);		
 		for(Blog item : list) {
