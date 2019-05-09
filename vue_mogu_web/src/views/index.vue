@@ -36,7 +36,7 @@
       <p class="blogtext">{{item.summary}}</p>
       <div class="bloginfo">
         <ul>
-          <li class="author"><a href="/">{{item.author}}</a></li>
+          <li class="author"><a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a></li>
           <li class="lmname" v-if="item.blogSort"><a href="javascript:void(0);" @click="goToList(item.blogSort.uid)">{{item.blogSort.sortName}}</a></li>
           <li class="timer">{{item.createTime}}</li>
           <li class="view"><span>{{item.clickCount}}</span></li>
@@ -187,6 +187,12 @@ export default {
     //跳转到搜索详情页
     goToList(uid) {
       let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
+      window.open(routeData.href, '_blank');
+    },
+
+    //跳转到搜索详情页
+    goToAuthor(author) {
+      let routeData = this.$router.resolve({ path: "/list", query: { author: author } });
       window.open(routeData.href, '_blank');
     },
 

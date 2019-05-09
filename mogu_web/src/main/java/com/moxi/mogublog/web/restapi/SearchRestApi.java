@@ -127,6 +127,34 @@ public class SearchRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	
+	@ApiOperation(value="根据作者获取相关的博客", notes="根据作者获取相关的博客")
+	@GetMapping("/searchBlogByAuthor")
+	public String searchBlogByAuthor (HttpServletRequest request,
+			@ApiParam(name = "author", value = "作者名称",required = true) @RequestParam(name = "author", required = true) String author) {
+		if(StringUtils.isEmpty(author)) {
+			return ResultUtil.result(SysConf.ERROR, "作者不能为空");
+		} 
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+
+		queryWrapper.eq(SQLConf.AUTHOR, author);
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		queryWrapper.excludeColumns(Blog.class, "content");
+		List<Blog> list = blogService.list(queryWrapper);		
+		for(Blog item : list) {
+			//获取标签
+			blogService.setTagByBlog(item);		
+			//获取分类
+			blogService.setSortByBlog(item);			
+			//设置博客标题图
+			setPhotoListByBlog(item);			
+		}
+		log.info("返回结果");
+		
+		//增加记录（可以考虑使用AOP）
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR, author, null);
+		
+		return ResultUtil.result(SysConf.SUCCESS, list);
+	}
 	
 	/**
 	 * 设置博客标题图

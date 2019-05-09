@@ -23,3 +23,11 @@ export function searchBlogBySort (params) {
     params
   })
 }
+
+export function searchBlogByAuthor (params) {
+  return request({
+    url: process.env.WEB_API + '/search/searchBlogByAuthor',
+    method: 'get',
+    params
+  })
+}

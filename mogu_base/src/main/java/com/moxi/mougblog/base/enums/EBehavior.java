@@ -14,6 +14,7 @@ public class EBehavior {
 	public static final String BLOG_PRAISE = "blog_praise"; //给博客点赞
 	public static final String FRIENDSHIP_LINK = "friendship_link"; //友情链接
 	public static final String BLOG_SEARCH = "blog_search"; //点击搜素
-	public static final String STUDY_VIDEO = "study_video"; //点击学习视频	
+	public static final String STUDY_VIDEO = "study_video"; //点击学习视频
+	public static final String BLOG_AUTHOR = "blog_author"; //点击查看作者文章
 	
 }

@@ -91,7 +91,7 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 
-import { searchBlog, searchBlogByTag, searchBlogBySort } from "../api/search";
+import { searchBlog, searchBlogByTag, searchBlogBySort, searchBlogByAuthor  } from "../api/search";
 
 export default {
   name: "list",
@@ -119,10 +119,12 @@ export default {
     this.keywords = this.$route.query.keyword;
     this.tagUid = this.$route.query.tagUid;
     this.sortUid = this.$route.query.sortUid;
+    this.author = this.$route.query.author;
 
     console.log("keywords", this.keywords);
     console.log("tagUid", this.tagUid);
     console.log("sortUid", this.sortUid);
+    console.log("author", this.author);
     this.search();
   },
   watch: {
@@ -195,6 +197,23 @@ export default {
           console.log(response);
           if (response.code == "success") {
             console.log("根据分类查找", response);
+            var blogData = response.data;
+            for (var i = 0; i < blogData.length; i++) {
+              blogData[i].blogSort = blogData[i].blogSort.sortName;
+            }
+            this.blogData = blogData;
+          }
+          console.log("blogData", this.blogData);
+        });
+
+      } else if(this.author != undefined) {
+
+        var params = new URLSearchParams();
+        params.append("author", this.author);
+        searchBlogByAuthor(params).then(response => {
+          console.log(response);
+          if (response.code == "success") {
+            console.log("根据作者名查找", response);
             var blogData = response.data;
             for (var i = 0; i < blogData.length; i++) {
               blogData[i].blogSort = blogData[i].blogSort.sortName;

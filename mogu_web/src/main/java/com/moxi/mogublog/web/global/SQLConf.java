@@ -23,6 +23,7 @@ public final class SQLConf extends BaseSQLConf{
 	public static final String TagUid = "tag_uid";
 	public static final String BLOG_SORT_UID = "blog_sort_uid";
 	public static final String SORT = "sort";
+	public static final String AUTHOR = "author";
 	
 	//StudyVideo表
 	public static final String RESOURCE_SORT_UID = "resource_sort_uid";
