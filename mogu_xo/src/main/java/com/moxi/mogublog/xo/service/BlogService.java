@@ -57,12 +57,5 @@ public interface BlogService extends SuperService<Blog> {
 	 * @date 2018年10月22日下午3:30:28
 	 */
 	public Integer getBlogCount(Integer status);
-	
-	/**
-	 * 增加博客的点击数
-	 * @author xzx19950624@qq.com
-	 * @date 2018年11月18日上午10:17:08
-	 */
-	public void addBlogClickCount(Blog blog);
 		
 }

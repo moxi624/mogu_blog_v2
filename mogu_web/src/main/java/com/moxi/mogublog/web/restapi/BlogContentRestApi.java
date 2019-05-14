@@ -109,7 +109,9 @@ public class BlogContentRestApi {
 			if(StringUtils.isEmpty(jsonResult)) {
 				
 				//给博客点击数增加
-				blogService.addBlogClickCount(blog);
+				Integer clickCount = blog.getClickCount() + 1;
+				blog.setClickCount(clickCount);	
+				blog.updateById();
 				
 			    //将该用户点击记录存储到redis中, 24小时后过期	
 				stringRedisTemplate.opsForValue().set("BLOG_CLICK:" + ip + "#" + uid, blog.getClickCount().toString(),

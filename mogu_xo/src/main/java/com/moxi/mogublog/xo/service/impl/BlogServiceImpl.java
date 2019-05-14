@@ -111,12 +111,4 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		return blogMapper.selectCount(queryWrapper);
 	}
 
-	@Override
-	public void addBlogClickCount(Blog blog) {
-		
-		Integer clickCount = blog.getClickCount() + 1;
-		blog.setClickCount(clickCount);	
-		blog.updateById();
-	}
-
 }
