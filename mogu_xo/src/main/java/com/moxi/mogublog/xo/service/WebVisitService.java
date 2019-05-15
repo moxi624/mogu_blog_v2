@@ -13,6 +13,19 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface WebVisitService extends SuperService<WebVisit> {
 	
-	
+	/**
+	 * 增加访问记录
+	 * @param userUid
+	 * @param ip
+	 * @param behavior
+	 * @param moduleUid
+	 * @param otherData
+	 */
 	public void addWebVisit(String userUid, String ip, String behavior, String moduleUid, String otherData);
+	
+	/**
+	 * 获取今日网站访问人数
+	 * @return
+	 */
+	public int getWebVisitCount();
 }

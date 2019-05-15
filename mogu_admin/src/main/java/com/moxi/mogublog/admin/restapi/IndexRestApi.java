@@ -12,6 +12,7 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.CommentService;
+import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
@@ -33,16 +34,23 @@ public class IndexRestApi {
 	
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	WebVisitService webVisitService;
 
 	@ApiOperation(value="首页初始化数据", notes="获取博客数量", response = String.class)	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String init() {
-		Map<String, Object> map = new HashMap<String, Object>();		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		
 		Integer blogCount = blogService.getBlogCount(EStatus.ENABLE);
-		Integer commentCount = commentService.getCommentCount(EStatus.ENABLE);
+		Integer commentCount = commentService.getCommentCount(EStatus.ENABLE);					
+		Integer visitCount = webVisitService.getWebVisitCount();
 		
 		map.put(SysConf.BLOG_COUNT, blogCount);
 		map.put(SysConf.COMMENT_COUNT, commentCount);
+		map.put(SysConf.VISIT_COUNT, visitCount);
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}
 }

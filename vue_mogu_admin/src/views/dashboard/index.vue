@@ -69,10 +69,10 @@ export default {
   },
   data() {
     return {
-      visitAddTotal: 6,
-      userTotal: 50,
-      commentTotal: 15,
-      blogTotal: 20,      
+      visitAddTotal: 0,
+      userTotal: 0,
+      commentTotal: 0,
+      blogTotal: 0,      
     };
   },
   created() {
@@ -81,6 +81,7 @@ export default {
       if (response.code == "success") {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;
+        this.visitAddTotal = response.data.visitCount;
       }
     });
 
