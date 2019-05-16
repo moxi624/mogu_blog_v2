@@ -5,7 +5,7 @@
     <el-row class="panel-group" :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
+          <div class="card-panel-icon-wrapper icon-money" @click="btnClick('1')">
             <svg-icon icon-class="eye" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
@@ -17,7 +17,7 @@
 
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
+          <div class="card-panel-icon-wrapper icon-people" @click="btnClick('2')">
             <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
@@ -29,7 +29,7 @@
 
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
+          <div class="card-panel-icon-wrapper icon-message" @click="btnClick('3')">
             <svg-icon icon-class="message" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
@@ -40,7 +40,7 @@
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shoppingCard">
+          <div class="card-panel-icon-wrapper icon-shoppingCard" @click="btnClick('4')">
             <svg-icon icon-class="form" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
@@ -84,8 +84,18 @@ export default {
         this.visitAddTotal = response.data.visitCount;
       }
     });
-
     console.log("role", this.roles);
+  },
+  methods: {
+    btnClick: function(type) {
+      console.log("点击了visit", type);
+      switch(type) {
+        case "1" : {};break;
+        case "2" : {};break;
+        case "3" : {};break;
+        case "4" : {};break;
+      }
+    }
   }
 };
 </script>
