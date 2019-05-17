@@ -90,10 +90,10 @@ export default {
     btnClick: function(type) {
       console.log("点击了visit", type);
       switch(type) {
-        case "1" : {};break;
-        case "2" : {};break;
-        case "3" : {};break;
-        case "4" : {};break;
+        case "1" : {this.$router.push({path: "/log/exceptionLog"})}; break;
+        case "2" : {this.$router.push({path: "/user/user"})}; break;
+        case "3" : {this.$router.push({path: "/message/comment"})}; break;
+        case "4" : {this.$router.push({path: "/blog/blog"})}; break;
       }
     }
   }

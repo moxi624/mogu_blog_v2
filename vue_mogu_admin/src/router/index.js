@@ -249,6 +249,12 @@ export const constantRouterMap = [
         name: '异常日志',
         component: () => import('@/views/log/exceptionLog'),
         meta: { title: '异常日志', icon: 'exception' }
+      },
+      {
+        path: 'webVisit',
+        name: '用户日志',
+        component: () => import('@/views/log/webVisit'),
+        meta: { title: '用户日志', icon: 'user1' }
       }
     ]
   },

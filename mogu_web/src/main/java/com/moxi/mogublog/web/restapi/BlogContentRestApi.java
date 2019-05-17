@@ -125,7 +125,7 @@ public class BlogContentRestApi {
 			}
 			
 			//增加记录（可以考虑使用AOP）
-	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET, blog.getUid(), null);
+	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_CONTNET.getBehavior(), blog.getUid(), null);
 			
 		}
 		
@@ -190,7 +190,7 @@ public class BlogContentRestApi {
 		}
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, ip, EBehavior.BLOG_PRAISE, blog.getUid(), null);
+        webVisitService.addWebVisit(null, ip, EBehavior.BLOG_PRAISE.getBehavior(), blog.getUid(), null);
         
 		return ResultUtil.result(SysConf.SUCCESS, "");
 	}

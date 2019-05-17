@@ -56,7 +56,7 @@ public class LogRestApi {
 	public String getLogList(HttpServletRequest request,
 			@ApiParam(name = "userName", value = "用户名",required = false) @RequestParam(name = "userName", required = false) String userName,
 			@ApiParam(name = "operation", value = "接口名",required = false) @RequestParam(name = "operation", required = false) String operation,
-			@ApiParam(name = "startTime", value = "开始时间",required = false) @RequestParam(name = "startTime", required = false) String startTime,
+			@ApiParam(name = "startTime", value = "时间段",required = false) @RequestParam(name = "startTime", required = false) String startTime,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		

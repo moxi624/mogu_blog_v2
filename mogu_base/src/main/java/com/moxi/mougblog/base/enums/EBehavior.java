@@ -1,20 +1,38 @@
 package com.moxi.mougblog.base.enums;
-/**
- * 用户行为枚举类
- * @author xuzhixiang
- * @date 2017年10月5日19:42:34
- *
- */
-public class EBehavior {
 
-    //蘑菇博客
-	public static final String BLOG_TAG = "blog_tag"; //点击标签
-	public static final String BLOG_SORT = "blog_sort"; //点击博客分类
-	public static final String BLOG_CONTNET = "blog_content"; //点击博客内容
-	public static final String BLOG_PRAISE = "blog_praise"; //给博客点赞
-	public static final String FRIENDSHIP_LINK = "friendship_link"; //友情链接
-	public static final String BLOG_SEARCH = "blog_search"; //点击搜素
-	public static final String STUDY_VIDEO = "study_video"; //点击学习视频
-	public static final String BLOG_AUTHOR = "blog_author"; //点击查看作者文章
+public enum EBehavior {
+    
+	BLOG_TAG("点击标签", "blog_tag"), 
+	BLOG_SORT("点击博客分类", "blog_sort"), 
+	BLOG_CONTNET("点击博客", "blog_content"), 
+	BLOG_PRAISE("点赞", "blog_praise"),
+	FRIENDSHIP_LINK("点击友情链接", "friendship_link"),
+	BLOG_SEARCH("点击搜索", "blog_search"),
+	STUDY_VIDEO("点击学习视频", "study_video"),
+	BLOG_AUTHOR("点击作者", "blog_author");
+    
+    
+	private String content;
+	private String behavior;
 	
+	private EBehavior(String content, String behavior) {
+		this.content = content;
+		this.behavior = behavior;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getBehavior() {
+		return behavior;
+	}
+	public void setBehavior(String behavior) {
+		this.behavior = behavior;
+	}
+   
+   
+   
 }

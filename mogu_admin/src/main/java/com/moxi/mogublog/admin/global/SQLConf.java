@@ -40,6 +40,10 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String SORT = "sort";
 	public final static String CLICK_COUNT = "click_count";
 	
+	// t_web_visit表
+	public final static String IP = "ip";
+	public final static String BEHAVIOR  = "behavior";
+	
 	//t_category_meun表
 	public final static String MENU_LEVEL = "menu_level";
 	public final static String PARENT_UID = "parent_uid";

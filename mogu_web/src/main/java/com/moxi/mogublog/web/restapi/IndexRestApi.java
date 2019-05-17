@@ -559,7 +559,7 @@ public class IndexRestApi {
 		if(link != null) {
 			
 			//增加记录（可以考虑使用AOP）
-	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.FRIENDSHIP_LINK, uid, null);
+	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.FRIENDSHIP_LINK.getBehavior(), uid, null);
 	        
 			int count = link.getClickCount() + 1;
 			link.setClickCount(count);

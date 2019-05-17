@@ -63,7 +63,7 @@ public class SearchRestApi {
         Map<String,Object> map = blogSearchService.search(keywords);
         
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SEARCH, null, keywords);
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SEARCH.getBehavior(), null, keywords);
         
         return ResultUtil.result(SysConf.SUCCESS, map);
 
@@ -93,7 +93,7 @@ public class SearchRestApi {
 		log.info("返回结果");
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG, tagUid, null);
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG.getBehavior(), tagUid, null);
 		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
@@ -122,7 +122,7 @@ public class SearchRestApi {
 		log.info("返回结果");
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT, blogSortUid, null);
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT.getBehavior(), blogSortUid, null);
 		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
@@ -151,7 +151,7 @@ public class SearchRestApi {
 		log.info("返回结果");
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR, author, null);
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
 		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
@@ -164,8 +164,7 @@ public class SearchRestApi {
 		//获取标题图片
 		if(blog != null && !StringUtils.isEmpty(blog.getFileUid())) {				
 			String result = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
-			List<String> picList = WebUtils.getPicture(result);
-			log.info("##### picList: #######" + picList);
+			List<String> picList = WebUtils.getPicture(result);			
 			if(picList != null && picList.size() > 0) {
 				blog.setPhotoList(picList); 
 			}

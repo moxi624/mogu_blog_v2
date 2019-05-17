@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 
@@ -41,6 +42,15 @@ public class WebVisit extends SuperEntity<WebVisit> {
      * 附加数据(比如搜索内容)
      */
     private String otherData;
+    
+    /**
+     * 以下字段不存入数据库
+     */
+    @TableField(exist = false)
+    private String content; //内容(点击的博客名，点击的标签名，搜索的内容，点击的作者)
+    
+    @TableField(exist = false)
+    private String behaviorContent; //行为名称
 
 	public String getUserUid() {
 		return userUid;
@@ -84,6 +94,22 @@ public class WebVisit extends SuperEntity<WebVisit> {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getBehaviorContent() {
+		return behaviorContent;
+	}
+
+	public void setBehaviorContent(String behaviorContent) {
+		this.behaviorContent = behaviorContent;
 	}
  
 }
