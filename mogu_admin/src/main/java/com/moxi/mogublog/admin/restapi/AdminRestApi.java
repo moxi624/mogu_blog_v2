@@ -88,7 +88,7 @@ public class AdminRestApi {
 		
 		QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
 		String pictureResult = null;		
-		queryWrapper.like(SQLConf.USER_NAME, keyword).or().like(SQLConf.NICK_NAME, keyword);
+		queryWrapper.like(SQLConf.USER_NAME, keyword).or().like(SQLConf.NICK_NAME, keyword.trim());
 		Page<Admin> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);

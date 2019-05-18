@@ -53,8 +53,8 @@ public class BlogSortRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<BlogSort>();
-		if(!StringUtils.isEmpty(keyword)) {
-			queryWrapper.like(SQLConf.CONTENT, keyword);
+		if(!StringUtils.isEmpty(keyword.trim())) {
+			queryWrapper.like(SQLConf.CONTENT, keyword.trim());
 		}
 		
 		Page<BlogSort> page = new Page<>();

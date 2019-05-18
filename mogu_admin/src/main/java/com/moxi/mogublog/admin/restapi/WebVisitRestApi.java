@@ -83,7 +83,7 @@ public class WebVisitRestApi {
 		EBehavior [] arr = EBehavior.values();
 
 		// 设置关键字查询
-		if(!StringUtils.isEmpty(keyword)) {
+		if(!StringUtils.isEmpty(keyword.trim())) {
 			
 			String behavior = "";
 			for(int a=0; a<arr.length; a++) {

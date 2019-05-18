@@ -21,6 +21,7 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.RoleService;
 
@@ -55,7 +56,10 @@ public class RoleRestApi {
 				@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 			
 			QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
-			queryWrapper.like(SQLConf.ROLENAEM, keyword);
+			if(StringUtils.isNotEmpty(keyword.trim())) {
+				queryWrapper.like(SQLConf.ROLENAEM, keyword.trim());	
+			}
+			
 			Page<Role> page = new Page<>();
 			page.setCurrent(currentPage);
 			page.setSize(pageSize);

@@ -70,8 +70,8 @@ public class PictureRestApi {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		QueryWrapper<Picture> queryWrapper = new QueryWrapper<Picture>();
-		if(!StringUtils.isEmpty(keyword)) {
-			queryWrapper.like(SQLConf.PIC_NAME, keyword);
+		if(!StringUtils.isEmpty(keyword.trim())) {
+			queryWrapper.like(SQLConf.PIC_NAME, keyword.trim());
 		}
 		
 		Page<Picture> page = new Page<>();
