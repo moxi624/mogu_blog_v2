@@ -1,6 +1,7 @@
 package com.moxi.mogublog.web.restapi;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,7 @@ import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -195,9 +197,9 @@ public class BlogContentRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, "");
 	}
 	
-	@ApiOperation(value="根据标签获取相关的博客", notes="根据标签获取相关的博客")
-	@GetMapping("/getSameBlog")
-	public String getNewBlog (HttpServletRequest request,
+	@ApiOperation(value="根据标签Uid获取相关的博客", notes="根据标签获取相关的博客")
+	@GetMapping("/getSameBlogByTagUid")
+	public String getSameBlogByTagUid (HttpServletRequest request,
 			@ApiParam(name = "tagUid", value = "博客标签UID",required = true) @RequestParam(name = "tagUid", required = true) String tagUid,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
@@ -223,6 +225,64 @@ public class BlogContentRestApi {
 		}
 		log.info("返回结果");
 		pageList.setRecords(list);
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
+	}
+	
+	@ApiOperation(value="根据BlogUid获取相关的博客", notes="根据标签获取相关的博客")
+	@GetMapping("/getSameBlogByBlogUid")
+	public String getSameBlogByBlogUid (HttpServletRequest request,
+			@ApiParam(name = "blogUid", value = "博客标签UID",required = true) @RequestParam(name = "blogUid", required = true) String blogUid,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		if(StringUtils.isEmpty(blogUid)) {
+			return ResultUtil.result(SysConf.ERROR, "博客UID不能为空");
+		}
+		
+		Blog blog = blogService.getById(blogUid);
+		
+		if(blog == null || blog.getStatus() == EStatus.DISABLED) {
+			return ResultUtil.result(SysConf.ERROR, "该博客不存在");
+		}
+				
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		
+		// 因为tagUid可能存在多个，需要切割进行拼接操作
+		List<String> tagList = StringUtils.changeStringToString(blog.getTagUid(), ",");		
+		for(int a=0; a<tagList.size(); a++) {			
+			if(a < tagList.size()-1) {
+				queryWrapper.eq(SQLConf.TagUid, tagList.get(a)).or();	
+			} else {
+				queryWrapper.eq(SQLConf.TagUid, tagList.get(a));
+			}				
+		}
+		
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+				
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();		
+		for(Blog item : list) {
+			//获取标签
+			blogService.setTagByBlog(item);		
+			//获取分类
+			blogService.setSortByBlog(item);			
+			//设置博客标题图
+			setPhotoListByBlog(item);			
+		}
+		
+		//过滤掉当前的博客
+		List<Blog> newList = new ArrayList<>();
+		for(Blog item : list) {
+			if(item.getUid().equals(blogUid)) {
+				continue;
+			}
+			newList.add(item);
+		}
+		
+		log.info("返回结果");
+		pageList.setRecords(newList);
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	

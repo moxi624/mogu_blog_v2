@@ -8,9 +8,17 @@ export function getBlogByUid (params) {
   })
 }
 
-export function getSameBlog (params) {
+export function getSameBlogByTagUid (params) {
   return request({
-    url: process.env.WEB_API + '/content/getSameBlog',
+    url: process.env.WEB_API + '/content/getSameBlogByTagUid',
+    method: 'get',
+    params
+  })
+}
+
+export function getSameBlogByBlogUid (params) {
+  return request({
+    url: process.env.WEB_API + '/content/getSameBlogByBlogUid',
     method: 'get',
     params
   })
