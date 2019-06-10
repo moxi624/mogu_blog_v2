@@ -56,7 +56,7 @@ public class RoleRestApi {
 				@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 			
 			QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
-			if(StringUtils.isNotEmpty(keyword.trim())) {
+			if(StringUtils.isNotEmpty(keyword) && StringUtils.isNotEmpty(keyword.trim())) {
 				queryWrapper.like(SQLConf.ROLENAEM, keyword.trim());	
 			}
 			

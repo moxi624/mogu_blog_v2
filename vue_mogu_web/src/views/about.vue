@@ -56,6 +56,7 @@ import BlogFooter from '../components/BlogFooter';
 import FollowUs from "../components/FollowUs";
 import ChangYan from "../components/ChangYan";
 
+import {recorderVisitPage} from "../api/index";
 import { getMe } from "../api/about";
 
 export default {
@@ -83,9 +84,13 @@ export default {
       if(response.code == "success") {
         this.info = response.data;
       }
-    })
-    
+    })    
     this.sid = "test";
+
+    var params = new URLSearchParams();
+    params.append("pageName", "ABOUT");
+    recorderVisitPage(params).then(response => {
+    });
   }
 }
 </script>

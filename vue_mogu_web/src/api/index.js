@@ -63,3 +63,11 @@ export function getWebConfig (params) {
     params
   })
 }
+
+export function recorderVisitPage (params) {
+  return request({
+    url: process.env.WEB_API + '/index/recorderVisitPage',
+    method: 'get',
+    params
+  })
+}

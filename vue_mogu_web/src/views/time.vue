@@ -43,7 +43,7 @@
 import Head from '../components/Head';
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBlogByTime } from "../api/index";
+import { getBlogByTime, recorderVisitPage } from "../api/index";
 export default {
   data() {
     return {
@@ -102,6 +102,11 @@ export default {
       that.pageSize = response.data.size;
       that.currentPage = response.data.current;
       this.isEnd = false;
+    });
+
+    var params = new URLSearchParams();
+    params.append("pageName", "TIME");
+    recorderVisitPage(params).then(response => {
     });
   },
   methods: {

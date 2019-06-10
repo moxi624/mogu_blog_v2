@@ -112,7 +112,7 @@ public class BlogRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
-		if(!StringUtils.isEmpty(keyword.trim())) {
+		if(StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
 			queryWrapper.like(SQLConf.TITLE, keyword.trim());
 		}
 		if(!StringUtils.isEmpty(tagUid)) {

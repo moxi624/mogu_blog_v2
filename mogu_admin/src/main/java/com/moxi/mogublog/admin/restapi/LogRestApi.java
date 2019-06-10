@@ -61,7 +61,7 @@ public class LogRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<SysLog> queryWrapper = new QueryWrapper<SysLog>();
-		if(!StringUtils.isEmpty(userName.trim())) {
+		if(StringUtils.isNotEmpty(userName) && !StringUtils.isEmpty(userName.trim())) {
 			queryWrapper.like(SQLConf.USER_NAME, userName.trim());
 		}
 		

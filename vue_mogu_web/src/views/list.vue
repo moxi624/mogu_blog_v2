@@ -91,6 +91,7 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 
+import {recorderVisitPage } from "../api/index";
 import { searchBlog, searchBlogByTag, searchBlogBySort, searchBlogByAuthor  } from "../api/search";
 
 export default {
@@ -126,6 +127,11 @@ export default {
     console.log("sortUid", this.sortUid);
     console.log("author", this.author);
     this.search();
+
+    var params = new URLSearchParams();
+    params.append("pageName", "LIST");
+    recorderVisitPage(params).then(response => {
+    });
   },
   watch: {
     $route(to, from) {

@@ -102,6 +102,7 @@ import {
   getNewBlog,
   getHotBlog,
   getHotTag,
+  recorderVisitPage
 } from "../api/index";
 export default {
   name: "index",
@@ -173,6 +174,12 @@ export default {
 
     // 获取最新博客
     this.newBlogList();
+
+    var params = new URLSearchParams();
+    params.append("pageName", "INDEX");
+    recorderVisitPage(params).then(response => {
+    });
+    
 
   },
   methods: {

@@ -61,7 +61,7 @@ public class SolrIndexRestApi {
     @GetMapping("/searchBlog")
     public String searchBlog(HttpServletRequest request,
                              @ApiParam(name = "keywords", value = "关键字",required = true)@RequestParam(required=true)String keywords) {
-    	if(StringUtils.isEmpty(keywords.trim())) {
+    	if(StringUtils.isNotEmpty(keywords) && StringUtils.isEmpty(keywords.trim())) {
     		return ResultUtil.result(SysConf.SUCCESS, "内容不能为空");	
     	}
         Map<String,Object> map = blogSearchService.search(keywords);

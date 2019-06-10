@@ -6,6 +6,7 @@
         <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
         <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>        	      
         <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
+        <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
 	    </div>
 
       <div class= "imgAll">
@@ -48,7 +49,8 @@ import {
   getPictureList,
   addPicture,
   editPicture,
-  deletePicture
+  deletePicture,
+  setCover
 } from "@/api/picture";
 
 import { formatData } from "@/utils/webUtils";
@@ -175,6 +177,7 @@ export default {
           type: "error",
           message: "请先选中图片！"
         });
+        return;
       }
 
       this.$confirm("是否删除选中图片？, 是否继续?", "提示", {
@@ -201,6 +204,44 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    setCover: function() {
+      
+      if (this.pictureUids.length != 1) {
+        this.$message({
+          type: "error",
+          message: "选择一张图片设为封面图！"
+        });
+        return;
+      }
+
+      this.$confirm("是否将该图片设为封面？, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+
+          let params = new URLSearchParams();
+          params.append("pictureUid", this.pictureUids[0]);
+          params.append("pictureSortUid", this.pictureSortUid); 
+
+          setCover(params).then(response => {
+
+            this.$message({
+              type: "success",
+              message: response.data
+            });            
+
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+
     },
     handleReturn: function() {
       this.$router.push({

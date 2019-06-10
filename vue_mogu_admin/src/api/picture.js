@@ -31,3 +31,11 @@ export function deletePicture(params) {
     params
   })
 }
+
+export function setCover(params) {
+  return request({
+    url: process.env.ADMIN_API + '/picture/setCover',
+    method: 'post',
+    params
+  })
+}

@@ -64,7 +64,7 @@ public class CategoryMenuRestApi {
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<CategoryMenu>();
-		if(!StringUtils.isEmpty(keyword.trim())) {
+		if(StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
 			queryWrapper.like(SQLConf.NAME, keyword.trim());
 		}
 		

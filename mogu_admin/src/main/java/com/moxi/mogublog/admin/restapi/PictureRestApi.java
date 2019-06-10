@@ -28,7 +28,9 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Picture;
+import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureService;
+import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +48,12 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/picture")
 public class PictureRestApi {
+	
 	@Autowired
 	PictureService pictureService;
+	
+	@Autowired
+	PictureSortService pictureSortService;
 	
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
@@ -70,7 +76,7 @@ public class PictureRestApi {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
 		}
 		QueryWrapper<Picture> queryWrapper = new QueryWrapper<Picture>();
-		if(!StringUtils.isEmpty(keyword.trim())) {
+		if(StringUtils.isNotEmpty(keyword) &&!StringUtils.isEmpty(keyword.trim())) {
 			queryWrapper.like(SQLConf.PIC_NAME, keyword.trim());
 		}
 		
@@ -173,6 +179,38 @@ public class PictureRestApi {
 			picture.updateById();
 		}				
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+	}
+	
+	@OperationLogger(value="通过图片Uid将图片设为封面")
+	@ApiOperation(value="通过图片Uid将图片设为封面", notes="通过图片Uid将图片设为封面", response = String.class)
+	@PostMapping("/setCover")
+	public String setCover(HttpServletRequest request,
+			@ApiParam(name = "pictureUid", value = "图片UID",required = true) @RequestParam(name = "pictureUid", required = true) String pictureUid,
+			@ApiParam(name = "pictureSortUid", value = "图片分类UID",required = true) @RequestParam(name = "pictureSortUid", required = true) String pictureSortUid) {
+		
+		if(StringUtils.isEmpty(pictureUid) || StringUtils.isEmpty(pictureSortUid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
+		
+		PictureSort pictureSort = pictureSortService.getById(pictureSortUid);
+		
+		if(pictureSort != null) {
+			
+			Picture picture = pictureService.getById(pictureUid);
+			
+			if(picture != null) {
+				pictureSort.setFileUid(picture.getFileUid());
+				pictureSort.updateById();	
+			} else {
+				return ResultUtil.result(SysConf.ERROR, "找不到该图片");	
+			}
+			
+			
+		} else {
+			return ResultUtil.result(SysConf.ERROR, "找不到该图片分类");
+		}
+			
+		return ResultUtil.result(SysConf.SUCCESS, "设置成功");
 	}
 }
 

@@ -49,6 +49,7 @@ import Head from '../components/Head';
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
 
+import {recorderVisitPage } from "../api/index";
 import { getStudyVideoBySort } from "../api/resource";
 
 export default {
@@ -77,6 +78,12 @@ export default {
         this.currentPage = response.data.current;
       }
     });
+
+    var params = new URLSearchParams();
+    params.append("pageName", "SHARE");
+    recorderVisitPage(params).then(response => {
+    });
+
   }
 };
 </script>

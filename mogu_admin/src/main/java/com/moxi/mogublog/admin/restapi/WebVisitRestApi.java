@@ -180,7 +180,7 @@ public class WebVisitRestApi {
 			
 			if(item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior()) ||
 					item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior()) ||
-					item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior()) ||
+					item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior()) ||					
 					item.getBehavior().equals(EBehavior.FRIENDSHIP_LINK.getBehavior())) {
 														
 				//从map中获取到对应的名称

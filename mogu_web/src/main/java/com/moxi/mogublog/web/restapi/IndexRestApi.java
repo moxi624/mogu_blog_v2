@@ -605,5 +605,19 @@ public class IndexRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, webConfig);
 	}
 	
+	@ApiOperation(value="记录访问页面", notes="记录访问页面")
+	@GetMapping("/recorderVisitPage")
+	public String recorderVisitPage (HttpServletRequest request,
+			@ApiParam(name = "pageName", value = "页面名称",required = false) @RequestParam(name = "pageName", required = true) String pageName) {
+		
+		if(StringUtils.isEmpty(pageName)) {
+			return ResultUtil.result(SysConf.SUCCESS, "页面名称不能为空");	
+		}
+		
+        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
+		
+		return ResultUtil.result(SysConf.SUCCESS, "记录成功");
+	}
+	
 }
 

@@ -121,7 +121,7 @@
 import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBlogByLevel, getNewBlog, getHotTag, getLink } from "../api/index";
+import { getBlogByLevel, getNewBlog, getHotTag, getLink, recorderVisitPage } from "../api/index";
 import { getBlogByUid, getSameBlogByTagUid, getSameBlogByBlogUid } from "../api/blogContent";
 
 import ThirdRecommend from "../components/ThirdRecommend";
@@ -174,10 +174,14 @@ export default {
     var blogParams = new URLSearchParams();
     blogParams.append("blogUid", this.blogUid);
     getSameBlogByBlogUid(blogParams).then(response => {
-      console.log("通过uid获取相关博客", response);
       if (response.code == "success") {
         this.sameBlogData = response.data.records;
       }
+    });
+
+    var params = new URLSearchParams();
+    params.append("pageName", "INFO");
+    recorderVisitPage(params).then(response => {
     });
   },
   methods: {

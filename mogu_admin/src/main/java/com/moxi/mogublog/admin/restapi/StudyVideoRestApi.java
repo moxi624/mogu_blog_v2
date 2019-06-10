@@ -71,7 +71,7 @@ public class StudyVideoRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		
 		QueryWrapper<StudyVideo> queryWrapper = new QueryWrapper<StudyVideo>();
-		if(!StringUtils.isEmpty(keyword.trim())) {
+		if(StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
 			queryWrapper.like(SQLConf.NAME, keyword.trim());
 		}
 		
