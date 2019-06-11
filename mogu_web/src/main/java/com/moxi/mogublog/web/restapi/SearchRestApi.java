@@ -1,5 +1,8 @@
 package com.moxi.mogublog.web.restapi;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +25,12 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.BlogSort;
+import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.BlogSortService;
+import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -42,6 +49,12 @@ public class SearchRestApi {
     
 	@Autowired
 	private BlogService blogService;
+	
+	@Autowired
+	TagService tagService;
+	
+	@Autowired
+	BlogSortService blogSortService;
 	
 	@Autowired
 	private PictureFeignClient pictureFeignClient;
@@ -82,15 +95,8 @@ public class SearchRestApi {
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		queryWrapper.excludeColumns(Blog.class, "content");
 		List<Blog> list = blogService.list(queryWrapper);		
-		for(Blog item : list) {
-			//获取标签
-			blogService.setTagByBlog(item);		
-			//获取分类
-			blogService.setSortByBlog(item);			
-			//设置博客标题图
-			setPhotoListByBlog(item);			
-		}
-		log.info("返回结果");
+		
+		list = setBlog(list);
 		
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG.getBehavior(), tagUid, null);
@@ -111,15 +117,8 @@ public class SearchRestApi {
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.excludeColumns(Blog.class, "content");
 		List<Blog> list = blogService.list(queryWrapper);		
-		for(Blog item : list) {
-			//获取标签
-			blogService.setTagByBlog(item);		
-			//获取分类
-			blogService.setSortByBlog(item);			
-			//设置博客标题图
-			setPhotoListByBlog(item);			
-		}
-		log.info("返回结果");
+		
+		list = setBlog(list);
 		
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT.getBehavior(), blogSortUid, null);
@@ -139,36 +138,101 @@ public class SearchRestApi {
 		queryWrapper.eq(SQLConf.AUTHOR, author);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.excludeColumns(Blog.class, "content");
-		List<Blog> list = blogService.list(queryWrapper);		
-		for(Blog item : list) {
-			//获取标签
-			blogService.setTagByBlog(item);		
-			//获取分类
-			blogService.setSortByBlog(item);			
-			//设置博客标题图
-			setPhotoListByBlog(item);			
-		}
-		log.info("返回结果");
+		List<Blog> list = blogService.list(queryWrapper);
 		
+		list = setBlog(list);
+
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
 		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	
+	
 	/**
-	 * 设置博客标题图
-	 * @param blog
+	 * 设置博客的分类标签和内容
+	 * @param list
+	 * @return
 	 */
-	private void setPhotoListByBlog(Blog blog) {
-		//获取标题图片
-		if(blog != null && !StringUtils.isEmpty(blog.getFileUid())) {				
-			String result = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
-			List<String> picList = WebUtils.getPicture(result);			
-			if(picList != null && picList.size() > 0) {
-				blog.setPhotoList(picList); 
+	private List<Blog> setBlog(List<Blog> list) {
+		final StringBuffer fileUids = new StringBuffer();
+		List<String> sortUids = new ArrayList<String>();
+		List<String> tagUids = new ArrayList<String>();
+
+		list.forEach( item -> {
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				fileUids.append(item.getFileUid() + ",");
 			}
+			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
+				sortUids.add(item.getBlogSortUid());
+			}
+			if(StringUtils.isNotEmpty(item.getTagUid())) {
+				tagUids.add(item.getTagUid());
+			}
+		});
+		String pictureList = null;
+		
+		if(fileUids != null) {
+			pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
 		}
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);				
+		Collection<BlogSort> sortList = new ArrayList<>();
+		Collection<Tag> tagList = new ArrayList<>();
+		if (sortUids.size() > 0) {
+			sortList = blogSortService.listByIds(sortUids);
+		}
+		if (tagUids.size() > 0) {
+			tagList = tagService.listByIds(tagUids);
+		}				
+		
+		
+		Map<String, BlogSort> sortMap = new HashMap<String, BlogSort> ();
+		Map<String, Tag> tagMap = new HashMap<String, Tag>();
+		Map<String, String> pictureMap = new HashMap<String, String>();
+		
+		sortList.forEach(item -> {
+			sortMap.put(item.getUid(), item);
+		});
+		
+		tagList.forEach(item -> {
+			tagMap.put(item.getUid(), item);
+		});
+		
+		picList.forEach(item -> {
+			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+		});
+		
+		
+		for(Blog item : list) {
+			
+			//设置分类			
+			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
+				item.setBlogSort(sortMap.get(item.getBlogSortUid()));	
+			}
+						
+			//获取标签
+			if(StringUtils.isNotEmpty(item.getTagUid())) {
+				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+				List<Tag> tagListTemp = new ArrayList<Tag>();
+				
+				tagUidsTemp.forEach(tag -> {
+					tagListTemp.add(tagMap.get(tag));
+				});
+				item.setTagList(tagListTemp);	
+			}
+			
+			//获取图片
+			if(StringUtils.isNotEmpty(item.getFileUid())) {
+				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+				List<String> pictureListTemp = new ArrayList<String>();
+				
+				pictureUidsTemp.forEach(picture -> {
+					pictureListTemp.add(pictureMap.get(picture));
+				});
+				item.setPhotoList(pictureListTemp);
+			}		
+		}
+		return list;
 	}
 
 
