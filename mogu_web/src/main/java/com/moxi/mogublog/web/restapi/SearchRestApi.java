@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -85,67 +87,94 @@ public class SearchRestApi {
 	@ApiOperation(value="根据标签获取相关的博客", notes="根据标签获取相关的博客")
 	@GetMapping("/searchBlogByTag")
 	public String searchBlogByTag (HttpServletRequest request,
-			@ApiParam(name = "tagUid", value = "博客标签UID",required = true) @RequestParam(name = "tagUid", required = true) String tagUid) {
+			@ApiParam(name = "tagUid", value = "博客标签UID",required = true) @RequestParam(name = "tagUid", required = true) String tagUid,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(tagUid)) {
 			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
-		} 
-		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();		
+		} 		
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		
 		queryWrapper.like(SQLConf.TagUid, tagUid);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
+		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.excludeColumns(Blog.class, "content");
-		List<Blog> list = blogService.list(queryWrapper);		
+
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();
 		
 		list = setBlog(list);
 		
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG.getBehavior(), tagUid, null);
-		
-		return ResultUtil.result(SysConf.SUCCESS, list);
+        
+        pageList.setRecords(list);
+        
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
 	@ApiOperation(value="根据分类获取相关的博客", notes="根据标签获取相关的博客")
 	@GetMapping("/searchBlogBySort")
 	public String searchBlogBySort (HttpServletRequest request,
-			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = true) @RequestParam(name = "blogSortUid", required = true) String blogSortUid) {
+			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = true) @RequestParam(name = "blogSortUid", required = true) String blogSortUid,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "uid不能为空");
 		} 
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-
+		
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		
 		queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		queryWrapper.excludeColumns(Blog.class, "content");
-		List<Blog> list = blogService.list(queryWrapper);		
-		
-		list = setBlog(list);
+		queryWrapper.excludeColumns(Blog.class, "content");		
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();				
+		list = setBlog(list);		
 		
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT.getBehavior(), blogSortUid, null);
-		
-		return ResultUtil.result(SysConf.SUCCESS, list);
+        
+        pageList.setRecords(list);
+        
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
 	@ApiOperation(value="根据作者获取相关的博客", notes="根据作者获取相关的博客")
 	@GetMapping("/searchBlogByAuthor")
 	public String searchBlogByAuthor (HttpServletRequest request,
-			@ApiParam(name = "author", value = "作者名称",required = true) @RequestParam(name = "author", required = true) String author) {
+			@ApiParam(name = "author", value = "作者名称",required = true) @RequestParam(name = "author", required = true) String author,
+			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(author)) {
 			return ResultUtil.result(SysConf.ERROR, "作者不能为空");
 		} 
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-
+		
+		Page<Blog> page = new Page<>();
+		page.setCurrent(currentPage);
+		page.setSize(pageSize);
+		
 		queryWrapper.eq(SQLConf.AUTHOR, author);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.excludeColumns(Blog.class, "content");
-		List<Blog> list = blogService.list(queryWrapper);
 		
-		list = setBlog(list);
+		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+		List<Blog> list = pageList.getRecords();				
+		list = setBlog(list);		
 
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
-		
-		return ResultUtil.result(SysConf.SUCCESS, list);
+        pageList.setRecords(list);
+        
+		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
 	

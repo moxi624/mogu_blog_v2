@@ -98,10 +98,14 @@ export default {
   name: "list",
   data() {
     return {
-      blogData: [],
-      isEnd: true,
+      blogData: [],      
       keywords: "",
+      currentPage: 1,
+      pageSize: 10,
+      total: 0, //总数量
+      isEnd: false, //是否到底底部了
       tagUid: "",
+      searchBlogData: [], //搜索出来的文章
       sortUid: ""
     };
   },
@@ -133,6 +137,23 @@ export default {
     recorderVisitPage(params).then(response => {
     });
   },
+   mounted() {
+    // 注册scroll事件并监听
+    var that = this;
+    var loading = false;
+    window.addEventListener("scroll", function() {
+      let scrollTop = document.documentElement.scrollTop; //当前的的位置
+      let scrollHeight = document.documentElement.scrollHeight; //最高的位置      
+      if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !loading) { 
+        console.log("我来了");
+        loading = true; 
+        that.currentPage = that.currentPage + 1;        
+        that.search();
+        loading = false;
+
+      }
+    });
+  },
   watch: {
     $route(to, from) {
       console.log(to, from);
@@ -158,6 +179,7 @@ export default {
       window.open(routeData.href, '_blank');
     },
     search: function() {
+      var that = this;
       if (this.keywords != undefined) {
         var params = new URLSearchParams();
         params.append("keywords", this.keywords);
@@ -180,34 +202,63 @@ export default {
       } else if (this.tagUid != undefined) {
 
         var params = new URLSearchParams();
-        params.append("tagUid", this.tagUid);
+        
+        params.append("tagUid", that.tagUid);
+        params.append("currentPage", that.currentPage);
+        params.append("pageSize", that.pageSize);
+
         searchBlogByTag(params).then(response => {
-          console.log(response);
-          if (response.code == "success") {
+
+          if (response.code == "success" && response.data.records.length > 0) {
             console.log("根据标签查找", response);
-            var blogData = response.data;
+            that.isEnd = false;
+            
+            var blogData = that.searchBlogData.concat(response.data.records);
+            that.searchBlogData = blogData;                          
+
+            that.total = response.data.total;
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current; 
             for (var i = 0; i < blogData.length; i++) {
-              // console.log(blogData[i].blogSort);
               blogData[i].blogSort = blogData[i].blogSort.sortName;
             }
             this.blogData = blogData;
+          } else {
+            that.isEnd = true;
           }
+
+
+
           console.log("blogData", this.blogData);
         });
 
       } else if(this.sortUid != undefined) {
 
         var params = new URLSearchParams();
-        params.append("blogSortUid", this.sortUid);
+        
+        params.append("blogSortUid", that.sortUid);
+        params.append("currentPage", that.currentPage);
+        params.append("pageSize", that.pageSize);
+
         searchBlogBySort(params).then(response => {
           console.log(response);
-          if (response.code == "success") {
+          if (response.code == "success" && response.data.records.length > 0) {
             console.log("根据分类查找", response);
-            var blogData = response.data;
+            that.isEnd = false;
+            
+            var blogData = that.searchBlogData.concat(response.data.records);
+            that.searchBlogData = blogData;                      
+
+            that.total = response.data.total;
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current; 
+
             for (var i = 0; i < blogData.length; i++) {
               blogData[i].blogSort = blogData[i].blogSort.sortName;
             }
             this.blogData = blogData;
+          } else {
+            that.isEnd = true;
           }
           console.log("blogData", this.blogData);
         });
@@ -215,18 +266,39 @@ export default {
       } else if(this.author != undefined) {
 
         var params = new URLSearchParams();
-        params.append("author", this.author);
+        
+        params.append("author", that.author);
+        params.append("currentPage", that.currentPage);
+        params.append("pageSize", that.pageSize);
+
         searchBlogByAuthor(params).then(response => {
           console.log(response);
-          if (response.code == "success") {
+          if (response.code == "success" && response.data.records.length > 0) {
             console.log("根据作者名查找", response);
-            var blogData = response.data;
+            that.isEnd = false;
+            
+            var blogData = that.searchBlogData.concat(response.data.records);
+            that.searchBlogData = blogData;     
+ 
+            that.total = response.data.total;
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current; 
+            
+            console.log("博客数据", blogData);
+
             for (var i = 0; i < blogData.length; i++) {
-              blogData[i].blogSort = blogData[i].blogSort.sortName;
+              if(blogData[i].blogSort == undefined) {
+                blogData[i].blogSort = "未分类"
+              } else {
+                blogData[i].blogSort = blogData[i].blogSort.sortName;
+              }
+              
             }
             this.blogData = blogData;
+          } else {
+            that.isEnd = true;
           }
-          console.log("blogData", this.blogData);
+
         });
 
       }
