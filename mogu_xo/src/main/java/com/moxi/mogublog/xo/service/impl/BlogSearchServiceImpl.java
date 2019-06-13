@@ -47,11 +47,10 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //搜索(带高亮)
     @Override
-    public Map<String, Object> search(String keywords) {
+    public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize) {
 
         Map<String, Object> map = new HashMap<>();
-        map.putAll(searchList(keywords));
-
+        map.putAll(searchList(keywords, currentPage, pageSize));
         return map;
     }
 
@@ -205,7 +204,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     }
 
 
-    private Map<String, Object> searchList(String keywords) {
+    private Map<String, Object> searchList(String keywords, Integer currentPage, Integer pageSize) {
 
         Map<String, Object> map = new HashMap<>();
 
@@ -218,6 +217,12 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         //添加查询条件
         Criteria criteria = new Criteria("blog_keywords").is(keywords);
         query.addCriteria(criteria);
+        
+
+
+        query.setOffset((currentPage - 1)*pageSize);//从第几条记录查询
+        query.setRows(pageSize);
+        
         HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage(query, SolrIndex.class);
 
         for (HighlightEntry<SolrIndex> h : page.getHighlighted()) {//循环高亮入口集合
@@ -226,7 +231,18 @@ public class BlogSearchServiceImpl implements BlogSearchService {
                 solrIndex.setTitle(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮结果
             }
         }
+        
+        // 返回总记录数
+        map.put("total", page.getTotalElements());
+        // 返回总页数
+        map.put("totalPages", page.getTotalPages());
+        // 返回当前页大小
+        map.put("pageSize", pageSize);
+        // 返回当前页
+        map.put("currentPage", currentPage);
+        
         map.put("rows", page.getContent());
+        
         return map;
     }
 

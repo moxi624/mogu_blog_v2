@@ -145,7 +145,6 @@ export default {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
       let scrollHeight = document.documentElement.scrollHeight; //最高的位置      
       if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !that.loading) { 
-        console.log("我来了");
         that.loading = true; 
         that.currentPage = that.currentPage + 1;        
         that.search();        
@@ -172,7 +171,6 @@ export default {
     },
     //点击了分类
     goToList(uid) {
-      console.log("点击了跳转", uid);
       let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });      
       window.open(routeData.href, '_blank');
     },
@@ -180,11 +178,15 @@ export default {
       var that = this;
       if (this.keywords != undefined) {
         var params = new URLSearchParams();
-        params.append("keywords", this.keywords);
+        params.append("currentPage", that.currentPage);
+        params.append("pageSize", that.pageSize);
+        params.append("keywords", that.keywords);
+        
         searchBlog(params).then(response => {
-          console.log(response);
-          if (response.code == "success") {
+          if (response.code == "success" && response.data.rows.length > 0) {            
+            that.isEnd = false;
             var blogData = response.data.rows;
+
             for (var i = 0; i < blogData.length; i++) {
               if (blogData[i].photoList) {
                 var tempList = blogData[i].photoList.split(",");
@@ -193,9 +195,13 @@ export default {
                 blogData[i].photoList = [];
               }
             }
+            blogData = that.searchBlogData.concat(blogData);
+            that.searchBlogData = blogData;
             this.blogData = blogData;
+          }  else {
+            that.isEnd = true;
           }
-          console.log("blogData", this.blogData);
+          that.loading = false; 
         });
       } else if (this.tagUid != undefined) {
 

@@ -11,12 +11,15 @@ import com.moxi.mogublog.xo.entity.Blog;
  * @create 2018-09-29 16:16
  */
 public interface BlogSearchService {
-    /**
-     * 搜索
-     * @param keywords
-     * @return
-     */
-    public Map<String, Object> search(String keywords);
+    
+	/**
+	 * 搜索
+	 * @param keywords 关键字
+	 * @param currentPage 当前页
+	 * @param pageSize  页大小
+	 * @return
+	 */
+    public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize);
 
     /**
      * 初始化索引

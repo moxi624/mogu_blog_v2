@@ -69,13 +69,15 @@ public class SearchRestApi {
 	@ApiOperation(value="搜索Blog", notes="搜索Blog")
     @GetMapping("/searchBlog")
     public String searchBlog(HttpServletRequest request,
-                             @ApiParam(name = "keywords", value = "关键字",required = true)@RequestParam(required=true)String keywords) {
+                             @ApiParam(name = "keywords", value = "关键字",required = true)@RequestParam(required=true)String keywords,
+                             @ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+                 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 		
 		if(StringUtils.isEmpty(keywords)) {
 			return ResultUtil.result(SysConf.ERROR, "关键字不能为空");
 		}
 		
-        Map<String,Object> map = blogSearchService.search(keywords);
+        Map<String,Object> map = blogSearchService.search(keywords, currentPage, pageSize);
         
 		//增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SEARCH.getBehavior(), null, keywords);
