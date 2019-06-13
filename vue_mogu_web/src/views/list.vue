@@ -106,7 +106,8 @@ export default {
       isEnd: false, //是否到底底部了
       tagUid: "",
       searchBlogData: [], //搜索出来的文章
-      sortUid: ""
+      sortUid: "",
+      loading: false, //内容是否正在加载
     };
   },
   components: {
@@ -140,17 +141,14 @@ export default {
    mounted() {
     // 注册scroll事件并监听
     var that = this;
-    var loading = false;
     window.addEventListener("scroll", function() {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
       let scrollHeight = document.documentElement.scrollHeight; //最高的位置      
-      if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !loading) { 
+      if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !that.loading) { 
         console.log("我来了");
-        loading = true; 
+        that.loading = true; 
         that.currentPage = that.currentPage + 1;        
-        that.search();
-        loading = false;
-
+        that.search();        
       }
     });
   },
@@ -210,26 +208,25 @@ export default {
         searchBlogByTag(params).then(response => {
 
           if (response.code == "success" && response.data.records.length > 0) {
-            console.log("根据标签查找", response);
-            that.isEnd = false;
-            
-            var blogData = that.searchBlogData.concat(response.data.records);
-            that.searchBlogData = blogData;                          
 
+            that.isEnd = false;
+            var blogData = response.data.records;                       
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current; 
+            
+            // 设置分类名 
             for (var i = 0; i < blogData.length; i++) {
               blogData[i].blogSort = blogData[i].blogSort.sortName;
             }
+
+            blogData = that.searchBlogData.concat(blogData);
+            that.searchBlogData = blogData;
             this.blogData = blogData;
           } else {
             that.isEnd = true;
           }
-
-
-
-          console.log("blogData", this.blogData);
+          that.loading = false;
         });
 
       } else if(this.sortUid != undefined) {
@@ -246,9 +243,7 @@ export default {
             console.log("根据分类查找", response);
             that.isEnd = false;
             
-            var blogData = that.searchBlogData.concat(response.data.records);
-            that.searchBlogData = blogData;                      
-
+            var blogData = response.data.records;                      
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current; 
@@ -256,35 +251,31 @@ export default {
             for (var i = 0; i < blogData.length; i++) {
               blogData[i].blogSort = blogData[i].blogSort.sortName;
             }
+
+            blogData = that.searchBlogData.concat(blogData);
+            that.searchBlogData = blogData;   
             this.blogData = blogData;
           } else {
             that.isEnd = true;
           }
-          console.log("blogData", this.blogData);
+          that.loading = false;
         });
 
       } else if(this.author != undefined) {
 
-        var params = new URLSearchParams();
-        
+        var params = new URLSearchParams();        
         params.append("author", that.author);
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
-
         searchBlogByAuthor(params).then(response => {
           console.log(response);
           if (response.code == "success" && response.data.records.length > 0) {
-            console.log("根据作者名查找", response);
-            that.isEnd = false;
-            
-            var blogData = that.searchBlogData.concat(response.data.records);
-            that.searchBlogData = blogData;     
- 
+
+            that.isEnd = false;   
+            var blogData = response.data.records;
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current; 
-            
-            console.log("博客数据", blogData);
 
             for (var i = 0; i < blogData.length; i++) {
               if(blogData[i].blogSort == undefined) {
@@ -292,12 +283,16 @@ export default {
               } else {
                 blogData[i].blogSort = blogData[i].blogSort.sortName;
               }
-              
             }
+
+            blogData = that.searchBlogData.concat(blogData);
+            that.searchBlogData = blogData;                
             this.blogData = blogData;
           } else {
             that.isEnd = true;
           }
+
+          that.loading = false;
 
         });
 
