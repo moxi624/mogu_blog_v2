@@ -157,7 +157,6 @@ export default {
   },
   created() {
     getLink().then(response => {
-      console.log("友情链接列表", response);
       this.linkData = response.data.records;
     });
 
@@ -165,7 +164,6 @@ export default {
     this.blogUid = this.$route.query.blogUid;
     params.append("uid", this.blogUid);
     getBlogByUid(params).then(response => {
-      console.log("通过uid获取博客", response);
       if (response.code == "success") {
         this.blogData = response.data;
       }

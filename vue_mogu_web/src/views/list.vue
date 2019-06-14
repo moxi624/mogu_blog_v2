@@ -127,10 +127,6 @@ export default {
     this.sortUid = this.$route.query.sortUid;
     this.author = this.$route.query.author;
 
-    console.log("keywords", this.keywords);
-    console.log("tagUid", this.tagUid);
-    console.log("sortUid", this.sortUid);
-    console.log("author", this.author);
     this.search();
 
     var params = new URLSearchParams();
@@ -153,7 +149,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(to, from);
       this.keywords = this.$route.query.keyword;
       this.tagUid = this.$route.query.tagUid;
       this.sortUid = this.$route.query.sortUid;
@@ -244,9 +239,7 @@ export default {
         params.append("pageSize", that.pageSize);
 
         searchBlogBySort(params).then(response => {
-          console.log(response);
           if (response.code == "success" && response.data.records.length > 0) {
-            console.log("根据分类查找", response);
             that.isEnd = false;
             
             var blogData = response.data.records;                      
@@ -274,7 +267,6 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         searchBlogByAuthor(params).then(response => {
-          console.log(response);
           if (response.code == "success" && response.data.records.length > 0) {
 
             that.isEnd = false;   

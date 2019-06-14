@@ -168,7 +168,6 @@ export default {
     var secondParams = new URLSearchParams();
     secondParams.append("level", 2);
     getBlogByLevel(secondParams).then(response => {
-      console.log("二级推荐", response);
       this.secondData = response.data.records;
     });
 
@@ -186,7 +185,6 @@ export default {
     
     //跳转到文章详情
     goToInfo(uid) {
-      console.log("跳转到文章详情");
       let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
       window.open(routeData.href, '_blank');
     },
@@ -209,7 +207,6 @@ export default {
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getNewBlog(params).then(response => {
-        console.log("最新博客", response);
         if(response.code == "success") {          
           this.newBlogData = response.data.records;
           this.total = response.data.total;

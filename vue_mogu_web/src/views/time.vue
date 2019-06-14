@@ -67,7 +67,6 @@ export default {
     window.addEventListener("scroll", function() {
       let scrollTop = document.documentElement.scrollTop; //当前的的位置
       let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-      console.log(scrollTop, scrollHeight);
       if (scrollTop >= 0.25 * scrollHeight && !that.isEnd && !loading) {
         loading = true;
         that.currentPage = that.currentPage + 1;
@@ -96,7 +95,6 @@ export default {
     params.append("currentPage", this.currentPage);
     params.append("pageSize", this.pageSize);
     getBlogByTime(params).then(response => {
-      console.log(response);
       that.newBlogData = response.data.records;
       that.total = response.data.total;
       that.pageSize = response.data.size;
@@ -112,7 +110,6 @@ export default {
   methods: {
     //跳转到文章详情
     goToInfo(uid) {
-      console.log("跳转到文章详情");
       let routeData = this.$router.resolve({
         path: "/info",
         query: { blogUid: uid }

@@ -134,7 +134,6 @@ public class SolrIndexRestApi {
         blogSearchService.addIndex(blog);
         log.info("新建solr索引");
         return ResultUtil.result(SysConf.SUCCESS, "新建solr索引成功");
-
     }
 
     @OperationLogger(value="更新solr索引")
