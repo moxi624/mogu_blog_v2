@@ -22,5 +22,5 @@
     <sql id="Base_Column_List">
         oid, uid, title, summary, content, taguid, clickcount, collectcount, photo, status, createtime, updatetime
     </sql>
-
+    
 </mapper>

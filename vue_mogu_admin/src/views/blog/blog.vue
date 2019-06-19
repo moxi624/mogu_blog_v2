@@ -376,14 +376,12 @@ export default {
     tagParams.append("pageSize", 100);
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
-      console.log("标签列表", response);
     });
 
     var blogSortParams = new URLSearchParams();
     blogSortParams.append("pageSize", 100);
     getBlogSortList(blogSortParams).then(response => {
       this.blogSortData = response.data.records;
-      console.log("博客分类", response);
     });
   },
   methods: {
@@ -400,7 +398,6 @@ export default {
         this.currentPage = response.data.current;
         this.pageSize = response.data.size;
         this.total = response.data.total;
-        console.log("博客内容", response.data);
       });
     },
     getFormObject: function() {

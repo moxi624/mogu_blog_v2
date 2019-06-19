@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.restapi;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,14 @@ public class IndexRestApi {
 		Integer commentCount = commentService.getCommentCount(EStatus.ENABLE);					
 		Integer visitCount = webVisitService.getWebVisitCount();
 		
+		List<Map<String, Object>> blogSortMap = blogService.getBlogCountByTag();
+		
 		map.put(SysConf.BLOG_COUNT, blogCount);
 		map.put(SysConf.COMMENT_COUNT, commentCount);
 		map.put(SysConf.VISIT_COUNT, visitCount);
+		map.put(SysConf.BLOG_COUNT_BY_TAG, blogSortMap);
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}
+	
+	
 }

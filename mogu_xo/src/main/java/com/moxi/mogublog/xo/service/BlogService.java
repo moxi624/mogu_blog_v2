@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -57,5 +58,12 @@ public interface BlogService extends SuperService<Blog> {
 	 * @date 2018年10月22日下午3:30:28
 	 */
 	public Integer getBlogCount(Integer status);
+	
+	/**
+	 * 通过
+	 * @author Administrator
+	 * @date 2019年6月19日16:28:16
+	 */
+	public List<Map<String, Object>>getBlogCountByTag();
 		
 }

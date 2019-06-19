@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
+    <!-- 右上角github图标 -->
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"></github-corner>
 
+    <!-- 顶部内容 -->
     <el-row class="panel-group" :gutter="40">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
@@ -50,6 +52,30 @@
         </div>
       </el-col>
     </el-row>
+
+    <!-- 分类图-->
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart v-if="showPieChart" :value="blogCountByTag" :tagName="tagNameArray" ></pie-chart>
+        </div>
+      </el-col>
+
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <bar-chart></bar-chart>
+        </div>
+      </el-col>
+
+      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+        <div class="chart-wrapper">
+          <todo-list></todo-list>
+        </div>
+      </el-col>
+
+
+    </el-row>
+
   </div>
 </template>
 
@@ -58,6 +84,9 @@ import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
 import { init } from "@/api/index";
 import GithubCorner from "@/components/GithubCorner";
+import PieChart from "@/components/PieChart";
+import TodoList from '@/components/TodoList'
+import BarChart from '@/components/BarChart'
 export default {
   name: "dashboard",
   computed: {
@@ -65,6 +94,9 @@ export default {
   },
   components: {
     GithubCorner,
+    PieChart,
+    TodoList,
+    BarChart,
     CountTo
   },
   data() {
@@ -72,7 +104,10 @@ export default {
       visitAddTotal: 0,
       userTotal: 0,
       commentTotal: 0,
-      blogTotal: 0,      
+      blogTotal: 0,
+      blogCountByTag: [],
+      showPieChart: false,
+      tagNameArray: [],
     };
   },
   created() {
@@ -81,19 +116,45 @@ export default {
       if (response.code == "success") {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;
-        this.visitAddTotal = response.data.visitCount;
+        this.visitAddTotal = response.data.visitCount;        
+        this.blogCountByTag = response.data.blogCountByTag;
+
+        var tagList = this.blogCountByTag;
+        for(var a=0; a<this.blogCountByTag.length; a++) {
+            this.tagNameArray.push(tagList[a].name);
+        }
+
+        this.showPieChart = true;
+
       }
     });
+
     console.log("role", this.roles);
   },
   methods: {
     btnClick: function(type) {
       console.log("点击了visit", type);
-      switch(type) {
-        case "1" : {this.$router.push({path: "/log/webVisit"})}; break;
-        case "2" : {this.$router.push({path: "/user/user"})}; break;
-        case "3" : {this.$router.push({path: "/message/comment"})}; break;
-        case "4" : {this.$router.push({path: "/blog/blog"})}; break;
+      switch (type) {
+        case "1":
+          {
+            this.$router.push({ path: "/log/webVisit" });
+          }
+          break;
+        case "2":
+          {
+            this.$router.push({ path: "/user/user" });
+          }
+          break;
+        case "3":
+          {
+            this.$router.push({ path: "/message/comment" });
+          }
+          break;
+        case "4":
+          {
+            this.$router.push({ path: "/blog/blog" });
+          }
+          break;
       }
     }
   }
