@@ -51,10 +51,14 @@ public class IndexRestApi {
 		
 		List<Map<String, Object>> blogSortMap = blogService.getBlogCountByTag();
 		
+		Map<String,Object> visitByWeek =  webVisitService.getVisitByWeek();
+		
 		map.put(SysConf.BLOG_COUNT, blogCount);
 		map.put(SysConf.COMMENT_COUNT, commentCount);
 		map.put(SysConf.VISIT_COUNT, visitCount);
 		map.put(SysConf.BLOG_COUNT_BY_TAG, blogSortMap);
+		map.put(SysConf.VISIT_BY_WEEK, visitByWeek);
+		
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}
 	

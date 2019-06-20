@@ -11,7 +11,7 @@
             <svg-icon icon-class="eye" class-name="card-panel-icon"/>
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">今日访问量：</div>
+            <div class="card-panel-text">今日IP数：</div>
             <count-to class="card-panel-num" :startVal="0" :endVal="visitAddTotal" :duration="3200"></count-to>
           </div>
         </div>
@@ -53,6 +53,11 @@
       </el-col>
     </el-row>
 
+    <!--访问量统计-->
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart v-if="showLineChart" :chart-data="lineChartData"></line-chart>
+    </el-row>
+
     <!-- 分类图-->
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
@@ -87,6 +92,14 @@ import GithubCorner from "@/components/GithubCorner";
 import PieChart from "@/components/PieChart";
 import TodoList from '@/components/TodoList'
 import BarChart from '@/components/BarChart'
+import LineChart from '@/components/LineChart'
+
+const lineChartData = {
+  date:["2019-6-20","2019-6-20","2019-6-20","2019-6-20","2019-6-20","2019-6-20"],
+  pv: [100, 120, 161, 134, 105, 160, 165],
+  uv: [120, 82, 91, 154, 162, 140, 145]
+}
+
 export default {
   name: "dashboard",
   computed: {
@@ -97,7 +110,8 @@ export default {
     PieChart,
     TodoList,
     BarChart,
-    CountTo
+    CountTo,
+    LineChart
   },
   data() {
     return {
@@ -107,7 +121,9 @@ export default {
       blogTotal: 0,
       blogCountByTag: [],
       showPieChart: false,
+      showLineChart: false,
       tagNameArray: [],
+      lineChartData: []
     };
   },
   created() {
@@ -118,6 +134,18 @@ export default {
         this.commentTotal = response.data.commentCount;
         this.visitAddTotal = response.data.visitCount;        
         this.blogCountByTag = response.data.blogCountByTag;
+        this.visitByWeek = response.data.visitByWeek;
+
+        console.log("visitByWeek", this.visitByWeek);
+
+        var lineChartData = {
+          "date": this.visitByWeek.date,
+          "expectedData": this.visitByWeek.pv,
+          "actualData": this.visitByWeek.uv,
+        }
+
+        this.lineChartData = lineChartData;
+        this.showLineChart = true;
 
         var tagList = this.blogCountByTag;
         for(var a=0; a<this.blogCountByTag.length; a++) {

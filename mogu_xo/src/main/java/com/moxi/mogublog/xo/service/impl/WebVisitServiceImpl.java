@@ -1,7 +1,11 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +67,62 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 		}
 		
 		return ipSet.size();
+	}
+
+	@Override
+	public Map<String, Object> getVisitByWeek() {
+		
+		// 获取到今天结束的时间
+		String todayEndTime = DateUtils.getToDayEndTime();
+		
+		//获取最近七天的日期
+		Date sevenDaysDate = DateUtils.getDate(todayEndTime, -6);
+		
+		String sevenDays = DateUtils.getOneDayStartTime(sevenDaysDate);
+		
+		// 获取最近七天的数组列表
+		List<String> sevenDaysList = DateUtils.getDaysByN(7, "yyyy-MM-dd");
+		// 获得最近七天的访问量
+		List<Map<String, Object>> pvMap = webVisitMapper.getPVByWeek(sevenDays, todayEndTime);
+		// 获得最近七天的独立用户
+		List<Map<String, Object>> uvMap = webVisitMapper.getUVByWeek(sevenDays, todayEndTime);
+		
+		Map<String, Object> countPVMap = new HashMap<String, Object>();
+		Map<String, Object> countUVMap = new HashMap<String, Object>();
+		
+		for(Map<String, Object> item : pvMap) {			
+			countPVMap.put(item.get("DATE").toString(), item.get("COUNT"));
+		}
+		for(Map<String, Object> item : uvMap) {			
+			countUVMap.put(item.get("DATE").toString(), item.get("COUNT"));
+		}
+		// 访问量数组
+		List<Integer> pvList = new ArrayList<>();
+		// 独立用户数组
+		List<Integer> uvList = new ArrayList<>();
+		
+		for(String day :sevenDaysList) {		
+			if(countPVMap.get(day) != null) {
+				Number pvNumber = (Number)countPVMap.get(day);
+				Number uvNumber = (Number)countUVMap.get(day);
+				pvList.add(pvNumber.intValue());
+				uvList.add(uvNumber.intValue());
+			} else {
+				pvList.add(0);
+				uvList.add(0);
+			}			
+		}
+
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		// 不含年份的数组格式
+		List<String> resultSevenDaysList = DateUtils.getDaysByN(7, "MM-dd");
+		
+		resultMap.put("date", resultSevenDaysList);
+		resultMap.put("pv", pvList);
+		resultMap.put("uv", uvList);
+		
+		return resultMap;
 	}
 
 }

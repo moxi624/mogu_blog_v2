@@ -1,5 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
+import java.util.Map;
+
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -28,4 +30,19 @@ public interface WebVisitService extends SuperService<WebVisit> {
 	 * @return
 	 */
 	public int getWebVisitCount();
+	
+	/**
+	 * 获取近七天的访问量
+	 * 
+	 * @return
+	 * 
+	 * {
+	 * 	 date: ["2019-6-20","2019-6-21","2019-6-22","2019-6-23","2019-6-24",,"2019-6-25","2019-6-26"]
+	 * 	 pv: [10,5,6,7,5,3,2]
+	 *   uv: [5,3,4,4,5,2,1]
+	 * }
+	 * 注：PV表示访问量   UV表示独立用户数
+	 */
+	public Map<String, Object> getVisitByWeek();
+	
 }

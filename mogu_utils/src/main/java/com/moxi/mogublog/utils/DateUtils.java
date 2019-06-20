@@ -7,6 +7,7 @@ package com.moxi.mogublog.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -114,6 +115,41 @@ public class DateUtils {
 		Date date = new Date(System.currentTimeMillis() - 24*60*60*1000L);
 		return formate.format(date);
 	}
+	
+	/**
+	 * 获取某天开始的时间
+	 * @author xzx19950624@qq.com
+	 * 2019年6月20日09:39:25
+	 * @return
+	 */
+	public static String getOneDayStartTime(String oneDay) {
+		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		Date date = new Date(oneDay);
+		return formate.format(date);
+	}
+	
+	public static String getOneDayStartTime(Date oneDay) {
+		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		return formate.format(oneDay);
+	}
+	
+	/**
+	 * 获取某天结束的时间
+	 * @author xzx19950624@qq.com
+	 * 2019年6月20日09:42:16
+	 * @return
+	 */
+	public static String getOneDayEndTime(String oneDay) {
+		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		Date date = new Date(oneDay);
+		return formate.format(date);
+	}
+	
+	public static String getOneDayEndTime(Date oneDay) {
+		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		return formate.format(oneDay);
+	}
+	
 	
 	/**
 	 * 获取本周开始的时间
@@ -475,7 +511,7 @@ public class DateUtils {
 		return null;
     }
     /**
-     * 吧date转换成字符串
+     * 把date转换成字符串
      * @param date
      * @param code 例如  yyyy-MM-dd 00:00:00
      * @return
@@ -484,6 +520,33 @@ public class DateUtils {
     	SimpleDateFormat formate = new SimpleDateFormat(code);
 		return formate.format(date);
     	
+    }
+    
+    /**
+     * 获取过去N天内的日期数组
+     * @param intervals      intervals天内
+     * @param formatStr      格式化字符串   yyyy-MM-dd
+     * @return              日期数组
+     */
+    public static ArrayList<String> getDaysByN (int intervals, String formatStr) {
+        ArrayList<String> pastDaysList = new ArrayList<>();
+        for (int i = intervals -1; i >= 0; i--) {
+            pastDaysList.add(getPastDate(i, formatStr));
+        }
+        return pastDaysList;
+    }
+    /**
+     * 获取过去第几天的日期
+     * @param past
+     * @return
+     */
+    public static String getPastDate(int past, String formatStr) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - past);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat(formatStr);
+        String result = format.format(today);
+        return result;
     }
     
 }
