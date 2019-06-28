@@ -37,6 +37,7 @@
         placeholder="请输入标签名"
         :remote-method="tagRemoteMethod"
         :loading="loading"
+        style="width:180px"
       >
         <el-option
           v-for="item in tagOptions"
@@ -46,7 +47,7 @@
         ></el-option>
       </el-select>
 
-      <el-select v-model="levelKeyword" clearable placeholder="推荐等级">
+      <el-select v-model="levelKeyword" clearable placeholder="推荐等级" style="width:140px">
         <el-option
           v-for="item in blogLevelList"
           :key="item.value"
@@ -177,7 +178,7 @@
     </div>
 
     <!-- 添加或修改对话框 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen >
       <el-form :model="form">
         <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
@@ -214,55 +215,76 @@
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="分类" :label-width="formLabelWidth" required>
-          <el-select v-model="form.blogSortUid" size="small" placeholder="请选择">
-            <el-option
-              v-for="item in blogSortData"
-              :key="item.uid"
-              :label="item.sortName"
-              :value="item.uid"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row>
+          <el-col :span="4.5">
+            <el-form-item label="分类" :label-width="formLabelWidth" required>
+              <el-select
+                v-model="form.blogSortUid"
+                size="small"
+                placeholder="请选择"
+                style="width:150px"
+              >
+                <el-option
+                  v-for="item in blogSortData"
+                  :key="item.uid"
+                  :label="item.sortName"
+                  :value="item.uid"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 
-        <el-form-item label="标签" :label-width="formLabelWidth" required>
-          <el-select v-model="tagValue" multiple size="small" placeholder="请选择" filterable>
-            <el-option
-              v-for="item in tagData"
-              :key="item.uid"
-              :label="item.content"
-              :value="item.uid"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+          <el-col :span="4.5">
+            <el-form-item label="标签" :label-width="lineLabelWidth" required>
+              <el-select
+                v-model="tagValue"
+                multiple
+                size="small"
+                placeholder="请选择"
+                style="width:170px"
+                filterable
+              >
+                <el-option
+                  v-for="item in tagData"
+                  :key="item.uid"
+                  :label="item.content"
+                  :value="item.uid"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 
-        <el-form-item label="推荐等级" :label-width="formLabelWidth" required>
-          <el-select v-model="form.level" size="small" placeholder="请选择">
-            <el-option
-              v-for="item in blogLevelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+          <el-col :span="5">
+            <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" required>
+              <el-select v-model="form.level" size="small" placeholder="请选择" style="width:120px">
+                <el-option
+                  v-for="item in blogLevelList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 
-        <!-- <el-form-item label="点击数" :label-width="formLabelWidth">
-		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-        </el-form-item>-->
-        <el-form-item label="是否发布" :label-width="formLabelWidth" required>
-          <el-radio-group v-model="form.isPublish" size="small">
-            <el-radio label="1" border>是</el-radio>
-            <el-radio label="0" border>否</el-radio>
-          </el-radio-group>
-        </el-form-item>
+          <el-col :span="5">
+            <el-form-item label="是否发布" :label-width="lineLabelWidth" required>
+              <el-radio-group v-model="form.isPublish" size="small">
+                <el-radio label="1" border>是</el-radio>
+                <el-radio label="0" border>否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
 
-        <el-form-item label="是否原创" :label-width="formLabelWidth" required>
-          <el-radio-group v-model="form.isOriginal" size="small">
-            <el-radio label="1" border>是</el-radio>
-            <el-radio label="0" border>否</el-radio>
-          </el-radio-group>
-        </el-form-item>
+          <el-col :span="5">
+            <el-form-item label="是否原创" :label-width="formLabelWidth" required>
+              <el-radio-group v-model="form.isOriginal" size="small">
+                <el-radio label="1" border>是</el-radio>
+                <el-radio label="0" border>否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-form-item label="作者" :label-width="formLabelWidth" required v-if="form.isOriginal==0">
           <el-input v-model="form.author" auto-complete="off"></el-input>
@@ -276,10 +298,12 @@
           <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
         </el-form-item>
       </el-form>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
+
     </el-dialog>
 
     <!--
@@ -341,6 +365,8 @@ export default {
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
+      lineLabelWidth: "90px", //一行的间隔数
+      maxLineLabelWidth: "100px",
       isEditForm: false,
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
@@ -413,7 +439,7 @@ export default {
         clickCount: 0,
         author: null, //作者
         level: 0, //推荐等级，默认是正常
-        articlesPart: null, //文章出处，默认蘑菇博客
+        articlesPart: null //文章出处，默认蘑菇博客
       };
       return formObject;
     },
@@ -560,14 +586,18 @@ export default {
       this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
       this.form.tagUid = this.tagValue.join(",");
 
-      if (this.form.title == null || this.form.tagUid == null) {
+      if (
+        this.form.title == null ||
+        this.form.tagUid == "" ||
+        this.form.blogSortUid == null ||
+        this.form.content == ""
+      ) {
         this.$message({
           type: "error",
           message: "必填项不能为空"
         });
         return;
       }
-
       console.log("这是form中的内容", this.form);
       var params = formatData(this.form);
       if (this.isEditForm) {
@@ -578,24 +608,31 @@ export default {
               type: "success",
               message: response.data
             });
+            this.dialogFormVisible = false;
+            this.blogList();
           } else {
             this.$message({
               type: "error",
               message: response.data
             });
           }
-          this.dialogFormVisible = false;
-          this.blogList();
         });
       } else {
         addBlog(params).then(response => {
           console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-          this.dialogFormVisible = false;
-          this.blogList();
+          if (response.code == "success") {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            this.dialogFormVisible = false;
+            this.blogList();
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            });
+          }
         });
       }
     }
@@ -646,5 +683,10 @@ export default {
 .img {
   width: 100%;
   height: 100%;
+}
+
+.el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 0px;
 }
 </style>

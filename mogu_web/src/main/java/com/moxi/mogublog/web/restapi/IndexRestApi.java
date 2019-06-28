@@ -140,9 +140,6 @@ public class IndexRestApi {
 		}
 		IPage<Blog> pageList = blogService.getBlogPageByLevel(page, level);
 		List<Blog> list = pageList.getRecords();		
-		final StringBuffer fileUids = new StringBuffer();
-		List<String> sortUids = new ArrayList<String>();
-		List<String> tagUids = new ArrayList<String>();
 
 		list = setBlog(list);
 		

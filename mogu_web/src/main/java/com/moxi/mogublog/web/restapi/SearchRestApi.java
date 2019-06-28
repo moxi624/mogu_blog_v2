@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,6 +65,9 @@ public class SearchRestApi {
 	
 	@Autowired
 	private WebVisitService webVisitService;
+	
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
     
     private static Logger log = LogManager.getLogger(SearchRestApi.class);
 
@@ -94,9 +99,34 @@ public class SearchRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(tagUid)) {
 			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
-		} 		
-		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		}
 		
+		Tag tag = tagService.getById(tagUid);
+		if(tag != null) {
+			
+			String ip = IpUtils.getIpAddr(request);
+			
+			//从Redis取出数据，判断该用户24小时内，是否点击过该标签
+			String jsonResult = stringRedisTemplate.opsForValue().get("TAG_CLICK:" + ip + "#" + tagUid);
+							
+			if(StringUtils.isEmpty(jsonResult)) {
+				
+				//给标签点击数增加
+				log.info("点击数加1");
+				int clickCount = tag.getClickCount() + 1;
+				tag.setClickCount(clickCount);
+				tag.updateById();
+				
+			    //将该用户点击记录存储到redis中, 24小时后过期	
+				stringRedisTemplate.opsForValue().set("TAG_CLICK:" + ip + "#" + tagUid, clickCount+"",
+						24, TimeUnit.HOURS);											
+			}			
+
+		} else {
+			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
+		}
+		
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();		
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);

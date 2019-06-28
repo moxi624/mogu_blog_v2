@@ -16,11 +16,7 @@
   <h1 class="t_nav"><span>你，我生命中一个重要的过客，我们之所以是过客，因为你未曾会为我停留。</span><a href="/" class="n1">网站首页</a><a href="/" class="n2">留言</a></h1>
   <div class="news_infos">
     <ul>
-
-        <keep-alive>
-          <ChangYan :sid="sid"  ></ChangYan>
-        </keep-alive>
-
+      <ChangYan :sid="sid"></ChangYan>
     </ul>
   </div>
   <div class="sidebar">
@@ -64,7 +60,8 @@ export default {
   data () {
   	return {
       info: {},
-      sid: "",
+      sid: "test",
+      isRouterAlive: false
     };
   },
   components: {
@@ -75,22 +72,29 @@ export default {
     ChangYan,
     Head,
   },
-  activated: function() {
-    this.getCase()
-    
-  },
+
   created() {
+    var that = this;
     getMe().then(response => {      
       if(response.code == "success") {
         this.info = response.data;
       }
     })    
-    this.sid = "test";
 
     var params = new URLSearchParams();
     params.append("pageName", "ABOUT");
     recorderVisitPage(params).then(response => {
     });
+    
+    var reloaded = window.localStorage.getItem('reloaded') || '0'
+    if (reloaded % 2 == 0 ) {
+      window.location.reload()
+      window.localStorage.setItem('reloaded',  + 1)
+    }
+
+  },
+  methods: {
+
   }
 }
 </script>
