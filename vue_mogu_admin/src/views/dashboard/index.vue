@@ -62,7 +62,7 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart v-if="showPieChart" :value="blogCountByTag" :tagName="tagNameArray" ></pie-chart>
+          <pie-chart v-if="showPieChart" :value="blogCountByTag" :tagName="tagNameArray"></pie-chart>
         </div>
       </el-col>
 
@@ -72,33 +72,31 @@
         </div>
       </el-col>
 
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+      <el-col
+        :xs="{span: 24}"
+        :sm="{span: 12}"
+        :md="{span: 12}"
+        :lg="{span: 6}"
+        :xl="{span: 6}"
+        style="margin-bottom:30px;"
+      >
         <div class="chart-wrapper">
           <todo-list></todo-list>
         </div>
       </el-col>
-
-
     </el-row>
-
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
-import { init } from "@/api/index";
+import { init, getVisitByWeek, getBlogCountByTag } from "@/api/index";
 import GithubCorner from "@/components/GithubCorner";
 import PieChart from "@/components/PieChart";
-import TodoList from '@/components/TodoList'
-import BarChart from '@/components/BarChart'
-import LineChart from '@/components/LineChart'
-
-const lineChartData = {
-  date:["2019-6-20","2019-6-20","2019-6-20","2019-6-20","2019-6-20","2019-6-20"],
-  pv: [100, 120, 161, 134, 105, 160, 165],
-  uv: [120, 82, 91, 154, 162, 140, 145]
-}
+import TodoList from "@/components/TodoList";
+import BarChart from "@/components/BarChart";
+import LineChart from "@/components/LineChart";
 
 export default {
   name: "dashboard",
@@ -118,12 +116,12 @@ export default {
       visitAddTotal: 0,
       userTotal: 0,
       commentTotal: 0,
-      blogTotal: 0,
-      blogCountByTag: [],
+      blogTotal: 0,      
       showPieChart: false,
       showLineChart: false,
+      blogCountByTag: [],
       tagNameArray: [],
-      lineChartData: []
+      lineChartData: {}
     };
   },
   created() {
@@ -132,36 +130,43 @@ export default {
       if (response.code == "success") {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;
-        this.visitAddTotal = response.data.visitCount;        
-        this.blogCountByTag = response.data.blogCountByTag;
-        this.visitByWeek = response.data.visitByWeek;
-
-        console.log("visitByWeek", this.visitByWeek);
-
-        var lineChartData = {
-          "date": this.visitByWeek.date,
-          "expectedData": this.visitByWeek.pv,
-          "actualData": this.visitByWeek.uv,
-        }
-
-        this.lineChartData = lineChartData;
-        this.showLineChart = true;
-
-        var tagList = this.blogCountByTag;
-        for(var a=0; a<this.blogCountByTag.length; a++) {
-            this.tagNameArray.push(tagList[a].name);
-        }
-
-        this.showPieChart = true;
-
+        this.visitAddTotal = response.data.visitCount;
       }
     });
 
-    console.log("role", this.roles);
+    getVisitByWeek().then(response => {
+      if (response.code == "success") {
+        var visitByWeek = response.data;
+        var lineChartData = {
+          date: visitByWeek.date,
+          expectedData: visitByWeek.pv,
+          actualData: visitByWeek.uv
+        };
+        this.lineChartData = lineChartData;
+        this.showLineChart = true;
+      }
+    });
+
+    //通过标签获取博客数目
+    getBlogCountByTag().then(response => {
+
+      if (response.code == "success") {
+        
+        this.blogCountByTag = response.data;
+
+        var tagList = this.blogCountByTag;
+
+        for (var a = 0; a < this.blogCountByTag.length; a++) {
+          this.tagNameArray.push(tagList[a].name);
+        }
+
+        this.showPieChart = true;
+      }
+    });
+
   },
   methods: {
     btnClick: function(type) {
-      console.log("点击了visit", type);
       switch (type) {
         case "1":
           {

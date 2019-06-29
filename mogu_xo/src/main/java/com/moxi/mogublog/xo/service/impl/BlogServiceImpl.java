@@ -140,16 +140,18 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 				}
 				
 			} else {				
-				//如果长度大于32，说明含有多个UID				
-				List<String> strList = StringUtils.changeStringToString(tagUid, ",");
-				for(String strItem : strList) {
-					if(tagMap.get(strItem) == null) {
-						tagMap.put(strItem, count);
-					} else {
-						Integer tempCount = tagMap.get(strItem) + count;
-						tagMap.put(strItem, tempCount);
-					}
-				}
+				//如果长度大于32，说明含有多个UID
+				if(StringUtils.isNotEmpty(tagUid)) {
+					List<String> strList = StringUtils.changeStringToString(tagUid, ",");
+					for(String strItem : strList) {
+						if(tagMap.get(strItem) == null) {
+							tagMap.put(strItem, count);
+						} else {
+							Integer tempCount = tagMap.get(strItem) + count;
+							tagMap.put(strItem, tempCount);
+						}
+					}	
+				}				
 			}			
 		}
 		

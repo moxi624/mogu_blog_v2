@@ -24,7 +24,6 @@ import io.swagger.annotations.ApiOperation;
  * @author xzx19950624@qq.com
  * @date 2018年10月22日下午3:27:24
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/index")
 @Api(value="首页RestApi", tags={"IndexRestApi"})
@@ -39,28 +38,38 @@ public class IndexRestApi {
 	@Autowired
 	WebVisitService webVisitService;
 
-	@ApiOperation(value="首页初始化数据", notes="获取博客数量", response = String.class)	
+	@ApiOperation(value="首页初始化数据", notes="首页初始化数据", response = String.class)	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String init() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		
+				
 		Integer blogCount = blogService.getBlogCount(EStatus.ENABLE);
 		Integer commentCount = commentService.getCommentCount(EStatus.ENABLE);					
 		Integer visitCount = webVisitService.getWebVisitCount();
 		
-		List<Map<String, Object>> blogSortMap = blogService.getBlogCountByTag();
-		
-		Map<String,Object> visitByWeek =  webVisitService.getVisitByWeek();
-		
 		map.put(SysConf.BLOG_COUNT, blogCount);
 		map.put(SysConf.COMMENT_COUNT, commentCount);
 		map.put(SysConf.VISIT_COUNT, visitCount);
-		map.put(SysConf.BLOG_COUNT_BY_TAG, blogSortMap);
-		map.put(SysConf.VISIT_BY_WEEK, visitByWeek);
-		
+
 		return ResultUtil.result(SysConf.SUCCESS, map);
 	}
 	
+	@ApiOperation(value="获取最近一周用户独立IP数和访问量", notes="获取最近一周用户独立IP数和访问量", response = String.class)	
+	@RequestMapping(value = "/getVisitByWeek", method = RequestMethod.GET)
+	public String getVisitByWeek() {		
+		
+		Map<String,Object> visitByWeek =  webVisitService.getVisitByWeek();
+		
+		return ResultUtil.result(SysConf.SUCCESS, visitByWeek);
+	}
+	
+	@ApiOperation(value="获取每个标签下文章数目", notes="获取每个标签下文章数目", response = String.class)	
+	@RequestMapping(value = "/getBlogCountByTag", method = RequestMethod.GET)
+	public String getBlogCountByTag() {		
+		
+		List<Map<String, Object>> blogCountByTag = blogService.getBlogCountByTag();
+		
+		return ResultUtil.result(SysConf.SUCCESS, blogCountByTag);
+	}
 	
 }
