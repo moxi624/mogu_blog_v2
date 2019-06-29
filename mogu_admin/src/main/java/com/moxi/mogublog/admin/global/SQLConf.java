@@ -51,5 +51,6 @@ public final class SQLConf extends BaseSQLConf{
 	//t_exception_log
 	public final static String EXCEPTION_JSON = "exceptionJson";
 	
-	
+	//t_todo
+	public final static String TEXT = "text";
 }

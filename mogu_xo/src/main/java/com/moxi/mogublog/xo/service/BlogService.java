@@ -60,10 +60,17 @@ public interface BlogService extends SuperService<Blog> {
 	public Integer getBlogCount(Integer status);
 	
 	/**
-	 * 通过
+	 * 通过标签获取博客数目
 	 * @author Administrator
 	 * @date 2019年6月19日16:28:16
 	 */
 	public List<Map<String, Object>>getBlogCountByTag();
+	
+	/**
+	 * 设置博客版权
+	 * @param blog
+	 * @return
+	 */
+	public void setBlogCopyright(Blog blog);
 		
 }

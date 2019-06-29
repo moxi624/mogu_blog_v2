@@ -92,6 +92,9 @@ public class BlogContentRestApi {
 		
 		if(blog != null) {
 			
+			// 设置文章版权申明
+			blogService.setBlogCopyright(blog);
+			
 			//设置博客标签
 			blogService.setTagByBlog(blog);				
 			
@@ -184,11 +187,17 @@ public class BlogContentRestApi {
 		    //给该博客点赞数置为1
 			stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, "1");
 			
+			blog.setCollectCount(1);
+			blog.updateById();
+			
 		} else {
 			Integer count = Integer.valueOf(pariseJsonResult) + 1;
 			
 			//给该博客点赞 +1
 			stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, count.toString());
+			
+			blog.setCollectCount(count);
+			blog.updateById();
 		}
 		
 		//增加记录（可以考虑使用AOP）

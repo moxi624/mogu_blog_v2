@@ -109,6 +109,9 @@ public class Blog extends SuperEntity<Blog> {
     
     @TableField(exist = false)
     private Integer praiseCount; //点赞数
+    
+    @TableField(exist = false)
+    private String copyright; //版权申明
 
 	public String getTitle() {
 		return title;
@@ -288,5 +291,15 @@ public class Blog extends SuperEntity<Blog> {
 	public void setPraiseCount(Integer praiseCount) {
 		this.praiseCount = praiseCount;
 	}
-	
+
+
+	public String getCopyright() {
+		return copyright;
+	}
+
+
+	public void setCopyright(String copyright) {
+		this.copyright = copyright;
+	}
+
 }

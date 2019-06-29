@@ -44,9 +44,9 @@
               target="_blank"
             >{{item.content}}</a>
           </div>
-          <div class="news_about">
-            <strong>简介</strong>
-            {{blogData.summary}}
+          <div class="news_about" >
+            <strong>版权</strong>
+            {{blogData.copyright}}
           </div>
           <div
             class="news_con"
