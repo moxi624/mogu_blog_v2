@@ -178,7 +178,7 @@
     </div>
 
     <!-- 添加或修改对话框 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen >
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen>
       <el-form :model="form">
         <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
@@ -303,7 +303,6 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
-
     </el-dialog>
 
     <!--
@@ -331,6 +330,9 @@ import {
   formatDataToJson,
   formatDataToForm
 } from "@/utils/webUtils";
+
+import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
+
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
 var querystring = require("querystring");
@@ -346,7 +348,6 @@ export default {
   data() {
     return {
       WEB_API: process.env.WEB_API,
-
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框
       loading: false, //搜索框加载状态
@@ -372,6 +373,7 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
+      interval: null, //定义触发器
       blogLevelList: [
         { label: "正常", value: 0 },
         { label: "一级推荐", value: 1 },
@@ -397,13 +399,11 @@ export default {
   created() {
     var that = this;
     this.blogList(); //获取博客列表
-
     var tagParams = new URLSearchParams();
     tagParams.append("pageSize", 100);
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
     });
-
     var blogSortParams = new URLSearchParams();
     blogSortParams.append("pageSize", 100);
     getBlogSortList(blogSortParams).then(response => {
@@ -475,10 +475,7 @@ export default {
     },
     //弹出选择图片框
     checkPhoto: function() {
-      console.log(this.photoVisible);
-      console.log("点击了选择图");
       this.photoVisible = true;
-      console.log(this.photoVisible);
     },
     getChooseData(data) {
       var that = this;
@@ -496,7 +493,6 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
       this.form.photoList = null;
       this.form.fileUid = "";
     },
@@ -516,17 +512,68 @@ export default {
     },
     handleAdd: function() {
       var that = this;
-      try {
-        that.$refs.ckeditor.initData(); //清空CKEditor中内容
-      } catch (error) {
-        // 第一次还未加载的时候，可能会报错，不过不影响使用
-        // 暂时还没有想到可能解决的方法
+
+      var tempForm = JSON.parse(getCookie("form"));
+
+      if (tempForm != null && tempForm.title != null) {
+        this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            this.dialogFormVisible = true;
+            this.tagValue = [];
+            this.form = JSON.parse(getCookie("form"));            
+            var tagValue = this.form.tagUid.split(",");
+            for(var a =0; a<tagValue.length; a++) {
+              if(tagValue[a] != null && tagValue[a] != "") {
+                this.tagValue.push(tagValue[a])
+              }              
+            }
+            this.isEditForm = false;
+            this.formBak();
+          })
+          .catch(() => {
+            try {
+              that.$refs.ckeditor.initData(); //清空CKEditor中内容
+            } catch (error) {
+              // 第一次还未加载的时候，可能会报错，不过不影响使用
+              // 暂时还没有想到可能解决的方法
+            }
+            this.dialogFormVisible = true;
+            this.form = this.getFormObject();
+            this.tagValue = [];
+            this.isEditForm = false;
+            delCookie("form");
+            this.formBak();
+          });
+      } else {
+        this.dialogFormVisible = true;
+        this.form = this.getFormObject();
+        this.tagValue = [];
+        this.isEditForm = false;
+        this.formBak();
+      }      
+    },
+    //备份form表单
+    formBak: function() {      
+      var that = this;
+
+      // 判断触发器是否存在
+      if(that.interval != null) {
+        return;
       }
-      console.log("点击了添加博客");
-      this.dialogFormVisible = true;
-      this.form = this.getFormObject();
-      this.tagValue = [];
-      this.isEditForm = false;
+      
+      that.interval = setInterval(function() {
+        if (that.form.title != null && that.form.title != "") {
+          console.log("开始设置cookie");
+          //存放到cookie中，时间1天
+          that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          that.form.tagUid = that.tagValue.join(",");
+          setCookie("form", JSON.stringify(that.form), 1);
+        }
+      }, 10000);
     },
     handleEdit: function(row) {
       this.title = "编辑博客";
@@ -578,7 +625,6 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.blogList();
     },
@@ -598,7 +644,6 @@ export default {
         });
         return;
       }
-      console.log("这是form中的内容", this.form);
       var params = formatData(this.form);
       if (this.isEditForm) {
         editBlog(params).then(response => {
@@ -625,6 +670,13 @@ export default {
               type: "success",
               message: response.data
             });
+
+            // 清空cookie中的内容
+            // Cookie("form", JSON.stringify(this.getFormObject()), 1);
+            delCookie("form");
+            // 清空触发器
+            clearInterval(this.interval);
+
             this.dialogFormVisible = false;
             this.blogList();
           } else {

@@ -57,20 +57,8 @@ const filters = {
   completed: todos => todos.filter(todo => todo.done),
   all: todos => todos
 };
-const defalutList = [
-  { text: "star这个仓库", done: false },
-  { text: "fork这个仓库", done: false },
-  { text: "follow author", done: false },
-  { text: "vue-element-admin", done: true },
-  { text: "vue", done: true }
-];
+
 export default {
-  props: {
-    todoArray: {
-      type: Array,
-      default: []
-    }
-  },
 
   components: { Todo },
   data() {

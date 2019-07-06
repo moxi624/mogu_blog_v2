@@ -81,7 +81,7 @@
         style="margin-bottom:30px;"
       >
         <div class="chart-wrapper">
-          <todo-list :todoArray="todoArray"></todo-list>
+          <todo-list></todo-list>
         </div>
       </el-col>
     </el-row>
@@ -122,13 +122,6 @@ export default {
       blogCountByTag: [],
       tagNameArray: [],
       lineChartData: {},
-      todoArray : [
-        { text: 'star这个仓库', done: false },
-        { text: 'fork这个仓库', done: false },
-        { text: 'follow author', done: false },
-        { text: 'vue-element-admin', done: true },
-        { text: 'vue', done: true },
-      ]
 
     };
   },
