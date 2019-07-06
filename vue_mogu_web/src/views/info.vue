@@ -67,7 +67,7 @@
                 href="javascript:void(0);"
                 @click="goToInfo(item.uid)"
                 title="item.title"
-              >{{item.title}}</a>
+              >{{subText(item.title, 18)}}</a>
             </li>
           </ul>
         </div>
@@ -213,6 +213,13 @@ export default {
       if (type == "img") {
         window.open(e.target.currentSrc);
       }
+    },
+    //切割字符串
+    subText: function(str, index) {
+      if(str.length < index) {
+        return str;
+      } 
+      return str.substring(0, index) + "...";
     }
   }
 };
