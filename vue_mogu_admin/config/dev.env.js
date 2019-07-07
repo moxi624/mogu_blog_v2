@@ -12,6 +12,8 @@ module.exports = merge(prodEnv, {
   SOLR_API: '"http://localhost:8080/solr"',
   BASE_IMAGE_URL: '"http://localhost:8600"',
 
+  BLOG_WEB_URL: '"http://localhost:9527"',  
+
   //开发环境
   // ADMIN_API: '"http://localhost:8080/mogu_admin"',
   // PICTURE_API: '"http://localhost:8080/mogu_picture"',

@@ -60,7 +60,7 @@
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>
     </div>
 
-    <el-table :data="tableData" @cell-click="onClick" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60">
@@ -81,7 +81,7 @@
 
       <el-table-column label="标题" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
+          <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
@@ -178,7 +178,12 @@
     </div>
 
     <!-- 添加或修改对话框 -->
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" fullscreen>
+    <el-dialog
+      :title="title"
+      :visible.sync="dialogFormVisible"
+      :before-close="closeDialog"
+      fullscreen
+    >
       <el-form :model="form">
         <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
@@ -347,7 +352,7 @@ export default {
   },
   data() {
     return {
-      WEB_API: process.env.WEB_API,
+      BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框
       loading: false, //搜索框加载状态
@@ -443,9 +448,8 @@ export default {
       };
       return formObject;
     },
-    onClick: function(row) {
-      // this.WEB_API = this.WEB_API + "/info?blogUid=" + row.uid;
-      console.log("点击了标题", this.WEB_API);
+    onClick: function(row) {      
+      window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
     },
     //标签远程搜索函数
     tagRemoteMethod: function(query) {
@@ -453,7 +457,6 @@ export default {
         var params = new URLSearchParams();
         params.append("keyword", query);
         getTagList(params).then(response => {
-          console.log(response);
           this.tagOptions = response.data.records;
         });
       } else {
@@ -466,7 +469,6 @@ export default {
         var params = new URLSearchParams();
         params.append("keyword", query);
         getBlogSortList(params).then(response => {
-          console.log(response);
           this.sortOptions = response.data.records;
         });
       } else {
@@ -507,14 +509,17 @@ export default {
       }
       return str;
     },
+    closeDialog(done) {
+      // 清空触发器
+      clearInterval(this.interval);
+      done();
+    },
     handleFind: function() {
       this.blogList();
     },
     handleAdd: function() {
       var that = this;
-
       var tempForm = JSON.parse(getCookie("form"));
-
       if (tempForm != null && tempForm.title != null) {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
@@ -524,12 +529,12 @@ export default {
           .then(() => {
             this.dialogFormVisible = true;
             this.tagValue = [];
-            this.form = JSON.parse(getCookie("form"));            
+            this.form = JSON.parse(getCookie("form"));
             var tagValue = this.form.tagUid.split(",");
-            for(var a =0; a<tagValue.length; a++) {
-              if(tagValue[a] != null && tagValue[a] != "") {
-                this.tagValue.push(tagValue[a])
-              }              
+            for (var a = 0; a < tagValue.length; a++) {
+              if (tagValue[a] != null && tagValue[a] != "") {
+                this.tagValue.push(tagValue[a]);
+              }
             }
             this.isEditForm = false;
             this.formBak();
@@ -543,6 +548,12 @@ export default {
             }
             this.dialogFormVisible = true;
             this.form = this.getFormObject();
+            try {
+              that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
+            } catch (error) {
+              // 第一次还未加载的时候，可能会报错，不过不影响使用
+              // 暂时还没有想到可能解决的方法
+            }
             this.tagValue = [];
             this.isEditForm = false;
             delCookie("form");
@@ -551,23 +562,22 @@ export default {
       } else {
         this.dialogFormVisible = true;
         this.form = this.getFormObject();
+        try {
+          that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
+        } catch (error) {
+          // 第一次还未加载的时候，可能会报错，不过不影响使用
+          // 暂时还没有想到可能解决的方法
+        }
         this.tagValue = [];
         this.isEditForm = false;
         this.formBak();
-      }      
+      }
     },
     //备份form表单
-    formBak: function() {      
+    formBak: function() {
       var that = this;
-
-      // 判断触发器是否存在
-      if(that.interval != null) {
-        return;
-      }
-      
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {
-          console.log("开始设置cookie");
           //存放到cookie中，时间1天
           that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
           that.form.tagUid = that.tagValue.join(",");
@@ -594,7 +604,6 @@ export default {
           }
         }
       }
-      console.log(row, "点击了编辑");
       this.dialogFormVisible = true;
       this.isEditForm = true;
     },
@@ -609,7 +618,6 @@ export default {
           let params = new URLSearchParams();
           params.append("uid", row.uid);
           deleteBlog(params).then(response => {
-            console.log(response);
             this.$message({
               type: "success",
               message: response.data
@@ -647,7 +655,6 @@ export default {
       var params = formatData(this.form);
       if (this.isEditForm) {
         editBlog(params).then(response => {
-          console.log(response);
           if (response.code == "success") {
             this.$message({
               type: "success",
@@ -664,7 +671,6 @@ export default {
         });
       } else {
         addBlog(params).then(response => {
-          console.log(response);
           if (response.code == "success") {
             this.$message({
               type: "success",

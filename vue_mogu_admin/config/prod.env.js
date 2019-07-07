@@ -13,5 +13,7 @@ module.exports = {
     WEB_API: '"http://120.79.70.126:8080/mogu_web"',
     SOLR_API: '"http://120.79.70.126:8080/solr"',
     BASE_IMAGE_URL: '"http://120.79.70.126:8600"',
+
+    BLOG_WEB_URL: '"http://www.moguit.cn"',
     
 }
