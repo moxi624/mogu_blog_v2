@@ -1,5 +1,21 @@
 # 蘑菇博客
 
+<p align=center>
+  <a href="http://www.moguit.cn">
+    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/template2.png" alt="蘑菇博客">
+  </a>
+</p>
+<p align=center>
+   蘑菇博客，一个基于微服务架构的前后端分离博客系统
+</p>
+
+<p align="center">
+  <a href="https://gitee.com/moxi159753/mogu_blog_v2"><img alt="Build Status" src="https://img.shields.io/hexpm/l/plug.svg"></a>
+<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
+		<img src="https://img.shields.io/badge/JDK-1.8+-green.svg" ></img>
+	</a>
+</p>
+
 #### 项目介绍
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
 
