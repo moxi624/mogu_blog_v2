@@ -5,7 +5,9 @@
     <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/favicon2.ico" alt="蘑菇博客" style="width:200px;height:200px">
   </a>
 </p>
-
+<p align=center>
+   蘑菇博客，一个基于微服务架构的前后端分离博客系统
+</p>
 <p align="center">
   <a href="https://gitee.com/moxi159753/mogu_blog_v2"><img alt="Build Status" src="https://img.shields.io/hexpm/l/plug.svg"></a>
 <a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
