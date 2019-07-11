@@ -2,11 +2,8 @@
 
 <p align=center>
   <a href="http://www.moguit.cn">
-    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/template2.png" alt="蘑菇博客">
+    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/template2.png" alt="蘑菇博客" style="width:80%">
   </a>
-</p>
-<p align=center>
-   蘑菇博客，一个基于微服务架构的前后端分离博客系统
 </p>
 
 <p align="center">
@@ -23,7 +20,7 @@
 - 现在挺多是SSM或者SSH的博客管理系统，现在我想用spring boot + spring cloud  + vue 的微服务架构
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 
-#### 项目介绍
+#### 目录介绍
 
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统。
 - mogu_admin: 是admin端API接口服务；
@@ -52,9 +49,15 @@
 - 引入swagger文档支持，方便编写API接口文档
 - 引入RabbitMQ消息队列，用于邮件和短信发送。
 
+#### Windows环境下搭建蘑菇博客
+
+可以参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)
+
 #### Docker快速搭建蘑菇博客
 
 ​	可以参考 [这篇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在虚拟机中，搭建好博客系统  
+
+
 
 #### 项目环境
 
