@@ -8,7 +8,7 @@ data:
     url: http://localhost:8600/
 file:
   upload:
-    path: D:/mogu_blog/data/
+    path: D:/mogu_blog/data
 
 #启动Basic验证    
 security:
@@ -30,11 +30,6 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-picture
-  devtools:
-    restart:
-      enabled: true #启动热部署
-      additional-paths:
-      - src/main/java #设置重启的目录，添加哪个目录文件需要restart
       
   # DATABASE CONFIG
   datasource:

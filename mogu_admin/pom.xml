@@ -75,16 +75,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency> 
-        
-        <!-- 热部署
-        	devtolls可以实现页面热部署(即页面修改后会立即生效)，这个可以直接在application.properties文件中配置        	  
-        	spring.thymeleaf.cache=false来实现 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        
+
         <!-- 添加Eureka相关依赖 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

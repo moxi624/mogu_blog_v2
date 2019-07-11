@@ -101,7 +101,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		
 		//因为首页并不需要显示内容，所以需要排除掉内容字段		
-		queryWrapper.excludeColumns(Blog.class, "content");
+//		queryWrapper.excludeColumns(Blog.class, "content");
+		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
 		
 		return blogMapper.selectPage(page, queryWrapper);
 	}
@@ -157,7 +158,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 		
 		//把查询到的Tag放到Map中
 		Set<String> tagUids = tagMap.keySet();
-		Collection<Tag> tagCollection = tagMapper.selectBatchIds(tagUids);
+		Collection<Tag> tagCollection = new ArrayList<>();
+
+		if(tagUids.size() > 0) {
+			tagCollection = tagMapper.selectBatchIds(tagUids);
+		}
+
 		Map<String, String> tagEntityMap = new HashMap<>();
 		for(Tag tag : tagCollection) {
 			if(StringUtils.isNotEmpty(tag.getContent())) {

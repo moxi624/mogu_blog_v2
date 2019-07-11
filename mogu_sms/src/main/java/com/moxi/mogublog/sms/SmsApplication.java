@@ -11,9 +11,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, VelocityAutoConfiguration.class})
 @EnableEurekaClient
 @EnableRabbit
-public class APP {
+public class SmsApplication {
 	
     public static void main(String[] args){
-        SpringApplication.run(APP.class,args);
+        SpringApplication.run(SmsApplication.class,args);
     }
 }

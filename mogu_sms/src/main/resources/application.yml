@@ -16,12 +16,7 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-sms
-  devtools:
-    restart:
-      enabled: true #启动热部署
-      additional-paths:
-      - src/main/java #设置重启的目录，添加哪个目录文件需要restart
-      
+
   #redis
   redis:
     host: 127.0.0.1 #redis的主机ip

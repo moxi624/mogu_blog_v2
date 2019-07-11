@@ -103,7 +103,8 @@ public class LogRestApi {
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		queryWrapper.excludeColumns(ExceptionLog.class, "exception_json");		
+//		queryWrapper.excludeColumns(ExceptionLog.class, "exception_json");
+		queryWrapper.select(ExceptionLog.class, i-> !i.getProperty().equals("exception_json"));
 		IPage<ExceptionLog> pageList = exceptionLogService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);

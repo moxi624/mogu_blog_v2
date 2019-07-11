@@ -20,7 +20,9 @@ export default {
   created() {
     getLink().then(response => {
       console.log("友情链接列表", response);
-      this.linkData = response.data.records;
+      if(response.code == "success") {
+        this.linkData = response.data.records;
+      }      
     });
   },
   methods: {
@@ -29,7 +31,6 @@ export default {
       params.append("uid", item.uid);
       addLinkCount(params).then(response => {
         if(response.code == "success") {
-          console.log("计数加1，准备跳转");
           window.location.href = item.url;    
         }
       })

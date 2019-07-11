@@ -36,6 +36,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.AdminRole;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
@@ -92,7 +93,8 @@ public class AdminRestApi {
 		Page<Admin> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
-		queryWrapper.excludeColumns(Admin.class, SysConf.PASS_WORD);
+//		queryWrapper.excludeColumns(Admin.class, SysConf.PASS_WORD);
+		queryWrapper.select(Admin.class, i-> !i.getProperty().equals("pass_word"));
 		IPage<Admin> pageList = adminService.page(page, queryWrapper);
 		List<Admin> list = pageList.getRecords();
 		log.info(list);

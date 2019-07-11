@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.baomidou.mybatisplus.extension.api.ApiResult;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.api.IErrorCode;
 import com.baomidou.mybatisplus.extension.enums.ApiErrorCode;
 import com.baomidou.mybatisplus.extension.exceptions.ApiException;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = Exception.class)
-    public ApiResult<Object> handleBadRequest(Exception e) {
+    public R<Object> handleBadRequest(Exception e) {
         /*
          * 业务逻辑异常
          */
@@ -43,10 +43,10 @@ public class GlobalExceptionHandler {
             IErrorCode errorCode = ((ApiException) e).getErrorCode();
             if (null != errorCode) {
                 logger.debug("Rest request error, {}", errorCode.toString());
-                return ApiResult.failed(errorCode);
+                return R.failed(errorCode);
             }
             logger.debug("Rest request error, {}", e.getMessage());
-            return ApiResult.failed(e.getMessage());
+            return R.failed(e.getMessage());
         }
 
         /*
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
                     jsonObject.put("msg", fieldError.getDefaultMessage());
                     jsonList.add(jsonObject);
                 });
-                return ApiResult.restResult(jsonList, ApiErrorCode.FAILED);
+                return R.restResult(jsonList, ApiErrorCode.FAILED);
             }
         }
 
@@ -70,6 +70,6 @@ public class GlobalExceptionHandler {
          * 系统内部异常，打印异常栈
          */
         logger.error("Error: handleBadRequest StackTrace : {}", e);
-        return ApiResult.failed(ApiErrorCode.FAILED);
+        return R.failed(ApiErrorCode.FAILED);
     }
 }

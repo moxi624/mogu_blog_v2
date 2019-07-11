@@ -36,6 +36,10 @@ CREATE TABLE `t_file` (
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件表';
 
+/*Data for the table `t_file` */
+
+insert  into `t_file`(`uid`,`file_old_name`,`pic_name`,`pic_url`,`pic_expanded_name`,`file_size`,`file_sort_uid`,`admin_uid`,`user_uid`,`status`,`create_time`,`update_time`) values ('4492602b8f345dbfe5acbfec7a029539','52{0C(A8OK9EVDY{Y_AJ)34.jpg','1562836897414.jpg','/blog/admin/jpg/2019/7/11/1562836897414.jpg','jpg',48568,'a9a747d944c24845815356f72723ef8e','uid00000000000000000000000000000000','uid00000000000000000000000000000000',1,'2019-07-11 17:21:37','2019-07-11 17:21:37'),('53dfc375a6e4344a5a608a6802715acb','52{0C(A8OK9EVDY{Y_AJ)34.jpg','1562836821468.jpg','/blog/admin/jpg/2019/7/11/1562836821468.jpg','jpg',48568,'a9a747d944c24845815356f72723ef8e','uid00000000000000000000000000000000','uid00000000000000000000000000000000',1,'2019-07-11 17:20:21','2019-07-11 17:20:21');
+
 /*Table structure for table `t_file_sort` */
 
 DROP TABLE IF EXISTS `t_file_sort`;
@@ -52,6 +56,8 @@ CREATE TABLE `t_file_sort` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件分类表';
 
 /*Data for the table `t_file_sort` */
+
+insert  into `t_file_sort`(`uid`,`project_name`,`sort_name`,`url`,`status`,`create_time`,`update_time`) values ('a9a747d944c24845815356f72723ef8e','blog','admin','/blog/admin',1,'2018-09-20 14:41:57','2018-09-20 19:40:02'),('a9a747d944c24845815356f72723ef8f','blog','web','/blog/web',1,'2018-09-20 19:40:37','2018-09-20 19:40:40');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

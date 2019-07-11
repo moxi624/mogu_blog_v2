@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  */
 @SuppressWarnings("rawtypes")
-public class SuperEntity<T extends Model> extends Model<T>{
+public class SuperEntity<T extends Model> extends Model {
 
 	/**
 	 * 
@@ -85,12 +85,6 @@ public class SuperEntity<T extends Model> extends Model<T>{
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	@Override
-	protected Serializable pkVal() {
-		// TODO Auto-generated method stub
-		return this.uid;
 	}
 
 }
