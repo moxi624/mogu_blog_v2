@@ -2,7 +2,7 @@
 
 <p align=center>
   <a href="http://www.moguit.cn">
-    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/template2.png" alt="蘑菇博客" style="width:80%">
+    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/favicon2.ico" alt="蘑菇博客" style="width:200px;height:200px">
   </a>
 </p>
 
