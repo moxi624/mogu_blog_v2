@@ -2,7 +2,7 @@
 
 <p align=center>
   <a href="http://www.moguit.cn">
-    <img src="https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/gitee/favicon2.ico" alt="蘑菇博客" style="width:200px;height:200px">
+    <img src="./doc/images/gitee/favicon2.ico" alt="蘑菇博客" style="width:200px;height:200px">
   </a>
 </p>
 <p align=center>
@@ -87,57 +87,57 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 
 - ### admin端
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/login.png)
+  ![image text](./doc/images/admin/login.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/bashboard.png)
+  ![image text](./doc/images/admin/bashboard.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blog.png)
+  ![image text](./doc/images/admin/blog.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogEdit.png)
+  ![image text](./doc/images/admin/blogEdit.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/addPicture.png)
+  ![image text](./doc/images/admin/addPicture.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogSort.png)
+  ![image text](./doc/images/admin/blogSort.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogTag.png)
+  ![image text](./doc/images/admin/blogTag.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogSort.png)
+  ![image text](./doc/images/admin/blogSort.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/blogLink.png)
+  ![image text](./doc/images/admin/blogLink.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/aboutMe.png)
+  ![image text](./doc/images/admin/aboutMe.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/webConf.png)
+  ![image text](./doc/images/admin/webConf.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/admin.png)
+  ![image text](./doc/images/admin/admin.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/categoryMenu.png)
+  ![image text](./doc/images/admin/categoryMenu.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/sysLog.png)
+  ![image text](./doc/images/admin/sysLog.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/exception.png)
+  ![image text](./doc/images/admin/exception.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/webConf.png)
+  ![image text](./doc/images/admin/webConf.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/pictureSort.png)
+  ![image text](./doc/images/admin/pictureSort.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/picture.png)
+  ![image text](./doc/images/admin/picture.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/solrIndex.png)
+  ![image text](./doc/images/admin/solrIndex.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/admin/swagger.png)
+  ![image text](./doc/images/admin/swagger.png)
 
 
 
 - ### Web端
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index.png)
+  ![image text](./doc/images/web/index.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/index2.png)
+  ![image text](./doc/images/web/index2.png)
   
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/content.png)
+  ![image text](./doc/images/web/content.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/about.png)
+  ![image text](./doc/images/web/about.png)
 
-  ![image text](https://gitee.com/moxi159753/UploadImage/raw/master/mogublog/web/time.png)
+  ![image text](./doc/images/web/time.png)
 
