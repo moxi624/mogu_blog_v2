@@ -190,9 +190,8 @@ public class IndexRestApi {
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		
-		//因为首页并不需要显示内容，所以需要排除掉内容字段		
-//		queryWrapper.excludeColumns(Blog.class, "content");
+
+		//因为首页并不需要显示内容，所以需要排除掉内容字段
 		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
 		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
@@ -223,9 +222,8 @@ public class IndexRestApi {
 		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		
-		//因为首页并不需要显示内容，所以需要排除掉内容字段		
-//		queryWrapper.excludeColumns(Blog.class, "content");
-		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));		
+		//因为首页并不需要显示内容，所以需要排除掉内容字段
+		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
 		
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();

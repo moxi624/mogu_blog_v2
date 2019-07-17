@@ -65,6 +65,14 @@ import { getWebConfig } from "../../api/index";
 export default {
   name: "Head",
   created() {
+    var tempValue = decodeURI(this.getUrlVars()["keyword"]);
+    console.log("输出的关键字", tempValue);
+    if(tempValue == null || tempValue == undefined || tempValue == "undefined") {
+
+    } else {
+      this.keyword = tempValue;
+    }
+    
     getWebConfig().then(response => {
       console.log("获取网站配置", response);
       if (response.code == "success") {
@@ -78,6 +86,11 @@ export default {
       keyword: "",
       info: {},
     };
+  },
+  watch: {
+      '$route'(to, from) {
+        this.$router.go(0);
+      }
   },
   methods: {
     goTo: function(url) {
@@ -110,6 +123,15 @@ export default {
         return;
       }
       this.$router.push({ path: "/list", query: { keyword: this.keyword } });
+      console.log("输出关键字", this.getUrlVars()["keyword"])
+    },
+    getUrlVars: function() {		        
+      var vars = {};		        
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&#]*)/gi,				        
+        function(m, key, value) {					            
+          vars[key] = value;
+        });		        
+        return vars;	    
     }
   }
 };
