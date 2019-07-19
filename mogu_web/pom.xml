@@ -19,12 +19,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-		    <artifactId>mogu_xo</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        
         <dependency>
 		    <artifactId>mogu_xo</artifactId>
 		    <groupId>com.moxi</groupId>
@@ -60,11 +54,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.6.1</version>
         </dependency>
-        
-        <dependency>
-	        <groupId>org.springframework.cloud</groupId>
-	        <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
-	    </dependency>
 
         <!-- 添加Eureka相关依赖 -->
 		<dependency>
