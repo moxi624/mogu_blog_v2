@@ -165,7 +165,6 @@ public class CategoryMenuRestApi {
 	        });
 			parentItem.setChildCategoryMenu(tempList);
 		}
-		
 		return ResultUtil.result(SysConf.SUCCESS, list);
 	}
 	

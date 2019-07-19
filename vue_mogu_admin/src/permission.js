@@ -11,23 +11,25 @@ const whiteListActiveList = ['/', '/dashboard', '/picture/picture', '/404', '/40
 const allList = []
 
 router.beforeEach((to, from, next) => {
-  for (var a = 0; a < constantRouterMap.length; a++) {
-    if (constantRouterMap[a].children) {
-      var childrenList = constantRouterMap[a].children
-      for (var b = 0; b < childrenList.length; b++) {
-        allList.push(constantRouterMap[a].path + '/' + childrenList[b].path)
+  if (allList.length === 0) {
+    for (var a = 0; a < constantRouterMap.length; a++) {
+      if (constantRouterMap[a].children) {
+        var childrenList = constantRouterMap[a].children
+        for (var b = 0; b < childrenList.length; b++) {
+          allList.push(constantRouterMap[a].path + '/' + childrenList[b].path)
+        }
+      } else {
+        allList.push(constantRouterMap[a].path)
       }
-    } else {
-      allList.push(constantRouterMap[a].path)
     }
   }
-  console.log('allList', allList)
+
   // 向白名单中添加内容
   const activeList = []
   if (store.getters.menu.sonList) {
     const sonList = store.getters.menu.sonList
-    for (var a = 0; a < sonList.length; a++) {
-      activeList.push(sonList[a].url)
+    for (var c = 0; c < sonList.length; c++) {
+      activeList.push(sonList[c].url)
     }
   }
 

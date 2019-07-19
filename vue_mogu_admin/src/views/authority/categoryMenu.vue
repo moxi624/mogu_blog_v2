@@ -272,9 +272,10 @@ export default {
     menuList: function() {
 
       getAllMenu().then(response => {
-        console.log(response);
+        console.log("getAllMenu", response);
         if (response.code == "success") {
           this.tableData = response.data;
+          this.menuOptions = response.data;
         }
       });
     },
@@ -300,7 +301,8 @@ export default {
     handleEdit: function(row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
+      var parentUid = row.parentUid;
+      
       this.form = row;
     },
     handleStick: function(row) {

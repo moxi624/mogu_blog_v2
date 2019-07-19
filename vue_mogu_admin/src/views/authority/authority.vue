@@ -20,16 +20,7 @@
         ></el-option>
       </el-select>
 
-      <el-select
-        v-model="roleKeyword"
-        filterable
-        clearable
-        remote
-        reserve-keyword
-        placeholder="请输入角色名"
-        :remote-method="roleRemoteMethod"
-        :loading="loading"
-      >
+      <el-select v-model="roleKeyword" placeholder="请选择" style="width:150px" clearable>
         <el-option
           v-for="item in roleOptions"
           :key="item.uid"
@@ -37,6 +28,7 @@
           :value="item.uid"
         ></el-option>
       </el-select>
+
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加权限</el-button>
     </div>
@@ -103,7 +95,6 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-
         <el-form-item label="管理员名" :label-width="formLabelWidth">
           <el-select
             v-model="form.adminUid"
@@ -125,16 +116,7 @@
         </el-form-item>
 
         <el-form-item label="角色名" :label-width="formLabelWidth">
-          <el-select
-            v-model="form.roleUid"
-            filterable
-            clearable
-            remote
-            reserve-keyword
-            placeholder="请输入管理员名"
-            :remote-method="roleRemoteMethod"
-            :loading="loading"
-          >
+          <el-select v-model="form.roleUid" placeholder="请选择" style="width:150px">
             <el-option
               v-for="item in roleOptions"
               :key="item.uid"
@@ -142,6 +124,7 @@
               :value="item.uid"
             ></el-option>
           </el-select>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -190,6 +173,7 @@ export default {
   },
   created() {
     this.adminRoleList();
+    this.roleList();
   },
   methods: {
     adminRoleList: function() {
@@ -207,7 +191,6 @@ export default {
         //初始化选项列表
         var data = this.tableData;
         for (let a = 0; a < data.length; a++) {
-
           let tag1 = false;
           let tag2 = false;
 
@@ -273,17 +256,11 @@ export default {
     },
 
     //角色远程搜索函数
-    roleRemoteMethod: function(query) {
-      if (query !== "") {
-        var params = new URLSearchParams();
-        params.append("keyword", query);
-        getRoleList(params).then(response => {
-          console.log(response);
-          this.roleOptions = response.data.records;
-        });
-      } else {
-        this.roleOptions = [];
-      }
+    roleList: function() {
+      getRoleList().then(response => {
+        this.roleOptions = response.data.records;
+      });
+      
     },
 
     handleDelete: function(row) {

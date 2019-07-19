@@ -97,9 +97,15 @@ public class AdminRoleRestApi {
 		});
 		
 		
-		Collection<Admin> adminList = adminService.listByIds(adminUids);
-		Collection<Role> roleList = roleService.listByIds(roleUids);
-		
+		Collection<Admin> adminList = new ArrayList<>();
+		Collection<Role> roleList = new ArrayList<>();
+		if (adminUids.size() > 0) {
+			adminList = adminService.listByIds(adminUids);
+		}
+		if (roleUids.size() > 0) {
+			roleList = roleService.listByIds(roleUids);
+		}
+
 		Map<String, Admin> adminMap = new HashMap<>();
 		Map<String, Role> roleMap = new HashMap<>();
 		
