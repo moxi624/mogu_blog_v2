@@ -177,8 +177,6 @@ public class LoginRestApi {
 			} else {
 				map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
 			}
-			
-			
 		}
 		
 		QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>();
@@ -188,7 +186,7 @@ public class LoginRestApi {
 		//加载这些角色所能访问的菜单页面列表
 		
 		//1)获取该管理员所有角色
-		List<String> roleUid = new ArrayList<String>();
+		List<String> roleUid = new ArrayList<>();
 		for(AdminRole adminRole : adminRoleList) {
 			if(adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
 				roleUid.add(adminRole.getRoleUid());	
@@ -208,18 +206,18 @@ public class LoginRestApi {
 		if(request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
 			return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		
 		Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 
-		QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>();
+		QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq(SQLConf.ADMINUID, admin.getUid());
 		List<AdminRole> adminRoleList = adminRoleService.list(queryWrapper);
 		
 		//加载这些角色所能访问的菜单页面列表
 		
 		//1)获取该管理员所有角色
-		List<String> roleUid = new ArrayList<String>();
+		List<String> roleUid = new ArrayList<>();
 		for(AdminRole adminRole : adminRoleList) {
 			if(adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
 				roleUid.add(adminRole.getRoleUid());	
@@ -228,7 +226,7 @@ public class LoginRestApi {
 		
 		Collection<Role> roleList = roleService.listByIds(roleUid);
 		
-		List<String> categoryMenuUids = new ArrayList<String>();
+		List<String> categoryMenuUids = new ArrayList<>();
 		
 		roleList.forEach(item -> {
 			String caetgoryMenuUids = item.getCategoryMenuUids();

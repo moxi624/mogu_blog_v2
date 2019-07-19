@@ -4,15 +4,28 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
+import { constantRouterMap } from './router/index'
 
 const whiteList = ['/login'] // 不重定向白名单
-let activeList = ["/", "/dashboard", "/picture/picture"] 
+const whiteListActiveList = ['/', '/dashboard', '/picture/picture', '/404', '/401']
+const allList = []
 
 router.beforeEach((to, from, next) => {
-
-  //像白名单中添加内容
+  for (var a = 0; a < constantRouterMap.length; a++) {
+    if (constantRouterMap[a].children) {
+      var childrenList = constantRouterMap[a].children
+      for (var b = 0; b < childrenList.length; b++) {
+        allList.push(constantRouterMap[a].path + '/' + childrenList[b].path)
+      }
+    } else {
+      allList.push(constantRouterMap[a].path)
+    }
+  }
+  console.log('allList', allList)
+  // 向白名单中添加内容
+  const activeList = []
   if (store.getters.menu.sonList) {
-    let sonList = store.getters.menu.sonList
+    const sonList = store.getters.menu.sonList
     for (var a = 0; a < sonList.length; a++) {
       activeList.push(sonList[a].url)
     }
@@ -42,17 +55,17 @@ router.beforeEach((to, from, next) => {
         //     next({ path: '/' })
         //   })
         // })
-
       } else {
-        console.log(to.path)
-        if (activeList.indexOf(to.path) !== -1) {
-          // console.log("在", activeList)
+        if (whiteListActiveList.indexOf(to.path) !== -1) {
+          next()
+        } else if (activeList.indexOf(to.path) !== -1) {
           next()
         } else {
-          store.dispatch('FedLogOut').then(() => {
-            // console.log("不在", activeList)
-            next({ path: '/' })
-          })
+          if (allList.indexOf(to.path) !== -1) {
+            next({ path: '/401' })
+          } else {
+            next({ path: '/404' })
+          }
         }
       }
     }
