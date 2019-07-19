@@ -53,7 +53,6 @@ const user = {
     // 获取菜单列表
     GetMenu({ commit }) {
       return new Promise((resolve, reject) => {
-
         getMenu().then(response => {
           console.log(response)
           const data = response.data

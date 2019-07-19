@@ -155,8 +155,13 @@ public class AdminRoleRestApi {
 		if(StringUtils.isEmpty(adminRole.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}
+		Admin admin = adminRole.getAdmin();
+		String userName = admin.getUserName();
+		String adminUid = String.valueOf(request.getAttribute("adminUid"));
+		if(userName.equals(SysConf.ADMIN) && !adminUid.equals(admin.getUid())) {
+			return ResultUtil.result(SysConf.ERROR, "您无法修改admin权限");
+		}
 		adminRole.updateById();
-		
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
 	

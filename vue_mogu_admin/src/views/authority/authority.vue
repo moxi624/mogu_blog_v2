@@ -214,8 +214,6 @@ export default {
           }
         }
 
-        console.log("admin", this.adminOptions);
-        console.log("role", this.roleOptions);
       });
     },
     getFormObject: function() {
@@ -290,12 +288,10 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.adminRoleList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
       if (this.isEditForm) {
         editAdminRole(this.form).then(response => {
           console.log(response);
@@ -308,7 +304,7 @@ export default {
             this.adminRoleList();
           } else {
             this.$message({
-              type: "success",
+              type: "error",
               message: response.data
             });
           }

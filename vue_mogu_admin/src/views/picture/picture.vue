@@ -232,7 +232,7 @@ export default {
               type: "success",
               message: response.data
             });            
-
+            this.pictureUids = [];
           });
         })
         .catch(() => {
