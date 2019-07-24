@@ -12,8 +12,7 @@ export default {
 </script>
 
 <style>
-
-#app {
-
-}
+ @import '../static/css/base.css';
+ @import '../static/css/index.css';
+ @import '../static/css/m.css';
 </style>
