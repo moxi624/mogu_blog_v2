@@ -1,93 +1,129 @@
 <template>
 <html>
-<body>
+  <body>
+    <Head></Head>
 
-<Head></Head>
-
-<!--
+    <!--
 	作者：xzx19950624@qq.com
 	时间：2018-07-15
 	描述：顶部标题
--->
-<BlogHead></BlogHead>
+    -->
+    <BlogHead></BlogHead>
 
-<article> 
-  <!--banner begin-->
- <div class="picsbox"> 
+    <article>
+      <!--banner begin-->
+      <div class="picsbox">
+        <FirstRecommend></FirstRecommend>
+        <!--banner end-->
 
-  <FirstRecommend></FirstRecommend>
-  <!--banner end-->
-
-  <!-- 二级推荐 -->
-  <div class="toppic">
-    <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)"> <a href="javascript:void(0);" target="_blank"> <i><img :src="item.photoList[0]"></i>
-      <h2>{{item.title}}</h2>
-      <span>{{item.blogSort.sortName}}</span> </a> 
-    </li>
-  </div>
-  </div>
-  <div class="blank"></div>
-
-  <!--blogsbox begin-->
-  <div class="blogsbox">
-    	<div v-for="item in newBlogData" :key="item.uid" class="blogs" data-scroll-reveal="enter bottom over 1s" >	  
-      <h3 class="blogtitle"><a href="javascript:void(0);" @click="goToInfo(item.uid)" target="_blank">{{item.title}}</a></h3>
-      <span class="blogpic"><a href="javascript:void(0);" @click="goToInfo(item.uid)" title=""><img v-if="item.photoList" :src="item.photoList[0]" alt=""></a></span>
-      <p class="blogtext">{{item.summary}}</p>
-      <div class="bloginfo">
-        <ul>
-          <li class="author"><a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a></li>
-          <li class="lmname" v-if="item.blogSort"><a href="javascript:void(0);" @click="goToList(item.blogSort.uid)">{{item.blogSort.sortName}}</a></li>
-          <li class="timer">{{item.createTime}}</li>
-          <li class="view"><span>{{item.clickCount}}</span></li>
-          <li class="like">{{item.collectCount}}</li>
-        </ul>
+        <!-- 二级推荐 -->
+        <div class="toppic">
+          <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
+            <a href="javascript:void(0);" target="_blank">
+              <i>
+                <img :src="item.photoList[0]">
+              </i>
+              <h2>{{item.title}}</h2>
+              <span>{{item.blogSort.sortName}}</span>
+            </a>
+          </li>
+        </div>
       </div>
-    </div>
-    <div class="isEnd">
-      <span v-if="!isEnd">正在加载中~</span>  
-      <span v-else>我也是有底线的~</span>  
-    </div>
-  </div>
-  <!--blogsbox end-->
-  
-  
-  <div class="sidebar">
+      <div class="blank"></div>
 
-    <!-- 三级推荐 -->
-    <ThirdRecommend></ThirdRecommend>
+      <!--blogsbox begin-->
+      <div class="blogsbox">
+        <div
+          v-for="item in newBlogData"
+          :key="item.uid"
+          class="blogs"
+          data-scroll-reveal="enter bottom over 1s"
+        >
+          <h3 class="blogtitle">
+            <a href="javascript:void(0);" @click="goToInfo(item.uid)" target="_blank">{{item.title}}</a>
+          </h3>
+          <span class="blogpic">
+            <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
+              <img v-if="item.photoList" :src="item.photoList[0]" alt>
+            </a>
+          </span>
+          <p class="blogtext">{{item.summary}}</p>
+          <div class="bloginfo">
+            <ul>
+              <li class="author">
+                <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
+              </li>
+              <li class="lmname" v-if="item.blogSort">
+                <a
+                  href="javascript:void(0);"
+                  @click="goToList(item.blogSort.uid)"
+                >{{item.blogSort.sortName}}</a>
+              </li>
+              <li class="timer">{{item.createTime}}</li>
+              <li class="view">
+                <span>{{item.clickCount}}</span>
+              </li>
+              <li class="like">{{item.collectCount}}</li>
+            </ul>
+          </div>
+        </div>
 
-    <!--标签云-->
-    <TagCloud></TagCloud>
+        <div class="isEnd">
+          <!-- <span v-if="!isEnd">正在加载中~</span> -->
+          
+          <div class="loadContent" @click="loadContent" v-if="!isEnd&&!loading">点击加载更多</div>  
 
-    <!--四级推荐-->
-    <FourthRecommend></FourthRecommend>
+          <div class="lds-css ng-scope" v-if="!isEnd&&loading" >
+            <div style="width:100%;height:100%" class="lds-facebook">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
 
-    <!--点击排行-->
-    <HotBlog></HotBlog>
+          <span v-if="isEnd">我也是有底线的~</span>
 
-    <Link></Link>
+        </div>
 
-    <!--关注我们-->
-    <FollowUs></FollowUs>
+        
 
-  </div>
-</article>
+      </div>
+      <!--blogsbox end-->
 
-<!--
+      <div class="sidebar">
+        <!-- 三级推荐 -->
+        <ThirdRecommend></ThirdRecommend>
+
+        <!--标签云-->
+        <TagCloud></TagCloud>
+
+        <!--四级推荐-->
+        <FourthRecommend></FourthRecommend>
+
+        <!--点击排行-->
+        <HotBlog></HotBlog>
+
+        <Link></Link>
+
+        <!--关注我们-->
+        <FollowUs></FollowUs>
+      </div>
+    </article>
+
+    <!--
 	作者：xzx19950624@qq.com
 	时间：2018-07-15
 	描述：博客底部
--->
-<BlogFooter></BlogFooter>
+    -->
+    <BlogFooter></BlogFooter>
 
-<a href="#" class="cd-top">Top</a>
-</body>
+    <a href="#" class="cd-top">Top</a>
+  </body>
 </html>
 </template>
 
 <script>
-import Head from '../components/Head';
+import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
 import FirstRecommend from "../components/FirstRecommend";
@@ -117,7 +153,7 @@ export default {
     HotBlog,
     FollowUs,
     Link,
-    Head,
+    Head
   },
   data() {
     return {
@@ -133,36 +169,38 @@ export default {
       pageSize: 15,
       total: 0, //总数量
       isEnd: false, //是否到底底部了
+      loading: false, //是否正在加载
     };
   },
   mounted() {
     // 注册scroll事件并监听
     var that = this;
-    var loading = false;
-    window.addEventListener("scroll", function() {
-      let scrollTop = document.documentElement.scrollTop; //当前的的位置
-      let scrollHeight = document.documentElement.scrollHeight; //最高的位置      
-      if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !loading) { 
-        loading = true; 
-        that.currentPage = that.currentPage + 1;        
-        var params = new URLSearchParams();
-        params.append("currentPage", that.currentPage);
-        params.append("pageSize", that.pageSize);
-        getNewBlog(params).then(response => {                  
-          if(response.code == "success" && response.data.records.length > 0) {
-            that.isEnd = false;
-            var newData = that.newBlogData.concat(response.data.records);
-            that.newBlogData = newData;            
-            that.total = response.data.total;
-            that.pageSize = response.data.size;
-            that.currentPage = response.data.current;                      
-          } else {
-            that.isEnd = true;
-          }
-          loading = false;          
-        });
-      }
-    });
+    that.loading = false;
+    // window.addEventListener("scroll", function() {
+    //   let scrollTop = document.documentElement.scrollTop; //当前的的位置
+    //   let scrollHeight = document.documentElement.scrollHeight; //最高的位置
+    //   console.log(scrollTop);
+    //   if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !that.loading) {
+    //     that.loading = true;
+    //     that.currentPage = that.currentPage + 1;
+    //     var params = new URLSearchParams();
+    //     params.append("currentPage", that.currentPage);
+    //     params.append("pageSize", that.pageSize);
+    //     getNewBlog(params).then(response => {
+    //       if (response.code == "success" && response.data.records.length > 0) {
+    //         that.isEnd = false;
+    //         var newData = that.newBlogData.concat(response.data.records);
+    //         that.newBlogData = newData;
+    //         that.total = response.data.total;
+    //         that.pageSize = response.data.size;
+    //         that.currentPage = response.data.current;
+    //       } else {
+    //         that.isEnd = true;
+    //       }
+    //       that.loading = false;
+    //     });
+    //   }
+    // });
   },
   created() {
     var secondParams = new URLSearchParams();
@@ -176,29 +214,34 @@ export default {
 
     var params = new URLSearchParams();
     params.append("pageName", "INDEX");
-    recorderVisitPage(params).then(response => {
-    });
-    
-
+    recorderVisitPage(params).then(response => {});
   },
   methods: {
-    
     //跳转到文章详情
     goToInfo(uid) {
-      let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
-      window.open(routeData.href, '_blank');
+      let routeData = this.$router.resolve({
+        path: "/info",
+        query: { blogUid: uid }
+      });
+      window.open(routeData.href, "_blank");
     },
 
     //跳转到搜索详情页
     goToList(uid) {
-      let routeData = this.$router.resolve({ path: "/list", query: { sortUid: uid } });
-      window.open(routeData.href, '_blank');
+      let routeData = this.$router.resolve({
+        path: "/list",
+        query: { sortUid: uid }
+      });
+      window.open(routeData.href, "_blank");
     },
 
     //跳转到搜索详情页
     goToAuthor(author) {
-      let routeData = this.$router.resolve({ path: "/list", query: { author: author } });
-      window.open(routeData.href, '_blank');
+      let routeData = this.$router.resolve({
+        path: "/list",
+        query: { author: author }
+      });
+      window.open(routeData.href, "_blank");
     },
 
     //最新博客列表
@@ -207,12 +250,39 @@ export default {
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getNewBlog(params).then(response => {
-        if(response.code == "success") {          
+        if (response.code == "success") {
           this.newBlogData = response.data.records;
           this.total = response.data.total;
           this.pageSize = response.data.size;
           this.currentPage = response.data.current;
-        }        
+        }
+      });
+    },
+
+    loadContent: function() {
+      var that = this;
+      that.loading = false;
+      that.currentPage = that.currentPage + 1;
+      var params = new URLSearchParams();
+      params.append("currentPage", that.currentPage);
+      params.append("pageSize", that.pageSize);
+      getNewBlog(params).then(response => {
+        if (response.code == "success" && response.data.records.length > 0) {
+          that.isEnd = false;
+          var newData = that.newBlogData.concat(response.data.records);
+          that.newBlogData = newData;
+          that.total = response.data.total;
+          that.pageSize = response.data.size;
+          that.currentPage = response.data.current;
+
+          //全部加载完毕
+          if(newData.length < that.pageSize) {
+            that.isEnd = true;
+          }
+        } else {
+          that.isEnd = true;
+        }
+        that.loading = false;
       });
     }
   }
@@ -221,9 +291,146 @@ export default {
 
 <style>
 .isEnd {
+  float: left;
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 80px;
   text-align: center;
+}
+
+.ng-scope {
+  margin: 0 auto;
+  width: 18%;
+  height: 10%;
+}
+
+.loadContent {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  margin: 0 auto;
+  color: aliceblue;
+  cursor: pointer;
+  background: #d88c51;
+}
+
+@keyframes lds-facebook_1 {
+  0% {
+    top: 0px;
+    height: 200px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+@-webkit-keyframes lds-facebook_1 {
+  0% {
+    top: 0px;
+    height: 200px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+@keyframes lds-facebook_2 {
+  0% {
+    top: 20px;
+    height: 160px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+@-webkit-keyframes lds-facebook_2 {
+  0% {
+    top: 20px;
+    height: 160px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+@keyframes lds-facebook_3 {
+  0% {
+    top: 40px;
+    height: 120px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+@-webkit-keyframes lds-facebook_3 {
+  0% {
+    top: 40px;
+    height: 120px;
+  }
+  50% {
+    top: 80px;
+    height: 40px;
+  }
+  100% {
+    top: 80px;
+    height: 40px;
+  }
+}
+.lds-facebook {
+  position: relative;
+}
+.lds-facebook div {
+  position: absolute;
+  width: 20px;
+}
+.lds-facebook div:nth-child(1) {
+  left: 40px;
+  background: #1d0e0b;
+  -webkit-animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  animation: lds-facebook_1 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  -webkit-animation-delay: -0.2s;
+  animation-delay: -0.2s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 90px;
+  background: #774023;
+  -webkit-animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  animation: lds-facebook_2 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  -webkit-animation-delay: -0.1s;
+  animation-delay: -0.1s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 140px;
+  background: #d88c51;
+  -webkit-animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  animation: lds-facebook_3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook {
+  width: 90px !important;
+  height: 90px !important;
+  -webkit-transform: translate(-45px, -45px) scale(0.45) translate(45px, 45px);
+  transform: translate(-45px, -45px) scale(0.45) translate(45px, 45px);
 }
 </style>

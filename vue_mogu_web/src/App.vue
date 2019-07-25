@@ -2,9 +2,13 @@
   <div id="app">
     <router-view/>
   </div>
+
 </template>
 	
 <script>
+import Head from './components/Head';
+import BlogHead from './components/BlogHead';
+import BlogFooter from './components/BlogFooter';
 
 export default {
   name: 'App'
@@ -12,7 +16,5 @@ export default {
 </script>
 
 <style>
- @import '../static/css/base.css';
  @import '../static/css/index.css';
- @import '../static/css/m.css';
 </style>

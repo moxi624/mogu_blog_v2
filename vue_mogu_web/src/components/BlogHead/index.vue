@@ -1,11 +1,13 @@
 <template>
-  <header>
-    <!--menu begin-->
-    <div class="menu">
-      <nav class="nav" id="topnav">
-        <h1 class="logo">
-          <a href="javascript:void(0);" @click="goTo('/')" v-if="info.name">{{info.name}}</a>
-        </h1>
+  <header class="header-navigation" id="header">
+    <nav>
+      <div class="logo">
+        <a href="javascript:void(0);" @click="goTo('/')" v-if="info.name">{{info.name}}</a>
+      </div>
+      <h2 id="mnavh" @click="openHead" :class="showHead?'open':''">
+        <span class="navicon"></span>
+      </h2>
+      <ul id="starlist" :style="showHead?'display: block':''">
         <li>
           <a href="javascript:void(0);" @click="goTo('/')">网站首页</a>
         </li>
@@ -16,45 +18,24 @@
         <li>
           <a href="javascript:void(0);" @click="goTo('/time')">时间轴</a>
         </li>
+      </ul>
 
-        <!-- <input />
-        <img src="../../../static/images/searchbg.png"/>z-->
-        <!--search begin-->
-        <div id="search_bar" class="search_bar search_open">
+      <div class="searchbox">
+        <div id="search_bar" :class="showSearch?'search_bar search_open':'search_bar'">
           <input
             class="input"
-            placeholder="想搜点什么呢..."
+            placeholder="想搜点什么呢.."
             type="text"
+            name="keyboard"
             v-model="keyword"
             v-on:keyup.enter="search"
           >
-          <span class="search_ico" @click="search()"></span>
-          <div></div>
+          <p class="search_ico" @click="clickSearchIco">
+            <span></span>
+          </p>
         </div>
-        <!--search end-->
-      </nav>
-    </div>
-    <!--menu end-->
-    <!--mnav begin-->
-    <div id="mnav">
-      <h2>
-        <a href="javascript:void(0);" @click="goTo('/')" class="mlogo" v-if="info.name">{{info.name}}</a>
-        <span class="navicon"></span>
-      </h2>
-      <dl class="list_dl">
-        <dt class="list_dt">
-          <a href="javascript:void(0);" @click="goTo('/')">网站首页</a>
-        </dt>
-        <dt class="list_dt">
-          <a href="about.html">关于我</a>
-        </dt>
-        <!-- <dt class="list_dt"> <a href="javascript:void(0);" @click="goTo('/about')">学习教程</a> </dt> -->
-        <dt class="list_dt">
-          <a href="javascript:void(0);" @click="goTo('/time')">时间轴</a>
-        </dt>
-      </dl>
-    </div>
-    <!--mnav end-->
+      </div>
+    </nav>
   </header>
 </template>
 
@@ -67,12 +48,15 @@ export default {
   created() {
     var tempValue = decodeURI(this.getUrlVars()["keyword"]);
     console.log("输出的关键字", tempValue);
-    if(tempValue == null || tempValue == undefined || tempValue == "undefined") {
-
+    if (
+      tempValue == null ||
+      tempValue == undefined ||
+      tempValue == "undefined"
+    ) {
     } else {
       this.keyword = tempValue;
     }
-    
+
     getWebConfig().then(response => {
       console.log("获取网站配置", response);
       if (response.code == "success") {
@@ -85,12 +69,14 @@ export default {
       BaseBlog: BASE_BLOG_API,
       keyword: "",
       info: {},
+      showSearch: false,  // 控制搜索框的弹出
+      showHead: false, //控制导航栏的弹出
     };
   },
   watch: {
-      '$route'(to, from) {
-        this.$router.go(0);
-      }
+    $route(to, from) {
+      this.$router.go(0);
+    }
   },
   methods: {
     goTo: function(url) {
@@ -123,15 +109,25 @@ export default {
         return;
       }
       this.$router.push({ path: "/list", query: { keyword: this.keyword } });
-      console.log("输出关键字", this.getUrlVars()["keyword"])
+      console.log("输出关键字", this.getUrlVars()["keyword"]);
     },
-    getUrlVars: function() {		        
-      var vars = {};		        
-      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&#]*)/gi,				        
-        function(m, key, value) {					            
+    getUrlVars: function() {
+      var vars = {};
+      var parts = window.location.href.replace(
+        /[?&]+([^=&]+)=([^&#]*)/gi,
+        function(m, key, value) {
           vars[key] = value;
-        });		        
-        return vars;	    
+        }
+      );
+      return vars;
+    },
+    clickSearchIco: function() {
+      this.showSearch = !this.showSearch;
+      console.log("点击了搜索图标", this.showSearch);
+    },
+    openHead: function() {
+      console.log("点击弹出导航");
+      this.showHead = !this.showHead;
     }
   }
 };

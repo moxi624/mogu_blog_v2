@@ -84,15 +84,17 @@
     //设置固定关注我们
 
     if ($('#follow-us')) {
+        // console.log("获取offset", $('#follow-us').offset())
         // var followUsPosition = $('#follow-us').offset().top;
+
         // window.onscroll = function () {
-        //     var nowPosition =  document.documentElement.scrollTop;
-        //     if (nowPosition - followUsPosition > 500 ) {
+        //     var nowPosition = document.documentElement.scrollTop;
+        //     if (nowPosition - followUsPosition > 500) {
         //         setTimeout(function () {
-        //             $('#follow-us').attr('class','guanzhu gd');
-        //         },150);
-        //     }else {
-        //         $('#follow-us').attr('class','guanzhu');
+        //             $('#follow-us').attr('class', 'guanzhu gd');
+        //         }, 150);
+        //     } else {
+        //         $('#follow-us').attr('class', 'guanzhu');
         //     }
         // };
     }

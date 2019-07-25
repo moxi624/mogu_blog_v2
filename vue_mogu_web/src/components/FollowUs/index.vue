@@ -1,5 +1,5 @@
 <template>
-    <div class="guanzhu" id="follow-us">
+    <div class="guanzhu" id="follow-us" ref="follow" @click="click">
       <h2 class="hometitle">关注我们 么么哒！</h2>
       <ul>
         <!-- <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>蘑菇博客</a></li>         -->
@@ -13,7 +13,7 @@
 
 <script>
 import { getContact } from "../../api/about";
-
+import $ from 'jquery'
 export default {
   name: "FollowUs",
   data() {
@@ -23,14 +23,19 @@ export default {
     };
   },
   created() {
+
     getContact().then(response => {
       if (response.code == "success") {
         this.contact = response.data;
         this.mailto = "mailto:" + this.contact.email;
       }
-    });
+    });  
   },
-  methods: {}
+  methods: {
+    click: function() {
+      console.log("top", this.$refs.follow.getBoundingClientRect().top)
+    }
+  }
 };
 </script>
 

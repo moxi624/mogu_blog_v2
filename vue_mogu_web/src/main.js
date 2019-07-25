@@ -5,21 +5,17 @@ import App from './App'
 import router from './router'
 
 //引入公共JS
-import jquery from '../static/js/jquery.min.js'
-import easyfader from  '../static/js/jquery.easyfader.min.js'
+import $ from 'jquery'
+import easyfader from '../static/js/jquery.easyfader.min.js'
 import scrollReveal from '../static/js/scrollReveal.js'
 import common from '../static/js/common.js'
-
-/*引入公共样式*/
-import baseCss from '../static/css/base.css'; 
-import indexCss from  '../static/css/index.css'; 
-import mCss from  '../static/css/m.css';
+// import nav from '../static/js/nav.js'
 
 Vue.config.productionTip = false
 
 Vue.directive('highlight', function (el) {
   let blocks = el.querySelectorAll('pre code');
-  blocks.forEach((block)=>{
+  blocks.forEach((block) => {
     hljs.highlightBlock(block)
   })
 })
