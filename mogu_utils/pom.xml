@@ -23,13 +23,13 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.31</version>
+			<version>${alibaba.fastjson.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
+			<version>${jackson.mapper.asl.version}</version>
 		</dependency>
 		
 		<!-- sfl4j -->
@@ -42,20 +42,21 @@
 		<dependency>
 		    <groupId>javax.mail</groupId>
 		    <artifactId>mail</artifactId>
-		    <version>1.4</version>
+		    <version>${javax.mail.version}</version>
 		</dependency>
 		
 		<!-- 引入Json相关 -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
-			<version>2.4</version>
+			<version>${net.sf.json.lib.version}</version>
 			<classifier>jdk15</classifier>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+			<version>${google.code.gson.version}</version>
 		</dependency>
 		
 		<!-- Apache开源组织提供的用于摘要运算、编码解码的包 常见的编码解码工具Base64、MD5、Hex、SHA1、DES等 -->

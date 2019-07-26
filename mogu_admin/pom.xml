@@ -13,13 +13,6 @@
 	<name>mogu_admin</name>
 	<description>Demo project for Spring Boot</description>
 
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-
 	<dependencies>
 	
 		<dependency>
@@ -49,19 +42,19 @@
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>servlet-api</artifactId>
-		    <version>3.0-alpha-1</version>
+		    <version>${servlet.api.version}</version>
 		</dependency>
 		
 		<dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
+            <version>${swagger.version}</version>
         </dependency>
         
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
+            <version>${swagger.ui.version}</version>
         </dependency>
         
         <!--spring切面aop依赖-->

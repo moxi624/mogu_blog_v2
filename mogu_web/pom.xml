@@ -8,7 +8,7 @@
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>mogu_web</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>mogu_web</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -42,18 +42,18 @@
 	             </exclusion>  
 	         </exclusions> -->
 	   	</dependency>
-        
-       <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
-        </dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.ui.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

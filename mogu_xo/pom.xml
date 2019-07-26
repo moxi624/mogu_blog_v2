@@ -26,13 +26,6 @@
 		    <groupId>com.moxi</groupId>
 		    <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        
-       	<dependency>
-		    <artifactId>mogu_config</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-       
 	</dependencies>
 	
  	<!-- Package as an executable jar -->

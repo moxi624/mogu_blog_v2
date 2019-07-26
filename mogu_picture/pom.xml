@@ -21,11 +21,12 @@
 	</properties>
 
 	<dependencies>
-		
+
+		<!-- 因为 这里暂时不需要用到spring security所以需要排除掉 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>mogu_base</artifactId>
+			<groupId>com.moxi</groupId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
@@ -39,31 +40,24 @@
 	             </exclusion>  
 	         </exclusions> -->
     	</dependency>
-    	
+
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>servlet-api</artifactId>
-		    <version>3.0-alpha-1</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.api.version}</version>
 		</dependency>
 
 		<dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
-        </dependency>
-		
-		<!-- 因为 这里暂时不需要用到spring security所以需要排除掉 -->
-        <dependency>
-		    <artifactId>mogu_base</artifactId>
-		    <groupId>com.moxi</groupId>
-		    <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.ui.version}</version>
+		</dependency>
 
         <!-- 添加Eureka相关依赖 -->
 		<dependency>

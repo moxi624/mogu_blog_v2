@@ -1,123 +1,111 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.moxi</groupId>
-    <artifactId>mogu_blog</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>mogu_sms</artifactId>
-  
-  <properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	<java.version>1.8</java.version>
-  </properties>
-  
+	<parent>
+		<groupId>com.moxi</groupId>
+		<artifactId>mogu_blog</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>mogu_sms</artifactId>
+	<packaging>jar</packaging>
+	<name>mogu_sms</name>
+	<description>Demo project for Spring Boot</description>
+
   <dependencies>
-  
 	<dependency>
 		<artifactId>mogu_base</artifactId>
 		<groupId>com.moxi</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
-    
+
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-test</artifactId>
 		<scope>test</scope>
 	</dependency>
-	
+
 	<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
-         <!--  <exclusions>  
-             <exclusion>  
-                 <groupId>org.springframework.boot</groupId>  
-                 <artifactId>spring-boot-starter-tomcat</artifactId>  
-             </exclusion>  
+         <!--  <exclusions>
+             <exclusion>
+                 <groupId>org.springframework.boot</groupId>
+                 <artifactId>spring-boot-starter-tomcat</artifactId>
+             </exclusion>
          </exclusions> -->
    	</dependency>
-   	
-	<dependency>
-	    <groupId>javax.servlet</groupId>
-	    <artifactId>servlet-api</artifactId>
-	    <version>3.0-alpha-1</version>
-	</dependency>
+
+	  <dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>servlet-api</artifactId>
+		  <version>${servlet.api.version}</version>
+	  </dependency>
 
     <!-- 添加Eureka相关依赖 -->
 	<dependency>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-eureka</artifactId>
 	</dependency>
-	
+
 	<dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-config</artifactId>
     </dependency>
-    
+
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-bus</artifactId>
     </dependency>
-    
+
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
     </dependency>
-    
+
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-actuator</artifactId>
 	</dependency>
-    
+
     <dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-test</artifactId>
 		<scope>test</scope>
 	</dependency>
-    
+
     <dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-amqp</artifactId>
 	</dependency>
-	
+
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-mail</artifactId>
 	</dependency>
-	
+
     <dependency>
    		<groupId>com.aliyun</groupId>
    		<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-   		<version>1.0.0</version>
+   		<version>${aliyun.java.sdk.dysmsapi.version}</version>
    	</dependency>
-   	
+
    	<dependency>
    		<groupId>com.aliyun</groupId>
    		<artifactId>aliyun-java-sdk-core</artifactId>
-   		<version>3.2.5</version>
+   		<version>${aliyun.java.sdk.core.version}</version>
    	</dependency>
-   	
-   	<!-- email -->
-	<dependency>
-	    <groupId>javax.mail</groupId>
-	    <artifactId>mail</artifactId>
-	    <version>1.4</version>
-	</dependency>
-   	
-   	<!--  
-   	<dependency> 
-	    <groupId>org.springframework.boot</groupId> 
-	    <artifactId>spring-boot-configuration-processor</artifactId> 
-	    <optional>true</optional> 
-  	</dependency> 
+
+   	<!--
+   	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-configuration-processor</artifactId>
+	    <optional>true</optional>
+  	</dependency>
   	-->
-  	
   </dependencies>
-  
-  
-  
+
+
   <!--spring boot打包的话需要指定一个唯一的入门-->
     <build>
 		  <resources>
@@ -139,9 +127,9 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>           
+                <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-	             <fork>true</fork> 
+	             <fork>true</fork>
 	             <!-- 如果没有该配置，devtools不会生效 -->
 	            <!-- 指定该Main Class为全局的唯一入口 -->
 	            <mainClass>com.moxi.mogublog.sms.SmsApplication</mainClass>
