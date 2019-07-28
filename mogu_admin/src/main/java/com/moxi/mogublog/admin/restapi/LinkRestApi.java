@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.xo.entity.Blog;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import java.util.List;
 
 /**
  * <p>
@@ -139,9 +142,13 @@ public class LinkRestApi {
 		
 		//查找出最大的那一个
 		QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
-		Link  maxSort = linkService.getOne(queryWrapper);
-		
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		Page<Link> page = new Page<>();
+		page.setCurrent(0);
+		page.setSize(1);
+		IPage<Link> pageList = linkService.page(page,queryWrapper);
+		List<Link> list = pageList.getRecords();
+		Link  maxSort = list.get(0);
 		if(StringUtils.isEmpty(maxSort.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
 		}

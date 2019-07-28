@@ -448,6 +448,7 @@ export default {
       };
       return formObject;
     },
+    // 跳转到该博客详情
     onClick: function(row) {      
       window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
     },

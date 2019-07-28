@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.xo.entity.Picture;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,8 +182,14 @@ public class PictureSortRestApi {
 		
 		//查找出最大的那一个
 		QueryWrapper<PictureSort> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
-		PictureSort  maxSort = pictureSortService.getOne(queryWrapper);
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		Page<PictureSort> page = new Page<>();
+		page.setCurrent(0);
+		page.setSize(1);
+		IPage<PictureSort> pageList = pictureSortService.page(page,queryWrapper);
+		List<PictureSort> list = pageList.getRecords();
+		PictureSort  maxSort = list.get(0);
+
 		
 		if(StringUtils.isEmpty(maxSort.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 

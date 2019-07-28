@@ -44,7 +44,7 @@
               target="_blank"
             >{{item.content}}</a>
           </div>
-          <div class="news_about" >
+          <div class="news_about">
             <strong>版权</strong>
             {{blogData.copyright}}
           </div>
@@ -112,7 +112,8 @@
     -->
     <BlogFooter></BlogFooter>
 
-    <a href="#" class="cd-top">Top</a>
+    <!--返回顶部-->
+    <CdTop></CdTop>
   </body>
 </html>
 </template>
@@ -121,8 +122,18 @@
 import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
-import { getBlogByLevel, getNewBlog, getHotTag, getLink, recorderVisitPage } from "../api/index";
-import { getBlogByUid, getSameBlogByTagUid, getSameBlogByBlogUid } from "../api/blogContent";
+import {
+  getBlogByLevel,
+  getNewBlog,
+  getHotTag,
+  getLink,
+  recorderVisitPage
+} from "../api/index";
+import {
+  getBlogByUid,
+  getSameBlogByTagUid,
+  getSameBlogByBlogUid
+} from "../api/blogContent";
 
 import ThirdRecommend from "../components/ThirdRecommend";
 import FourthRecommend from "../components/FourthRecommend";
@@ -131,6 +142,7 @@ import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import ChangYan from "../components/ChangYan";
 import PayCode from "../components/PayCode";
+import CdTop from "../components/CdTop";
 
 export default {
   name: "info",
@@ -153,7 +165,8 @@ export default {
     FollowUs,
     ChangYan,
     Head,
-    PayCode
+    PayCode,
+    CdTop
   },
   created() {
     getLink().then(response => {
@@ -179,8 +192,7 @@ export default {
 
     var params = new URLSearchParams();
     params.append("pageName", "INFO");
-    recorderVisitPage(params).then(response => {
-    });
+    recorderVisitPage(params).then(response => {});
   },
   methods: {
     //跳转到文章详情
@@ -216,9 +228,9 @@ export default {
     },
     //切割字符串
     subText: function(str, index) {
-      if(str.length < index) {
+      if (str.length < index) {
         return str;
-      } 
+      }
       return str.substring(0, index) + "...";
     }
   }

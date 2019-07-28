@@ -1,48 +1,59 @@
 <template>
 <html>
+  <Head></Head>
 
-<Head></Head>
-
-<body>
-<!--
+  <body>
+    <!--
 	作者：xzx19950624@qq.com
 	时间：2018-07-15
 	描述：顶部标题
--->
-<BlogHead></BlogHead>
+    -->
+    <BlogHead></BlogHead>
 
-<div class="pagebg timer"> </div>
-<div class="container">
-  <h1 class="t_nav"><span>时光飞逝，机会就在我们眼前，何时找到了灵感，就要把握机遇，我们需要智慧和勇气去把握机会。</span><a href="/" class="n1">网站首页</a><a href="javascript:void(0);" class="n2">时间轴</a></h1>
-  <div class="timebox">
-  <ul id="list" style="">
-    <li v-for="item in newBlogData" :key="item.uid"><span>{{formatDate(item.createTime)}}</span><a href="javascript:void(0);" @click="goToInfo(item.uid)" :title="item.title">{{item.title}}</a></li>
-  </ul>
-  <ul id="list2">
-  </ul>
-  </div>
-  <div class="isEnd">
-    <span v-if="!isEnd">正在加载中~</span>  
-    <span v-else>我也是有底线的~</span>  
-  </div>
-</div>
+    <div class="pagebg timer"></div>
+    <div class="container">
+      <h1 class="t_nav">
+        <span>时光飞逝，机会就在我们眼前，何时找到了灵感，就要把握机遇，我们需要智慧和勇气去把握机会。</span>
+        <a href="/" class="n1">网站首页</a>
+        <a href="javascript:void(0);" class="n2">时间轴</a>
+      </h1>
+      <div class="timebox">
+        <ul id="list" style>
+          <li v-for="item in newBlogData" :key="item.uid">
+            <span>{{formatDate(item.createTime)}}</span>
+            <a
+              href="javascript:void(0);"
+              @click="goToInfo(item.uid)"
+              :title="item.title"
+            >{{item.title}}</a>
+          </li>
+        </ul>
+        <ul id="list2"></ul>
+      </div>
+      <div class="isEnd">
+        <span v-if="!isEnd">正在加载中~</span>
+        <span v-else>我也是有底线的~</span>
+      </div>
+    </div>
 
-<!--
+    <!--
 	作者：xzx19950624@qq.com
 	时间：2018-07-15
 	描述：博客底部
--->
-<BlogFooter></BlogFooter>
+    -->
+    <BlogFooter></BlogFooter>
 
-<a href="#" class="cd-top">Top</a>
-</body>
+    <!--返回顶部-->
+    <CdTop></CdTop>
+  </body>
 </html>
 </template>
 
 <script>
-import Head from '../components/Head';
+import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
+import CdTop from "../components/CdTop";
 import { getBlogByTime, recorderVisitPage } from "../api/index";
 export default {
   data() {
@@ -57,7 +68,8 @@ export default {
     //注册组件
     BlogHead,
     BlogFooter,
-    Head
+    Head,
+    CdTop
   },
   mounted() {
     // 注册scroll事件并监听
@@ -84,7 +96,7 @@ export default {
           } else {
             that.isEnd = true;
           }
-          loading = false; 
+          loading = false;
         });
       }
     });
@@ -104,8 +116,7 @@ export default {
 
     var params = new URLSearchParams();
     params.append("pageName", "TIME");
-    recorderVisitPage(params).then(response => {
-    });
+    recorderVisitPage(params).then(response => {});
   },
   methods: {
     //跳转到文章详情
@@ -120,8 +131,8 @@ export default {
       var date = new Date(time);
       var year = date.getFullYear();
       /* 在日期格式中，月份是从0开始的，因此要加0
-   * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
-   * */
+       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+       * */
       var month =
         date.getMonth() + 1 < 10
           ? "0" + (date.getMonth() + 1)

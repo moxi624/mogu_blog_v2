@@ -28,6 +28,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 /**
  * <p>
  * 标签表 RestApi
@@ -147,11 +149,16 @@ public class TagRestApi {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		Tag tag = tagService.getById(uid);
-		
+
 		//查找出最大的那一个
 		QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
-		Tag  maxTag = tagService.getOne(queryWrapper);
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		Page<Tag> page = new Page<>();
+		page.setCurrent(0);
+		page.setSize(1);
+		IPage<Tag> pageList = tagService.page(page,queryWrapper);
+		List<Tag> list = pageList.getRecords();
+		Tag  maxTag = list.get(0);
 		
 		if(StringUtils.isEmpty(maxTag.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 

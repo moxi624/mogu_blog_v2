@@ -176,11 +176,16 @@ public class ResourceSortRestApi {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
 		}		
 		ResourceSort resourceSort = resourceSortService.getById(uid);
-		
+
 		//查找出最大的那一个
 		QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
-		ResourceSort  maxSort = resourceSortService.getOne(queryWrapper);
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		Page<ResourceSort> page = new Page<>();
+		page.setCurrent(0);
+		page.setSize(1);
+		IPage<ResourceSort> pageList = resourceSortService.page(page,queryWrapper);
+		List<ResourceSort> list = pageList.getRecords();
+		ResourceSort  maxSort = list.get(0);
 		
 		if(StringUtils.isEmpty(maxSort.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 

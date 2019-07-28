@@ -36,7 +36,7 @@
 
       <el-table-column label="友链URL" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.url }}</span>
+          <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.url }}</span>
         </template>
       </el-table-column>
 
@@ -251,6 +251,10 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 跳转到友链下
+    onClick: function(row) {            
+      window.open(row.url);
     },
     handleCurrentChange: function(val) {
       console.log("点击了换页");

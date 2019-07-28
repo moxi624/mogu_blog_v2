@@ -114,7 +114,8 @@
     -->
     <BlogFooter></BlogFooter>
 
-    <a href="#" class="cd-top">Top</a>
+    <!--返回顶部-->
+    <CdTop></CdTop>
   </body>
 </html>
 </template>
@@ -129,6 +130,7 @@ import FourthRecommend from "../components/FourthRecommend";
 import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
+import CdTop from "../components/CdTop";
 
 import { recorderVisitPage } from "../api/index";
 import {
@@ -163,7 +165,8 @@ export default {
     TagCloud,
     HotBlog,
     FollowUs,
-    Head
+    Head,
+    CdTop
   },
   created() {
     this.keywords = this.$route.query.keyword;

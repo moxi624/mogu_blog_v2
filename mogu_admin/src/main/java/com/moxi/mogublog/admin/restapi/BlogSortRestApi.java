@@ -27,6 +27,8 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 /**
  * <p>
  * 博客分类表 RestApi
@@ -153,9 +155,14 @@ public class BlogSortRestApi {
 		
 		//查找出最大的那一个
 		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.SORT);		
-		BlogSort  maxSort = blogSortService.getOne(queryWrapper);
-		
+		queryWrapper.orderByDesc(SQLConf.SORT);
+		Page<BlogSort> page = new Page<>();
+		page.setCurrent(0);
+		page.setSize(1);
+		IPage<BlogSort> pageList = blogSortService.page(page,queryWrapper);
+		List<BlogSort> list = pageList.getRecords();
+		BlogSort  maxSort = list.get(0);
+
 		if(StringUtils.isEmpty(maxSort.getUid())) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误"); 
 		}

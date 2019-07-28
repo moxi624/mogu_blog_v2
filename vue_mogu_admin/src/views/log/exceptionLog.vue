@@ -32,7 +32,7 @@
 	      </template>
 	    </el-table-column> -->
 
-      <el-table-column label="异常内容" width="300">
+      <el-table-column label="异常内容" width="700">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.exceptionMessage }}</span>
 	      </template>

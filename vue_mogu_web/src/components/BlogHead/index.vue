@@ -1,5 +1,5 @@
 <template>
-  <header class="header-navigation" id="header">
+  <header :class="isVisible?'header-navigation slideDown':'header-navigation slideUp'" id="header">
     <nav>
       <div class="logo">
         <a href="javascript:void(0);" @click="goTo('/')" v-if="info.name">{{info.name}}</a>
@@ -47,7 +47,6 @@ export default {
   name: "Head",
   created() {
     var tempValue = decodeURI(this.getUrlVars()["keyword"]);
-    console.log("输出的关键字", tempValue);
     if (
       tempValue == null ||
       tempValue == undefined ||
@@ -58,7 +57,6 @@ export default {
     }
 
     getWebConfig().then(response => {
-      console.log("获取网站配置", response);
       if (response.code == "success") {
         this.info = response.data;
       }
@@ -69,14 +67,28 @@ export default {
       BaseBlog: BASE_BLOG_API,
       keyword: "",
       info: {},
-      showSearch: false,  // 控制搜索框的弹出
+      showSearch: false, // 控制搜索框的弹出
       showHead: false, //控制导航栏的弹出
+      isVisible: true //控制web端导航的隐藏和现实
     };
   },
   watch: {
     $route(to, from) {
       this.$router.go(0);
     }
+  },
+  mounted() {
+    var that = this;
+    var after = 0;
+    window.addEventListener("scroll", function() {
+      let scrollTop = document.documentElement.scrollTop; //当前的的位置
+      if (scrollTop > after) {
+        that.isVisible = false;
+      } else {
+        that.isVisible = true;
+      }
+      after = scrollTop;
+    });
   },
   methods: {
     goTo: function(url) {
@@ -109,7 +121,6 @@ export default {
         return;
       }
       this.$router.push({ path: "/list", query: { keyword: this.keyword } });
-      console.log("输出关键字", this.getUrlVars()["keyword"]);
     },
     getUrlVars: function() {
       var vars = {};
@@ -123,10 +134,8 @@ export default {
     },
     clickSearchIco: function() {
       this.showSearch = !this.showSearch;
-      console.log("点击了搜索图标", this.showSearch);
     },
     openHead: function() {
-      console.log("点击弹出导航");
       this.showHead = !this.showHead;
     }
   }

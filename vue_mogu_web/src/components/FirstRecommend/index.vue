@@ -59,7 +59,6 @@ export default {
     var params = new URLSearchParams();
     params.append("level", 1);
     getBlogByLevel(params).then(response => {
-      console.log("一级推荐", response);
       this.slideList = response.data.records;
     });
   },

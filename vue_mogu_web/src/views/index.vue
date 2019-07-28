@@ -70,10 +70,10 @@
 
         <div class="isEnd">
           <!-- <span v-if="!isEnd">正在加载中~</span> -->
-          
-          <div class="loadContent" @click="loadContent" v-if="!isEnd&&!loading">点击加载更多</div>  
 
-          <div class="lds-css ng-scope" v-if="!isEnd&&loading" >
+          <div class="loadContent" @click="loadContent" v-if="!isEnd&&!loading">点击加载更多</div>
+
+          <div class="lds-css ng-scope" v-if="!isEnd&&loading">
             <div style="width:100%;height:100%" class="lds-facebook">
               <div></div>
               <div></div>
@@ -82,11 +82,7 @@
           </div>
 
           <span v-if="isEnd">我也是有底线的~</span>
-
         </div>
-
-        
-
       </div>
       <!--blogsbox end-->
 
@@ -117,7 +113,8 @@
     -->
     <BlogFooter></BlogFooter>
 
-    <a href="#" class="cd-top">Top</a>
+    <!--返回顶部-->
+    <CdTop></CdTop>
   </body>
 </html>
 </template>
@@ -133,6 +130,7 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import Link from "../components/Link";
+import CdTop from "../components/CdTop";
 import {
   getBlogByLevel,
   getNewBlog,
@@ -153,7 +151,8 @@ export default {
     HotBlog,
     FollowUs,
     Link,
-    Head
+    Head,
+    CdTop
   },
   data() {
     return {
@@ -169,7 +168,7 @@ export default {
       pageSize: 15,
       total: 0, //总数量
       isEnd: false, //是否到底底部了
-      loading: false, //是否正在加载
+      loading: false //是否正在加载
     };
   },
   mounted() {
@@ -276,7 +275,7 @@ export default {
           that.currentPage = response.data.current;
 
           //全部加载完毕
-          if(newData.length < that.pageSize) {
+          if (newData.length < that.pageSize) {
             that.isEnd = true;
           }
         } else {
@@ -311,7 +310,7 @@ export default {
   margin: 0 auto;
   color: aliceblue;
   cursor: pointer;
-  background: #d88c51;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 @keyframes lds-facebook_1 {
