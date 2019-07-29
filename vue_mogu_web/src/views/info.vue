@@ -1,6 +1,8 @@
 <template>
 <html>
-  <Head></Head>
+  <Head>
+
+  </Head>
 
   <body>
     <!--
@@ -13,7 +15,11 @@
     <article>
       <h1 class="t_nav">
         <a href="/" class="n1">网站首页</a>
-        <a href="/" class="n2">{{blogData.blogSort.sortName}}</a>
+        <a
+          href="javascript:void(0);"
+          @click="goToSortList(blogData.blogSort.uid)"
+          class="n2"
+        >{{blogData.blogSort.sortName}}</a>
       </h1>
       <div class="infosbox">
         <div class="newsview">
@@ -49,7 +55,7 @@
             {{blogData.copyright}}
           </div>
           <div
-            class="news_con"
+            class="news_con fixck"
             v-html="blogData.content"
             v-highlight
             @click="imageChange"
@@ -122,6 +128,7 @@
 import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
+
 import {
   getBlogByLevel,
   getNewBlog,
@@ -238,4 +245,65 @@ export default {
 </script>
 
 <style>
+/* .fixck {
+    font-family: Arial, Verdana, sans-serif !important;
+    font-size: 12px !important;
+    color: #222 !important;
+    line-height: normal !important;
+}
+ 
+.fixck p {
+    margin: 12px 0 !important;
+}
+ 
+.fixck a {
+    text-decoration: underline !important;
+    color: #00E !important;
+}
+ 
+.fixck ul,
+.fixck ol {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+}
+.fixck ul {
+    list-style: disc outside none !important;
+}
+.fixck ol {
+    list-style: decimal outside none !important;
+}
+.fixck li {
+    display: list-item !important;
+}
+ 
+.fixck h1 {
+    font-weight: bold !important;
+    font-size: 32px !important;
+    margin: 21px 0 !important;
+}
+.fixck h2 {
+    font-weight: bold !important;
+    font-size: 24px !important;
+    margin: 19px 0 !important;
+}
+.fixck h3 {
+    font-weight: bold !important;
+    font-size: 19px !important;
+    margin: 18px 0 !important;
+}
+.fixck h4 {
+    font-weight: bold !important;
+    font-size: 16px !important;
+    margin: 21px 0 !important;
+}
+.fixck h5 {
+    font-weight: bold !important;
+    font-size: 13px !important;
+    margin: 22px 0 !important;
+}
+.fixck h6 {
+    font-weight: bold !important;
+    font-size: 11px !important;
+    margin: 24px 0 !important;
+} */
 </style>

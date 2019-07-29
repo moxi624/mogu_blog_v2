@@ -49,11 +49,10 @@ CKEDITOR.editorConfig = function (config) {
 
 	//添加插件，多个插件用逗号隔开
 	// codesnippet: 代码块   ， uploadimage: 上传图片,  colorbutton: 颜色按钮
-	config.extraPlugins = 'codesnippet,panelbutton,floatpanel,colorbutton,markdown,colordialog,dialog,dialogui,smiley';
+	config.extraPlugins = 'codesnippet,panelbutton,floatpanel,colorbutton,markdown,colordialog,dialog,dialogui,smiley,widget,lineutils,eqneditor';
 
 	//设置前景色的取值 plugins/colorbutton/plugin.js
 	config.colorButton_colors = "000,800000,8B4513,2F4F4F,008080,000080,4B0082,696969,B22222,A52A2A,DAA520,006400,40E0D0,0000CD,800080,808080,F00,FF8C00,FFD700,008000,0FF,00F,EE82EE,A9A9A9,FFA07A,FFA500,FFFF00,00FF00,AFEEEE,ADD8E6,DDA0DD,D3D3D3,FFF0F5,FAEBD7,FFFFE0,F0FFF0,F0FFFF,F0F8FF,E6E6FA,FFF";
-
 
 	//配置代码块风格
 	codeSnippet_theme: 'zenburn';

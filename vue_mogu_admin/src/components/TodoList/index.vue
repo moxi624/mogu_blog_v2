@@ -63,7 +63,7 @@ export default {
   components: { Todo },
   data() {
     return {
-      visibility: "all",
+      visibility: "active",
       filters,
       // todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY)) || defalutList
       todos: []

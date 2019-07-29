@@ -1,7 +1,78 @@
-﻿/*
- Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
- For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
-*/
-CKEDITOR.dialog.add("mathjax",function(d){var c,b=d.lang.mathjax;return{title:b.title,minWidth:350,minHeight:100,contents:[{id:"info",elements:[{id:"equation",type:"textarea",label:b.dialogInput,onLoad:function(){var a=this;if(!CKEDITOR.env.ie||8!=CKEDITOR.env.version)this.getInputElement().on("keyup",function(){c.setValue("\\("+a.getInputElement().getValue()+"\\)")})},setup:function(a){this.setValue(CKEDITOR.plugins.mathjax.trim(a.data.math))},commit:function(a){a.setData("math","\\("+this.getValue()+
-"\\)")}},{id:"documentation",type:"html",html:'\x3cdiv style\x3d"width:100%;text-align:right;margin:-8px 0 10px"\x3e\x3ca class\x3d"cke_mathjax_doc" href\x3d"'+b.docUrl+'" target\x3d"_black" style\x3d"cursor:pointer;color:#00B2CE;text-decoration:underline"\x3e'+b.docLabel+"\x3c/a\x3e\x3c/div\x3e"},!(CKEDITOR.env.ie&&8==CKEDITOR.env.version)&&{id:"preview",type:"html",html:'\x3cdiv style\x3d"width:100%;text-align:center;"\x3e\x3ciframe style\x3d"border:0;width:0;height:0;font-size:20px" scrolling\x3d"no" frameborder\x3d"0" allowTransparency\x3d"true" src\x3d"'+
-CKEDITOR.plugins.mathjax.fixSrc+'"\x3e\x3c/iframe\x3e\x3c/div\x3e',onLoad:function(){var a=CKEDITOR.document.getById(this.domId).getChild(0);c=new CKEDITOR.plugins.mathjax.frameWrapper(a,d)},setup:function(a){c.setValue(a.data.math)}}]}]}});
+/**
+ * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+'use strict';
+
+CKEDITOR.dialog.add( 'mathjax', function( editor ) {
+
+	var preview,
+		lang = editor.lang.mathjax;
+
+	return {
+		title: lang.title,
+		minWidth: 350,
+		minHeight: 100,
+		contents: [
+			{
+				id: 'info',
+				elements: [
+					{
+						id: 'equation',
+						type: 'textarea',
+						label: lang.dialogInput,
+
+						onLoad: function() {
+							var that = this;
+
+							if ( !( CKEDITOR.env.ie && CKEDITOR.env.version == 8 ) ) {
+								this.getInputElement().on( 'keyup', function() {
+									// Add \( and \) for preview.
+									preview.setValue( '\\(' + that.getInputElement().getValue() + '\\)' );
+								} );
+							}
+						},
+
+						setup: function( widget ) {
+							// Remove \( and \).
+							this.setValue( CKEDITOR.plugins.mathjax.trim( widget.data.math ) );
+						},
+
+						commit: function( widget ) {
+							// Add \( and \) to make TeX be parsed by MathJax by default.
+							widget.setData( 'math', '\\(' + this.getValue() + '\\)' );
+						}
+					},
+					{
+						id: 'documentation',
+						type: 'html',
+						html:
+							'<div style="width:100%;text-align:right;margin:-8px 0 10px">' +
+								'<a class="cke_mathjax_doc" href="' + lang.docUrl + '" target="_black" style="cursor:pointer;color:#00B2CE;text-decoration:underline">' +
+									lang.docLabel +
+								'</a>' +
+							'</div>'
+					},
+					( !( CKEDITOR.env.ie && CKEDITOR.env.version == 8 ) ) && {
+						id: 'preview',
+						type: 'html',
+						html:
+							'<div style="width:100%;text-align:center;">' +
+								'<iframe style="border:0;width:0;height:0;font-size:20px" scrolling="no" frameborder="0" allowTransparency="true" src="' + CKEDITOR.plugins.mathjax.fixSrc + '"></iframe>' +
+							'</div>',
+
+						onLoad: function() {
+							var iFrame = CKEDITOR.document.getById( this.domId ).getChild( 0 );
+							preview = new CKEDITOR.plugins.mathjax.frameWrapper( iFrame, editor );
+						},
+
+						setup: function( widget ) {
+							preview.setValue( widget.data.math );
+						}
+					}
+				]
+			}
+		]
+	};
+} );
