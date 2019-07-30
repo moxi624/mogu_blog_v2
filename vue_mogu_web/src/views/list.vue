@@ -58,21 +58,13 @@
         </div>
 
         <div class="isEnd">
-          <!-- <span v-if="blogData.length> 0">
-        <span v-if="!isEnd">正在加载中~</span>  
-        <span v-else>我也是有底线的~</span>    
-      </span>
-      <span v-else>
-        <span>空空如也~</span>    
-          </span>-->
-
           <div
             class="loadContent"
             @click="loadContent"
-            v-if="blogData.length > 0 && !isEnd&&!loading"
+            v-if="!isEnd && !loading && totalPages>0"
           >点击加载更多</div>
 
-          <div class="lds-css ng-scope" v-if="blogData.length > 0 && !isEnd&&loading">
+          <div class="lds-css ng-scope" v-if="!isEnd && loading">
             <div style="width:100%;height:100%" class="lds-facebook">
               <div></div>
               <div></div>
@@ -80,9 +72,9 @@
             </div>
           </div>
 
-          <span v-if="blogData.length > 0 && isEnd">我也是有底线的~</span>
+          <span v-if="blogData.length >= 0 && isEnd &&!loading && totalPages>0">我也是有底线的~</span>
 
-          <span v-if="blogData.length == 0">空空如也~</span>
+          <span v-if="totalPages == 0 && !loading">空空如也~</span>
         </div>
       </div>
       <!--blogsbox end-->
@@ -147,12 +139,13 @@ export default {
       blogData: [],
       keywords: "",
       currentPage: 1,
+      totalPages: 0,
       pageSize: 10,
       total: 0, //总数量
-      isEnd: false, //是否到底底部了
       tagUid: "",
       searchBlogData: [], //搜索出来的文章
       sortUid: "",
+      isEnd: false, //是否到底底部了
       loading: false //内容是否正在加载
     };
   },
@@ -221,12 +214,12 @@ export default {
     // 加载内容
     loadContent: function() {
       var that = this;
-      that.loading = true;
       that.currentPage = that.currentPage + 1;
       that.search();
     },
     search: function() {
       var that = this;
+      that.loading = true;
       if (this.keywords != undefined) {
         var params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
@@ -235,7 +228,12 @@ export default {
 
         searchBlog(params).then(response => {
           if (response.code == "success" && response.data.rows.length > 0) {
+            
             that.isEnd = false;
+            
+            //获取总页数
+            that.totalPages = response.data.totalPages;
+
             var blogData = response.data.rows;
 
             for (var i = 0; i < blogData.length; i++) {
@@ -249,6 +247,10 @@ export default {
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
             this.blogData = blogData;
+            //全部加载完毕
+            if (blogData.length < that.pageSize) {
+              that.isEnd = true;
+            }
           } else {
             that.isEnd = true;
           }
