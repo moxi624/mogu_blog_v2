@@ -1,8 +1,6 @@
 <template>
 <html>
-  <Head>
-
-  </Head>
+  <Head></Head>
 
   <body>
     <!--
@@ -19,12 +17,12 @@
           href="javascript:void(0);"
           @click="goToSortList(blogData.blogSort.uid)"
           class="n2"
-        >{{blogData.blogSort.sortName}}</a>
+        >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
       </h1>
       <div class="infosbox">
         <div class="newsview">
           <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
-          <div class="bloginfo">
+          <div class="bloginfo" v-if="blogData.blogSort">
             <ul>
               <li class="author">
                 <a href="/">{{blogData.author}}</a>
@@ -32,8 +30,8 @@
               <li class="lmname">
                 <a
                   href="javascript:void(0);"
-                  @click="goToSortList(blogData.blogSort.uid)"
-                >{{blogData.blogSort.sortName}}</a>
+                  @click="goToSortList(blogData.blogSort == null ?'':blogData.blogSort.uid)"
+                >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
               </li>
               <li class="timer">{{blogData.createTime}}</li>
               <li class="view">{{blogData.clickCount}}</li>
@@ -176,6 +174,7 @@ export default {
     CdTop
   },
   created() {
+
     getLink().then(response => {
       this.linkData = response.data.records;
     });
@@ -184,6 +183,7 @@ export default {
     this.blogUid = this.$route.query.blogUid;
     params.append("uid", this.blogUid);
     getBlogByUid(params).then(response => {
+      console.log("返回的Blog数据", response.data)
       if (response.code == "success") {
         this.blogData = response.data;
       }
@@ -245,65 +245,73 @@ export default {
 </script>
 
 <style>
-/* .fixck {
-    font-family: Arial, Verdana, sans-serif !important;
-    font-size: 12px !important;
-    color: #222 !important;
-    line-height: normal !important;
+.fixck {
+  /* font-family: Arial, Verdana, sans-serif !important;
+  font-size: 12px !important;
+  color: #222 !important;
+  line-height: normal !important; */
 }
- 
+
 .fixck p {
-    margin: 12px 0 !important;
+  margin: 12px 0 !important;
 }
- 
+
 .fixck a {
-    text-decoration: underline !important;
-    color: #00E !important;
+  text-decoration: underline !important;
+  color: #00e !important;
 }
+
+.fixck ul li {
+  list-style: disc;
  
+}
+.fixck ol li {
+  list-style: decimal;
+}
 .fixck ul,
 .fixck ol {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
 }
-.fixck ul {
-    list-style: disc outside none !important;
-}
-.fixck ol {
-    list-style: decimal outside none !important;
-}
+
 .fixck li {
-    display: list-item !important;
+  display: list-item !important;
 }
- 
+
 .fixck h1 {
-    font-weight: bold !important;
-    font-size: 32px !important;
-    margin: 21px 0 !important;
+  font-weight: bold !important;
+  font-size: 32px !important;
+  margin: 21px 0 !important;
 }
 .fixck h2 {
-    font-weight: bold !important;
-    font-size: 24px !important;
-    margin: 19px 0 !important;
+  font-weight: bold !important;
+  font-size: 24px !important;
+  margin: 19px 0 !important;
 }
 .fixck h3 {
-    font-weight: bold !important;
-    font-size: 19px !important;
-    margin: 18px 0 !important;
+  font-weight: bold !important;
+  font-size: 19px !important;
+  margin: 18px 0 !important;
 }
 .fixck h4 {
-    font-weight: bold !important;
-    font-size: 16px !important;
-    margin: 21px 0 !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  margin: 21px 0 !important;
 }
 .fixck h5 {
-    font-weight: bold !important;
-    font-size: 13px !important;
-    margin: 22px 0 !important;
+  font-weight: bold !important;
+  font-size: 13px !important;
+  margin: 22px 0 !important;
 }
 .fixck h6 {
-    font-weight: bold !important;
-    font-size: 11px !important;
-    margin: 24px 0 !important;
-} */
+  font-weight: bold !important;
+  font-size: 11px !important;
+  margin: 24px 0 !important;
+}
+
+.news_con {
+  line-height: 1.8;
+  font-size: 16px;
+  text-align: justify;
+}
 </style>

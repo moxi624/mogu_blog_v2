@@ -12,7 +12,7 @@ a:hover { text-decoration: none; color: #00A7EB; }
 .f_l { float: left }
 .f_r { float: right }
 .mt20 { margin-top: 20px }
-article { width: 1140px; margin: 80px auto 0; overflow: hidden }
+article { width: 1200px; margin: 80px auto 0; overflow: hidden }
 .tophead { width: 1200px; margin: 0 auto 10px; overflow: hidden; }
 header { position: fixed; top: 0; z-index: 99999 }
 .container { width: 1140px; margin: 20px auto }
