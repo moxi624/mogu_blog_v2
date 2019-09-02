@@ -1,0 +1,68 @@
+{
+  "name": "xc-portal",
+  "version": "1.0.0",
+  "description": "xc-portal",
+  "author": "mrt_0607@126.com",
+  "private": true,
+  "dependencies": {
+    "@koa/cors": "^2.2.1",
+    "@nuxtjs/pwa": "^2.0.5",
+    "Base64": "^1.0.1",
+    "axios": "^0.17.1",
+    "bootstrap-vue": "^2.0.0-rc.1",
+    "cross-env": "^5.0.1",
+    "element-ui": "^2.12.0",
+    "formidable": "^1.1.1",
+    "highlight.js": "^9.15.10",
+    "jsonwebtoken": "^8.1.1",
+    "jwt-decode": "^2.2.0",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.3.0",
+    "koa-static": "^4.0.2",
+    "markdown-it": "^8.4.0",
+    "md5": "^2.2.1",
+    "mongoose": "^5.0.1",
+    "nuxt": "1.3.0",
+    "postcss-cssnext": "^3.0.2",
+    "postcss-import": "^11.0.0",
+    "postcss-url": "^7.3.0",
+    "source-map-support": "^0.4.15",
+    "top-editor": "^0.0.6",
+    "vue-highlight.js": "^3.1.0",
+    "vue-highlightjs": "^1.3.3"
+  },
+  "devDependencies": {
+    "@nuxtjs/axios": "^5.1.1",
+    "@nuxtjs/proxy": "^1.1.4",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-component": "^1.1.0",
+    "babel-preset-latest-node": "^0.4.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "backpack-core": "^0.3.0",
+    "eslint": "^3.13.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-html": "^2.0.3",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "nodemon": "^1.11.0",
+    "scmp": "^2.0.0"
+  },
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "10000"
+    }
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .eslintignore .",
+    "precommit": "npm run lint"
+  }
+}
