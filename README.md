@@ -16,11 +16,12 @@
 </p>
 
 ## 项目介绍
-蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
+蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Nuxt +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合自己的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
 - 现在挺多是SSM或者SSH的博客管理系统，现在我想用spring boot + spring cloud  + vue 的微服务架构
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
+- 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发
 
 ## 目录介绍
 
@@ -36,19 +37,21 @@
 - mogu_config: 是存放一些配置
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
-- vue_mogu_web：VUE的前台页面
+- vue_mogu_web：VUE的门户网站
+- nuxt_mogu_web：Nuxt的门户网站
 
 ## 技术架构
 
 - 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼、RabbitMQ
-- 前端采用的技术： Vue， Element， ES6， CKEditor
+- 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 
 ## 项目特点
 
 - 友好的代码结构及注释，便于阅读及二次开发
 - 实现前后端分离，通过Json进行数据交互，前端再也不用关注后端技术
+- 利于SEO优化，让博客能够搜索到。
 - 页面交互使用Vue2.x，极大的提高了开发效率。
-- 引入swagger文档支持，方便编写API接口文档
+- 引入swagger文档支持，方便编写API接口文档。
 - 引入RabbitMQ消息队列，用于邮件和短信发送。
 
 ## Windows环境下搭建蘑菇博客
@@ -69,7 +72,7 @@
 - 安装 RabbitMQ （3.7.4）
 - 安装 Erlang (20.3) （安装RabbitMQ还需要Erlang）
 - 安装 Nginx
-- 安装IDE （推荐安装STS）
+- 安装IDE （STS或IDEA）
 
 ## 启动顺序
 
