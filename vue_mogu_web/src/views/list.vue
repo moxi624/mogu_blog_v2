@@ -374,7 +374,7 @@ export default {
   margin: 0 auto;
   color: aliceblue;
   cursor: pointer;
-  background: #d88c51;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 @keyframes lds-facebook_1 {
