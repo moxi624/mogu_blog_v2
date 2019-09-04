@@ -95,13 +95,15 @@
         <div class="loadContent">
           <span>
             <div v-if="currentPage - 1 <= 0">上一页</div>
-            <a v-if="currentPage - 1 > 0" :href="'/home?currentPage=' + (currentPage - 1) ">上一页</a>
+            <a v-if="currentPage - 1 > 0" :href="'/home?currentPage=' + (currentPage - 1)">上一页</a>
           </span>
-          <input :value="currentPage" @change="change">
-          <span @click="to()">跳转</span>
+          <input v-model="currentPage" @change="change">
+          <span>
+            <a :href="'/home?currentPage=' + currentPage">跳转</a>
+          </span>
           <span>
             <div v-if="currentPage*pageSize >= total">下一页</div>
-            <a v-if="currentPage*pageSize < total" :href="'/home?currentPage=' + (currentPage + 1) ">下一页</a>
+            <a v-if="currentPage*pageSize < total" :href="'/home?currentPage=' + (currentPage + 1)">下一页</a>
           </span>
         </div>
       </div>
@@ -289,7 +291,7 @@ export default {
       currentPage = 1;
     }
     if (!pageSize) {
-      pageSize = 10;
+      pageSize = 13;
     }
 
     var params = new URLSearchParams();
@@ -330,7 +332,7 @@ export default {
 
     if (response.code == "success") {
       return {
-        BASE_BLOG_API: config.BASE_BLOG_API,
+        BASE_BLOG_API: process.env.BASE_BLOG_API,
         currentPage: currentPage,
         slideList: firstResponse.data.records,
         secondData: secondResponse.data.records,
@@ -349,6 +351,7 @@ export default {
       };
     } else {
       return {
+        BASE_BLOG_API: process.env.BASE_BLOG_API,
         slideList: [],
         secondData: [],
         thirdData: [],
@@ -393,8 +396,8 @@ export default {
   },
   methods: {
     to: function() {
-      console.log(this.currentPage);
-      this.$router.push(`/home?currentPage=` + this.currentPage);
+      // console.log(this.currentPage);
+      // this.$router.push(`/home?currentPage=` + this.currentPage);
     },
     go() {
       this.timer = setInterval(() => {
@@ -717,6 +720,7 @@ img {
   width: 400px;
   height: 30px;
   margin: 0 auto;
+  margin-bottom: 10px;
   color: aliceblue;
 }
 .loadContent span {
@@ -728,6 +732,10 @@ img {
   margin-right: 10px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.8);
+}
+
+.loadContent span a{
+  color:wheat;
 }
 
 .loadContent input {

@@ -4,7 +4,7 @@ let config = require('~/config/sysConfig')
 
 export function searchBlog (params) {
   return request({
-    url: config.WEB_API + '/search/searchBlog',
+    url: process.env.WEB_API + '/search/searchBlog',
     method: 'get',
     params
   })
@@ -12,7 +12,7 @@ export function searchBlog (params) {
 
 export function searchBlogByTag (params) {
   return request({
-    url: config.WEB_API + '/search/searchBlogByTag',
+    url: process.env.WEB_API + '/search/searchBlogByTag',
     method: 'get',
     params
   })
@@ -20,7 +20,7 @@ export function searchBlogByTag (params) {
 
 export function searchBlogBySort (params) {
   return request({
-    url: config.WEB_API + '/search/searchBlogBySort',
+    url: process.env.WEB_API + '/search/searchBlogBySort',
     method: 'get',
     params
   })
@@ -28,7 +28,7 @@ export function searchBlogBySort (params) {
 
 export function searchBlogByAuthor (params) {
   return request({
-    url: config.WEB_API + '/search/searchBlogByAuthor',
+    url: process.env.WEB_API + '/search/searchBlogByAuthor',
     method: 'get',
     params
   })

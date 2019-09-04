@@ -18,7 +18,11 @@ module.exports = {
     'highlight.js/styles/github.css',
     'element-ui/lib/theme-chalk/index.css',
   ],
-  loaders:[
+  env: {
+    WEB_API: process.env.WEB_API,
+    BASE_BLOG_API: process.env.BASE_BLOG_API,
+  },
+  loaders: [
     {
       test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
       loader: 'url-loader',
@@ -37,7 +41,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['axios','element-ui'],
+    vendor: ['axios', 'element-ui'],
     /*extend (config, { isDev, isClient }) {
       if (isDev && isClient) {
         config.module.rules.push({
@@ -51,11 +55,11 @@ module.exports = {
 
 
   },
-  css:["~static/css/index.css","~static/highlight/styles/zenburn.css"],
-  modules: ['@nuxtjs/pwa', '@nuxtjs/axios','@nuxtjs/proxy'],
-  plugins: [{src: '~plugins/element-ui', ssr: true}, {src: '~plugins/highlight', ssr: true}],
+  css: ["~static/css/index.css", "~static/highlight/styles/zenburn.css"],
+  modules: ['@nuxtjs/pwa', '@nuxtjs/axios', '@nuxtjs/proxy'],
+  plugins: [{ src: '~plugins/element-ui', ssr: true }, { src: '~plugins/highlight', ssr: true }],
   proxy: [
-/*    ['/group1', { target: 'http://192.168.101.64' }],
-    ['/search', { target: 'http://127.0.0.1:40100',pathRewrite: { '^/search' : '/' } }]*/
+    /*    ['/group1', { target: 'http://192.168.101.64' }],
+        ['/search', { target: 'http://127.0.0.1:40100',pathRewrite: { '^/search' : '/' } }]*/
   ]
 }
