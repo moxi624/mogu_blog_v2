@@ -5,7 +5,7 @@ var sysConfig = {
     backStaticURL: 'http://www.xuecheng.com/static',
     imgUrl:'http://img.xuecheng.com',
     videoUrl:'http://video.xuecheng.com',
-    BASE_BLOG_API: '"http://localhost:9527"',
+    BASE_BLOG_API: 'http://localhost:10000',
     PICTURE_API: 'http://localhost:8602',
     WEB_API: 'http://localhost:8603',
 }
