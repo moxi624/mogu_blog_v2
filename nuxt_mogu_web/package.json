@@ -60,9 +60,10 @@
   "scripts": {
     "dev": "cross-env WEB_API=http://localhost:8603 BASE_BLOG_API=http://localhost:10000 nuxt",
     "build": "cross-env WEB_API=http://120.79.70.126:8080/mogu_web BASE_BLOG_API=http://120.79.70.126:10000 nuxt build",
-    "start": "cross-env WEB_API=http://localhost:8603 BASE_BLOG_API=http://localhost:10000 nuxt start",
+    "start": "cross-env WEB_API=http://120.79.70.126:8080/mogu_web BASE_BLOG_API=http://120.79.70.126:10000 nuxt start",
     "generate": "cross-env WEB_API=http://120.79.70.126:8080/mogu_web BASE_BLOG_API=http://120.79.70.126:10000 nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .eslintignore .",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "server":"live-server ./ --port=10000"
   }
 }

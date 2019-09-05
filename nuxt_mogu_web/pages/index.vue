@@ -256,7 +256,6 @@
                 {{contact.weChat}}
               </a>
             </li>
-            <!-- <li class="wx"><img src="../../../static/images/wx.jpg"></li> -->
           </ul>
         </div>
         <!--关注我们 介绍-->
@@ -268,7 +267,6 @@
 //配置文件
 let config = require("~/config/sysConfig");
 import querystring from "querystring";
-import * as courseApi from "~/api/course";
 
 import {
   getBlogByLevel,

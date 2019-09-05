@@ -1,6 +1,7 @@
 <template>
   <div>
     <article>
+
       <!--banner begin-->
       <div class="picsbox">
         <div class="banner">
@@ -256,19 +257,17 @@
                 {{contact.weChat}}
               </a>
             </li>
-            <!-- <li class="wx"><img src="../../../static/images/wx.jpg"></li> -->
           </ul>
         </div>
         <!--关注我们 介绍-->
+
       </div>
     </article>
   </div>
 </template>
 <script>
 //配置文件
-let config = require("~/config/sysConfig");
 import querystring from "querystring";
-import * as courseApi from "~/api/course";
 
 import {
   getBlogByLevel,
@@ -367,12 +366,6 @@ export default {
         currentPage: 1,
         pageSize: 10
       };
-    }
-  },
-  //自定义过虑器
-  filters: {
-    money: function(value) {
-      return Math.floor(value);
     }
   },
   data() {
