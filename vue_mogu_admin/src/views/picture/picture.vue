@@ -78,7 +78,7 @@ export default {
       loading: true,
       currentPage: 1,
       total: null,
-      pageSize: 10,
+      pageSize: 14,
       title: "增加图片",
       dialogFormVisible: false,
       keyword: ""

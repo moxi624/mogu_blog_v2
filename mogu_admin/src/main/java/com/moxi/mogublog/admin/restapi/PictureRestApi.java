@@ -70,7 +70,7 @@ public class PictureRestApi {
 			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
 			@ApiParam(name = "pictureSortUid", value = "图片分类UID",required = true) @RequestParam(name = "pictureSortUid", required = true) String pictureSortUid,
 			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "14") Long pageSize) {
 		
 		if(StringUtils.isEmpty(pictureSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");

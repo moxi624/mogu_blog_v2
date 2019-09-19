@@ -108,7 +108,7 @@ public class PictureSortRestApi {
 				item.setPhotoList(pictureListTemp);
 			}	
 		}
-		
+		pageList.setRecords(list);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
@@ -205,6 +205,19 @@ public class PictureSortRestApi {
 		pictureSort.updateById();
 		
 		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+	}
+
+	@OperationLogger(value="通过Uid获取分类")
+	@ApiOperation(value="通过Uid获取分类", notes="通过Uid获取分类", response = String.class)
+	@PostMapping("/getPictureSortByUid")
+	public String getPictureSortByUid(HttpServletRequest request,
+						@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid) {
+
+		if(StringUtils.isEmpty(uid)) {
+			return ResultUtil.result(SysConf.ERROR, "数据错误");
+		}
+		PictureSort pictureSort = pictureSortService.getById(uid);
+		return ResultUtil.result(SysConf.SUCCESS, pictureSort);
 	}
 }
 

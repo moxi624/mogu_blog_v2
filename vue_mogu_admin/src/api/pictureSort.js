@@ -39,3 +39,11 @@ export function stickPictureSort(params) {
     params
   })
 }
+
+export function getPictureSortByUid(params) {
+  return request({
+    url: process.env.ADMIN_API + '/pictureSort/getPictureSortByUid',
+    method: 'post',
+    params
+  })
+}
