@@ -222,6 +222,7 @@ public class BlogContentRestApi {
 		page.setSize(pageSize);
 		queryWrapper.eq(SQLConf.TagUid, tagUid);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();		
 		for(Blog item : list) {
@@ -237,7 +238,7 @@ public class BlogContentRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
 	
-	@ApiOperation(value="根据BlogUid获取相关的博客", notes="根据标签获取相关的博客")
+	@ApiOperation(value="根据BlogUid获取相关的博客", notes="根据BlogUid获取相关的博客")
 	@GetMapping("/getSameBlogByBlogUid")
 	public String getSameBlogByBlogUid (HttpServletRequest request,
 			@ApiParam(name = "blogUid", value = "博客标签UID",required = true) @RequestParam(name = "blogUid", required = true) String blogUid,
@@ -254,6 +255,7 @@ public class BlogContentRestApi {
 		}
 				
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 		Page<Blog> page = new Page<>();
 		page.setCurrent(currentPage);
 		page.setSize(pageSize);
