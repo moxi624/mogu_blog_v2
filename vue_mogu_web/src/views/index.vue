@@ -19,7 +19,7 @@
         <!-- 二级推荐 -->
         <div class="toppic">
           <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
-            <a href="javascript:void(0);" target="_blank">
+            <a href="javascript:void(0);">
               <i>
                 <img :src="item.photoList[0]">
               </i>
@@ -40,7 +40,7 @@
           data-scroll-reveal="enter bottom over 1s"
         >
           <h3 class="blogtitle">
-            <a href="javascript:void(0);" @click="goToInfo(item.uid)" target="_blank">{{item.title}}</a>
+            <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
           </h3>
           <span class="blogpic">
             <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
