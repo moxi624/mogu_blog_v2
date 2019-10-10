@@ -35,7 +35,7 @@
         }
         c.appendChild(b);
       };
-      loadJs("//120.79.70.126:8600/blog/resource/java/Chanyan/changyan.js", function() {
+      loadJs("//101.132.194.128:8600/blog/resource/java/Chanyan/changyan.js", function() {
         window.changyan.api.config({ appid: appid, conf: conf });
       });
     }
