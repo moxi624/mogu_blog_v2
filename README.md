@@ -80,9 +80,10 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 
 ## 致谢
 
-- 感谢杨青小姐姐的博客模板，http://www.yangqq.com/
+- 感谢**杨青小姐姐**的博客模板，http://www.yangqq.com/
 - Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
-- 感谢苞米豆提供的Mybatis-plus框架：http://mp.baomidou.com/
+- 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
+- 感谢**JetBrains**对开源的支持： https://www.jetbrains.com/?from=mogu_blog_v2 
 
 ## 相关截图
 
