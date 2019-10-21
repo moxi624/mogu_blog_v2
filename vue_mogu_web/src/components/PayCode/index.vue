@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     dashangToggle: function() {
-      console.log("点击了打赏");
+      console.log("点击了打赏", this.showPay);
       this.showPay = !this.showPay;
     },
     // 支付方式

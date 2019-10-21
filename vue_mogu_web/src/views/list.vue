@@ -30,7 +30,6 @@
             <a
               href="javascript:void(0);"
               @click="goToInfo(item.id?item.id:item.uid)"
-              target="_blank"
               v-html="item.title"
             >{{item.title}}</a>
           </h3>

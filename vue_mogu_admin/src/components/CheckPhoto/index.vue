@@ -182,7 +182,6 @@ export default {
           params.append("currentPage", val); //每一页显示40个
           params.append("pageSize", 20); //每一页显示40个
           getPictureList(params).then(function(response) {
-            console.log("返回的数据", response);
             if (response.code == "success") {
               var newObject = {
                 pictureSortUid: pictureSortUid,
@@ -192,7 +191,7 @@ export default {
                 currentPage: response.data.current,
                 total: response.data.total
               };
-              Vue.set(that.pictureSorts, 0, newObject);
+              Vue.set(that.pictureSorts, that.activeName, newObject);
             } else {
               this.$message({ type: "error", message: response.data });
             }
