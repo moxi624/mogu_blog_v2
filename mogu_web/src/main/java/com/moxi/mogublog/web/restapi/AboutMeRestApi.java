@@ -61,7 +61,7 @@ public class AboutMeRestApi {
 			admin.setPhotoList(WebUtils.getPicture(pictureList));
 		}
 		log.info("获取用户信息");
-		Admin result = new Admin();		
+		Admin result = new Admin();
 		result.setNickName(admin.getNickName());
 		result.setOccupation(admin.getOccupation());
 		result.setSummary(admin.getSummary());
@@ -71,6 +71,8 @@ public class AboutMeRestApi {
 		result.setMobile(admin.getMobile());
 		result.setAvatar(admin.getAvatar());
 		result.setPhotoList(admin.getPhotoList());
+		result.setGithub(admin.getGithub());
+		result.setGitee(admin.getGitee());
 		return ResultUtil.result(SysConf.SUCCESS, result);
 	}
 	
@@ -87,6 +89,8 @@ public class AboutMeRestApi {
 			result.setQqNumber(admin.getQqNumber());
 			result.setEmail(admin.getEmail());
 			result.setMobile(admin.getMobile());
+			result.setGithub(admin.getGithub());
+			result.setGitee(admin.getGitee());
 			return ResultUtil.result(SysConf.SUCCESS, result);
 		} else {
 			return ResultUtil.result(SysConf.ERROR, "获取失败");

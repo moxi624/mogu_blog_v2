@@ -106,14 +106,14 @@ public class LoginRestApi {
 	      }
 	      Admin admin = adminService.getOne(queryWrapper);
 	      if (admin == null) {
-	          return ResultUtil.result(SysConf.ERROR, "管理员账号不存在");
+	          return ResultUtil.result(SysConf.ERROR, "用户名或密码错误");
 	      }
 	      //验证密码
 	      PasswordEncoder encoder = new BCryptPasswordEncoder();
 	      boolean isPassword = encoder.matches(password, admin.getPassWord());
 	      if (!isPassword) {
 	          //密码错误，返回提示
-	          return ResultUtil.result(SysConf.ERROR, "密码错误");
+	          return ResultUtil.result(SysConf.ERROR, "用户名或密码错误");
 	      }
 	      //根据admin获取账户拥有的角色uid集合
 	      QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();

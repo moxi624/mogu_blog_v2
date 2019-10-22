@@ -6,6 +6,8 @@
         <li class="qq" v-if="contact.qqNumber"><a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1595833114" target="_blank"><span>QQ号</span>{{contact.qqNumber}}</a></li>
         <li class="email" v-if="contact.email"><a :href="mailto" target="_blank"><span>邮箱帐号</span>{{contact.email}}</a></li>
         <li class="wxgzh" v-if="contact.weChat"><a href="/" target="_blank"><span>微信号</span>{{contact.weChat}}</a></li>
+        <li class="github" v-if="contact.github"><a :href="contact.github" target="_blank"><span>Github</span>{{contact.github}}</a></li>
+        <li class="gitee" v-if="contact.gitee"><a :href="contact.gitee" target="_blank"><span>Gitee</span>{{contact.gitee}}</a></li>
         <!-- <li class="wx"><img src="../../../static/images/wx.jpg"></li> -->
       </ul>
     </div>
@@ -27,6 +29,7 @@ export default {
     getContact().then(response => {
       if (response.code == "success") {
         this.contact = response.data;
+        console.log("返回的github", this.contact);
         this.mailto = "mailto:" + this.contact.email;
       }
     });  

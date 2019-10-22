@@ -185,16 +185,21 @@ footer a { color: #a5a4a4 }
 .guanzhu .qq { border: #2ab39a 1px solid; background: url(../images/gzbg.jpg) no-repeat 0 -98px }
 .guanzhu .email { border: #12aae8 1px solid; background: url(../images/gzbg.jpg) no-repeat 0 -150px }
 .guanzhu .wxgzh { border: #199872 1px solid; background: url(../images/gzbg.jpg) no-repeat 0 -200px }
+.guanzhu .github { border: #000000 1px solid; background: url(../images/github.jpg) no-repeat; background-size:25px; background-position-y:47%; }
+.guanzhu .gitee { border: #E93B3C 1px solid; background: url(../images/gitee.jpg) no-repeat; background-size:25px; background-position-y:47%; }
 .guanzhu .wx { overflow: hidden; padding: 0 }
 .guanzhu .wx img { width: 100%; }
-.guanzhu ul li span { float: right; text-align: center; width: 100px; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; transition: all 0.5s; }
+.guanzhu ul li span { float: right; text-align: center; width: 85px; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; transition: all 0.5s; }
 .guanzhu .sina span { background: #ec3d51; }
 .guanzhu .tencent span { background: #68a6d6; }
 .guanzhu .qq span { background: #2ab39a; }
 .guanzhu .email span { background: #12aae8; }
 .guanzhu .wxgzh span { background: #199872; }
+.guanzhu .github span { background: #000000; }
+.guanzhu .gitee span { background: #E93B3C; }
+
 .guanzhu a span { color: #FFF }
-.guanzhu ul li:hover span { width: 120px; }
+.guanzhu ul li:hover span { width: 100px; }
 /*gd*/
 .gd { width: 300px; top: 100px; z-index: 999; position: fixed; _position: absolute; _top:expression(documentElement.scrollTop + 0 + "px");
 _margin-top: 100px; }

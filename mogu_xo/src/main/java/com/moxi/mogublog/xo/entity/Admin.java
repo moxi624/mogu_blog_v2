@@ -99,7 +99,16 @@ public class Admin extends SuperEntity<Admin> {
      * 最后登录IP
      */
     private String lastLoginIp;
-    
+
+	/**
+	 * github地址
+	 */
+	private String github;
+
+	/**
+	 * gitee地址
+	 */
+	private String gitee;
     
     /**
      * 以下字段不存入数据库
@@ -281,5 +290,20 @@ public class Admin extends SuperEntity<Admin> {
 	public void setValidCode(String validCode) {
 		this.validCode = validCode;
 	}
-	
+
+	public String getGithub() {
+		return github;
+	}
+
+	public void setGithub(String github) {
+		this.github = github;
+	}
+
+	public String getGitee() {
+		return gitee;
+	}
+
+	public void setGitee(String gitee) {
+		this.gitee = gitee;
+	}
 }

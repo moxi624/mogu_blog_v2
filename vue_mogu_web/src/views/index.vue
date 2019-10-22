@@ -87,12 +87,17 @@
       <!--blogsbox end-->
 
       <div class="sidebar">
-        <!-- 三级推荐 -->
-        <ThirdRecommend></ThirdRecommend>
 
         <!--标签云-->
         <TagCloud></TagCloud>
 
+        <!--关注我们-->
+        <FollowUs></FollowUs>
+
+
+        <!-- 三级推荐 -->
+        <ThirdRecommend></ThirdRecommend>
+        
         <!--四级推荐-->
         <FourthRecommend></FourthRecommend>
 
@@ -101,8 +106,7 @@
 
         <Link></Link>
 
-        <!--关注我们-->
-        <FollowUs></FollowUs>
+
       </div>
     </article>
 

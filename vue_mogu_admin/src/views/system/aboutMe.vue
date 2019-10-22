@@ -24,9 +24,9 @@
               <el-radio v-model="form.gender" label="2" border size="medium">女</el-radio>
             </el-form-item>
           
-          <el-form-item label="手机号">
+          <!-- <el-form-item label="手机号">
             <el-input v-model="form.mobile" style="width: 400px"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           
           <el-form-item label="邮箱">
             <el-input v-model="form.email" style="width: 400px"></el-input>
@@ -36,9 +36,17 @@
             <el-input v-model="form.qqNumber" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="微信号">
-            <el-input v-model="form.weChat" style="width: 400px"></el-input>
+          <el-form-item label="Github">
+            <el-input v-model="form.github" style="width: 400px"></el-input>
           </el-form-item>
+
+          <el-form-item label="Gitee">
+            <el-input v-model="form.gitee" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <!-- <el-form-item label="微信号">
+            <el-input v-model="form.weChat" style="width: 400px"></el-input>
+          </el-form-item> -->
           
           <el-form-item label="职业">
             <el-input v-model="form.occupation" style="width: 400px"></el-input>
@@ -47,7 +55,7 @@
           <el-form-item label="简介">
             <el-input
               type="textarea"
-              :autosize="{ minRows: 4, maxRows: 10}"
+              :autosize="{ minRows: 3, maxRows: 10}"
               placeholder="请输入内容"
               style="width: 400px"
               v-model="form.summary">
