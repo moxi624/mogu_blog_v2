@@ -59,7 +59,7 @@ nav { width: 1140px; margin: auto; position: relative }
 .slideUp { -webkit-transform: translateY(-100px); -ms-transform: translateY(-100px); -o-transform: translateY(-100px); transform: translateY(-100px); -webkit-transition: transform .5s ease-out; -o-transition: transform .5s ease-out; transition: transform .5s ease-out; }
 .slideDown { -webkit-transform: translateY(0); -ms-transform: translateY(0); -o-transform: translateY(0); transform: translateY(0); -webkit-transition: transform .5s ease-out; -o-transition: transform .5s ease-out; transition: transform .5s ease-out; }
 /*cd-top*/
-.cd-top { display: inline-block; height: 40px; width: 40px; position: fixed; bottom: 40px; right: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); overflow: hidden; text-indent: 100%; white-space: nowrap; background: rgba(0, 0, 0, 0.8) url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/top.png) no-repeat center; visibility: hidden; opacity: 0; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; transition: all 0.3s; }
+.cd-top { display: inline-block; height: 40px; width: 40px; position: fixed; bottom: 40px; right: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); overflow: hidden; text-indent: 100%; white-space: nowrap; background: rgba(0, 0, 0, 0.8) url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/top.png) no-repeat center; visibility: hidden; opacity: 0; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; transition: all 0.3s; }
 .cd-top.cd-is-visible { visibility: visible; opacity: 1; }
 /*footer*/
 footer { width: 100%; background: #333; color: #a5a4a4; text-align: center; padding: 20px 0; clear: both; }
@@ -108,11 +108,11 @@ footer a { color: #a5a4a4 }
 .bloginfo ul li { float: left; font-size: 12px; padding: 0 0 0 20px; margin: 0 15px 0 0; color: #748594; line-height: 1.5; display: inline-block; }
 .bloginfo ul li a { color: #748594; }
 .bloginfo ul li a:hover { color: #000 }
-.bloginfo .author { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat 0 0 }
-.bloginfo .lmname { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -23px left; }
-.bloginfo .timer { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -44px left; }
-.bloginfo .view { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -64px left; }
-.bloginfo .like { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -85px left; }
+.bloginfo .author { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat 0 0 }
+.bloginfo .lmname { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -23px left; }
+.bloginfo .timer { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -44px left; }
+.bloginfo .view { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -64px left; }
+.bloginfo .like { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/auicon.jpg) no-repeat top -85px left; }
 /*bplist*/
 .bplist { width: 100%; overflow: hidden; display: block; margin-bottom: 20px }
 .bplist li { float: left; width: 32.8%; height: 174px; overflow: hidden; }
@@ -206,7 +206,7 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 .n1, .n2 { width: 100px; display: block; text-align: center; float: left; color: #fff; }
 .n1 { background: #000; }
 .n2 { background: #3a6ab5; }
-.sidebar .about { background: #FFF url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/banner.png) no-repeat top center; overflow: hidden; }
+.sidebar .about { background: #FFF url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/banner.png) no-repeat top center; overflow: hidden; }
 .avatar { margin: 40px auto 20px; width: 100px }
 .avatar img { width: 100px; border-radius: 50% }
 .abname { color: #3f3f3f; font-weight: bold; font-size: 16px; margin-bottom: 10px; text-align: center }
@@ -216,9 +216,9 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 /*pagebg*/
 .pagebg { margin-top: 60px; padding: 100px 0; text-align: center; width: 100%; }
 /*pagebg.pagebg p { font-size: 36px; color: #FFF; }*/
-.ab { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/blank.jpg) no-repeat; background-size: cover; background-position: top center; }
-.sh { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/page_bg.jpg) no-repeat; background-size: cover; background-position: top center; }
-.timer { background: url(http://120.79.70.126:8600/blog/admin/jpg/2019/9/1/page_time.jpg) no-repeat; background-size: cover; background-position: top center; }
+.ab { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/blank.jpg) no-repeat; background-size: cover; background-position: top center; }
+.sh { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/page_bg.jpg) no-repeat; background-size: cover; background-position: top center; }
+.timer { background: url(http://101.132.194.128:8600/blog/admin/jpg/2019/9/1/page_time.jpg) no-repeat; background-size: cover; background-position: top center; }
 /*share*/
 .share { overflow: hidden; padding-top: 10px }
 .shareli { margin: 0 15px; padding-bottom: 10px }
