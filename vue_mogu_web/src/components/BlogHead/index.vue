@@ -9,14 +9,17 @@
       </h2>
       <ul id="starlist" :style="showHead?'display: block':''">
         <li>
-          <a href="javascript:void(0);" @click="goTo('/')">网站首页</a>
+          <a href="javascript:void(0);" @click="goTo('/')" :class="[saveTitle == '/' ? 'title' : '']">首页</a>
         </li>
         <li>
-          <a href="javascript:void(0);" @click="goTo('/about')">关于我</a>
+          <a href="javascript:void(0);" @click="goTo('/about')" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>
+        </li>
+        <li>
+          <a href="javascript:void(0);" @click="goTo('/sort')" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>
         </li>
         <!-- <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li> -->
         <li>
-          <a href="javascript:void(0);" @click="goTo('/time')">时间轴</a>
+          <a href="javascript:void(0);" @click="goTo('/time')" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>
         </li>
       </ul>
 
@@ -61,10 +64,27 @@ export default {
         this.info = response.data;
       }
     });
+
+    // 获取当前所在页面
+    var test = window.location.href;
+    console.log("url", test);
+    var start = 0;
+    var end = test.length;
+    for(var i=0; i< test.length; i++) {
+      if(test[i] == '#'){
+        start = i;
+      }
+      if(test[i] == '?' && i >start){
+        end = i;
+      }
+    }
+    var result = test.substring(start+1, end);
+    this.saveTitle = result;
   },
   data() {
     return {
       BaseBlog: BASE_BLOG_API,
+      saveTitle: "",
       keyword: "",
       info: {},
       showSearch: false, // 控制搜索框的弹出
@@ -91,7 +111,8 @@ export default {
     });
   },
   methods: {
-    goTo: function(url) {
+    goTo: function(url) {            
+      console.log("saveTitle", this.saveTitle);
       switch (url) {
         case "/":
           {
@@ -101,6 +122,11 @@ export default {
         case "/about":
           {
             this.$router.push({ path: "/about" });
+          }
+          break;
+        case "/sort":
+          {
+            this.$router.push({ path: "/sort" });
           }
           break;
         case "/study":
@@ -143,4 +169,7 @@ export default {
 </script>
 
 <style>
+#starlist li .title{
+  color: #00A7EB;
+}
 </style>

@@ -10,6 +10,7 @@ export const constantRouterMap = [
   { path: '/about', component: () => import('@/views/about') },
   { path: '/life', component: () => import('@/views/life') },
   { path: '/list', component: () => import('@/views/list') },
+  { path: '/sort', component: () => import('@/views/sort') },
   { path: '/share', component: () => import('@/views/share') },
   { path: '/time', component: () => import('@/views/time') }
 ]

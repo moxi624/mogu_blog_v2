@@ -4,7 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-//引入公共JS
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+
+Vue.use(ElementUI, { locale })
+
+// 引入公共JS
 import $ from 'jquery'
 import easyfader from '../static/js/jquery.easyfader.min.js'
 import scrollReveal from '../static/js/scrollReveal.js'
