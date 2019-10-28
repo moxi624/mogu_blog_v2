@@ -10,6 +10,7 @@ public enum EBehavior {
 	BLOG_SEARCH("点击搜索", "blog_search"),
 	STUDY_VIDEO("点击学习视频", "study_video"),
 	VISIT_PAGE("访问页面", "visit_page"),
+	VISIT_SORT("点击归档", "visit_sort"),
 	BLOG_AUTHOR("点击作者", "blog_author");
     
     

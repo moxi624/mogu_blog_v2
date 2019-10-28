@@ -35,6 +35,9 @@ public final class SQLConf extends BaseSQLConf{
 	public static final String BEHAVIOR = "behavior";
 	public static final String IP = "ip";
 	public static final String MODULE_UID = "module_uid";
+
+	//sortRestAPi
+	public static final String MONTH = "month";
 	
 	
 }

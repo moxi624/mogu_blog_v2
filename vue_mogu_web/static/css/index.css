@@ -223,6 +223,7 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 /*pagebg.pagebg p { font-size: 36px; color: #FFF; }*/
 .ab { background: url(../images/blank.jpg) no-repeat; background-size: cover; background-position: top center; }
 .sh { background: url(../images/page_bg.jpg) no-repeat; background-size: cover; background-position: top center; }
+.sorts { background: url(../images/page_bg.jpg) no-repeat; background-size: cover; background-position: top center; }
 .timer { background: url(../images/page_time.jpg) no-repeat; background-size: cover; background-position: top center; }
 /*share*/
 .share { overflow: hidden; padding-top: 10px }

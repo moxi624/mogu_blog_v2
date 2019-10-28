@@ -10,7 +10,7 @@
     -->
     <BlogHead></BlogHead>
 
-    <div class="pagebg timer"></div>
+    <div class="pagebg sorts"></div>
     <div class="container">
       <h1 class="t_nav">
         <span>有些的时候，正是为了爱才悄悄躲开。躲开的是身影，躲不开的却是那份默默的情怀。</span>
@@ -31,7 +31,10 @@
             </div>
             <el-timeline :reverse="reverse">
               <el-timeline-item v-for="(activity, index) in activities" hide-timestamp :key="index">
-                <span @click="clickTime(activity.content)" :class="[activity.content == selectContent ? 'sortBoxSpan sortBoxSpanSelect' : 'sortBoxSpan']">{{activity.content}}</span>
+                <span
+                  @click="clickTime(activity.content)"
+                  :class="[activity.content == selectContent ? 'sortBoxSpan sortBoxSpanSelect' : 'sortBoxSpan']"
+                >{{activity.content}}</span>
               </el-timeline-item>
             </el-timeline>
           </div>
@@ -47,11 +50,31 @@
                 placement="top"
               >
                 <el-card>
-                  <h4 @click="goToInfo(item.uid)" class="itemTitle">{{item.title}}</h4>
-                  <br />
-                  <el-tag v-if="item.isOriginal==0" type="danger">原创</el-tag>
-                  <el-tag v-if="item.isOriginal==1" type="info">转载</el-tag>
-                  <el-tag type="success">标签二</el-tag>
+                  <h4 @click="goToList('blogContent', item.uid)" class="itemTitle">{{item.title}}</h4>
+                  <br>
+                  <el-tag class="elTag" v-if="item.isOriginal==1" type="danger">原创</el-tag>
+                  <el-tag class="elTag" v-if="item.isOriginal==0" type="info">转载</el-tag>
+
+                  <el-tag
+                    class="elTag"
+                    v-if="item.author"
+                    @click="goToList('author', item.author)"
+                  >{{item.author}}</el-tag>
+
+                  <el-tag
+                    class="elTag"
+                    type="success"
+                    v-if="item.blogSort != null"
+                    @click="goToList('blogSort', item.blogSort.uid)"
+                  >{{item.blogSort.sortName}}</el-tag>
+                  <el-tag
+                    class="elTag"
+                    v-for="tagItem in item.tagList"
+                    v-if="tagItem != null"
+                    :key="tagItem.uid"
+                    @click="goToList('tag', tagItem.uid)"
+                    type="warning"
+                  >{{tagItem.content}}</el-tag>
                 </el-card>
               </el-timeline-item>
             </el-timeline>
@@ -79,7 +102,7 @@ import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
 import CdTop from "../components/CdTop";
 import { recorderVisitPage } from "../api/index";
-import { getSortByMonth } from "../api/sort";
+import { getSortList, getArticleByMonth } from "../api/sort";
 export default {
   data() {
     return {
@@ -100,10 +123,9 @@ export default {
   mounted() {},
   created() {
     var that = this;
-    getSortByMonth().then(response => {
+    getSortList().then(response => {
       if (response.code == "success") {
-        var activities = response.data.month;
-        this.articleByDate = response.data.content;
+        var activities = response.data;
         console.log("返回的内容", response);
         var result = [];
         for (var a = 0; a < activities.length; a++) {
@@ -112,9 +134,8 @@ export default {
           result.push(dataForDate);
         }
         this.activities = result;
-        this.selectContent = activities[activities.length-1];        
-        this.itemByDate = response.data.content[activities[activities.length-1]];
-        console.log("activities", this.activities);
+        // 默认选择最后一个
+        this.clickTime(activities[activities.length - 1]);
       }
     });
 
@@ -124,17 +145,58 @@ export default {
   },
   methods: {
     clickTime(content) {
-      console.log("点击了", this.articleByDate[content]);
       this.selectContent = content;
-      this.itemByDate = this.articleByDate[content];
-    },
-    //跳转到文章详情
-    goToInfo(uid) {
-      let routeData = this.$router.resolve({
-        path: "/info",
-        query: { blogUid: uid }
+      var params = new URLSearchParams();
+      params.append("monthDate", content);
+      getArticleByMonth(params).then(response => {
+        console.log("返回的内容", response);
+        if (response.code == "success") {
+          this.itemByDate = response.data;
+        }
       });
-      window.open(routeData.href, "_blank");
+    },
+    //跳转到搜索详情页
+    goToList(type, uid) {
+      switch (type) {
+        case "tag":
+          {
+            let routeData = this.$router.resolve({
+              path: "/list",
+              query: { tagUid: uid }
+            });
+            window.open(routeData.href, "_blank");
+          }
+          break;
+        case "blogSort":
+          {
+            let routeData = this.$router.resolve({
+              path: "/list",
+              query: { sortUid: uid }
+            });
+            window.open(routeData.href, "_blank");
+          }
+          break;
+
+        case "author":
+          {
+            let routeData = this.$router.resolve({
+              path: "/list",
+              query: { author: uid }
+            });
+            window.open(routeData.href, "_blank");
+          }
+          break;
+
+        case "blogContent":
+          {
+            let routeData = this.$router.resolve({
+              path: "/info",
+              query: { blogUid: uid }
+            });
+            window.open(routeData.href, "_blank");
+          }
+          break;
+      }
     },
     formatDate: function(time) {
       var date = new Date(time);
@@ -182,17 +244,19 @@ export default {
   cursor: pointer;
 }
 .sortBoxSpan:hover {
-  color: #409EFF;
+  color: #409eff;
 }
 .sortBoxSpanSelect {
-  color: #409EFF;
+  color: #409eff;
 }
 
 .itemTitle {
   cursor: pointer;
 }
 .itemTitle:hover {
-  color: #409EFF;
+  color: #409eff;
 }
-
+.elTag {
+  cursor: pointer;
+}
 </style>

@@ -168,7 +168,6 @@ public class WebVisitRestApi {
 		});
 			
 		list.forEach(item -> {
-			
 
 			for(int a=0; a<arr.length; a++) {
 				// 设置行为名称

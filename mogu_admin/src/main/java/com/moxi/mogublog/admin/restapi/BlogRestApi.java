@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.utils.DateUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -308,6 +309,7 @@ public class BlogRestApi {
 			map.put(SysConf.COMMAND, SysConf.ADD);
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
+			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);	
 			
@@ -420,6 +422,9 @@ public class BlogRestApi {
 			map.put(SysConf.COMMAND, SysConf.EDIT);
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
+			String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
+			System.out.println(dateTime);
+			map.put(SysConf.CREATE_TIME, dateTime);
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
 			
@@ -433,6 +438,7 @@ public class BlogRestApi {
 			map.put(SysConf.COMMAND, SysConf.EDIT);
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
+			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
 			
@@ -458,10 +464,13 @@ public class BlogRestApi {
 		
 		//保存成功后，需要发送消息到solr 和 redis
 		if(save) {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<>();
 			map.put(SysConf.COMMAND, SysConf.DELETE);
 			map.put(SysConf.BLOG_UID, blog.getUid());
 			map.put(SysConf.LEVEL, blog.getLevel());
+			String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
+			System.out.println(dateTime);
+			map.put(SysConf.CREATE_TIME, dateTime);
 			//发送到RabbitMq
 			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
 			
