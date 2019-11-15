@@ -218,7 +218,9 @@ export default {
     },
     search: function() {
       var that = this;
+      
       that.loading = true;
+
       if (this.keywords != undefined) {
         var params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
@@ -228,8 +230,7 @@ export default {
         searchBlog(params).then(response => {
           if (response.code == "success" && response.data.rows.length > 0) {
             
-            that.isEnd = false;
-            
+            that.isEnd = false;            
             //获取总页数
             that.totalPages = response.data.totalPages;
 
@@ -264,7 +265,11 @@ export default {
 
         searchBlogByTag(params).then(response => {
           if (response.code == "success" && response.data.records.length > 0) {
-            that.isEnd = false;
+            
+            that.isEnd = false;            
+            //获取总页数
+            that.totalPages = response.data.total;
+
             var blogData = response.data.records;
             that.total = response.data.total;
             that.pageSize = response.data.size;
@@ -278,10 +283,11 @@ export default {
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
             this.blogData = blogData;
+            that.loading = false;
           } else {
             that.isEnd = true;
+            that.loading = false;
           }
-          that.loading = false;
         });
       } else if (this.sortUid != undefined) {
         var params = new URLSearchParams();
@@ -292,7 +298,10 @@ export default {
 
         searchBlogBySort(params).then(response => {
           if (response.code == "success" && response.data.records.length > 0) {
-            that.isEnd = false;
+            
+            that.isEnd = false;            
+            //获取总页数
+            that.totalPages = response.data.total;
 
             var blogData = response.data.records;
             that.total = response.data.total;
@@ -306,10 +315,11 @@ export default {
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
             this.blogData = blogData;
+            that.loading = false;
           } else {
             that.isEnd = true;
+            that.loading = false;
           }
-          that.loading = false;
         });
       } else if (this.author != undefined) {
         var params = new URLSearchParams();
@@ -317,8 +327,16 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         searchBlogByAuthor(params).then(response => {
+          console.log("返回作者的文章", response.data);
           if (response.code == "success" && response.data.records.length > 0) {
-            that.isEnd = false;
+
+            that.loading = false;
+
+            that.isEnd = false;      
+
+            //获取总页数
+            that.totalPages = response.data.total;
+
             var blogData = response.data.records;
             that.total = response.data.total;
             that.pageSize = response.data.size;
@@ -334,12 +352,14 @@ export default {
 
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
-            this.blogData = blogData;
-          } else {
-            that.isEnd = true;
-          }
+            this.blogData = blogData;   
+            that.loading = false;         
 
-          that.loading = false;
+          } else {            
+            that.isEnd = true;
+            that.loading = false;
+          }
+                    
         });
       }
     }

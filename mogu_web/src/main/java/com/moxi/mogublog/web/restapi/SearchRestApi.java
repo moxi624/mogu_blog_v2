@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mougblog.base.enums.EPublish;
+import com.moxi.mougblog.base.global.BaseSQLConf;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +135,7 @@ public class SearchRestApi {
 		
 		queryWrapper.like(SQLConf.TagUid, tagUid);
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));;
 
@@ -166,6 +169,9 @@ public class SearchRestApi {
 		
 		queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+
 		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();				
@@ -195,6 +201,8 @@ public class SearchRestApi {
 		page.setSize(pageSize);
 		
 		queryWrapper.eq(SQLConf.AUTHOR, author);
+		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+		queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 
 		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));

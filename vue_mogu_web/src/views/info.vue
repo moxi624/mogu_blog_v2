@@ -25,7 +25,7 @@
           <div class="bloginfo" v-if="blogData.blogSort">
             <ul>
               <li class="author">
-                <a href="/">{{blogData.author}}</a>
+                <a href="javascript:void(0);" @click="goToAuthor(blogData.author)">{{blogData.author}}</a>
               </li>
               <li class="lmname">
                 <a
@@ -183,7 +183,6 @@ export default {
     this.blogUid = this.$route.query.blogUid;
     params.append("uid", this.blogUid);
     getBlogByUid(params).then(response => {
-      console.log("返回的Blog数据", response.data)
       if (response.code == "success") {
         this.blogData = response.data;
       }
@@ -226,6 +225,15 @@ export default {
       });
       window.open(routeData.href, "_blank");
     },
+    //跳转到搜索详情页
+    goToAuthor(author) {
+      let routeData = this.$router.resolve({
+        path: "/list",
+        query: { author: author }
+      });
+      window.open(routeData.href, "_blank");
+    },
+
     imageChange: function(e) {
       //首先需要判断点击的是否是图片
       var type = e.target.localName;
