@@ -8,7 +8,7 @@ data:
     url: http://localhost:8600/
 file:
   upload:
-    path: D:/mogu_blog/data
+    path: D:/mogu_blog/data/
 
 #启动Basic验证    
 security:

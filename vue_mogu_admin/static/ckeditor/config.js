@@ -9,6 +9,9 @@ CKEDITOR.editorConfig = function (config) {
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
+
+	
+
 	config.toolbarGroups = [
 		{ name: 'clipboard', groups: ['clipboard', 'undo'] },
 		{ name: 'editing', groups: ['find', 'selection', 'spellchecker'] },
@@ -25,6 +28,9 @@ CKEDITOR.editorConfig = function (config) {
 		{ name: 'colors' },
 		{ name: 'about' }
 	];
+
+	// 配置disallowedContent，过滤掉宽高
+	config.disallowedContent = 'img{width,height};img[width,height]';
 
 	config.keystrokes = [
 		[ CKEDITOR.ALT + 121 /*F10*/, 'toolbarFocus' ],  //获取焦点
