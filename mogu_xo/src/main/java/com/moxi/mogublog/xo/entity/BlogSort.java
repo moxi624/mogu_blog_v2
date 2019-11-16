@@ -25,7 +25,12 @@ public class BlogSort extends SuperEntity<BlogSort> {
     /**
      * 分类介绍
      */
-    private String content;    
+    private String content;
+
+	/**
+	 * 点击数
+	 */
+	private Integer clickCount;
     
     /**
      * 排序字段，数值越大，越靠前
@@ -58,5 +63,13 @@ public class BlogSort extends SuperEntity<BlogSort> {
 
 	public void setSort(int sort) {
 		this.sort = sort;
+	}
+
+	public Integer getClickCount() {
+		return clickCount;
+	}
+
+	public void setClickCount(Integer clickCount) {
+		this.clickCount = clickCount;
 	}
 }

@@ -3,6 +3,9 @@ package com.moxi.mogublog.admin.restapi;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mougblog.base.enums.EPublish;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -43,8 +49,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/tag")
 public class TagRestApi {
+
 	@Autowired
 	TagService tagService;
+
+	@Autowired
+	BlogService blogService;
 	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
 	
@@ -174,6 +184,85 @@ public class TagRestApi {
 		tag.updateById();
 		
 		return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+	}
+
+	@OperationLogger(value="通过点击量排序标签")
+	@ApiOperation(value="通过点击量排序标签", notes="通过点击量排序标签", response = String.class)
+	@PostMapping("/tagSortByClickCount")
+	public String tagSortByClickCount(HttpServletRequest request) {
+
+		QueryWrapper<Tag> queryWrapper = new QueryWrapper();
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		// 按点击从高到低排序
+		queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+		List<Tag> tagList = tagService.list(queryWrapper);
+		// 设置初始化最大的sort值
+		Integer maxSort = tagList.size();
+		for (Tag item : tagList) {
+			item.setSort(item.getClickCount());
+			item.updateById();
+		}
+		return ResultUtil.result(SysConf.SUCCESS, "排序成功");
+	}
+
+	/**
+	 * 通过引用量排序标签
+	 * 引用量就是所有的文章中，有多少使用了该标签，如果使用的越多，该标签的引用量越大，那么排名越靠前
+	 * @param request
+	 * @return
+	 */
+	@OperationLogger(value="通过引用量排序标签")
+	@ApiOperation(value="通过引用量排序标签", notes="通过引用量排序标签", response = String.class)
+	@PostMapping("/tagSortByCite")
+	public String tagSortByCite(HttpServletRequest request) {
+
+		// 定义Map   key：tagUid,  value: 引用量
+		Map<String, Integer> map = new HashMap<>();
+
+		QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
+		tagQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		List<Tag> tagList = tagService.list(tagQueryWrapper);
+		// 初始化所有标签的引用量
+		tagList.forEach(item -> {
+			map.put(item.getUid(), 0);
+		});
+
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+		queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+		// 过滤content字段
+		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
+		List<Blog> blogList = blogService.list(queryWrapper);
+
+		blogList.forEach(item -> {
+			String tagUids = item.getTagUid();
+			List<String> tagUidList = StringUtils.changeStringToString(tagUids, ",");
+			for(String tagUid : tagUidList) {
+				if(map.get(tagUid) != null) {
+					Integer count = map.get(tagUid) + 1;
+					map.put(tagUid, count);
+				} else {
+					map.put(tagUid, 0);
+				}
+			}
+		});
+
+		tagList.forEach(item -> {
+			item.setSort(map.get(item.getUid()));
+			item.updateById();
+		});
+
+		// 批量更新，存在问题
+//		List<Tag> updateTagList = new ArrayList<>();
+//		tagList.forEach(item -> {
+//			Tag tag = new Tag();
+//			tag.setUid(item.getUid());
+//			tag.setSort(map.get(item.getUid()));
+//			updateTagList.add(tag);
+//		});
+//		tagService.updateBatchById(updateTagList);
+
+		return ResultUtil.result(SysConf.SUCCESS, "排序成功");
 	}
 }
 

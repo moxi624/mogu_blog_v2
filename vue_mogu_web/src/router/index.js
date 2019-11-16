@@ -12,6 +12,8 @@ export const constantRouterMap = [
   { path: '/list', component: () => import('@/views/list') },
   { path: '/sort', component: () => import('@/views/sort') },
   { path: '/share', component: () => import('@/views/share') },
+  { path: '/classify', component: () => import('@/views/classify') },
+  { path: '/tag', component: () => import('@/views/tag') },
   { path: '/time', component: () => import('@/views/time') }
 ]
 
@@ -21,7 +23,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   var reloaded = window.localStorage.getItem('reloaded') || '0'
-  if (to.path === '/about') {        
+  if (to.path === '/about') {
     window.localStorage.setItem('reloaded', reloaded)
   } else if (from.path === '/about') {
     var count = Number(reloaded) + 1

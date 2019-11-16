@@ -55,10 +55,10 @@ public class SearchRestApi {
     
 	@Autowired
 	private BlogService blogService;
-	
+
 	@Autowired
 	TagService tagService;
-	
+
 	@Autowired
 	BlogSortService blogSortService;
 	
@@ -160,7 +160,32 @@ public class SearchRestApi {
 			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		if(StringUtils.isEmpty(blogSortUid)) {
 			return ResultUtil.result(SysConf.ERROR, "uid不能为空");
-		} 
+		}
+		BlogSort blogSort = blogSortService.getById(blogSortUid);
+		if(blogSort != null) {
+
+			String ip = IpUtils.getIpAddr(request);
+
+			//从Redis取出数据，判断该用户24小时内，是否点击过该分类
+			String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_SORT_CLICK:" + ip + "#" + blogSortUid);
+
+			if(StringUtils.isEmpty(jsonResult)) {
+
+				//给标签点击数增加
+				log.info("点击数加1");
+				int clickCount = blogSort.getClickCount() + 1;
+				blogSort.setClickCount(clickCount);
+				blogSort.updateById();
+
+				//将该用户点击记录存储到redis中, 24小时后过期
+				stringRedisTemplate.opsForValue().set("BLOG_SORT_CLICK:" + ip + "#" + blogSortUid, clickCount+"",
+						24, TimeUnit.HOURS);
+			}
+
+		} else {
+			return ResultUtil.result(SysConf.ERROR, "标签不能为空");
+		}
+
 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
 		
 		Page<Blog> page = new Page<>();

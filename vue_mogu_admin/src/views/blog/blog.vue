@@ -93,8 +93,8 @@
 
       <el-table-column label="是否原创" width="100">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.isOriginal==1" type="success">是</el-tag>
-          <el-tag v-if="scope.row.isOriginal==0" type="danger">否</el-tag>
+          <el-tag v-if="scope.row.isOriginal==1" type="success">原创</el-tag>
+          <el-tag v-if="scope.row.isOriginal==0" type="info">转载</el-tag>
         </template>
       </el-table-column>
 
@@ -284,8 +284,8 @@
           <el-col :span="5">
             <el-form-item label="是否原创" :label-width="formLabelWidth" required>
               <el-radio-group v-model="form.isOriginal" size="small">
-                <el-radio label="1" border>是</el-radio>
-                <el-radio label="0" border>否</el-radio>
+                <el-radio label="1" border>原创</el-radio>
+                <el-radio label="0" border>转载</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

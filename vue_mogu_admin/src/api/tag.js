@@ -39,3 +39,19 @@ export function stickTag(params) {
     params
   })
 }
+
+export function tagSortByClickCount(params) {
+  return request({
+    url: process.env.ADMIN_API + '/tag/tagSortByClickCount',
+    method: 'post',
+    params
+  })
+}
+
+export function tagSortByCite(params) {
+  return request({
+    url: process.env.ADMIN_API + '/tag/tagSortByCite',
+    method: 'post',
+    params
+  })
+}

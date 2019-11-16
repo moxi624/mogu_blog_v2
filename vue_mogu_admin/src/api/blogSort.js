@@ -39,3 +39,19 @@ export function stickBlogSort(params) {
     params
   })
 }
+
+export function blogSortByClickCount(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blogSort/blogSortByClickCount',
+    method: 'post',
+    params
+  })
+}
+
+export function blogSortByCite(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blogSort/blogSortByCite',
+    method: 'post',
+    params
+  })
+}

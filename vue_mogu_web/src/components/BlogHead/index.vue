@@ -9,17 +9,51 @@
       </h2>
       <ul id="starlist" :style="showHead?'display: block':''">
         <li>
-          <a href="javascript:void(0);" @click="goTo('/')" :class="[saveTitle == '/' ? 'title' : '']">首页</a>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/')"
+            :class="[saveTitle == '/' ? 'title' : '']"
+          >首页</a>
         </li>
         <li>
-          <a href="javascript:void(0);" @click="goTo('/about')" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/about')"
+            :class="[saveTitle == '/about' ? 'title' : '']"
+          >关于我</a>
         </li>
+
         <li>
-          <a href="javascript:void(0);" @click="goTo('/sort')" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/sort')"
+            :class="[saveTitle == '/sort' ? 'title' : '']"
+          >归档</a>
         </li>
+
+        <li>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/classify')"
+            :class="[saveTitle == '/classify' ? 'title' : '']"
+          >分类</a>
+        </li>
+
+        <li>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/tag')"
+            :class="[saveTitle == '/tag' ? 'title' : '']"
+          >标签</a>
+        </li>
+
         <!-- <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li> -->
         <li>
-          <a href="javascript:void(0);" @click="goTo('/time')" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>
+          <a
+            href="javascript:void(0);"
+            @click="goTo('/time')"
+            :class="[saveTitle == '/time' ? 'title' : '']"
+          >时间轴</a>
         </li>
       </ul>
 
@@ -70,15 +104,15 @@ export default {
     console.log("url", test);
     var start = 0;
     var end = test.length;
-    for(var i=0; i< test.length; i++) {
-      if(test[i] == '#'){
+    for (var i = 0; i < test.length; i++) {
+      if (test[i] == "#") {
         start = i;
       }
-      if(test[i] == '?' && i >start){
+      if (test[i] == "?" && i > start) {
         end = i;
       }
     }
-    var result = test.substring(start+1, end);
+    var result = test.substring(start + 1, end);
     this.saveTitle = result;
   },
   data() {
@@ -111,7 +145,7 @@ export default {
     });
   },
   methods: {
-    goTo: function(url) {            
+    goTo: function(url) {
       console.log("saveTitle", this.saveTitle);
       switch (url) {
         case "/":
@@ -127,6 +161,17 @@ export default {
         case "/sort":
           {
             this.$router.push({ path: "/sort" });
+          }
+          break;
+        case "/classify":
+          {
+            this.$router.push({ path: "/classify" });
+          }
+          break;
+
+        case "/tag":
+          {
+            this.$router.push({ path: "/tag" });
           }
           break;
         case "/study":
@@ -169,7 +214,7 @@ export default {
 </script>
 
 <style>
-#starlist li .title{
-  color: #00A7EB;
+#starlist li .title {
+  color: #00a7eb;
 }
 </style>
