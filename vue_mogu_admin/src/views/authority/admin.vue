@@ -26,7 +26,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
-            :src="scope.row.photoList[0]"
+            :src="BASE_IMAGE_URL + scope.row.photoList[0]"
             style="width: 100px;height: 100px;"
           >
         </template>
@@ -114,7 +114,7 @@
               @click="deletePhoto()"
               @mouseover="icon = true"
             ></i>
-            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]">
+            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]">
           </div>
           <div v-else class="uploadImgBody" @click="checkPhoto">
             <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -199,6 +199,7 @@ import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       roleData: [], //角色列表
       roleValue: [], //选择的角色列表

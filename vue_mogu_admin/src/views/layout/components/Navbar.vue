@@ -19,7 +19,7 @@
 
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">            
-            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">            
+            <img :src="BASE_IMAGE_URL + avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">            
             <i class="el-icon-caret-bottom"/>            
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -73,6 +73,7 @@ export default {
   },
   data() {
     return {
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       menuName: "全屏",
       menuName2: "换肤",
       dialogFormVisible: false,

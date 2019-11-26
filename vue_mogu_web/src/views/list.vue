@@ -35,7 +35,7 @@
           </h3>
           <span class="blogpic">
             <a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" title>
-              <img v-if="item.photoList" :src="item.photoList[0]" alt>
+              <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" alt>
             </a>
           </span>
           <p class="blogtext" v-html="item.summary">{{item.summary}}</p>
@@ -135,6 +135,7 @@ export default {
   name: "list",
   data() {
     return {
+      PICTURE_HOST: process.env.PICTURE_HOST,
       blogData: [],
       keywords: "",
       currentPage: 1,

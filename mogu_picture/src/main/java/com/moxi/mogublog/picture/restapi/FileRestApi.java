@@ -125,7 +125,7 @@ public class FileRestApi {
 				for(com.moxi.mogublog.picture.entity.File file : fileList) {						
 					if(file!=null) {
 						Map<String, Object> remap = new HashMap<>();
-						remap.put("url", imgHost + file.getPicUrl());//，地址
+						remap.put("url", file.getPicUrl());//，地址
 						remap.put("expandedName", file.getPicExpandedName());//后缀名，也就是类型
 						remap.put("name", file.getPicName());//名称
 						remap.put("uid", file.getUid());

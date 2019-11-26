@@ -20,7 +20,7 @@
 <ul>
  <li v-for="item in studyVideoData" :key="item.uid"> 
    <div class="shareli"><a href="/" target="_blank"> 
-    <i><img class="resImg" :src="item.photoList[0]"></i>
+    <i><img class="resImg" :src="PICTURE_HOST + item.photoList[0]"></i>
     <h2><b>{{item.name}}</b></h2>
     <span>{{item.resourceSort.sortName}}</span> </a>
     </div> 
@@ -56,6 +56,7 @@ export default {
   name: "share",
   data() {
     return {
+      PICTURE_HOST: process.env.PICTURE_HOST,
       studyVideoData: [],
       currentPage: 1,
       pageSize: 8,

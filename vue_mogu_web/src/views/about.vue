@@ -25,7 +25,7 @@
       <div class="sidebar">
         <div class="about">
           <p class="avatar" v-if="info.photoList">
-            <img :src="info.photoList[0]" alt>
+            <img :src="PICTURE_HOST + info.photoList[0]" alt>
           </p>
           <p class="abname">{{info.nickName}}</p>
           <p class="abposition">{{info.occupation}}</p>
@@ -67,6 +67,7 @@ export default {
   name: "about",
   data() {
     return {
+      PICTURE_HOST: process.env.PICTURE_HOST,
       info: {},
       sid: "test",
       isRouterAlive: false

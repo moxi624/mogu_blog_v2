@@ -14,7 +14,7 @@
           <a href="javascript:void(0);">
             <img
               v-if="list.photoList"
-              :src="list.photoList[0]"
+              :src="PICTURE_HOST + list.photoList[0]"
               :alt="list.title"
               @click="goToInfo(list.uid)"
             >
@@ -42,6 +42,7 @@ export default {
   name: "FirstRecommend",
   data() {
     return {
+      PICTURE_HOST: process.env.PICTURE_HOST,
       isShow: false, //控制左右滑动按钮是否显示
       slideList: [],
       currentIndex: 0,

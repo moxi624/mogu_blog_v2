@@ -73,7 +73,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
-            :src="scope.row.photoList[0]"
+            :src="BASE_IMAGE_URL + scope.row.photoList[0]"
             style="width: 100px;height: 100px;"
           >
         </template>
@@ -203,7 +203,7 @@
             <img
               @mouseover="icon = true"
               @mouseout="icon = false"
-              v-bind:src="form.photoList[0]"
+              v-bind:src="BASE_IMAGE_URL + form.photoList[0]"
               style="display:inline; width: 150px;height: 150px;"
             >
           </div>
@@ -352,6 +352,7 @@ export default {
   },
   data() {
     return {
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框

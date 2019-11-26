@@ -21,7 +21,7 @@
           <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
             <a href="javascript:void(0);">
               <i>
-                <img :src="item.photoList[0]">
+                <img :src="PICTURE_HOST + item.photoList[0]">
               </i>
               <h2>{{item.title}}</h2>
               <span>{{item.blogSort.sortName}}</span>
@@ -44,7 +44,7 @@
           </h3>
           <span class="blogpic">
             <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
-              <img v-if="item.photoList" :src="item.photoList[0]" alt>
+              <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" alt>
             </a>
           </span>
           <p class="blogtext">{{item.summary}}</p>
@@ -160,6 +160,7 @@ export default {
   },
   data() {
     return {
+      PICTURE_HOST: process.env.PICTURE_HOST,
       firstData: [], //；一级推荐数据
       secondData: [], //；二级级推荐数据
       thirdData: [], //三级推荐
@@ -211,6 +212,8 @@ export default {
     getBlogByLevel(secondParams).then(response => {
       this.secondData = response.data.records;
     });
+
+    console.log("测试地址", this.PICTURE_HOST)
 
     // 获取最新博客
     this.newBlogList();

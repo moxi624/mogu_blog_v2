@@ -12,7 +12,7 @@
       <div class= "imgAll">
         <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" @click="checked(picture)">
               <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0">
-              <img class= "img" :src="picture.pictureUrl"/>
+              <img class= "img" :src="BASE_IMAGE_URL + picture.pictureUrl"/>
         </div>
         <div class= "removeFloat"></div>      
       </div>
@@ -60,6 +60,7 @@ import { Loading } from "element-ui";
 export default {
   data() {
     return {
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       uploadPictureHost: null,
       fileList: [],

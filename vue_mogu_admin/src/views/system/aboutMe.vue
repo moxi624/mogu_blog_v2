@@ -8,7 +8,7 @@
           <el-form-item label="用户头像">
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />	    		 
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" />	    		 
             </div>
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -142,6 +142,7 @@ import { getMe, editMe, changePwd } from "@/api/system";
 export default {
   data() {
     return {
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {},
       changePwdForm: {
         oldPwd: "",
