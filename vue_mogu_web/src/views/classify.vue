@@ -117,6 +117,7 @@ export default {
     var that = this;
     getSortList().then(response => {
       if (response.code == "success") {
+        console.log("返回的列表", response);
         var activities = response.data;
         var result = [];
         for (var a = 0; a < activities.length; a++) {

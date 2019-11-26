@@ -31,7 +31,7 @@
           >归档</a>
         </li>
 
-        <li>
+        <!-- <li>
           <a
             href="javascript:void(0);"
             @click="goTo('/classify')"
@@ -45,7 +45,7 @@
             @click="goTo('/tag')"
             :class="[saveTitle == '/tag' ? 'title' : '']"
           >标签</a>
-        </li>
+        </li> -->
 
         <!-- <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li> -->
         <li>
