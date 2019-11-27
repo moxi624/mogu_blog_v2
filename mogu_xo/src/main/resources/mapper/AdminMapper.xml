@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moxi.mogublog.xo.dao.AdminMapper">
+<mapper namespace="com.moxi.mogublog.xo.mapper.AdminMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Admin">
@@ -26,5 +26,9 @@
     <sql id="Base_Column_List">
         uid, userName, passWord, gender, avatar, email, birthday, mobile, validCode, summary, loginCount, lastLoginTime, lastLoginIp, status, createTime, updateTime
     </sql>
+
+    <select id="getAdminByUid" resultType="com.moxi.mogublog.xo.entity.Admin">
+        select * from t_admin where uid = #{uid}
+    </select>
     
 </mapper>

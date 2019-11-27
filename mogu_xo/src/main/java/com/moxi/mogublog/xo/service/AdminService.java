@@ -13,4 +13,5 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface AdminService extends SuperService<Admin> {
 
+    public Admin getAdminByUid(String uid);
 }
