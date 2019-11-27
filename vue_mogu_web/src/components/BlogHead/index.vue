@@ -77,7 +77,6 @@
 </template>
 
 <script>
-import { BASE_BLOG_API } from "../../../config/dev.env";
 import { getWebConfig } from "../../api/index";
 
 export default {
@@ -117,7 +116,6 @@ export default {
   },
   data() {
     return {
-      BaseBlog: BASE_BLOG_API,
       saveTitle: "",
       keyword: "",
       info: {},

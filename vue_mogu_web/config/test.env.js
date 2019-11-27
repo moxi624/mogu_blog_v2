@@ -6,6 +6,7 @@ module.exports = merge(devEnv, {
   NODE_ENV: '"testing"',
   
   //配置测试环境
- 	PICTURE_API: '"http://localhost:8602"',
 	WEB_API: '"http://localhost:8603"',
+  PICTURE_HOST: '"http://localhost:8600"',
+  
 })
