@@ -60,15 +60,16 @@
 
     <!-- 分类图-->
     <el-row :gutter="32">
+
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart v-if="showPieChart" :value="blogCountByTag" :tagName="tagNameArray"></pie-chart>
+          <pie-chart v-if="showPieBlogSortChart" :value="blogCountByBlogSort" :tagName="blogSortNameArray"></pie-chart>
         </div>
       </el-col>
 
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart></bar-chart>
+          <pie-chart v-if="showPieChart" :value="blogCountByTag" :tagName="tagNameArray"></pie-chart>
         </div>
       </el-col>
 
@@ -91,7 +92,7 @@
 <script>
 import { mapGetters } from "vuex";
 import CountTo from "vue-count-to";
-import { init, getVisitByWeek, getBlogCountByTag } from "@/api/index";
+import { init, getVisitByWeek, getBlogCountByTag, getBlogCountByBlogSort } from "@/api/index";
 import GithubCorner from "@/components/GithubCorner";
 import PieChart from "@/components/PieChart";
 import TodoList from "@/components/TodoList";
@@ -118,9 +119,12 @@ export default {
       commentTotal: 0,
       blogTotal: 0,      
       showPieChart: false,
+      showPieBlogSortChart: false,
       showLineChart: false,
       blogCountByTag: [],
+      blogCountByBlogSort: [],
       tagNameArray: [],
+      blogSortNameArray: [],
       lineChartData: {},
 
     };
@@ -164,6 +168,26 @@ export default {
         this.showPieChart = true;
       }
     });
+
+    //通过博客分类获取博客数目
+    getBlogCountByBlogSort().then(response => {
+
+      if (response.code == "success") {
+        
+        this.blogCountByBlogSort = response.data;
+
+        var blogSortList = this.blogCountByBlogSort;
+
+        for (var a = 0; a < this.blogCountByBlogSort.length; a++) {
+          this.blogSortNameArray.push(blogSortList[a].name);
+        }
+
+        this.showPieBlogSortChart = true;
+      }
+    });
+
+
+
 
   },
   methods: {

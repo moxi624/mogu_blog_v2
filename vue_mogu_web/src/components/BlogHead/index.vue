@@ -31,21 +31,13 @@
           >归档</a>
         </li>
 
-        <!-- <li>
+        <li>
           <a
             href="javascript:void(0);"
             @click="goTo('/classify')"
             :class="[saveTitle == '/classify' ? 'title' : '']"
           >分类</a>
         </li>
-
-        <li>
-          <a
-            href="javascript:void(0);"
-            @click="goTo('/tag')"
-            :class="[saveTitle == '/tag' ? 'title' : '']"
-          >标签</a>
-        </li> -->
 
         <!-- <li><a href="javascript:void(0);" @click="goTo('/study')">学习教程</a></li> -->
         <li>
@@ -167,11 +159,6 @@ export default {
           }
           break;
 
-        case "/tag":
-          {
-            this.$router.push({ path: "/tag" });
-          }
-          break;
         case "/study":
           {
             this.$router.push({ path: "/share" });

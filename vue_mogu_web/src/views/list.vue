@@ -219,7 +219,7 @@ export default {
     },
     search: function() {
       var that = this;
-      
+
       that.loading = true;
 
       if (this.keywords != undefined) {
@@ -230,12 +230,19 @@ export default {
 
         searchBlog(params).then(response => {
           if (response.code == "success" && response.data.rows.length > 0) {
+            that.isEnd = false;
             
-            that.isEnd = false;            
             //获取总页数
             that.totalPages = response.data.totalPages;
-
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current;
             var blogData = response.data.rows;
+
+            //全部加载完毕
+            console.log(blogData.length, that.pageSize);
+            if (blogData.length < that.pageSize) {
+              that.isEnd = true;
+            }
 
             for (var i = 0; i < blogData.length; i++) {
               if (blogData[i].photoList) {
@@ -248,10 +255,6 @@ export default {
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
             this.blogData = blogData;
-            //全部加载完毕
-            if (blogData.length < that.pageSize) {
-              that.isEnd = true;
-            }
           } else {
             that.isEnd = true;
           }
@@ -266,8 +269,7 @@ export default {
 
         searchBlogByTag(params).then(response => {
           if (response.code == "success" && response.data.records.length > 0) {
-            
-            that.isEnd = false;            
+            that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.total;
 
@@ -275,6 +277,12 @@ export default {
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current;
+
+            //全部加载完毕
+            console.log(blogData.length, that.pageSize);
+            if (blogData.length < that.pageSize) {
+              that.isEnd = true;
+            }
 
             // 设置分类名
             for (var i = 0; i < blogData.length; i++) {
@@ -285,6 +293,7 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
+
           } else {
             that.isEnd = true;
             that.loading = false;
@@ -299,8 +308,7 @@ export default {
 
         searchBlogBySort(params).then(response => {
           if (response.code == "success" && response.data.records.length > 0) {
-            
-            that.isEnd = false;            
+            that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.total;
 
@@ -308,6 +316,12 @@ export default {
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current;
+            
+            //全部加载完毕
+            console.log(blogData.length, that.pageSize);
+            if (blogData.length < that.pageSize) {
+              that.isEnd = true;
+            }
 
             for (var i = 0; i < blogData.length; i++) {
               blogData[i].blogSort = blogData[i].blogSort.sortName;
@@ -317,6 +331,7 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
+
           } else {
             that.isEnd = true;
             that.loading = false;
@@ -328,12 +343,10 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         searchBlogByAuthor(params).then(response => {
-          console.log("返回作者的文章", response.data);
           if (response.code == "success" && response.data.records.length > 0) {
-
             that.loading = false;
 
-            that.isEnd = false;      
+            that.isEnd = false;
 
             //获取总页数
             that.totalPages = response.data.total;
@@ -342,6 +355,12 @@ export default {
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current;
+
+            //全部加载完毕
+            console.log(blogData.length, that.pageSize);
+            if (blogData.length < that.pageSize) {
+              that.isEnd = true;
+            }
 
             for (var i = 0; i < blogData.length; i++) {
               if (blogData[i].blogSort == undefined) {
@@ -353,14 +372,13 @@ export default {
 
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
-            this.blogData = blogData;   
-            that.loading = false;         
-
-          } else {            
+            this.blogData = blogData;
+            that.loading = false;
+     
+          } else {
             that.isEnd = true;
             that.loading = false;
           }
-                    
         });
       }
     }

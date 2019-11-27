@@ -63,13 +63,23 @@ public class IndexRestApi {
 		return ResultUtil.result(SysConf.SUCCESS, visitByWeek);
 	}
 	
-	@ApiOperation(value="获取每个标签下文章数目", notes="获取每个标签下文章数目", response = String.class)	
+	@ApiOperation(value="获取每个标签下文章数目", notes="获取每个标签下文章数目", response = String.class)
 	@RequestMapping(value = "/getBlogCountByTag", method = RequestMethod.GET)
-	public String getBlogCountByTag() {		
-		
+	public String getBlogCountByTag() {
+
 		List<Map<String, Object>> blogCountByTag = blogService.getBlogCountByTag();
-		
+
 		return ResultUtil.result(SysConf.SUCCESS, blogCountByTag);
 	}
+
+	@ApiOperation(value="获取每个分类下文章数目", notes="获取每个分类下文章数目", response = String.class)
+	@RequestMapping(value = "/getBlogCountByBlogSort", method = RequestMethod.GET)
+	public String getBlogCountByBlogSort() {
+
+		List<Map<String, Object>> blogCountByTag = blogService.getBlogCountByBlogSort();
+
+		return ResultUtil.result(SysConf.SUCCESS, blogCountByTag);
+	}
+
 	
 }

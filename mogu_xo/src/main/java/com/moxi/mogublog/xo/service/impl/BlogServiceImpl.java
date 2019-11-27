@@ -192,6 +192,61 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 	}
 
 	@Override
+	public List<Map<String, Object>> getBlogCountByBlogSort() {
+
+		List<Map<String, Object>> blogCoutByBlogSortMap = blogMapper.getBlogCountByBlogSort();
+
+		Map<String, Integer> blogSortMap = new HashMap<>();
+
+		for(Map<String, Object> item : blogCoutByBlogSortMap) {
+
+			String blogSortUid = String.valueOf(item.get("blog_sort_uid"));
+			// java.lang.Number是Integer,Long的父类
+			Number num = (Number)item.get("count");
+			Integer count = 0;
+			if(num != null) {
+				count = num.intValue();
+			}
+
+			blogSortMap.put(blogSortUid, count);
+		}
+
+		//把查询到的BlogSort放到Map中
+		Set<String> blogSortUids = blogSortMap.keySet();
+		Collection<BlogSort> blogSortCollection = new ArrayList<>();
+
+		if(blogSortUids.size() > 0) {
+			blogSortCollection = blogSortMapper.selectBatchIds(blogSortUids);
+		}
+
+		Map<String, String> blogSortEntityMap = new HashMap<>();
+		for(BlogSort blogSort : blogSortCollection) {
+			if(StringUtils.isNotEmpty(blogSort.getSortName())) {
+				blogSortEntityMap.put(blogSort.getUid(), blogSort.getSortName());
+			}
+		}
+
+		List<Map<String, Object>> resultMap = new ArrayList<Map<String, Object>>();
+		for(Map.Entry<String, Integer> entry : blogSortMap.entrySet()){
+
+			String blogSortUid = entry.getKey();
+
+			if(blogSortEntityMap.get(blogSortUid) != null) {
+				String blogSortName = blogSortEntityMap.get(blogSortUid);
+				Integer count = entry.getValue();
+
+				Map<String, Object> itemResultMap = new HashMap<>();
+				itemResultMap.put("name", blogSortName);
+				itemResultMap.put("value", count);
+				resultMap.add(itemResultMap);
+			}
+		}
+
+		return resultMap;
+
+	}
+
+	@Override
 	public void setBlogCopyright(Blog blog) {
 		
 		//如果是原创的话

@@ -143,8 +143,8 @@ public class BlogRestApi {
 		}
 		
 		final StringBuffer fileUids = new StringBuffer();
-		List<String> sortUids = new ArrayList<String>();
-		List<String> tagUids = new ArrayList<String>();
+		List<String> sortUids = new ArrayList<>();
+		List<String> tagUids = new ArrayList<>();
 
 		list.forEach( item -> {
 			if(StringUtils.isNotEmpty(item.getFileUid())) {
@@ -215,7 +215,7 @@ public class BlogRestApi {
 				item.setPhotoList(pictureListTemp);
 			}		
 		}
-		log.info("返回结果");
+
 		pageList.setRecords(list);
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}

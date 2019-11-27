@@ -20,3 +20,10 @@ export function getBlogCountByTag() {
     method: 'get'
   })
 }
+
+export function getBlogCountByBlogSort() {
+  return request({
+    url: process.env.ADMIN_API + '/index/getBlogCountByBlogSort',
+    method: 'get'
+  })
+}

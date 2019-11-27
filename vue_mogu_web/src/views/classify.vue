@@ -10,13 +10,14 @@
     -->
     <BlogHead></BlogHead>
 
-    <div class="pagebg sorts"></div>
+    <div class="pagebg classify"></div>
     <div class="container">
       <h1 class="t_nav">
-        <span>有些的时候，正是为了爱才悄悄躲开。躲开的是身影，躲不开的却是那份默默的情怀。</span>
+        <span>不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span>
         <a href="/" class="n1">网站首页</a>
         <a href="javascript:void(0);" class="n2">分类</a>
       </h1>
+
       <div class="sortBox">
         <div class="time">
           <div class="block">
@@ -24,20 +25,20 @@
             <el-timeline :reverse="reverse">
               <el-timeline-item v-for="(activity, index) in activities" hide-timestamp :key="index">
                 <span
-                  @click="clickTime(activity.content)"
-                  :class="[activity.content == selectContent ? 'sortBoxSpan sortBoxSpanSelect' : 'sortBoxSpan']"
-                >{{activity.content}}</span>
+                  @click="getBlogList(activity.uid)"
+                  :class="[activity.uid == selectBlogUid ? 'sortBoxSpan sortBoxSpanSelect' : 'sortBoxSpan']"
+                >{{activity.sortName}}</span>
               </el-timeline-item>
             </el-timeline>
           </div>
         </div>
 
         <div class="article">
-          <div class="block">
+          <div class="block" v-infinite-scroll="load">
             <el-timeline>
               <el-timeline-item
                 v-for="item in itemByDate"
-                :key="item.timestamp"
+                :key="item.uid"
                 :timestamp="item.createTime"
                 placement="top"
               >
@@ -94,15 +95,18 @@ import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
 import CdTop from "../components/CdTop";
 import { recorderVisitPage } from "../api/index";
-import { getSortList, getArticleByMonth } from "../api/sort";
+import { getBlogSortList, getArticleByBlogSortUid } from "../api/classify";
 export default {
   data() {
     return {
-      selectContent: "",
-      reverse: true,
+      selectBlogUid: "",
+      reverse: false,
       activities: [],
       itemByDate: [],
-      articleByDate: {}
+      articleByDate: {},
+      count: 0,
+      currentPage: 1,
+      pageSize: 10
     };
   },
   components: {
@@ -115,35 +119,55 @@ export default {
   mounted() {},
   created() {
     var that = this;
-    getSortList().then(response => {
+    getBlogSortList().then(response => {
       if (response.code == "success") {
-        console.log("返回的列表", response);
         var activities = response.data;
         var result = [];
         for (var a = 0; a < activities.length; a++) {
-          var temp = activities[a].replace("年", "-").replace("月", "-") + "1";
-          var dataForDate = { content: activities[a], timestamp: temp };
+          var dataForDate = {
+            sortName: activities[a].sortName,
+            uid: activities[a].uid
+          };
           result.push(dataForDate);
         }
         this.activities = result;
-        // 默认选择最后一个
-        this.clickTime(activities[activities.length - 1]);
+
+        // 默认选择第一个
+        this.getBlogList(activities[0].uid);
       }
     });
 
     var params = new URLSearchParams();
-    params.append("pageName", "SORT");
+    params.append("pageName", "CLASSIFY");
     recorderVisitPage(params).then(response => {});
   },
   methods: {
-    clickTime(content) {
-      this.selectContent = content;
+    getBlogList(blogSortUid) {
+      console.log("点击获取列表", blogSortUid);
+      this.selectBlogUid = blogSortUid;
       var params = new URLSearchParams();
-      params.append("monthDate", content);
-      getArticleByMonth(params).then(response => {
+      params.append("blogSortUid", blogSortUid);
+      getArticleByBlogSortUid(params).then(response => {
         console.log("返回的内容", response);
         if (response.code == "success") {
-          this.itemByDate = response.data;
+          this.itemByDate = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+        }
+      });
+    },
+    load() {      
+      var params = new URLSearchParams();
+      if(this.selectBlogUid == null || this.selectBlogUid == "" || this.selectBlogUid == undefined) {
+        return;
+      }
+      params.append("blogSortUid", this.selectBlogUid);
+      params.append("currentPage", this.currentPage + 1);
+      getArticleByBlogSortUid(params).then(response => {        
+        if (response.code == "success") {
+          this.itemByDate = this.itemByDate.concat(response.data.records);
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
         }
       });
     },
@@ -189,20 +213,6 @@ export default {
           }
           break;
       }
-    },
-    formatDate: function(time) {
-      var date = new Date(time);
-      var year = date.getFullYear();
-      /* 在日期格式中，月份是从0开始的，因此要加0
-       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
-       * */
-      var month =
-        date.getMonth() + 1 < 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1;
-      var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-      // 拼接
-      return year + "-" + month + "-" + day;
     }
   }
 };

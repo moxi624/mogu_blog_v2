@@ -11,7 +11,8 @@ public enum EBehavior {
 	STUDY_VIDEO("点击学习视频", "study_video"),
 	VISIT_PAGE("访问页面", "visit_page"),
 	VISIT_SORT("点击归档", "visit_sort"),
-	BLOG_AUTHOR("点击作者", "blog_author");
+	BLOG_AUTHOR("点击作者", "blog_author"),
+	VISIT_CLASSIFY("点击分类", "visit_classify");
     
     
 	private String content;
