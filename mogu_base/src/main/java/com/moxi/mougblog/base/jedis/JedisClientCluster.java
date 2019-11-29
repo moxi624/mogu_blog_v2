@@ -17,7 +17,6 @@ public class JedisClientCluster implements JedisClient {
 		this.jedisCluster = jedisCluster;
 	}
 
-	
 	public String set(String key, String value) {
 		return jedisCluster.set(key, value);
 	}

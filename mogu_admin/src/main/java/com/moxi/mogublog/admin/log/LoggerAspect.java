@@ -35,10 +35,10 @@ public class LoggerAspect {
 	  private ExceptionLog exceptionLog;
 	  
 	  @Autowired
-	  private SysLogService SysLogService;
+	  private SysLogService sysLogService;
 	  
 	  @Autowired
-	  private ExceptionLogService ExceptionLogService;
+	  private ExceptionLogService exceptionLogService;
 	  
 	  @Autowired
 	  private HttpServletRequest request;
@@ -88,7 +88,7 @@ public class LoggerAspect {
 		  SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		  sysLog.setUserName(securityUser.getUsername());
 		  sysLog.setAdminUid(securityUser.getUid());
-		  SysLogService.save(sysLog);
+		  sysLogService.save(sysLog);
 	  }
 	  
 	  @AfterThrowing(value = "pointcut(operationLogger)",throwing = "e")
@@ -102,7 +102,7 @@ public class LoggerAspect {
 		  exceptionLog.setExceptionMessage(e.getMessage());
 		  
 		  //保存异常日志信息
-		  ExceptionLogService.save(exceptionLog);
+		  exceptionLogService.save(exceptionLog);
 	  }
 	  
 	  

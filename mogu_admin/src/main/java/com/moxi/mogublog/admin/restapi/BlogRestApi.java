@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mougblog.base.enums.EPublish;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -285,7 +286,7 @@ public class BlogRestApi {
 		blog.setArticlesPart(articlesPart);
 		
 		//如果是原创，作者为用户的昵称
-		if(isOriginal.equals("1")) {
+		if("1".equals(isOriginal)) {
 			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 			if(admin != null) {
 				blog.setAuthor(admin.getNickName());
@@ -304,7 +305,7 @@ public class BlogRestApi {
 		Boolean save = blogService.save(blog);
 		
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save && isPublish.equals("1")) {
+		if(save && EPublish.PUBLISH.equals(isPublish)) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(SysConf.COMMAND, SysConf.ADD);
 			map.put(SysConf.BLOG_UID, blog.getUid());
@@ -355,7 +356,7 @@ public class BlogRestApi {
  		Integer count = blogService.count(queryWrapper);
  		if(blog != null) {
  			//传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
- 			if(blog.getLevel() != level) {
+ 			if(blog.getLevel().equals(level)) {
  				count += 1;
  			}
  		}
@@ -398,7 +399,7 @@ public class BlogRestApi {
 		blog.setCollectCount(collectCount);		
 		blog.setIsOriginal(isOriginal);		
 		//如果是原创，作者为用户的昵称
-		if(isOriginal.equals("1")) {
+		if("1".equals(isOriginal)) {
 			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());			
 			if(admin != null) {
 				blog.setAdminUid(admin.getUid());
@@ -417,7 +418,7 @@ public class BlogRestApi {
 		blog.setStatus(EStatus.ENABLE);
 		Boolean save = blog.updateById();
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save && isPublish.equals("1")) {
+		if(save && EPublish.PUBLISH.equals(isPublish)) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(SysConf.COMMAND, SysConf.EDIT);
 			map.put(SysConf.BLOG_UID, blog.getUid());
@@ -430,8 +431,7 @@ public class BlogRestApi {
 			
 			//更新solr索引
 			blogSearchService.updateIndex(blog);
-			
-		} else if(isPublish.equals("0")) {
+		} else if(EPublish.NO_PUBLISH.equals(isPublish)) {
 			
 			//这是需要做的是，是删除redis中的该条博客数据
 			Map<String, Object> map = new HashMap<String, Object>();

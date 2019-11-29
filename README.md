@@ -38,11 +38,11 @@
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
-- nuxt_mogu_web：Nuxt的门户网站
+- nuxt_mogu_web：Nuxt的门户网站（因部署时遇到问题，无法完成正常部署，故搁置...）
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼、RabbitMQ
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 
 ## 项目特点
@@ -60,7 +60,7 @@
 
 ## Docker快速搭建蘑菇博客
 
-​	可以参考 [这篇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在虚拟机中，搭建好博客系统  
+​	可以参考 [这篇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在服务器中，搭建好博客系统  
 
 ## 项目环境
 
@@ -81,6 +81,7 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 ## 致谢
 
 - 感谢**杨青小姐姐**的博客模板，http://www.yangqq.com/
+- 感谢**PanJiaChen**提供的**vue-element-admin**： https://github.com/PanJiaChen/vue-element-admin 
 - Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
 - 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
 - 感谢**JetBrains**对开源的支持： https://www.jetbrains.com/?from=mogu_blog_v2 

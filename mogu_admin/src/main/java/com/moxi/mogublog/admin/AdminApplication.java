@@ -17,7 +17,8 @@ import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableTransactionManagement
-@SpringBootApplication(exclude = VelocityAutoConfiguration.class)//redis和velocity的包会起冲突
+//redis和velocity的包会起冲突
+@SpringBootApplication(exclude = VelocityAutoConfiguration.class)
 @EnableSwagger2
 @EnableEurekaClient
 @EnableCaching

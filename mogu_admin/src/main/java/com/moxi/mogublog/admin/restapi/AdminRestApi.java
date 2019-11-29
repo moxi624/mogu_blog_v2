@@ -206,7 +206,8 @@ public class AdminRestApi {
 					return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
 				}
 
-				registered.setStatus(EStatus.ENABLE);// 设置为未审核状态
+				// 设置为未审核状态
+				registered.setStatus(EStatus.ENABLE);
 				
 				PasswordEncoder encoder = new BCryptPasswordEncoder();
 				
@@ -271,8 +272,9 @@ public class AdminRestApi {
 		if (admin == null) {
 			return ResultUtil.result(SysConf.ERROR, "管理员不存在");
 		}
-		
-		String checkValidCode = stringRedisTemplate.opsForValue().get(newInfo);//从redis中获取验证码
+
+		//从redis中获取验证码
+		String checkValidCode = stringRedisTemplate.opsForValue().get(newInfo);
 		if(checkValidCode.isEmpty()) {
 			return ResultUtil.result(SysConf.ERROR, "验证码已过期");
 		}
@@ -289,7 +291,8 @@ public class AdminRestApi {
 			}
 			admin.setUpdateTime(new Date());
 			adminService.updateById(admin);
-			stringRedisTemplate.delete(newInfo);//删除缓存中的验证码
+			//删除缓存中的验证码
+			stringRedisTemplate.delete(newInfo);
 			return ResultUtil.result(SysConf.SUCCESS, "更新成功");
 		}
 		return ResultUtil.result(SysConf.ERROR, "验证码错误");

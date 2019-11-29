@@ -156,7 +156,7 @@ public class CategoryMenuRestApi {
 	                if(o1.getSort() > o2.getSort()){
 	                    return -1;
 	                }
-	                if(o1.getSort() == o2.getSort()){
+	                if(o1.getSort().equals(o2.getSort()) ){
 	                    return 0;
 	                }
 	                return 1;

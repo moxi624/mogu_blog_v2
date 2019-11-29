@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiParam;
 public class LogRestApi {
 	
 	@Autowired
-	SysLogService SysLogService;
+	SysLogService sysLogService;
 	
 	@Autowired
 	ExceptionLogService exceptionLogService;
@@ -82,7 +82,7 @@ public class LogRestApi {
 		page.setSize(pageSize);		
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
-		IPage<SysLog> pageList = SysLogService.page(page, queryWrapper);
+		IPage<SysLog> pageList = sysLogService.page(page, queryWrapper);
 		log.info("返回结果");
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
