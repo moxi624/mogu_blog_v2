@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 22018年9月26日09:54:43
  */
+@Data
 @TableName("t_link")
 public class Link extends SuperEntity<Link> {
 
@@ -41,48 +43,4 @@ public class Link extends SuperEntity<Link> {
      * 排序字段
      */
     private Integer sort;
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public Integer getClickCount() {
-		return clickCount;
-	}
-
-	public void setClickCount(Integer clickCount) {
-		this.clickCount = clickCount;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
 }

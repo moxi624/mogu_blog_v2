@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * 相册分类实体类
@@ -12,6 +13,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @date 2018年9月17日16:10:38
  *
  */
+@Data
 @TableName("t_picture_sort")
 public class PictureSort extends SuperEntity<PictureSort>{
 	
@@ -20,62 +22,32 @@ public class PictureSort extends SuperEntity<PictureSort>{
 	 */
 	private static final long serialVersionUID = 3454006152368184626L;
 
-	private String parentUid; // 父ID
-	
-	private String name; //分类名
-	
-	private String fileUid;//分类图片Uid
+	/**
+	 * 父UID
+	 */
+	private String parentUid;
+
+	/**
+	 * 分类名
+	 */
+	private String name;
+
+	/**
+	 * 分类图片Uid
+	 */
+	private String fileUid;
 	
     /**
      * 排序字段，数值越大，越靠前
      */
     private int sort;
-	
-    @TableField(exist = false)
-    private List<String> photoList; //分类图
 
-	public String getParentUid() {
-		return parentUid;
-	}
+	//以下字段不存入数据库
 
-	public void setParentUid(String parentUid) {
-		this.parentUid = parentUid;
-	}
+	/**
+	 * 分类图
+	 */
+	@TableField(exist = false)
+    private List<String> photoList;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getFileUid() {
-		return fileUid;
-	}
-
-	public void setFileUid(String fileUid) {
-		this.fileUid = fileUid;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public List<String> getPhotoList() {
-		return photoList;
-	}
-
-	public void setPhotoList(List<String> photoList) {
-		this.photoList = photoList;
-	}
-
-	public int getSort() {
-		return sort;
-	}
-
-	public void setSort(int sort) {
-		this.sort = sort;
-	}
-	
 }

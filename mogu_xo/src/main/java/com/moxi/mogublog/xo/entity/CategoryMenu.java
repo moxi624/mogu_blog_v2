@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -14,6 +15,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018年11月23日10:35:03
  */
+@Data
 @TableName("t_category_menu")
 public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparable<CategoryMenu>{
 	
@@ -65,82 +67,6 @@ public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparabl
      */
     @TableField(exist = false)
     private List<CategoryMenu> childCategoryMenu;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getParentUid() {
-		return parentUid;
-	}
-
-	public void setParentUid(String parentUid) {
-		this.parentUid = parentUid;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-
-	public Integer getMenuLevel() {
-		return menuLevel;
-	}
-
-	public void setMenuLevel(Integer menuLevel) {
-		this.menuLevel = menuLevel;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public CategoryMenu getParentCategoryMenu() {
-		return parentCategoryMenu;
-	}
-
-	public void setParentCategoryMenu(CategoryMenu parentCategoryMenu) {
-		this.parentCategoryMenu = parentCategoryMenu;
-	}
-
-	public List<CategoryMenu> getChildCategoryMenu() {
-		return childCategoryMenu;
-	}
-
-	public void setChildCategoryMenu(List<CategoryMenu> childCategoryMenu) {
-		this.childCategoryMenu = childCategoryMenu;
-	}
 
 	@Override
 	public int compareTo(CategoryMenu o) {

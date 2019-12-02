@@ -32,6 +32,7 @@
 		<jjwt.version>0.7.0</jjwt.version>
 		<druid.version>1.1.8</druid.version>
 		<google.code.gson.version>2.7</google.code.gson.version>
+		<lombok.version>1.18.10</lombok.version>
  	</properties>
  
 

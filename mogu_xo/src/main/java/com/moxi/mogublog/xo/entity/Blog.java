@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -14,6 +15,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018-09-08
  */
+@Data
 @TableName("t_blog")
 public class Blog extends SuperEntity<Blog> {
 
@@ -93,213 +95,36 @@ public class Blog extends SuperEntity<Blog> {
      *	4：四级 推荐 (特别推荐)
      */
     private Integer level;
-    
+
+    // 以下字段不存入数据库，封装为了方便使用
+
     /**
-     * 以下字段不存入数据库，封装为了方便使用 
+	 * 标签,一篇博客对应多个标签
      */
     @TableField(exist = false)
-    private List<Tag> tagList; //标签,一篇博客对应多个标签
-    
-    @TableField(exist = false)
-    private List<String> photoList; //标题图
-    
-    @TableField(exist = false)
-    private BlogSort blogSort; //博客分类
-    
-    
-    @TableField(exist = false)
-    private Integer praiseCount; //点赞数
-    
-    @TableField(exist = false)
-    private String copyright; //版权申明
-
-	public String getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-
-	public String getSummary() {
-		return summary;
-	}
-
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-
-	public String getContent() {
-		return content;
-	}
-
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-
-	public String getTagUid() {
-		return tagUid;
-	}
-
-
-	public void setTagUid(String tagUid) {
-		this.tagUid = tagUid;
-	}
-
-
-	public Integer getClickCount() {
-		return clickCount;
-	}
-
-
-	public void setClickCount(Integer clickCount) {
-		this.clickCount = clickCount;
-	}
-
-
-	public Integer getCollectCount() {
-		return collectCount;
-	}
-
-
-	public void setCollectCount(Integer collectCount) {
-		this.collectCount = collectCount;
-	}
-
-
-	public String getFileUid() {
-		return fileUid;
-	}
-
-
-	public void setFileUid(String fileUid) {
-		this.fileUid = fileUid;
-	}
-
-
-	public List<Tag> getTagList() {
-		return tagList;
-	}
-
-
-	public void setTagList(List<Tag> tagList) {
-		this.tagList = tagList;
-	}
-
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-
-	public List<String> getPhotoList() {
-		return photoList;
-	}
-
-
-	public void setPhotoList(List<String> photoList) {
-		this.photoList = photoList;
-	}
-
-
-	public String getAdminUid() {
-		return adminUid;
-	}
-
-
-	public void setAdminUid(String adminUid) {
-		this.adminUid = adminUid;
-	}
-
-	public String getIsOriginal() {
-		return isOriginal;
-	}
-
-
-	public void setIsOriginal(String isOriginal) {
-		this.isOriginal = isOriginal;
-	}
-
-
-	public String getAuthor() {
-		return author;
-	}
-
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-
-	public String getArticlesPart() {
-		return articlesPart;
-	}
-
-
-	public void setArticlesPart(String articlesPart) {
-		this.articlesPart = articlesPart;
-	}
-
-
-	public String getBlogSortUid() {
-		return blogSortUid;
-	}
-
-
-	public void setBlogSortUid(String blogSortUid) {
-		this.blogSortUid = blogSortUid;
-	}
-
-
-	public BlogSort getBlogSort() {
-		return blogSort;
-	}
-
-
-	public void setBlogSort(BlogSort blogSort) {
-		this.blogSort = blogSort;
-	}
-
-	public Integer getLevel() {
-		return level;
-	}
-
-	public void setLevel(Integer level) {
-		this.level = level;
-	}
-
-
-	public String getIsPublish() {
-		return isPublish;
-	}
-
-
-	public void setIsPublish(String isPublish) {
-		this.isPublish = isPublish;
-	}
-
-	public Integer getPraiseCount() {
-		return praiseCount;
-	}
-
-	public void setPraiseCount(Integer praiseCount) {
-		this.praiseCount = praiseCount;
-	}
-
-
-	public String getCopyright() {
-		return copyright;
-	}
-
-
-	public void setCopyright(String copyright) {
-		this.copyright = copyright;
-	}
-
+    private List<Tag> tagList;
+
+	/**
+	 * 标题图
+	 */
+	@TableField(exist = false)
+    private List<String> photoList;
+
+	/**
+	 * 博客分类
+	 */
+	@TableField(exist = false)
+    private BlogSort blogSort;
+
+	/**
+	 * 点赞数
+	 */
+	@TableField(exist = false)
+    private Integer praiseCount;
+
+	/**
+	 * 版权申明
+	 */
+	@TableField(exist = false)
+    private String copyright;
 }

@@ -3,6 +3,7 @@ package com.moxi.mogublog.xo.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author limbo
  * @since 2018-09-30
  */
+@Data
 @TableName("t_admin_role")
 public class AdminRole extends SuperEntity<AdminRole>{
 
@@ -41,41 +43,5 @@ public class AdminRole extends SuperEntity<AdminRole>{
      */
     @TableField(exist = false)
     private Role role;
-    
-	public String getAdminUid() {
-		return adminUid;
-	}
-
-	public void setAdminUid(String adminUid) {
-		this.adminUid = adminUid;
-	}
-
-	public String getRoleUid() {
-		return roleUid;
-	}
-
-	public void setRoleUid(String roleUid) {
-		this.roleUid = roleUid;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public Admin getAdmin() {
-		return admin;
-	}
-
-	public void setAdmin(Admin admin) {
-		this.admin = admin;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
 
 }

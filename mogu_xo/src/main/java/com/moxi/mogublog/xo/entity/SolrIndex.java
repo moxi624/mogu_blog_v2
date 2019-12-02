@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import java.util.Date;
 
+import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
 
 /**
@@ -9,6 +10,7 @@ import org.apache.solr.client.solrj.beans.Field;
  * @author limboy
  * @create 2018-09-29 16:12
  */
+@Data
 public class SolrIndex {
     /**
      * 博客uid
@@ -72,103 +74,9 @@ public class SolrIndex {
     
     /**
      * 以下字段不存入solr索引库中
-     * 
+     * 标题图
      */
     @Field("photo_list")
-    private String photoList; //标题图
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getBlogSort() {
-        return blogSort;
-    }
-
-    public void setBlogSort(String blogSort) {
-        this.blogSort = blogSort;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-    
-    public String getFileUid() {
-		return fileUid;
-	}
-
-	public void setFileUid(String fileUid) {
-		this.fileUid = fileUid;
-	}
-
-	public String getPhotoList() {
-		return photoList;
-	}
-
-	public void setPhotoList(String photoList) {
-		this.photoList = photoList;
-	}
-	
-	public String getBlogTagUid() {
-		return blogTagUid;
-	}
-
-	public void setBlogTagUid(String blogTagUid) {
-		this.blogTagUid = blogTagUid;
-	}
-
-	public String getBlogSortUid() {
-		return blogSortUid;
-	}
-
-	public void setBlogSortUid(String blogSortUid) {
-		this.blogSortUid = blogSortUid;
-	}
-
-	@Override
-    public String toString() {
-        return "SolrIndex [id=" + id + ", title=" + title + ", summary=" + summary + ", tag=" + tag + ", blogSort="
-                + blogSort + ", author=" + author + ", updateTime=" + updateTime + "]";
-    }
+    private String photoList;
 
 }

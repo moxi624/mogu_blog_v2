@@ -2,6 +2,8 @@ package com.moxi.mogublog.xo.entity;
 
 import java.util.Date;
 import java.util.List;
+
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -16,6 +18,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018-09-04
  */
+@Data
 @TableName("t_admin")
 public class Admin extends SuperEntity<Admin> {
 
@@ -110,11 +113,13 @@ public class Admin extends SuperEntity<Admin> {
 	 */
 	private String gitee;
     
+    // 以下字段不存入数据库
+
     /**
-     * 以下字段不存入数据库
+     * 用户头像
      */
     @TableField(exist = false)
-    private List<String> photoList; //用户头像
+    private List<String> photoList;
     
     /**
      * 所拥有的角色名
@@ -134,176 +139,4 @@ public class Admin extends SuperEntity<Admin> {
     @TableField(exist = false)
     private String validCode;
 
-    
-    public List<Role> getRoleList() {
-		return roleList;
-	}
-
-	public void setRoleList(List<Role> roleList) {
-		this.roleList = roleList;
-	}
-
-	public List<String> getRoleNames() {
-		return roleNames;
-	}
-
-	public void setRoleNames(List<String> roleNames) {
-		this.roleNames = roleNames;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassWord() {
-		return passWord;
-	}
-
-	public void setPassWord(String passWord) {
-		this.passWord = passWord;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Date getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public Integer getLoginCount() {
-		return loginCount;
-	}
-
-	public void setLoginCount(Integer loginCount) {
-		this.loginCount = loginCount;
-	}
-
-	public Date getLastLoginTime() {
-		return lastLoginTime;
-	}
-
-	public void setLastLoginTime(Date lastLoginTime) {
-		this.lastLoginTime = lastLoginTime;
-	}
-
-	public String getLastLoginIp() {
-		return lastLoginIp;
-	}
-
-	public void setLastLoginIp(String lastLoginIp) {
-		this.lastLoginIp = lastLoginIp;
-	}
-	
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public String getNickName() {
-		return nickName;
-	}
-
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-
-	public String getQqNumber() {
-		return qqNumber;
-	}
-
-	public void setQqNumber(String qqNumber) {
-		this.qqNumber = qqNumber;
-	}
-
-	public String getWeChat() {
-		return weChat;
-	}
-
-	public void setWeChat(String weChat) {
-		this.weChat = weChat;
-	}
-
-	public String getOccupation() {
-		return occupation;
-	}
-
-	public void setOccupation(String occupation) {
-		this.occupation = occupation;
-	}
-
-	public List<String> getPhotoList() {
-		return photoList;
-	}
-
-	public void setPhotoList(List<String> photoList) {
-		this.photoList = photoList;
-	}
-
-	public String getValidCode() {
-		return validCode;
-	}
-
-	public void setValidCode(String validCode) {
-		this.validCode = validCode;
-	}
-
-	public String getGithub() {
-		return github;
-	}
-
-	public void setGithub(String github) {
-		this.github = github;
-	}
-
-	public String getGitee() {
-		return gitee;
-	}
-
-	public void setGitee(String gitee) {
-		this.gitee = gitee;
-	}
 }

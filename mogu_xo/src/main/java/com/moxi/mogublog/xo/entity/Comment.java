@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018-09-08
  */
+@Data
 @TableName("t_comment")
 public class Comment extends SuperEntity<Comment> {
 
@@ -45,57 +47,5 @@ public class Comment extends SuperEntity<Comment> {
      * 博客uid
      */
     private String blogUid;
-
-	public String getUserUid() {
-		return userUid;
-	}
-
-	public void setUserUid(String userUid) {
-		this.userUid = userUid;
-	}
-
-	public String getToUid() {
-		return toUid;
-	}
-
-	public void setToUid(String toUid) {
-		this.toUid = toUid;
-	}
-
-	public String getToUserUid() {
-		return toUserUid;
-	}
-
-	public void setToUserUid(String toUserUid) {
-		this.toUserUid = toUserUid;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getBlogUid() {
-		return blogUid;
-	}
-
-	public void setBlogUid(String blogUid) {
-		this.blogUid = blogUid;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -14,6 +15,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author xuzhixiang
  * @since 2018年10月19日20:46:51
  */
+@Data
 @TableName("t_study_video")
 public class StudyVideo extends SuperEntity<StudyVideo> {
 
@@ -54,86 +56,16 @@ public class StudyVideo extends SuperEntity<StudyVideo> {
      * 点击数
      */
     private String clickCount;
-    
+
+	/**
+	 * 学习视频标题图
+	 */
+	@TableField(exist = false)
+    private List<String> photoList;
+
+	/**
+	 * 资源分类
+	 */
     @TableField(exist = false)
-    private List<String> photoList; //学习视频标题图
-
-    @TableField(exist = false)
-    private ResourceSort resourceSort; //学习视频标题图
-    
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getBaiduPath() {
-		return baiduPath;
-	}
-
-	public void setBaiduPath(String baiduPath) {
-		this.baiduPath = baiduPath;
-	}
-
-	public String getFileUid() {
-		return fileUid;
-	}
-
-	public void setFileUid(String fileUid) {
-		this.fileUid = fileUid;
-	}
-
-	public String getResourceSortUid() {
-		return resourceSortUid;
-	}
-
-	public void setResourceSortUid(String resourceSortUid) {
-		this.resourceSortUid = resourceSortUid;
-	}
-
-	public String getClickCount() {
-		return clickCount;
-	}
-
-	public void setClickCount(String clickCount) {
-		this.clickCount = clickCount;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public List<String> getPhotoList() {
-		return photoList;
-	}
-
-	public void setPhotoList(List<String> photoList) {
-		this.photoList = photoList;
-	}
-
-	public ResourceSort getResourceSort() {
-		return resourceSort;
-	}
-
-	public void setResourceSort(ResourceSort resourceSort) {
-		this.resourceSort = resourceSort;
-	}
+    private ResourceSort resourceSort;
 }

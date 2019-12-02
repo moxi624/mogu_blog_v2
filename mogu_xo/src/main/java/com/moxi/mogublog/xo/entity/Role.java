@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import lombok.Data;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
  * @author limbo
  * @since 2018-09-30
  */
+@Data
 @TableName("t_role")
 public class Role extends SuperEntity<Role>{
 	
@@ -30,32 +32,4 @@ public class Role extends SuperEntity<Role>{
      * 该角色所能管辖的区域
      */
     private String categoryMenuUids;
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getCategoryMenuUids() {
-		return categoryMenuUids;
-	}
-
-	public void setCategoryMenuUids(String categoryMenuUids) {
-		this.categoryMenuUids = categoryMenuUids;
-	}
 }
