@@ -57,7 +57,6 @@ public class SuperEntity<T extends Model> extends Model {
 	private Date updateTime;
 	
 	public SuperEntity() {
-		
 		this.status = 1;
 		this.createTime = new Date(); 
 		this.updateTime = new Date(); 

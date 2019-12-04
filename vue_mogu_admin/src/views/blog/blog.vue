@@ -8,6 +8,7 @@
         style="width: 200px;"
         v-model="keyword"
         placeholder="请输入博客名"
+        @keyup.enter.native="handleFind"
       ></el-input>
 
       <el-select
@@ -18,6 +19,7 @@
         reserve-keyword
         placeholder="请输入分类名"
         :remote-method="sortRemoteMethod"
+        @keyup.enter.native="handleFind"
         :loading="loading"
       >
         <el-option
@@ -37,6 +39,7 @@
         placeholder="请输入标签名"
         :remote-method="tagRemoteMethod"
         :loading="loading"
+        @keyup.enter.native="handleFind"
         style="width:180px"
       >
         <el-option
@@ -418,18 +421,23 @@ export default {
   },
   methods: {
     blogList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("blogSortUid", this.sortKeyword);
-      params.append("tagUid", this.tagKeyword);
-      params.append("levelKeyword", this.levelKeyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+
+      var params = {};
+      params.uid = "123";
+      params.keyword = this.keyword;
+      params.blogSortUid = this.sortKeyword;
+      params.tagUid = this.tagKeyword;
+      params.levelKeyword = this.levelKeyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
+      // var params = formatData(params);
       getBlogList(params).then(response => {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        if(response.code == "success") {
+          this.tableData = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        }
       });
     },
     getFormObject: function() {
@@ -654,9 +662,11 @@ export default {
         });
         return;
       }
+
       var params = formatData(this.form);
       if (this.isEditForm) {
-        editBlog(params).then(response => {
+
+        editBlog(this.form).then(response => {
           if (response.code == "success") {
             this.$message({
               type: "success",
@@ -671,8 +681,10 @@ export default {
             });
           }
         });
+        
       } else {
-        addBlog(params).then(response => {
+
+        addBlog(this.form).then(response => {
           if (response.code == "success") {
             this.$message({
               type: "success",
@@ -694,6 +706,8 @@ export default {
             });
           }
         });
+
+
       }
     }
   }

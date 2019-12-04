@@ -43,7 +43,7 @@
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，RabbitMQ，阿里大鱼
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 
 ## 项目特点

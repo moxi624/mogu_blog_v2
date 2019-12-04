@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mougblog.base.service.SuperService;
+import com.moxi.mougblog.base.vo.Result;
 
 /**
  * <p>
@@ -79,5 +80,5 @@ public interface BlogService extends SuperService<Blog> {
 	 * @return
 	 */
 	public void setBlogCopyright(Blog blog);
-		
+
 }

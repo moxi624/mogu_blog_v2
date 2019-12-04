@@ -18,12 +18,10 @@ public class Tag extends SuperEntity<Tag> {
 
     private static final long serialVersionUID = 1L;
 
-
     /**
      * 标签内容
      */
     private String content;
-
 
     /**
      * 标签简介

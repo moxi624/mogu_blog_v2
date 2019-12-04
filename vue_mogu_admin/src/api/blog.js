@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function getBlogList(params) {
   return request({
     url: process.env.ADMIN_API + '/blog/getList',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 

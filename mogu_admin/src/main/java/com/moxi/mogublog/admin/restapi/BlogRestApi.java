@@ -8,19 +8,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import com.moxi.mogublog.admin.vo.BlogVO;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mougblog.base.enums.EPublish;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -91,7 +95,7 @@ public class BlogRestApi {
 	
 	@Value(value="${BLOG.SECOND_COUNT}")
 	private Integer BLOG_SECOND_COUNT;
-	
+
 	@Value(value="${BLOG.THIRD_COUNT}")
 	private Integer BLOG_THIRD_COUNT;
 	
@@ -102,47 +106,42 @@ public class BlogRestApi {
     private BlogSearchService blogSearchService;
 	
 	private static Logger log = LogManager.getLogger(AdminRestApi.class);
-		
-	@ApiOperation(value="获取博客列表", notes="获取博客列表", response = String.class)	
-	@RequestMapping(value = "/getList", method = RequestMethod.GET)
-	public String getList(HttpServletRequest request,
-			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
-			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-			@ApiParam(name = "blogSortUid", value = "分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-			@ApiParam(name = "levelKeyword", value = "博客等级",required = false) @RequestParam(name = "levelKeyword", required = false) String levelKeyword,
-			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-		
-		QueryWrapper<Blog> queryWrapper = new QueryWrapper<Blog>();
-		if(StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
-			queryWrapper.like(SQLConf.TITLE, keyword.trim());
+
+	@ApiOperation(value="获取博客列表", notes="获取博客列表", response = String.class)
+	@PostMapping("/getList")
+	public String getList(@Validated({GetList.class}) @RequestBody BlogVO blogVO, BindingResult result) {
+
+		ThrowableUtils.checkParamArgument(result);
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		if(StringUtils.isNotEmpty(blogVO.getKeyword()) && !StringUtils.isEmpty(blogVO.getKeyword().trim())) {
+			queryWrapper.like(SQLConf.TITLE, blogVO.getKeyword().trim());
 		}
-		if(!StringUtils.isEmpty(tagUid)) {
-			queryWrapper.like(SQLConf.TAG_UID, tagUid);
+		if(!StringUtils.isEmpty(blogVO.getTagUid())) {
+			queryWrapper.like(SQLConf.TAG_UID, blogVO.getTagUid());
 		}
-		if(!StringUtils.isEmpty(blogSortUid)) {
-			queryWrapper.like(SQLConf.BLOG_SORT_UID, blogSortUid);
+		if(!StringUtils.isEmpty(blogVO.getBlogSortUid())) {
+			queryWrapper.like(SQLConf.BLOG_SORT_UID, blogVO.getBlogSortUid());
 		}
-		if(!StringUtils.isEmpty(levelKeyword)) {
-			queryWrapper.eq(SQLConf.LEVEL, levelKeyword);
+		if(!StringUtils.isEmpty(blogVO.getLevelKeyword())) {
+			queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevelKeyword());
 		}
-		
-		//分页 
+
+		//分页
 		Page<Blog> page = new Page<>();
-		page.setCurrent(currentPage);
-		page.setSize(pageSize);
-		
+		page.setCurrent(blogVO.getCurrentPage());
+		page.setSize(blogVO.getPageSize());
+
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-		
+
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		
+
 		IPage<Blog> pageList = blogService.page(page, queryWrapper);
 		List<Blog> list = pageList.getRecords();
-		
+
 		if(list.size() == 0) {
 			return ResultUtil.result(SysConf.SUCCESS, pageList);
 		}
-		
+
 		final StringBuffer fileUids = new StringBuffer();
 		List<String> sortUids = new ArrayList<>();
 		List<String> tagUids = new ArrayList<>();
@@ -157,136 +156,93 @@ public class BlogRestApi {
 			if(StringUtils.isNotEmpty(item.getTagUid())) {
 				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
 				for(String itemTagUid : tagUidsTemp) {
-					tagUids.add(itemTagUid);	
-				}				
+					tagUids.add(itemTagUid);
+				}
 			}
 		});
 		String pictureList = null;
-		
+
 		if(fileUids != null) {
 			pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
 		}
-		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);				
-		Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);		
+		List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+		Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
 		Collection<Tag> tagList = tagService.listByIds(tagUids);
-		
-		Map<String, BlogSort> sortMap = new HashMap<String, BlogSort> ();
-		Map<String, Tag> tagMap = new HashMap<String, Tag>();
-		Map<String, String> pictureMap = new HashMap<String, String>();
-		
+
+		Map<String, BlogSort> sortMap = new HashMap<> ();
+		Map<String, Tag> tagMap = new HashMap<>();
+		Map<String, String> pictureMap = new HashMap<>();
+
 		sortList.forEach(item -> {
 			sortMap.put(item.getUid(), item);
 		});
-		
+
 		tagList.forEach(item -> {
 			tagMap.put(item.getUid(), item);
 		});
-		
+
 		picList.forEach(item -> {
 			pictureMap.put(item.get("uid").toString(), item.get("url").toString());
 		});
-		
-		
+
+
 		for(Blog item : list) {
-			
-			//设置分类			
+
+			//设置分类
 			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
-				item.setBlogSort(sortMap.get(item.getBlogSortUid()));	
+				item.setBlogSort(sortMap.get(item.getBlogSortUid()));
 			}
-						
+
 			//获取标签
 			if(StringUtils.isNotEmpty(item.getTagUid())) {
 				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
 				List<Tag> tagListTemp = new ArrayList<Tag>();
-				
+
 				tagUidsTemp.forEach(tag -> {
 					tagListTemp.add(tagMap.get(tag));
 				});
-				item.setTagList(tagListTemp);	
+				item.setTagList(tagListTemp);
 			}
-			
+
 			//获取图片
 			if(StringUtils.isNotEmpty(item.getFileUid())) {
 				List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
 				List<String> pictureListTemp = new ArrayList<String>();
-				
+
 				pictureUidsTemp.forEach(picture -> {
 					pictureListTemp.add(pictureMap.get(picture));
 				});
 				item.setPhotoList(pictureListTemp);
-			}		
+			}
 		}
 
 		pageList.setRecords(list);
 		return ResultUtil.result(SysConf.SUCCESS, pageList);
 	}
-	
-	@OperationLogger(value="增加博客")
-	@ApiOperation(value="增加博客", notes="增加博客", response = String.class)	
-	@PostMapping("/add")
-	public String add(HttpServletRequest request,
-			@ApiParam(name = "title", value = "博客标题",required = true) @RequestParam(name = "title", required = true) String title,
-			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
-			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "tagUid", value = "标签uid",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false, defaultValue = "1") Integer clickCount,
-			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
-			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
-			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
-			@ApiParam(name = "isPublish", value = "是否发布",required = false) @RequestParam(name = "isPublish", required = false, defaultValue = "1") String isPublish,
-			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
-			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
-			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-			@ApiParam(name = "fileUid", value = "标题图Uid",required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
-		
- 		if(StringUtils.isEmpty(title) || StringUtils.isEmpty(content) || StringUtils.isEmpty(blogSortUid)) {
-			return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
-		}
- 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
- 		queryWrapper.eq(SQLConf.LEVEL, level);
- 		Integer count = blogService.count(queryWrapper);
- 		
- 		//添加的时候进行判断
-		switch(level) {
 
-			case ELevel.FIRST: { 
-				if(count > BLOG_FIRST_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.SECOND: {
-				if(count > BLOG_SECOND_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.THIRD: {
-				if(count > BLOG_THIRD_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.FOURTH: { 
-				if(count > BLOG_FOURTH_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
-				}
-			} break;
+	@OperationLogger(value="增加博客")
+	@ApiOperation(value="增加博客", notes="增加博客", response = String.class)
+	@PostMapping("/add")
+	public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody BlogVO blogVO, BindingResult result) {
+
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+		Integer count = blogService.count(queryWrapper);
+
+		String addVerdictResult = addVerdict(count, blogVO.getLevel());
+
+		// 判断是否能够添加推荐
+		if(StringUtils.isNotBlank(addVerdictResult)) {
+			return addVerdictResult;
 		}
+
 		Blog blog = new Blog();
-		blog.setTitle(title);
-		blog.setSummary(summary);
-		blog.setContent(content);		
-		blog.setTagUid(tagUid);
-		blog.setBlogSortUid(blogSortUid);
-		blog.setClickCount(clickCount);
-		blog.setCollectCount(collectCount);
-		blog.setFileUid(fileUid);
-		blog.setLevel(level);		
-		blog.setArticlesPart(articlesPart);
-		
+
 		//如果是原创，作者为用户的昵称
-		if("1".equals(isOriginal)) {
+		if("1".equals(blogVO.getIsOriginal())) {
 			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 			if(admin != null) {
 				blog.setAuthor(admin.getNickName());
@@ -294,166 +250,87 @@ public class BlogRestApi {
 			}
 			blog.setArticlesPart(PROJECT_NAME);
 		} else {
-			if(StringUtils.isEmpty(author)) {
-				return ResultUtil.result(SysConf.ERROR, "作者不能为空");
-			}
-			blog.setAuthor(author);
+			blog.setAuthor(blogVO.getAuthor());
 		}
-		blog.setIsOriginal(isOriginal);
-		blog.setIsPublish(isPublish);
+
+		blog.setTitle(blogVO.getTitle());
+		blog.setSummary(blogVO.getSummary());
+		blog.setContent(blogVO.getContent());
+		blog.setTagUid(blogVO.getTagUid());
+		blog.setBlogSortUid(blogVO.getBlogSortUid());
+		blog.setFileUid(blogVO.getFileUid());
+		blog.setLevel(blogVO.getLevel());
+		blog.setIsOriginal(blogVO.getIsOriginal());
+		blog.setIsPublish(blogVO.getIsPublish());
 		blog.setStatus(EStatus.ENABLE);
-		Boolean save = blogService.save(blog);
-		
+		Boolean isSave = blogService.save(blog);
+
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save && EPublish.PUBLISH.equals(isPublish)) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(SysConf.COMMAND, SysConf.ADD);
-			map.put(SysConf.BLOG_UID, blog.getUid());
-			map.put(SysConf.LEVEL, blog.getLevel());
-			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
-			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);	
-			
-			//获取图片
-			if(StringUtils.isNotEmpty(blog.getFileUid())) {
-				String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");	
-				List<String> picList = WebUtils.getPicture(pictureList);
-				blog.setPhotoList(picList);				
-			}
-						
-			//增加solr索引
-			blogSearchService.addIndex(blog);
-		}
+		updateSolrAndRedis(isSave, blog);
 
 		return ResultUtil.result(SysConf.SUCCESS, "添加成功");
 	}
-	
+
 	@OperationLogger(value="编辑博客")
 	@ApiOperation(value="编辑博客", notes="编辑博客", response = String.class)
 	@PostMapping("/edit")
-	public String edit(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid,
-			@ApiParam(name = "title", value = "博客标题",required = false) @RequestParam(name = "title", required = false) String title,
-			@ApiParam(name = "summary", value = "博客简介",required = false) @RequestParam(name = "summary", required = false) String summary,
-			@ApiParam(name = "content", value = "博客正文",required = false) @RequestParam(name = "content", required = false) String content,
-			@ApiParam(name = "tagUid", value = "标签UID",required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-			@ApiParam(name = "blogSortUid", value = "博客分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-			@ApiParam(name = "clickCount", value = "点击数",required = false) @RequestParam(name = "clickCount", required = false) Integer clickCount,
-			@ApiParam(name = "level", value = "推荐等级",required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
-			@ApiParam(name = "collectCount", value = "收藏数",required = false) @RequestParam(name = "collectCount", required = false, defaultValue = "0") Integer collectCount,
-			@ApiParam(name = "isOriginal", value = "是否原创",required = false) @RequestParam(name = "isOriginal", required = false, defaultValue = "1") String isOriginal,
-			@ApiParam(name = "isPublish", value = "是否发布",required = false) @RequestParam(name = "isPublish", required = false, defaultValue = "1") String isPublish,
-			@ApiParam(name = "author", value = "作者",required = false) @RequestParam(name = "author", required = true) String author,
-			@ApiParam(name = "articlesPart", value = "文章出处",required = false) @RequestParam(name = "articlesPart", required = false) String articlesPart,
-			@ApiParam(name = "fileUid", value = "标题图UID",required = false) @RequestParam(name = "fileUid", required = false) String fileUid ) {
-		
-		if(StringUtils.isEmpty(uid)) {
-			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}
-		Blog blog = blogService.getById(uid);
- 		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
- 		queryWrapper.eq(SQLConf.LEVEL, level);
- 		Integer count = blogService.count(queryWrapper);
- 		if(blog != null) {
- 			//传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
- 			if(blog.getLevel().equals(level)) {
- 				count += 1;
- 			}
- 		}
- 		//添加的时候进行判断
-		switch(level) {
+	public String edit(HttpServletRequest request, @Validated({Update.class}) @RequestBody BlogVO blogVO, BindingResult result) {
 
-			case ELevel.FIRST: { 
-				if(count > BLOG_FIRST_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.SECOND: {
-				if(count > BLOG_SECOND_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.THIRD: {
-				if(count > BLOG_THIRD_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
-				}
-			} break;
-			
-			case ELevel.FOURTH: { 
-				if(count > BLOG_FOURTH_COUNT) {
-					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
-				}
-			} break;
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
+		Blog blog = blogService.getById(blogVO.getUid());
+		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+		queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+		Integer count = blogService.count(queryWrapper);
+		if(blog != null) {
+			//传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
+			if(blog.getLevel().equals(blogVO.getLevel())) {
+				count += 1;
+			}
 		}
-		
-		blog.setTitle(title);
-		blog.setSummary(summary);
-		blog.setContent(content);
-		blog.setTagUid(tagUid);
-		blog.setBlogSortUid(blogSortUid);
-		blog.setFileUid(fileUid);
-		blog.setClickCount(clickCount);
-		blog.setLevel(level);
-		blog.setCollectCount(collectCount);		
-		blog.setIsOriginal(isOriginal);		
+		String addVerdictResult = addVerdict(count, blogVO.getLevel());
+		//添加的时候进行判断
+		if(StringUtils.isNotBlank(addVerdictResult)) {
+			return addVerdictResult;
+		}
+
 		//如果是原创，作者为用户的昵称
-		if("1".equals(isOriginal)) {
-			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());			
+		if("1".equals(blogVO.getIsOriginal())) {
+			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 			if(admin != null) {
-				blog.setAdminUid(admin.getUid());
 				blog.setAuthor(admin.getNickName());
-				blog.setArticlesPart(PROJECT_NAME);
+				blog.setAdminUid(admin.getUid());
 			}
+			blog.setArticlesPart(PROJECT_NAME);
 		} else {
-			if(StringUtils.isEmpty(author)) {
-				return ResultUtil.result(SysConf.ERROR, "作者名不能为空");
-			}
-			blog.setAuthor(author);
+			blog.setAuthor(blogVO.getAuthor());
 		}
-		
-		blog.setIsPublish(isPublish);
-		blog.setArticlesPart(articlesPart);
+
+		blog.setTitle(blogVO.getTitle());
+		blog.setSummary(blogVO.getSummary());
+		blog.setContent(blogVO.getContent());
+		blog.setTagUid(blogVO.getTagUid());
+		blog.setBlogSortUid(blogVO.getBlogSortUid());
+		blog.setFileUid(blogVO.getFileUid());
+		blog.setLevel(blogVO.getLevel());
+		blog.setIsOriginal(blogVO.getIsOriginal());
+		blog.setIsPublish(blogVO.getIsPublish());
 		blog.setStatus(EStatus.ENABLE);
-		Boolean save = blog.updateById();
+
+		Boolean isSave = blog.updateById();
+
 		//保存成功后，需要发送消息到solr 和 redis
-		if(save && EPublish.PUBLISH.equals(isPublish)) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(SysConf.COMMAND, SysConf.EDIT);
-			map.put(SysConf.BLOG_UID, blog.getUid());
-			map.put(SysConf.LEVEL, blog.getLevel());
-			String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
-			System.out.println(dateTime);
-			map.put(SysConf.CREATE_TIME, dateTime);
-			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
-			
-			//更新solr索引
-			blogSearchService.updateIndex(blog);
-		} else if(EPublish.NO_PUBLISH.equals(isPublish)) {
-			
-			//这是需要做的是，是删除redis中的该条博客数据
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(SysConf.COMMAND, SysConf.EDIT);
-			map.put(SysConf.BLOG_UID, blog.getUid());
-			map.put(SysConf.LEVEL, blog.getLevel());
-			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
-			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
-			
-			//当设置下架状态时，删除博客索引
-			blogSearchService.deleteIndex(blog.getUid());
-		}
-		
+		updateSolrAndRedis(isSave, blog);
+
 		return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
 	}
-	
+
 	@OperationLogger(value="删除博客")
 	@ApiOperation(value="删除博客", notes="删除博客", response = String.class)
 	@PostMapping("/delete")
 	public String delete(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
+			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid ) {
 		
 		if(StringUtils.isEmpty(uid)) {
 			return ResultUtil.result(SysConf.ERROR, "数据错误");
@@ -479,7 +356,95 @@ public class BlogRestApi {
 		}
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
 	}
-	
-		
+
+	/**
+	 * 添加的时候进行判断
+	 * @param count
+	 * @param level
+	 * @return
+	 */
+	private String addVerdict(Integer count , Integer level) {
+		//添加的时候进行判断
+		switch(level) {
+			case ELevel.FIRST: {
+				if(count > BLOG_FIRST_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
+				}
+			} break;
+
+			case ELevel.SECOND: {
+				if(count > BLOG_SECOND_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
+				}
+			} break;
+
+			case ELevel.THIRD: {
+				if(count > BLOG_THIRD_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
+				}
+			} break;
+
+			case ELevel.FOURTH: {
+				if(count > BLOG_FOURTH_COUNT) {
+					return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
+				}
+			} break;
+			default:
+			{
+
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 设置图片
+	 * @param blog
+	 */
+	private void setPhoto(Blog blog) {
+		if(StringUtils.isNotEmpty(blog.getFileUid())) {
+			String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
+			List<String> picList = WebUtils.getPicture(pictureList);
+			blog.setPhotoList(picList);
+		}
+	}
+
+	/**
+	 * 保存成功后，需要发送消息到solr 和 redis
+	 * @param isSave
+	 * @param blog
+	 */
+	private void updateSolrAndRedis(Boolean isSave, Blog blog) {
+		if(isSave && EPublish.PUBLISH.equals(blog.getIsPublish())) {
+			Map<String, Object> map = new HashMap<>();
+			map.put(SysConf.COMMAND, SysConf.ADD);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
+
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+			//设置图片
+			setPhoto(blog);
+
+			//增加solr索引
+			blogSearchService.addIndex(blog);
+		} else if(EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
+
+			//这是需要做的是，是删除redis中的该条博客数据
+			Map<String, Object> map = new HashMap<>();
+			map.put(SysConf.COMMAND, SysConf.EDIT);
+			map.put(SysConf.BLOG_UID, blog.getUid());
+			map.put(SysConf.LEVEL, blog.getLevel());
+			map.put(SysConf.CREATE_TIME, blog.getCreateTime());
+
+			//发送到RabbitMq
+			rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+			//当设置下架状态时，删除博客索引
+			blogSearchService.deleteIndex(blog.getUid());
+		}
+	}
 }
 

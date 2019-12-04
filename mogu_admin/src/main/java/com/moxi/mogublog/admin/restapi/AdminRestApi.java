@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.admin.vo.AdminVO;
 import org.apache.commons.collections.bag.SynchronizedSortedBag;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -190,11 +191,11 @@ public class AdminRestApi {
 				return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
 			}
 				
-			QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+			QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
 			queryWrapper.eq(SQLConf.USER_NAME, userName);
 			Admin admin = adminService.getOne(queryWrapper);
 			
-			QueryWrapper<Admin> wrapper= new QueryWrapper<Admin>();
+			QueryWrapper<Admin> wrapper= new QueryWrapper<>();
 			if (admin == null) {
 				if(StringUtils.isNotEmpty(email)) {
 					wrapper.eq(SQLConf.EMAIL, email);
