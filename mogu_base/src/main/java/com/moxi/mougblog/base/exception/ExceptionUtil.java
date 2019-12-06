@@ -5,8 +5,8 @@ import com.moxi.mougblog.base.vo.Result;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @Author:byteblogs
- * @Date:2018/09/27 12:52
+ * @Author: 陌溪
+ * @Date: 2019年12月4日22:47:08
  */
 public class ExceptionUtil {
 

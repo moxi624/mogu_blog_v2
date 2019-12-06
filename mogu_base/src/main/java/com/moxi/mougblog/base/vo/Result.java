@@ -17,19 +17,47 @@ import java.util.List;
 @Accessors(chain = true)
 public class Result<T> {
 
-    private int success = 0; // 操作标识，标记
-    private String resultCode; // 结果编码
-    private String message; // 提示信息
-    private T model; // 结果对象
-    private List<T> models; // 结果集对象
-    private PageInfo pageInfo; // 分页信息对象
-    private Object extra; // 扩展字段
+    /**
+     * 操作标识，标记
+     */
+    private int success = 0;
+    /**
+     * 结果编码
+     */
+    private String resultCode;
+    /**
+     * 提示信息
+     */
+    private String message;
+    /**
+     * 结果对象
+     */
+    private T model;
+    /**
+     * 结果集对象
+     */
+    private List<T> models;
+    /**
+     * 分页信息对象
+     */
+    private PageInfo pageInfo;
+    /**
+     * 扩展字段
+     */
+    private Object extra;
 
-    // 禁止空参构造
+    /**
+     * 禁止空参构造
+     */
     private Result() {
     }
 
-    // 通过操作标识及提示信息构建结果对象
+    /**
+     * 通过操作标识及提示信息构建结果对象
+     * @param success
+     * @param <T>
+     * @return
+     */
     private static <T> Result<T> createWithSuccessFlag(int success) {
         Result result = new Result();
         result.setSuccess(success);

@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.entity;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
@@ -28,7 +29,9 @@ public class Blog extends SuperEntity<Blog> {
 
     /**
      * 博客简介
+     * updateStrategy = FieldStrategy.IGNORED ：表示更新时候忽略非空判断
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String summary;
 
     /**
@@ -59,6 +62,7 @@ public class Blog extends SuperEntity<Blog> {
     /**
      * 标题图片UID
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String fileUid;
     
     /**

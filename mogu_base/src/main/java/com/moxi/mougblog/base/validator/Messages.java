@@ -1,7 +1,7 @@
 package com.moxi.mougblog.base.validator;
 
 /**
- *
+ * 错误消息模板
  */
 public interface Messages {
     /**

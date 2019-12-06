@@ -1,8 +1,9 @@
 package com.moxi.mougblog.base.validator.group;
 
 /**
- * @author: byteblogs
- * @date: 2019/9/30 19:13
+ * Update 用于 edit更新
+ * @author: 陌溪
+ * @date: 2019年12月4日22:49:53
  */
 public interface Update {
 }

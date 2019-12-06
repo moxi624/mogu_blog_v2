@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Andy Chen
- * @date 9/30/19 1:30 PM
+ * @author 陌溪
+ * @date 2019年12月4日22:47:18
  */
 public class ThrowableUtils {
     /**

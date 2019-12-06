@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @description: 400 统一异常处理
- * @author: byteblogs
- * @date: 2019/09/30 17:02
+ * @author: 陌溪
+ * @date: 2019年12月4日22:48:18
  */
 @ControllerAdvice
 @Slf4j

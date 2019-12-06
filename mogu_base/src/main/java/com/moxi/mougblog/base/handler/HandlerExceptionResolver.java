@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
 /**
- * @Author:byteblogs
- * @Date:2018/08/20 18:49
+ * @Author: 陌溪
+ * @Date: 2019年12月4日22:48:08
  */
 @Slf4j
 public class HandlerExceptionResolver implements org.springframework.web.servlet.HandlerExceptionResolver {

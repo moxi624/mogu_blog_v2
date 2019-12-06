@@ -1,5 +1,6 @@
 package com.moxi.mogublog.admin.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -53,6 +54,7 @@ public class BlogVO extends BaseVO<BlogVO> {
     /**
      * 标签uid
      */
+    @NotBlank(groups = {Insert.class, Update.class})
     private String tagUid;
 
     /**
