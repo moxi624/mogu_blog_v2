@@ -407,30 +407,31 @@ export default {
   },
   created() {
     var that = this;
+
     this.blogList(); //获取博客列表
+
     var tagParams = new URLSearchParams();
     tagParams.append("pageSize", 100);
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
     });
-    var blogSortParams = new URLSearchParams();
-    blogSortParams.append("pageSize", 100);
+
+    var blogSortParams = {};
+    blogSortParams.pageSize = 100;
+    blogSortParams.currentPage = 1;
     getBlogSortList(blogSortParams).then(response => {
       this.blogSortData = response.data.records;
     });
   },
   methods: {
     blogList: function() {
-
       var params = {};
-      params.uid = "123";
       params.keyword = this.keyword;
       params.blogSortUid = this.sortKeyword;
       params.tagUid = this.tagKeyword;
       params.levelKeyword = this.levelKeyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
-      // var params = formatData(params);
       getBlogList(params).then(response => {
         if(response.code == "success") {
           this.tableData = response.data.records;
@@ -440,6 +441,7 @@ export default {
         }
       });
     },
+
     getFormObject: function() {
       var formObject = {
         uid: null,
@@ -476,8 +478,8 @@ export default {
     //分类远程搜索函数
     sortRemoteMethod: function(query) {
       if (query !== "") {
-        var params = new URLSearchParams();
-        params.append("keyword", query);
+        var params = {};
+        params.keyword = query;
         getBlogSortList(params).then(response => {
           this.sortOptions = response.data.records;
         });

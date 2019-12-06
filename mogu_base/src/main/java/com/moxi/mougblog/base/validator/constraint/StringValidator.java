@@ -1,7 +1,7 @@
 package com.moxi.mougblog.base.validator.constraint;
 
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -19,7 +19,7 @@ public class StringValidator implements ConstraintValidator<NotBlank, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || StringUtils.isBlank(value)) {
+        if (value == null || StringUtils.isBlank(value) || StringUtils.isEmpty(value.trim())) {
             return false;
         }
         return true;

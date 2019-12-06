@@ -158,10 +158,11 @@ export default {
   },
   methods: {
     blogSortList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
       getBlogSortList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
@@ -304,10 +305,8 @@ export default {
       this.blogSortList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      var params = formatData(this.form);
       if (this.isEditForm) {
-        editBlogSort(params).then(response => {
+        editBlogSort(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({
@@ -324,7 +323,7 @@ export default {
           }
         });
       } else {
-        addBlogSort(params).then(response => {
+        addBlogSort(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({

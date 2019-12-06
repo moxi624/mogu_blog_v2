@@ -9,9 +9,11 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
  *
  */
 public final class SQLConf extends BaseSQLConf{
-	
 
-	//FileSort表
+
+	/**
+	 * FileSort表
+	 */
 	public final static String BLOG_SORT_UID = "blog_sort_uid";
 	public final static String TAG_UID = "tag_uid";
 	public final static String CONTENT = "content";
@@ -39,18 +41,26 @@ public final class SQLConf extends BaseSQLConf{
 	public final static String MOBILE = "mobile";
 	public final static String SORT = "sort";
 	public final static String CLICK_COUNT = "click_count";
-	
-	// t_web_visit表
+
+	/**
+	 * t_web_visit表
+	 */
 	public final static String IP = "ip";
 	public final static String BEHAVIOR  = "behavior";
-	
-	//t_category_meun表
+
+	/**
+	 * t_category_meun表
+	 */
 	public final static String MENU_LEVEL = "menu_level";
 	public final static String PARENT_UID = "parent_uid";
-	
-	//t_exception_log
+
+	/**
+	 * t_exception_log
+	 */
 	public final static String EXCEPTION_JSON = "exceptionJson";
-	
-	//t_todo
+
+	/**
+	 * t_todo
+	 */
 	public final static String TEXT = "text";
 }
