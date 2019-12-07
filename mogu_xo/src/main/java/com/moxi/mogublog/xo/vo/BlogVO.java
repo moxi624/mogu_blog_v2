@@ -1,19 +1,13 @@
-package com.moxi.mogublog.admin.vo;
+package com.moxi.mogublog.xo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
 import java.util.List;
 
 /**

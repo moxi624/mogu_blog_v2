@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.vo;
+package com.moxi.mogublog.xo.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.vo.BaseVO;

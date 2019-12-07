@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
-import com.moxi.mogublog.admin.vo.BlogVO;
 import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.xo.vo.BlogVO;
+import com.moxi.mougblog.base.enums.EOriginal;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -242,7 +242,7 @@ public class BlogRestApi {
 		Blog blog = new Blog();
 
 		//如果是原创，作者为用户的昵称
-		if("1".equals(blogVO.getIsOriginal())) {
+		if(EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
 			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 			if(admin != null) {
 				blog.setAuthor(admin.getNickName());
@@ -296,7 +296,7 @@ public class BlogRestApi {
 		}
 
 		//如果是原创，作者为用户的昵称
-		if("1".equals(blogVO.getIsOriginal())) {
+		if(EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
 			Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 			if(admin != null) {
 				blog.setAuthor(admin.getNickName());

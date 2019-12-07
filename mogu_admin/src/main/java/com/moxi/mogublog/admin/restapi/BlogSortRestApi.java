@@ -3,11 +3,10 @@ package com.moxi.mogublog.admin.restapi;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.moxi.mogublog.admin.vo.BlogSortVO;
-import com.moxi.mogublog.admin.vo.BlogVO;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.GetList;

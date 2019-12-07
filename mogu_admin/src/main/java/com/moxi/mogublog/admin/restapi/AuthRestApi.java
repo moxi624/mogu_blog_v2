@@ -117,7 +117,7 @@ public class AuthRestApi {
 				PasswordEncoder encoder = new BCryptPasswordEncoder();
 				registered.setPassWord(encoder.encode(registered.getPassWord()));
 				adminService.save(registered);
-				//清楚redis中的缓存
+				//清除redis中的缓存
 				if(StringUtils.isEmpty(mobile)) {
 					stringRedisTemplate.delete(email);
 				}else {
