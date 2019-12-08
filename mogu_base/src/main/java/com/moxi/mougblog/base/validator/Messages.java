@@ -19,5 +19,7 @@ public interface Messages {
     String ID_NOT_NULL="can not be null";
     String PAGE_NOT_NULL = "page not be null";
     String SIZE_NOT_NULL = "size not be null";
+
+    String ID_LENGTH_THIRTY_TWO = "length must be 32";
 }
 

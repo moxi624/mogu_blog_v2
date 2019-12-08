@@ -22,6 +22,8 @@ public class Constants {
     public static final int NINE = 9;
     public static final int TEN = 10;
 
+    public static final int THIRTY_TWO = 32;
+
     // 默认文件路径分隔符
     public static final String PATH_SEPARATOR = "/";
 
