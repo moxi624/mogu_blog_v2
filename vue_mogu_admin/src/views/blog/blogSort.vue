@@ -239,7 +239,6 @@ export default {
     handleEdit: function(row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
     },
     handleStick: function(row) {
@@ -249,8 +248,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          var params = {};
+          params.uid = row.uid;
           stickBlogSort(params).then(response => {
             if (response.code == "success") {
               this.blogSortList();
@@ -281,10 +280,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          var params = {};
+          params.uid = row.uid;
           deleteBlogSort(params).then(response => {
-            console.log(response);
             this.$message({
               type: "success",
               message: response.data
@@ -300,7 +298,6 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.blogSortList();
     },

@@ -153,16 +153,17 @@ export default {
   },
   methods: {
     tagList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
+
       getTagList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
         this.pageSize = response.data.size;
         this.total = response.data.total;
-        console.log(response);
       });
     },
     getFormObject: function() {
@@ -237,7 +238,6 @@ export default {
       this.title = "编辑标签";
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
     },
     handleStick: function(row) {
@@ -247,8 +247,10 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+
+          var params = {};
+          params.uid = row.uid;
+
           stickTag(params).then(response => {
             if (response.code == "success") {
               this.tagList();
@@ -279,8 +281,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+
+          var params = {};
+          params.uid = row.uid;
           deleteTag(params).then(response => {
             console.log(response);
             this.$message({
@@ -298,15 +301,13 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.tagList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      var params = formatData(this.form);
+
       if (this.isEditForm) {
-        editTag(params).then(response => {
+        editTag(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({
@@ -323,7 +324,7 @@ export default {
           }
         });
       } else {
-        addTag(params).then(response => {
+        addTag(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({

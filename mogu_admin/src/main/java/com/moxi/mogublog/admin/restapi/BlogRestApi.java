@@ -14,6 +14,7 @@ import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.enums.EOriginal;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
@@ -329,13 +330,12 @@ public class BlogRestApi {
 	@OperationLogger(value="删除博客")
 	@ApiOperation(value="删除博客", notes="删除博客", response = String.class)
 	@PostMapping("/delete")
-	public String delete(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid ) {
-		
-		if(StringUtils.isEmpty(uid)) {
-			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
-		Blog blog = blogService.getById(uid);
+	public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody BlogVO blogVO, BindingResult result) {
+
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
+		Blog blog = blogService.getById(blogVO.getUid());
 		blog.setStatus(EStatus.DISABLED);		
 		Boolean save = blog.updateById();
 		

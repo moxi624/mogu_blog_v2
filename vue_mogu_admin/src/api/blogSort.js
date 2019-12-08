@@ -28,7 +28,7 @@ export function deleteBlogSort(params) {
   return request({
     url: process.env.ADMIN_API + '/blogSort/delete',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -36,7 +36,7 @@ export function stickBlogSort(params) {
   return request({
     url: process.env.ADMIN_API + '/blogSort/stick',
     method: 'post',
-    params
+    data: params
   })
 }
 

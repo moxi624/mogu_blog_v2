@@ -216,11 +216,11 @@
         </el-form-item>
 
         <el-form-item label="标题" :label-width="formLabelWidth" required>
-          <el-input v-model="form.title" auto-complete="off"></el-input>
+          <el-input v-model="form.title" auto-complete="off" @input="contentChange"></el-input>
         </el-form-item>
 
         <el-form-item label="简介" :label-width="formLabelWidth">
-          <el-input v-model="form.summary" auto-complete="off"></el-input>
+          <el-input v-model="form.summary" auto-complete="off" @input="contentChange"></el-input>
         </el-form-item>
 
         <el-row>
@@ -303,7 +303,7 @@
         </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" required>
-          <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
+          <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange"></CKEditor>
         </el-form-item>
       </el-form>
 
@@ -407,11 +407,10 @@ export default {
   },
   created() {
     var that = this;
-
     this.blogList(); //获取博客列表
-
-    var tagParams = new URLSearchParams();
-    tagParams.append("pageSize", 100);
+    var tagParams = {};
+    tagParams.pageSize = 100;
+    tagParams.currentPage = 1;
     getTagList(tagParams).then(response => {
       this.tagData = response.data.records;
     });
@@ -466,8 +465,8 @@ export default {
     //标签远程搜索函数
     tagRemoteMethod: function(query) {
       if (query !== "") {
-        var params = new URLSearchParams();
-        params.append("keyword", query);
+        var params = {};
+        params.keyword = query;
         getTagList(params).then(response => {
           this.tagOptions = response.data.records;
         });
@@ -531,8 +530,8 @@ export default {
     },
     handleAdd: function() {
       var that = this;
-      var tempForm = JSON.parse(getCookie("form"));
-      if (tempForm != null && tempForm.title != null) {
+      var tempForm = JSON.parse(getCookie("form"));      
+      if (tempForm != null && tempForm.title != null && tempForm.title != "") {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -549,7 +548,6 @@ export default {
               }
             }
             this.isEditForm = false;
-            this.formBak();
           })
           .catch(() => {
             try {
@@ -569,7 +567,6 @@ export default {
             this.tagValue = [];
             this.isEditForm = false;
             delCookie("form");
-            this.formBak();
           });
       } else {
         this.dialogFormVisible = true;
@@ -585,15 +582,23 @@ export default {
         this.formBak();
       }
     },
+    contentChange: function() {
+      console.log("开始备份");
+      var that = this;
+      //存放到cookie中，时间10天
+      that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+      that.form.tagUid = that.tagValue.join(",");
+      setCookie("form", JSON.stringify(that.form), 10);
+    },
     //备份form表单
     formBak: function() {
       var that = this;
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {
-          //存放到cookie中，时间1天
+          //存放到cookie中，时间10天
           that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
           that.form.tagUid = that.tagValue.join(",");
-          setCookie("form", JSON.stringify(that.form), 1);
+          setCookie("form", JSON.stringify(that.form), 10);
         }
       }, 10000);
     },
@@ -627,8 +632,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+  
+          var params = {};
+          params.uid = row.uid;
           deleteBlog(params).then(response => {
             this.$message({
               type: "success",

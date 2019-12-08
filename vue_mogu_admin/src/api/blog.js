@@ -28,6 +28,6 @@ export function deleteBlog(params) {
   return request({
     url: process.env.ADMIN_API + '/blog/delete',
     method: 'post',
-    params
+    data: params
   })
 }

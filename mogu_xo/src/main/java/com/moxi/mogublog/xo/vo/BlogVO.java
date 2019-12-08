@@ -37,6 +37,7 @@ public class BlogVO extends BaseVO<BlogVO> {
     /**
      * 博客简介
      */
+
     private String summary;
 
     /**

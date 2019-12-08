@@ -9,6 +9,7 @@ import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
@@ -46,7 +47,6 @@ import java.util.Map;
  * @author xzx19950624@qq.com
  * @since 2018年9月24日15:45:18
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/blogSort")
 public class BlogSortRestApi {
@@ -111,6 +111,9 @@ public class BlogSortRestApi {
 	@PostMapping("/edit")
 	public String edit(@Validated({Update.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
 
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
 		BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
 
 		/**
@@ -135,13 +138,12 @@ public class BlogSortRestApi {
 	@OperationLogger(value="删除博客分类")
 	@ApiOperation(value="删除博客分类", notes="删除博客分类", response = String.class)
 	@PostMapping("/delete")
-	public String delete(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
-		
-		if(StringUtils.isEmpty(uid)) {
-			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
-		BlogSort blogSort = blogSortService.getById(uid);
+	public String delete(@Validated({Delete.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
+
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
+		BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
 		blogSort.setStatus(EStatus.DISABLED);		
 		blogSort.updateById();
 		return ResultUtil.result(SysConf.SUCCESS, "删除成功");
@@ -149,13 +151,12 @@ public class BlogSortRestApi {
 	
 	@ApiOperation(value="置顶分类", notes="置顶分类", response = String.class)
 	@PostMapping("/stick")
-	public String stick(HttpServletRequest request,
-			@ApiParam(name = "uid", value = "唯一UID",required = true) @RequestParam(name = "uid", required = true) String uid			) {
-		
-		if(StringUtils.isEmpty(uid)) {
-			return ResultUtil.result(SysConf.ERROR, "数据错误");
-		}		
-		BlogSort blogSort = blogSortService.getById(uid);
+	public String stick(@Validated({Delete.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
+
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
+		BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
 		
 		//查找出最大的那一个
 		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
@@ -186,7 +187,7 @@ public class BlogSortRestApi {
 	@OperationLogger(value="通过点击量排序博客分类")
 	@ApiOperation(value="通过点击量排序博客分类", notes="通过点击量排序博客分类", response = String.class)
 	@PostMapping("/blogSortByClickCount")
-	public String blogSortByClickCount(HttpServletRequest request) {
+	public String blogSortByClickCount() {
 
 		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper();
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
@@ -205,13 +206,12 @@ public class BlogSortRestApi {
 	/**
 	 * 通过引用量排序标签
 	 * 引用量就是所有的文章中，有多少使用了该标签，如果使用的越多，该标签的引用量越大，那么排名越靠前
-	 * @param request
 	 * @return
 	 */
 	@OperationLogger(value="通过引用量排序博客分类")
 	@ApiOperation(value="通过引用量排序博客分类", notes="通过引用量排序博客分类", response = String.class)
 	@PostMapping("/blogSortByCite")
-	public String blogSortByCite(HttpServletRequest request) {
+	public String blogSortByCite() {
 
 		// 定义Map   key：tagUid,  value: 引用量
 		Map<String, Integer> map = new HashMap<>();

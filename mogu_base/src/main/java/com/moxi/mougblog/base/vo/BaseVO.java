@@ -2,6 +2,7 @@ package com.moxi.mougblog.base.vo;
 
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
+import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class BaseVO<T> extends PageInfo<T> {
     /**
      * 唯一UID
      */
-    @NotBlank(groups = {Update.class})
+    @NotBlank(groups = {Update.class, Delete.class})
     private String uid;
 
     private Integer status;
