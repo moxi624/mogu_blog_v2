@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>mogu_eureka</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,19 +52,27 @@
 		</dependency>
 
 	</dependencies>
-	
+
 	<!--spring boot打包的话需要指定一个唯一的入门-->
-    <build>    
+	<build>
 		<plugins>
-	  	<!-- 如果要打成jar包并使用 java -jar **.jar运行，请不要注释spring-boot-maven-plugin -->
-		         <plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-			        <warName>mogu_eureka</warName>
-			    </configuration>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 指定该Main Class为全局的唯一入口 -->
+					<mainClass>com.moxi.mogublog.eureka.EurekaApplication</mainClass>
+					<layout>ZIP</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
-    </build>
+	</build>
 
 </project>

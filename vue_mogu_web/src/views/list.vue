@@ -227,15 +227,16 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         params.append("keywords", that.keywords);
-
+        console.log("开始搜索");
         searchBlog(params).then(response => {
+          console.log("返回的内容", response);
           if (response.code == "success" && response.data.rows.length > 0) {
             that.isEnd = false;
             
             //获取总页数
             that.totalPages = response.data.totalPages;
-            that.pageSize = response.data.size;
-            that.currentPage = response.data.current;
+            that.pageSize = response.data.pageSize;
+            that.currentPage = response.data.currentPage;
             var blogData = response.data.rows;
 
             //全部加载完毕

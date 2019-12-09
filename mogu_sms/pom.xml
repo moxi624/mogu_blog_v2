@@ -106,45 +106,27 @@
   </dependencies>
 
 
-  <!--spring boot打包的话需要指定一个唯一的入门-->
-    <build>
-		  <resources>
-		   <resource>
-		       <directory>src/main/java</directory>
-		       <includes>
-		           <include>**/*.xml</include>
-		       </includes>
-		   </resource>
-		   <resource>
-		       <directory>src/main/resources</directory>
-		       <includes>
-		           <include>**.*</include>
-		           <include>**/*.*</include><!-- i18n能读取到 -->
-		            <include>**/*/*.*</include>
-		       </includes>
-		   </resource>
-		 </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-	             <fork>true</fork>
-	             <!-- 如果没有该配置，devtools不会生效 -->
-	            <!-- 指定该Main Class为全局的唯一入口 -->
-	            <mainClass>com.moxi.mogublog.sms.SmsApplication</mainClass>
-	            <layout>ZIP</layout>
-          	</configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
-              </goals>
-            </execution>
-          </executions>
-          </plugin>
-        </plugins>
-        <finalName>mogu_sms</finalName>
-    </build>
+	<!--spring boot打包的话需要指定一个唯一的入门-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 指定该Main Class为全局的唯一入口 -->
+					<mainClass>com.moxi.mogublog.sms.SmsApplication</mainClass>
+					<layout>ZIP</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
   
 </project>
