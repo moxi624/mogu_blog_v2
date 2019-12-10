@@ -58,11 +58,3 @@ eureka:
       zone: ABC      # eureka可以理解的元数据
       lilizhou: BBC  # 不会影响客户端行为
     lease-renewal-interval-in-seconds: 5
-    
-
-####### 日志输出 #########
-logging:
-  file: D:/mogu_blog/logs/sms/sms.log
-  level:
-    root: info
-    org.springframework.web: DEBUG

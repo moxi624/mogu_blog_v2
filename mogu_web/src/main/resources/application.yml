@@ -132,10 +132,3 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-
-####### 日志输出 #########
-logging:
-  file: D:/mogu_blog/logs/web/web.log
-  level:
-    root: info
-    org.springframework.web: info  

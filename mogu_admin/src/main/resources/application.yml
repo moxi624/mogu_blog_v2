@@ -153,11 +153,3 @@ audience:
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
   name: mogublog
   expiresSecond: 3600  #1个小时
-
-####### 日志输出 #########
-logging:
-  file: D:/mogu_blog/logs/admin/admin.log
-  level:
-    root: info
-    org.springframework.web: info
-  
