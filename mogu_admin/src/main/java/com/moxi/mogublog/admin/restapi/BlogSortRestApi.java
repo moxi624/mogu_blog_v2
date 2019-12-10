@@ -69,7 +69,7 @@ public class BlogSortRestApi {
 
 		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
 		if(StringUtils.isNotEmpty(blogSortVO.getKeyword()) && !StringUtils.isEmpty(blogSortVO.getKeyword().trim())) {
-			queryWrapper.like(SQLConf.CONTENT, blogSortVO.getKeyword().trim());
+			queryWrapper.like(SQLConf.SORT_NAME, blogSortVO.getKeyword().trim());
 		}
 		Page<BlogSort> page = new Page<>();
 		page.setCurrent(blogSortVO.getCurrentPage());

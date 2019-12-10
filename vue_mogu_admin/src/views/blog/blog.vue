@@ -407,7 +407,23 @@ export default {
   },
   created() {
     var that = this;
+
+    //从dashboard传递过来的 tagUid 以及 blogSortUid
+    var tempTag = this.$route.query.tag;
+    var tempBlogSort = this.$route.query.blogSort;
+    if(tempTag != undefined) {
+      console.log("我不为空");      
+      this.tagRemoteMethod(tempTag.name);
+      this.tagKeyword = tempTag.tagUid;
+    }
+    if(tempBlogSort != undefined) {
+      console.log("我不为空");      
+      this.sortRemoteMethod(tempBlogSort.name);
+      this.sortKeyword = tempBlogSort.blogSortUid;
+    }
+
     this.blogList(); //获取博客列表
+
     var tagParams = {};
     tagParams.pageSize = 100;
     tagParams.currentPage = 1;
@@ -467,6 +483,8 @@ export default {
       if (query !== "") {
         var params = {};
         params.keyword = query;
+        params.pageSize = 10;
+        params.currentPage = 1;
         getTagList(params).then(response => {
           this.tagOptions = response.data.records;
         });
@@ -479,6 +497,8 @@ export default {
       if (query !== "") {
         var params = {};
         params.keyword = query;
+        params.pageSize = 10;
+        params.currentPage = 1;
         getBlogSortList(params).then(response => {
           this.sortOptions = response.data.records;
         });

@@ -180,7 +180,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 				String tagName = tagEntityMap.get(tagUid);
 				Integer count = entry.getValue();
 				
-				Map<String, Object> itemResultMap = new HashMap<String, Object>();
+				Map<String, Object> itemResultMap = new HashMap<>();
+				itemResultMap.put("tagUid", tagUid);
 				itemResultMap.put("name", tagName);
 				itemResultMap.put("value", count);
 				resultMap.add(itemResultMap);
@@ -236,6 +237,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 				Integer count = entry.getValue();
 
 				Map<String, Object> itemResultMap = new HashMap<>();
+				itemResultMap.put("blogSortUid", blogSortUid);
 				itemResultMap.put("name", blogSortName);
 				itemResultMap.put("value", count);
 				resultMap.add(itemResultMap);

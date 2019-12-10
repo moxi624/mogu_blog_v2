@@ -56,9 +56,13 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      var that = this;
+      that.chart = echarts.init(this.$el, 'macarons')
 
-      this.chart.setOption({
+      that.chart.on('click',function (param) {
+        that.$emit("clickPie", param.dataIndex);
+      })
+      that.chart.setOption({
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -66,7 +70,7 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: this.tagName
+          data: that.tagName
         },
         calculable: true,
         series: [
@@ -76,7 +80,7 @@ export default {
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: this.value,
+            data: that.value,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }
