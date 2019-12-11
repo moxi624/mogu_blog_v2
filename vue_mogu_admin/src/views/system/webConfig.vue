@@ -157,7 +157,6 @@ export default {
   },
   created() {
     getWebConfig().then(response => {
-      console.log(response);
       if (response.code == "success") {
         if (response.data) {
           this.form = response.data;
@@ -177,12 +176,11 @@ export default {
       projectName: "blog",
       sortName: "admin"
     };
+
   },
   methods: {
     //弹出选择图片框
     checkPhoto: function() {
-      console.log(this.photoVisible);
-      console.log("点击了选择图");
       this.photoVisible = true;
       console.log(this.photoVisible);
     },
@@ -202,9 +200,9 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
       this.form.photoList = null;
       this.form.fileUid = "";
+      this.fileIds = "";
       this.icon = false;
     },
     checkPhoto() {

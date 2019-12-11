@@ -4,6 +4,7 @@
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-input
         clearable
+        @keyup.enter.native="handleFind"
         class="filter-item"
         style="width: 200px;"
         v-model="keyword"

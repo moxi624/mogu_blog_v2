@@ -41,7 +41,7 @@ public class IndexRestApi {
 	@ApiOperation(value="首页初始化数据", notes="首页初始化数据", response = String.class)	
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	public String init() {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 				
 		Integer blogCount = blogService.getBlogCount(EStatus.ENABLE);
 		Integer commentCount = commentService.getCommentCount(EStatus.ENABLE);					

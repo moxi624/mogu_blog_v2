@@ -3,7 +3,13 @@ package com.moxi.mogublog.admin.restapi;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.moxi.mogublog.xo.vo.LinkVO;
+import com.moxi.mogublog.xo.vo.WebConfigVO;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +38,6 @@ import io.swagger.annotations.ApiOperation;
  * @author xzx19950624@qq.com
  * @since 2018年11月11日15:19:28
  */
-//@PreAuthorize("hasRole('Administrator')")
 @Api(value="系统配置RestApi",tags={"WebConfigRestApi"})
 @RestController
 @RequestMapping("/webConfig")
@@ -46,7 +51,7 @@ public class WebConfigRestApi {
 	
 	@ApiOperation(value="获取网站配置", notes="获取网站配置")
 	@GetMapping("/getWebConfig")
-	public String getWebConfig(HttpServletRequest request) {
+	public String getWebConfig() {
 
 		QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
@@ -81,11 +86,35 @@ public class WebConfigRestApi {
 	@OperationLogger(value="修改网站配置")
 	@ApiOperation(value="修改网站配置", notes="修改网站配置")
 	@PostMapping("/editWebConfig")
-	public String editWebConfig(HttpServletRequest request, @RequestBody WebConfig webConfig) {
+	public String editWebConfig(@Validated({Update.class}) @RequestBody WebConfigVO webConfigVO, BindingResult result) {
 		
-		if(StringUtils.isEmpty(webConfig.getUid())) {
+		if(StringUtils.isEmpty(webConfigVO.getUid())) {
+
+			WebConfig webConfig = new WebConfig();
+			webConfig.setLogo(webConfigVO.getLogo());
+			webConfig.setName(webConfigVO.getName());
+			webConfig.setTitle(webConfigVO.getTitle());
+			webConfig.setSummary(webConfigVO.getSummary());
+			webConfig.setKeyword(webConfigVO.getKeyword());
+			webConfig.setAuthor(webConfigVO.getAuthor());
+			webConfig.setRecordNum(webConfigVO.getRecordNum());
+			webConfig.setAliPay(webConfigVO.getAliPay());
+			webConfig.setWeixinPay(webConfigVO.getWeixinPay());
+			webConfig.setStartComment(webConfigVO.getStartComment());
+
 			webConfigService.save(webConfig);
 		} else {
+			WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
+			webConfig.setLogo(webConfigVO.getLogo());
+			webConfig.setName(webConfigVO.getName());
+			webConfig.setTitle(webConfigVO.getTitle());
+			webConfig.setSummary(webConfigVO.getSummary());
+			webConfig.setKeyword(webConfigVO.getKeyword());
+			webConfig.setAuthor(webConfigVO.getAuthor());
+			webConfig.setRecordNum(webConfigVO.getRecordNum());
+			webConfig.setAliPay(webConfigVO.getAliPay());
+			webConfig.setWeixinPay(webConfigVO.getWeixinPay());
+			webConfig.setStartComment(webConfigVO.getStartComment());
 			webConfigService.updateById(webConfig);	
 		}				
 		return ResultUtil.result(SysConf.SUCCESS, "更新成功");		

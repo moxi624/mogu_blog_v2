@@ -349,7 +349,7 @@ public class BlogRestApi {
 			System.out.println(dateTime);
 			map.put(SysConf.CREATE_TIME, dateTime);
 			//发送到RabbitMq
-			rabbitTemplate.convertAndSend("exchange.direct", "mogu.blog", map);
+			rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 			
 			//删除solr索引
 			blogSearchService.deleteIndex(blog.getUid());

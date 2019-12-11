@@ -1,5 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class BlogSort extends SuperEntity<BlogSort> {
     /**
      * 分类介绍
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String content;
 
 	/**

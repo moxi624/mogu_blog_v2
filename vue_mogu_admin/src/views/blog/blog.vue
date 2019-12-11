@@ -411,13 +411,11 @@ export default {
     //从dashboard传递过来的 tagUid 以及 blogSortUid
     var tempTag = this.$route.query.tag;
     var tempBlogSort = this.$route.query.blogSort;
-    if(tempTag != undefined) {
-      console.log("我不为空");      
+    if(tempTag != undefined) { 
       this.tagRemoteMethod(tempTag.name);
       this.tagKeyword = tempTag.tagUid;
     }
-    if(tempBlogSort != undefined) {
-      console.log("我不为空");      
+    if(tempBlogSort != undefined) {    
       this.sortRemoteMethod(tempBlogSort.name);
       this.sortKeyword = tempBlogSort.blogSortUid;
     }

@@ -4,6 +4,7 @@
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-input
         clearable
+        @keyup.enter.native="handleFind"
         class="filter-item"
         style="width: 200px;"
         v-model="keyword"
@@ -66,7 +67,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="150">
+      <el-table-column label="操作" fixed="right" min-width="240">
         <template slot-scope="scope">
           <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
           <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
@@ -159,10 +160,11 @@ export default {
   },
   methods: {
     linkList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
+
       getLinkList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
@@ -202,8 +204,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {};
+          params.uid = row.uid;
           stickLink(params).then(response => {
             if (response.code == "success") {
               this.linkList();
@@ -234,8 +236,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {};
+          params.uid = row.uid;
           deleteLink(params).then(response => {
             console.log(response);
             this.$message({
@@ -253,19 +255,16 @@ export default {
         });
     },
     // 跳转到友链下
-    onClick: function(row) {            
+    onClick: function(row) {
       window.open(row.url);
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.linkList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      var params = formatData(this.form);
       if (this.isEditForm) {
-        editLink(params).then(response => {
+        editLink(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({
@@ -282,7 +281,7 @@ export default {
           }
         });
       } else {
-        addLink(params).then(response => {
+        addLink(this.form).then(response => {
           console.log(response);
           if (response.code == "success") {
             this.$message({
