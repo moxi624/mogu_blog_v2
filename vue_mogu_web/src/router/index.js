@@ -13,7 +13,8 @@ export const constantRouterMap = [
   { path: '/sort', component: () => import('@/views/sort') },
   { path: '/share', component: () => import('@/views/share') },
   { path: '/classify', component: () => import('@/views/classify') },
-  { path: '/time', component: () => import('@/views/time') }
+  { path: '/time', component: () => import('@/views/time') },
+  { path: '/login', component: () => import('@/views/login') }
 ]
 
 const router = new Router({

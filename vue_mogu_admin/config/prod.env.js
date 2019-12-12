@@ -7,7 +7,11 @@ module.exports = {
     PICTURE_API: '"http://101.132.194.128:8602"',
     WEB_API: '"http://101.132.194.128:8603"',
     SOLR_API: '"http://101.132.194.128:8080/solr"',
-    BASE_IMAGE_URL: '"http://101.132.194.128:8600"',
+
+    // BASE_IMAGE_URL: '"http://101.132.194.128:8600"',
+    BASE_IMAGE_URL: '"http://picture.moguit.cn"',
+
+
     BLOG_WEB_URL: '"http://101.132.194.128:9527"',  
 
     //生产环境

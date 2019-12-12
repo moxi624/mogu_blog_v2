@@ -9,6 +9,7 @@ module.exports = {
 
   //配置线上环境
   WEB_API: '"http://101.132.194.128:8603"',
-  PICTURE_HOST: '"http://101.132.194.128:8600"',
+  // PICTURE_HOST: '"http://101.132.194.128:8600"',
+  PICTURE_HOST: '"http://picture.moguit.cn"',
 
 }

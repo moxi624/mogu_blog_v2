@@ -252,6 +252,7 @@ public class BlogRestApi {
 			blog.setArticlesPart(PROJECT_NAME);
 		} else {
 			blog.setAuthor(blogVO.getAuthor());
+			blog.setArticlesPart(blogVO.getArticlesPart());
 		}
 
 		blog.setTitle(blogVO.getTitle());
@@ -306,6 +307,7 @@ public class BlogRestApi {
 			blog.setArticlesPart(PROJECT_NAME);
 		} else {
 			blog.setAuthor(blogVO.getAuthor());
+			blog.setArticlesPart(blogVO.getArticlesPart());
 		}
 
 		blog.setTitle(blogVO.getTitle());
