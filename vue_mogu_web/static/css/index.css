@@ -317,6 +317,28 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 .shang_payselect { text-align: center; margin: 0 auto; margin-top: 40px; cursor: pointer; height: 60px; width: 280px; }
 .shang_payselect .pay_item { display: inline-block; margin-right: 10px; float: left; }
 .shang_payselect img { float: left }
+
+/*归档页面*/
+
+.sortBox .time {
+    float: left;
+    width: 17%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sortBox .article {
+    margin-left: 20px;
+    float: left;
+    width: 78%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 @media screen and (min-width: 1024px) and (max-width: 1199px) {
 header { width: 100%; margin: auto; }
 nav { width: 90% }
@@ -466,6 +488,28 @@ footer p { padding: 0 30px }
 .pagebg { margin-top: 50px; }
 .diggit { float: none; margin-left: auto; }
 .dasbox { display: none }
+
+/*归档页面*/
+
+.sortBox .time {
+    float: left;
+    width: 40%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sortBox .article {
+    margin-left: 20px;
+    float: left;
+    width: 50%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 }
 
 ::-webkit-scrollbar-track-piece { 

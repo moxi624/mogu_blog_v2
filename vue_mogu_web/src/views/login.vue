@@ -111,13 +111,14 @@
 import Head from "../components/Head";
 import BlogHead from "../components/BlogHead";
 import BlogFooter from "../components/BlogFooter";
+import { login, logout, register  } from "../api/user";
 
 export default {
   name: "share",
   data() {
     return {
       // 显示登录页面
-      showLogin: true, 
+      showLogin: true,
       isLogin: false,
       table: false,
       dialog: false,
@@ -166,18 +167,37 @@ export default {
       clearTimeout(this.timer);
     },
     startLogin: function() {
-      console.log("开始登录");
+      var params = {};
+      params.userName = this.loginForm.userName;
+      params.passWord = this.loginForm.password;
+      params.isRememberMe = 0;
+      console.log("登录表单", params);
+      login(params).then(response => {
+        if (response.code == "success") {
+          console.log(response.data);
+        }
+      });
     },
     startRegister: function() {
-      console.log("开始注册");
+      
+      var params = {};
+      params.userName = this.registerForm.userName;
+      params.passWord = this.registerForm.password;
+      params.email = this.registerForm.email;
+      console.log("登录表单", params);
+      register(params).then(response => {
+        if (response.code == "success") {
+          console.log(response.data);
+        }
+      });
     },
     goLogin: function() {
       console.log("去登录页面");
       this.showLogin = true;
     },
     goRegister: function() {
-        console.log("去注册页面");
-        this.showLogin = false;
+      console.log("去注册页面");
+      this.showLogin = false;
     }
   }
 };
