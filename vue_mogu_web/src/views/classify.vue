@@ -223,24 +223,6 @@ export default {
 .sortBox {
   color: #555;
 }
-.sortBox .time {
-  float: left;
-  width: 17%;
-  height: 800px;
-  overflow: scroll;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.sortBox .article {
-  margin-left: 20px;
-  float: left;
-  width: 78%;
-  height: 800px;
-  overflow: scroll;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 .sortBoxSpan {
   cursor: pointer;

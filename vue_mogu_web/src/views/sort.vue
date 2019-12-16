@@ -222,7 +222,6 @@ export default {
   color: #555;
 }
 
-
 .sortBoxSpan {
   cursor: pointer;
 }

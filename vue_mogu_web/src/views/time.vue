@@ -18,7 +18,7 @@
         <a href="javascript:void(0);" class="n2">时间轴</a>
       </h1>
       <div class="timebox">
-        <ul id="list" style>
+        <ul id="list" v-infinite-scroll="load">
           <li v-for="item in newBlogData" :key="item.uid">
             <span>{{formatDate(item.createTime)}}</span>
             <a
@@ -29,10 +29,6 @@
           </li>
         </ul>
         <ul id="list2"></ul>
-      </div>
-      <div class="isEnd">
-        <span v-if="!isEnd">正在加载中~</span>
-        <span v-else>我也是有底线的~</span>
       </div>
     </div>
 
@@ -76,30 +72,30 @@ export default {
     var that = this;
     var loading = false;
 
-    window.addEventListener("scroll", function() {
-      let scrollTop = document.documentElement.scrollTop; //当前的的位置
-      let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-      if (scrollTop >= 0.25 * scrollHeight && !that.isEnd && !loading) {
-        loading = true;
-        that.currentPage = that.currentPage + 1;
-        var params = new URLSearchParams();
-        params.append("currentPage", that.currentPage);
-        params.append("pageSize", that.pageSize);
-        getBlogByTime(params).then(response => {
-          if (response.code == "success" && response.data.records.length > 0) {
-            that.isEnd = false;
-            var newData = that.newBlogData.concat(response.data.records);
-            that.newBlogData = newData;
-            that.total = response.data.total;
-            that.pageSize = response.data.size;
-            that.currentPage = response.data.current;
-          } else {
-            that.isEnd = true;
-          }
-          loading = false;
-        });
-      }
-    });
+    // window.addEventListener("scroll", function() {
+    //   let scrollTop = document.documentElement.scrollTop; //当前的的位置
+    //   let scrollHeight = document.documentElement.scrollHeight; //最高的位置
+    //   if (scrollTop >= 0.25 * scrollHeight && !that.isEnd && !loading) {
+    //     loading = true;
+    //     that.currentPage = that.currentPage + 1;
+    //     var params = new URLSearchParams();
+    //     params.append("currentPage", that.currentPage);
+    //     params.append("pageSize", that.pageSize);
+    //     getBlogByTime(params).then(response => {
+    //       if (response.code == "success" && response.data.records.length > 0) {
+    //         that.isEnd = false;
+    //         var newData = that.newBlogData.concat(response.data.records);
+    //         that.newBlogData = newData;
+    //         that.total = response.data.total;
+    //         that.pageSize = response.data.size;
+    //         that.currentPage = response.data.current;
+    //       } else {
+    //         that.isEnd = true;
+    //       }
+    //       loading = false;
+    //     });
+    //   }
+    // });
   },
   created() {
     var that = this;
@@ -117,6 +113,7 @@ export default {
     var params = new URLSearchParams();
     params.append("pageName", "TIME");
     recorderVisitPage(params).then(response => {});
+
   },
   methods: {
     //跳转到文章详情
@@ -126,6 +123,26 @@ export default {
         query: { blogUid: uid }
       });
       window.open(routeData.href, "_blank");
+    },
+    load() {
+      var params = new URLSearchParams();
+      var that = this;
+      var loading = true;
+      params.append("currentPage", this.currentPage + 1);
+      params.append("pageSize", this.pageSize);
+      getBlogByTime(params).then(response => {
+        if (response.code == "success" && response.data.records.length > 0) {
+          that.isEnd = false;
+          var newData = that.newBlogData.concat(response.data.records);
+          that.newBlogData = newData;
+          that.total = response.data.total;
+          that.pageSize = response.data.size;
+          that.currentPage = response.data.current;
+        } else {
+          that.isEnd = true;
+        }
+        loading = false;
+      });
     },
     formatDate: function(time) {
       var date = new Date(time);

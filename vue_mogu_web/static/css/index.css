@@ -237,7 +237,7 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 .share ul li:hover { transform: translateY(-6px); -webkit-transform: translateY(-6px); -moz-transform: translateY(-6px); }
 .share ul li span { position: absolute; right: 30px; top: 15px; background: rgba(232, 40, 74, .8); color: #FFF; padding: 3px 8px; font-size: 12px; border-radius: 3px; }
 /*timer*/
-.timebox { position: relative; overflow: hidden }
+.timebox { position: relative; height: 800px; overflow: scroll; overflow-x: hidden; overflow-y: auto;}
 .timebox li { overflow: hidden; font-size: 16px; margin: 10px 0; line-height: 44px; }
 .timebox li a { background: #FFF; display: block; float: left; padding: 0 30px; position: relative; -webkit-box-shadow: 0 5px 10px 0 rgba(146, 146, 146, .1); -moz-box-shadow: 0 5px 10px 0 rgba(146, 146, 146, .1); box-shadow: 0 5px 10px 0 rgba(146, 146, 146, .1); -webkit-transition: all .5s ease; -moz-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; }
 .timebox li span { margin-right: 90px; display: block; float: left; background: #f7f7f7; height: 44px; color: #999; -webkit-transition: all .5s ease; -moz-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; }
@@ -441,6 +441,28 @@ h1.t_nav span { display: none }
 .pagebg { margin-top: 50px; }
 .diggit { float: none; margin-left: auto; }
 .dasbox { display: none }
+
+/*归档页面*/
+
+.sortBox .time {
+    float: left;
+    width: 20%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.sortBox .article {
+    margin-left: 20px;
+    float: left;
+    width: 50%;
+    height: 800px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 }
 @media only screen and (max-width: 479px) {
 header, .blogsbox, .banner { width: 100%; margin: auto; }
@@ -490,10 +512,9 @@ footer p { padding: 0 30px }
 .dasbox { display: none }
 
 /*归档页面*/
-
 .sortBox .time {
     float: left;
-    width: 40%;
+    width: 34%;
     height: 800px;
     overflow: scroll;
     overflow-x: hidden;
@@ -503,7 +524,7 @@ footer p { padding: 0 30px }
 .sortBox .article {
     margin-left: 20px;
     float: left;
-    width: 50%;
+    width: 60%;
     height: 800px;
     overflow: scroll;
     overflow-x: hidden;
