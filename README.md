@@ -85,7 +85,24 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 - 感谢**PanJiaChen**提供的**vue-element-admin**： https://github.com/PanJiaChen/vue-element-admin 
 - Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
 - 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
-- 感谢**JetBrains**对开源的支持： https://www.jetbrains.com/?from=mogu_blog_v2 
+- 感谢**JetBrains**提供的免费开源License： https://www.jetbrains.com/?from=mogu_blog_v2 
+
+## 关注&交流
+
+刚刚创建了一个QQ群，目前项目还存在很多不足之处，欢迎各位老哥进群交流~
+
+|                QQ群（备注：蘑菇博客）                 |               QQ（备注：蘑菇博客）               |
+| :---------------------------------------------------: | :----------------------------------------------: |
+| <img src="./doc/images/qq/qqGroup.png" width="200" /> | <img src="./doc/images/qq/qq.png" width="200" /> |
+
+## 贡献代码
+
+1. fork本项目到自己的repo
+2. 把fork过去的项目也就是你仓库中的项目clone到你的本地
+3. 修改代码
+4. commit后push到自己的库
+5. 发起PR（pull request） 请求，提交到`dev`分支
+6. 等待作者合并
 
 ## 相关截图
 
