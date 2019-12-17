@@ -1,15 +1,5 @@
 <template>
-<html>
-  <Head></Head>
-
-  <body>
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
-
+  <div>
     <div class="pagebg timer"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -31,25 +21,10 @@
         <ul id="list2"></ul>
       </div>
     </div>
-
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
-
-    <!--返回顶部-->
-    <CdTop></CdTop>
-  </body>
-</html>
+  </div>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
-import CdTop from "../components/CdTop";
 import { getBlogByTime, recorderVisitPage } from "../api/index";
 export default {
   data() {
@@ -62,10 +37,6 @@ export default {
   },
   components: {
     //注册组件
-    BlogHead,
-    BlogFooter,
-    Head,
-    CdTop
   },
   mounted() {
     // 注册scroll事件并监听
@@ -113,7 +84,6 @@ export default {
     var params = new URLSearchParams();
     params.append("pageName", "TIME");
     recorderVisitPage(params).then(response => {});
-
   },
   methods: {
     //跳转到文章详情

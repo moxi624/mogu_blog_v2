@@ -93,7 +93,11 @@ public class ClassifyRestApi {
 		}
 
 		//增加点击记录
-		webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.VISIT_CLASSIFY.getBehavior(), null, blogSortUid);
+		BlogSort blogSort = blogSortService.getById(blogSortUid);
+		if (blogSort == null) {
+			return ResultUtil.result("error", "BlogSort不存在");
+		}
+		webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
 
 		//分页
 		Page<Blog> page = new Page<>();

@@ -5,6 +5,8 @@ import java.util.Map;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mougblog.base.service.SuperService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * Web访问记录 服务类
@@ -18,12 +20,12 @@ public interface WebVisitService extends SuperService<WebVisit> {
 	/**
 	 * 增加访问记录
 	 * @param userUid
-	 * @param ip
+	 * @param request
 	 * @param behavior
 	 * @param moduleUid
 	 * @param otherData
 	 */
-	public void addWebVisit(String userUid, String ip, String behavior, String moduleUid, String otherData);
+	public void addWebVisit(String userUid, HttpServletRequest request, String behavior, String moduleUid, String otherData);
 	
 	/**
 	 * 获取今日网站访问人数

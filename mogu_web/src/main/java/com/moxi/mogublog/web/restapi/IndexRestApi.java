@@ -280,7 +280,7 @@ public class IndexRestApi {
 		if(link != null) {
 			
 			//增加记录（可以考虑使用AOP）
-	        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.FRIENDSHIP_LINK.getBehavior(), uid, null);
+	        webVisitService.addWebVisit(null, request, EBehavior.FRIENDSHIP_LINK.getBehavior(), uid, null);
 	        
 			int count = link.getClickCount() + 1;
 			link.setClickCount(count);
@@ -335,7 +335,7 @@ public class IndexRestApi {
 			return ResultUtil.result(SysConf.SUCCESS, "页面名称不能为空");	
 		}
 		
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
+        webVisitService.addWebVisit(null, request, EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
 		
 		return ResultUtil.result(SysConf.SUCCESS, "记录成功");
 	}

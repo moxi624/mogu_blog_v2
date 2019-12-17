@@ -1,132 +1,105 @@
 <template>
-<html>
-  <Head></Head>
-
-  <body>
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
-
-    <article>
-      <h1 class="t_nav">
-        <a href="/" class="n1">网站首页</a>
-        <a
-          href="javascript:void(0);"
-          @click="goToSortList(blogData.blogSort.uid)"
-          class="n2"
-        >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
-      </h1>
-      <div class="infosbox">
-        <div class="newsview">
-          <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
-          <div class="bloginfo" v-if="blogData.blogSort">
-            <ul>
-              <li class="author">
-                <a href="javascript:void(0);" @click="goToAuthor(blogData.author)">{{blogData.author}}</a>
-              </li>
-              <li class="lmname">
-                <a
-                  href="javascript:void(0);"
-                  @click="goToSortList(blogData.blogSort == null ?'':blogData.blogSort.uid)"
-                >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
-              </li>
-              <li class="timer">{{blogData.createTime}}</li>
-              <li class="view">{{blogData.clickCount}}</li>
-              <li class="like">{{blogData.collectCount}}</li>
-            </ul>
-          </div>
-          <div class="tags">
-            <a
-              v-if="blogData.tagList"
-              v-for="item in blogData.tagList"
-              :key="item.uid"
-              href="javascript:void(0);"
-              @click="goToList(item.uid)"
-              target="_blank"
-            >{{item.content}}</a>
-          </div>
-          <div class="news_about">
-            <strong>版权</strong>
-            {{blogData.copyright}}
-          </div>
-          <div
-            class="news_con fixck"
-            v-html="blogData.content"
-            v-highlight
-            @click="imageChange"
-          >{{blogData.content}}</div>
-        </div>
-
-        <!--付款码和点赞-->
-        <PayCode :blogUid="blogUid"></PayCode>
-
-        <div class="otherlink" v-if="sameBlogData.length > 0">
-          <h2>相关文章</h2>
+  <article>
+    <h1 class="t_nav">
+      <a href="/" class="n1">网站首页</a>
+      <a
+        href="javascript:void(0);"
+        @click="goToSortList(blogData.blogSort.uid)"
+        class="n2"
+      >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
+    </h1>
+    <div class="infosbox">
+      <div class="newsview">
+        <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
+        <div class="bloginfo" v-if="blogData.blogSort">
           <ul>
-            <li v-for="item in sameBlogData" :key="item.uid">
+            <li class="author">
+              <a href="javascript:void(0);" @click="goToAuthor(blogData.author)">{{blogData.author}}</a>
+            </li>
+            <li class="lmname">
               <a
                 href="javascript:void(0);"
-                @click="goToInfo(item.uid)"
-                title="item.title"
-              >{{subText(item.title, 18)}}</a>
+                @click="goToSortList(blogData.blogSort == null ?'':blogData.blogSort.uid)"
+              >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
             </li>
+            <li class="timer">{{blogData.createTime}}</li>
+            <li class="view">{{blogData.clickCount}}</li>
+            <li class="like">{{blogData.collectCount}}</li>
           </ul>
         </div>
-        <div class="news_pl">
-          <h2>文章评论</h2>
-          <ul>
-            <ChangYan :sid="this.blogUid"></ChangYan>
-          </ul>
+        <div class="tags">
+          <a
+            v-if="blogData.tagList"
+            v-for="item in blogData.tagList"
+            :key="item.uid"
+            href="javascript:void(0);"
+            @click="goToList(item.uid)"
+            target="_blank"
+          >{{item.content}}</a>
         </div>
+        <div class="news_about">
+          <strong>版权</strong>
+          {{blogData.copyright}}
+        </div>
+        <div
+          class="news_con fixck"
+          v-html="blogData.content"
+          v-highlight
+          @click="imageChange"
+        >{{blogData.content}}</div>
       </div>
-      <div class="sidebar">
-        <!-- 三级推荐 -->
-        <ThirdRecommend></ThirdRecommend>
 
-        <!--标签云-->
-        <TagCloud></TagCloud>
+      <!--付款码和点赞-->
+      <PayCode :blogUid="blogUid"></PayCode>
 
-        <!--四级推荐-->
-        <FourthRecommend></FourthRecommend>
-
-        <!--点击排行-->
-        <HotBlog></HotBlog>
-
-        <div class="links">
-          <h2 class="hometitle">友情链接</h2>
-          <ul>
-            <li v-for="item in linkData" :key="item.uid">
-              <a :href="item.url" target="_blank" v-if="item.title">{{item.title}}</a>
-            </li>
-          </ul>
-        </div>
-
-        <!--关注我们-->
-        <FollowUs></FollowUs>
+      <div class="otherlink" v-if="sameBlogData.length > 0">
+        <h2>相关文章</h2>
+        <ul>
+          <li v-for="item in sameBlogData" :key="item.uid">
+            <a
+              href="javascript:void(0);"
+              @click="goToInfo(item.uid)"
+              title="item.title"
+            >{{subText(item.title, 18)}}</a>
+          </li>
+        </ul>
       </div>
-    </article>
+      <div class="news_pl">
+        <h2>文章评论</h2>
+        <ul>
+          <ChangYan :sid="this.blogUid"></ChangYan>
+        </ul>
+      </div>
+    </div>
+    <div class="sidebar">
+      <!-- 三级推荐 -->
+      <ThirdRecommend></ThirdRecommend>
 
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
+      <!--标签云-->
+      <TagCloud></TagCloud>
 
-    <!--返回顶部-->
-    <CdTop></CdTop>
-  </body>
-</html>
+      <!--四级推荐-->
+      <FourthRecommend></FourthRecommend>
+
+      <!--点击排行-->
+      <HotBlog></HotBlog>
+
+      <div class="links">
+        <h2 class="hometitle">友情链接</h2>
+        <ul>
+          <li v-for="item in linkData" :key="item.uid">
+            <a :href="item.url" target="_blank" v-if="item.title">{{item.title}}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!--关注我们-->
+      <FollowUs></FollowUs>
+    </div>
+  </article>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
-
 import {
   getBlogByLevel,
   getNewBlog,
@@ -147,7 +120,6 @@ import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import ChangYan from "../components/ChangYan";
 import PayCode from "../components/PayCode";
-import CdTop from "../components/CdTop";
 
 export default {
   name: "info",
@@ -161,20 +133,15 @@ export default {
   },
   components: {
     //注册组件
-    BlogHead,
-    BlogFooter,
     FourthRecommend,
     ThirdRecommend,
     TagCloud,
     HotBlog,
     FollowUs,
     ChangYan,
-    Head,
-    PayCode,
-    CdTop
+    PayCode
   },
   created() {
-
     getLink().then(response => {
       this.linkData = response.data.records;
     });
@@ -271,7 +238,6 @@ export default {
 
 .fixck ul li {
   list-style: disc;
- 
 }
 .fixck ol li {
   list-style: decimal;

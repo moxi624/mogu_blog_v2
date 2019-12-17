@@ -1,15 +1,5 @@
 <template>
-<html>
-  <Head></Head>
-
-  <body>
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
-
+  <div>
     <div class="pagebg sh"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -97,32 +87,16 @@
         <FollowUs></FollowUs>
       </div>
     </div>
-
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
-
-    <!--返回顶部-->
-    <CdTop></CdTop>
-  </body>
-</html>
+  </div>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
 
 import ThirdRecommend from "../components/ThirdRecommend";
 import FourthRecommend from "../components/FourthRecommend";
 import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
-import CdTop from "../components/CdTop";
-
 import { recorderVisitPage } from "../api/index";
 import {
   searchBlog,
@@ -150,16 +124,11 @@ export default {
     };
   },
   components: {
-    //注册组件
-    BlogHead,
-    BlogFooter,
     FourthRecommend,
     ThirdRecommend,
     TagCloud,
     HotBlog,
     FollowUs,
-    Head,
-    CdTop
   },
   created() {
     this.keywords = this.$route.query.keyword;
@@ -167,11 +136,20 @@ export default {
     this.sortUid = this.$route.query.sortUid;
     this.author = this.$route.query.author;
 
-    this.search();
-
     var params = new URLSearchParams();
     params.append("pageName", "LIST");
     recorderVisitPage(params).then(response => {});
+
+    if (
+      this.keywords == undefined &&
+      this.tagUid == undefined &&
+      this.sortUid == undefined &&
+      this.author == undefined
+    ) {
+      return;
+    }
+
+    this.search();
   },
   mounted() {
     // 注册scroll事件并监听
@@ -232,7 +210,7 @@ export default {
           console.log("返回的内容", response);
           if (response.code == "success" && response.data.rows.length > 0) {
             that.isEnd = false;
-            
+
             //获取总页数
             that.totalPages = response.data.totalPages;
             that.pageSize = response.data.pageSize;
@@ -294,7 +272,6 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
-
           } else {
             that.isEnd = true;
             that.loading = false;
@@ -317,7 +294,7 @@ export default {
             that.total = response.data.total;
             that.pageSize = response.data.size;
             that.currentPage = response.data.current;
-            
+
             //全部加载完毕
             console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
@@ -332,7 +309,6 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
-
           } else {
             that.isEnd = true;
             that.loading = false;
@@ -375,7 +351,6 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
-     
           } else {
             that.isEnd = true;
             that.loading = false;

@@ -137,7 +137,7 @@ public class SortRestApi {
 		}
 
 		//增加点击记录
-		webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.VISIT_SORT.getBehavior(), null, monthDate);
+		webVisitService.addWebVisit(null, request, EBehavior.VISIT_SORT.getBehavior(), null, monthDate);
 
 		//从Redis中获取内容
 		String contentResult = stringRedisTemplate.opsForValue().get("BOLG_SORT_BY_MONTH:" + monthDate);
