@@ -1,15 +1,5 @@
 <template>
-<html>
-  <Head></Head>
-
-  <body>
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
-
+  <div>
     <div class="pagebg classify"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -75,25 +65,10 @@
         </div>
       </div>
     </div>
-
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
-
-    <!--返回顶部-->
-    <CdTop></CdTop>
-  </body>
-</html>
+  </div>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
-import CdTop from "../components/CdTop";
 import { recorderVisitPage } from "../api/index";
 import { getBlogSortList, getArticleByBlogSortUid } from "../api/classify";
 export default {
@@ -111,10 +86,6 @@ export default {
   },
   components: {
     //注册组件
-    BlogHead,
-    BlogFooter,
-    Head,
-    CdTop
   },
   mounted() {},
   created() {
@@ -156,14 +127,18 @@ export default {
         }
       });
     },
-    load() {      
+    load() {
       var params = new URLSearchParams();
-      if(this.selectBlogUid == null || this.selectBlogUid == "" || this.selectBlogUid == undefined) {
+      if (
+        this.selectBlogUid == null ||
+        this.selectBlogUid == "" ||
+        this.selectBlogUid == undefined
+      ) {
         return;
       }
       params.append("blogSortUid", this.selectBlogUid);
       params.append("currentPage", this.currentPage + 1);
-      getArticleByBlogSortUid(params).then(response => {        
+      getArticleByBlogSortUid(params).then(response => {
         if (response.code == "success") {
           this.itemByDate = this.itemByDate.concat(response.data.records);
           this.currentPage = response.data.current;

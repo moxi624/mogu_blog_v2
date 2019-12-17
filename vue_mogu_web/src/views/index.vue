@@ -1,132 +1,103 @@
 <template>
-<html>
-  <body>
-    <Head></Head>
+  <article>
+    <!--banner begin-->
+    <div class="picsbox">
+      <FirstRecommend></FirstRecommend>
+      <!--banner end-->
 
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
+      <!-- 二级推荐 -->
+      <div class="toppic">
+        <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
+          <a href="javascript:void(0);">
+            <i>
+              <img :src="PICTURE_HOST + item.photoList[0]">
+            </i>
+            <h2>{{item.title}}</h2>
+            <span>{{item.blogSort.sortName}}</span>
+          </a>
+        </li>
+      </div>
+    </div>
+    <div class="blank"></div>
 
-    <article>
-      <!--banner begin-->
-      <div class="picsbox">
-        <FirstRecommend></FirstRecommend>
-        <!--banner end-->
-
-        <!-- 二级推荐 -->
-        <div class="toppic">
-          <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
-            <a href="javascript:void(0);">
-              <i>
-                <img :src="PICTURE_HOST + item.photoList[0]">
-              </i>
-              <h2>{{item.title}}</h2>
-              <span>{{item.blogSort.sortName}}</span>
-            </a>
-          </li>
+    <!--blogsbox begin-->
+    <div class="blogsbox">
+      <div
+        v-for="item in newBlogData"
+        :key="item.uid"
+        class="blogs"
+        data-scroll-reveal="enter bottom over 1s"
+      >
+        <h3 class="blogtitle">
+          <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
+        </h3>
+        <span class="blogpic">
+          <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
+            <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" alt>
+          </a>
+        </span>
+        <p class="blogtext">{{item.summary}}</p>
+        <div class="bloginfo">
+          <ul>
+            <li class="author">
+              <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
+            </li>
+            <li class="lmname" v-if="item.blogSort">
+              <a
+                href="javascript:void(0);"
+                @click="goToList(item.blogSort.uid)"
+              >{{item.blogSort.sortName}}</a>
+            </li>
+            <li class="timer">{{item.createTime}}</li>
+            <li class="view">
+              <span>{{item.clickCount}}</span>
+            </li>
+            <li class="like">{{item.collectCount}}</li>
+          </ul>
         </div>
       </div>
-      <div class="blank"></div>
 
-      <!--blogsbox begin-->
-      <div class="blogsbox">
-        <div
-          v-for="item in newBlogData"
-          :key="item.uid"
-          class="blogs"
-          data-scroll-reveal="enter bottom over 1s"
-        >
-          <h3 class="blogtitle">
-            <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
-          </h3>
-          <span class="blogpic">
-            <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
-              <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" alt>
-            </a>
-          </span>
-          <p class="blogtext">{{item.summary}}</p>
-          <div class="bloginfo">
-            <ul>
-              <li class="author">
-                <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
-              </li>
-              <li class="lmname" v-if="item.blogSort">
-                <a
-                  href="javascript:void(0);"
-                  @click="goToList(item.blogSort.uid)"
-                >{{item.blogSort.sortName}}</a>
-              </li>
-              <li class="timer">{{item.createTime}}</li>
-              <li class="view">
-                <span>{{item.clickCount}}</span>
-              </li>
-              <li class="like">{{item.collectCount}}</li>
-            </ul>
+      <div class="isEnd">
+        <!-- <span v-if="!isEnd">正在加载中~</span> -->
+
+        <div class="loadContent" @click="loadContent" v-if="!isEnd&&!loading">点击加载更多</div>
+
+        <div class="lds-css ng-scope" v-if="!isEnd&&loading">
+          <div style="width:100%;height:100%" class="lds-facebook">
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         </div>
 
-        <div class="isEnd">
-          <!-- <span v-if="!isEnd">正在加载中~</span> -->
-
-          <div class="loadContent" @click="loadContent" v-if="!isEnd&&!loading">点击加载更多</div>
-
-          <div class="lds-css ng-scope" v-if="!isEnd&&loading">
-            <div style="width:100%;height:100%" class="lds-facebook">
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </div>
-
-          <span v-if="isEnd">我也是有底线的~</span>
-        </div>
+        <span v-if="isEnd">我也是有底线的~</span>
       </div>
-      <!--blogsbox end-->
+    </div>
+    <!--blogsbox end-->
 
-      <div class="sidebar">
+    <div class="sidebar">
+      <!--标签云-->
+      <TagCloud></TagCloud>
 
-        <!--标签云-->
-        <TagCloud></TagCloud>
+      <!--关注我们-->
+      <FollowUs></FollowUs>
 
-        <!--关注我们-->
-        <FollowUs></FollowUs>
+      <!-- 三级推荐 -->
+      <ThirdRecommend></ThirdRecommend>
 
+      <!--四级推荐-->
+      <FourthRecommend></FourthRecommend>
 
-        <!-- 三级推荐 -->
-        <ThirdRecommend></ThirdRecommend>
-        
-        <!--四级推荐-->
-        <FourthRecommend></FourthRecommend>
+      <!--点击排行-->
+      <HotBlog></HotBlog>
 
-        <!--点击排行-->
-        <HotBlog></HotBlog>
+      <Link></Link>
 
-        <Link></Link>
-
-
-      </div>
-    </article>
-
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
-
-    <!--返回顶部-->
-    <CdTop></CdTop>
-  </body>
-</html>
+    </div>
+  </article>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
 import FirstRecommend from "../components/FirstRecommend";
 import ThirdRecommend from "../components/ThirdRecommend";
 import FourthRecommend from "../components/FourthRecommend";
@@ -134,7 +105,6 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import Link from "../components/Link";
-import CdTop from "../components/CdTop";
 import {
   getBlogByLevel,
   getNewBlog,
@@ -146,8 +116,6 @@ export default {
   name: "index",
   components: {
     //注册组件
-    BlogHead,
-    BlogFooter,
     FirstRecommend,
     FourthRecommend,
     ThirdRecommend,
@@ -155,8 +123,6 @@ export default {
     HotBlog,
     FollowUs,
     Link,
-    Head,
-    CdTop
   },
   data() {
     return {
@@ -213,7 +179,7 @@ export default {
       this.secondData = response.data.records;
     });
 
-    console.log("测试地址", this.PICTURE_HOST)
+    console.log("测试地址", this.PICTURE_HOST);
 
     // 获取最新博客
     this.newBlogList();

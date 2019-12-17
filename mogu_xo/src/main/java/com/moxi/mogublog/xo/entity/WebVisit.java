@@ -31,6 +31,16 @@ public class WebVisit extends SuperEntity<WebVisit> {
     private String ip;
 
     /**
+     * 操作系统
+     */
+    private String os;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
+
+    /**
      * 用户访问行为   (点击了文章，点击了标签，点击了分类，进行了搜索)
      */
     private String behavior;

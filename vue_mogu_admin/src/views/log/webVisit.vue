@@ -32,6 +32,18 @@
 	      </template>
 	    </el-table-column>
 
+      <el-table-column label="平台" width="100">
+	      <template slot-scope="scope">
+	        <span>{{ scope.row.os }}</span>
+	      </template>
+	    </el-table-column>
+
+      <el-table-column label="浏览器" width="200">
+	      <template slot-scope="scope">
+	        <span>{{ scope.row.browser }}</span>
+	      </template>
+	    </el-table-column>
+
 	    <el-table-column label="用户行为" width="150">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.behaviorContent }}</span>

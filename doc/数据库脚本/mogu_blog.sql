@@ -476,6 +476,8 @@ CREATE TABLE `t_web_visit` (
   `uid` varchar(32) NOT NULL COMMENT '主键',
   `user_uid` varchar(255) DEFAULT NULL COMMENT '用户uid',
   `ip` varchar(255) DEFAULT NULL COMMENT '访问ip地址',
+  `os` varchar(255) DEFAULT NULL COMMENT '操作系统',
+  `browser` varchar(255) DEFAULT NULL COMMENT '浏览器及版本',
   `behavior` varchar(255) DEFAULT NULL COMMENT '用户行为',
   `module_uid` varchar(255) DEFAULT NULL COMMENT '模块uid（文章uid，标签uid，分类uid）',
   `other_data` varchar(255) DEFAULT NULL COMMENT '附加数据(比如搜索内容)',

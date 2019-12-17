@@ -1,15 +1,5 @@
 <template>
-<html>
-  <Head></Head>
-
-  <body>
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
-    -->
-    <BlogHead></BlogHead>
-
+  <div>
     <div class="pagebg ab"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -37,29 +27,12 @@
         <follow-us></follow-us>
       </div>
     </div>
-
-    <!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
-    -->
-    <BlogFooter></BlogFooter>
-
-    <!--返回顶部-->
-    <CdTop></CdTop>
-
-  </body>
-</html>
+  </div>
 </template>
 
 <script>
-import Head from "../components/Head";
-import BlogHead from "../components/BlogHead";
-import BlogFooter from "../components/BlogFooter";
 import FollowUs from "../components/FollowUs";
 import ChangYan from "../components/ChangYan";
-import CdTop from "../components/CdTop";
-
 import { recorderVisitPage } from "../api/index";
 import { getMe } from "../api/about";
 
@@ -75,12 +48,9 @@ export default {
   },
   components: {
     //注册组件
-    BlogHead,
-    BlogFooter,
     FollowUs,
     ChangYan,
-    Head,
-    CdTop
+
   },
 
   created() {

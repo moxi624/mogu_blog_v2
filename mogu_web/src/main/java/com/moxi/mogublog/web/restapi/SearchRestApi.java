@@ -87,7 +87,7 @@ public class SearchRestApi {
         Map<String,Object> map = blogSearchService.search(keywords, currentPage, pageSize);
         
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SEARCH.getBehavior(), null, keywords);
+        webVisitService.addWebVisit(null, request, EBehavior.BLOG_SEARCH.getBehavior(), null, keywords);
         
         return ResultUtil.result(SysConf.SUCCESS, map);
 
@@ -145,7 +145,7 @@ public class SearchRestApi {
 		list = setBlog(list);
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_TAG.getBehavior(), tagUid, null);
+        webVisitService.addWebVisit(null, request, EBehavior.BLOG_TAG.getBehavior(), tagUid, null);
         
         pageList.setRecords(list);
         
@@ -203,7 +203,7 @@ public class SearchRestApi {
 		list = setBlog(list);		
 		
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_SORT.getBehavior(), blogSortUid, null);
+        webVisitService.addWebVisit(null, request, EBehavior.BLOG_SORT.getBehavior(), blogSortUid, null);
         
         pageList.setRecords(list);
         
@@ -237,7 +237,7 @@ public class SearchRestApi {
 		list = setBlog(list);		
 
 		//增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, IpUtils.getIpAddr(request), EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
+        webVisitService.addWebVisit(null, request, EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
         pageList.setRecords(list);
         
 		return ResultUtil.result(SysConf.SUCCESS, pageList);

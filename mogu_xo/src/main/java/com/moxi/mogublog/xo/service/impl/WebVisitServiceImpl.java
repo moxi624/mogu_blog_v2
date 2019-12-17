@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.moxi.mogublog.utils.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -35,11 +37,16 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 	WebVisitMapper webVisitMapper; 
 	
 	@Override
-	public void addWebVisit(String userUid, String ip, String behavior, String moduleUid, String otherData) {
+	public void addWebVisit(String userUid, HttpServletRequest request, String behavior, String moduleUid, String otherData) {
 		
 		//增加记录（可以考虑使用AOP）
+		Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+		String os = map.get("OS");
+		String browser = map.get("BROWSER");
 		WebVisit webVisit = new WebVisit();
-		webVisit.setIp(ip);
+		webVisit.setIp(IpUtils.getIpAddr(request));
+		webVisit.setOs(os);
+		webVisit.setBrowser(browser);
 		webVisit.setUserUid(userUid);
 		webVisit.setBehavior(behavior);		
 		webVisit.setModuleUid(moduleUid);
