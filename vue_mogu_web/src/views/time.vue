@@ -42,31 +42,6 @@ export default {
     // 注册scroll事件并监听
     var that = this;
     var loading = false;
-
-    // window.addEventListener("scroll", function() {
-    //   let scrollTop = document.documentElement.scrollTop; //当前的的位置
-    //   let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-    //   if (scrollTop >= 0.25 * scrollHeight && !that.isEnd && !loading) {
-    //     loading = true;
-    //     that.currentPage = that.currentPage + 1;
-    //     var params = new URLSearchParams();
-    //     params.append("currentPage", that.currentPage);
-    //     params.append("pageSize", that.pageSize);
-    //     getBlogByTime(params).then(response => {
-    //       if (response.code == "success" && response.data.records.length > 0) {
-    //         that.isEnd = false;
-    //         var newData = that.newBlogData.concat(response.data.records);
-    //         that.newBlogData = newData;
-    //         that.total = response.data.total;
-    //         that.pageSize = response.data.size;
-    //         that.currentPage = response.data.current;
-    //       } else {
-    //         that.isEnd = true;
-    //       }
-    //       loading = false;
-    //     });
-    //   }
-    // });
   },
   created() {
     var that = this;

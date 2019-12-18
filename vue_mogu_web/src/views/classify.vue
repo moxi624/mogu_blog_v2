@@ -87,7 +87,7 @@ export default {
   components: {
     //注册组件
   },
-  mounted() {},
+  mounted() { },
   created() {
     var that = this;
     getBlogSortList().then(response => {
@@ -110,16 +110,14 @@ export default {
 
     var params = new URLSearchParams();
     params.append("pageName", "CLASSIFY");
-    recorderVisitPage(params).then(response => {});
+    recorderVisitPage(params).then(response => { });
   },
   methods: {
     getBlogList(blogSortUid) {
-      console.log("点击获取列表", blogSortUid);
       this.selectBlogUid = blogSortUid;
       var params = new URLSearchParams();
       params.append("blogSortUid", blogSortUid);
       getArticleByBlogSortUid(params).then(response => {
-        console.log("返回的内容", response);
         if (response.code == "success") {
           this.itemByDate = response.data.records;
           this.currentPage = response.data.current;

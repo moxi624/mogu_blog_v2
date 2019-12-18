@@ -110,12 +110,6 @@ export default {
   components: {},
   data() {
     return {
-      isActives: [true, false, false, false, false],
-      isActive1: true,
-      isActive2: false,
-      isActive3: false,
-      isActive4: false,
-      isActive5: false,
 
       info: {},
       saveTitle: "",
