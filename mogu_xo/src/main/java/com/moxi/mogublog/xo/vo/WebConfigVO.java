@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- * 网站配置表
+ * 网站配置VO
  * </p>
  *
  * @author xuzhixiang

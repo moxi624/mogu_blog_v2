@@ -29,7 +29,7 @@
     <footer class="footer" v-show="todos.length">
       <span class="todo-count">
         <strong>{{ remaining }}</strong>
-        {{ remaining | pluralize('item') }} 
+        {{ remaining | pluralize('item') }}
       </span>
       <ul class="filters">
         <li v-for="(val, key) in filters" :key="key">
@@ -70,12 +70,7 @@ export default {
     };
   },
   created() {
-    getList().then(response => {
-      console.log("待办事项", response);
-      if (response.code == "success") {
-        this.todos = response.data.records;
-      }
-    });
+    this.getTodoList();
   },
   computed: {
     allChecked() {
@@ -94,8 +89,10 @@ export default {
     },
 
     getTodoList() {
-      getList().then(response => {
-        console.log("待办事项", response);
+      var params = {};
+      params.currentPage = 1;
+      params.pageSize = 30;
+      getList(params).then(response => {
         if (response.code == "success") {
           this.todos = response.data.records;
         }
@@ -106,11 +103,9 @@ export default {
     addTodo(e) {
       const text = e.target.value;
       if (text.trim()) {
-        var params = new URLSearchParams();
-        params.append("text", text.trim());
-
+        var params = {};
+        params.text = text.trim();
         addTodo(params).then(response => {
-          console.log("添加事项", response);
           if (response.code == "success") {
             this.getTodoList();
           }
@@ -120,10 +115,10 @@ export default {
     },
 
     toggleTodo(val) {
-      console.log("开始编辑", val);      
-      var params = new URLSearchParams();      
-      params.append("done", !val.done);      
-      params.append("uid", val.uid);
+      var params = {};
+      params.done = !val.done;
+      params.uid = val.uid;
+      params.text = val.text;
       editTodo(params).then(response => {
         if (response.code == "success") {
           this.getTodoList();
@@ -132,8 +127,8 @@ export default {
 
     },
     deleteTodo(todo) {
-      var params = new URLSearchParams();
-      params.append("uid", todo.uid);
+      var params = {};
+      params.uid = todo.uid;
       deleteTodo(params).then(response => {
         if (response.code == "success") {
           this.getTodoList();
@@ -141,9 +136,11 @@ export default {
       });
     },
     editTodo({ todo, value }) {
-      var params = new URLSearchParams();
-      params.append("text", value.trim());
-      params.append("uid", todo.uid);
+      var params = {};
+      params.done = todo.done;
+      params.uid = todo.uid;
+      params.text = value.trim();
+
       editTodo(params).then(response => {
         if (response.code == "success") {
           this.getTodoList();
@@ -159,13 +156,9 @@ export default {
 
     //切换
     toggleAll({ done }) {
-      // this.todos.forEach(todo => {
-      //   todo.done = done;
-      //   this.setLocalStorgae();
-      // });
 
-      var params = new URLSearchParams();
-      params.append("done", done);
+      var params = {};
+      params.done = done;
       toggleAll(params).then(response => {
         if (response.code == "success") {
           this.getTodoList();

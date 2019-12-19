@@ -6,14 +6,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.moxi.mogublog.xo.vo.WebVisitVO;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.GetList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,7 +37,6 @@ import com.moxi.mougblog.base.enums.EStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 /**
  * <p>
@@ -70,35 +68,34 @@ public class WebVisitRestApi {
 
 	
 	@ApiOperation(value="获取用户访问列表", notes="获取用户访问列表")
-	@GetMapping("/getList")
-	public String getList(HttpServletRequest request,
-			@ApiParam(name = "keyword", value = "关键字",required = false) @RequestParam(name = "keyword", required = false) String keyword,
-			@ApiParam(name = "startTime", value = "时间段",required = false) @RequestParam(name = "startTime", required = false) String startTime,
-			@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-			@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-		
+	@PostMapping("/getList")
+	public String getList(@Validated({GetList.class}) @RequestBody WebVisitVO webVisitVO, BindingResult result) {
+
+		// 参数校验
+		ThrowableUtils.checkParamArgument(result);
+
 		QueryWrapper<WebVisit> queryWrapper = new QueryWrapper<>();
 		
 		// 得到所有的枚举对象		
 		EBehavior [] arr = EBehavior.values();
 
 		// 设置关键字查询
-		if(!StringUtils.isEmpty(keyword.trim())) {
+		if(!StringUtils.isEmpty(webVisitVO.getKeyword()) && !StringUtils.isEmpty(webVisitVO.getKeyword().trim())) {
 			
 			String behavior = "";
 			for(int a=0; a<arr.length; a++) {
 				// 设置行为名称
-				if(arr[a].getContent().equals(keyword.trim())) {
+				if(arr[a].getContent().equals(webVisitVO.getKeyword().trim())) {
 					behavior = arr[a].getBehavior();
 				}
 			}
 			
-			queryWrapper.like(SQLConf.IP, keyword.trim()).or().eq(SQLConf.BEHAVIOR, behavior);
+			queryWrapper.like(SQLConf.IP, webVisitVO.getKeyword().trim()).or().eq(SQLConf.BEHAVIOR, behavior);
 		}
 		
 		// 设置起始时间段
-		if(!StringUtils.isEmpty(startTime)) {
-			String [] time = startTime.split(",");
+		if(!StringUtils.isEmpty(webVisitVO.getStartTime())) {
+			String [] time = webVisitVO.getStartTime().split(",");
 			if(time.length < 2) {
 				return ResultUtil.result(SysConf.ERROR, "传入时间有误");
 			}
@@ -106,8 +103,8 @@ public class WebVisitRestApi {
 		}
 		
 		Page<WebVisit> page = new Page<>();
-		page.setCurrent(currentPage);
-		page.setSize(pageSize);		
+		page.setCurrent(webVisitVO.getCurrentPage());
+		page.setSize(webVisitVO.getPageSize());
 		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);		
 		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);		
 		IPage<WebVisit> pageList = webVisitService.page(page, queryWrapper);		
@@ -135,7 +132,7 @@ public class WebVisitRestApi {
 		Collection<Link> linkList = new ArrayList<>();
 		
 		if(blogUids.size() > 0) {
-			blogList = blogService.listByIds(blogUids);	
+			blogList = blogService.listByIds(blogUids);
 		}
 		
 		if(tagUids.size() > 0) {

@@ -141,11 +141,16 @@ export default {
   },
   methods: {
     webVisitList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);      
-      params.append("startTime", this.value5);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {};
+      params.keyword = this.keyword;
+      params.startTime = "";
+      if(this.value5) {
+        params.startTime = this.value5[0] + "," + this.value5[1];
+      }      
+      params.pageSize = this.pageSize;
+      params.currentPage = this.currentPage;
+
+      console.log("params", params, this.value5);
       getWebVisitList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
