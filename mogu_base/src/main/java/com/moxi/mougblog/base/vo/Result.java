@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 用于向前端返回统一的结果对象
+ *
  * @param <T>
  */
 @Data
@@ -54,6 +55,7 @@ public class Result<T> {
 
     /**
      * 通过操作标识及提示信息构建结果对象
+     *
      * @param success
      * @param <T>
      * @return

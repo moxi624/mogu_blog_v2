@@ -17,7 +17,7 @@ public class BlogSortVO extends BaseVO<BlogSortVO> {
 
     /**
      * 无参构造方法
-      */
+     */
     BlogSortVO() {
 
     }

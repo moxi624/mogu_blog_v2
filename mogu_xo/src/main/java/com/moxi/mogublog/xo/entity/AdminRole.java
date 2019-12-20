@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @Data
 @TableName("t_admin_role")
-public class AdminRole extends SuperEntity<AdminRole>{
+public class AdminRole extends SuperEntity<AdminRole> {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,10 +28,10 @@ public class AdminRole extends SuperEntity<AdminRole>{
      * 角色id
      */
     private String roleUid;
-    
-    
+
+
     //以下字段不存入数据库，封装为了更好使用
-    
+
     /**
      * 管理员
      */

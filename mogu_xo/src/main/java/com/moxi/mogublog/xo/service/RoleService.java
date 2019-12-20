@@ -11,6 +11,6 @@ import com.moxi.mougblog.base.service.SuperService;
  * @author xuzhixiang
  * @since 2018-09-04
  */
-public interface RoleService extends SuperService<Role>{
+public interface RoleService extends SuperService<Role> {
 
 }

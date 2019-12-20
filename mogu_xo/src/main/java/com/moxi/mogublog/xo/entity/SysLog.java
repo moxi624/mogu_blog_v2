@@ -15,54 +15,54 @@ import lombok.Data;
  */
 @Data
 @TableName("t_sys_log")
-public class SysLog extends SuperEntity<SysLog>{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4851055162892178225L;
+public class SysLog extends SuperEntity<SysLog> {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4851055162892178225L;
 
-	/**
-	 * 操作用户名
-	 */
-	private String userName;
+    /**
+     * 操作用户名
+     */
+    private String userName;
 
-	/**
-	 * 操作人uid
-	 */
-	private String adminUid;
+    /**
+     * 操作人uid
+     */
+    private String adminUid;
 
-	/**
-	 * 请求IP
-	 */
-	private String ip;
+    /**
+     * 请求IP
+     */
+    private String ip;
 
-	/**
-	 * 请求地址
-	 */
-	private String url;
+    /**
+     * 请求地址
+     */
+    private String url;
 
-	/**
-	 * 请求方式 GET POST
-	 */
-	private String type;
+    /**
+     * 请求方式 GET POST
+     */
+    private String type;
 
-	/**
-	 * 请求类路径
-	 */
+    /**
+     * 请求类路径
+     */
     private String classPath;
 
-	/**
-	 * 方法名
-	 */
-	private String method;
+    /**
+     * 方法名
+     */
+    private String method;
 
-	/**
-	 * 参数
-	 */
+    /**
+     * 参数
+     */
     private String params;
 
-	/**
-	 * 描述
-	 */
-	private String operation;
+    /**
+     * 描述
+     */
+    private String operation;
 }

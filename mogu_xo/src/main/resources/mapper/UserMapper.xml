@@ -4,29 +4,30 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.User">
-        <id column="uid" property="uid" />
-        <result column="userName" property="userName" />
-        <result column="password" property="password" />
-        <result column="gender" property="gender" />
-        <result column="avatar" property="avatar" />
-        <result column="email" property="email" />
-        <result column="birthday" property="birthday" />
-        <result column="mobile" property="mobile" />
-        <result column="qqNumber" property="qqNumber" />
-        <result column="weChat" property="weChat" />
-        <result column="validCode" property="validCode" />
-        <result column="summary" property="summary" />
-        <result column="loginCount" property="loginCount" />
-        <result column="lastLoginTime" property="lastLoginTime" />
-        <result column="lastLoginIp" property="lastLoginIp" />
-        <result column="status" property="status" />
-        <result column="createTime" property="createTime" />
-        <result column="updateTime" property="updateTime" />
+        <id column="uid" property="uid"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="gender" property="gender"/>
+        <result column="avatar" property="avatar"/>
+        <result column="email" property="email"/>
+        <result column="birthday" property="birthday"/>
+        <result column="mobile" property="mobile"/>
+        <result column="qqNumber" property="qqNumber"/>
+        <result column="weChat" property="weChat"/>
+        <result column="validCode" property="validCode"/>
+        <result column="summary" property="summary"/>
+        <result column="loginCount" property="loginCount"/>
+        <result column="lastLoginTime" property="lastLoginTime"/>
+        <result column="lastLoginIp" property="lastLoginIp"/>
+        <result column="status" property="status"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, userName, passWord, gender, avatar, email, birthday, mobile, qqNumber, weChat, validCode, summary, loginCount, lastLoginTime, lastLoginIp, status, createTime, updateTime
+        uid, userName, passWord, gender, avatar, email, birthday, mobile, qqNumber, weChat, validCode, summary,
+        loginCount, lastLoginTime, lastLoginIp, status, createTime, updateTime
     </sql>
-    
+
 </mapper>

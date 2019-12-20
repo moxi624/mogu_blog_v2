@@ -9,7 +9,7 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author xuzhixiang

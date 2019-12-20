@@ -32,13 +32,13 @@ public class Link extends SuperEntity<Link> {
     /**
      * 友链地址
      */
-    private  String url;
-    
+    private String url;
+
     /**
      * 点击数
      */
     private Integer clickCount;
-    
+
     /**
      * 排序字段
      */

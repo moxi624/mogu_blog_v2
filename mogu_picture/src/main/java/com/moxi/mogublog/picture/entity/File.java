@@ -15,7 +15,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
 public class File extends SuperEntity<File> {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String fileOldName;
 
     private Long fileSize;
@@ -50,14 +50,14 @@ public class File extends SuperEntity<File> {
     }
 
     public String getFileSortUid() {
-		return fileSortUid;
-	}
+        return fileSortUid;
+    }
 
-	public void setFileSortUid(String fileSortUid) {
-		this.fileSortUid = fileSortUid;
-	}
+    public void setFileSortUid(String fileSortUid) {
+        this.fileSortUid = fileSortUid;
+    }
 
-	public String getPicExpandedName() {
+    public String getPicExpandedName() {
         return picExpandedName;
     }
 
@@ -81,24 +81,24 @@ public class File extends SuperEntity<File> {
         this.picUrl = picUrl;
     }
 
-	public String getAdminUid() {
-		return adminUid;
-	}
+    public String getAdminUid() {
+        return adminUid;
+    }
 
-	public void setAdminUid(String adminUid) {
-		this.adminUid = adminUid;
-	}
+    public void setAdminUid(String adminUid) {
+        this.adminUid = adminUid;
+    }
 
-	public String getUserUid() {
-		return userUid;
-	}
+    public String getUserUid() {
+        return userUid;
+    }
 
-	public void setUserUid(String userUid) {
-		this.userUid = userUid;
-	}
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 
 }

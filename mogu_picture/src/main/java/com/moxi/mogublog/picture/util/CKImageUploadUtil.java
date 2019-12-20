@@ -21,13 +21,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
  * @Description: 图片上传工具类，包括ckeditor操作
  */
 public class CKImageUploadUtil {
-	
-	@Value(value="${file.upload.path}") //获取基本路径
-	private static String basePath;
-	
-	@Value(value="${data.image.url}")
-	private static String imgURL;
-	
+
+    @Value(value = "${file.upload.path}") //获取基本路径
+    private static String basePath;
+
+    @Value(value = "${data.image.url}")
+    private static String imgURL;
+
 
     // 图片类型
     private static List<String> fileTypes = new ArrayList<String>();
@@ -42,14 +42,13 @@ public class CKImageUploadUtil {
 
     /**
      * 图片上传
-     * 
-     * @Title upload
+     *
      * @param request
-     * @param DirectoryName
-     *            文件上传目录：比如upload(无需带前面的/) upload/news ..
+     * @param DirectoryName 文件上传目录：比如upload(无需带前面的/) upload/news ..
      * @return
      * @throws IllegalStateException
      * @throws IOException
+     * @Title upload
      */
     public static String upload(HttpServletRequest request, String DirectoryName) throws IllegalStateException,
             IOException {
@@ -82,7 +81,7 @@ public class CKImageUploadUtil {
                             continue;
                         }
                         // 获得上传路径的绝对路径地址(/upload)-->
-                        String realPath = basePath +  DirectoryName;
+                        String realPath = basePath + DirectoryName;
                         System.out.println(realPath);
                         // 如果路径不存在，则创建该路径
                         File realPathDirectory = new File(realPath);
@@ -107,13 +106,12 @@ public class CKImageUploadUtil {
 
     /**
      * ckeditor文件上传功能，回调，传回图片路径，实现预览效果。
-     * 
-     * @Title ckeditor
+     *
      * @param request
      * @param response
-     * @param DirectoryName
-     *            文件上传目录：比如upload(无需带前面的/) upload/..
+     * @param DirectoryName 文件上传目录：比如upload(无需带前面的/) upload/..
      * @throws IOException
+     * @Title ckeditor
      */
     public static void ckeditor(HttpServletRequest request, HttpServletResponse response, String DirectoryName)
             throws IOException {

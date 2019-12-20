@@ -33,12 +33,12 @@ public class Admin extends SuperEntity<Admin> {
      * 密码
      */
     private String passWord;
-    
+
     /**
      * 昵称
      */
     private String nickName;
-    
+
     /**
      * 性别(1:男2:女)
      */
@@ -57,7 +57,7 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * 出生年月日
      */
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date birthday;
 
@@ -65,22 +65,22 @@ public class Admin extends SuperEntity<Admin> {
      * 手机
      */
     private String mobile;
-    
+
     /**
      * QQ号
      */
     private String qqNumber;
-    
+
     /**
      * 微信号
      */
     private String weChat;
-    
+
     /**
      * 职业
      */
-    private String occupation;   
-    
+    private String occupation;
+
     /**
      * 自我简介最多150字
      */
@@ -94,7 +94,7 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * 最后登录时间
      */
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
 
@@ -103,16 +103,16 @@ public class Admin extends SuperEntity<Admin> {
      */
     private String lastLoginIp;
 
-	/**
-	 * github地址
-	 */
-	private String github;
+    /**
+     * github地址
+     */
+    private String github;
 
-	/**
-	 * gitee地址
-	 */
-	private String gitee;
-    
+    /**
+     * gitee地址
+     */
+    private String gitee;
+
     // 以下字段不存入数据库
 
     /**
@@ -120,19 +120,19 @@ public class Admin extends SuperEntity<Admin> {
      */
     @TableField(exist = false)
     private List<String> photoList;
-    
+
     /**
      * 所拥有的角色名
      */
     @TableField(exist = false)
     private List<String> roleNames;
-    
+
     /**
      * 所拥有的角色
      */
     @TableField(exist = false)
     private List<Role> roleList;
-    
+
     /**
      * 验证码
      */

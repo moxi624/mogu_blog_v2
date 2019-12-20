@@ -11,6 +11,6 @@ import com.moxi.mougblog.base.service.SuperService;
  * @author xuzhixiang
  * @since 2018年11月23日10:41:47
  */
-public interface CategoryMenuService extends SuperService<CategoryMenu>{
+public interface CategoryMenuService extends SuperService<CategoryMenu> {
 
 }

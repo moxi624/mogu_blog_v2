@@ -23,7 +23,7 @@ import com.aliyuncs.profile.IClientProfile;
  * 工程依赖了2个jar包(存放在工程的libs目录下)
  * 1:aliyun-java-sdk-core.jar
  * 2:aliyun-java-sdk-dysmsapi.jar
- *
+ * <p>
  * 备注:Demo工程编码采用UTF-8
  * 国际短信发送请勿参照此DEMO
  */
@@ -34,13 +34,13 @@ public class SmsUtil {
     static final String product = "Dysmsapi";
     //产品域名,开发者无需替换
     static final String domain = "dysmsapi.aliyuncs.com";
-    
-    @Value(value="${accessKeyId}")
+
+    @Value(value = "${accessKeyId}")
     private String accessKeyId;
-    
-    @Value(value="${accessKeySecret}")
+
+    @Value(value = "${accessKeySecret}")
     private String accessKeySecret;
-    
+
     //@Autowired
     //private Environment env;
 
@@ -48,7 +48,7 @@ public class SmsUtil {
     //String accessKeyId = env.getProperty("accessKeyId");
     //String accessKeySecret = env.getProperty("accessKeySecret");
 
-    public SendSmsResponse sendSms(String mobile,String template_code,String sign_name,String param) throws ClientException {
+    public SendSmsResponse sendSms(String mobile, String template_code, String sign_name, String param) throws ClientException {
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
@@ -83,7 +83,7 @@ public class SmsUtil {
     }
 
 
-    public QuerySendDetailsResponse querySendDetails(String mobile,String bizId) throws ClientException {
+    public QuerySendDetailsResponse querySendDetails(String mobile, String bizId) throws ClientException {
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");

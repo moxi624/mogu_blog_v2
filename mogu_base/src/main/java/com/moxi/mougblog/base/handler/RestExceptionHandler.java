@@ -23,59 +23,64 @@ public class RestExceptionHandler {
 
     /**
      * 400错误
+     *
      * @param ex
      * @return
      */
     @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseBody
-    public Result requestNotReadable(HttpMessageNotReadableException ex){
-        log.error("异常类 HttpMessageNotReadableException {},",ex.getMessage());
+    public Result requestNotReadable(HttpMessageNotReadableException ex) {
+        log.error("异常类 HttpMessageNotReadableException {},", ex.getMessage());
         return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
     }
 
     /**
      * 400错误
+     *
      * @param ex
      * @return
      */
     @ExceptionHandler({TypeMismatchException.class})
     @ResponseBody
-    public Result requestTypeMismatch(TypeMismatchException ex){
-        log.error("异常类 TypeMismatchException {},",ex.getMessage());
+    public Result requestTypeMismatch(TypeMismatchException ex) {
+        log.error("异常类 TypeMismatchException {},", ex.getMessage());
         return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
     }
 
     /**
      * 400错误
+     *
      * @param ex
      * @return
      */
     @ExceptionHandler({MissingServletRequestParameterException.class})
     @ResponseBody
-    public Result requestMissingServletRequest(MissingServletRequestParameterException ex){
-        log.error("异常类 MissingServletRequestParameterException {},",ex.getMessage());
+    public Result requestMissingServletRequest(MissingServletRequestParameterException ex) {
+        log.error("异常类 MissingServletRequestParameterException {},", ex.getMessage());
         return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
     }
 
     /**
      * 405错误
+     *
      * @return
      */
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
     @ResponseBody
-    public Result request405(){
+    public Result request405() {
         log.error("异常类 HttpRequestMethodNotSupportedException ");
         return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
     }
 
     /**
      * 415错误
+     *
      * @return
      */
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     @ResponseBody
-    public Result request415(HttpMediaTypeNotSupportedException ex){
-        log.error("异常类 HttpMediaTypeNotSupportedException {}",ex.getMessage());
+    public Result request415(HttpMediaTypeNotSupportedException ex) {
+        log.error("异常类 HttpMediaTypeNotSupportedException {}", ex.getMessage());
         return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
     }
 }

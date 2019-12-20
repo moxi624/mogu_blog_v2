@@ -24,7 +24,7 @@ public class MybatisPlusConfig {
         scannerConfigurer.setBasePackage("com.moxi.mogublog.picture.mapper*");
         return scannerConfigurer;
     }
-    
+
 
     /**
      * mybatis-plus分页插件
@@ -46,7 +46,7 @@ public class MybatisPlusConfig {
      * 性能分析拦截器，不建议生产使用
      */
     @Bean
-    public PerformanceInterceptor performanceInterceptor(){
+    public PerformanceInterceptor performanceInterceptor() {
         return new PerformanceInterceptor();
     }
 }

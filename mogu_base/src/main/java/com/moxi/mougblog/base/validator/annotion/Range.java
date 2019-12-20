@@ -15,11 +15,11 @@ import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * 数字的范围约束
- * 
+ *
  * @author 陌溪
  * @date 2019年12月4日22:48:34
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD})
+@Target({TYPE, ANNOTATION_TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {RangValidator.class})
 public @interface Range {

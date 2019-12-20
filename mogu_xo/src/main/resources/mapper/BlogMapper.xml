@@ -4,23 +4,23 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Blog">
-        <id column="oid" property="oid" />
-        <result column="uid" property="uid" />
-        <result column="title" property="title" />
-        <result column="summary" property="summary" />
-        <result column="content" property="content" />
-        <result column="taguid" property="taguid" />
-        <result column="clickcount" property="clickcount" />
-        <result column="collectcount" property="collectcount" />
-        <result column="photo" property="photo" />
-        <result column="status" property="status" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
+        <id column="oid" property="oid"/>
+        <result column="uid" property="uid"/>
+        <result column="title" property="title"/>
+        <result column="summary" property="summary"/>
+        <result column="content" property="content"/>
+        <result column="taguid" property="taguid"/>
+        <result column="clickcount" property="clickcount"/>
+        <result column="collectcount" property="collectcount"/>
+        <result column="photo" property="photo"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         oid, uid, title, summary, content, taguid, clickcount, collectcount, photo, status, createtime, updatetime
     </sql>
-    
+
 </mapper>

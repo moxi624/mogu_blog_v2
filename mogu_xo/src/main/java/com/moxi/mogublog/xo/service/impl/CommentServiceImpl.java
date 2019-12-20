@@ -20,15 +20,15 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
  */
 @Service
 public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment> implements CommentService {
-	
-	@Autowired
-	CommentMapper commentMapper;
-	
-	@Override
-	public Integer getCommentCount(int status) {
-		QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq(BaseSQLConf.STATUS, status);
-		return commentMapper.selectCount(queryWrapper);
-	}
+
+    @Autowired
+    CommentMapper commentMapper;
+
+    @Override
+    public Integer getCommentCount(int status) {
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseSQLConf.STATUS, status);
+        return commentMapper.selectCount(queryWrapper);
+    }
 
 }

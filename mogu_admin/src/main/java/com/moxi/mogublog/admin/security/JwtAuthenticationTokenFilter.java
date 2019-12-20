@@ -23,46 +23,47 @@ import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 
 @Component
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
-	
-	private static Logger log = LogManager.getLogger(JwtAuthenticationTokenFilter.class);
-	
-	@Autowired
-	private Audience audience;
-	
-	@Autowired
-	private UserDetailsService userDetailsService;
-	
-	@Autowired
-	private JwtHelper jwtHelper;
-	
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+
+    private static Logger log = LogManager.getLogger(JwtAuthenticationTokenFilter.class);
+
+    @Autowired
+    private Audience audience;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtHelper jwtHelper;
+
 //	@Value(value="${base64Secret}")
 //	private String base64Secret;
-	
-	@Value(value="${tokenHead}")
-	private String tokenHead;
-	
-	@Value(value="${tokenHeader}")
-	private String tokenHeader;
-	
-	@Value(value="${audience.expiresSecond}")
-	private Long expiresSecond;
-	
-	/**
-	 *  Reserved claims（保留），它的含义就像是编程语言的保留字一样，属于JWT标准里面规定的一些claim。JWT标准里面定好的claim有：
-	 iss(Issuser)：代表这个JWT的签发主体；
-	 sub(Subject)：代表这个JWT的主体，即它的所有人；
-	 aud(Audience)：代表这个JWT的接收对象；
-	 exp(Expiration time)：是一个时间戳，代表这个JWT的过期时间；
-	 nbf(Not Before)：是一个时间戳，代表这个JWT生效的开始时间，意味着在这个时间之前验证JWT是会失败的；
-	 iat(Issued at)：是一个时间戳，代表这个JWT的签发时间；
-	 jti(JWT ID)：是JWT的唯一标识。
-	 * @param req
-	 * @param res
-	 * @param chain
-	 * @throws IOException
-	 * @throws ServletException
-	 */
+
+    @Value(value = "${tokenHead}")
+    private String tokenHead;
+
+    @Value(value = "${tokenHeader}")
+    private String tokenHeader;
+
+    @Value(value = "${audience.expiresSecond}")
+    private Long expiresSecond;
+
+    /**
+     * Reserved claims（保留），它的含义就像是编程语言的保留字一样，属于JWT标准里面规定的一些claim。JWT标准里面定好的claim有：
+     * iss(Issuser)：代表这个JWT的签发主体；
+     * sub(Subject)：代表这个JWT的主体，即它的所有人；
+     * aud(Audience)：代表这个JWT的接收对象；
+     * exp(Expiration time)：是一个时间戳，代表这个JWT的过期时间；
+     * nbf(Not Before)：是一个时间戳，代表这个JWT生效的开始时间，意味着在这个时间之前验证JWT是会失败的；
+     * iat(Issued at)：是一个时间戳，代表这个JWT的签发时间；
+     * jti(JWT ID)：是JWT的唯一标识。
+     *
+     * @param req
+     * @param res
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
 //	@Override
 //	public void doFilterInternal(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 //			throws IOException, ServletException {
@@ -115,55 +116,53 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter{
 //		}
 //		chain.doFilter(req, res);
 //	}
-	
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        //得到请求头信息authorization信息
+        final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
-		//得到请求头信息authorization信息
-		final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
-		
-		log.error("传递过来的token为:" + authHeader);
-		
-		//请求头 'Authorization': tokenHead + token
-		if (authHeader != null && authHeader.startsWith(tokenHead)) {
-		
-			final String token = authHeader.substring(tokenHead.length());
-			
-			//判断token是否过期
-			if (!jwtHelper.isExpiration(token, audience.getBase64Secret())) {
-				//刷新token过期时间
-				jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
-				log.info("token未过期，刷新token");
-			} else {
-				chain.doFilter(request, response);
-				return;
-			}
-			
-			String username = jwtHelper.getUsername(token,audience.getBase64Secret());
-			String adminUid = jwtHelper.getUserUid(token,audience.getBase64Secret());
-			
-			//把adminUid存储到request中
-			request.setAttribute("adminUid", adminUid);
-			logger.info("解析出来用户 : " + username);
-			logger.info("解析出来的用户Uid : " + adminUid);
-			
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-		        
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-				
-				if(jwtHelper.validateToken(token,userDetails,audience.getBase64Secret())) {
-					 UsernamePasswordAuthenticationToken authentication	= new UsernamePasswordAuthenticationToken(
-			                userDetails, null, userDetails.getAuthorities());
-					 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
-			                 request));
-					 logger.info("authenticated user " + username + ", setting security context");
-			         SecurityContextHolder.getContext().setAuthentication(authentication);//以后可以security中取得SecurityUser信息
-				}
-			}
-		}
-		chain.doFilter(request, response);	
-	}
+        log.error("传递过来的token为:" + authHeader);
+
+        //请求头 'Authorization': tokenHead + token
+        if (authHeader != null && authHeader.startsWith(tokenHead)) {
+
+            final String token = authHeader.substring(tokenHead.length());
+
+            //判断token是否过期
+            if (!jwtHelper.isExpiration(token, audience.getBase64Secret())) {
+                //刷新token过期时间
+                jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
+                log.info("token未过期，刷新token");
+            } else {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            String username = jwtHelper.getUsername(token, audience.getBase64Secret());
+            String adminUid = jwtHelper.getUserUid(token, audience.getBase64Secret());
+
+            //把adminUid存储到request中
+            request.setAttribute("adminUid", adminUid);
+            logger.info("解析出来用户 : " + username);
+            logger.info("解析出来的用户Uid : " + adminUid);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                if (jwtHelper.validateToken(token, userDetails, audience.getBase64Secret())) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
+                            request));
+                    logger.info("authenticated user " + username + ", setting security context");
+                    SecurityContextHolder.getContext().setAuthentication(authentication);//以后可以security中取得SecurityUser信息
+                }
+            }
+        }
+        chain.doFilter(request, response);
+    }
 }
 		
 

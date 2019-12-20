@@ -48,90 +48,90 @@ import io.swagger.annotations.ApiParam;
  */
 @RestController
 @RequestMapping("/role")
-@Api(value="角色管理RestApi",tags={"RoleRestApi"})
+@Api(value = "角色管理RestApi", tags = {"RoleRestApi"})
 public class RoleRestApi {
 
-		@Autowired
-		private RoleService roleService;
-		
-		private static Logger log = LogManager.getLogger(RoleRestApi.class);
-		
-		@ApiOperation(value="获取角色信息列表", notes="获取角色信息列表")
-		@PostMapping("/getList")
-		public String getList(@Validated({GetList.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+    @Autowired
+    private RoleService roleService;
 
-			// 参数校验
-			ThrowableUtils.checkParamArgument(result);
-			
-			QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
-			if(StringUtils.isNotEmpty(roleVO.getKeyword()) && StringUtils.isNotEmpty(roleVO.getKeyword().trim())) {
-				queryWrapper.like(SQLConf.ROLENAEM, roleVO.getKeyword().trim());
-			}
-			queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-			Page<Role> page = new Page<>();
-			page.setCurrent(roleVO.getCurrentPage());
-			page.setSize(roleVO.getPageSize());
-			IPage<Role> pageList = roleService.page(page, queryWrapper);
-			log.info("获取角色信息列表");
-			return ResultUtil.result(SysConf.SUCCESS, pageList);
-		}
-		
-		@OperationLogger(value="新增角色信息")
-		@ApiOperation(value="新增角色信息", notes="新增角色信息")
-		@PostMapping("/add")
-		public String add(@Validated({Insert.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+    private static Logger log = LogManager.getLogger(RoleRestApi.class);
 
-			// 参数校验
-			ThrowableUtils.checkParamArgument(result);
+    @ApiOperation(value = "获取角色信息列表", notes = "获取角色信息列表")
+    @PostMapping("/getList")
+    public String getList(@Validated({GetList.class}) @RequestBody RoleVO roleVO, BindingResult result) {
 
-			String roleName = roleVO.getRoleName();
-			QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-			queryWrapper.eq(SQLConf.ROLENAEM, roleName);
-			Role getRole = roleService.getOne(queryWrapper);
-			if(getRole == null) {
-				Role role = new Role();
-				role.setRoleName(roleVO.getRoleName());
-				role.setCategoryMenuUids(roleVO.getCategoryMenuUids());
-				role.setSummary(roleVO.getSummary());
-				role.insert();
-				return ResultUtil.result(SysConf.SUCCESS, "新增角色成功");
-			}
-			return ResultUtil.result(SysConf.ERROR, "角色已存在");
-		}
-		
-		@OperationLogger(value="更新角色信息")
-		@ApiOperation(value="更新角色信息", notes="更新角色信息")
-		@PostMapping("/update")
-		public String update(@Validated({Update.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
 
-			// 参数校验
-			ThrowableUtils.checkParamArgument(result);
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<Role>();
+        if (StringUtils.isNotEmpty(roleVO.getKeyword()) && StringUtils.isNotEmpty(roleVO.getKeyword().trim())) {
+            queryWrapper.like(SQLConf.ROLENAEM, roleVO.getKeyword().trim());
+        }
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        Page<Role> page = new Page<>();
+        page.setCurrent(roleVO.getCurrentPage());
+        page.setSize(roleVO.getPageSize());
+        IPage<Role> pageList = roleService.page(page, queryWrapper);
+        log.info("获取角色信息列表");
+        return ResultUtil.result(SysConf.SUCCESS, pageList);
+    }
 
-			String uid = roleVO.getUid();
-			Role getRole = roleService.getById(uid);
-			if (getRole == null) {
-				return ResultUtil.result(SysConf.ERROR, "角色不存在");
-			}
-			getRole.setRoleName(roleVO.getRoleName());
-			getRole.setCategoryMenuUids(roleVO.getCategoryMenuUids());
-			getRole.setSummary(roleVO.getSummary());
-			getRole.updateById();
-			return ResultUtil.result(SysConf.SUCCESS, "更新角色信息成功");
-			
-		}
-		
-		@OperationLogger(value="删除角色信息")
-		@ApiOperation(value="删除角色信息", notes="删除角色信息")
-		@PostMapping("/delete")
-		public String delete(@Validated({Delete.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+    @OperationLogger(value = "新增角色信息")
+    @ApiOperation(value = "新增角色信息", notes = "新增角色信息")
+    @PostMapping("/add")
+    public String add(@Validated({Insert.class}) @RequestBody RoleVO roleVO, BindingResult result) {
 
-			// 参数校验
-			ThrowableUtils.checkParamArgument(result);
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
 
-			Role role = roleService.getById(roleVO.getUid());
-			role.setStatus(EStatus.DISABLED);
-			role.updateById();
-			return ResultUtil.result(SysConf.SUCCESS, "删除角色信息成功");
-		}
-		
+        String roleName = roleVO.getRoleName();
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.ROLENAEM, roleName);
+        Role getRole = roleService.getOne(queryWrapper);
+        if (getRole == null) {
+            Role role = new Role();
+            role.setRoleName(roleVO.getRoleName());
+            role.setCategoryMenuUids(roleVO.getCategoryMenuUids());
+            role.setSummary(roleVO.getSummary());
+            role.insert();
+            return ResultUtil.result(SysConf.SUCCESS, "新增角色成功");
+        }
+        return ResultUtil.result(SysConf.ERROR, "角色已存在");
+    }
+
+    @OperationLogger(value = "更新角色信息")
+    @ApiOperation(value = "更新角色信息", notes = "更新角色信息")
+    @PostMapping("/update")
+    public String update(@Validated({Update.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        String uid = roleVO.getUid();
+        Role getRole = roleService.getById(uid);
+        if (getRole == null) {
+            return ResultUtil.result(SysConf.ERROR, "角色不存在");
+        }
+        getRole.setRoleName(roleVO.getRoleName());
+        getRole.setCategoryMenuUids(roleVO.getCategoryMenuUids());
+        getRole.setSummary(roleVO.getSummary());
+        getRole.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, "更新角色信息成功");
+
+    }
+
+    @OperationLogger(value = "删除角色信息")
+    @ApiOperation(value = "删除角色信息", notes = "删除角色信息")
+    @PostMapping("/delete")
+    public String delete(@Validated({Delete.class}) @RequestBody RoleVO roleVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        Role role = roleService.getById(roleVO.getUid());
+        role.setStatus(EStatus.DISABLED);
+        role.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, "删除角色信息成功");
+    }
+
 }

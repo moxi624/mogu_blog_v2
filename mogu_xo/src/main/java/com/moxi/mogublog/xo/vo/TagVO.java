@@ -21,7 +21,7 @@ public class TagVO extends BaseVO<TagVO> {
 
     /**
      * 无参构造方法，初始化默认值
-      */
+     */
     TagVO() {
 
     }
