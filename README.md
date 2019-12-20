@@ -89,7 +89,7 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 
 ## 关注&交流
 
-刚刚创建了一个QQ群<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=88bc57d77601a3c5ae97fe6d9c0bfa25c2ae166d8f0b9f6da6f7294097be6d08"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="蘑菇博客交流群" title="蘑菇博客交流群"></a>，目前项目还存在很多不足之处，欢迎各位老哥进群交流~
+刚刚创建了一个QQ群<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=88bc57d77601a3c5ae97fe6d9c0bfa25c2ae166d8f0b9f6da6f7294097be6d08"><img border="0" src="./doc/images/qq/group.png" alt="蘑菇博客交流群" title="蘑菇博客交流群"></a>，目前项目还存在很多不足之处，欢迎各位老哥进群交流~
 
 |                QQ群（备注：蘑菇博客）                 |               QQ（备注：蘑菇博客）               |
 | :---------------------------------------------------: | :----------------------------------------------: |
