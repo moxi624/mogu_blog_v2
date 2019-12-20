@@ -1,102 +1,104 @@
 <template>
   <div class="app-container">
-      <!-- 查询和其他操作 -->
-	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-        <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入角色名称"></el-input>
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加角色</el-button>	              
-	    </div>
+    <!-- 查询和其他操作 -->
+    <div class="filter-container" style="margin: 10px 0 10px 0;">
+      <el-input
+        clearable
+        class="filter-item"
+        style="width: 200px;"
+        v-model="keyword"
+        placeholder="请输入角色名称"
+      ></el-input>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加角色</el-button>
+    </div>
 
-      <el-table :data="tableData"  style="width: 100%">
-      
+    <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="序号" width="60">
-	      <template slot-scope="scope">
-	        <span >{{scope.$index + 1}}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="角色名称" width="200">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.roleName }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="角色介绍" width="200">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.summary }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="创建时间" width="160">
-	      <template slot-scope="scope">
-	        <span >{{ scope.row.createTime }}</span>
-	      </template>
-	    </el-table-column>
-	    
-	   	<el-table-column label="状态" width="100">
-	   	  <template slot-scope="scope">
-		   	  <template v-if="scope.row.status == 1">
-		        <span>正常</span>
-		      </template>
-		      <template v-if="scope.row.status == 2">
-		        <span>推荐</span>
-		      </template>
-		      <template v-if="scope.row.status == 0">
-		        <span>已删除</span>
-		      </template>
-	   	  </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
-	      <template slot-scope="scope" >
-	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
-	      </template>
-	    </el-table-column>     	    
-	  </el-table>
+        <template slot-scope="scope">
+          <span>{{scope.$index + 1}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="角色名称" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.roleName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="角色介绍" width="300">
+        <template slot-scope="scope">
+          <span>{{ scope.row.summary }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" width="100">
+        <template slot-scope="scope">
+          <template v-if="scope.row.status == 1">
+            <span>正常</span>
+          </template>
+          <template v-if="scope.row.status == 2">
+            <span>推荐</span>
+          </template>
+          <template v-if="scope.row.status == 0">
+            <span>已删除</span>
+          </template>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" fixed="right" min-width="150">
+        <template slot-scope="scope">
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <!--分页-->
     <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total">
-        </el-pagination>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </div>
 
-	  <!-- 添加或修改对话框 -->
-		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-		  <el-form :model="form">
-		  	
+    <!-- 添加或修改对话框 -->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
         <el-form-item label="角色名称" :label-width="formLabelWidth">
-		      <el-input v-model="form.roleName" auto-complete="off"></el-input>
-		    </el-form-item>
-		    
-		    <el-form-item label="角色介绍" :label-width="formLabelWidth">
-		      <el-input v-model="form.summary" auto-complete="off"></el-input>
-		    </el-form-item>
+          <el-input v-model="form.roleName" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="角色介绍" :label-width="formLabelWidth">
+          <el-input v-model="form.summary" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="访问菜单" :label-width="formLabelWidth">
           <el-tree
             ref="tree"
             :data="categoryMenuList"
             show-checkbox
-            node-key="uid"            
+            node-key="uid"
             :props="defaultProps"
-            :default-checked-keys="form.categoryMenuUids">
-          </el-tree>
+            :default-checked-keys="form.categoryMenuUids"
+          ></el-tree>
         </el-form-item>
-
-		  </el-form>
-		  <div slot="footer" class="dialog-footer">
-		    <el-button @click="dialogFormVisible = false">取 消</el-button>
-		    <el-button type="primary" @click="submitForm">确 定</el-button>
-		  </div>
-		</el-dialog>
-
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -127,7 +129,7 @@ export default {
 
       //分类菜单列表
       categoryMenuList: [],
-      
+
       // tree配置项
       defaultProps: {
         children: "childCategoryMenu",
@@ -145,7 +147,7 @@ export default {
   },
   watch: {
     'form': {
-      handler (newVal, oldVal) {
+      handler(newVal, oldVal) {
         console.log("value changed ", newVal, oldVal);
       },
       deep: true,
@@ -153,75 +155,77 @@ export default {
   },
   methods: {
 
-    allMenuList: function() {
+    allMenuList: function () {
       getAllMenu().then(response => {
         console.log(response);
         if (response.code == "success") {
-          let data = response.data;        
-          this.categoryMenuList = data;        
+          let data = response.data;
+          this.categoryMenuList = data;
         }
       });
     },
-    handleFind: function() {
+    handleFind: function () {
       this.roleList();
     },
-    roleList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+    roleList: function () {
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
+
       getRoleList(params).then(response => {
         console.log(response);
-        if(response.code == "success") {
+        if (response.code == "success") {
           var data = response.data.records;
-          
+
           //初始化菜单UID
-          for( let a=0; a< data.length; a++) {
-            if(data[a].categoryMenuUids) {
+          for (let a = 0; a < data.length; a++) {
+            if (data[a].categoryMenuUids) {
               data[a].categoryMenuUids = eval("(" + data[a].categoryMenuUids + ")");
             } else {
               data[a].categoryMenuUids = [];
-            }            
+            }
           }
           this.tableData = data;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
           this.total = response.data.total;
-        } 
-        
+        }
+
       });
     },
-    getFormObject: function() {
+    getFormObject: function () {
       var formObject = {
         uid: null,
         roleName: null,
-        summary: null
+        summary: null,
+        categoryMenuUids: [],
       };
       return formObject;
     },
 
-    handleAdd: function() {
+    handleAdd: function () {
+      console.log("点击添加", this.getFormObject());
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
-      this.isEditForm = false;
-    },
-
-    handleEdit: function(row) {
-      
-      this.dialogFormVisible = true;
-      this.isEditForm = true;
-      console.log(row);
-      this.form = row;
-
-      console.log("选中的初始化", this.form.categoryMenuUids);
-      
       setTimeout(() => {
         this.$refs.tree.setCheckedKeys(this.form.categoryMenuUids);
       }, 0);
-      
+      this.isEditForm = false;
     },
 
-    handleDelete: function(row) {
+    handleEdit: function (row) {
+
+      this.dialogFormVisible = true;
+      this.isEditForm = true;
+      this.form = row;
+      setTimeout(() => {
+        this.$refs.tree.setCheckedKeys(this.form.categoryMenuUids);
+      }, 0);
+    },
+
+    handleDelete: function (row) {
+
       var that = this;
       this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -229,9 +233,10 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
-          deleteBlogSort(params).then(response => {
+          var params = {};
+          params.uid = row.uid;
+
+          deleteRole(params).then(response => {
             console.log(response);
             this.$message({
               type: "success",
@@ -247,24 +252,15 @@ export default {
           });
         });
     },
-    handleCurrentChange: function(val) {
-      console.log("点击了换页");
+    handleCurrentChange: function (val) {
       this.currentPage = val;
       this.roleList();
     },
-    submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      
-      // var params = formatData(this.form);
-      console.log(this.$refs.tree.getCheckedKeys());
-      
+    submitForm: function () {
+
       //得到选中树的UID
-      var categoryMenuUids = this.$refs.tree.getCheckedKeys();     
-      // let ids = "";
-      // for(let a=0; a < categoryMenuUids.length; a++) {
-      //   ids = ids + categoryMenuUids[a] + ",";
-      // }
-      this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);   
+      var categoryMenuUids = this.$refs.tree.getCheckedKeys();
+      this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
 
       if (this.isEditForm) {
         console.log("form", this.form);

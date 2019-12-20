@@ -1,5 +1,7 @@
 package com.moxi.mogublog.xo.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
@@ -26,10 +28,12 @@ public class Role extends SuperEntity<Role>{
     /**
      * 介绍
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String summary;
     
     /**
      * 该角色所能管辖的区域
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String categoryMenuUids;
 }

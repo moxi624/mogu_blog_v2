@@ -124,7 +124,6 @@
               :value="item.uid"
             ></el-option>
           </el-select>
-
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -176,7 +175,7 @@ export default {
     this.roleList();
   },
   methods: {
-    adminRoleList: function() {
+    adminRoleList: function () {
       var params = new URLSearchParams();
       params.append("adminUid", this.adminKeyword);
       params.append("roleUid", this.roleKeyword);
@@ -216,7 +215,7 @@ export default {
 
       });
     },
-    getFormObject: function() {
+    getFormObject: function () {
       var formObject = {
         uid: null,
         content: null,
@@ -224,15 +223,15 @@ export default {
       };
       return formObject;
     },
-    handleFind: function() {
+    handleFind: function () {
       this.adminRoleList();
     },
-    handleAdd: function() {
+    handleAdd: function () {
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
-    handleEdit: function(row) {
+    handleEdit: function (row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
       console.log(row);
@@ -240,7 +239,7 @@ export default {
     },
 
     //管理员远程搜索函数
-    adminRemoteMethod: function(query) {
+    adminRemoteMethod: function (query) {
       if (query !== "") {
         var params = new URLSearchParams();
         params.append("keyword", query);
@@ -254,14 +253,19 @@ export default {
     },
 
     //角色远程搜索函数
-    roleList: function() {
-      getRoleList().then(response => {
+    roleList: function () {
+
+      var params = {};      
+      params.currentPage = 1;
+      params.pageSize = 10;
+
+      getRoleList(params).then(response => {
         this.roleOptions = response.data.records;
       });
-      
+
     },
 
-    handleDelete: function(row) {
+    handleDelete: function (row) {
       var that = this;
       this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -287,11 +291,11 @@ export default {
           });
         });
     },
-    handleCurrentChange: function(val) {
+    handleCurrentChange: function (val) {
       this.currentPage = val;
       this.adminRoleList();
     },
-    submitForm: function() {
+    submitForm: function () {
       if (this.isEditForm) {
         editAdminRole(this.form).then(response => {
           console.log(response);

@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function getRoleList(params) {
   return request({
     url: process.env.ADMIN_API + '/role/getList',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
@@ -28,7 +28,7 @@ export function deleteRole(params) {
   return request({
     url: process.env.ADMIN_API + '/role/delete',
     method: 'post',
-    params
+    data: params
   })
 }
 
