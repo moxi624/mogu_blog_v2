@@ -1,7 +1,7 @@
 #app
 server:
-    port: 8602
-    
+  port: 8602
+
 #Data image url
 data:
   image:
@@ -10,32 +10,38 @@ file:
   upload:
     path: D:/mogu_blog/data/
 
-#启动Basic验证    
-security:
-  basic:
-    enabled: true
-  user:
-    name: user
-    password: password123    
 
 #spring
 spring:
-  http:
+  servlet:
     multipart:
-      max-file-size: 5Mb  # 修改单次文件上传文件大小不能超过5MB
-      max-request-size: 50Mb # 设置单次文件请求总大小不能超过50MB
+      enabled: true
+      max-file-size: 5MB # 修改单次文件上传文件大小不能超过5MB
+      max-request-size: 50MB # 设置单次文件请求总大小不能超过50MB
+
   jmx:
     default-domain: mogu_picture
   thymeleaf:
     cache: true   #关闭缓存
   application:
     name: mogu-picture
-      
+  security:
+    user:
+      name: user
+      password: password123
+  #Solr
+  data:
+    solr:
+      host: http://localhost:8080/solr
+      core: collection1
+      repositories:
+        enabled: true
+
   # DATABASE CONFIG
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/mogu_picture?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false    
+    url: jdbc:mysql://localhost:3306/mogu_picture?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
@@ -49,27 +55,30 @@ spring:
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
-    
+
     #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     filters: stat,wall,log4j
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-    
+
 eureka:
   client:
     healthcheck:
       enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
-      defaultZone: http://user:password123@localhost:8761/eureka
+      defaultZone: http://user:password123@localhost:8761/
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
     metadata-map:
       zone: ABC      # eureka可以理解的元数据
       lilizhou: BBC  # 不会影响客户端行为
     lease-renewal-interval-in-seconds: 5
-    
+
+
 #mybatis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

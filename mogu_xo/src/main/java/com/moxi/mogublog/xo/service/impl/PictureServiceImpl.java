@@ -1,11 +1,10 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.xo.entity.Picture;
 import com.moxi.mogublog.xo.mapper.PictureMapper;
 import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>

@@ -16,21 +16,20 @@ import lombok.Data;
 public class BlogSortVO extends BaseVO<BlogSortVO> {
 
     /**
-     * 无参构造方法
-      */
-    BlogSortVO() {
-
-    }
-
-    /**
      * 分类名
      */
     @NotBlank(groups = {Insert.class, Update.class})
     private String sortName;
-
     /**
      * 分类介绍
      */
     private String content;
+
+    /**
+     * 无参构造方法
+     */
+    BlogSortVO() {
+
+    }
 
 }

@@ -11,6 +11,6 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
  * @author limbo
  * @since 2018-09-30
  */
-public interface AdminRoleMapper extends SuperMapper<AdminRole>{
+public interface AdminRoleMapper extends SuperMapper<AdminRole> {
 
 }

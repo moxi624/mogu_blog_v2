@@ -1,5 +1,8 @@
 package com.moxi.mogublog.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,22 +13,19 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 /**
  * 发送http请求的工具类
- * @author xzx19950624@qq.com
  *
+ * @author xzx19950624@qq.com
  */
 public class HttpRequestUtil {
-	private static Logger log = Logger.getLogger(HttpRequestUtil.class);
-	 /**
+    private static Logger log = LoggerFactory.getLogger(HttpRequestUtil.class);
+
+    /**
      * 向指定URL发送GET方法的请求
-     * 
-     * @param url
-     *            发送请求的URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *
+     * @param url   发送请求的URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return URL 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param) {
@@ -37,7 +37,7 @@ public class HttpRequestUtil {
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
             // 设置通用的请求属性
-            connection.setRequestProperty("Content-type", "application/x-java-serialized-object");  
+            connection.setRequestProperty("Content-type", "application/x-java-serialized-object");
 
             // 建立实际的连接
             connection.connect();
@@ -70,22 +70,20 @@ public class HttpRequestUtil {
         }
         return result;
     }
-    
-	 /**
+
+    /**
      * 向指定URL发送GET方法的请求
-     * 
-     * @param url
-     *            发送请求的URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *
+     * @param url   发送请求的URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return URL 所代表远程资源的响应结果
      */
-    public static String sendGet(String url, String param,String token) {
-    	
-    	if(StringUtils.isEmpty(token)) {
-    		return sendGet(url, param);
-    	}
-    	
+    public static String sendGet(String url, String param, String token) {
+
+        if (StringUtils.isEmpty(token)) {
+            return sendGet(url, param);
+        }
+
         String result = "";
         BufferedReader in = null;
         try {
@@ -94,7 +92,7 @@ public class HttpRequestUtil {
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
             // 设置通用的请求属性
-            connection.setRequestProperty("Content-type", "application/x-java-serialized-object");  
+            connection.setRequestProperty("Content-type", "application/x-java-serialized-object");
 //            connection.setRequestProperty("accept", "*/*");
 //            connection.setRequestProperty("connection", "Keep-Alive");
 //            connection.setRequestProperty("user-agent",
@@ -132,15 +130,13 @@ public class HttpRequestUtil {
         }
         return result;
     }
-    
+
 
     /**
      * 向指定 URL 发送POST方法的请求
-     * 
-     * @param url
-     *            发送请求的 URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *
+     * @param url   发送请求的 URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, String param) {
@@ -156,15 +152,15 @@ public class HttpRequestUtil {
 //            conn.setRequestProperty("connection", "Keep-Alive");
 //            conn.setRequestProperty("user-agent",
 //                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-            
+
             conn.setRequestMethod("POST");//默认get
-            
+
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
             //post请求不能使用缓存
             conn.setUseCaches(false);
-            
+
             // 获取URLConnection对象对应的输出流
             out = new PrintWriter(conn.getOutputStream());
             // 发送请求参数
@@ -179,20 +175,19 @@ public class HttpRequestUtil {
                 result += line;
             }
         } catch (Exception e) {
-            log.info("发送 POST 请求出现异常！"+e);
+            log.info("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
-        finally{
-            try{
-                if(out!=null){
+        finally {
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in!=null){
+                if (in != null) {
                     in.close();
                 }
-            }
-            catch(IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }

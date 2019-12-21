@@ -1,9 +1,7 @@
 package com.moxi.mougblog.base.validator.annotion;
 
 
-
 import com.moxi.mougblog.base.validator.Messages;
-import com.moxi.mougblog.base.validator.constraint.IntegerValidator;
 import com.moxi.mougblog.base.validator.constraint.LongValidator;
 
 import javax.validation.Constraint;
@@ -18,7 +16,7 @@ import static java.lang.annotation.ElementType.*;
  * @author: 陌溪
  * @date: 2019年12月4日13:12:52
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD})
+@Target({TYPE, ANNOTATION_TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {LongValidator.class})
 public @interface LongNotNull {

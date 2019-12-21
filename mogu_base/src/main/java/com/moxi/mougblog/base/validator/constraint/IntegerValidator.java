@@ -1,7 +1,6 @@
 package com.moxi.mougblog.base.validator.constraint;
 
 import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -19,7 +18,7 @@ public class IntegerValidator implements ConstraintValidator<IntegerNotNull, Int
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (value == null ) {
+        if (value == null) {
             return false;
         }
         return true;

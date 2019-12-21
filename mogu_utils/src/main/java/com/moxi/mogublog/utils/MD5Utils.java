@@ -1,35 +1,36 @@
 package com.moxi.mogublog.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 /**
  * MD5工具类
+ *
  * @author xzx19950624@qq.com
  * @date 2017年9月24日16:40:20
- *
  */
 public class MD5Utils {
-	private static Logger logger = LogManager.getLogger(MD5Utils.class);
-	
-	/**
-	 * MD5加码 生成32位md5码(不可逆的)
-	 * @param inStr
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @author xuzhixiang
-	 * @date 2017年9月24日17:22:13
-	 */
-    public static String string2MD5(String inStr) throws NoSuchAlgorithmException{
+    private static Logger logger = LoggerFactory.getLogger(MD5Utils.class);
+
+    /**
+     * MD5加码 生成32位md5码(不可逆的)
+     *
+     * @param inStr
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @author xuzhixiang
+     * @date 2017年9月24日17:22:13
+     */
+    public static String string2MD5(String inStr) throws NoSuchAlgorithmException {
         MessageDigest md5;
-        String string="";
+        String string = "";
         try {
             md5 = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            logger.error("MD5加密实现的错误日志-->>"+e.getMessage(), e);
+            logger.error("MD5加密实现的错误日志-->>" + e.getMessage(), e);
             return string;
         }
         char[] charArray = inStr.toCharArray();
@@ -46,18 +47,19 @@ public class MD5Utils {
             }
             hexValue.append(Integer.toHexString(val));
         }
-        string=hexValue.toString();
+        string = hexValue.toString();
         logger.debug("MD5加密的32位密钥的调试日志-->>" + string);
         return string;
     }
-    
+
     /**
      * 加密解密算法 执行一次加密，两次解密
+     *
      * @param inStr
      * @return
      * @throws Exception
      */
-    public static String convertMD5(String inStr) throws Exception{
+    public static String convertMD5(String inStr) throws Exception {
         char[] a = inStr.toCharArray();
         for (int i = 0; i < a.length; i++) {
             a[i] = (char) (a[i] ^ 't');
@@ -66,5 +68,5 @@ public class MD5Utils {
         logger.debug("MD5加密的二次加密的字符串的调试日志-->>" + string);
         return string;
     }
-    
+
 }

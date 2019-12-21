@@ -1,12 +1,11 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.mapper.AdminMapper;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>

@@ -1,15 +1,14 @@
 package com.moxi.mogublog.picture.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mogublog.picture.mapper.FileMapper;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author xuzhixiang

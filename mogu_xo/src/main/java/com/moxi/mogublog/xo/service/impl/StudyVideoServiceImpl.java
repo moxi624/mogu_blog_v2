@@ -1,11 +1,10 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.mapper.StudyVideoMapper;
 import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>

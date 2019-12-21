@@ -4,12 +4,12 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.AdminRole">
-        <id column="uid" property="uid" />
-        <result column="adminUid" property="adminUid" />
-        <result column="roleUid" property="roleUid" />
-        <result column="status" property="status" />
-        <result column="createTime" property="createTime" />
-        <result column="updateTime" property="updateTime" />
+        <id column="uid" property="uid"/>
+        <result column="adminUid" property="adminUid"/>
+        <result column="roleUid" property="roleUid"/>
+        <result column="status" property="status"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -1,12 +1,11 @@
 package com.moxi.mogublog.config.mybatis;
 
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.baomidou.mybatisplus.extension.incrementer.H2KeyGenerator;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 //@MapperScan("com.baomidou.springboot.mapper*")//这个注解，作用相当于下面的@Bean MapperScannerConfigurer，2者配置1份即可
@@ -24,7 +23,7 @@ public class MybatisPlusConfig {
         scannerConfigurer.setBasePackage("com.moxi.mogublog.xo.mapper*");
         return scannerConfigurer;
     }
-    
+
 
     /**
      * mybatis-plus分页插件
@@ -46,7 +45,7 @@ public class MybatisPlusConfig {
      * 性能分析拦截器，不建议生产使用
      */
     @Bean
-    public PerformanceInterceptor performanceInterceptor(){
+    public PerformanceInterceptor performanceInterceptor() {
         return new PerformanceInterceptor();
     }
 }

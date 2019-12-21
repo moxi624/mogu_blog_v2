@@ -1,22 +1,21 @@
 package com.moxi.mogublog.admin.security;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.moxi.mogublog.config.security.SecurityUser;
+import com.moxi.mogublog.xo.entity.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.moxi.mogublog.config.security.SecurityUser;
-import com.moxi.mogublog.xo.entity.Admin;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SecurityUserFactory {
-	
-	private SecurityUserFactory() {
+
+    private SecurityUserFactory() {
     }
-	
+
     public static SecurityUser create(Admin admin) {
-    	boolean enabled = (admin.getStatus()==1)?true:false;
-    	return new SecurityUser(
+        boolean enabled = (admin.getStatus() == 1) ? true : false;
+        return new SecurityUser(
                 admin.getUid(),
                 admin.getUserName(),
                 admin.getPassWord(),
@@ -24,7 +23,7 @@ public final class SecurityUserFactory {
                 mapToGrantedAuthorities(admin.getRoleNames())
         );
     }
- 
+
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<String> authorities) {
         return authorities.stream()
                 .map(SimpleGrantedAuthority::new)

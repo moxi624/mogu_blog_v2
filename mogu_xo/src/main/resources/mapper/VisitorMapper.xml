@@ -4,15 +4,15 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Visitor">
-        <id column="uid" property="uid" />
-        <result column="username" property="username" />
-        <result column="email" property="email" />
-        <result column="logincount" property="logincount" />
-        <result column="lastlogintime" property="lastlogintime" />
-        <result column="lastloginip" property="lastloginip" />
-        <result column="status" property="status" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
+        <id column="uid" property="uid"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="logincount" property="logincount"/>
+        <result column="lastlogintime" property="lastlogintime"/>
+        <result column="lastloginip" property="lastloginip"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

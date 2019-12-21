@@ -9,17 +9,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.*;
 
 /**
  * 数字的范围约束
- * 
+ *
  * @author 陌溪
  * @date 2019年12月4日22:48:34
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD})
+@Target({TYPE, ANNOTATION_TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {RangValidator.class})
 public @interface Range {

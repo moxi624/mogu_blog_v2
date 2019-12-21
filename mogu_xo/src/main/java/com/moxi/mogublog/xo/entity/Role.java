@@ -14,20 +14,20 @@ import lombok.Data;
  */
 @Data
 @TableName("t_role")
-public class Role extends SuperEntity<Role>{
-	
-	private static final long serialVersionUID = 1L;
+public class Role extends SuperEntity<Role> {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 角色名称
      */
     private String roleName;
-    
+
     /**
      * 介绍
      */
     private String summary;
-    
+
     /**
      * 该角色所能管辖的区域
      */

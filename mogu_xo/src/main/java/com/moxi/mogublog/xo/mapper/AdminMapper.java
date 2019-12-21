@@ -2,7 +2,6 @@ package com.moxi.mogublog.xo.mapper;
 
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mougblog.base.mapper.SuperMapper;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -17,6 +16,7 @@ public interface AdminMapper extends SuperMapper<Admin> {
 
     /**
      * 通过uid获取管理员
+     *
      * @return
      */
     public Admin getAdminByUid(@Param("uid") String uid);

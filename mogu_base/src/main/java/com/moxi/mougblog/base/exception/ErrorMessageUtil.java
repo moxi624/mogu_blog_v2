@@ -7,11 +7,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @Description: 异常提示工具类
@@ -22,6 +18,7 @@ public class ErrorMessageUtil {
 
     /**
      * 根据错误提示码，获取对应错误提示信息（中文）
+     *
      * @param errorCode
      * @return
      */
@@ -32,6 +29,7 @@ public class ErrorMessageUtil {
     /**
      * 根据错误提示码、语言获取对应错误提示信息
      * 注意：language 传入空时，按照中文处理
+     *
      * @param errorCode
      * @param language
      * @return
@@ -80,6 +78,7 @@ public class ErrorMessageUtil {
 
         /**
          * 获取内部错误提示信息
+         *
          * @param errorCode
          * @param language
          * @return
@@ -93,6 +92,7 @@ public class ErrorMessageUtil {
         /**
          * 根据规则获取错误提示资源文件路径
          * 注意：目前没有做外置化配置，亦不支持用户自定义；后续有需要则提供代码配置接口
+         *
          * @return
          */
         private static final List<String> getResourcesPath(String lang) {

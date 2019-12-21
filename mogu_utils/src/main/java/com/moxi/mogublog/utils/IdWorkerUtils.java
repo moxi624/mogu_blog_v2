@@ -45,22 +45,20 @@ public class IdWorkerUtils {
     private final static long sequenceMask = -1L ^ (-1L << sequenceBits);
     /* 上次生产id时间戳 */
     private static long lastTimestamp = -1L;
-    // 0，并发控制
-    private long sequence = 0L;
-
     private final long workerId;
     // 数据标识id部分
     private final long datacenterId;
+    // 0，并发控制
+    private long sequence = 0L;
 
-    public IdWorkerUtils(){
+    public IdWorkerUtils() {
         this.datacenterId = getDatacenterId(maxDatacenterId);
         this.workerId = getMaxWorkerId(datacenterId, maxWorkerId);
     }
+
     /**
-     * @param workerId
-     *            工作机器ID
-     * @param datacenterId
-     *            序列号
+     * @param workerId     工作机器ID
+     * @param datacenterId 序列号
      */
     public IdWorkerUtils(long workerId, long datacenterId) {
         if (workerId > maxWorkerId || workerId < 0) {
@@ -72,6 +70,52 @@ public class IdWorkerUtils {
         this.workerId = workerId;
         this.datacenterId = datacenterId;
     }
+
+    /**
+     * <p>
+     * 获取 maxWorkerId
+     * </p>
+     */
+    protected static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
+        StringBuffer mpid = new StringBuffer();
+        mpid.append(datacenterId);
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        if (!name.isEmpty()) {
+            /*
+             * GET jvmPid
+             */
+            mpid.append(name.split("@")[0]);
+        }
+        /*
+         * MAC + PID 的 hashcode 获取16个低位
+         */
+        return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
+    }
+
+    /**
+     * <p>
+     * 数据标识id部分
+     * </p>
+     */
+    protected static long getDatacenterId(long maxDatacenterId) {
+        long id = 0L;
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            if (network == null) {
+                id = 1L;
+            } else {
+                byte[] mac = network.getHardwareAddress();
+                id = ((0x000000FF & (long) mac[mac.length - 1])
+                        | (0x0000FF00 & (((long) mac[mac.length - 2]) << 8))) >> 6;
+                id = id % (maxDatacenterId + 1);
+            }
+        } catch (Exception e) {
+            System.out.println(" getDatacenterId: " + e.getMessage());
+        }
+        return id;
+    }
+
     /**
      * 获取下一个ID
      *
@@ -112,51 +156,6 @@ public class IdWorkerUtils {
 
     private long timeGen() {
         return System.currentTimeMillis();
-    }
-
-    /**
-     * <p>
-     * 获取 maxWorkerId
-     * </p>
-     */
-    protected static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
-        StringBuffer mpid = new StringBuffer();
-        mpid.append(datacenterId);
-        String name = ManagementFactory.getRuntimeMXBean().getName();
-        if (!name.isEmpty()) {
-         /*
-          * GET jvmPid
-          */
-            mpid.append(name.split("@")[0]);
-        }
-      /*
-       * MAC + PID 的 hashcode 获取16个低位
-       */
-        return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
-    }
-
-    /**
-     * <p>
-     * 数据标识id部分
-     * </p>
-     */
-    protected static long getDatacenterId(long maxDatacenterId) {
-        long id = 0L;
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-            if (network == null) {
-                id = 1L;
-            } else {
-                byte[] mac = network.getHardwareAddress();
-                id = ((0x000000FF & (long) mac[mac.length - 1])
-                        | (0x0000FF00 & (((long) mac[mac.length - 2]) << 8))) >> 6;
-                id = id % (maxDatacenterId + 1);
-            }
-        } catch (Exception e) {
-            System.out.println(" getDatacenterId: " + e.getMessage());
-        }
-        return id;
     }
 
 

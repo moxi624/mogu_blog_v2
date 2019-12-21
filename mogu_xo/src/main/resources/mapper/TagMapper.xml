@@ -4,12 +4,12 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Tag">
-        <id column="uid" property="uid" />
-        <result column="content" property="content" />
-        <result column="status" property="status" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
-        <result column="clickcount" property="clickcount" />
+        <id column="uid" property="uid"/>
+        <result column="content" property="content"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <result column="clickcount" property="clickcount"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

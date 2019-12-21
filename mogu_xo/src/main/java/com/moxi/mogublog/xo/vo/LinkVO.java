@@ -16,27 +16,25 @@ import lombok.Data;
 public class LinkVO extends BaseVO<LinkVO> {
 
     /**
-     * 无参构造方法，初始化默认值
-      */
-    LinkVO() {
-
-    }
-
-    /**
      * 友链标题
      */
     @NotBlank(groups = {Insert.class, Update.class})
     private String title;
-
     /**
      * 友链介绍
      */
     private String summary;
-
     /**
      * 友链地址
      */
     @NotBlank(groups = {Insert.class, Update.class})
-    private  String url;
+    private String url;
+
+    /**
+     * 无参构造方法，初始化默认值
+     */
+    LinkVO() {
+
+    }
 
 }

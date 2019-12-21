@@ -5,7 +5,7 @@ import com.moxi.mougblog.base.entity.SuperEntity;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author xuzhixiang

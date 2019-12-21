@@ -4,21 +4,21 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.SysLog">
-        <id column="uid" property="uid" />
-        <result column="userName" property="userName" />
-        <result column="ip" property="ip" />
-        <result column="url" property="url" />
-        <result column="type" property="type" />
-        <result column="classPath" property="classPath" />
-        <result column="method" property="method" />
-        <result column="params" property="params" />
-        <result column="operation" property="operation" />
-        <result column="logDate" property="logDate" />
+        <id column="uid" property="uid"/>
+        <result column="userName" property="userName"/>
+        <result column="ip" property="ip"/>
+        <result column="url" property="url"/>
+        <result column="type" property="type"/>
+        <result column="classPath" property="classPath"/>
+        <result column="method" property="method"/>
+        <result column="params" property="params"/>
+        <result column="operation" property="operation"/>
+        <result column="logDate" property="logDate"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         uid, userName, ip, url, type, calssPath, method, params, operation, logDate
     </sql>
-    
+
 </mapper>

@@ -26,8 +26,8 @@ public class Tag extends SuperEntity<Tag> {
     /**
      * 标签简介
      */
-    private  int clickCount;
-    
+    private int clickCount;
+
     /**
      * 排序字段，数值越大，越靠前
      */
