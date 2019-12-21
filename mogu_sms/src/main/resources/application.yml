@@ -29,6 +29,14 @@ spring:
     username: guest
     password: guest
 
+  #Solr
+  data:
+    solr:
+      host: http://localhost:8080/solr
+      core: collection1
+      repositories:
+        enabled: true
+
     #mail
   mail:
     username: mogublog@163.com
@@ -53,7 +61,7 @@ eureka:
       defaultZone: http://user:password123@localhost:8761/eureka
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
     metadata-map:
       zone: ABC      # eureka可以理解的元数据
       lilizhou: BBC  # 不会影响客户端行为

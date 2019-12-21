@@ -1,7 +1,6 @@
 server:
   port: 8761
 
-
 spring:
   jmx:
     default-domain: mogu_eureka
@@ -15,4 +14,4 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://user:password123@localhost:8761/eureka
