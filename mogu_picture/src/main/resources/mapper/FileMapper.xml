@@ -4,23 +4,24 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.picture.entity.File">
-        <result column="uid" property="uid" />
-        <result column="file_old_name" property="fileOldName" />
-        <result column="file_size" property="fileSize" />
-        <result column="file_sort_id" property="fileSortId" />
-        <result column="pic_expanded_name" property="picExpandedName" />
-        <result column="pic_name" property="picName" />
-        <result column="pic_url" property="picUrl" />
-        <result column="sys_user_id" property="sysUserId" />
-        <result column="user_id" property="userId" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
-        <result column="status" property="status" />
+        <result column="uid" property="uid"/>
+        <result column="file_old_name" property="fileOldName"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="file_sort_id" property="fileSortId"/>
+        <result column="pic_expanded_name" property="picExpandedName"/>
+        <result column="pic_name" property="picName"/>
+        <result column="pic_url" property="picUrl"/>
+        <result column="sys_user_id" property="sysUserId"/>
+        <result column="user_id" property="userId"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
+        <result column="status" property="status"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, file_old_name, file_size, file_sort_id, pic_expanded_name, pic_name, pic_url, sys_user_id, user_id, createtime, updatetime, status
+        uid, file_old_name, file_size, file_sort_id, pic_expanded_name, pic_name, pic_url, sys_user_id, user_id,
+        createtime, updatetime, status
     </sql>
 
 </mapper>

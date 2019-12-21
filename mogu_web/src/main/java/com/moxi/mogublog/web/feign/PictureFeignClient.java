@@ -10,25 +10,25 @@ import com.moxi.mogublog.web.config.FeignConfiguration;
 
 /**
  * mogu_picture相关接口
- * @author xuzhixiang
  *
+ * @author xuzhixiang
  */
 
 @FeignClient(name = "mogu-picture", url = "http://localhost:8602/", configuration = FeignConfiguration.class)
 public interface PictureFeignClient {
-	
 
-	/**
-	 * 获取文件的信息接口
-	   @ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
-	   @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")
-	   
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)
-	public String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);
-	
-	@RequestMapping(value = "/file/hello", method = RequestMethod.GET)
-	public String hello();
+
+    /**
+     * 获取文件的信息接口
+     *
+     * @param request
+     * @return
+     * @ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
+     * @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")
+     */
+    @RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)
+    public String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);
+
+    @RequestMapping(value = "/file/hello", method = RequestMethod.GET)
+    public String hello();
 }

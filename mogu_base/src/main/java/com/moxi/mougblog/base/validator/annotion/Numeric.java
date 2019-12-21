@@ -15,11 +15,11 @@ import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * 是否为数字
- * 
+ *
  * @author 陌溪
  * @date 2019年12月4日13:14:24
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD})
+@Target({TYPE, ANNOTATION_TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {NumericValidator.class})
 public @interface Numeric {

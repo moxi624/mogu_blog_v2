@@ -12,11 +12,12 @@ import com.moxi.mougblog.base.service.SuperService;
  * @since 2019年6月29日10:31:18
  */
 public interface TodoService extends SuperService<Todo> {
-	
-	/**
-	 * 批量更新代办事项的状态
-	 * @param done : 状态
-	 * @param adminUid : 管理员UID
-	 */
-	public void toggleAll(Integer done, String adminUid);
+
+    /**
+     * 批量更新代办事项的状态
+     *
+     * @param done     : 状态
+     * @param adminUid : 管理员UID
+     */
+    public void toggleAll(Integer done, String adminUid);
 }

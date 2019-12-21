@@ -1,7 +1,7 @@
 #app
 server:
-    port: 8602
-    
+  port: 8602
+
 #Data image url
 data:
   image:
@@ -16,7 +16,7 @@ security:
     enabled: true
   user:
     name: user
-    password: password123    
+    password: password123
 
 #spring
 spring:
@@ -30,12 +30,12 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-picture
-      
+
   # DATABASE CONFIG
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/mogu_picture?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false    
+    url: jdbc:mysql://localhost:3306/mogu_picture?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
@@ -49,13 +49,13 @@ spring:
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
-    
+
     #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     filters: stat,wall,log4j
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-    
+
 eureka:
   client:
     healthcheck:
@@ -69,7 +69,7 @@ eureka:
       zone: ABC      # eureka可以理解的元数据
       lilizhou: BBC  # 不会影响客户端行为
     lease-renewal-interval-in-seconds: 5
-    
+
 #mybatis
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

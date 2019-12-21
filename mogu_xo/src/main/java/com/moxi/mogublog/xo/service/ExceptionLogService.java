@@ -11,6 +11,6 @@ import com.moxi.mougblog.base.service.SuperService;
  * @author limbo
  * @since 2018-09-30
  */
-public interface ExceptionLogService extends SuperService<ExceptionLog>{
+public interface ExceptionLogService extends SuperService<ExceptionLog> {
 
 }

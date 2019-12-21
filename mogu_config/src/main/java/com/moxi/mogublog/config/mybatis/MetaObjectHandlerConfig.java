@@ -11,18 +11,19 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 
 @Component
 public class MetaObjectHandlerConfig implements MetaObjectHandler {
-	
-  Logger log = LogManager.getLogger(MetaObjectHandlerConfig.class);	
-  @Override
-  public void insertFill(MetaObject metaObject) {
-	log.info("插入方法填充");
-    setFieldValByName("create_time", new Date(), metaObject);
-    setFieldValByName("update_time", new Date(), metaObject);
-  }
 
-  @Override
-  public void updateFill(MetaObject metaObject) {
-	  log.info("更新方法填充");
-	  setFieldValByName("update_time", new Date(), metaObject);
-  }
+    Logger log = LogManager.getLogger(MetaObjectHandlerConfig.class);
+
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        log.info("插入方法填充");
+        setFieldValByName("create_time", new Date(), metaObject);
+        setFieldValByName("update_time", new Date(), metaObject);
+    }
+
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        log.info("更新方法填充");
+        setFieldValByName("update_time", new Date(), metaObject);
+    }
 }

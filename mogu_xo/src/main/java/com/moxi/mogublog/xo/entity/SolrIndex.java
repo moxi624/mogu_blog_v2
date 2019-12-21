@@ -7,6 +7,7 @@ import org.apache.solr.client.solrj.beans.Field;
 
 /**
  * 用于建立solr索引实体类
+ *
  * @author limboy
  * @create 2018-09-29 16:12
  */
@@ -17,7 +18,7 @@ public class SolrIndex {
      */
     @Field("id")
     private String id;
-    
+
     /**
      * 图片Uid
      */
@@ -47,13 +48,13 @@ public class SolrIndex {
      */
     @Field("blog_sort")
     private String blogSort;
-    
+
     /**
      * 博客标签UID
      */
     @Field("blog_tag_uid")
     private String blogTagUid;
-    
+
     /**
      * 博客分类UID
      */
@@ -71,7 +72,7 @@ public class SolrIndex {
      */
     @Field("blog_updateTime")
     private Date updateTime;
-    
+
     /**
      * 以下字段不存入solr索引库中
      * 标题图

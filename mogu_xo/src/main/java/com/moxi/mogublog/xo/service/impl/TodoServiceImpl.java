@@ -18,13 +18,13 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
  */
 @Service
 public class TodoServiceImpl extends SuperServiceImpl<TodoMapper, Todo> implements TodoService {
-	
-	@Autowired
-	TodoMapper  todoMapper;
-	
-	@Override
-	public void toggleAll(Integer done, String adminUid) {
-		todoMapper.toggleAll(done, adminUid);
-	}
+
+    @Autowired
+    TodoMapper todoMapper;
+
+    @Override
+    public void toggleAll(Integer done, String adminUid) {
+        todoMapper.toggleAll(done, adminUid);
+    }
 
 }

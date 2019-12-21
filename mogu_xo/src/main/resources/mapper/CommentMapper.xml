@@ -4,16 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Comment">
-        <id column="uid" property="uid" />
-        <result column="useruid" property="useruid" />
-        <result column="touid" property="touid" />
-        <result column="touseruid" property="touseruid" />
-        <result column="username" property="username" />
-        <result column="content" property="content" />
-        <result column="bloguid" property="bloguid" />
-        <result column="status" property="status" />
-        <result column="createtime" property="createtime" />
-        <result column="updatetime" property="updatetime" />
+        <id column="uid" property="uid"/>
+        <result column="useruid" property="useruid"/>
+        <result column="touid" property="touid"/>
+        <result column="touseruid" property="touseruid"/>
+        <result column="username" property="username"/>
+        <result column="content" property="content"/>
+        <result column="bloguid" property="bloguid"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updatetime" property="updatetime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

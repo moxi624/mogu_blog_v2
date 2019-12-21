@@ -32,30 +32,31 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.admin.restapi",
         "com.moxi.mogublog.xo.service",
         "com.moxi.mogublog.utils"
-        })
+})
 public class AdminApplication {
 
-    public static void main(String[] args){
-        SpringApplication.run(AdminApplication.class,args);
+    public static void main(String[] args) {
+        SpringApplication.run(AdminApplication.class, args);
     }
-	
-    private CorsConfiguration buildConfig() {  
-        CorsConfiguration corsConfiguration = new CorsConfiguration();  
-        corsConfiguration.addAllowedOrigin("*");  
-        corsConfiguration.addAllowedHeader("*");  
-        corsConfiguration.addAllowedMethod("*");  
-        return corsConfiguration;  
-    }  
-      
-    /** 
-     * 跨域过滤器 
-     * @return 
+
+    private CorsConfiguration buildConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        return corsConfiguration;
+    }
+
+    /**
+     * 跨域过滤器
+     *
+     * @return
      */
-    @Bean  
-    public CorsFilter corsFilter() {  
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();  
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig()); // 4  
-        return new CorsFilter(source);  
-    } 
+        return new CorsFilter(source);
+    }
 
 }

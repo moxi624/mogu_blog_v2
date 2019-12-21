@@ -24,27 +24,28 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.picture.service"})
 public class PictureApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PictureApplication.class, args);
-	}
-	
-    private CorsConfiguration buildConfig() {  
-        CorsConfiguration corsConfiguration = new CorsConfiguration();  
-        corsConfiguration.addAllowedOrigin("*");  
-        corsConfiguration.addAllowedHeader("*");  
-        corsConfiguration.addAllowedMethod("*");  
-        return corsConfiguration;  
-    }  
-      
-    /** 
-     * 跨域过滤器 
-     * @return 
+    public static void main(String[] args) {
+        SpringApplication.run(PictureApplication.class, args);
+    }
+
+    private CorsConfiguration buildConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        return corsConfiguration;
+    }
+
+    /**
+     * 跨域过滤器
+     *
+     * @return
      */
-    @Bean  
-    public CorsFilter corsFilter() {  
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();  
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig()); // 4  
-        return new CorsFilter(source);  
-    } 
+        return new CorsFilter(source);
+    }
 
 }

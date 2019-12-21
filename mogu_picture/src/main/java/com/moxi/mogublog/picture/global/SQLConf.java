@@ -4,15 +4,15 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 
 /**
  * SQL字段常量
- * @author xuzhixiang
  *
+ * @author xuzhixiang
  */
-public final class SQLConf extends BaseSQLConf{
-	
+public final class SQLConf extends BaseSQLConf {
 
-	//FileSort表
-	public final static String PROJECT_NAME = "project_name";
-	public final static String SORT_NAME = "sort_name";
-	
-	
+
+    //FileSort表
+    public final static String PROJECT_NAME = "project_name";
+    public final static String SORT_NAME = "sort_name";
+
+
 }

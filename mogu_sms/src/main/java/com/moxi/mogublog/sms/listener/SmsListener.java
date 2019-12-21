@@ -12,27 +12,27 @@ import com.moxi.mogublog.sms.util.SmsUtil;
 
 @Component
 public class SmsListener {
-	
-	@Autowired
-	private SmsUtil smsUtil;
 
-	@RabbitListener(queues = "mogu.sms")
-	public void sendSms(Map<String,String> map){
-		
-		try {
-			SendSmsResponse response = smsUtil.sendSms(
-					map.get("mobile"),
-					map.get("template_code") ,
-					map.get("sign_name")  , 
-					map.get("param") );
-			System.out.println("code:"+response.getCode());
-			System.out.println("message:"+response.getMessage());			
-		
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
+    @Autowired
+    private SmsUtil smsUtil;
+
+    @RabbitListener(queues = "mogu.sms")
+    public void sendSms(Map<String, String> map) {
+
+        try {
+            SendSmsResponse response = smsUtil.sendSms(
+                    map.get("mobile"),
+                    map.get("template_code"),
+                    map.get("sign_name"),
+                    map.get("param"));
+            System.out.println("code:" + response.getCode());
+            System.out.println("message:" + response.getMessage());
+
+        } catch (ClientException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
 }

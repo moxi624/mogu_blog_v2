@@ -13,10 +13,11 @@ import static java.lang.annotation.ElementType.*;
 
 /**
  * 不为空字符串
+ *
  * @author: 陌溪
  * @date: 2019年12月4日13:12:52
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD})
+@Target({TYPE, ANNOTATION_TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {IdValidator.class})
 public @interface IdValid {

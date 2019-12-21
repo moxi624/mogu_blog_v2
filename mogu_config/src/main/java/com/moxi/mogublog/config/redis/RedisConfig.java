@@ -18,22 +18,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Configuration
-public class RedisConfig extends CachingConfigurerSupport{
-  
-	@Bean
-	public KeyGenerator keyGenerator() {
+public class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    public KeyGenerator keyGenerator() {
         return new KeyGenerator() {
-			@Override
-			public Object generate(Object target, java.lang.reflect.Method method, Object... params) {
-				// TODO Auto-generated method stub
-				StringBuilder sb = new StringBuilder();
+            @Override
+            public Object generate(Object target, java.lang.reflect.Method method, Object... params) {
+                // TODO Auto-generated method stub
+                StringBuilder sb = new StringBuilder();
                 sb.append(target.getClass().getName());
                 sb.append(method.getName());
                 for (Object obj : params) {
                     sb.append(obj.toString());
                 }
                 return sb.toString();
-			}
+            }
         };
     }
 
@@ -42,10 +42,10 @@ public class RedisConfig extends CachingConfigurerSupport{
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
         RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
         //设置缓存过期时间
-        rcm.setDefaultExpiration(60*8);//秒
+        rcm.setDefaultExpiration(60 * 8);//秒
         return rcm;
     }
-    
+
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
         StringRedisTemplate template = new StringRedisTemplate(factory);
@@ -58,5 +58,5 @@ public class RedisConfig extends CachingConfigurerSupport{
         template.afterPropertiesSet();
         return template;
     }
-    
+
 }

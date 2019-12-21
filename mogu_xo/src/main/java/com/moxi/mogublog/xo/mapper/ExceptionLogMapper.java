@@ -12,6 +12,6 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
  * @author limbo
  * @since 2018-11-18
  */
-public interface ExceptionLogMapper extends SuperMapper<ExceptionLog>{
+public interface ExceptionLogMapper extends SuperMapper<ExceptionLog> {
 
 }

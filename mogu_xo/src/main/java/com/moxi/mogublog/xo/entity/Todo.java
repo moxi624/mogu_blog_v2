@@ -18,18 +18,18 @@ public class Todo extends SuperEntity<Todo> {
 
     private static final long serialVersionUID = 1L;
 
-	/**
-	 * 内容
-	 */
-	private String text;
+    /**
+     * 内容
+     */
+    private String text;
 
-	/**
-	 * 管理员UID
-	 */
-	private String adminUid;
+    /**
+     * 管理员UID
+     */
+    private String adminUid;
 
-	/**
-	 * 表示事项是否完成
-	 */
-	private Boolean done;
+    /**
+     * 表示事项是否完成
+     */
+    private Boolean done;
 }

@@ -10,7 +10,7 @@ security:
 
 spring:
   jmx:
-    default-domain: mogu_eureka  
+    default-domain: mogu_eureka
 
 eureka:
   client:

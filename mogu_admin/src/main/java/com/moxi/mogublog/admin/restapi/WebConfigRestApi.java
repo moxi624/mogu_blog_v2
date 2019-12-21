@@ -38,86 +38,86 @@ import io.swagger.annotations.ApiOperation;
  * @author xzx19950624@qq.com
  * @since 2018年11月11日15:19:28
  */
-@Api(value="系统配置RestApi",tags={"WebConfigRestApi"})
+@Api(value = "系统配置RestApi", tags = {"WebConfigRestApi"})
 @RestController
 @RequestMapping("/webConfig")
 public class WebConfigRestApi {
-		
-	@Autowired
-	WebConfigService webConfigService;
-	
-	@Autowired
-	private PictureFeignClient pictureFeignClient;
-	
-	@ApiOperation(value="获取网站配置", notes="获取网站配置")
-	@GetMapping("/getWebConfig")
-	public String getWebConfig() {
 
-		QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		WebConfig webConfig = webConfigService.getOne(queryWrapper);
-		
-		//获取图片
-		if(webConfig !=null && StringUtils.isNotEmpty(webConfig.getLogo())) {
-			String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), ",");
-			webConfig.setPhotoList(WebUtils.getPicture(pictureList));
-		}
-		
-		//获取支付宝收款二维码
-		if(webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
-			String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), ",");
-			if(WebUtils.getPicture(pictureList).size() > 0) {
-				webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));	
-			}
-			
-		}
-		//获取微信收款二维码
-		if(webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
-			String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), ",");
-			if(WebUtils.getPicture(pictureList).size() > 0) {
-				webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));	
-			}
-			
-		}
-		
-		return ResultUtil.result(SysConf.SUCCESS, webConfig);		
-	}
-	
-	@OperationLogger(value="修改网站配置")
-	@ApiOperation(value="修改网站配置", notes="修改网站配置")
-	@PostMapping("/editWebConfig")
-	public String editWebConfig(@Validated({Update.class}) @RequestBody WebConfigVO webConfigVO, BindingResult result) {
-		
-		if(StringUtils.isEmpty(webConfigVO.getUid())) {
+    @Autowired
+    WebConfigService webConfigService;
 
-			WebConfig webConfig = new WebConfig();
-			webConfig.setLogo(webConfigVO.getLogo());
-			webConfig.setName(webConfigVO.getName());
-			webConfig.setTitle(webConfigVO.getTitle());
-			webConfig.setSummary(webConfigVO.getSummary());
-			webConfig.setKeyword(webConfigVO.getKeyword());
-			webConfig.setAuthor(webConfigVO.getAuthor());
-			webConfig.setRecordNum(webConfigVO.getRecordNum());
-			webConfig.setAliPay(webConfigVO.getAliPay());
-			webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-			webConfig.setStartComment(webConfigVO.getStartComment());
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
 
-			webConfigService.save(webConfig);
-		} else {
-			WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
-			webConfig.setLogo(webConfigVO.getLogo());
-			webConfig.setName(webConfigVO.getName());
-			webConfig.setTitle(webConfigVO.getTitle());
-			webConfig.setSummary(webConfigVO.getSummary());
-			webConfig.setKeyword(webConfigVO.getKeyword());
-			webConfig.setAuthor(webConfigVO.getAuthor());
-			webConfig.setRecordNum(webConfigVO.getRecordNum());
-			webConfig.setAliPay(webConfigVO.getAliPay());
-			webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-			webConfig.setStartComment(webConfigVO.getStartComment());
-			webConfigService.updateById(webConfig);	
-		}				
-		return ResultUtil.result(SysConf.SUCCESS, "更新成功");		
-	}
+    @ApiOperation(value = "获取网站配置", notes = "获取网站配置")
+    @GetMapping("/getWebConfig")
+    public String getWebConfig() {
+
+        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        WebConfig webConfig = webConfigService.getOne(queryWrapper);
+
+        //获取图片
+        if (webConfig != null && StringUtils.isNotEmpty(webConfig.getLogo())) {
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), ",");
+            webConfig.setPhotoList(WebUtils.getPicture(pictureList));
+        }
+
+        //获取支付宝收款二维码
+        if (webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), ",");
+            if (WebUtils.getPicture(pictureList).size() > 0) {
+                webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));
+            }
+
+        }
+        //获取微信收款二维码
+        if (webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), ",");
+            if (WebUtils.getPicture(pictureList).size() > 0) {
+                webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));
+            }
+
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, webConfig);
+    }
+
+    @OperationLogger(value = "修改网站配置")
+    @ApiOperation(value = "修改网站配置", notes = "修改网站配置")
+    @PostMapping("/editWebConfig")
+    public String editWebConfig(@Validated({Update.class}) @RequestBody WebConfigVO webConfigVO, BindingResult result) {
+
+        if (StringUtils.isEmpty(webConfigVO.getUid())) {
+
+            WebConfig webConfig = new WebConfig();
+            webConfig.setLogo(webConfigVO.getLogo());
+            webConfig.setName(webConfigVO.getName());
+            webConfig.setTitle(webConfigVO.getTitle());
+            webConfig.setSummary(webConfigVO.getSummary());
+            webConfig.setKeyword(webConfigVO.getKeyword());
+            webConfig.setAuthor(webConfigVO.getAuthor());
+            webConfig.setRecordNum(webConfigVO.getRecordNum());
+            webConfig.setAliPay(webConfigVO.getAliPay());
+            webConfig.setWeixinPay(webConfigVO.getWeixinPay());
+            webConfig.setStartComment(webConfigVO.getStartComment());
+
+            webConfigService.save(webConfig);
+        } else {
+            WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
+            webConfig.setLogo(webConfigVO.getLogo());
+            webConfig.setName(webConfigVO.getName());
+            webConfig.setTitle(webConfigVO.getTitle());
+            webConfig.setSummary(webConfigVO.getSummary());
+            webConfig.setKeyword(webConfigVO.getKeyword());
+            webConfig.setAuthor(webConfigVO.getAuthor());
+            webConfig.setRecordNum(webConfigVO.getRecordNum());
+            webConfig.setAliPay(webConfigVO.getAliPay());
+            webConfig.setWeixinPay(webConfigVO.getWeixinPay());
+            webConfig.setStartComment(webConfigVO.getStartComment());
+            webConfigService.updateById(webConfig);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, "更新成功");
+    }
 }
 

@@ -17,6 +17,7 @@ public interface AdminMapper extends SuperMapper<Admin> {
 
     /**
      * 通过uid获取管理员
+     *
      * @return
      */
     public Admin getAdminByUid(@Param("uid") String uid);

@@ -5,7 +5,7 @@ import com.moxi.mougblog.base.service.SuperService;
 
 /**
  * <p>
- *  文件分类服务类
+ * 文件分类服务类
  * </p>
  *
  * @author xuzhixiang

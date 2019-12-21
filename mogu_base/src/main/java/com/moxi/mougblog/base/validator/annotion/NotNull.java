@@ -14,12 +14,13 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 
 /**
- *  这里有些冗余了，其实面对控制器的VO对象，应该全为String类型。
- *  作为后端程序员，不应该相信前端传递的任何参数，所以字符串类型也应该被识别。
+ * 这里有些冗余了，其实面对控制器的VO对象，应该全为String类型。
+ * 作为后端程序员，不应该相信前端传递的任何参数，所以字符串类型也应该被识别。
+ *
  * @author 陌溪
  * @date 2019年12月4日13:13:51
  */
-@Target({TYPE, ANNOTATION_TYPE,FIELD,PARAMETER})
+@Target({TYPE, ANNOTATION_TYPE, FIELD, PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {IdValidator.class})
 public @interface NotNull {

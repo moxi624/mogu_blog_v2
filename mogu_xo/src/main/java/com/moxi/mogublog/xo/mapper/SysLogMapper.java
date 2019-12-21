@@ -12,6 +12,6 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
  * @author limbo
  * @since 2018-11-18
  */
-public interface SysLogMapper extends SuperMapper<SysLog>{
+public interface SysLogMapper extends SuperMapper<SysLog> {
 
 }

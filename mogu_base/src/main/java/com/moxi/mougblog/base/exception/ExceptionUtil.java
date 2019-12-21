@@ -12,6 +12,7 @@ public class ExceptionUtil {
 
     /**
      * 业务回滚，抛出特定异常：包含错误消息
+     *
      * @param message
      */
     public static void rollback(String message) {
@@ -20,6 +21,7 @@ public class ExceptionUtil {
 
     /**
      * 业务回滚，抛出特定异常：包含错误消息，错误编码
+     *
      * @param message
      * @param code
      */
@@ -29,6 +31,7 @@ public class ExceptionUtil {
 
     /**
      * 业务回滚，抛出特定异常：包含错误消息，错误原因
+     *
      * @param message
      * @param cause
      */
@@ -38,6 +41,7 @@ public class ExceptionUtil {
 
     /**
      * 业务回滚，抛出特定异常：包含错误消息，错误编码，错误原因
+     *
      * @param message
      * @param code
      * @param cause
@@ -48,6 +52,7 @@ public class ExceptionUtil {
 
     /**
      * 业务不需回滚，设置result返回
+     *
      * @param message
      */
     public static Result setResult(String message) {

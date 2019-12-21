@@ -39,149 +39,152 @@ import java.util.*;
 
 /**
  * 分类RestApi
+ *
  * @author xzx19950624@qq.com
  * @date 2019年11月26日18:59:21
  */
 @RestController
 @RequestMapping("/classify")
-@Api(value="分类RestApi",tags={"ClassifyRestApi"})
+@Api(value = "分类RestApi", tags = {"ClassifyRestApi"})
 public class ClassifyRestApi {
 
-	@Autowired
-	BlogService blogService;
+    @Autowired
+    BlogService blogService;
 
-	@Autowired
-	TagService tagService;
+    @Autowired
+    TagService tagService;
 
-	@Autowired
-	BlogSortService blogSortService;
+    @Autowired
+    BlogSortService blogSortService;
 
-	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
-	@Autowired
-	private WebVisitService webVisitService;
-	
-	private static Logger log = LogManager.getLogger(ClassifyRestApi.class);
-	
-	/**
-	 * 获取分类的信息
-	 * @author xzx19950624@qq.com
-	 * @date 2018年11月6日下午8:57:48
-	 */
-	
-	@ApiOperation(value="分类", notes="分类")
-	@GetMapping("/getBlogSortList")
-	public String getBlogSortList(HttpServletRequest request) {
+    @Autowired
+    private WebVisitService webVisitService;
 
-		QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
-		queryWrapper.orderByDesc(SQLConf.SORT);
-		List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
-		return ResultUtil.result("success", blogSortList);
-	}
+    private static Logger log = LogManager.getLogger(ClassifyRestApi.class);
 
-	@ApiOperation(value="通过blogUid获取文章", notes="通过blogUid获取文章")
-	@GetMapping("/getArticleByBlogSortUid")
-	public String getArticleByBlogSortUid(HttpServletRequest request,
-									@ApiParam(name = "blogSortUid", value = "分类UID",required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
-									@ApiParam(name = "currentPage", value = "当前页数",required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-									@ApiParam(name = "pageSize", value = "每页显示数目",required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    /**
+     * 获取分类的信息
+     *
+     * @author xzx19950624@qq.com
+     * @date 2018年11月6日下午8:57:48
+     */
 
-		if(StringUtils.isEmpty(blogSortUid)) {
-			return ResultUtil.result("error", "传入BlogUid不能为空");
-		}
+    @ApiOperation(value = "分类", notes = "分类")
+    @GetMapping("/getBlogSortList")
+    public String getBlogSortList(HttpServletRequest request) {
 
-		//增加点击记录
-		BlogSort blogSort = blogSortService.getById(blogSortUid);
-		if (blogSort == null) {
-			return ResultUtil.result("error", "BlogSort不存在");
-		}
-		webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
+        QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.SORT);
+        List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
+        return ResultUtil.result("success", blogSortList);
+    }
 
-		//分页
-		Page<Blog> page = new Page<>();
-		page.setCurrent(currentPage);
-		page.setSize(pageSize);
+    @ApiOperation(value = "通过blogUid获取文章", notes = "通过blogUid获取文章")
+    @GetMapping("/getArticleByBlogSortUid")
+    public String getArticleByBlogSortUid(HttpServletRequest request,
+                                          @ApiParam(name = "blogSortUid", value = "分类UID", required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
+                                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
-		QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-		queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-		queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-		queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
-		queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
+        if (StringUtils.isEmpty(blogSortUid)) {
+            return ResultUtil.result("error", "传入BlogUid不能为空");
+        }
 
-		//因为首页并不需要显示内容，所以需要排除掉内容字段
-		queryWrapper.select(Blog.class, i-> !i.getProperty().equals("content"));
-		IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        //增加点击记录
+        BlogSort blogSort = blogSortService.getById(blogSortUid);
+        if (blogSort == null) {
+            return ResultUtil.result("error", "BlogSort不存在");
+        }
+        webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
 
-		//给博客增加标签和分类
-		List<Blog> list = setBlog(pageList.getRecords());
-		pageList.setRecords(list);
+        //分页
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
 
-		return ResultUtil.result("success", pageList);
-	}
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
 
-	/**
-	 * 设置博客的分类标签和分类
-	 * @param list
-	 * @return
-	 */
-	private List<Blog> setBlog(List<Blog> list) {
-		final StringBuffer fileUids = new StringBuffer();
-		List<String> sortUids = new ArrayList<String>();
-		List<String> tagUids = new ArrayList<String>();
+        //因为首页并不需要显示内容，所以需要排除掉内容字段
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
 
-		list.forEach( item -> {
-			if(StringUtils.isNotEmpty(item.getFileUid())) {
-				fileUids.append(item.getFileUid() + ",");
-			}
-			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
-				sortUids.add(item.getBlogSortUid());
-			}
-			if(StringUtils.isNotEmpty(item.getTagUid())) {
-				tagUids.add(item.getTagUid());
-			}
-		});
+        //给博客增加标签和分类
+        List<Blog> list = setBlog(pageList.getRecords());
+        pageList.setRecords(list);
 
-		Collection<BlogSort> sortList = new ArrayList<>();
-		Collection<Tag> tagList = new ArrayList<>();
-		if (sortUids.size() > 0) {
-			sortList = blogSortService.listByIds(sortUids);
-		}
-		if (tagUids.size() > 0) {
-			tagList = tagService.listByIds(tagUids);
-		}
+        return ResultUtil.result("success", pageList);
+    }
 
-		Map<String, BlogSort> sortMap = new HashMap<String, BlogSort> ();
-		Map<String, Tag> tagMap = new HashMap<String, Tag>();
-		Map<String, String> pictureMap = new HashMap<String, String>();
+    /**
+     * 设置博客的分类标签和分类
+     *
+     * @param list
+     * @return
+     */
+    private List<Blog> setBlog(List<Blog> list) {
+        final StringBuffer fileUids = new StringBuffer();
+        List<String> sortUids = new ArrayList<String>();
+        List<String> tagUids = new ArrayList<String>();
 
-		sortList.forEach(item -> {
-			sortMap.put(item.getUid(), item);
-		});
+        list.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + ",");
+            }
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+                sortUids.add(item.getBlogSortUid());
+            }
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                tagUids.add(item.getTagUid());
+            }
+        });
 
-		tagList.forEach(item -> {
-			tagMap.put(item.getUid(), item);
-		});
+        Collection<BlogSort> sortList = new ArrayList<>();
+        Collection<Tag> tagList = new ArrayList<>();
+        if (sortUids.size() > 0) {
+            sortList = blogSortService.listByIds(sortUids);
+        }
+        if (tagUids.size() > 0) {
+            tagList = tagService.listByIds(tagUids);
+        }
 
-		for(Blog item : list) {
+        Map<String, BlogSort> sortMap = new HashMap<String, BlogSort>();
+        Map<String, Tag> tagMap = new HashMap<String, Tag>();
+        Map<String, String> pictureMap = new HashMap<String, String>();
 
-			//设置分类
-			if(StringUtils.isNotEmpty(item.getBlogSortUid())) {
-				item.setBlogSort(sortMap.get(item.getBlogSortUid()));
-			}
-			//获取标签
-			if(StringUtils.isNotEmpty(item.getTagUid())) {
-				List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
-				List<Tag> tagListTemp = new ArrayList<Tag>();
-				tagUidsTemp.forEach(tag -> {
-					tagListTemp.add(tagMap.get(tag));
-				});
-				item.setTagList(tagListTemp);
-			}
-		}
-		return list;
-	}
+        sortList.forEach(item -> {
+            sortMap.put(item.getUid(), item);
+        });
+
+        tagList.forEach(item -> {
+            tagMap.put(item.getUid(), item);
+        });
+
+        for (Blog item : list) {
+
+            //设置分类
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+                item.setBlogSort(sortMap.get(item.getBlogSortUid()));
+            }
+            //获取标签
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<Tag> tagListTemp = new ArrayList<Tag>();
+                tagUidsTemp.forEach(tag -> {
+                    tagListTemp.add(tagMap.get(tag));
+                });
+                item.setTagList(tagListTemp);
+            }
+        }
+        return list;
+    }
 
 }
 

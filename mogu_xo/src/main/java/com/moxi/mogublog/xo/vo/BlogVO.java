@@ -21,7 +21,7 @@ public class BlogVO extends BaseVO<BlogVO> {
 
     /**
      * 无参构造方法，初始化默认值
-      */
+     */
     BlogVO() {
         this.level = 0;
         this.isOriginal = "1";
@@ -90,12 +90,12 @@ public class BlogVO extends BaseVO<BlogVO> {
     private String articlesPart;
 
     /**
-     *	推荐级别，用于首页推荐
-     *	0：正常
-     *	1：一级推荐(轮播图)
-     *	2：二级推荐(top)
-     *	3：三级推荐 ()
-     *	4：四级 推荐 (特别推荐)
+     * 推荐级别，用于首页推荐
+     * 0：正常
+     * 1：一级推荐(轮播图)
+     * 2：二级推荐(top)
+     * 3：三级推荐 ()
+     * 4：四级 推荐 (特别推荐)
      */
     private Integer level;
 

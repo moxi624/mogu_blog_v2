@@ -4,13 +4,13 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.moxi.mogublog.picture.entity.FileSort">
-        <id column="uid" property="uid" />
-        <result column="create_time" property="createTime" />
-        <result column="status" property="status" />
-        <result column="update_time" property="updateTime" />
-        <result column="project_name" property="projectName" />
-        <result column="sort_name" property="sortName" />
-        <result column="url" property="url" />
+        <id column="uid" property="uid"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="project_name" property="projectName"/>
+        <result column="sort_name" property="sortName"/>
+        <result column="url" property="url"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

@@ -17,7 +17,7 @@ public class LinkVO extends BaseVO<LinkVO> {
 
     /**
      * 无参构造方法，初始化默认值
-      */
+     */
     LinkVO() {
 
     }
@@ -37,6 +37,6 @@ public class LinkVO extends BaseVO<LinkVO> {
      * 友链地址
      */
     @NotBlank(groups = {Insert.class, Update.class})
-    private  String url;
+    private String url;
 
 }

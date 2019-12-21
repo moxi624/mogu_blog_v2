@@ -19,7 +19,7 @@ public class IntegerValidator implements ConstraintValidator<IntegerNotNull, Int
 
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
-        if (value == null ) {
+        if (value == null) {
             return false;
         }
         return true;
