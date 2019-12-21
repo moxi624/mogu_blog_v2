@@ -87,8 +87,8 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 //	        solrTemplate.saveBean(document);
 //	        solrTemplate.commit();
         }
-        solrTemplate.saveBeans(solrIndexs);
-        solrTemplate.commit();
+        solrTemplate.saveBeans("collection1", solrIndexs);
+        solrTemplate.commit("collection1");
     }
 
     //添加索引
@@ -111,8 +111,8 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
         solrIndex.setAuthor(blog.getAuthor());
         solrIndex.setUpdateTime(new Date());
-        solrTemplate.saveBean(solrIndex);
-        solrTemplate.commit();
+        solrTemplate.saveBean("collection1", solrIndex);
+        solrTemplate.commit("collection1");
 
     }
 
@@ -120,10 +120,10 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     @Override
     public void updateIndex(Blog blog) {
 
-        SolrIndex solrIndex = solrTemplate.getById(blog.getUid(), SolrIndex.class);
+        Optional<SolrIndex> solrIndex = solrTemplate.getById("collection1", blog.getUid(), SolrIndex.class);
 
         //为空表示原来修改发布状态位的时候，删除掉了索引，需要重新添加
-        if (solrIndex == null) {
+        if (solrIndex.isPresent()) {
 
             addIndex(blog);
 
@@ -134,32 +134,32 @@ public class BlogSearchServiceImpl implements BlogSearchService {
                 for (String s : blog.getPhotoList()) {
                     str = str + s + ",";
                 }
-                solrIndex.setPhotoList(str);
+                solrIndex.get().setPhotoList(str);
             }
-            solrIndex.setId(blog.getUid());
-            solrIndex.setTitle(blog.getTitle());
-            solrIndex.setSummary(blog.getSummary());
-            solrIndex.setTag(getTagbyTagUid(blog.getTagUid()));
-            solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
-            solrIndex.setAuthor(blog.getAuthor());
-            solrIndex.setUpdateTime(new Date());
-            solrTemplate.saveBean(solrIndex);
-            solrTemplate.commit();
+            solrIndex.get().setId(blog.getUid());
+            solrIndex.get().setTitle(blog.getTitle());
+            solrIndex.get().setSummary(blog.getSummary());
+            solrIndex.get().setTag(getTagbyTagUid(blog.getTagUid()));
+            solrIndex.get().setBlogSort(getBlogSort(blog.getBlogSortUid()));
+            solrIndex.get().setAuthor(blog.getAuthor());
+            solrIndex.get().setUpdateTime(new Date());
+            solrTemplate.saveBean("collection1", solrIndex);
+            solrTemplate.commit("collection1");
         }
 
     }
 
     @Override
     public void deleteIndex(String uid) {
-        solrTemplate.deleteById(uid);
-        solrTemplate.commit();
+        solrTemplate.deleteByIds("collection1", uid);
+        solrTemplate.commit("collection1");
     }
 
     @Override
     public void deleteAllIndex() {
         SimpleQuery query = new SimpleQuery("*:*");
-        solrTemplate.delete(query);
-        solrTemplate.commit();
+        solrTemplate.delete("collection1",query);
+        solrTemplate.commit("collection1");
     }
 
 
@@ -211,10 +211,10 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         query.addCriteria(criteria);
 
 
-        query.setOffset((currentPage - 1) * pageSize);//从第几条记录查询
+        query.setOffset((long)(currentPage - 1) * pageSize);//从第几条记录查询
         query.setRows(pageSize);
 
-        HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage(query, SolrIndex.class);
+        HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage("collection1", query, SolrIndex.class);
 
         for (HighlightEntry<SolrIndex> h : page.getHighlighted()) {//循环高亮入口集合
             SolrIndex solrIndex = h.getEntity();//获取原实体类
