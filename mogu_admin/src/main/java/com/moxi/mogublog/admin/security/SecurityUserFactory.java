@@ -1,13 +1,12 @@
 package com.moxi.mogublog.admin.security;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.moxi.mogublog.config.security.SecurityUser;
+import com.moxi.mogublog.xo.entity.Admin;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.moxi.mogublog.config.security.SecurityUser;
-import com.moxi.mogublog.xo.entity.Admin;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SecurityUserFactory {
 

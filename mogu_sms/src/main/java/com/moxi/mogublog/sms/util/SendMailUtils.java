@@ -1,13 +1,13 @@
 package com.moxi.mogublog.sms.util;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 
 /**
@@ -19,11 +19,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendMailUtils {
 
-    @Autowired
-    private JavaMailSenderImpl mailSender;
-
     @Value(value = "${spring.mail.username}")
     public String SENDER;
+    @Autowired
+    private JavaMailSenderImpl mailSender;
 
     /**
      * 发送邮件

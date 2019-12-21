@@ -1,11 +1,10 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.mapper.WebConfigMapper;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.stereotype.Service;
 
 
 /**

@@ -1,14 +1,13 @@
 package com.moxi.mogublog.picture.config;
 
-import java.util.Date;
-
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.moxi.mogublog.picture.global.SysConf;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.moxi.mogublog.picture.global.SysConf;
+import java.util.Date;
 
 @Component
 public class MetaObjectHandlerConfig implements MetaObjectHandler {

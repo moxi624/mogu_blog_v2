@@ -1,10 +1,10 @@
 package com.moxi.mogublog.utils;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.apache.log4j.Logger;
 
 /**
  * 对字符串转换的一些操作
@@ -13,10 +13,8 @@ import org.apache.log4j.Logger;
  */
 public class StringUtils {
 
-    private static int machineId = 1; //集群号
-
-
     public static Logger log = Logger.getLogger(StringUtils.class);
+    private static int machineId = 1; //集群号
 
     /**
      * 把String 转换为 long

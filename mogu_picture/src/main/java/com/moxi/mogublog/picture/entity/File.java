@@ -32,6 +32,9 @@ public class File extends SuperEntity<File> {
 
     private String userUid;
 
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 
     public String getFileOldName() {
         return fileOldName;
@@ -95,10 +98,6 @@ public class File extends SuperEntity<File> {
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
     }
 
 }

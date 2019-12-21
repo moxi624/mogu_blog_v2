@@ -45,12 +45,11 @@ public class IdWorkerUtils {
     private final static long sequenceMask = -1L ^ (-1L << sequenceBits);
     /* 上次生产id时间戳 */
     private static long lastTimestamp = -1L;
-    // 0，并发控制
-    private long sequence = 0L;
-
     private final long workerId;
     // 数据标识id部分
     private final long datacenterId;
+    // 0，并发控制
+    private long sequence = 0L;
 
     public IdWorkerUtils() {
         this.datacenterId = getDatacenterId(maxDatacenterId);
@@ -70,48 +69,6 @@ public class IdWorkerUtils {
         }
         this.workerId = workerId;
         this.datacenterId = datacenterId;
-    }
-
-    /**
-     * 获取下一个ID
-     *
-     * @return
-     */
-    public synchronized long nextId() {
-        long timestamp = timeGen();
-        if (timestamp < lastTimestamp) {
-            throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
-        }
-
-        if (lastTimestamp == timestamp) {
-            // 当前毫秒内，则+1
-            sequence = (sequence + 1) & sequenceMask;
-            if (sequence == 0) {
-                // 当前毫秒内计数满了，则等待下一秒
-                timestamp = tilNextMillis(lastTimestamp);
-            }
-        } else {
-            sequence = 0L;
-        }
-        lastTimestamp = timestamp;
-        // ID偏移组合生成最终的ID，并返回ID
-        long nextId = ((timestamp - twepoch) << timestampLeftShift)
-                | (datacenterId << datacenterIdShift)
-                | (workerId << workerIdShift) | sequence;
-
-        return nextId;
-    }
-
-    private long tilNextMillis(final long lastTimestamp) {
-        long timestamp = this.timeGen();
-        while (timestamp <= lastTimestamp) {
-            timestamp = this.timeGen();
-        }
-        return timestamp;
-    }
-
-    private long timeGen() {
-        return System.currentTimeMillis();
     }
 
     /**
@@ -157,6 +114,48 @@ public class IdWorkerUtils {
             System.out.println(" getDatacenterId: " + e.getMessage());
         }
         return id;
+    }
+
+    /**
+     * 获取下一个ID
+     *
+     * @return
+     */
+    public synchronized long nextId() {
+        long timestamp = timeGen();
+        if (timestamp < lastTimestamp) {
+            throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+        }
+
+        if (lastTimestamp == timestamp) {
+            // 当前毫秒内，则+1
+            sequence = (sequence + 1) & sequenceMask;
+            if (sequence == 0) {
+                // 当前毫秒内计数满了，则等待下一秒
+                timestamp = tilNextMillis(lastTimestamp);
+            }
+        } else {
+            sequence = 0L;
+        }
+        lastTimestamp = timestamp;
+        // ID偏移组合生成最终的ID，并返回ID
+        long nextId = ((timestamp - twepoch) << timestampLeftShift)
+                | (datacenterId << datacenterIdShift)
+                | (workerId << workerIdShift) | sequence;
+
+        return nextId;
+    }
+
+    private long tilNextMillis(final long lastTimestamp) {
+        long timestamp = this.timeGen();
+        while (timestamp <= lastTimestamp) {
+            timestamp = this.timeGen();
+        }
+        return timestamp;
+    }
+
+    private long timeGen() {
+        return System.currentTimeMillis();
     }
 
 

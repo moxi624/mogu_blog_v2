@@ -1,9 +1,9 @@
 package com.moxi.mogublog.utils;
 
-import java.util.UUID;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.util.UUID;
 
 /**
  * String工具类

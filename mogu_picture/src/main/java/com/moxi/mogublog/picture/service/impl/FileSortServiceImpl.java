@@ -1,11 +1,10 @@
 package com.moxi.mogublog.picture.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.moxi.mogublog.picture.entity.FileSort;
 import com.moxi.mogublog.picture.mapper.FileSortMapper;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>

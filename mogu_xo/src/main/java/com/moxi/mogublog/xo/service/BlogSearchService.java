@@ -1,9 +1,9 @@
 package com.moxi.mogublog.xo.service;
 
+import com.moxi.mogublog.xo.entity.Blog;
+
 import java.util.List;
 import java.util.Map;
-
-import com.moxi.mogublog.xo.entity.Blog;
 
 /**
  * solr索引维护

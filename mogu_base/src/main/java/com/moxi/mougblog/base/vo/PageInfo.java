@@ -3,7 +3,6 @@ package com.moxi.mougblog.base.vo;
 import com.moxi.mougblog.base.validator.Messages;
 import com.moxi.mougblog.base.validator.annotion.LongNotNull;
 import com.moxi.mougblog.base.validator.group.GetList;
-
 import lombok.Data;
 
 /**

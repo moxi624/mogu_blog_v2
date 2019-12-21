@@ -4,8 +4,6 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -34,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -48,22 +45,17 @@ import java.util.*;
 @Api(value = "分类RestApi", tags = {"ClassifyRestApi"})
 public class ClassifyRestApi {
 
+    private static Logger log = LogManager.getLogger(ClassifyRestApi.class);
     @Autowired
     BlogService blogService;
-
     @Autowired
     TagService tagService;
-
     @Autowired
     BlogSortService blogSortService;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private WebVisitService webVisitService;
-
-    private static Logger log = LogManager.getLogger(ClassifyRestApi.class);
 
     /**
      * 获取分类的信息

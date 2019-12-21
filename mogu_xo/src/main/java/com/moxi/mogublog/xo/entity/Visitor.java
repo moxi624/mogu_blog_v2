@@ -1,10 +1,10 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * <p>

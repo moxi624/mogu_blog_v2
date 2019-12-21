@@ -1,10 +1,9 @@
 package com.moxi.mogublog.picture.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.extension.api.IErrorCode;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.enums.ApiErrorCode;
+import com.baomidou.mybatisplus.extension.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -12,10 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.baomidou.mybatisplus.extension.api.IErrorCode;
-import com.baomidou.mybatisplus.extension.enums.ApiErrorCode;
-import com.baomidou.mybatisplus.extension.exceptions.ApiException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>

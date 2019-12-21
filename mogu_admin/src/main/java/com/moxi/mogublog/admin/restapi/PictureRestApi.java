@@ -1,22 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,9 +16,18 @@ import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -49,20 +42,15 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/picture")
 public class PictureRestApi {
 
+    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     PictureService pictureService;
-
     @Autowired
     PictureSortService pictureSortService;
-
     @Autowired
     private PictureFeignClient pictureFeignClient;
-
     @Value(value = "${data.image.url}")
     private String IMG_HOST;
-
-
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
 
     @ApiOperation(value = "获取图片列表", notes = "获取图片列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)

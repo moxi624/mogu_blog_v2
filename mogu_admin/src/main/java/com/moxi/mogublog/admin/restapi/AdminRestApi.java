@@ -1,29 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -37,16 +14,25 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.AdminRole;
-import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mougblog.base.enums.EStatus;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * <p>
@@ -61,25 +47,19 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "管理员RestApi", tags = {"AdminRestApi"})
 public class AdminRestApi {
 
+    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private AdminService adminService;
-
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private AdminRoleService adminRoleService;
-
     @Autowired
     private PictureFeignClient pictureFeignClient;
-
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
-
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
 
     @ApiOperation(value = "获取管理员列表", notes = "获取管理员列表")
     @GetMapping("/getList")

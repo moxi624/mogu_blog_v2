@@ -1,18 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.moxi.mogublog.xo.vo.TodoVO;
-import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.*;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,11 +11,23 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Todo;
 import com.moxi.mogublog.xo.service.TodoService;
+import com.moxi.mogublog.xo.vo.TodoVO;
 import com.moxi.mougblog.base.enums.EStatus;
-
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -42,10 +42,9 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/todo")
 public class TodoRestApi {
 
+    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     TodoService todoService;
-
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
 
     @ApiOperation(value = "获取代办事项列表", notes = "获取代办事项列表", response = String.class)
     @PostMapping("/getList")

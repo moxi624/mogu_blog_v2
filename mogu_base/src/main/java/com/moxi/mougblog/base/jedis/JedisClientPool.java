@@ -1,9 +1,9 @@
 package com.moxi.mougblog.base.jedis;
 
-import java.util.List;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import java.util.List;
 
 public class JedisClientPool implements JedisClient {
 

@@ -1,11 +1,10 @@
 package com.moxi.mogublog.config.security;
 
-import java.util.Collection;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
 
 public class SecurityUser implements UserDetails {
     /**

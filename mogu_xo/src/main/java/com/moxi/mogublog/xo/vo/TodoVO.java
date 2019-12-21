@@ -18,23 +18,22 @@ import lombok.Data;
 public class TodoVO extends BaseVO<TodoVO> {
 
     /**
-     * 无参构造方法，初始化默认值
-     */
-    TodoVO() {
-
-    }
-
-    /**
      * 内容
      */
     @NotBlank(groups = {Insert.class, Update.class})
     private String text;
-
-
     /**
      * 表示事项是否完成
      */
     @BooleanNotNULL(groups = {Update.class, GetOne.class})
     private Boolean done;
+
+
+    /**
+     * 无参构造方法，初始化默认值
+     */
+    TodoVO() {
+
+    }
 
 }

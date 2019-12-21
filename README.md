@@ -95,6 +95,15 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 | :---------------------------------------------------: | :----------------------------------------------: |
 | <img src="./doc/images/qq/qqGroup.png" width="200" /> | <img src="./doc/images/qq/qq.png" width="200" /> |
 
+## 将来要做的事
+
+- [ ] SpringBoot版本升级成2.X
+- [ ] 门户网站增加登录页面
+- [ ] 支持第三方登录
+- [ ] 写一个评论模块，用于替换搜狐畅言
+- [ ] 解决Nuxt_mogu_web中存在的问题，使博客能被搜索引擎收录
+- [ ] 前端增加用户模块
+
 ## 贡献代码
 
 1. fork本项目到自己的repo

@@ -1,8 +1,6 @@
 package com.moxi.mogublog.xo.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.moxi.mougblog.base.entity.SuperEntity;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 

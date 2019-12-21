@@ -1,28 +1,5 @@
 package com.moxi.mogublog.admin.restapi;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.moxi.mogublog.xo.vo.RoleVO;
-import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.Delete;
-import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -33,10 +10,24 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.RoleService;
-
+import com.moxi.mogublog.xo.vo.RoleVO;
+import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -51,10 +42,9 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "角色管理RestApi", tags = {"RoleRestApi"})
 public class RoleRestApi {
 
+    private static Logger log = LogManager.getLogger(RoleRestApi.class);
     @Autowired
     private RoleService roleService;
-
-    private static Logger log = LogManager.getLogger(RoleRestApi.class);
 
     @ApiOperation(value = "获取角色信息列表", notes = "获取角色信息列表")
     @PostMapping("/getList")

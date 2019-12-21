@@ -1,6 +1,5 @@
 package com.moxi.mougblog.base.validator.constraint;
 
-import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.LongNotNull;
 
 import javax.validation.ConstraintValidator;

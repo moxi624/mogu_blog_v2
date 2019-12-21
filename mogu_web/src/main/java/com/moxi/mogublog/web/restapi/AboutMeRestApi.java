@@ -1,15 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -19,9 +10,16 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.service.AdminService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 关于我 RestApi
@@ -34,13 +32,11 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "关于我 RestApi", tags = {"AboutMeRestApi"})
 public class AboutMeRestApi {
 
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
-
+    private static Logger log = LogManager.getLogger(AboutMeRestApi.class);
     @Autowired
     AdminService adminService;
-
-    private static Logger log = LogManager.getLogger(AboutMeRestApi.class);
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
 
     /**
      * 获取关于我的信息

@@ -1,18 +1,12 @@
 package com.moxi.mogublog.sms.listener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
-import com.moxi.mogublog.utils.DateUtils;
-import com.moxi.mougblog.base.global.BaseSQLConf;
-import org.apache.commons.collections.bag.SynchronizedSortedBag;
+import com.moxi.mogublog.sms.global.SysConf;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import com.moxi.mogublog.sms.global.SysConf;
+import java.util.Map;
 
 /**
  * 博客监听器(用于更新Redis和索引)

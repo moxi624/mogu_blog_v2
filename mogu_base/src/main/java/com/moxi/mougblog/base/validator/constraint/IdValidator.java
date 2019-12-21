@@ -3,7 +3,6 @@ package com.moxi.mougblog.base.validator.constraint;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.annotion.IdValid;
-import com.moxi.mougblog.base.validator.annotion.NotNull;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

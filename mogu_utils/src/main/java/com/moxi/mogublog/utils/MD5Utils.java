@@ -1,10 +1,10 @@
 package com.moxi.mogublog.utils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * MD5工具类

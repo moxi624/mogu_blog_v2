@@ -1,10 +1,7 @@
 package com.moxi.mougblog.base.vo;
 
-import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.annotion.IdValid;
-import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Delete;
-import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import lombok.Data;
 

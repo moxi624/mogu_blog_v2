@@ -1,16 +1,6 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,10 +14,18 @@ import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mogublog.xo.service.ExceptionLogService;
 import com.moxi.mogublog.xo.service.SysLogService;
 import com.moxi.mougblog.base.enums.EStatus;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -43,13 +41,11 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/log")
 public class LogRestApi {
 
+    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     SysLogService sysLogService;
-
     @Autowired
     ExceptionLogService exceptionLogService;
-
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
 
     @ApiOperation(value = "获取操作日志列表", notes = "获取操作日志列表", response = String.class)
     @RequestMapping(value = "/getLogList", method = RequestMethod.GET)

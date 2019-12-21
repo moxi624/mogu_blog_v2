@@ -12,9 +12,9 @@ import javax.validation.ConstraintValidatorContext;
  * @date 2019年12月4日13:17:03
  */
 public class RangValidator implements ConstraintValidator<Range, String> {
+    private final int DEFAULT_MAX = 11;
     private long min;
     private long max;
-    private final int DEFAULT_MAX = 11;
 
     @Override
     public void initialize(Range constraintAnnotation) {

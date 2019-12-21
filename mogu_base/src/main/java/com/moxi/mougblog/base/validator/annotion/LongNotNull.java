@@ -2,7 +2,6 @@ package com.moxi.mougblog.base.validator.annotion;
 
 
 import com.moxi.mougblog.base.validator.Messages;
-import com.moxi.mougblog.base.validator.constraint.IntegerValidator;
 import com.moxi.mougblog.base.validator.constraint.LongValidator;
 
 import javax.validation.Constraint;

@@ -1,22 +1,5 @@
 package com.moxi.mogublog.admin.restapi;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
@@ -29,10 +12,19 @@ import com.moxi.mogublog.xo.service.BlogSearchService;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSysConf;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 索引维护api
@@ -46,16 +38,13 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "索引维护RestApi", tags = {"solrIndexRestApi"})
 public class SolrIndexRestApi {
 
+    private static Logger log = LogManager.getLogger(SolrIndexRestApi.class);
     @Autowired
     private BlogSearchService blogSearchService;
-
     @Autowired
     private BlogService blogService;
-
     @Autowired
     private PictureFeignClient pictureFeignClient;
-
-    private static Logger log = LogManager.getLogger(SolrIndexRestApi.class);
 
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/searchBlog")

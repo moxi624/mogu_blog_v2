@@ -1,14 +1,12 @@
 package com.moxi.mogublog.sms.listener;
 
-import java.util.Map;
-
-import javax.mail.MessagingException;
-
+import com.moxi.mogublog.sms.util.SendMailUtils;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.moxi.mogublog.sms.util.SendMailUtils;
+import javax.mail.MessagingException;
+import java.util.Map;
 
 
 @Component

@@ -1,11 +1,10 @@
 package com.moxi.mogublog.admin.feign;
 
+import com.moxi.mogublog.admin.config.FeignConfiguration;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.moxi.mogublog.admin.config.FeignConfiguration;
 
 /**
  * mogu_picture相关接口

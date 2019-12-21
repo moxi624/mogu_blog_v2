@@ -1,14 +1,26 @@
 package com.moxi.mogublog.web.restapi;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.SQLConf;
+import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.xo.entity.*;
+import com.moxi.mogublog.xo.service.*;
+import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.ELevel;
+import com.moxi.mougblog.base.enums.EPublish;
+import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.BaseSQLConf;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,37 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
-import com.moxi.mogublog.web.global.SQLConf;
-import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.entity.Link;
-import com.moxi.mogublog.xo.entity.Tag;
-import com.moxi.mogublog.xo.entity.WebConfig;
-import com.moxi.mogublog.xo.service.BlogService;
-import com.moxi.mogublog.xo.service.BlogSortService;
-import com.moxi.mogublog.xo.service.LinkService;
-import com.moxi.mogublog.xo.service.TagService;
-import com.moxi.mogublog.xo.service.WebConfigService;
-import com.moxi.mogublog.xo.service.WebVisitService;
-import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.enums.ELevel;
-import com.moxi.mougblog.base.enums.EPublish;
-import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.BaseSQLConf;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 
 /**
@@ -65,9 +48,7 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "首页RestApi", tags = {"IndexRestApi"})
 public class IndexRestApi {
 
-    @Autowired
-    private BlogService blogService;
-
+    private static Logger log = LogManager.getLogger(IndexRestApi.class);
     @Autowired
     TagService tagService;
 
@@ -76,41 +57,30 @@ public class IndexRestApi {
 
     @Autowired
     LinkService linkService;
-
+    @Autowired
+    private BlogService blogService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private WebConfigService webConfigService;
-
     @Autowired
     private WebVisitService webVisitService;
-
     @Value(value = "${BLOG.HOT_COUNT}")
     private Integer BLOG_HOT_COUNT;
-
     @Value(value = "${BLOG.HOT_TAG_COUNT}")
     private Integer BLOG_HOT_TAG_COUNT;
-
     @Value(value = "${BLOG.NEW_COUNT}")
     private Integer BLOG_NEW_COUNT;
-
     @Value(value = "${BLOG.FIRST_COUNT}")
     private Integer BLOG_FIRST_COUNT;
-
     @Value(value = "${BLOG.SECOND_COUNT}")
     private Integer BLOG_SECOND_COUNT;
-
     @Value(value = "${BLOG.THIRD_COUNT}")
     private Integer BLOG_THIRD_COUNT;
-
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
-
-    private static Logger log = LogManager.getLogger(IndexRestApi.class);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")

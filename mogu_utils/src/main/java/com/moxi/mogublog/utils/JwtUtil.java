@@ -1,19 +1,17 @@
 package com.moxi.mogublog.utils;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
-import org.apache.log4j.Logger;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.log4j.Logger;
+
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * jwt生成接口
@@ -22,9 +20,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 public class JwtUtil {
 
-    private static Logger log = Logger.getLogger(JwtUtil.class);
     private final static String base64Secret = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
     private final static int expiresSecond = 1000 * 60 * 2 * 60;//过期时间
+    private static Logger log = Logger.getLogger(JwtUtil.class);
 
     /**
      * 解析jwt toke 获取数据

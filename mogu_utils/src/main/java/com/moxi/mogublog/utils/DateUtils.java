@@ -6,40 +6,31 @@ package com.moxi.mogublog.utils;
  * 2018年5月8日  上午9:20:33
  */
 
+import org.apache.log4j.Logger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
 
 public class DateUtils {
 
-    public static Logger log = Logger.getLogger(DateUtils.class);
-
     public static final String STARTTIME = " 00:00:00";
-
     public static final String ENDTIME = " 23:59:59";
-
     public final static String FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
-
     public final static String[] REPLACE_STRING = new String[]{"GMT+0800", "GMT+08:00"};
-
     public final static String SPLIT_STRING = "(中国标准时间)";
+    public static Logger log = Logger.getLogger(DateUtils.class);
 
     private DateUtils() {
     }
 
     /**
      * 获取现在的时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年5月8日  上午9:28:12
-     * @return
      */
     public static String getNowTime() {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -48,7 +39,6 @@ public class DateUtils {
     }
 
     /**
-     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月14日
@@ -73,9 +63,10 @@ public class DateUtils {
 
     /**
      * 获取今天开始的时间
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年5月8日  上午9:40:53
-     * @return
      */
     public static String getToDayStartTime() {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -85,9 +76,10 @@ public class DateUtils {
 
     /**
      * 获取今天结束的时间
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年6月12日
-     * @return
      */
     public static String getToDayEndTime() {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
@@ -97,9 +89,10 @@ public class DateUtils {
 
     /**
      * 获取昨天开始的时间
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年6月11日
-     * @return
      */
     public static String getYestodayStartTime() {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -109,6 +102,7 @@ public class DateUtils {
 
     /**
      * 获取昨天结束的时间
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月11日
@@ -121,9 +115,10 @@ public class DateUtils {
 
     /**
      * 获取某天开始的时间
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2019年6月20日09:39:25
-     * @return
      */
     public static String getOneDayStartTime(String oneDay) {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -138,9 +133,10 @@ public class DateUtils {
 
     /**
      * 获取某天结束的时间
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2019年6月20日09:42:16
-     * @return
      */
     public static String getOneDayEndTime(String oneDay) {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -156,6 +152,7 @@ public class DateUtils {
 
     /**
      * 获取本周开始的时间
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -170,6 +167,7 @@ public class DateUtils {
 
     /**
      * 将  String 转换成  date
+     *
      * @param dateTime
      * @return
      * @author xzx19950624@qq.com
@@ -189,6 +187,7 @@ public class DateUtils {
 
     /**
      * 将  date 转换成  时间戳
+     *
      * @param dateTime
      * @return
      * @author xzx19950624@qq.com
@@ -204,6 +203,7 @@ public class DateUtils {
 
     /**
      * Date 转换成  String
+     *
      * @param dateTime
      * @return
      * @author xzx19950624@qq.com
@@ -217,6 +217,7 @@ public class DateUtils {
 
     /**
      * 获取本周开始的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -232,6 +233,7 @@ public class DateUtils {
 
     /**
      * 获取本周结束的时间
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -245,6 +247,7 @@ public class DateUtils {
 
     /**
      * 获取本周结束的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -259,6 +262,7 @@ public class DateUtils {
 
     /**
      * 获取上周开始的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -275,6 +279,7 @@ public class DateUtils {
 
     /**
      * 获取上周结束的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -291,6 +296,7 @@ public class DateUtils {
 
     /**
      * 获取本月开始的时间
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -304,6 +310,7 @@ public class DateUtils {
 
     /**
      * 获取本月开始的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -318,6 +325,7 @@ public class DateUtils {
 
     /**
      * 获取本月结束的时间
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -332,6 +340,7 @@ public class DateUtils {
 
     /**
      * 获取本月结束的时间的字符串
+     *
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月13日
@@ -357,7 +366,7 @@ public class DateUtils {
     }
 
     /**
-     * 得到二个日期间的间隔天数  
+     * 得到二个日期间的间隔天数
      */
     public static int getTwoDay(String sj1, String sj2) {
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -374,6 +383,7 @@ public class DateUtils {
 
     /**
      * 判断某个日期属于本周的第几天 (星期一代表第一天)
+     *
      * @param dateTime
      * @return
      * @throws ParseException
@@ -395,6 +405,7 @@ public class DateUtils {
 
     /**
      * 判断某个日期属于本月的第几天
+     *
      * @param dateTime
      * @return
      * @throws ParseException
@@ -427,9 +438,10 @@ public class DateUtils {
 
     /**
      * 获取当前的年
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年5月8日  上午9:36:12
-     * @return
      */
     public static Integer getYears() {
         Calendar calendar = new GregorianCalendar(TimeZone
@@ -440,9 +452,10 @@ public class DateUtils {
 
     /**
      * 获取当前的月
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年5月8日  上午9:37:37
-     * @return
      */
     public static Integer getMonth() {
         Calendar calendar = new GregorianCalendar(TimeZone
@@ -453,9 +466,10 @@ public class DateUtils {
 
     /**
      * 获取当前天
+     *
+     * @return
      * @author xzx19950624@qq.com
      * 2018年5月8日  上午10:31:37
-     * @return
      */
     public static Integer getDay() {
         Calendar calendar = new GregorianCalendar(TimeZone
@@ -465,6 +479,7 @@ public class DateUtils {
 
     /**
      * wx支付的过期时间
+     *
      * @param hour
      * @return
      */
@@ -492,8 +507,9 @@ public class DateUtils {
 
     /**
      * 获取几天之后的日期（wq）
+     *
      * @param date yyyy-MM-dd HH:mm:ss
-     * @param day 加减的天数
+     * @param day  加减的天数
      * @return
      */
     public static Date getDate(String date, int day) {
@@ -518,6 +534,7 @@ public class DateUtils {
 
     /**
      * 把date转换成字符串
+     *
      * @param date
      * @param code 例如  yyyy-MM-dd 00:00:00
      * @return
@@ -530,8 +547,9 @@ public class DateUtils {
 
     /**
      * 获取过去N天内的日期数组
-     * @param intervals      intervals天内
-     * @param formatStr      格式化字符串   yyyy-MM-dd
+     *
+     * @param intervals intervals天内
+     * @param formatStr 格式化字符串   yyyy-MM-dd
      * @return 日期数组
      */
     public static ArrayList<String> getDaysByN(int intervals, String formatStr) {
@@ -544,6 +562,7 @@ public class DateUtils {
 
     /**
      * 获取过去第几天的日期
+     *
      * @param past
      * @return
      */

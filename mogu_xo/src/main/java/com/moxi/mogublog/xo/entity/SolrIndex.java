@@ -1,9 +1,9 @@
 package com.moxi.mogublog.xo.entity;
 
-import java.util.Date;
-
 import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
+
+import java.util.Date;
 
 /**
  * 用于建立solr索引实体类

@@ -1,11 +1,11 @@
 package com.moxi.mogublog.utils;
 
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonValueProcessor;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsonValueProcessor;
 
 /*** 将Bean中的Timestamp转换为json中的日期字符串*/
 public class DateJsonValueProcessor implements JsonValueProcessor {
