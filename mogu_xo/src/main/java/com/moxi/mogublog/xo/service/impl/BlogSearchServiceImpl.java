@@ -39,18 +39,18 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 
     //搜索(带高亮)
     @Override
-    public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize) {
+    public Map<String, Object> search(String colleciton, String keywords, Integer currentPage, Integer pageSize) {
 
         Map<String, Object> map = new HashMap<>();
-        map.putAll(searchList(keywords, currentPage, pageSize));
+        map.putAll(searchList(colleciton, keywords, currentPage, pageSize));
         return map;
     }
 
     //初始化索引
     @Override
-    public void initIndex(List<Blog> blogList) {
+    public void initIndex(String collection, List<Blog> blogList) {
 
-        this.deleteAllIndex(); //清除所有索引
+        this.deleteAllIndex(collection); //清除所有索引
 
         List<SolrIndex> solrIndexs = new ArrayList<>();
 
@@ -87,13 +87,13 @@ public class BlogSearchServiceImpl implements BlogSearchService {
 //	        solrTemplate.saveBean(document);
 //	        solrTemplate.commit();
         }
-        solrTemplate.saveBeans("collection1", solrIndexs);
-        solrTemplate.commit("collection1");
+        solrTemplate.saveBeans(collection, solrIndexs);
+        solrTemplate.commit(collection);
     }
 
     //添加索引
     @Override
-    public void addIndex(Blog blog) {
+    public void addIndex(String collection, Blog blog) {
 
         SolrIndex solrIndex = new SolrIndex();
         //将图片存放索引中
@@ -111,21 +111,21 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         solrIndex.setBlogSort(getBlogSort(blog.getBlogSortUid()));
         solrIndex.setAuthor(blog.getAuthor());
         solrIndex.setUpdateTime(new Date());
-        solrTemplate.saveBean("collection1", solrIndex);
-        solrTemplate.commit("collection1");
+        solrTemplate.saveBean(collection, solrIndex);
+        solrTemplate.commit(collection);
 
     }
 
     //更新索引
     @Override
-    public void updateIndex(Blog blog) {
+    public void updateIndex(String collection, Blog blog) {
 
-        Optional<SolrIndex> solrIndex = solrTemplate.getById("collection1", blog.getUid(), SolrIndex.class);
+        Optional<SolrIndex> solrIndex = solrTemplate.getById(collection, blog.getUid(), SolrIndex.class);
 
         //为空表示原来修改发布状态位的时候，删除掉了索引，需要重新添加
         if (solrIndex.isPresent()) {
 
-            addIndex(blog);
+            addIndex(collection, blog);
 
         } else {
             //将图片存放索引中
@@ -143,23 +143,23 @@ public class BlogSearchServiceImpl implements BlogSearchService {
             solrIndex.get().setBlogSort(getBlogSort(blog.getBlogSortUid()));
             solrIndex.get().setAuthor(blog.getAuthor());
             solrIndex.get().setUpdateTime(new Date());
-            solrTemplate.saveBean("collection1", solrIndex);
-            solrTemplate.commit("collection1");
+            solrTemplate.saveBean(collection, solrIndex);
+            solrTemplate.commit(collection);
         }
 
     }
 
     @Override
-    public void deleteIndex(String uid) {
-        solrTemplate.deleteByIds("collection1", uid);
-        solrTemplate.commit("collection1");
+    public void deleteIndex(String collection,String uid) {
+        solrTemplate.deleteByIds(collection, uid);
+        solrTemplate.commit(collection);
     }
 
     @Override
-    public void deleteAllIndex() {
+    public void deleteAllIndex(String collection) {
         SimpleQuery query = new SimpleQuery("*:*");
-        solrTemplate.delete("collection1",query);
-        solrTemplate.commit("collection1");
+        solrTemplate.delete(collection,query);
+        solrTemplate.commit(collection);
     }
 
 
@@ -196,7 +196,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     }
 
 
-    private Map<String, Object> searchList(String keywords, Integer currentPage, Integer pageSize) {
+    private Map<String, Object> searchList(String collection, String keywords, Integer currentPage, Integer pageSize) {
 
         Map<String, Object> map = new HashMap<>();
 
@@ -214,7 +214,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         query.setOffset((long)(currentPage - 1) * pageSize);//从第几条记录查询
         query.setRows(pageSize);
 
-        HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage("collection1", query, SolrIndex.class);
+        HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage(collection, query, SolrIndex.class);
 
         for (HighlightEntry<SolrIndex> h : page.getHighlighted()) {//循环高亮入口集合
             SolrIndex solrIndex = h.getEntity();//获取原实体类

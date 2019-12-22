@@ -21,7 +21,7 @@ public interface BlogSearchService {
      * @param pageSize    页大小
      * @return
      */
-    public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize);
+    public Map<String, Object> search(String collection, String keywords, Integer currentPage, Integer pageSize);
 
     /**
      * 初始化索引
@@ -29,7 +29,7 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void initIndex(List<Blog> blogList);
+    public void initIndex(String collection, List<Blog> blogList);
 
     /**
      * 添加索引
@@ -37,7 +37,7 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void addIndex(Blog blog);
+    public void addIndex(String collection, Blog blog);
 
     /**
      * 更新索引
@@ -45,7 +45,7 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void updateIndex(Blog blog);
+    public void updateIndex(String collection, Blog blog);
 
     /**
      * 删除索引
@@ -53,7 +53,7 @@ public interface BlogSearchService {
      * @param id
      * @return
      */
-    public void deleteIndex(String id);
+    public void deleteIndex(String collection, String id);
 
     /**
      * 删除全部索引
@@ -61,5 +61,5 @@ public interface BlogSearchService {
      * @param
      * @return
      */
-    public void deleteAllIndex();
+    public void deleteAllIndex(String collection);
 }

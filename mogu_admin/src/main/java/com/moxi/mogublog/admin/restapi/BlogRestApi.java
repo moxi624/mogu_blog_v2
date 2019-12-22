@@ -83,6 +83,8 @@ public class BlogRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
+    @Value(value = "${spring.data.solr.core}")
+    private String collection;
     @Autowired
     private BlogSearchService blogSearchService;
 
@@ -332,7 +334,7 @@ public class BlogRestApi {
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //删除solr索引
-            blogSearchService.deleteIndex(blog.getUid());
+            blogSearchService.deleteIndex(collection, blog.getUid());
         }
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
@@ -415,7 +417,7 @@ public class BlogRestApi {
             setPhoto(blog);
 
             //增加solr索引
-            blogSearchService.addIndex(blog);
+            blogSearchService.addIndex(collection, blog);
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
             //这是需要做的是，是删除redis中的该条博客数据
@@ -429,7 +431,7 @@ public class BlogRestApi {
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //当设置下架状态时，删除博客索引
-            blogSearchService.deleteIndex(blog.getUid());
+            blogSearchService.deleteIndex(collection, blog.getUid());
         }
     }
 }
