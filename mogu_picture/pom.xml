@@ -74,6 +74,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-feign</artifactId>
+            <version>${startFeign.version}</version>
         </dependency>
 
     </dependencies>

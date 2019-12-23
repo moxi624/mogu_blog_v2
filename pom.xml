@@ -37,6 +37,7 @@
         <Hutool.version>4.6.4</Hutool.version>
         <log4j.version>1.2.17</log4j.version>
         <eureka.version>1.2.3.RELEASE</eureka.version>
+        <startFeign.version>1.4.7.RELEASE</startFeign.version>
 
     </properties>
 
