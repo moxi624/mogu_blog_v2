@@ -1,6 +1,7 @@
 package com.moxi.mogublog.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +19,8 @@ import java.util.Map;
  * @author xzx19950624@qq.com
  */
 public class HttpRequestUtil {
-    private static Logger log = Logger.getLogger(HttpRequestUtil.class);
+
+    private static Logger log = LoggerFactory.getLogger(HttpRequestUtil.class);
 
     /**
      * 向指定URL发送GET方法的请求

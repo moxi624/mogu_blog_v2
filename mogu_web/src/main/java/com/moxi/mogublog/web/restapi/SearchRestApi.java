@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,8 @@ public class SearchRestApi {
     private WebVisitService webVisitService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Value(value = "${spring.data.solr.core}")
+    private String collection;
 
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/searchBlog")
@@ -66,7 +69,7 @@ public class SearchRestApi {
             return ResultUtil.result(SysConf.ERROR, "关键字不能为空");
         }
 
-        Map<String, Object> map = blogSearchService.search(keywords, currentPage, pageSize);
+        Map<String, Object> map = blogSearchService.search(collection, keywords, currentPage, pageSize);
 
         //增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, request, EBehavior.BLOG_SEARCH.getBehavior(), null, keywords);

@@ -1,7 +1,7 @@
 package com.moxi.mogublog.admin.feign;
 
 import com.moxi.mogublog.admin.config.FeignConfiguration;
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,6 @@ public interface PictureFeignClient {
     /**
      * 获取文件的信息接口
      *
-     * @param request
      * @return
      * @ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
      * @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")

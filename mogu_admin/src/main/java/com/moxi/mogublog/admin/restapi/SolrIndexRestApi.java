@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,6 @@ import java.util.Map;
  * @author limboy
  * @create 2018-09-29 16:25
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/search")
 @Api(value = "索引维护RestApi", tags = {"solrIndexRestApi"})
@@ -45,6 +45,8 @@ public class SolrIndexRestApi {
     private BlogService blogService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
+    @Value(value = "${spring.data.solr.core}")
+    private String collection;
 
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/searchBlog")
@@ -55,7 +57,7 @@ public class SolrIndexRestApi {
         if (StringUtils.isNotEmpty(keywords) && StringUtils.isEmpty(keywords.trim())) {
             return ResultUtil.result(SysConf.SUCCESS, "内容不能为空");
         }
-        Map<String, Object> map = blogSearchService.search(keywords, currentPage, pageSize);
+        Map<String, Object> map = blogSearchService.search(collection, keywords, currentPage, pageSize);
         return ResultUtil.result(SysConf.SUCCESS, map);
 
     }
@@ -106,7 +108,7 @@ public class SolrIndexRestApi {
                 item.setPhotoList(pictureListTemp);
             }
         }
-        blogSearchService.initIndex(blogList);
+        blogSearchService.initIndex(collection, blogList);
         log.info("初始化索引成功");
         return ResultUtil.result(SysConf.SUCCESS, "初始化索引成功");
 
@@ -120,7 +122,7 @@ public class SolrIndexRestApi {
         if (blog == null || StringUtils.isEmpty(blog.getUid())) {
             return ResultUtil.result(SysConf.ERROR, "UID不能为空");
         }
-        blogSearchService.addIndex(blog);
+        blogSearchService.addIndex(collection, blog);
         log.info("新建solr索引");
         return ResultUtil.result(SysConf.SUCCESS, "新建solr索引成功");
     }
@@ -133,7 +135,7 @@ public class SolrIndexRestApi {
         if (blog == null || StringUtils.isEmpty(blog.getUid())) {
             return ResultUtil.result(SysConf.ERROR, "UID不能为空");
         }
-        blogSearchService.updateIndex(blog);
+        blogSearchService.updateIndex(collection, blog);
 
         log.info("更新solr索引");
         return ResultUtil.result(SysConf.SUCCESS, "更新solr索引成功");
@@ -146,7 +148,7 @@ public class SolrIndexRestApi {
     public String deleteIndex(HttpServletRequest request,
                               @ApiParam(name = "uid", value = "博客uid", required = true) @RequestParam(name = "uid", required = true) String uid) {
 
-        blogSearchService.deleteIndex(uid);
+        blogSearchService.deleteIndex(collection, uid);
         log.info("删除部分索引");
         return ResultUtil.result(SysConf.SUCCESS, "删除索引成功");
 
@@ -157,10 +159,8 @@ public class SolrIndexRestApi {
     @PostMapping("/deleteAllIndex")
     public String deleteAllIndex(HttpServletRequest request) {
 
-        blogSearchService.deleteAllIndex();
+        blogSearchService.deleteAllIndex(collection);
         log.info("删除所有索引");
         return ResultUtil.result(SysConf.SUCCESS, "删除所有索引成功");
     }
-
-
 }

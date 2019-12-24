@@ -1,6 +1,7 @@
 package com.moxi.mogublog.utils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.UUID;
  */
 public class StringUtils {
 
-    public static Logger log = Logger.getLogger(StringUtils.class);
+    public static Logger log = LoggerFactory.getLogger(StringUtils.class);
     private static int machineId = 1; //集群号
 
     /**

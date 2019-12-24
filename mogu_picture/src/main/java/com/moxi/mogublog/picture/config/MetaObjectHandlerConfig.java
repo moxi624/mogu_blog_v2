@@ -3,8 +3,8 @@ package com.moxi.mogublog.picture.config;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.moxi.mogublog.picture.global.SysConf;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -12,7 +12,8 @@ import java.util.Date;
 @Component
 public class MetaObjectHandlerConfig implements MetaObjectHandler {
 
-    Logger log = LogManager.getLogger(MetaObjectHandlerConfig.class);
+    Logger log = LoggerFactory.getLogger(MetaObjectHandlerConfig.class);
+
 
     @Override
     public void insertFill(MetaObject metaObject) {

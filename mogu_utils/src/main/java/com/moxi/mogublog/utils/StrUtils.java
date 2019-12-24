@@ -1,7 +1,7 @@
 package com.moxi.mogublog.utils;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -12,7 +12,8 @@ import java.util.UUID;
  * @date 2017年9月21日21:41:28
  */
 public class StrUtils {
-    private static Logger logger = LogManager.getLogger(StrUtils.class);
+
+    private static Logger logger = LoggerFactory.getLogger(StrUtils.class);
 
     /**
      * 获取UUID，去掉了-

@@ -4,7 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -22,7 +23,7 @@ public class JwtUtil {
 
     private final static String base64Secret = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
     private final static int expiresSecond = 1000 * 60 * 2 * 60;//过期时间
-    private static Logger log = Logger.getLogger(JwtUtil.class);
+    private static Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
     /**
      * 解析jwt toke 获取数据
@@ -43,11 +44,12 @@ public class JwtUtil {
     }
 
     /**
-     * 生成jwt token user的
+     * 生成jwt token user
      *
-     * @param username
-     * @param password
      * @param userOpenId
+     * @param userId
+     * @param isUser
+     * @param shopId
      * @return
      */
     public static String createJWT(String userOpenId, Long userId, boolean isUser, Long shopId) {
@@ -126,8 +128,8 @@ public class JwtUtil {
         Map<String, Object> remap = new HashMap<>();
         Claims parseJWT = parseJWT(rd_session);
 
-        long userId = 0l;
-        long shopId = 0l;
+        long userId = 0L;
+        long shopId = 0L;
         boolean isUser = true;
         String userOpenId = "";
         try {

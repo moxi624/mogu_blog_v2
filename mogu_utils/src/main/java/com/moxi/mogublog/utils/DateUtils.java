@@ -6,7 +6,8 @@ package com.moxi.mogublog.utils;
  * 2018年5月8日  上午9:20:33
  */
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,7 @@ public class DateUtils {
     public final static String FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
     public final static String[] REPLACE_STRING = new String[]{"GMT+0800", "GMT+08:00"};
     public final static String SPLIT_STRING = "(中国标准时间)";
-    public static Logger log = Logger.getLogger(DateUtils.class);
+    public static Logger log = LoggerFactory.getLogger(DateUtils.class);
 
     private DateUtils() {
     }
@@ -188,7 +189,6 @@ public class DateUtils {
     /**
      * 将  date 转换成  时间戳
      *
-     * @param dateTime
      * @return
      * @author xzx19950624@qq.com
      * @date 2018年6月26日
@@ -274,23 +274,6 @@ public class DateUtils {
         currentDate.add(GregorianCalendar.DATE, mondayPlus + 7 * weeks);
         Date monday = currentDate.getTime();
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-        return formate.format(monday);
-    }
-
-    /**
-     * 获取上周结束的时间的字符串
-     *
-     * @return
-     * @author xzx19950624@qq.com
-     * @date 2018年6月13日
-     */
-    public static String getLastWeekEndTimeStr() {
-        int weeks = -1;
-        int mondayPlus = getMondayPlus();
-        GregorianCalendar currentDate = new GregorianCalendar();
-        currentDate.add(GregorianCalendar.DATE, mondayPlus + weeks);
-        Date monday = currentDate.getTime();
-        SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
         return formate.format(monday);
     }
 

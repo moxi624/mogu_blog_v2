@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class JsonUtils {
 
-    public static Logger log = Logger.getLogger(JsonUtils.class);
+    public static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
      * 把对象转换为json数据

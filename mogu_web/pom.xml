@@ -63,17 +63,33 @@
         <!-- 添加Eureka相关依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+            <version>9.3.1</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+        </dependency>
+
+        <!--JustAuth第三方登录模块-->
+<!--        <dependency>-->
+<!--            <groupId>me.zhyd.oauth</groupId>-->
+<!--            <artifactId>JustAuth</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <!--spring boot打包的话需要指定一个唯一的入门-->

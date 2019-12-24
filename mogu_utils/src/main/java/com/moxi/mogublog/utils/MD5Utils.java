@@ -1,7 +1,7 @@
 package com.moxi.mogublog.utils;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * @date 2017年9月24日16:40:20
  */
 public class MD5Utils {
-    private static Logger logger = LogManager.getLogger(MD5Utils.class);
+    private static Logger logger = LoggerFactory.getLogger(MD5Utils.class);
 
     /**
      * MD5加码 生成32位md5码(不可逆的)
