@@ -151,7 +151,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     }
 
     @Override
-    public void deleteIndex(String collection,String uid) {
+    public void deleteIndex(String collection, String uid) {
         solrTemplate.deleteByIds(collection, uid);
         solrTemplate.commit(collection);
     }
@@ -159,7 +159,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     @Override
     public void deleteAllIndex(String collection) {
         SimpleQuery query = new SimpleQuery("*:*");
-        solrTemplate.delete(collection,query);
+        solrTemplate.delete(collection, query);
         solrTemplate.commit(collection);
     }
 
@@ -212,7 +212,7 @@ public class BlogSearchServiceImpl implements BlogSearchService {
         query.addCriteria(criteria);
 
 
-        query.setOffset((long)(currentPage - 1) * pageSize);//从第几条记录查询
+        query.setOffset((long) (currentPage - 1) * pageSize);//从第几条记录查询
         query.setRows(pageSize);
 
         HighlightPage<SolrIndex> page = solrTemplate.queryForHighlightPage(collection, query, SolrIndex.class);

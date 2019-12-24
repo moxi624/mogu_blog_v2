@@ -16,13 +16,12 @@ public enum SystemLanguageEnum {
      */
     EN("en", "英文");
 
+    private final String code;
+    private final String name;
     SystemLanguageEnum(String code, String name) {
         this.code = code;
         this.name = name;
     }
-
-    private final String code;
-    private final String name;
 
     public String getCode() {
         return code;

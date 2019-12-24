@@ -84,11 +84,11 @@
         </dependency>
 
         <!--JustAuth第三方登录模块-->
-<!--        <dependency>-->
-<!--            <groupId>me.zhyd.oauth</groupId>-->
-<!--            <artifactId>JustAuth</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>me.zhyd.oauth</groupId>-->
+        <!--            <artifactId>JustAuth</artifactId>-->
+        <!--            <version>1.0.0</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 
