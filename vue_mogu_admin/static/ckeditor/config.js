@@ -10,7 +10,7 @@ CKEDITOR.editorConfig = function (config) {
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
 
-	
+
 
 	config.toolbarGroups = [
 		{ name: 'clipboard', groups: ['clipboard', 'undo'] },
@@ -65,7 +65,7 @@ CKEDITOR.editorConfig = function (config) {
 
     //使用zenburn的代码高亮风格样式 PS:zenburn效果就是黑色背景
     //如果不设置着默认风格为default
-	
+
 	//设置语言
 	config.language = 'zh-cn';
 
@@ -73,15 +73,15 @@ CKEDITOR.editorConfig = function (config) {
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
 	//开启工具栏“图像”中文件上传功能，后面的url为待会要上传action要指向的的action或servlet
-	config.filebrowserImageUploadUrl = "http://localhost:8602/ckeditor/imgUpload?";
+	config.filebrowserImageUploadUrl = "http://101.132.194.128:8602/ckeditor/imgUpload?";
 
-	//开启插入\编辑超链接中文件上传功能，后面的url为待会要上传action要指向的的action或servlet                                                                                                   
-	config.filebrowserUploadUrl = 'http://localhost:8602/ckeditor/fileUpload';
+	//开启插入\编辑超链接中文件上传功能，后面的url为待会要上传action要指向的的action或servlet
+	config.filebrowserUploadUrl = 'http://101.132.194.128:8602/ckeditor/fileUpload';
 
 	//开启flash中文件上传，这里因为不常用，我暂时就不配置了
 	//config.filebrowserFlashUploadUrl="";
 
-	//工具栏“图像”中预览区域显示内容 
+	//工具栏“图像”中预览区域显示内容
 	config.image_previewText = ' ';
 
 	config.font_names = '宋体/宋体;黑体/黑体;仿宋/仿宋_GB2312;楷体/楷体_GB2312;隶书/隶书;幼圆/幼圆;雅黑/雅黑;'+ config.font_names ;

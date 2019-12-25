@@ -257,4 +257,48 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
     }
 
+    @Override
+    public Map<String, Object> getBlogContributeCount() {
+
+        // 获取今天结束时间
+        String endTime = DateUtils.getNowTime();
+
+        // 获取365天前的日期
+        Date temp = DateUtils.getDate(endTime, -365);
+
+        String startTime = DateUtils.dateTimeToStr(temp);
+
+        List<Map<String, Object>> blogContributeMap = blogMapper.getBlogContributeCount(startTime, endTime);
+
+        List<String> dateList = DateUtils.getDayBetweenDates(startTime, endTime);
+
+        Map<String, Object> dateMap = new HashMap<>();
+
+        for(Map<String, Object> itemMap : blogContributeMap) {
+
+            dateMap.put(itemMap.get("DATE").toString(), itemMap.get("COUNT"));
+        }
+
+        List<List<Object>> resultList = new ArrayList<>();
+        for(String item : dateList) {
+            Integer count = 0;
+            if(dateMap.get(item) != null) {
+                count = Integer.valueOf(dateMap.get(item).toString());
+            }
+            List<Object> objectList = new ArrayList<>();
+            objectList.add(item);
+            objectList.add(count);
+            resultList.add(objectList);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        List<String> contributeDateList = new ArrayList<>();
+        contributeDateList.add(startTime);
+        contributeDateList.add(endTime);
+        resultMap.put("contributeDate", contributeDateList);
+        resultMap.put("blogContributeCount", resultList);
+
+        return resultMap;
+    }
+
 }
