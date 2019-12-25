@@ -53,9 +53,9 @@
       </el-col>
     </el-row>
 
-    <!--访问量统计-->
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart v-if="showLineChart" :chart-data="lineChartData"></line-chart>
+    <!--文章贡献度-->
+    <el-row>
+      <CalendarChart></CalendarChart>
     </el-row>
 
     <!-- 分类图-->
@@ -96,6 +96,12 @@
         </div>
       </el-col>
     </el-row>
+
+    <!--访问量统计-->
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart v-if="showLineChart" :chart-data="lineChartData"></line-chart>
+    </el-row>
+
   </div>
 </template>
 
@@ -113,6 +119,7 @@ import PieChart from "@/components/PieChart";
 import TodoList from "@/components/TodoList";
 import BarChart from "@/components/BarChart";
 import LineChart from "@/components/LineChart";
+import CalendarChart from "@/components/CalendarChart";
 
 export default {
   name: "dashboard",
@@ -125,7 +132,8 @@ export default {
     TodoList,
     BarChart,
     CountTo,
-    LineChart
+    LineChart,
+    CalendarChart
   },
   data() {
     return {
@@ -206,7 +214,7 @@ export default {
     },
     clickBlogSortPie: function(index) {
       var blogSort = this.blogCountByBlogSort[index];
- 
+
       this.$router.push({
         path: "/blog/blog",
         query: { blogSort: blogSort }

@@ -27,3 +27,10 @@ export function getBlogCountByBlogSort() {
     method: 'get'
   })
 }
+
+export function getBlogContributeCount() {
+  return request({
+    url: process.env.ADMIN_API + '/index/getBlogContributeCount',
+    method: 'get'
+  })
+}

@@ -9,11 +9,14 @@
    蘑菇博客，一个基于微服务架构的前后端分离博客系统
 </p>
 <p align="center">
-  <a href="https://gitee.com/moxi159753/mogu_blog_v2"><img alt="Build Status" src="https://img.shields.io/hexpm/l/plug.svg"></a>
 <a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
+    	<img src="https://img.shields.io/hexpm/l/plug.svg" ></img>
 		<img src="https://img.shields.io/badge/JDK-1.8+-green.svg" ></img>
-	</a>
-</p>
+        <img src="https://img.shields.io/badge/springboot-2.2.2.RELEASE-green" ></img>
+<img src="https://img.shields.io/badge/SpringCloud-Hoxton.RELEASE-brightgreen" ></img><img src="https://img.shields.io/badge/vue-2.5.17-green" ></img>
+<img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img>
+<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img>
+<img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img></a></p>
 
 ## 项目介绍
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Nuxt +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
@@ -77,7 +80,7 @@
 
 ## 启动顺序
 
-mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
+mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
 ## 致谢
 
@@ -97,7 +100,8 @@ mogu_eureka ->  mogu_picture -> mogu_sts -> mogu_admin -> mogu_web
 
 ## 将来要做的事
 
-- [ ] SpringBoot版本升级成2.X
+- [x] SpringBoot版本升级成2.X
+- [ ] 后台首页增加文章贡献，类似于Github中的代码贡献，能强迫自己每天写博客，哈哈哈
 - [ ] 将图片存储在七牛云中
 - [ ] 门户网站增加登录页面
 - [ ] 支持第三方登录

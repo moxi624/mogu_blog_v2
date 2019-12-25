@@ -80,5 +80,13 @@ public class IndexRestApi {
         return ResultUtil.result(SysConf.SUCCESS, blogCountByTag);
     }
 
+    @ApiOperation(value = "获取一年内的文章贡献数", notes = "获取一年内的文章贡献度", response = String.class)
+    @RequestMapping(value = "/getBlogContributeCount", method = RequestMethod.GET)
+    public String getBlogContributeCount() {
+
+        Map<String, Object> resultMap = blogService.getBlogContributeCount();
+        return ResultUtil.result(SysConf.SUCCESS, resultMap);
+    }
+
 
 }
