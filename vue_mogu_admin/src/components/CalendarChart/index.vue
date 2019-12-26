@@ -65,7 +65,7 @@
               calendar: [{
                 top: 100,
                 left: 'center',
-                range: ['2018-12-25', '2019-12-25'],
+                range: contributeDate,
                 splitLine: {
                   show: true,
                   lineStyle: {
