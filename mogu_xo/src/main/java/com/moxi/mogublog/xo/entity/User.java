@@ -118,4 +118,13 @@ public class User extends SuperEntity<User> {
     //@TableField(exist = false)
     private String validCode;
 
+    /**
+     * 资料来源
+     */
+    private String source;
+
+    /**
+     * 平台uuid
+     */
+    private String uuid;
 }

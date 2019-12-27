@@ -19,11 +19,11 @@
 
         <el-row class="elRow">
           <el-tooltip content="码云" placement="bottom">
-            <el-button icon="el-icon-search" circle></el-button>
+            <el-button icon="el-icon-search" circle @click="goAuth('gitee')"></el-button>
           </el-tooltip>
 
           <el-tooltip content="Github" placement="bottom">
-            <el-button type="primary" icon="el-icon-edit" circle></el-button>
+            <el-button type="primary" icon="el-icon-edit" circle @click="goAuth('github')"></el-button>
           </el-tooltip>
 
           <el-tooltip content="QQ" placement="bottom">
@@ -179,7 +179,7 @@ export default {
       });
     },
     startRegister: function() {
-      
+
       var params = {};
       params.userName = this.registerForm.userName;
       params.passWord = this.registerForm.password;
@@ -198,7 +198,23 @@ export default {
     goRegister: function() {
       console.log("去注册页面");
       this.showLogin = false;
-    }
+    },
+    goAuth: function (source) {
+      console.log("go", source)
+      var params = new URLSearchParams();
+      params.append("source", source);
+      login(params).then(response => {
+        if (response.code == "success") {
+          console.log(response.data.url);
+          var token = response.data.token;
+          console.log(response);
+          window.location.href = response.data.url
+
+          //window.open(response.data);
+        }
+      });
+      // this.$router.push({name: '/oauth/render/gitee'});
+    },
   }
 };
 </script>

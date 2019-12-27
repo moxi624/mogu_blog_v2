@@ -132,3 +132,12 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+
+justAuth:
+  clientId:
+    gitee: 2d0c84d5a3366ff87738ad98aeea3abdb24288441078d26500676f3f90d4f6ea
+    github: 7080b287878aed7972c1
+  clientSecret:
+    gitee: a44e77b8144ecc7f533c29fb22df5439053ab1a18de29ccb29e2e282ce5ce79c
+    github: 5e7563a8f3903be6d9d4c0fb9b754ef06af0c7ab
+

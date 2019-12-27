@@ -1,5 +1,7 @@
 package com.moxi.mougblog.base.global;
 
+import org.springframework.web.client.HttpClientErrorException;
+
 /**
  * SQL字段常量
  *
@@ -14,4 +16,11 @@ public class BaseSQLConf {
     public final static String STATUS = "status";
     public final static String IS_PUBLISH = "is_publish";
     public final static String LEVEL = "level";
+
+    //user表
+    public static final String USERNAME = "user_name";
+    public static final String USEREMAIL = "email";
+    public static final String SOURCE = "source";
+    public static final String UUID = "uuid";
+
 }

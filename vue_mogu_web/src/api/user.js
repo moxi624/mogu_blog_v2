@@ -2,9 +2,23 @@ import request from '@/utils/request'
 
 export function login(params) {
   return request({
-    url: process.env.WEB_API + '/user/login',
+    url: process.env.WEB_API + '/oauth/render',
     method: 'post',
-    data: params
+    params
+  })
+}
+
+export function authVerify(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/verify/' + params,
+    method: 'get',
+  })
+}
+
+export function deleteUserAccessToken(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/delete/' + params,
+    method: 'post',
   })
 }
 

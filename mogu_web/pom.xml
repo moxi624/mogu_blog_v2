@@ -84,11 +84,26 @@
         </dependency>
 
         <!--JustAuth第三方登录模块-->
-        <!--        <dependency>-->
-        <!--            <groupId>me.zhyd.oauth</groupId>-->
-        <!--            <artifactId>JustAuth</artifactId>-->
-        <!--            <version>1.0.0</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+            <version>1.13.1</version>
+        </dependency>
+
+        <!--JWT-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
 
     </dependencies>
 

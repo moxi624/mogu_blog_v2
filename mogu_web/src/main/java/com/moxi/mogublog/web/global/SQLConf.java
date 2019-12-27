@@ -39,5 +39,4 @@ public final class SQLConf extends BaseSQLConf {
     //sortRestAPi
     public static final String MONTH = "month";
 
-
 }
