@@ -2,10 +2,7 @@ package com.moxi.mogublog.web.auth;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.JwtUtil;
-import com.moxi.mogublog.utils.MailUtils;
-import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
@@ -118,8 +115,12 @@ public class RestAuthController {
     @GetMapping("/verify/{accessToken}")
     public String verifyUser(@PathVariable("accessToken") String accessToken){
         String userInfo = stringRedisTemplate.opsForValue().get(accessToken);
-        Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
-        return ResultUtil.result(SysConf.SUCCESS, map);
+        if(StringUtils.isEmpty(userInfo)) {
+            return ResultUtil.result(SysConf.ERROR, "token已失效");
+        } else {
+            Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
+            return ResultUtil.result(SysConf.SUCCESS, map);
+        }
     }
 
     @ApiOperation(value = "删除accessToken", notes = "删除accessToken")

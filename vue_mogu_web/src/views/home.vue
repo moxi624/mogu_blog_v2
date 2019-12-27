@@ -131,13 +131,14 @@
         info: {},
         saveTitle: "",
         keyword: "",
-        info: {},
         showSearch: false, // 控制搜索框的弹出
         showHead: false, //控制导航栏的弹出
         isCdTopVisible: false,
         isVisible: true, //控制web端导航的隐藏和显示
         isLogin: false,
-        userInfo: {}, // 用户信息
+        userInfo: {
+
+        }, // 用户信息
       };
     },
     mounted() {
@@ -169,7 +170,7 @@
           this.$router.go(0);
         }
 
-        // 获取当前所在页面
+        // 获取当前所在页面kbs
         var test = window.location.href;
         var start = 0;
         var end = test.length;
@@ -198,10 +199,12 @@
       console.log("token", token);
       if (token != undefined) {
         authVerify(token).then(response => {
-          console.log("返回的用户信息", response);
           if (response.code == "success") {
+            console.log("userInfo", response.data)
             this.isLogin = true;
             this.userInfo = response.data;
+          } else {
+            this.isLogin = false;
           }
         });
       } else {
@@ -233,7 +236,6 @@
       this.saveTitle = result;
 
       getWebConfig().then(response => {
-        console.log("head获取网站配置1", response);
         if (response.code == "success") {
           this.info = response.data;
         }
@@ -272,7 +274,20 @@
       userlogout: function () {
         deleteUserAccessToken(getCookie("token"));
         delCookie("token");
-        window.location.reload()
+        let url = window.parent.location.href;
+        let haveToken = url.indexOf("?token")
+        console.log("我来了", haveToken);
+        if(haveToken != -1) {
+          let list = url.split("?token");
+          console.log("我来了2", list);
+          this.isLogin = false;
+          window.location.href = list[0]
+
+        } else {
+          console.log("我来了1");
+          window.location.reload()
+        }
+
       },
 
       handleCommand(command) {
@@ -310,7 +325,7 @@
     top: 15px;
   }
 
-  .userInfo img {
+  .userInfoAvatar img {
     border-radius:50%;
   }
 </style>
