@@ -46,7 +46,7 @@
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 
 ## 项目特点
@@ -57,6 +57,7 @@
 - 页面交互使用Vue2.x，极大的提高了开发效率。
 - 引入swagger文档支持，方便编写API接口文档。
 - 引入RabbitMQ消息队列，用于邮件和短信发送。
+- 引入JustAuth第三方登录开源库，支持Gitee、Github账号登录
 
 ## Windows环境下搭建蘑菇博客
 
@@ -89,6 +90,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 - Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
 - 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
 - 感谢**JetBrains**提供的免费开源License： https://www.jetbrains.com/?from=mogu_blog_v2 
+- 感谢**yadong.zhang**提供的第三方登录开源库：https://gitee.com/yadong.zhang/JustAuth.git
 
 ## 关注&交流
 

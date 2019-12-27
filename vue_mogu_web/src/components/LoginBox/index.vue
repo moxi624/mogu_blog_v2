@@ -12,28 +12,41 @@
       <el-divider></el-divider>
       <el-form :label-position="labelPosition" :model="loginForm">
         <el-form-item label="用户名">
-          <el-input v-model="loginForm.userName"></el-input>
+          <el-input v-model="loginForm.userName" disabled></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input type="password" v-model="loginForm.password"></el-input>
+          <el-input type="password" v-model="loginForm.password" disabled></el-input>
         </el-form-item>
         <el-row class="btn">
-          <el-button class="loginBtn" type="primary" @click="startLogin">登录</el-button>
-          <el-button class="registerBtn" type="info" @click="goRegister">注册</el-button>
+          <el-button class="loginBtn" type="primary" @click="startLogin" disabled>登录</el-button>
+          <el-button class="registerBtn" type="info" @click="goRegister" disabled>注册</el-button>
         </el-row>
 
         <el-row class="elRow">
           <el-tooltip content="码云" placement="bottom">
-            <el-button icon="el-icon-search" circle @click="goAuth('gitee')"></el-button>
+            <el-button type="danger" circle @click="goAuth('gitee')">
+              <span class="iconfont">&#xe602;</span>
+            </el-button>
           </el-tooltip>
 
           <el-tooltip content="Github" placement="bottom">
-            <el-button type="primary" icon="el-icon-edit" circle @click="goAuth('github')"></el-button>
+            <el-button type="info" circle @click="goAuth('github')">
+              <span class="iconfont">&#xe64a;</span>
+            </el-button>
           </el-tooltip>
 
           <el-tooltip content="QQ" placement="bottom">
-            <el-button type="success" icon="el-icon-check" circle></el-button>
+            <el-button type="primary" circle disabled>
+              <span class="iconfont">&#xe601;</span>
+            </el-button>
           </el-tooltip>
+
+          <el-tooltip content="微信" placement="bottom">
+            <el-button type="success" circle disabled>
+              <span class="iconfont">&#xe66f;</span>
+            </el-button>
+          </el-tooltip>
+
         </el-row>
         <div class="loginTip">登录过的用户请沿用之前的登录方式</div>
       </el-form>
@@ -157,7 +170,6 @@
         });
       },
       closeLogin: function() {
-        console.log("关闭窗口");
         this.$emit("closeLoginBox", "");
       }
     }

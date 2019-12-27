@@ -1,0 +1,44 @@
+{
+  "id": "1587051",
+  "name": "mogu_blog",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "339514",
+      "name": "QQ",
+      "font_class": "icon",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "402163",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "882998",
+      "name": "微博",
+      "font_class": "weibo",
+      "unicode": "e6f5",
+      "unicode_decimal": 59125
+    },
+    {
+      "icon_id": "7334992",
+      "name": "github",
+      "font_class": "git",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "10558510",
+      "name": "码云 (1)",
+      "font_class": "mayun",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    }
+  ]
+}
