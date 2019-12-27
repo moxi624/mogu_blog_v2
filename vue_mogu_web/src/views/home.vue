@@ -81,19 +81,19 @@
 
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
         <span class="el-dropdown-link">
-          <img  v-if="!isLogin" src="../../static/images/defaultAvatar.png">
+          <img  v-if="!isLogin" @click="userLogin" src="../../static/images/defaultAvatar.png">
           <img  v-if="isLogin" :src="userInfo.avatar">
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-if="!isLogin" command="goLogin">登录</el-dropdown-item>
-          <el-dropdown-item v-if="isLogin" command="goUserInfo">{{userInfo.nickName}}</el-dropdown-item>
-          <el-dropdown-item v-if="isLogin" command="changePwd">密码修改</el-dropdown-item>
-          <el-dropdown-item v-if="isLogin" command="logout">登出</el-dropdown-item>
+        <el-dropdown-menu slot="dropdown" v-if="isLogin">
+          <el-dropdown-item  command="goUserInfo">主页</el-dropdown-item>
+          <el-dropdown-item  command="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+
+
     </nav>
   </header>
-
+  <LoginBox v-if="showLogin" @closeLoginBox="closeLoginBox"></LoginBox>
   <div>
     <router-view/>
   </div>
@@ -121,13 +121,15 @@
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, deleteUserAccessToken} from "../api/user";
+  import LoginBox from "../components/LoginBox";
 
   export default {
     name: "index",
-    components: {},
+    components: {
+      LoginBox
+    },
     data() {
       return {
-
         info: {},
         saveTitle: "",
         keyword: "",
@@ -136,9 +138,9 @@
         isCdTopVisible: false,
         isVisible: true, //控制web端导航的隐藏和显示
         isLogin: false,
-        userInfo: {
-
-        }, // 用户信息
+        showLogin: false, //显示登录框
+        userInfo: { // 用户信息
+        },
       };
     },
     mounted() {
@@ -165,7 +167,6 @@
     },
     watch: {
       $route(to, from) {
-        // console.log("路由变化", to, from);
         if (to.path == "/list" || to.path == "/about") {
           this.$router.go(0);
         }
@@ -196,11 +197,9 @@
 
       // 从cookie中获取token
       token = getCookie("token")
-      console.log("token", token);
       if (token != undefined) {
         authVerify(token).then(response => {
           if (response.code == "success") {
-            console.log("userInfo", response.data)
             this.isLogin = true;
             this.userInfo = response.data;
           } else {
@@ -268,23 +267,20 @@
       returnTop: function () {
         window.scrollTo(0, 0);
       },
-      userlogin: function () {
-        this.$router.push({path: '/login'})
+      userLogin: function () {
+        this.showLogin = true;
       },
-      userlogout: function () {
+      userLogout: function () {
         deleteUserAccessToken(getCookie("token"));
         delCookie("token");
         let url = window.parent.location.href;
         let haveToken = url.indexOf("?token")
-        console.log("我来了", haveToken);
         if(haveToken != -1) {
           let list = url.split("?token");
-          console.log("我来了2", list);
           this.isLogin = false;
           window.location.href = list[0]
 
         } else {
-          console.log("我来了1");
           window.location.reload()
         }
 
@@ -292,11 +288,8 @@
 
       handleCommand(command) {
         switch (command) {
-          case "goLogin" : {
-            this.userlogin();
-          }; break;
           case "logout" : {
-            this.userlogout();
+            this.userLogout();
           }; break;
           case "goUserInfo" : {
             this.$message('click on item ' + command);
@@ -305,6 +298,9 @@
             this.$message('click on item ' + command);
           }; break;
         }
+      },
+      closeLoginBox: function() {
+        this.showLogin = false;
       }
 
     }
@@ -319,13 +315,14 @@
   .userInfoAvatar {
     width: 35px;
     height: 35px;
-    /*float: right;*/
     position: absolute;
     right: -77px;
     top: 15px;
   }
 
   .userInfoAvatar img {
+    width: 35px;
+    height: 35px;
     border-radius:50%;
   }
 </style>

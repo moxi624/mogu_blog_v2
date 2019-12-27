@@ -100,8 +100,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
 ## 将来要做的事
 
-- [x] SpringBoot版本升级成2.X
-- [ ] 后台首页增加文章贡献，类似于Github中的代码贡献，能强迫自己每天写博客，哈哈哈
+- [ ] IDEA集成Docker实现一键打包部署
 - [ ] 将图片存储在七牛云中
 - [ ] 门户网站增加登录页面
 - [ ] 支持第三方登录
