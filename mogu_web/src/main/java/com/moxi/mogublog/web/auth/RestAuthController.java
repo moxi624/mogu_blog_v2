@@ -1,8 +1,9 @@
 package com.moxi.mogublog.web.auth;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
@@ -17,14 +18,15 @@ import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
@@ -73,7 +75,7 @@ public class RestAuthController {
      * oauth平台中配置的授权回调地址，以本项目为例，在创建gitee授权应用时的回调地址应为：http://127.0.0.1:8603/oauth/callback/gitee
      */
     @RequestMapping("/callback/{source}")
-    public void login(@PathVariable("source") String source, AuthCallback callback, HttpServletResponse httpServletResponse) throws IOException {
+    public void login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         System.out.println("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
@@ -84,14 +86,14 @@ public class RestAuthController {
         Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get("data")));
         Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get("token")));
         String accessToken = token.get("accessToken").toString();
-        User user = userService.insertUserInfo(result);
+        User user = userService.insertUserInfo(request, result);
 
-        if(user != null) {
+        if (user != null) {
             //将从数据库查询的数据缓存到redis中
 //            stringRedisTemplate.opsForValue().set("source", user.getSource());
 //            stringRedisTemplate.opsForValue().set("uuid", user.getUuid());
 
-            stringRedisTemplate.opsForValue().set( accessToken, JsonUtils.objectToJson(user), 60*100, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(accessToken, JsonUtils.objectToJson(user), 60 * 100, TimeUnit.SECONDS);
         }
 
 
@@ -113,9 +115,9 @@ public class RestAuthController {
 
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/verify/{accessToken}")
-    public String verifyUser(@PathVariable("accessToken") String accessToken){
+    public String verifyUser(@PathVariable("accessToken") String accessToken) {
         String userInfo = stringRedisTemplate.opsForValue().get(accessToken);
-        if(StringUtils.isEmpty(userInfo)) {
+        if (StringUtils.isEmpty(userInfo)) {
             return ResultUtil.result(SysConf.ERROR, "token已失效");
         } else {
             Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
@@ -125,8 +127,9 @@ public class RestAuthController {
 
     @ApiOperation(value = "删除accessToken", notes = "删除accessToken")
     @RequestMapping("/delete/{accessToken}")
-    public void deleteUserAccessToken(@PathVariable("accessToken") String accessToken){
+    public String deleteUserAccessToken(@PathVariable("accessToken") String accessToken) {
         stringRedisTemplate.delete(accessToken);
+        return ResultUtil.result(SysConf.SUCCESS, "删除accessToken成功");
     }
 
 
@@ -150,7 +153,7 @@ public class RestAuthController {
             default:
                 break;
         }
-        if (null == authRequest){
+        if (null == authRequest) {
             throw new AuthException("未获取到有效的Auth配置");
         }
         return authRequest;

@@ -15,8 +15,7 @@
         <img src="https://img.shields.io/badge/springboot-2.2.2.RELEASE-green" ></img>
 <img src="https://img.shields.io/badge/SpringCloud-Hoxton.RELEASE-brightgreen" ></img><img src="https://img.shields.io/badge/vue-2.5.17-green" ></img>
 <img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img>
-<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img>
-<img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img></a></p>
+<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 ## 项目介绍
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Nuxt +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
