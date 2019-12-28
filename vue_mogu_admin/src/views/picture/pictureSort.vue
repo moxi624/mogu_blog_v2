@@ -4,36 +4,36 @@
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名称"></el-input>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>	      
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
 	    </div>
 
-    <el-table :data="tableData"  style="width: 100%"> 
+    <el-table :data="tableData"  style="width: 100%">
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
 	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
 	      </template>
 	    </el-table-column>
-		    
+
 	    <el-table-column label="分类名" width="160">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.name }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -47,15 +47,15 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+
+	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
           <el-button @click="handleManager(scope.row)" type="success" size="small">管理图片</el-button>
           <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
-	    </el-table-column>     	    
+	    </el-table-column>
 	  </el-table>
 
 		<!--分页-->
@@ -72,11 +72,11 @@
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
-		  	
+
 		    <el-form-item v-if="isEditForm == true" label="图片分类UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
 		    </el-form-item>
-		    
+
 		   	<el-form-item v-if="isEditForm == false" label="图片分类UID" :label-width="formLabelWidth" style="display: none;">
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
@@ -84,17 +84,17 @@
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
-		    	</div>				
+		    	</div>
 		    </el-form-item>
-		    
+
 		    <el-form-item label="标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
-		    
+
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -367,32 +367,23 @@ export default {
   line-height: 150px;
   text-align: center;
 }
-.img {
-  max-height: 100%;
-  max-width: 100%;
-  vertical-align: middle;
-}
 .imgBody {
   width: 150px;
   height: 150px;
-  /* border: solid 1px #8080ff; */
+  border: solid 2px #ffffff;
   float: left;
-  margin: 30px;
   position: relative;
 }
-.removeFloat {
-  clear: both;
+.uploadImgBody {
+  margin-left: 5px;
+  width: 150px;
+  height: 150px;
+  border: dashed 1px #c0c0c0;
+  float: left;
+  position: relative;
 }
-.imgAll {
-  width: 98%;
-  line-height: 150px;
-  text-align: center;
-  overflow-y: auto;
-}
-.imgLimit {
-  height: 50px;
-  margin-left: 30%;
-  margin-top: 50px;
+.uploadImgBody :hover {
+  border: dashed 1px #00ccff;
 }
 .inputClass {
   position: absolute;
