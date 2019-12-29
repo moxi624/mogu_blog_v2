@@ -31,28 +31,40 @@
         <h3 class="blogtitle">
           <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
         </h3>
+
         <span class="blogpic">
           <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
             <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" alt>
           </a>
         </span>
+
         <p class="blogtext">{{item.summary}}</p>
         <div class="bloginfo">
           <ul>
+
             <li class="author">
+              <span class="iconfont">&#xe60f;</span>
               <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
             </li>
             <li class="lmname" v-if="item.blogSort">
+              <span class="iconfont">&#xe603;</span>
               <a
                 href="javascript:void(0);"
                 @click="goToList(item.blogSort.uid)"
               >{{item.blogSort.sortName}}</a>
             </li>
-            <li class="timer">{{item.createTime}}</li>
+            <li class="createTime">
+              <span class="iconfont">&#xe606;</span>
+              {{item.createTime}}
+            </li>
             <li class="view">
+              <span class="iconfont">&#xe8c7;</span>
               <span>{{item.clickCount}}</span>
             </li>
-            <li class="like">{{item.collectCount}}</li>
+            <li class="like">
+              <span class="iconfont">&#xe663;</span>
+              {{item.collectCount}}
+            </li>
           </ul>
         </div>
       </div>
@@ -404,5 +416,10 @@ export default {
   height: 90px !important;
   -webkit-transform: translate(-45px, -45px) scale(0.45) translate(45px, 45px);
   transform: translate(-45px, -45px) scale(0.45) translate(45px, 45px);
+}
+
+.iconfont {
+  font-size: 15px;
+  margin-right: 2px;
 }
 </style>
