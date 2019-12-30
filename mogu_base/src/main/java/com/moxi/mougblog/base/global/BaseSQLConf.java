@@ -22,5 +22,6 @@ public class BaseSQLConf {
     public static final String USEREMAIL = "email";
     public static final String SOURCE = "source";
     public static final String UUID = "uuid";
+    public static final String URL = "url";
 
 }

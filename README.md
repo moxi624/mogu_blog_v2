@@ -82,6 +82,15 @@
 
 mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
+## Docker容器中的初始密码
+
+- **vue_mogu_admin**：用户：admin，密码：mogu2018
+- **Mysql**：用户：root，密码：mogu2018
+- **Redis**：密码：mogu2018
+- 
+
+
+
 ## 致谢
 
 - 感谢**杨青小姐姐**的博客模板，http://www.yangqq.com/

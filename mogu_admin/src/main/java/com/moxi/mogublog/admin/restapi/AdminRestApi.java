@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -74,8 +75,8 @@ public class AdminRestApi {
         Page<Admin> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-//		queryWrapper.excludeColumns(Admin.class, SysConf.PASS_WORD);
-        queryWrapper.select(Admin.class, i -> !i.getProperty().equals("pass_word"));
+        // 去除密码
+        queryWrapper.select(Admin.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         IPage<Admin> pageList = adminService.page(page, queryWrapper);
         List<Admin> list = pageList.getRecords();
         log.info(list);
@@ -83,24 +84,22 @@ public class AdminRestApi {
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getAvatar())) {
-                fileUids.append(item.getAvatar() + ",");
+                fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
             }
         });
 
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         if (fileUids != null) {
-            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
 
         for (Admin item : list) {
-            //清空密码
-            item.setPassWord("");
 
             //查询出角色信息封装到admin中
             QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
@@ -118,8 +117,8 @@ public class AdminRestApi {
 
             //获取图片
             if (StringUtils.isNotEmpty(item.getAvatar())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), ",");
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
                 pictureUidsTemp.forEach(picture -> {
                     if (pictureMap.get(picture) != null && pictureMap.get(picture) != "") {
                         pictureListTemp.add(pictureMap.get(picture));
@@ -141,7 +140,7 @@ public class AdminRestApi {
                           @ApiParam(name = "uid", value = "管理员uid", required = true) @RequestParam(name = "uid", required = false) String uid) {
 
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         Admin admin = adminService.getById(uid);
@@ -149,7 +148,7 @@ public class AdminRestApi {
         admin.setPassWord(encoder.encode(DEFAULE_PWD));
         admin.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "重置成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "注册管理员")
@@ -163,7 +162,7 @@ public class AdminRestApi {
         String email = registered.getEmail();
 
         if (StringUtils.isEmpty(userName)) {
-            return ResultUtil.result(SysConf.ERROR, "用户名不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         if (StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
@@ -198,7 +197,7 @@ public class AdminRestApi {
 
             //这里需要通过SMS模块，发送邮件告诉初始密码
 
-            return ResultUtil.result(SysConf.SUCCESS, "注册成功");
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
         }
         return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
     }

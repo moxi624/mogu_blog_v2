@@ -9,6 +9,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.*;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -81,7 +83,6 @@ public class IndexRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
     @GetMapping("/getBlogByLevel")
@@ -131,7 +132,7 @@ public class IndexRestApi {
         pageList.setRecords(list);
 
         //将从数据库查询的数据缓存到redis中
-        stringRedisTemplate.opsForValue().set("BOLG_LEVEL:" + level, JsonUtils.objectToJson(list).toString());
+        stringRedisTemplate.opsForValue().set(SysConf.BOLG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString());
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -149,15 +150,14 @@ public class IndexRestApi {
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-//		queryWrapper.excludeColumns(Blog.class, SysConf.CONTENT);
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
 
         list = setBlog(list);
 
-        log.info("返回结果");
+        log.info("获取首页排行博客");
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -177,7 +177,7 @@ public class IndexRestApi {
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
@@ -188,7 +188,7 @@ public class IndexRestApi {
 
         list = setBlog(list);
 
-        log.info("返回结果");
+        log.info("获取首页最新的博客");
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -208,14 +208,14 @@ public class IndexRestApi {
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
 
         list = setBlog(list);
 
-        log.info("返回结果");
+        log.info("按时间戳获取博客");
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -232,7 +232,7 @@ public class IndexRestApi {
         queryWrapper.orderByDesc(SQLConf.SORT);
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
         IPage<Tag> pageList = tagService.page(page, queryWrapper);
-        log.info("返回结果");
+        log.info("获取最热标签");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
@@ -249,17 +249,17 @@ public class IndexRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Link> pageList = linkService.page(page, queryWrapper);
-        log.info("返回结果");
+        log.info("获取友情链接");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
-    @ApiOperation(value = "友情链接点击数", notes = "获取友情链接")
+    @ApiOperation(value = "增加友情链接点击数", notes = "增加友情链接点击数")
     @GetMapping("/addLinkCount")
     public String addLinkCount(HttpServletRequest request,
                                @ApiParam(name = "uid", value = "友情链接UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
 
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         Link link = linkService.getById(uid);
         if (link != null) {
@@ -271,10 +271,10 @@ public class IndexRestApi {
             link.setClickCount(count);
             link.updateById();
         } else {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
-        return ResultUtil.result(SysConf.SUCCESS, "更新点击数成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
 
@@ -287,13 +287,13 @@ public class IndexRestApi {
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
 
         if (StringUtils.isNotEmpty(webConfig.getLogo())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), SysConf.FILE_SEGMENTATION);
             webConfig.setPhotoList(WebUtils.getPicture(pictureList));
         }
 
         //获取支付宝收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), SysConf.FILE_SEGMENTATION);
             if (WebUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));
             }
@@ -301,7 +301,7 @@ public class IndexRestApi {
         }
         //获取微信收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), SysConf.FILE_SEGMENTATION);
             if (WebUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));
             }
@@ -317,12 +317,12 @@ public class IndexRestApi {
                                     @ApiParam(name = "pageName", value = "页面名称", required = false) @RequestParam(name = "pageName", required = true) String pageName) {
 
         if (StringUtils.isEmpty(pageName)) {
-            return ResultUtil.result(SysConf.SUCCESS, "页面名称不能为空");
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.PARAM_INCORRECT);
         }
 
         webVisitService.addWebVisit(null, request, EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
 
-        return ResultUtil.result(SysConf.SUCCESS, "记录成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
 
@@ -339,7 +339,7 @@ public class IndexRestApi {
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 sortUids.add(item.getBlogSortUid());
@@ -351,7 +351,7 @@ public class IndexRestApi {
         String pictureList = null;
 
         if (fileUids != null) {
-            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = new ArrayList<>();
@@ -364,9 +364,9 @@ public class IndexRestApi {
         }
 
 
-        Map<String, BlogSort> sortMap = new HashMap<String, BlogSort>();
-        Map<String, Tag> tagMap = new HashMap<String, Tag>();
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         sortList.forEach(item -> {
             sortMap.put(item.getUid(), item);
@@ -377,7 +377,7 @@ public class IndexRestApi {
         });
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
 
 
@@ -390,7 +390,7 @@ public class IndexRestApi {
 
             //获取标签
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), SysConf.FILE_SEGMENTATION);
                 List<Tag> tagListTemp = new ArrayList<Tag>();
 
                 tagUidsTemp.forEach(tag -> {
@@ -401,7 +401,7 @@ public class IndexRestApi {
 
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
                 List<String> pictureListTemp = new ArrayList<String>();
 
                 pictureUidsTemp.forEach(picture -> {

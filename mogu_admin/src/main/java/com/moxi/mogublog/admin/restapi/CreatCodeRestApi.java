@@ -78,7 +78,7 @@ public class CreatCodeRestApi {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://120.79.70.126:8600//blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"http://picture.moguit.cn//blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -93,7 +93,7 @@ public class CreatCodeRestApi {
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "@mugublog.com\r\n" +
+                        "@muguit.cn\r\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +

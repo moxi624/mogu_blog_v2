@@ -1,9 +1,11 @@
-package com.moxi.mogublog.web.auth;
+package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.global.MessageConf;
+import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
@@ -18,6 +20,8 @@ import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,11 +37,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * 第三方登录认证
+ */
 @RestController
 @RequestMapping("/oauth")
 @Api(value = "认证RestApi", tags = {"AuthRestApi"})
-public class RestAuthController {
+public class AuthRestApi {
+
+    private static Logger log = LogManager.getLogger(IndexRestApi.class);
 
     @Autowired
     private UserService userService;
@@ -49,24 +57,24 @@ public class RestAuthController {
     private String githubClienId;
     @Value(value = "${justAuth.clientSecret.github}")
     private String githubClientSecret;
+    @Value(value = "${data.webSite.url}")
+    private String webSiteUrl;
+    @Value(value = "${data.web.url}")
+    private String moguWebUrl;
+    @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
+    private Long userTokenSurvivalTime;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     @ApiOperation(value = "获取认证", notes = "获取认证")
     @RequestMapping("/render")
     public String renderAuth(String source, HttpServletResponse response) throws IOException {
-        System.out.println("进入render:" + source);
+        log.info("进入render:" + source);
         AuthRequest authRequest = getAuthRequest(source);
         String token = AuthStateUtils.createState();
         String authorizeUrl = authRequest.authorize(token);
-        System.out.println(authorizeUrl);
-
-        stringRedisTemplate.opsForValue().set("token:" + token, token);
-
-//        response.sendRedirect(authorizeUrl);
         Map<String, String> map = new HashMap<>();
-        map.put("token", token);
-        map.put("url", authorizeUrl);
+        map.put(SQLConf.URL, authorizeUrl);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
 
@@ -76,29 +84,24 @@ public class RestAuthController {
      */
     @RequestMapping("/callback/{source}")
     public void login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
-        System.out.println("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
+        log.info("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
         String result = JSONObject.toJSONString(response);
         System.out.println(JSONObject.toJSONString(response));
 
         Map<String, Object> map = JsonUtils.jsonToMap(result);
-        Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get("data")));
-        Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get("token")));
-        String accessToken = token.get("accessToken").toString();
+        Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get(SysConf.DATA)));
+        Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
+        String accessToken = token.get(SysConf.ACCESS_TOKEN).toString();
         User user = userService.insertUserInfo(request, result);
 
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
-//            stringRedisTemplate.opsForValue().set("source", user.getSource());
-//            stringRedisTemplate.opsForValue().set("uuid", user.getUuid());
-
-            stringRedisTemplate.opsForValue().set(accessToken, JsonUtils.objectToJson(user), 60 * 100, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.SECONDS);
         }
 
-
-//        return response;
-        httpServletResponse.sendRedirect("http://localhost:9527/#/?token=" + accessToken);
+        httpServletResponse.sendRedirect(webSiteUrl + "?token=" + accessToken);
     }
 
     @RequestMapping("/revoke/{source}/{token}")
@@ -116,9 +119,9 @@ public class RestAuthController {
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/verify/{accessToken}")
     public String verifyUser(@PathVariable("accessToken") String accessToken) {
-        String userInfo = stringRedisTemplate.opsForValue().get(accessToken);
+        String userInfo = stringRedisTemplate.opsForValue().get("TOKEN:" + accessToken);
         if (StringUtils.isEmpty(userInfo)) {
-            return ResultUtil.result(SysConf.ERROR, "token已失效");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         } else {
             Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
             return ResultUtil.result(SysConf.SUCCESS, map);
@@ -128,33 +131,33 @@ public class RestAuthController {
     @ApiOperation(value = "删除accessToken", notes = "删除accessToken")
     @RequestMapping("/delete/{accessToken}")
     public String deleteUserAccessToken(@PathVariable("accessToken") String accessToken) {
-        stringRedisTemplate.delete(accessToken);
-        return ResultUtil.result(SysConf.SUCCESS, "删除accessToken成功");
+        stringRedisTemplate.delete(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
 
     private AuthRequest getAuthRequest(String source) {
         AuthRequest authRequest = null;
         switch (source) {
-            case "github":
+            case SysConf.GITHUB:
                 authRequest = new AuthGithubRequest(AuthConfig.builder()
                         .clientId(githubClienId)
                         .clientSecret(githubClientSecret)
-                        .redirectUri("http://127.0.0.1:8603/oauth/callback/github")
+                        .redirectUri(moguWebUrl + "/oauth/callback/github")
                         .build());
                 break;
-            case "gitee":
+            case SysConf.GITEE:
                 authRequest = new AuthGiteeRequest(AuthConfig.builder()
                         .clientId(giteeClienId)
                         .clientSecret(giteeClientSecret)
-                        .redirectUri("http://127.0.0.1:8603/oauth/callback/gitee")
+                        .redirectUri(moguWebUrl + "/oauth/callback/gitee")
                         .build());
                 break;
             default:
                 break;
         }
         if (null == authRequest) {
-            throw new AuthException("未获取到有效的Auth配置");
+            throw new AuthException(MessageConf.OPERATION_FAIL);
         }
         return authRequest;
     }

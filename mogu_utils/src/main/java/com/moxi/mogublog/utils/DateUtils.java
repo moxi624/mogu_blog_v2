@@ -567,7 +567,7 @@ public class DateUtils {
     public static List<String> getDayBetweenDates(String begin, String end) {
         Date dBegin = strToDateTime(begin);
         Date dEnd = strToDateTime(end);
-        List<String> lDate = new ArrayList<String>();
+        List<String> lDate = new ArrayList<>();
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         lDate.add(sd.format(dBegin));
         Calendar calBegin = Calendar.getInstance();

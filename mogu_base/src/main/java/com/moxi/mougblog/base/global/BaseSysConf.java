@@ -13,6 +13,8 @@ public class BaseSysConf {
     public final static String STATUS = "status";
     public final static String CREATE_TIME = "createTime";
     public final static String TOKEN = "token";
+    public final static String ACCESS_TOKEN = "accessToken";
+
 
     public final static String CODE = "code";
     public final static String DATA = "data";
@@ -34,5 +36,20 @@ public class BaseSysConf {
     public final static String DELETE = "delete";
     public final static String EXCHANGE_DIRECT = "exchange.direct";
     public final static String MOGU_BLOG = "mogu.blog";
+
+    // redis相关
+    public final static String BLOG_SORT_BY_MONTH = "BLOG_SORT_BY_MONTH";
+    // redis分割符
+    public final static String REDIS_SEGMENTATION = ":";
+    // 月份集合
+    public final static String MONTH_SET = "MONTH_SET";
+    // 博客等级
+    public final static String BOLG_LEVEL = "BOLG_LEVEL";
+    // token令牌
+    public final static String USER_TOEKN = "userToken";
+
+    // 文件分割符
+    public final static String FILE_SEGMENTATION = ",";
+
 
 }

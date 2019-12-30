@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -49,13 +50,13 @@ public class WebConfigRestApi {
 
         //获取图片
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getLogo())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), SysConf.FILE_SEGMENTATION);
             webConfig.setPhotoList(WebUtils.getPicture(pictureList));
         }
 
         //获取支付宝收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), SysConf.FILE_SEGMENTATION);
             if (WebUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));
             }
@@ -63,7 +64,7 @@ public class WebConfigRestApi {
         }
         //获取微信收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
-            String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), SysConf.FILE_SEGMENTATION);
             if (WebUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));
             }
@@ -107,7 +108,7 @@ public class WebConfigRestApi {
             webConfig.setStartComment(webConfigVO.getStartComment());
             webConfigService.updateById(webConfig);
         }
-        return ResultUtil.result(SysConf.SUCCESS, "更新成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 }
 

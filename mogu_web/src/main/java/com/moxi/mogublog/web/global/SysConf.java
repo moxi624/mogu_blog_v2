@@ -14,5 +14,9 @@ public final class SysConf extends BaseSysConf {
     public final static String CONTENT = "content";
     public final static String AVATAR = "avatar";
     public final static String ERROR = "error";
-    public static final Object ADMIN = "admin";
+    public static final String ADMIN = "admin";
+
+    // 用于第三方登录
+    public static final String GITHUB = "github";
+    public static final String GITEE = "gitee";
 }

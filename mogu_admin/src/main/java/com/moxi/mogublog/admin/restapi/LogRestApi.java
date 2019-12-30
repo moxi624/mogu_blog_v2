@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author xzx19950624@qq.com
  * @since 2018年9月24日15:45:18
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @Api(value = "管理员操作日志RestApi", tags = {"LogRestApi"})
 @RequestMapping("/log")

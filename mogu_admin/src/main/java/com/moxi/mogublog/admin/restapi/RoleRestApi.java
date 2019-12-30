@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -84,9 +85,9 @@ public class RoleRestApi {
             role.setCategoryMenuUids(roleVO.getCategoryMenuUids());
             role.setSummary(roleVO.getSummary());
             role.insert();
-            return ResultUtil.result(SysConf.SUCCESS, "新增角色成功");
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
         }
-        return ResultUtil.result(SysConf.ERROR, "角色已存在");
+        return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
     }
 
     @OperationLogger(value = "更新角色信息")
@@ -100,13 +101,13 @@ public class RoleRestApi {
         String uid = roleVO.getUid();
         Role getRole = roleService.getById(uid);
         if (getRole == null) {
-            return ResultUtil.result(SysConf.ERROR, "角色不存在");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         getRole.setRoleName(roleVO.getRoleName());
         getRole.setCategoryMenuUids(roleVO.getCategoryMenuUids());
         getRole.setSummary(roleVO.getSummary());
         getRole.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "更新角色信息成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
 
     }
 
@@ -121,7 +122,7 @@ public class RoleRestApi {
         Role role = roleService.getById(roleVO.getUid());
         role.setStatus(EStatus.DISABLED);
         role.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除角色信息成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
 }

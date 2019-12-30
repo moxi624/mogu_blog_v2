@@ -37,7 +37,6 @@ import java.util.Map;
  * @author xzx19950624@qq.com
  * @since 2018年9月17日16:21:43
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/picture")
 public class PictureRestApi {

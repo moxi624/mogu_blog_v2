@@ -4,6 +4,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -66,7 +67,7 @@ public class LinkRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Link> pageList = linkService.page(page, queryWrapper);
-        log.info("返回结果");
+        log.info("获取友链列表");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
@@ -85,7 +86,7 @@ public class LinkRestApi {
         link.setClickCount(0);
         link.setStatus(EStatus.ENABLE);
         link.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑友链")
@@ -101,7 +102,7 @@ public class LinkRestApi {
         link.setSummary(linkVO.getSummary());
         link.setUrl(linkVO.getUrl());
         link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除友链")
@@ -115,7 +116,7 @@ public class LinkRestApi {
         Link tag = linkService.getById(linkVO.getUid());
         tag.setStatus(EStatus.DISABLED);
         tag.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     @ApiOperation(value = "置顶友链", notes = "置顶友链", response = String.class)
@@ -137,10 +138,10 @@ public class LinkRestApi {
         List<Link> list = pageList.getRecords();
         Link maxSort = list.get(0);
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(link.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
@@ -149,7 +150,6 @@ public class LinkRestApi {
 
         link.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 }
-

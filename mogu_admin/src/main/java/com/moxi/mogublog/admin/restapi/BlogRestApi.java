@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -129,13 +130,13 @@ public class BlogRestApi {
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 sortUids.add(item.getBlogSortUid());
             }
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), SysConf.FILE_SEGMENTATION);
                 for (String itemTagUid : tagUidsTemp) {
                     tagUids.add(itemTagUid);
                 }
@@ -144,7 +145,7 @@ public class BlogRestApi {
         String pictureList = null;
 
         if (fileUids != null) {
-            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
@@ -163,7 +164,7 @@ public class BlogRestApi {
         });
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
 
 
@@ -176,7 +177,7 @@ public class BlogRestApi {
 
             //获取标签
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), SysConf.FILE_SEGMENTATION);
                 List<Tag> tagListTemp = new ArrayList<Tag>();
 
                 tagUidsTemp.forEach(tag -> {
@@ -187,8 +188,8 @@ public class BlogRestApi {
 
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
 
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
@@ -250,7 +251,7 @@ public class BlogRestApi {
         //保存成功后，需要发送消息到solr 和 redis
         updateSolrAndRedis(isSave, blog);
 
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑博客")
@@ -278,12 +279,10 @@ public class BlogRestApi {
         }
 
         //如果是原创，作者为用户的昵称
+        Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
+        blog.setAdminUid(admin.getUid());
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
-            Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
-            if (admin != null) {
-                blog.setAuthor(admin.getNickName());
-                blog.setAdminUid(admin.getUid());
-            }
+            blog.setAuthor(admin.getNickName());
             blog.setArticlesPart(PROJECT_NAME);
         } else {
             blog.setAuthor(blogVO.getAuthor());
@@ -306,7 +305,7 @@ public class BlogRestApi {
         //保存成功后，需要发送消息到solr 和 redis
         updateSolrAndRedis(isSave, blog);
 
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除博客")
@@ -336,11 +335,11 @@ public class BlogRestApi {
             //删除solr索引
             blogSearchService.deleteIndex(collection, blog.getUid());
         }
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     /**
-     * 添加的时候进行判断
+     * 添加时校验
      *
      * @param count
      * @param level
@@ -390,7 +389,7 @@ public class BlogRestApi {
      */
     private void setPhoto(Blog blog) {
         if (StringUtils.isNotEmpty(blog.getFileUid())) {
-            String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), SysConf.FILE_SEGMENTATION);
             List<String> picList = WebUtils.getPicture(pictureList);
             blog.setPhotoList(picList);
         }
@@ -403,6 +402,7 @@ public class BlogRestApi {
      * @param blog
      */
     private void updateSolrAndRedis(Boolean isSave, Blog blog) {
+        // 保存操作，并且文章已设置发布
         if (isSave && EPublish.PUBLISH.equals(blog.getIsPublish())) {
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.ADD);

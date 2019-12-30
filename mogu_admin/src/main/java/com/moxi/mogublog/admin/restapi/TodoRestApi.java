@@ -4,6 +4,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,7 +92,7 @@ public class TodoRestApi {
         todo.setDone(false);
         todo.setAdminUid(adminUid);
         todo.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑代办事项")
@@ -106,13 +108,13 @@ public class TodoRestApi {
         Todo todo = todoService.getById(todoVO.getUid());
 
         if (!todo.getAdminUid().equals(adminUid)) {
-            return ResultUtil.result(SysConf.ERROR, "您无权编辑该内容!");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ACCESS_NO_PRIVILEGE);
         }
 
         todo.setText(todoVO.getText());
         todo.setDone(todoVO.getDone());
         todo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除代办事项")
@@ -128,12 +130,12 @@ public class TodoRestApi {
         Todo todo = todoService.getById(todoVO.getUid());
 
         if (!todo.getAdminUid().equals(adminUid)) {
-            return ResultUtil.result(SysConf.ERROR, "您无权删除该内容!");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DATA_NO_PRIVILEGE);
         }
 
         todo.setStatus(EStatus.DISABLED);
         todo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     @OperationLogger(value = "批量编辑代办事项")
@@ -151,7 +153,7 @@ public class TodoRestApi {
         } else {
             todoService.toggleAll(0, adminUid);
         }
-        return ResultUtil.result(SysConf.SUCCESS, "批量更新成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
 
