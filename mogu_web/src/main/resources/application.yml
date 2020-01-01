@@ -5,6 +5,7 @@ server:
 #阿里大于
 templateCode: SMS_XXXXXX #短信模板编号
 signName: 蘑菇博客
+PROJECT_NAME_EN: moguBlog
 
 moguBlog:
   email: mogublog@163.com

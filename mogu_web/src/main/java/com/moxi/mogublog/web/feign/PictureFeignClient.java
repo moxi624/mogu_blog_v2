@@ -1,6 +1,7 @@
 package com.moxi.mogublog.web.feign;
 
 import com.moxi.mogublog.web.config.FeignConfiguration;
+import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,14 @@ public interface PictureFeignClient {
      */
     @RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)
     public String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);
+
+    /**
+     * 通过URL List上传图片
+     * @param fileVO
+     * @return
+     */
+    @RequestMapping(value = "/file/uploadPicsByUrl", method = RequestMethod.POST)
+    public String uploadPicsByUrl(FileVO fileVO);
 
     @RequestMapping(value = "/file/hello", method = RequestMethod.GET)
     public String hello();

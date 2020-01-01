@@ -26,17 +26,20 @@ public class BlogListener {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+// TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
 
     @RabbitListener(queues = "mogu.blog")
     public void updateRedis(Map<String, String> map) {
 
         if (map != null) {
             String level = map.get(SysConf.LEVEL);
-            //从Redis中获取内容
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:1", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:2", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:3", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:4", "");
+            //从Redis清空对应的数据
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
+            stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
+            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
 
             String createTime = map.get(SysConf.CREATE_TIME);
 

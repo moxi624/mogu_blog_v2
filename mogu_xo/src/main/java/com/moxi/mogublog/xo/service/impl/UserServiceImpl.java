@@ -44,7 +44,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
                 exist = true;
             }
         } else {
-            System.out.println("未获取道uuid或source");
+            System.out.println("未获取到uuid或source");
             return null;
         }
 

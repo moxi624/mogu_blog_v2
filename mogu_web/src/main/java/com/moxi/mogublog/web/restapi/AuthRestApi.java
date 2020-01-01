@@ -1,14 +1,14 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.zhyd.oauth.config.AuthConfig;
@@ -33,8 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,8 +62,12 @@ public class AuthRestApi {
     private String moguWebUrl;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
+    @Value(value = "${PROJECT_NAME_EN}")
+    private String PROJECT_NAME_EN;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取认证", notes = "获取认证")
     @RequestMapping("/render")
@@ -88,13 +91,78 @@ public class AuthRestApi {
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
         String result = JSONObject.toJSONString(response);
-        System.out.println(JSONObject.toJSONString(response));
-
         Map<String, Object> map = JsonUtils.jsonToMap(result);
         Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get(SysConf.DATA)));
         Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
         String accessToken = token.get(SysConf.ACCESS_TOKEN).toString();
-        User user = userService.insertUserInfo(request, result);
+
+        Boolean exist = false;
+        User user = null;
+        //判断user是否存在
+        if (data.get(SysConf.UUID) != null && data.get(SysConf.SOURCE) != null) {
+            user = userService.getUserBySourceAnduuid(data.get(SysConf.SOURCE).toString(), data.get(SysConf.UUID).toString());
+            if(user != null) {
+                exist = true;
+            } else {
+                user = new User();
+            }
+
+        } else {
+            return ;
+        }
+        if (data.get(SysConf.EMAIL) != null) {
+            String email = data.get(SysConf.EMAIL).toString();
+            user.setEmail(email);
+        }
+        if (data.get(SysConf.AVATAR) != null) {
+            // 获取到头像，然后上传到自己服务器
+            FileVO fileVO = new FileVO();
+            fileVO.setAdminUid("uid00000000000000000000000000000000");
+            fileVO.setUserUid(user.getUid());
+            fileVO.setProjectName(SysConf.BLOG);
+            fileVO.setSortName(SysConf.ADMIN);
+            List<String> urlList = new ArrayList<>();
+            urlList.add(data.get(SysConf.AVATAR).toString());
+            fileVO.setUrlList(urlList);
+            String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
+            Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
+            if(resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
+                if(resultMap.get(SysConf.DATA) != null) {
+                    List<Map<String, Object>> listMap = (List<Map<String, Object>>)resultMap.get(SysConf.DATA);
+                    if(listMap != null && listMap.size() > 0) {
+                        Map<String,Object> pictureMap = listMap.get(0);
+                        if(pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                            user.setAvatar(pictureMap.get(SysConf.UID).toString());
+                            user.setPhotoUrl(pictureMap.get(SysConf.PIC_URL).toString());
+                        }
+                    }
+                }
+            }
+        }
+        if (data.get(SysConf.NICKNAME) != null) {
+            user.setNickName(data.get(SysConf.NICKNAME).toString());
+        }
+        if(user.getLoginCount() == null) {
+            user.setLoginCount(0);
+        } else {
+            user.setLoginCount(user.getLoginCount() + 1);
+        }
+
+        user.setLastLoginTime(new Date());
+        user.setLastLoginIp(IpUtils.getIpAddr(request));
+        if (exist) {
+            user.updateById();
+        } else {
+            user.setUuid(data.get(SysConf.UUID).toString());
+            user.setSource(data.get(SysConf.SOURCE).toString());
+            user.setUserName(PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid()));
+            //产生(0,999999]之间的随机数
+            Integer randNum = (int) (Math.random() * (999999) + 1);
+            //进行六位数补全
+            String workPassWord = String.format("%06d", randNum);
+            user.setPassWord(workPassWord);
+            user.insert();
+        }
 
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
@@ -119,7 +187,7 @@ public class AuthRestApi {
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/verify/{accessToken}")
     public String verifyUser(@PathVariable("accessToken") String accessToken) {
-        String userInfo = stringRedisTemplate.opsForValue().get("TOKEN:" + accessToken);
+        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
         if (StringUtils.isEmpty(userInfo)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         } else {

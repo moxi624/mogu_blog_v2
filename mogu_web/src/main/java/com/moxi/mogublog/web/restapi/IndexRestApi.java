@@ -83,7 +83,7 @@ public class IndexRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
     @GetMapping("/getBlogByLevel")
     public String getBlogByLevel(HttpServletRequest request,
@@ -127,12 +127,49 @@ public class IndexRestApi {
         IPage<Blog> pageList = blogService.getBlogPageByLevel(page, level);
         List<Blog> list = pageList.getRecords();
 
+        // 一级推荐或者二级推荐没有内容时，自动把top5填充至一级推荐和二级推荐中
+        if((level == SysConf.ONE || level == SysConf.TWO) && list.size() == 0) {
+            QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+            Page<Blog> hotPage = new Page<>();
+            page.setCurrent(1);
+            page.setSize(BLOG_HOT_COUNT);
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+            queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+            queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+            IPage<Blog> hotPageList = blogService.page(page, queryWrapper);
+            List<Blog> hotBlogList = hotPageList.getRecords();
+            List<Blog> secondBlogList = new ArrayList<>();
+            List<Blog> firstBlogList = new ArrayList<>();
+            for(int a=0; a<hotBlogList.size(); a++) {
+                // 当推荐大于两个的时候
+                if((hotBlogList.size() - firstBlogList.size()) > BLOG_SECOND_COUNT) {
+                    firstBlogList.add(hotBlogList.get(a));
+                } else {
+                    secondBlogList.add(hotBlogList.get(a));
+                }
+            }
+
+            firstBlogList = setBlog(firstBlogList);
+            secondBlogList = setBlog(secondBlogList);
+
+            //将从数据库查询的数据缓存到redis中
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList).toString());
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList).toString());
+
+            switch (level) {
+                case SysConf.ONE: {pageList.setRecords(firstBlogList);};break;
+                case SysConf.TWO: {pageList.setRecords(secondBlogList);};break;
+            }
+            return ResultUtil.result(SysConf.SUCCESS, pageList);
+        }
+
         list = setBlog(list);
 
         pageList.setRecords(list);
 
         //将从数据库查询的数据缓存到redis中
-        stringRedisTemplate.opsForValue().set(SysConf.BOLG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString());
+        stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString());
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -140,6 +177,20 @@ public class IndexRestApi {
     @ApiOperation(value = "获取首页排行博客", notes = "获取首页排行博客")
     @GetMapping("/getHotBlog")
     public String getHotBlog(HttpServletRequest request) {
+
+        log.info("获取首页排行博客");
+
+        //从Redis中获取内容
+        String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.HOT_BLOG);
+
+        //判断redis中是否有文章
+        if (StringUtils.isNotEmpty(jsonResult)) {
+            List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+            IPage pageList = new Page();
+            pageList.setRecords(list);
+            log.info("从Redis中返回最新博客");
+            return ResultUtil.result(SysConf.SUCCESS, pageList);
+        }
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();
@@ -157,7 +208,9 @@ public class IndexRestApi {
 
         list = setBlog(list);
 
-        log.info("获取首页排行博客");
+        //将从热门博客缓存到redis中
+        stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, JsonUtils.objectToJson(list).toString());
+
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -168,10 +221,26 @@ public class IndexRestApi {
                              @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                              @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
+        log.info("获取首页最新的博客");
+
+        // 只缓存第一页的内容
+        if(currentPage == 1L) {
+            //从Redis中获取内容
+            String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.NEW_BLOG);
+
+            //判断redis中是否有文章
+            if (StringUtils.isNotEmpty(jsonResult)) {
+                log.info("从Redis中返回最新博客");
+                List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+                IPage pageList = new Page();
+                pageList.setRecords(list);
+                return ResultUtil.result(SysConf.SUCCESS, pageList);
+            }
+        }
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
-        page.setSize(pageSize);
+        page.setSize(BLOG_NEW_COUNT);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
@@ -188,7 +257,11 @@ public class IndexRestApi {
 
         list = setBlog(list);
 
-        log.info("获取首页最新的博客");
+        //将从最新博客缓存到redis中
+        if(currentPage == 1L) {
+            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString());
+            log.info("将数据缓存至Redis中");
+        }
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -226,7 +299,7 @@ public class IndexRestApi {
 
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         Page<Tag> page = new Page<>();
-        page.setCurrent(0);
+        page.setCurrent(1);
         page.setSize(BLOG_HOT_TAG_COUNT);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
@@ -242,7 +315,7 @@ public class IndexRestApi {
                           @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                           @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<Link>();
+        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
         Page<Link> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
@@ -334,8 +407,8 @@ public class IndexRestApi {
      */
     private List<Blog> setBlog(List<Blog> list) {
         final StringBuffer fileUids = new StringBuffer();
-        List<String> sortUids = new ArrayList<String>();
-        List<String> tagUids = new ArrayList<String>();
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
@@ -402,7 +475,7 @@ public class IndexRestApi {
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
                 List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureListTemp = new ArrayList<>();
 
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));

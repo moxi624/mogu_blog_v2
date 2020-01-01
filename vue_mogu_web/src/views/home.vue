@@ -82,7 +82,8 @@
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
         <span class="el-dropdown-link">
           <img  v-if="!isLogin" @click="userLogin" src="../../static/images/defaultAvatar.png">
-          <img  v-if="isLogin" :src="userInfo.avatar">
+          <img  v-if="isLogin&&userInfo.photoUrl!=undefined"  :src="PICTURE_HOST + userInfo.photoUrl">
+          <img  v-if="isLogin&&userInfo.photoUrl==undefined"  src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>
         <el-dropdown-menu slot="dropdown" v-if="isLogin">
           <el-dropdown-item  command="goUserInfo">主页</el-dropdown-item>
@@ -130,6 +131,7 @@
     },
     data() {
       return {
+        PICTURE_HOST: process.env.PICTURE_HOST,
         info: {},
         saveTitle: "",
         keyword: "",
@@ -204,6 +206,7 @@
             this.userInfo = response.data;
           } else {
             this.isLogin = false;
+            delCookie("token");
           }
         });
       } else {

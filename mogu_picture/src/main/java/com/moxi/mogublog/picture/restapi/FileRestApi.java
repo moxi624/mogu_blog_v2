@@ -12,17 +12,24 @@ import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 
 /**
@@ -62,14 +69,45 @@ public class FileRestApi {
             ext = StringUtils.substring(fileName, fileName.lastIndexOf(".") + 1);
         }
         ext = ext.toLowerCase();
-        if (ext == null || ext.length() < 1)
+        if (ext == null || ext.length() < 1) {
             ext = "jpg";
+        }
 
         return ext;
     }
 
+    @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String hello() {
+    public String hello(String urlString, int i) throws IOException {
+        // 构造URL
+        URL url = new URL(urlString);
+        // 打开连接
+        URLConnection con = url.openConnection();
+        // 输入流
+        InputStream inputStream = null;
+        // 当获取的相片无法正常显示的时候，需要给一个默认图片
+        try {
+            inputStream = con.getInputStream();
+        } catch (Exception exception) {
+            return ResultUtil.result(SysConf.ERROR, "无法获取头像");
+        }
+
+        // 1K的数据缓冲
+        byte[] bs = new byte[1024];
+        // 读取到的数据长度
+        int len;
+        // 输出的文件流
+        String filename = "D:\\" + i + ".jpg";  //下载路径及下载图片名称
+        File file = new File(filename);
+        FileOutputStream os = new FileOutputStream(file, true);
+        // 开始读取
+        while ((len = inputStream.read(bs)) != -1) {
+            os.write(bs, 0, len);
+        }
+        System.out.println(i);
+        // 完毕，关闭所有链接
+        os.close();
+        inputStream.close();
         return "hello";
     }
 
@@ -311,5 +349,134 @@ public class FileRestApi {
         }
         return ResultUtil.result(SysConf.ERROR, "请上传图片");
     }
+
+    @ApiOperation(value = "通过URL上传图片", notes = "通过URL上传图片")
+    @PostMapping("/uploadPicsByUrl")
+    public synchronized Object uploadPicsByUrl(@Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
+
+        String userUid = fileVO.getUserUid();
+        String adminUid = fileVO.getAdminUid();
+        String projectName = fileVO.getProjectName();
+        String sortName = fileVO.getSortName();
+        List<String> urlList = fileVO.getUrlList();
+
+        //projectName现在默认base
+        if (StringUtils.isEmpty(projectName)) {
+            projectName = "base";
+        }
+
+        //这里可以检测用户上传，如果不是网站的用户或会员就不能调用
+        if (StringUtils.isEmpty(userUid) && StringUtils.isEmpty(adminUid)) {
+            return ResultUtil.result(SysConf.ERROR, "请先注册");
+        } else {
+
+        }
+
+        log.info("####### fileSorts" + projectName + " ###### " + sortName);
+
+        QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.SORT_NAME, sortName);
+        queryWrapper.eq(SQLConf.PROJECT_NAME, projectName);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        List<FileSort> fileSorts = fileSortService.list(queryWrapper);
+
+        System.out.println("fileSorts" + JsonUtils.objectToJson(fileSorts));
+
+        FileSort fileSort = null;
+        if (fileSorts.size() > 0) {
+            fileSort = fileSorts.get(0);
+            log.info("====fileSort====" + JsonUtils.objectToJson(fileSort));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "文件不被允许上传");
+        }
+
+        String sortUrl = fileSort.getUrl();
+
+        //判断url是否为空，如果为空，使用默认
+        if (StringUtils.isEmpty(sortUrl)) {
+            sortUrl = "base/common/";
+        } else {
+            sortUrl = fileSort.getUrl();
+        }
+
+        List<com.moxi.mogublog.picture.entity.File> lists = new ArrayList<>();
+
+        //文件上传
+        if (urlList != null && urlList.size() > 0) {
+            for (String itemUrl : urlList) {
+
+                //获取新文件名(默认为jpg)
+                String newFileName = String.valueOf(System.currentTimeMillis() + ".jpg");
+
+                //文件绝对路径
+                String newPath = path + sortUrl + "/jpg/" + DateUtils.getYears() + "/"
+                        + DateUtils.getMonth() + "/" + DateUtils.getDay() + "/";
+                //文件相对路径
+                String picurl = sortUrl + "/jpg/" + DateUtils.getYears() + "/"
+                        + DateUtils.getMonth() + "/" + DateUtils.getDay() + "/" + newFileName;
+                String saveUrl = newPath + newFileName;
+                log.info("newPath:" + newPath);
+                log.info("saveUrl:" + saveUrl);
+
+                // 判断文件是否存在
+                File file1 = new File(newPath);
+                if (!file1.exists()) {
+                    file1.mkdirs();
+                }
+                try {
+
+                    // 构造URL
+                    URL url = new URL(itemUrl);
+
+                    // 打开连接
+                    URLConnection con = url.openConnection();
+
+                    // 输入流
+                    InputStream inputStream = null;
+
+                    // 当获取的相片无法正常显示的时候，需要给一个默认图片
+                    inputStream = con.getInputStream();
+
+                    // 1K的数据缓冲
+                    byte[] bs = new byte[1024];
+                    // 读取到的数据长度
+                    int len;
+
+                    File file = new File(saveUrl);
+                    FileOutputStream os = new FileOutputStream(file, true);
+                    // 开始读取
+                    while ((len = inputStream.read(bs)) != -1) {
+                        os.write(bs, 0, len);
+                    }
+                    // 完毕，关闭所有链接
+                    os.close();
+                    inputStream.close();
+
+                } catch (Exception e) {
+                    log.info("==上传文件异常===url:" + saveUrl + "-----");
+                    e.printStackTrace();
+                    return ResultUtil.result(SysConf.ERROR, "文件上传失败");
+                }
+                com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
+
+                file.setCreateTime(new Date(System.currentTimeMillis()));
+                file.setFileSortUid(fileSort.getUid());
+                file.setFileOldName(itemUrl);
+                file.setFileSize(0L);
+                file.setPicExpandedName("jpg");
+                file.setPicName(newFileName);
+                file.setPicUrl(picurl);
+                file.setStatus(EStatus.ENABLE);
+                file.setUserUid(userUid);
+                file.setAdminUid(adminUid);
+                fileService.save(file);
+                lists.add(file);
+            }
+            //保存成功返回数据
+            return ResultUtil.result(SysConf.SUCCESS, lists);
+        }
+        return ResultUtil.result(SysConf.ERROR, "请上传图片");
+    }
+
 }
 
