@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -149,9 +148,9 @@ public class TodoRestApi {
         String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
 
         if (todoVO.getDone()) {
-            todoService.toggleAll(1, adminUid);
+            todoService.toggleAll(SysConf.ONE, adminUid);
         } else {
-            todoService.toggleAll(0, adminUid);
+            todoService.toggleAll(SysConf.ZERO, adminUid);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
