@@ -54,17 +54,17 @@ jobs:
     - name: move_to_files
       run: |
         mkdir -p transfer_files
-        mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
-        mv ./mogu_sms/target/mogu_sms-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_sms-0.0.1-SNAPSHOT.jar
-        mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
-        mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
-        mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_web-0.0.1-SNAPSHOT.jar
-        mv ./mogu_blog_web/dist ./tranfer_files/web_dist
+        mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
+        mv ./mogu_sms/target/mogu_sms-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar
+        mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
+        mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
+        mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
+        mv ./mogu_blog_web/dist ./transfer_files/web_dist
         mv ./mogu_blog_admin/dist ./transfer_files/admin_dist
     - name: scp
       uses: garygrossgarten/github-action-scp@release
       with:
-        local: ./tranfer_files
+        local: ./transfer_files
         remote: /home/
         host: ${{ secrets.DOCKER_IP }}
         username: ${{ secrets.DOCKER_ID }}
@@ -79,19 +79,19 @@ jobs:
         port: ${{ secrets.DOCKER_PORT }}
         script: |
           mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
-          mv /home/tranfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
           mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
-          mv /home/tranfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
           mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
-          mv /home/tranfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
           mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
-          mv /home/tranfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
           mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
-          mv /home/tranfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
           mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
-          mv /home/tranfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
+          mv /home/transfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
           mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
-          mv /home/tranfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
+          mv /home/transfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
     - name: start_eureka
       uses: appleboy/ssh-action@master
       with:
