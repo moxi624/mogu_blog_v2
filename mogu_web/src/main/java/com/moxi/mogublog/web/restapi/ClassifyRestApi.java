@@ -64,7 +64,7 @@ public class ClassifyRestApi {
      * @date 2018年11月6日下午8:57:48
      */
 
-    @ApiOperation(value = "分类", notes = "分类")
+    @ApiOperation(value = "获取分类的信息", notes = "获取分类的信息")
     @GetMapping("/getBlogSortList")
     public String getBlogSortList(HttpServletRequest request) {
 
@@ -72,7 +72,7 @@ public class ClassifyRestApi {
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
-        return ResultUtil.result("success", blogSortList);
+        return ResultUtil.result(SysConf.SUCCESS, blogSortList);
     }
 
     @ApiOperation(value = "通过blogUid获取文章", notes = "通过blogUid获取文章")
@@ -83,13 +83,13 @@ public class ClassifyRestApi {
                                           @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         if (StringUtils.isEmpty(blogSortUid)) {
-            return ResultUtil.result("error", "传入BlogUid不能为空");
+            return ResultUtil.result(SysConf.ERROR, "传入BlogUid不能为空");
         }
 
         //增加点击记录
         BlogSort blogSort = blogSortService.getById(blogSortUid);
         if (blogSort == null) {
-            return ResultUtil.result("error", "BlogSort不存在");
+            return ResultUtil.result(SysConf.ERROR, "BlogSort不存在");
         }
         webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
 
@@ -105,14 +105,14 @@ public class ClassifyRestApi {
         queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
 
         //给博客增加标签和分类
         List<Blog> list = setBlog(pageList.getRecords());
         pageList.setRecords(list);
 
-        return ResultUtil.result("success", pageList);
+        return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
     /**
@@ -123,12 +123,12 @@ public class ClassifyRestApi {
      */
     private List<Blog> setBlog(List<Blog> list) {
         final StringBuffer fileUids = new StringBuffer();
-        List<String> sortUids = new ArrayList<String>();
-        List<String> tagUids = new ArrayList<String>();
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 sortUids.add(item.getBlogSortUid());
@@ -147,9 +147,9 @@ public class ClassifyRestApi {
             tagList = tagService.listByIds(tagUids);
         }
 
-        Map<String, BlogSort> sortMap = new HashMap<String, BlogSort>();
-        Map<String, Tag> tagMap = new HashMap<String, Tag>();
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         sortList.forEach(item -> {
             sortMap.put(item.getUid(), item);
@@ -167,8 +167,8 @@ public class ClassifyRestApi {
             }
             //获取标签
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
-                List<Tag> tagListTemp = new ArrayList<Tag>();
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), SysConf.FILE_SEGMENTATION);
+                List<Tag> tagListTemp = new ArrayList<>();
                 tagUidsTemp.forEach(tag -> {
                     tagListTemp.add(tagMap.get(tag));
                 });

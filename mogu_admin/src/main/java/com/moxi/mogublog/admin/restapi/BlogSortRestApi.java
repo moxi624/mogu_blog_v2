@@ -4,6 +4,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -89,7 +90,7 @@ public class BlogSortRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         BlogSort tempSort = blogSortService.getOne(queryWrapper);
         if (tempSort != null) {
-            return ResultUtil.result(SysConf.ERROR, "该分类已经存在");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
         }
 
         BlogSort blogSort = new BlogSort();
@@ -97,7 +98,7 @@ public class BlogSortRestApi {
         blogSort.setSortName(blogSortVO.getSortName());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑博客分类")
@@ -118,7 +119,7 @@ public class BlogSortRestApi {
             queryWrapper.eq(SQLConf.SORT_NAME, blogSortVO.getSortName());
             BlogSort tempSort = blogSortService.getOne(queryWrapper);
             if (tempSort != null) {
-                return ResultUtil.result(SysConf.ERROR, "该分类已经存在");
+                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
             }
         }
 
@@ -126,7 +127,7 @@ public class BlogSortRestApi {
         blogSort.setSortName(blogSortVO.getSortName());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除博客分类")
@@ -140,7 +141,7 @@ public class BlogSortRestApi {
         BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
         blogSort.setStatus(EStatus.DISABLED);
         blogSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)
@@ -163,10 +164,10 @@ public class BlogSortRestApi {
         BlogSort maxSort = list.get(0);
 
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(blogSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
@@ -175,7 +176,7 @@ public class BlogSortRestApi {
 
         blogSort.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     @OperationLogger(value = "通过点击量排序博客分类")
@@ -184,17 +185,20 @@ public class BlogSortRestApi {
     public String blogSortByClickCount() {
 
         QueryWrapper<BlogSort> queryWrapper = new QueryWrapper();
+
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         // 按点击从高到低排序
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+
         List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
+
         // 设置初始化最大的sort值
         Integer maxSort = blogSortList.size();
         for (BlogSort item : blogSortList) {
             item.setSort(item.getClickCount());
             item.updateById();
         }
-        return ResultUtil.result(SysConf.SUCCESS, "排序成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     /**
@@ -223,7 +227,7 @@ public class BlogSortRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         // 过滤content字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> blogList = blogService.list(queryWrapper);
 
         blogList.forEach(item -> {
@@ -241,7 +245,7 @@ public class BlogSortRestApi {
             item.updateById();
         });
 
-        return ResultUtil.result(SysConf.SUCCESS, "排序成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 }
 

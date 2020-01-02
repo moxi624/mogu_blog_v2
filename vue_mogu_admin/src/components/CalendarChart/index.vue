@@ -23,7 +23,6 @@
       initDate: function() {
 
         getBlogContributeCount().then(response => {
-          console.log("我来啦", response.data.blogContributeCount);
           if(response.code == "success") {
 
             var contributeDate = response.data.contributeDate;

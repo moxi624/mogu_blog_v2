@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
@@ -69,7 +70,7 @@ public class SortRestApi {
     public String getSortList(HttpServletRequest request) {
 
         //从Redis中获取内容
-        String monthResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
+        String monthResult = stringRedisTemplate.opsForValue().get(SysConf.MONTH_SET);
 
         //判断redis中时候包含归档的内容
         if (StringUtils.isNotEmpty(monthResult)) {
@@ -81,10 +82,10 @@ public class SortRestApi {
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
         //给博客增加标签和分类
@@ -115,13 +116,13 @@ public class SortRestApi {
 
         // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
         map.forEach((key, value) -> {
-            stringRedisTemplate.opsForValue().set("BOLG_SORT_BY_MONTH:" + key, JsonUtils.objectToJson(value).toString());
+            stringRedisTemplate.opsForValue().set( SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
         });
 
         //将从数据库查询的数据缓存到redis中
-        stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet).toString());
+        stringRedisTemplate.opsForValue().set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
 
-        return ResultUtil.result("success", monthSet);
+        return ResultUtil.result(SysConf.SUCCESS, monthSet);
     }
 
     @ApiOperation(value = "通过月份获取文章", notes = "通过月份获取文章")
@@ -130,14 +131,14 @@ public class SortRestApi {
                                     @ApiParam(name = "monthDate", value = "归档的日期", required = false) @RequestParam(name = "monthDate", required = false) String monthDate) {
 
         if (StringUtils.isEmpty(monthDate)) {
-            return ResultUtil.result("error", "传入日期不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         //增加点击记录
         webVisitService.addWebVisit(null, request, EBehavior.VISIT_SORT.getBehavior(), null, monthDate);
 
         //从Redis中获取内容
-        String contentResult = stringRedisTemplate.opsForValue().get("BOLG_SORT_BY_MONTH:" + monthDate);
+        String contentResult = stringRedisTemplate.opsForValue().get(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + monthDate);
 
         //判断redis中时候包含该日期下的文章
         if (StringUtils.isNotEmpty(contentResult)) {
@@ -151,7 +152,7 @@ public class SortRestApi {
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         //因为首页并不需要显示内容，所以需要排除掉内容字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
         //给博客增加标签和分类
@@ -181,13 +182,13 @@ public class SortRestApi {
 
         // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
         map.forEach((key, value) -> {
-            stringRedisTemplate.opsForValue().set("BOLG_SORT_BY_MONTH:" + key, JsonUtils.objectToJson(value).toString());
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION  + key, JsonUtils.objectToJson(value).toString());
         });
 
         //将从数据库查询的数据缓存到redis中
-        stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet).toString());
+        stringRedisTemplate.opsForValue().set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
 
-        return ResultUtil.result("success", map.get(monthDate));
+        return ResultUtil.result(SysConf.SUCCESS, map.get(monthDate));
     }
 
     /**
@@ -203,7 +204,7 @@ public class SortRestApi {
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 sortUids.add(item.getBlogSortUid());
@@ -222,9 +223,9 @@ public class SortRestApi {
             tagList = tagService.listByIds(tagUids);
         }
 
-        Map<String, BlogSort> sortMap = new HashMap<String, BlogSort>();
-        Map<String, Tag> tagMap = new HashMap<String, Tag>();
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         sortList.forEach(item -> {
             sortMap.put(item.getUid(), item);
@@ -242,7 +243,7 @@ public class SortRestApi {
             }
             //获取标签
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), SysConf.FILE_SEGMENTATION);
                 List<Tag> tagListTemp = new ArrayList<Tag>();
                 tagUidsTemp.forEach(tag -> {
                     tagListTemp.add(tagMap.get(tag));

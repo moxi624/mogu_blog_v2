@@ -8,10 +8,8 @@ import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.AdminRole;
 import com.moxi.mogublog.xo.entity.CategoryMenu;
 import com.moxi.mogublog.xo.entity.Role;
-import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
@@ -48,9 +46,6 @@ public class LoginRestApi {
 
     @Autowired
     private JwtHelper jwtHelper;
-
-    @Autowired
-    private AdminRoleService adminRoleService;
 
     @Autowired
     private CategoryMenuService categoryMenuService;
@@ -98,16 +93,9 @@ public class LoginRestApi {
             //密码错误，返回提示
             return ResultUtil.result(SysConf.ERROR, "用户名或密码错误");
         }
-        //根据admin获取账户拥有的角色uid集合
-        QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(SQLConf.ADMINUID, admin.getUid());
-        List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
-        List<String> roleUids = new ArrayList<>();
-        for (AdminRole adminRole : adminRoleList) {
-            String roleUid = adminRole.getRoleUid();
-            roleUids.add(roleUid);
-        }
 
+        List<String> roleUids = new ArrayList<>();
+        roleUids.add(admin.getRoleUid());
         List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
         String roleNames = null;
         for (Role role : roles) {
@@ -141,16 +129,12 @@ public class LoginRestApi {
     public String info(HttpServletRequest request,
                        @ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
 
-        if (request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
-            return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
-        }
-        Map<String, Object> map = new HashMap<String, Object>();
-
+        Map<String, Object> map = new HashMap<>();
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
         map.put(SysConf.TOKEN, token);
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), SysConf.FILE_SEGMENTATION);
             admin.setPhotoList(WebUtils.getPicture(pictureList));
 
             List<String> list = WebUtils.getPicture(pictureList);
@@ -162,23 +146,14 @@ public class LoginRestApi {
             }
         }
 
-        QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<AdminRole>();
-        queryWrapper.eq(SQLConf.ADMINUID, admin.getUid());
-        List<AdminRole> adminRoleList = adminRoleService.list(queryWrapper);
 
         //加载这些角色所能访问的菜单页面列表
-
         //1)获取该管理员所有角色
         List<String> roleUid = new ArrayList<>();
-        for (AdminRole adminRole : adminRoleList) {
-            if (adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
-                roleUid.add(adminRole.getRoleUid());
-            }
-        }
-
+        roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
 
-        map.put("roles", roleList);
+        map.put(SysConf.ROLES, roleList);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
 
@@ -186,27 +161,13 @@ public class LoginRestApi {
     @GetMapping(value = "/getMenu")
     public String getMenu(HttpServletRequest request) {
 
-        if (request.getAttribute(SysConf.ADMIN_UID) == null || request.getAttribute(SysConf.ADMIN_UID) == "") {
-            return ResultUtil.result(SysConf.ERROR, "登录失效，请重新登录");
-        }
         Map<String, Object> map = new HashMap<>();
-
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 
-        QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.ADMINUID, admin.getUid());
-        List<AdminRole> adminRoleList = adminRoleService.list(queryWrapper);
-
         //加载这些角色所能访问的菜单页面列表
-
         //1)获取该管理员所有角色
         List<String> roleUid = new ArrayList<>();
-        for (AdminRole adminRole : adminRoleList) {
-            if (adminRole != null && StringUtils.isNotEmpty(adminRole.getRoleUid())) {
-                roleUid.add(adminRole.getRoleUid());
-            }
-        }
-
+        roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
 
         List<String> categoryMenuUids = new ArrayList<>();
@@ -222,8 +183,8 @@ public class LoginRestApi {
 
         Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
 
-        List<CategoryMenu> childCategoryMenuList = new ArrayList<CategoryMenu>();
-        List<String> parentCategoryMenuUids = new ArrayList<String>();
+        List<CategoryMenu> childCategoryMenuList = new ArrayList<>();
+        List<String> parentCategoryMenuUids = new ArrayList<>();
 
         categoryMenuList.forEach(item -> {
 
@@ -239,12 +200,12 @@ public class LoginRestApi {
         });
 
         Collection<CategoryMenu> parentCategoryMenuList = categoryMenuService.listByIds(parentCategoryMenuUids);
-        List<CategoryMenu> list = new ArrayList<CategoryMenu>(parentCategoryMenuList);
+        List<CategoryMenu> list = new ArrayList<>(parentCategoryMenuList);
         //对parent进行排序
         Collections.sort(list);
 
-        map.put("parentList", list);
-        map.put("sonList", childCategoryMenuList);
+        map.put(SysConf.PARENT_LIST, list);
+        map.put(SysConf.SON_LIST, childCategoryMenuList);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
 

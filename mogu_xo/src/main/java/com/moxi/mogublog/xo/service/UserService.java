@@ -3,6 +3,8 @@ package com.moxi.mogublog.xo.service;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mougblog.base.service.SuperService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * 管理员表 服务类
@@ -17,7 +19,7 @@ public interface UserService extends SuperService<User> {
      * 记录用户信息
      * @param response
      */
-    User insertUserInfo(String response);
+    User insertUserInfo(HttpServletRequest request, String response);
 
     /**
      * 通过source uuid获取用户类

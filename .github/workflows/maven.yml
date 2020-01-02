@@ -1,6 +1,6 @@
-name: Java CI
+name: mogu CI/CD
 
-on:
+on: 
   push:
     branches: 
       - master
@@ -11,10 +11,137 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Set SSH Environment
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.ID_RSA_PUB }}" > ~/.ssh/id_rsa.pub
+        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+        chmod 600 ~/.ssh/id_rsa
+        chmod 700 ~/.ssh && chmod 700 ~/.ssh/*
+        ls -l ~/.ssh/
+    - name: download config file and replace
+      run: |
+        git clone git@github.com:moxi624/mogu_prod_configuration.git
+        mv -f ./mogu_prod_configuration/config/mogu_admin/application.yml ./mogu_admin/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/config/mogu_eureka/application.yml ./mogu_eureka/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/config/mogu_picture/application.yml ./mogu_picture/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/config/vue_mogu_admin/config.js ./vue_mogu_admin/static/ckeditor/config.js
+    - name: build jar
+      run: | 
+        mvn clean install
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x    
+    - name: build vue
+      run: |
+        cd ./vue_mogu_admin
+        npm run build
+        cd ..
+        cd ./vue_mogu_web
+        npm run build
+        cd ..
+    - name: move_to_files
+      run: |
+        mkdir -p transfer_files
+        mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
+        mv ./mogu_sms/target/mogu_sms-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_sms-0.0.1-SNAPSHOT.jar
+        mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
+        mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
+        mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./tranfer_files/mogu_web-0.0.1-SNAPSHOT.jar
+        mv ./mogu_blog_web/dist ./tranfer_files/web_dist
+        mv ./mogu_blog_admin/dist ./transfer_files/admin_dist
+    - name: scp
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: ./tranfer_files
+        remote: /home/
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+    - name: distribution and backup
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+          mv /home/tranfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
+          mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+          mv /home/tranfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
+          mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+          mv /home/tranfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
+          mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+          mv /home/tranfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
+          mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+          mv /home/tranfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
+          mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+          mv /home/tranfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
+          mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+          mv /home/tranfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
+    - name: start_eureka
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_eureka/
+          ./shutdown.sh
+          ./startup.sh
+    - name: start_picture
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_picture/
+          ./shutdown.sh
+          ./startup.sh
+    - name: start_admin
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_admin/
+          ./shutdown.sh
+          ./startup.sh
+    - name: start_sms
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_sms/
+          ./shutdown.sh
+          ./startup.sh
+    - name: start_web
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_web/
+          ./shutdown.sh
+          ./startup.sh

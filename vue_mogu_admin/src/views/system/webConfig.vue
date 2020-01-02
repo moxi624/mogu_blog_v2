@@ -234,8 +234,7 @@ export default {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.aliPay = fileList[0].uid;
-          this.form.aliPayPhoto =
-            process.env.BASE_IMAGE_URL + fileList[0].picUrl;
+          this.form.aliPayPhoto = fileList[0].picUrl;
           var tempForm = this.form;
           this.form = {};
           this.form = tempForm;
@@ -249,8 +248,7 @@ export default {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.weixinPay = fileList[0].uid;
-          this.form.weixinPayPhoto =
-            process.env.BASE_IMAGE_URL + fileList[0].picUrl;
+          this.form.weixinPayPhoto = fileList[0].picUrl;
           var tempForm = this.form;
           this.form = {};
           this.form = tempForm;

@@ -125,6 +125,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -255,7 +256,7 @@ export default {
     //角色远程搜索函数
     roleList: function () {
 
-      var params = {};      
+      var params = {};
       params.currentPage = 1;
       params.pageSize = 10;
 

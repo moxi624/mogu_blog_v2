@@ -66,6 +66,7 @@
       <div class="searchbox">
         <div id="search_bar" :class="showSearch?'search_bar search_open':'search_bar'">
           <input
+            ref="searchInput"
             class="input"
             placeholder="想搜点什么呢.."
             type="text"
@@ -80,13 +81,16 @@
       </div>
 
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
-        <span class="el-dropdown-link">
-          <img  v-if="!isLogin" @click="userLogin" src="../../static/images/defaultAvatar.png">
-          <img  v-if="isLogin" :src="userInfo.avatar">
+        <span class="el-dropdown-link" @click="userLogin">
+          <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
+          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl">
+          <img v-if="isLogin&&userInfo.photoUrl==undefined"
+               src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>
-        <el-dropdown-menu slot="dropdown" v-if="isLogin">
-          <el-dropdown-item  command="goUserInfo">主页</el-dropdown-item>
-          <el-dropdown-item  command="logout">退出</el-dropdown-item>
+
+        <el-dropdown-menu slot="dropdown" >
+          <el-dropdown-item command="goUserInfo" v-show="isLogin">主页</el-dropdown-item>
+          <el-dropdown-item command="logout" v-show="isLogin">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
 
@@ -101,7 +105,7 @@
   <footer>
     <p>
       <a href="http://localhost:9527/" target="_blank">&nbsp;&nbsp;</a>
-      <a href="javasrcipt:void(0);" @click="goIndex()">Copyright 2019&nbsp;{{info.name}}&nbsp;</a>
+      <a href="javasrcipt:void(0);" @click="goIndex()">Copyright 2019-2010&nbsp;{{info.name}}&nbsp;</a>
       <a href="http://www.beian.miit.gov.cn">{{info.recordNum}}</a>
     </p>
   </footer>
@@ -130,6 +134,7 @@
     },
     data() {
       return {
+        PICTURE_HOST: process.env.PICTURE_HOST,
         info: {},
         saveTitle: "",
         keyword: "",
@@ -204,6 +209,7 @@
             this.userInfo = response.data;
           } else {
             this.isLogin = false;
+            delCookie("token");
           }
         });
       } else {
@@ -260,6 +266,8 @@
       },
       clickSearchIco: function () {
         this.showSearch = !this.showSearch;
+        //获取焦点
+        this.$refs.searchInput.focus();
       },
       openHead: function () {
         this.showHead = !this.showHead;
@@ -275,7 +283,7 @@
         delCookie("token");
         let url = window.parent.location.href;
         let haveToken = url.indexOf("?token")
-        if(haveToken != -1) {
+        if (haveToken != -1) {
           let list = url.split("?token");
           this.isLogin = false;
           window.location.href = list[0]
@@ -290,16 +298,27 @@
         switch (command) {
           case "logout" : {
             this.userLogout();
-          }; break;
+          }
+            ;
+            break;
+          case "login" : {
+            this.userLogin();
+          }
+            ;
+            break;
           case "goUserInfo" : {
             this.$message('click on item ' + command);
-          }; break;
+          }
+            ;
+            break;
           case "changePwd" : {
             this.$message('click on item ' + command);
-          }; break;
+          }
+            ;
+            break;
         }
       },
-      closeLoginBox: function() {
+      closeLoginBox: function () {
         this.showLogin = false;
       }
 
@@ -311,8 +330,11 @@
   #starlist li .title {
     color: #00a7eb;
   }
-
+  .el-dropdown {
+    position: absolute;
+  }
   .userInfoAvatar {
+
     width: 35px;
     height: 35px;
     position: absolute;
@@ -323,6 +345,22 @@
   .userInfoAvatar img {
     width: 35px;
     height: 35px;
-    border-radius:50%;
+    border-radius: 50%;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .userInfoAvatar {
+      width: 35px;
+      height: 35px;
+      position: absolute;
+      right: 0px;
+      top: 12px;
+    }
+
+    .searchbox {
+      position: absolute;
+      right: 40px;
+      top: 0
+    }
   }
 </style>

@@ -4,6 +4,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.DateUtils;
@@ -85,9 +86,9 @@ public class WebVisitRestApi {
 
         // 设置起始时间段
         if (!StringUtils.isEmpty(webVisitVO.getStartTime())) {
-            String[] time = webVisitVO.getStartTime().split(",");
+            String[] time = webVisitVO.getStartTime().split(SysConf.FILE_SEGMENTATION);
             if (time.length < 2) {
-                return ResultUtil.result(SysConf.ERROR, "传入时间有误");
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
             }
             queryWrapper.between(SQLConf.CREATE_TIME, DateUtils.str2Date(time[0]), DateUtils.str2Date(time[1]));
         }

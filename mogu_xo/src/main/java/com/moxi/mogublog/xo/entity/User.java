@@ -45,7 +45,7 @@ public class User extends SuperEntity<User> {
     private String gender;
 
     /**
-     * 个人头像
+     * 个人头像(UID)
      */
     private String avatar;
 
@@ -110,7 +110,7 @@ public class User extends SuperEntity<User> {
      * 用户头像
      */
     @TableField(exist = false)
-    private List<String> photoList;
+    private String photoUrl;
 
     /**
      * 验证码

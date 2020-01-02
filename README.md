@@ -15,8 +15,7 @@
         <img src="https://img.shields.io/badge/springboot-2.2.2.RELEASE-green" ></img>
 <img src="https://img.shields.io/badge/SpringCloud-Hoxton.RELEASE-brightgreen" ></img><img src="https://img.shields.io/badge/vue-2.5.17-green" ></img>
 <img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img>
-<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img>
-<img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img></a></p>
+<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 ## 项目介绍
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Nuxt +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验
@@ -46,7 +45,7 @@
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 
 ## 项目特点
@@ -57,6 +56,7 @@
 - 页面交互使用Vue2.x，极大的提高了开发效率。
 - 引入swagger文档支持，方便编写API接口文档。
 - 引入RabbitMQ消息队列，用于邮件和短信发送。
+- 引入JustAuth第三方登录开源库，支持Gitee、Github账号登录
 
 ## Windows环境下搭建蘑菇博客
 
@@ -82,6 +82,15 @@
 
 mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
+## Docker容器中的初始密码
+
+- **vue_mogu_admin**：用户：admin，密码：mogu2018
+- **Mysql**：用户：root，密码：mogu2018
+- **Redis**：密码：mogu2018
+- 
+
+
+
 ## 致谢
 
 - 感谢**杨青小姐姐**的博客模板，http://www.yangqq.com/
@@ -89,6 +98,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 - Vue项目参考这篇博客：https://segmentfault.com/a/1190000009506097
 - 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
 - 感谢**JetBrains**提供的免费开源License： https://www.jetbrains.com/?from=mogu_blog_v2 
+- 感谢**yadong.zhang**提供的第三方登录开源库：https://gitee.com/yadong.zhang/JustAuth.git
 
 ## 关注&交流
 
@@ -101,9 +111,9 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 ## 将来要做的事
 
 - [ ] IDEA集成Docker实现一键打包部署
+- [x] 门户网站增加登录页面
+- [x] 支持第三方登录
 - [ ] 将图片存储在七牛云中
-- [ ] 门户网站增加登录页面
-- [ ] 支持第三方登录
 - [ ] 写一个评论模块，用于替换搜狐畅言
 - [ ] 解决Nuxt_mogu_web中存在的问题，使博客能被搜索引擎收录
 - [ ] 前端增加用户模块

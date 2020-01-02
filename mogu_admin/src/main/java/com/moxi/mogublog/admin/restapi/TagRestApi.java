@@ -4,6 +4,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -63,7 +64,7 @@ public class TagRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        QueryWrapper<Tag> queryWrapper = new QueryWrapper<Tag>();
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(tagVO.getKeyword()) && !StringUtils.isEmpty(tagVO.getKeyword())) {
             queryWrapper.like(SQLConf.CONTENT, tagVO.getKeyword().trim());
         }
@@ -74,7 +75,7 @@ public class TagRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Tag> pageList = tagService.page(page, queryWrapper);
-        log.info("返回结果");
+        log.info("获取标签列表");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
@@ -89,14 +90,14 @@ public class TagRestApi {
         queryWrapper.eq(SQLConf.CONTENT, tagVO.getContent());
         Tag tempTag = tagService.getOne(queryWrapper);
         if (tempTag != null) {
-            return ResultUtil.result(SysConf.ERROR, "该标签已经存在");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
         }
         Tag tag = new Tag();
         tag.setContent(tagVO.getContent());
         tag.setClickCount(0);
         tag.setStatus(EStatus.ENABLE);
         tag.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑标签")
@@ -114,14 +115,14 @@ public class TagRestApi {
             queryWrapper.eq(SQLConf.CONTENT, tagVO.getContent());
             Tag tempTag = tagService.getOne(queryWrapper);
             if (tempTag != null) {
-                return ResultUtil.result(SysConf.ERROR, "该标签已经存在");
+                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
             }
         }
 
         tag.setContent(tagVO.getContent());
         tag.setStatus(EStatus.ENABLE);
         tag.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除标签")
@@ -135,7 +136,7 @@ public class TagRestApi {
         Tag tag = tagService.getById(tagVO.getUid());
         tag.setStatus(EStatus.DISABLED);
         tag.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     @OperationLogger(value = "置顶标签")
@@ -159,10 +160,10 @@ public class TagRestApi {
         Tag maxTag = list.get(0);
 
         if (StringUtils.isEmpty(maxTag.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxTag.getUid().equals(tag.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "该标签已经在顶端");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
         Integer sortCount = maxTag.getSort() + 1;
@@ -171,7 +172,7 @@ public class TagRestApi {
 
         tag.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_FAIL);
     }
 
     @OperationLogger(value = "通过点击量排序标签")
@@ -190,7 +191,7 @@ public class TagRestApi {
             item.setSort(item.getClickCount());
             item.updateById();
         }
-        return ResultUtil.result(SysConf.SUCCESS, "排序成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     /**
@@ -219,12 +220,12 @@ public class TagRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         // 过滤content字段
-        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> blogList = blogService.list(queryWrapper);
 
         blogList.forEach(item -> {
             String tagUids = item.getTagUid();
-            List<String> tagUidList = StringUtils.changeStringToString(tagUids, ",");
+            List<String> tagUidList = StringUtils.changeStringToString(tagUids, SysConf.FILE_SEGMENTATION);
             for (String tagUid : tagUidList) {
                 if (map.get(tagUid) != null) {
                     Integer count = map.get(tagUid) + 1;
@@ -240,7 +241,7 @@ public class TagRestApi {
             item.updateById();
         });
 
-        return ResultUtil.result(SysConf.SUCCESS, "排序成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 }
 

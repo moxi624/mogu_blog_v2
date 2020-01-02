@@ -4,7 +4,7 @@
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
         <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
-        <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>        	      
+        <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
         <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
         <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
 	    </div>
@@ -14,7 +14,7 @@
               <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0">
               <img class= "img" :src="BASE_IMAGE_URL + picture.pictureUrl"/>
         </div>
-        <div class= "removeFloat"></div>      
+        <div class= "removeFloat"></div>
       </div>
 
 		<!--分页-->
@@ -207,7 +207,7 @@ export default {
         });
     },
     setCover: function() {
-      
+
       if (this.pictureUids.length != 1) {
         this.$message({
           type: "error",
@@ -225,14 +225,14 @@ export default {
 
           let params = new URLSearchParams();
           params.append("pictureUid", this.pictureUids[0]);
-          params.append("pictureSortUid", this.pictureSortUid); 
+          params.append("pictureSortUid", this.pictureSortUid);
 
           setCover(params).then(response => {
 
             this.$message({
               type: "success",
               message: response.data
-            });            
+            });
             this.pictureUids = [];
           });
         })
@@ -263,7 +263,7 @@ export default {
 
     },
     handleRemove: function() {
-     
+
     },
     submitNormalUpload: function() {
       var that = this;
@@ -276,7 +276,7 @@ export default {
         for (let index = 0; index < file.length; index++) {
           this.fileUids = this.fileUids + file[index].uid + ",";
         }
-    
+
         this.count = this.count + 1;
         if(this.count % fileList.length == 0) {
           var params = new URLSearchParams();
@@ -288,7 +288,7 @@ export default {
                 type: "success",
                 message: response.data
               });
-              that.pictureList();            
+              that.pictureList();
             }
           });
         }

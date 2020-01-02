@@ -14,17 +14,19 @@
         <div class="bloginfo" v-if="blogData.blogSort">
           <ul>
             <li class="author">
+              <span class="iconfont">&#xe60f;</span>
               <a href="javascript:void(0);" @click="goToAuthor(blogData.author)">{{blogData.author}}</a>
             </li>
             <li class="lmname">
+              <span class="iconfont">&#xe603;</span>
               <a
                 href="javascript:void(0);"
                 @click="goToSortList(blogData.blogSort == null ?'':blogData.blogSort.uid)"
               >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
             </li>
-            <li class="timer">{{blogData.createTime}}</li>
-            <li class="view">{{blogData.clickCount}}</li>
-            <li class="like">{{blogData.collectCount}}</li>
+            <li class="createTime"><span class="iconfont">&#xe606;</span>{{blogData.createTime}}</li>
+            <li class="view"><span class="iconfont">&#xe8c7;</span>{{blogData.clickCount}}</li>
+            <li class="like"><span class="iconfont">&#xe663;</span>{{blogData.collectCount}}</li>
           </ul>
         </div>
         <div class="tags">
@@ -46,7 +48,8 @@
           v-html="blogData.content"
           v-highlight
           @click="imageChange"
-        >{{blogData.content}}</div>
+        >{{blogData.content}}
+        </div>
       </div>
 
       <!--付款码和点赞-->
@@ -100,192 +103,195 @@
 </template>
 
 <script>
-import {
-  getBlogByLevel,
-  getNewBlog,
-  getHotTag,
-  getLink,
-  recorderVisitPage
-} from "../api/index";
-import {
-  getBlogByUid,
-  getSameBlogByTagUid,
-  getSameBlogByBlogUid
-} from "../api/blogContent";
+  import {getLink, recorderVisitPage} from "../api/index";
+  import {getBlogByUid, getSameBlogByBlogUid} from "../api/blogContent";
 
-import ThirdRecommend from "../components/ThirdRecommend";
-import FourthRecommend from "../components/FourthRecommend";
-import TagCloud from "../components/TagCloud";
-import HotBlog from "../components/HotBlog";
-import FollowUs from "../components/FollowUs";
-import ChangYan from "../components/ChangYan";
-import PayCode from "../components/PayCode";
+  import ThirdRecommend from "../components/ThirdRecommend";
+  import FourthRecommend from "../components/FourthRecommend";
+  import TagCloud from "../components/TagCloud";
+  import HotBlog from "../components/HotBlog";
+  import FollowUs from "../components/FollowUs";
+  import ChangYan from "../components/ChangYan";
+  import PayCode from "../components/PayCode";
 
-export default {
-  name: "info",
-  data() {
-    return {
-      blogUid: null, //传递过来的博客uid
-      blogData: null,
-      sameBlogData: [], //相关文章
-      linkData: [] //友情链接
-    };
-  },
-  components: {
-    //注册组件
-    FourthRecommend,
-    ThirdRecommend,
-    TagCloud,
-    HotBlog,
-    FollowUs,
-    ChangYan,
-    PayCode
-  },
-  created() {
-    getLink().then(response => {
-      this.linkData = response.data.records;
-    });
-
-    var params = new URLSearchParams();
-    this.blogUid = this.$route.query.blogUid;
-    params.append("uid", this.blogUid);
-    getBlogByUid(params).then(response => {
-      if (response.code == "success") {
-        this.blogData = response.data;
-      }
-    });
-
-    var blogParams = new URLSearchParams();
-    blogParams.append("blogUid", this.blogUid);
-    getSameBlogByBlogUid(blogParams).then(response => {
-      if (response.code == "success") {
-        this.sameBlogData = response.data.records;
-      }
-    });
-
-    var params = new URLSearchParams();
-    params.append("pageName", "INFO");
-    recorderVisitPage(params).then(response => {});
-  },
-  methods: {
-    //跳转到文章详情
-    goToInfo(uid) {
-      let routeData = this.$router.resolve({
-        path: "/info",
-        query: { blogUid: uid }
+  export default {
+    name: "info",
+    data() {
+      return {
+        blogUid: null, //传递过来的博客uid
+        blogData: null,
+        sameBlogData: [], //相关文章
+        linkData: [] //友情链接
+      };
+    },
+    components: {
+      //注册组件
+      FourthRecommend,
+      ThirdRecommend,
+      TagCloud,
+      HotBlog,
+      FollowUs,
+      ChangYan,
+      PayCode
+    },
+    created() {
+      getLink().then(response => {
+        this.linkData = response.data.records;
       });
-      window.open(routeData.href, "_blank");
-    },
-    //跳转到搜索详情页
-    goToList(uid) {
-      let routeData = this.$router.resolve({
-        path: "/list",
-        query: { tagUid: uid }
-      });
-      window.open(routeData.href, "_blank");
-    },
-    //跳转到搜索详情页
-    goToSortList(uid) {
-      let routeData = this.$router.resolve({
-        path: "/list",
-        query: { sortUid: uid }
-      });
-      window.open(routeData.href, "_blank");
-    },
-    //跳转到搜索详情页
-    goToAuthor(author) {
-      let routeData = this.$router.resolve({
-        path: "/list",
-        query: { author: author }
-      });
-      window.open(routeData.href, "_blank");
-    },
 
-    imageChange: function(e) {
-      //首先需要判断点击的是否是图片
-      var type = e.target.localName;
-      if (type == "img") {
-        window.open(e.target.currentSrc);
-      }
+      var params = new URLSearchParams();
+      this.blogUid = this.$route.query.blogUid;
+      params.append("uid", this.blogUid);
+      getBlogByUid(params).then(response => {
+        if (response.code == "success") {
+          this.blogData = response.data;
+        }
+      });
+
+      var blogParams = new URLSearchParams();
+      blogParams.append("blogUid", this.blogUid);
+      getSameBlogByBlogUid(blogParams).then(response => {
+        if (response.code == "success") {
+          this.sameBlogData = response.data.records;
+        }
+      });
+
+      var params = new URLSearchParams();
+      params.append("pageName", "INFO");
+      recorderVisitPage(params).then(response => {
+      });
     },
-    //切割字符串
-    subText: function(str, index) {
-      if (str.length < index) {
-        return str;
+    methods: {
+      //跳转到文章详情
+      goToInfo(uid) {
+        let routeData = this.$router.resolve({
+          path: "/info",
+          query: {blogUid: uid}
+        });
+        window.open(routeData.href, "_blank");
+      },
+      //跳转到搜索详情页
+      goToList(uid) {
+        let routeData = this.$router.resolve({
+          path: "/list",
+          query: {tagUid: uid}
+        });
+        window.open(routeData.href, "_blank");
+      },
+      //跳转到搜索详情页
+      goToSortList(uid) {
+        let routeData = this.$router.resolve({
+          path: "/list",
+          query: {sortUid: uid}
+        });
+        window.open(routeData.href, "_blank");
+      },
+      //跳转到搜索详情页
+      goToAuthor(author) {
+        let routeData = this.$router.resolve({
+          path: "/list",
+          query: {author: author}
+        });
+        window.open(routeData.href, "_blank");
+      },
+
+      imageChange: function (e) {
+        //首先需要判断点击的是否是图片
+        var type = e.target.localName;
+        if (type == "img") {
+          window.open(e.target.currentSrc);
+        }
+      },
+      //切割字符串
+      subText: function (str, index) {
+        if (str.length < index) {
+          return str;
+        }
+        return str.substring(0, index) + "...";
       }
-      return str.substring(0, index) + "...";
     }
-  }
-};
+  };
 </script>
 
 <style>
-.fixck {
-  /* font-family: Arial, Verdana, sans-serif !important;
-  font-size: 12px !important;
-  color: #222 !important;
-  line-height: normal !important; */
-}
+  .fixck {
+    /* font-family: Arial, Verdana, sans-serif !important;
+    font-size: 12px !important;
+    color: #222 !important;
+    line-height: normal !important; */
+  }
 
-.fixck p {
-  margin: 12px 0 !important;
-}
+  .fixck p {
+    margin: 12px 0 !important;
+  }
 
-.fixck a {
-  text-decoration: underline !important;
-  color: #00e !important;
-}
+  .fixck a {
+    text-decoration: underline !important;
+    color: #00e !important;
+  }
 
-.fixck ul li {
-  list-style: disc;
-}
-.fixck ol li {
-  list-style: decimal;
-}
-.fixck ul,
-.fixck ol {
-  padding-left: 40px !important;
-  padding-right: 40px !important;
-}
+  .fixck ul li {
+    list-style: disc;
+  }
 
-.fixck li {
-  display: list-item !important;
-}
+  .fixck ol li {
+    list-style: decimal;
+  }
 
-.fixck h1 {
-  font-weight: bold !important;
-  font-size: 32px !important;
-  margin: 21px 0 !important;
-}
-.fixck h2 {
-  font-weight: bold !important;
-  font-size: 24px !important;
-  margin: 19px 0 !important;
-}
-.fixck h3 {
-  font-weight: bold !important;
-  font-size: 19px !important;
-  margin: 18px 0 !important;
-}
-.fixck h4 {
-  font-weight: bold !important;
-  font-size: 16px !important;
-  margin: 21px 0 !important;
-}
-.fixck h5 {
-  font-weight: bold !important;
-  font-size: 13px !important;
-  margin: 22px 0 !important;
-}
-.fixck h6 {
-  font-weight: bold !important;
-  font-size: 11px !important;
-  margin: 24px 0 !important;
-}
+  .fixck ul,
+  .fixck ol {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
 
-.news_con {
-  line-height: 1.8;
-  font-size: 16px;
-  text-align: justify;
-}
+  .fixck li {
+    display: list-item !important;
+  }
+
+  .fixck h1 {
+    font-weight: bold !important;
+    font-size: 32px !important;
+    margin: 21px 0 !important;
+  }
+
+  .fixck h2 {
+    font-weight: bold !important;
+    font-size: 24px !important;
+    margin: 19px 0 !important;
+  }
+
+  .fixck h3 {
+    font-weight: bold !important;
+    font-size: 19px !important;
+    margin: 18px 0 !important;
+  }
+
+  .fixck h4 {
+    font-weight: bold !important;
+    font-size: 16px !important;
+    margin: 21px 0 !important;
+  }
+
+  .fixck h5 {
+    font-weight: bold !important;
+    font-size: 13px !important;
+    margin: 22px 0 !important;
+  }
+
+  .fixck h6 {
+    font-weight: bold !important;
+    font-size: 11px !important;
+    margin: 24px 0 !important;
+  }
+
+  .news_con {
+    line-height: 1.8;
+    font-size: 16px;
+    text-align: justify;
+  }
+
+  .iconfont {
+    font-size: 14px;
+    margin-right: 3px;
+  }
 </style>

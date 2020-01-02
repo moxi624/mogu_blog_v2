@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
@@ -13,9 +14,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.AdminRole;
 import com.moxi.mogublog.xo.entity.Role;
-import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -55,8 +54,6 @@ public class AdminRestApi {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private AdminRoleService adminRoleService;
-    @Autowired
     private PictureFeignClient pictureFeignClient;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
@@ -74,8 +71,8 @@ public class AdminRestApi {
         Page<Admin> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-//		queryWrapper.excludeColumns(Admin.class, SysConf.PASS_WORD);
-        queryWrapper.select(Admin.class, i -> !i.getProperty().equals("pass_word"));
+        // 去除密码
+        queryWrapper.select(Admin.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         IPage<Admin> pageList = adminService.page(page, queryWrapper);
         List<Admin> list = pageList.getRecords();
         log.info(list);
@@ -83,43 +80,31 @@ public class AdminRestApi {
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getAvatar())) {
-                fileUids.append(item.getAvatar() + ",");
+                fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
             }
         });
 
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         if (fileUids != null) {
-            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
 
         for (Admin item : list) {
-            //清空密码
-            item.setPassWord("");
 
-            //查询出角色信息封装到admin中
-            QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-            wrapper.eq(SQLConf.ADMINUID, item.getUid());
-            List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
-            List<String> roleUids = new ArrayList<>();
-            for (AdminRole adminRole : adminRoleList) {
-                String roleUid = adminRole.getRoleUid();
-                roleUids.add(roleUid);
-            }
-            if (roleUids.size() > 0) {
-                List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
-                item.setRoleList(roles);
-            }
+            Role role = roleService.getById(item.getRoleUid());
+
+            item.setRole(role);
 
             //获取图片
             if (StringUtils.isNotEmpty(item.getAvatar())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), ",");
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
                 pictureUidsTemp.forEach(picture -> {
                     if (pictureMap.get(picture) != null && pictureMap.get(picture) != "") {
                         pictureListTemp.add(pictureMap.get(picture));
@@ -127,8 +112,6 @@ public class AdminRestApi {
                 });
                 item.setPhotoList(pictureListTemp);
             }
-
-
         }
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -141,7 +124,7 @@ public class AdminRestApi {
                           @ApiParam(name = "uid", value = "管理员uid", required = true) @RequestParam(name = "uid", required = false) String uid) {
 
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         Admin admin = adminService.getById(uid);
@@ -149,7 +132,7 @@ public class AdminRestApi {
         admin.setPassWord(encoder.encode(DEFAULE_PWD));
         admin.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "重置成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "注册管理员")
@@ -163,7 +146,7 @@ public class AdminRestApi {
         String email = registered.getEmail();
 
         if (StringUtils.isEmpty(userName)) {
-            return ResultUtil.result(SysConf.ERROR, "用户名不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         if (StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
@@ -198,7 +181,7 @@ public class AdminRestApi {
 
             //这里需要通过SMS模块，发送邮件告诉初始密码
 
-            return ResultUtil.result(SysConf.SUCCESS, "注册成功");
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
         }
         return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
     }
@@ -309,14 +292,8 @@ public class AdminRestApi {
         List<Role> unassignRoles = new ArrayList<>();
 
         //根据admin获取账户拥有的角色uid集合
-        QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(SQLConf.ADMINUID, admin.getUid());
-        List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
         List<String> roleUids = new ArrayList<>();
-        for (AdminRole adminRole : adminRoleList) {
-            String roleUid = adminRole.getRoleUid();
-            roleUids.add(roleUid);
-        }
+        roleUids.add(admin.getRoleUid());
         for (Role role : roles) {
             if (roleUids.contains(role.getUid())) {
                 assignedRoles.add(role);
@@ -327,55 +304,6 @@ public class AdminRestApi {
         map.put("assignedRoles", assignedRoles);
         map.put("unassignRoles", unassignRoles);
         return ResultUtil.result(SysConf.SUCCESS, map);
-    }
-
-    @OperationLogger(value = "管理员角色分配")
-    @ApiOperation(value = "管理员角色分配", notes = "管理员角色分配")
-    @PostMapping("/doAssign")
-    public String doAssign(HttpServletRequest request,
-                           @ApiParam(name = "adminUid", value = "管理员uid", required = true) @RequestParam(name = "adminUid", required = true) String adminUid,
-                           @ApiParam(name = "unAssignRoleUids", value = "需分配的未分配角色") @RequestParam(name = "unAssignRoleUids", required = true) String[] unAssignRoleUids) {
-
-
-        if (adminUid.isEmpty()) {
-            return ResultUtil.result(SysConf.ERROR, "管理员不存在");
-        }
-        List<AdminRole> adminRoles = new ArrayList<>();
-        for (String roleUid : unAssignRoleUids) {
-            QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.ADMINUID, adminUid);
-            queryWrapper.eq(SQLConf.ROLEUID, roleUid);
-            AdminRole getAdminRole = adminRoleService.getOne(queryWrapper);
-            if (getAdminRole != null) {
-                continue;
-            }
-            AdminRole adminRole = new AdminRole();
-            adminRole.setAdminUid(adminUid);
-            adminRole.setRoleUid(roleUid);
-            adminRoles.add(adminRole);
-        }
-        adminRoleService.saveBatch(adminRoles);
-        return ResultUtil.result(SysConf.SUCCESS, "分配管理员角色成功");
-    }
-
-    @OperationLogger(value = "取消管理员角色分配")
-    @ApiOperation(value = "取消管理员角色分配", notes = "取消管理员角色分配")
-    @PostMapping("/doUnassign")
-    public String doUnassign(HttpServletRequest request,
-                             @ApiParam(name = "adminUid", value = "管理员uid", required = true) @RequestParam(name = "adminUid", required = true) String adminUid,
-                             @ApiParam(name = "assignRoleUids", value = "需取消的已分配角色") @RequestParam(name = "assignRoleUids", required = true) String[] assignRoleUids) {
-
-        if (adminUid.isEmpty()) {
-            return ResultUtil.result(SysConf.ERROR, "管理员不存在");
-        }
-
-        for (String roleUid : assignRoleUids) {
-            QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.ADMINUID, adminUid);
-            queryWrapper.eq(SQLConf.ROLEUID, roleUid);
-            adminRoleService.remove(queryWrapper);
-        }
-        return ResultUtil.result(SysConf.SUCCESS, "取消管理员角色成功");
     }
 
 }

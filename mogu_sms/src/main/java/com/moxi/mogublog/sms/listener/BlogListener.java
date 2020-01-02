@@ -1,11 +1,17 @@
 package com.moxi.mogublog.sms.listener;
 
 import com.moxi.mogublog.sms.global.SysConf;
+import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.utils.JsonUtils;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,33 +26,50 @@ public class BlogListener {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+// TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
 
     @RabbitListener(queues = "mogu.blog")
     public void updateRedis(Map<String, String> map) {
 
         if (map != null) {
             String level = map.get(SysConf.LEVEL);
-            //从Redis中获取内容
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:1", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:2", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:3", "");
-            stringRedisTemplate.opsForValue().set("BOLG_LEVEL:4", "");
+            //从Redis清空对应的数据
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
+            stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
+            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
 
             String createTime = map.get(SysConf.CREATE_TIME);
+
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
+            String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
+            String [] list = sd.split("-");
+
             System.out.println(createTime);
-            String year = createTime.substring(0, 4);
-            String month = createTime.substring(5, 7);
+            String year = list[0];
+            String month = list[1];
             String key = year + "年" + month + "月";
             System.out.println(key);
-            stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH" + key, "");
-            stringRedisTemplate.opsForValue().set("MONTH_SET", "");
-
-//			String result = stringRedisTemplate.opsForValue().get("BOLG_LEVEL:" + level);
-//			if(StringUtils.isNotEmpty(result)) {
-//				List list = JsonUtils.jsonArrayToArrayList(result);
-//			}
+            stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
 
 
+            String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
+            ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
+            Boolean haveMonth = false;
+            if(monthSet != null) {
+                for (String item : monthSet) {
+                    if (item.equals(key)) {
+                        haveMonth = true;
+                        break;
+                    }
+                }
+                if(!haveMonth) {
+                    monthSet.add(key);
+                    stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                }
+            }
         }
     }
 }

@@ -5,12 +5,19 @@ server:
 #阿里大于
 templateCode: SMS_XXXXXX #短信模板编号
 signName: 蘑菇博客
+PROJECT_NAME_EN: moguBlog
 
 moguBlog:
   email: mogublog@163.com
 
-#Data image url
 data:
+  # 门户页面
+  webSite:
+    url: http://localhost:9527/#/
+  # mogu_web网址，用于第三方登录回调
+  web:
+    url: http://127.0.0.1:8603
+  # 静态资源映射，通过nginx
   image:
     url: http://localhost:8600/
 file:
@@ -26,6 +33,7 @@ BLOG:
   SECOND_COUNT: 2 #二级推荐
   THIRD_COUNT: 3 #三级推荐
   FOURTH_COUNT: 5 #四级推荐
+  USER_TOKEN_SURVIVAL_TIME: 6000 # toekn令牌存活时间, 100分钟
 
 
 #spring
@@ -133,11 +141,12 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
 
+# 第三方登录
 justAuth:
   clientId:
-    gitee: 2d0c84d5a3366ff87738ad98aeea3abdb24288441078d26500676f3f90d4f6ea
-    github: 7080b287878aed7972c1
+    gitee: bd8238be8154932860aab5b1d2594f00d5472970b6d72f83f338eecb474d6898
+    github: 4fbf8a5fe687887c2549
   clientSecret:
-    gitee: a44e77b8144ecc7f533c29fb22df5439053ab1a18de29ccb29e2e282ce5ce79c
-    github: 5e7563a8f3903be6d9d4c0fb9b754ef06af0c7ab
+    gitee: 39f64142da6819e394b6d093984cec39d41e47eb5fd824f49fc0c24bbcbd8ec7
+    github: 7318a7bea7a5b006a97ac8e7758d130ce04e622e
 
