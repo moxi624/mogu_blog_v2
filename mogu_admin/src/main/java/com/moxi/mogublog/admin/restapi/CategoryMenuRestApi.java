@@ -230,6 +230,8 @@ public class CategoryMenuRestApi {
 
         queryWrapper.orderByDesc(SQLConf.SORT);
 
+        queryWrapper.last("limit 1");
+
         CategoryMenu maxSort = categoryMenuService.getOne(queryWrapper);
 
         if (StringUtils.isEmpty(maxSort.getUid())) {
