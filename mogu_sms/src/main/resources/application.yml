@@ -29,15 +29,7 @@ spring:
     username: guest
     password: guest
 
-  #Solr
-  data:
-    solr:
-      host: http://localhost:8080/solr
-      core: collection1
-      repositories:
-        enabled: true
-
-    #mail
+  #mail
   mail:
     username: mogublog@163.com
     password: a1313375 #授权码开启SMTP服务里设置

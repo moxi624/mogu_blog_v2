@@ -29,13 +29,6 @@ spring:
     user:
       name: user
       password: password123
-  #Solr
-  data:
-    solr:
-      host: http://localhost:8080/solr
-      core: collection1
-      repositories:
-        enabled: true
 
   # DATABASE CONFIG
   datasource:
