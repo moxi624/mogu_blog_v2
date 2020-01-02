@@ -14,9 +14,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.AdminRole;
 import com.moxi.mogublog.xo.entity.Role;
-import com.moxi.mogublog.xo.service.AdminRoleService;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -55,8 +53,6 @@ public class AdminRestApi {
     private AdminService adminService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private AdminRoleService adminRoleService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
     @Value(value = "${DEFAULE_PWD}")
@@ -101,19 +97,9 @@ public class AdminRestApi {
 
         for (Admin item : list) {
 
-            //查询出角色信息封装到admin中
-            QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-            wrapper.eq(SQLConf.ADMINUID, item.getUid());
-            List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
-            List<String> roleUids = new ArrayList<>();
-            for (AdminRole adminRole : adminRoleList) {
-                String roleUid = adminRole.getRoleUid();
-                roleUids.add(roleUid);
-            }
-            if (roleUids.size() > 0) {
-                List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
-                item.setRoleList(roles);
-            }
+            Role role = roleService.getById(item.getRoleUid());
+
+            item.setRole(role);
 
             //获取图片
             if (StringUtils.isNotEmpty(item.getAvatar())) {
@@ -126,8 +112,6 @@ public class AdminRestApi {
                 });
                 item.setPhotoList(pictureListTemp);
             }
-
-
         }
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -308,14 +292,8 @@ public class AdminRestApi {
         List<Role> unassignRoles = new ArrayList<>();
 
         //根据admin获取账户拥有的角色uid集合
-        QueryWrapper<AdminRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(SQLConf.ADMINUID, admin.getUid());
-        List<AdminRole> adminRoleList = adminRoleService.list(wrapper);
         List<String> roleUids = new ArrayList<>();
-        for (AdminRole adminRole : adminRoleList) {
-            String roleUid = adminRole.getRoleUid();
-            roleUids.add(roleUid);
-        }
+        roleUids.add(admin.getRoleUid());
         for (Role role : roles) {
             if (roleUids.contains(role.getUid())) {
                 assignedRoles.add(role);
@@ -326,55 +304,6 @@ public class AdminRestApi {
         map.put("assignedRoles", assignedRoles);
         map.put("unassignRoles", unassignRoles);
         return ResultUtil.result(SysConf.SUCCESS, map);
-    }
-
-    @OperationLogger(value = "管理员角色分配")
-    @ApiOperation(value = "管理员角色分配", notes = "管理员角色分配")
-    @PostMapping("/doAssign")
-    public String doAssign(HttpServletRequest request,
-                           @ApiParam(name = "adminUid", value = "管理员uid", required = true) @RequestParam(name = "adminUid", required = true) String adminUid,
-                           @ApiParam(name = "unAssignRoleUids", value = "需分配的未分配角色") @RequestParam(name = "unAssignRoleUids", required = true) String[] unAssignRoleUids) {
-
-
-        if (adminUid.isEmpty()) {
-            return ResultUtil.result(SysConf.ERROR, "管理员不存在");
-        }
-        List<AdminRole> adminRoles = new ArrayList<>();
-        for (String roleUid : unAssignRoleUids) {
-            QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.ADMINUID, adminUid);
-            queryWrapper.eq(SQLConf.ROLEUID, roleUid);
-            AdminRole getAdminRole = adminRoleService.getOne(queryWrapper);
-            if (getAdminRole != null) {
-                continue;
-            }
-            AdminRole adminRole = new AdminRole();
-            adminRole.setAdminUid(adminUid);
-            adminRole.setRoleUid(roleUid);
-            adminRoles.add(adminRole);
-        }
-        adminRoleService.saveBatch(adminRoles);
-        return ResultUtil.result(SysConf.SUCCESS, "分配管理员角色成功");
-    }
-
-    @OperationLogger(value = "取消管理员角色分配")
-    @ApiOperation(value = "取消管理员角色分配", notes = "取消管理员角色分配")
-    @PostMapping("/doUnassign")
-    public String doUnassign(HttpServletRequest request,
-                             @ApiParam(name = "adminUid", value = "管理员uid", required = true) @RequestParam(name = "adminUid", required = true) String adminUid,
-                             @ApiParam(name = "assignRoleUids", value = "需取消的已分配角色") @RequestParam(name = "assignRoleUids", required = true) String[] assignRoleUids) {
-
-        if (adminUid.isEmpty()) {
-            return ResultUtil.result(SysConf.ERROR, "管理员不存在");
-        }
-
-        for (String roleUid : assignRoleUids) {
-            QueryWrapper<AdminRole> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.ADMINUID, adminUid);
-            queryWrapper.eq(SQLConf.ROLEUID, roleUid);
-            adminRoleService.remove(queryWrapper);
-        }
-        return ResultUtil.result(SysConf.SUCCESS, "取消管理员角色成功");
     }
 
 }

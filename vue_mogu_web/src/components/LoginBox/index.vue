@@ -124,40 +124,36 @@
     },
     methods: {
       startLogin: function () {
-        var params = {};
-        params.userName = this.loginForm.userName;
-        params.passWord = this.loginForm.password;
-        params.isRememberMe = 0;
-        console.log("登录表单", params);
-        login(params).then(response => {
-          if (response.code == "success") {
-            console.log(response.data);
-          }
-        });
+        // var params = {};
+        // params.userName = this.loginForm.userName;
+        // params.passWord = this.loginForm.password;
+        // params.isRememberMe = 0;
+        // login(params).then(response => {
+        //   if (response.code == "success") {
+        //     console.log(response.data);
+        //   }
+        // });
       },
       startRegister: function () {
 
-        var params = {};
-        params.userName = this.registerForm.userName;
-        params.passWord = this.registerForm.password;
-        params.email = this.registerForm.email;
-        console.log("登录表单", params);
-        register(params).then(response => {
-          if (response.code == "success") {
-            console.log(response.data);
-          }
-        });
+        // var params = {};
+        // params.userName = this.registerForm.userName;
+        // params.passWord = this.registerForm.password;
+        // params.email = this.registerForm.email;
+        // console.log("登录表单", params);
+        // register(params).then(response => {
+        //   if (response.code == "success") {
+        //     console.log(response.data);
+        //   }
+        // });
       },
       goLogin: function () {
-        console.log("去登录页面");
         this.showLogin = true;
       },
       goRegister: function () {
-        console.log("去注册页面");
         this.showLogin = false;
       },
       goAuth: function (source) {
-        console.log("go", source)
         var params = new URLSearchParams();
         params.append("source", source);
         login(params).then(response => {

@@ -32,16 +32,14 @@
           <div class="bloginfo">
             <ul>
               <li class="author">
-                <a href="/">{{item.author}}</a>
+                <span class="iconfont">&#xe60f;</span>
+                <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
               </li>
               <li class="lmname" v-if="item.blogSort">
+                <span class="iconfont">&#xe603;</span>
                 <a href="javascript:void(0);" @click="goToList(item.blogSortUid)">{{item.blogSort}}</a>
               </li>
-              <li class="timer">{{item.updateTime}}</li>
-              <li class="view">
-                <span>{{item.clickCount}}</span>
-              </li>
-              <li class="like">{{item.collectCount}}</li>
+              <li class="createTime"><span class="iconfont">&#xe606;</span>{{item.updateTime}}</li>
             </ul>
           </div>
         </div>

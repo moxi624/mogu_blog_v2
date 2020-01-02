@@ -40,7 +40,7 @@
 
       <el-table-column label="拥有角色" width="150">
         <template slot-scope="scope">
-          <el-tag v-for="item in scope.row.roleList" :key="item.uid" type="danger">{{item.roleName}}</el-tag>
+          <el-tag v-if="scope.row.role" type="danger">{{scope.row.role.roleName}}</el-tag>
         </template>
       </el-table-column>
 
@@ -125,6 +125,17 @@
           <el-input v-model="form.userName"></el-input>
         </el-form-item>
 
+        <el-form-item label="角色名" :label-width="formLabelWidth">
+          <el-select v-model="form.roleUid" placeholder="请选择" style="width:150px">
+            <el-option
+              v-for="item in roleOptions"
+              :key="item.uid"
+              :label="item.roleName"
+              :value="item.uid"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="昵称" :label-width="formLabelWidth">
           <el-input v-model="form.nickName"></el-input>
         </el-form-item>
@@ -141,27 +152,19 @@
         </el-form-item>
 
         <el-form-item label="手机号" :label-width="formLabelWidth">
-          <el-input v-model="form.mobile" :disabled="isEditForm"></el-input>
+          <el-input v-model="form.mobile" ></el-input>
         </el-form-item>
 
         <el-form-item label="微信号" :label-width="formLabelWidth">
-          <el-input v-model="form.weChat" :disabled="isEditForm"></el-input>
+          <el-input v-model="form.weChat" ></el-input>
         </el-form-item>
 
         <el-form-item label="QQ号码" :label-width="formLabelWidth">
-          <el-input v-model="form.qqNumber" :disabled="isEditForm"></el-input>
+          <el-input v-model="form.qqNumber" ></el-input>
         </el-form-item>
 
         <el-form-item label="职业" :label-width="formLabelWidth">
-          <el-input v-model="form.occupation" :disabled="isEditForm"></el-input>
-        </el-form-item>
-
-        <el-form-item label="最后登录时间" :label-width="formLabelWidth">
-          <el-input v-model="form.lastLoginTime" :disabled="isEditForm"></el-input>
-        </el-form-item>
-
-        <el-form-item label="最后登录IP" :label-width="formLabelWidth">
-          <el-input v-model="form.lastLoginIp" :disabled="isEditForm"></el-input>
+          <el-input v-model="form.occupation" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,6 +196,8 @@ import {
 
 import { getRoleList } from "@/api/role";
 
+
+
 import CheckPhoto from "../../components/CheckPhoto";
 
 import { formatData } from "@/utils/webUtils";
@@ -201,6 +206,8 @@ export default {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
+      roleOptions: [], //角色候选框
+      loading: false, //搜索框加载状态
       roleData: [], //角色列表
       roleValue: [], //选择的角色列表
       keyword: "",
@@ -224,7 +231,7 @@ export default {
   created() {
 
     this.adminList();
-    // this.roleList();
+    this.roleList();
   },
   methods: {
     adminList: function() {
@@ -233,17 +240,27 @@ export default {
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getAdminList(params).then(response => {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
-        console.log(response);        
+        if(response.code == "success") {
+          console.log("得到的admin", response);
+          this.tableData = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        }
       });
+    },
+    //角色远程搜索函数
+    roleList: function () {
+      var params = {};
+      params.currentPage = 1;
+      params.pageSize = 10;
+      getRoleList(params).then(response => {
+        this.roleOptions = response.data.records;
+      });
+
     },
     //弹出选择图片框
     checkPhoto: function() {
-      console.log(this.photoVisible);
-      console.log("点击了选择图");
       this.photoVisible = true;
       console.log(this.photoVisible);
     },
@@ -293,9 +310,9 @@ export default {
       this.title = "编辑标签";
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);      
+      console.log(row);
       this.form = row;
-      
+
       this.fileIds = this.form.avatar;
 
       this.roleValue = [];
@@ -303,11 +320,11 @@ export default {
       //设置选择的角色列表
       if(row.roleList) {
         row.roleList.forEach(element => {
-          roleList.push(element.uid);  
+          roleList.push(element.uid);
         });
-        this.roleValue = roleList;        
+        this.roleValue = roleList;
       }
-      
+
     },
     handRest: function(row) {
       var that = this;
@@ -374,8 +391,8 @@ export default {
       this.adminList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form); 
-      this.form.avatar = this.fileIds;           
+      console.log("点击了提交表单", this.form);
+      this.form.avatar = this.fileIds;
       if (this.isEditForm) {
         editAdmin(this.form).then(response => {
           console.log(response);

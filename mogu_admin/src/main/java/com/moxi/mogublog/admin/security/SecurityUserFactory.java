@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.security;
 
 import com.moxi.mogublog.config.security.SecurityUser;
 import com.moxi.mogublog.xo.entity.Admin;
+import com.moxi.mougblog.base.enums.EStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,7 +15,7 @@ public final class SecurityUserFactory {
     }
 
     public static SecurityUser create(Admin admin) {
-        boolean enabled = (admin.getStatus() == 1) ? true : false;
+        boolean enabled = (admin.getStatus() == EStatus.ENABLE) ? true : false;
         return new SecurityUser(
                 admin.getUid(),
                 admin.getUserName(),

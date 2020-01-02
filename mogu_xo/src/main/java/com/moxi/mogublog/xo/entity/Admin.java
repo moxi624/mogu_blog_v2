@@ -30,6 +30,11 @@ public class Admin extends SuperEntity<Admin> {
     private String userName;
 
     /**
+     * 角色Uid
+     */
+    private String roleUid;
+
+    /**
      * 密码
      */
     private String passWord;
@@ -128,10 +133,10 @@ public class Admin extends SuperEntity<Admin> {
     private List<String> roleNames;
 
     /**
-     * 所拥有的角色
+     * 所拥有的角色名
      */
     @TableField(exist = false)
-    private List<Role> roleList;
+    private Role role;
 
     /**
      * 验证码
