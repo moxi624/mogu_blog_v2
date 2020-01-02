@@ -59,8 +59,8 @@ jobs:
         mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
         mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
         mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
-        mv ./mogu_blog_web/dist ./transfer_files/web_dist
-        mv ./mogu_blog_admin/dist ./transfer_files/admin_dist
+        mv ./vue_blog_web/dist ./transfer_files/web_dist
+        mv ./vue_blog_admin/dist ./transfer_files/admin_dist
     - name: scp
       uses: garygrossgarten/github-action-scp@release
       with:
