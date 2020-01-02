@@ -44,9 +44,11 @@ jobs:
     - name: build vue
       run: |
         cd ./vue_mogu_admin
+        npm run install
         npm run build
         cd ..
         cd ./vue_mogu_web
+        npm run install
         npm run build
         cd ..
     - name: move_to_files
