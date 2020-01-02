@@ -88,7 +88,7 @@
                src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>
 
-        <el-dropdown-menu slot="dropdown" >
+        <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="goUserInfo" v-show="isLogin">主页</el-dropdown-item>
           <el-dropdown-item command="logout" v-show="isLogin">退出</el-dropdown-item>
         </el-dropdown-menu>
@@ -330,8 +330,9 @@
   #starlist li .title {
     color: #00a7eb;
   }
+
   .el-dropdown {
-    position: absolute;
+    position: static;
   }
   .userInfoAvatar {
 
