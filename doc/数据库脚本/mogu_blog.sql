@@ -49,7 +49,7 @@ CREATE TABLE `t_admin` (
 
 /*Data for the table `t_admin` */
 
-insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`valid_code`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nick_name`,`qq_number`,`we_chat`,`occupation`,`github`,`gitee`,`role_uid`) values ('1f01cd1d2f474743b241d74008b12333','admin','$2a$10$FrHbye0RSyU.EfgDAFJIbupIMfdaWBX/R9Mfv1fGaijyhgnxZKrmq','1',',874939b5d7bd4f00b78a866a7c7f2a20','','2018-09-29',' ',NULL,'一个95后！正在潜心研究机器学习和Java后端技术，一边学习一边积累经验',591,'2020-01-02 18:46:15','192.168.80.1',1,'2018-09-08 11:05:05','2018-11-14 06:47:00','陌溪_','1595833114','','Java开发','https://github.com/moxi624','https://gitee.com/moxi159753','434994947c5a4ee3a710cd277357c7c3');
+insert  into `t_admin`(`uid`,`user_name`,`pass_word`,`gender`,`avatar`,`email`,`birthday`,`mobile`,`valid_code`,`summary`,`login_count`,`last_login_time`,`last_login_ip`,`status`,`create_time`,`update_time`,`nick_name`,`qq_number`,`we_chat`,`occupation`,`github`,`gitee`,`role_uid`) values ('1f01cd1d2f474743b241d74008b12333','admin','$2a$10$2GretrSxlvw8492fpLh.veW9mRvElrh8V4oRFPOxIB5rMkdBl6GVS','1',',874939b5d7bd4f00b78a866a7c7f2a20','','2018-09-29',' ',NULL,'一个95后！正在潜心研究机器学习和Java后端技术，一边学习一边积累经验',593,'2020-01-02 22:46:40','192.168.80.1',1,'2018-09-08 11:05:05','2018-11-14 06:47:00','陌溪_','1595833114','','Java开发','https://github.com/moxi624','https://gitee.com/moxi159753','434994947c5a4ee3a710cd277357c7c3');
 
 /*Table structure for table `t_blog` */
 
@@ -479,6 +479,8 @@ CREATE TABLE `t_web_visit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Web访问记录表';
 
 /*Data for the table `t_web_visit` */
+
+insert  into `t_web_visit`(`uid`,`user_uid`,`ip`,`behavior`,`module_uid`,`other_data`,`status`,`create_time`,`update_time`,`os`,`browser`) values ('1e7f5d1548c4ab3eb987151a023a7b6b',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:17:24','2020-01-02 20:17:24','Windows','Chrome-79.0.3945.88'),('43f22a79b47076d9686f61938c899439',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:19:09','2020-01-02 20:19:09','Windows','Chrome-79.0.3945.88'),('54dabd5fe5781f5fde9a066c1d7e970b',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:16:43','2020-01-02 20:16:43','Windows','Chrome-79.0.3945.88'),('705a798d60c7b4db4feba7d921e07624',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:15:52','2020-01-02 20:15:52','Windows','Chrome-79.0.3945.88'),('9807ba7a1ccf92d190bf82e057be24db',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:16:58','2020-01-02 20:16:58','Windows','Chrome-79.0.3945.88'),('b7376508ab056a41c948927eb36dd0d4',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:14:41','2020-01-02 20:14:41','Windows','Chrome-79.0.3945.88'),('bfffa98cdd71b91f8c36d1f314de53e7',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 22:21:40','2020-01-02 22:21:40','Windows','Chrome-79.0.3945.88'),('cbefe49c491cc10e54c42ed6e16767ea',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:19:11','2020-01-02 20:19:11','Windows','Chrome-79.0.3945.88'),('d1ca4300bd2d69944684bc1faf029899',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:04:37','2020-01-02 20:04:37','Windows','Chrome-79.0.3945.88'),('fc24799841651cc21844678586130db4',NULL,'192.168.80.1','visit_page',NULL,'INDEX',1,'2020-01-02 20:04:23','2020-01-02 20:04:23','Windows','Chrome-79.0.3945.88');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

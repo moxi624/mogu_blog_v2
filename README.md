@@ -62,9 +62,13 @@
 
 参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在window下搭建蘑菇博客的开发环境
 
-## Docker快速搭建蘑菇博客
+## Docker搭建蘑菇博客
 
 参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在服务器中，搭建好博客系统  
+
+## 蘑菇博客部署到服务器
+
+参考[蘑菇博客如何部署到阿里云服务器](http://www.moguit.cn/#/info?blogUid=89defe3f4a3f317cba9aa0cdb9ff879e)，在你修改蘑菇博客源码后，将项目打包部署到云服务器
 
 ## 项目环境
 
@@ -82,14 +86,13 @@
 
 mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
-## Docker容器中的初始密码
+## Docker容器中的初始用户和密码
 
-- **vue_mogu_admin**：用户：admin，密码：mogu2018
+- **后台登录**：用户：admin，密码：mogu2018
 - **Mysql**：用户：root，密码：mogu2018
 - **Redis**：密码：mogu2018
+- **远程SSH初始密码**：用户：root，密码：mogu2018
 - 
-
-
 
 ## 致谢
 
@@ -110,7 +113,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 
 ## 将来要做的事
 
-- [ ] IDEA集成Docker实现一键打包部署
+- [x] 集成Github Actions，完成蘑菇博客持续集成服务
 - [x] 门户网站增加登录页面
 - [x] 支持第三方登录
 - [ ] 将图片存储在七牛云中
