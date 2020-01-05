@@ -32,7 +32,9 @@ public class BlogListener {
     public void updateRedis(Map<String, String> map) {
 
         if (map != null) {
-            String level = map.get(SysConf.LEVEL);
+
+            String comment = map.get(SysConf.COMMAND);
+
             //从Redis清空对应的数据
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
@@ -41,33 +43,40 @@ public class BlogListener {
             stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
             stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
 
-            String createTime = map.get(SysConf.CREATE_TIME);
+            if(SysConf.DELETE_BATCH.equals(comment)) {
 
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-            String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
-            String [] list = sd.split("-");
+                stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
+                stringRedisTemplate.opsForValue().set("MONTH_SET", "");
 
-            System.out.println(createTime);
-            String year = list[0];
-            String month = list[1];
-            String key = year + "年" + month + "月";
-            System.out.println(key);
-            stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
+            } else {
+                String level = map.get(SysConf.LEVEL);
 
 
-            String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
-            ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
-            Boolean haveMonth = false;
-            if(monthSet != null) {
-                for (String item : monthSet) {
-                    if (item.equals(key)) {
-                        haveMonth = true;
-                        break;
+                String createTime = map.get(SysConf.CREATE_TIME);
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
+                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
+                String [] list = sd.split("-");
+                System.out.println(createTime);
+                String year = list[0];
+                String month = list[1];
+                String key = year + "年" + month + "月";
+                System.out.println(key);
+                stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
+
+                String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
+                ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
+                Boolean haveMonth = false;
+                if(monthSet != null) {
+                    for (String item : monthSet) {
+                        if (item.equals(key)) {
+                            haveMonth = true;
+                            break;
+                        }
                     }
-                }
-                if(!haveMonth) {
-                    monthSet.add(key);
-                    stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                    if(!haveMonth) {
+                        monthSet.add(key);
+                        stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                    }
                 }
             }
         }

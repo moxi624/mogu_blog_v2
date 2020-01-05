@@ -12,6 +12,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
+import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.vo.BlogSortVO;
@@ -33,9 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -130,18 +129,36 @@ public class BlogSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
-    @OperationLogger(value = "删除博客分类")
-    @ApiOperation(value = "删除博客分类", notes = "删除博客分类", response = String.class)
-    @PostMapping("/delete")
-    public String delete(@Validated({Delete.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
+    @OperationLogger(value = "批量删除博客分类")
+    @ApiOperation(value = "批量删除博客分类", notes = "批量删除博客分类", response = String.class)
+    @PostMapping("/deleteBatch")
+    public String delete(@Validated({Delete.class}) @RequestBody List<BlogSortVO> blogSortVoList, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
-        blogSort.setStatus(EStatus.DISABLED);
-        blogSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        if(blogSortVoList.size() <=0 ) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> uids = new ArrayList<>();
+
+        blogSortVoList.forEach(item->{
+            uids.add(item.getUid());
+        });
+
+        Collection<BlogSort> blogSortList = blogSortService.listByIds(uids);
+
+        blogSortList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        Boolean save = blogSortService.updateBatchById(blogSortList);
+
+        if(save) {
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+        }
     }
 
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)

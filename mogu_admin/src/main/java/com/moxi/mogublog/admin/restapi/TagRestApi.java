@@ -34,9 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -88,6 +86,7 @@ public class TagRestApi {
         ThrowableUtils.checkParamArgument(result);
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.CONTENT, tagVO.getContent());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Tag tempTag = tagService.getOne(queryWrapper);
         if (tempTag != null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
@@ -113,6 +112,7 @@ public class TagRestApi {
         if (tag != null && !tag.getContent().equals(tagVO.getContent())) {
             QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.CONTENT, tagVO.getContent());
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             Tag tempTag = tagService.getOne(queryWrapper);
             if (tempTag != null) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
@@ -125,18 +125,34 @@ public class TagRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
-    @OperationLogger(value = "删除标签")
-    @ApiOperation(value = "删除标签", notes = "删除标签", response = String.class)
-    @PostMapping("/delete")
-    public String delete(@Validated({Delete.class}) @RequestBody TagVO tagVO, BindingResult result) {
+    @OperationLogger(value = "批量删除标签")
+    @ApiOperation(value = "批量删除标签", notes = "批量删除标签", response = String.class)
+    @PostMapping("/deleteBatch")
+    public String delete(@Validated({Delete.class}) @RequestBody List<TagVO> tagVoList, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        Tag tag = tagService.getById(tagVO.getUid());
-        tag.setStatus(EStatus.DISABLED);
-        tag.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        if(tagVoList.size() <=0 ) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> uids = new ArrayList<>();
+        tagVoList.forEach(item->{
+            uids.add(item.getUid());
+        });
+        Collection<Tag> tagList = tagService.listByIds(uids);
+
+        tagList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        Boolean save = tagService.updateBatchById(tagList);
+
+        if(save) {
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+        }
     }
 
     @OperationLogger(value = "置顶标签")

@@ -31,3 +31,11 @@ export function deleteBlog(params) {
     data: params
   })
 }
+
+export function deleteBatchBlog(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blog/deleteBatch',
+    method: 'post',
+    data: params
+  })
+}

@@ -24,9 +24,9 @@ export function editTag(params) {
   })
 }
 
-export function deleteTag(params) {
+export function deleteBatchTag(params) {
   return request({
-    url: process.env.ADMIN_API + '/tag/delete',
+    url: process.env.ADMIN_API + '/tag/deleteBatch',
     method: 'post',
     data: params
   })

@@ -157,6 +157,12 @@ public class BlogSearchServiceImpl implements BlogSearchService {
     }
 
     @Override
+    public void deleteBatchIndex(String collection, List<String> ids) {
+        solrTemplate.deleteByIds(collection, ids);
+        solrTemplate.commit(collection);
+    }
+
+    @Override
     public void deleteAllIndex(String collection) {
         SimpleQuery query = new SimpleQuery("*:*");
         solrTemplate.delete(collection, query);

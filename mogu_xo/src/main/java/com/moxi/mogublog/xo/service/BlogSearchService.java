@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.service;
 
 import com.moxi.mogublog.xo.entity.Blog;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,13 @@ public interface BlogSearchService {
      * @return
      */
     public void deleteIndex(String collection, String id);
+
+    /**
+     * 批量删除索引
+     * @param collection
+     * @param ids
+     */
+    public void deleteBatchIndex(String collection, List<String> ids);
 
     /**
      * 删除全部索引

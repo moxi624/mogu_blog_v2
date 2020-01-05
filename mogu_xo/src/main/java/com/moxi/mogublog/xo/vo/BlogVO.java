@@ -100,6 +100,7 @@ public class BlogVO extends BaseVO<BlogVO> {
      * 版权申明
      */
     private String copyright;
+
     /**
      * 博客等级关键字，仅用于getList
      */

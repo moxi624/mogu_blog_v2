@@ -24,10 +24,7 @@ import com.moxi.mougblog.base.enums.EOriginal;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.Delete;
-import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
+import com.moxi.mougblog.base.validator.group.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.LogManager;
@@ -106,6 +103,12 @@ public class BlogRestApi {
         }
         if (!StringUtils.isEmpty(blogVO.getLevelKeyword())) {
             queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevelKeyword());
+        }
+        if (!StringUtils.isEmpty(blogVO.getIsPublish())) {
+            queryWrapper.eq(SQLConf.IS_PUBLISH, blogVO.getIsPublish());
+        }
+        if (!StringUtils.isEmpty(blogVO.getIsOriginal())) {
+            queryWrapper.eq(SQLConf.IS_ORIGINAL, blogVO.getIsOriginal());
         }
 
         //分页
@@ -337,6 +340,43 @@ public class BlogRestApi {
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
+
+    @OperationLogger(value = "删除选中博客")
+    @ApiOperation(value = "删除选中博客", notes = "删除选中博客", response = String.class)
+    @PostMapping("/deleteBatch")
+    public String deleteBatch(HttpServletRequest request, @RequestBody List<BlogVO> blogVoList) {
+
+        if(blogVoList.size() <=0 ) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> uids = new ArrayList<>();
+        blogVoList.forEach(item->{
+            uids.add(item.getUid());
+        });
+        Collection<Blog> blogList = blogService.listByIds(uids);
+
+        blogList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        Boolean save = blogService.updateBatchById(blogList);
+
+        //保存成功后，需要发送消息到solr 和 redis
+        if (save) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(SysConf.COMMAND, SysConf.DELETE_BATCH);
+            map.put(SysConf.BLOG_UID, uids);
+
+            //发送到RabbitMq
+            rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+            //删除solr索引
+            blogSearchService.deleteBatchIndex(collection, uids);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+    }
+
 
     /**
      * 添加时校验

@@ -24,9 +24,9 @@ export function editBlogSort(params) {
   })
 }
 
-export function deleteBlogSort(params) {
+export function deleteBatchBlogSort(params) {
   return request({
-    url: process.env.ADMIN_API + '/blogSort/delete',
+    url: process.env.ADMIN_API + '/blogSort/deleteBatch',
     method: 'post',
     data: params
   })

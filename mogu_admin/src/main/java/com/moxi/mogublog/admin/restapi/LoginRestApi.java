@@ -13,6 +13,7 @@ import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mougblog.base.vo.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -130,6 +131,9 @@ public class LoginRestApi {
                        @ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
 
         Map<String, Object> map = new HashMap<>();
+        if (request.getAttribute(SysConf.ADMIN_UID) ==  null) {
+            return ResultUtil.result(SysConf.ERROR, "token用户过期");
+        }
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
         map.put(SysConf.TOKEN, token);
         //获取图片

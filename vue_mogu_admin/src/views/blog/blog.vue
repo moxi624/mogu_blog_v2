@@ -59,11 +59,30 @@
         ></el-option>
       </el-select>
 
+      <el-select v-model="publishKeyword" clearable placeholder="是否发布" style="width:140px">
+        <el-option
+          v-for="item in blogPublishList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+
+      <el-select v-model="originalKeyword" clearable placeholder="是否原创" style="width:140px">
+        <el-option
+          v-for="item in blogOriginalList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60">
@@ -112,6 +131,7 @@
 	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
 	      </template>
       </el-table-column>-->
+
       <el-table-column label="标签" width="100">
         <template slot-scope="scope">
           <template>
@@ -191,7 +211,7 @@
         <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
 		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
 		    </el-form-item>
-		    
+
 		   	<el-form-item v-if="isEditForm == false" label="博客UID" :label-width="formLabelWidth" style="display: none;">
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
         </el-form-item>-->
@@ -330,7 +350,7 @@
 </template>
 
 <script>
-import { getBlogList, addBlog, editBlog, deleteBlog } from "@/api/blog";
+import { getBlogList, addBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
 import {
@@ -357,6 +377,7 @@ export default {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
+      multipleSelection: [], //多选，用于批量删除
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框
       loading: false, //搜索框加载状态
@@ -369,6 +390,8 @@ export default {
       tagKeyword: "", //标签搜索
       sortKeyword: "", //分类搜索
       levelKeyword: "", //等级搜索
+      publishKeyword: "", // 发布 搜索
+      originalKeyword: "", // 原创 搜索
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -383,6 +406,14 @@ export default {
       fileIds: "",
       icon: false, //控制删除图标的显示
       interval: null, //定义触发器
+      blogOriginalList: [
+        { label: "原创", value: 1 },
+        { label: "转载", value: 0 },
+      ],
+      blogPublishList: [
+        { label: "已下架", value: 0 },
+        { label: "已发布", value: 1 },
+      ],
       blogLevelList: [
         { label: "正常", value: 0 },
         { label: "一级推荐", value: 1 },
@@ -411,11 +442,11 @@ export default {
     //从dashboard传递过来的 tagUid 以及 blogSortUid
     var tempTag = this.$route.query.tag;
     var tempBlogSort = this.$route.query.blogSort;
-    if(tempTag != undefined) { 
+    if(tempTag != undefined) {
       this.tagRemoteMethod(tempTag.name);
       this.tagKeyword = tempTag.tagUid;
     }
-    if(tempBlogSort != undefined) {    
+    if(tempBlogSort != undefined) {
       this.sortRemoteMethod(tempBlogSort.name);
       this.sortKeyword = tempBlogSort.blogSortUid;
     }
@@ -443,6 +474,8 @@ export default {
       params.blogSortUid = this.sortKeyword;
       params.tagUid = this.tagKeyword;
       params.levelKeyword = this.levelKeyword;
+      params.isPublish = this.publishKeyword;
+      params.isOriginal = this.originalKeyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getBlogList(params).then(response => {
@@ -473,7 +506,7 @@ export default {
       return formObject;
     },
     // 跳转到该博客详情
-    onClick: function(row) {      
+    onClick: function(row) {
       window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
     },
     //标签远程搜索函数
@@ -548,7 +581,7 @@ export default {
     },
     handleAdd: function() {
       var that = this;
-      var tempForm = JSON.parse(getCookie("form"));      
+      var tempForm = JSON.parse(getCookie("form"));
       if (tempForm != null && tempForm.title != null && tempForm.title != "") {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
@@ -650,10 +683,41 @@ export default {
         type: "warning"
       })
         .then(() => {
-  
+
           var params = {};
           params.uid = row.uid;
           deleteBlog(params).then(response => {
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.blogList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleDeleteBatch: function(row) {
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中博客删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+
+          deleteBatchBlog(that.multipleSelection).then(response => {
             this.$message({
               type: "success",
               message: response.data
@@ -707,7 +771,7 @@ export default {
             });
           }
         });
-        
+
       } else {
 
         addBlog(this.form).then(response => {
@@ -735,6 +799,10 @@ export default {
 
 
       }
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
   }
 };

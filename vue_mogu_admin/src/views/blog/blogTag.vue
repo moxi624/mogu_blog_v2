@@ -12,6 +12,7 @@
       ></el-input>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加标签</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
       <el-button
         class="filter-item"
         type="info"
@@ -26,7 +27,7 @@
       >引用量排序</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60">
@@ -50,6 +51,12 @@
       <el-table-column label="创建时间" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="更新时间" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
 
@@ -124,7 +131,7 @@ import {
   getTagList,
   addTag,
   editTag,
-  deleteTag,
+  deleteBatchTag,
   stickTag,
   tagSortByClickCount,
   tagSortByCite
@@ -133,6 +140,7 @@ import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
+      multipleSelection: [], //多选，用于批量删除
       tableData: [],
       keyword: "",
       currentPage: 1,
@@ -220,13 +228,13 @@ export default {
         }
       )
         .then(() => {
-					
+
 					tagSortByCite().then(response => {
             if (response.code == "success") {
               this.tagList();
             }
 					});
-					
+
         })
         .catch(() => {
           this.$message({
@@ -283,9 +291,41 @@ export default {
       })
         .then(() => {
 
-          var params = {};
-          params.uid = row.uid;
-          deleteTag(params).then(response => {
+          var params = [];
+          params.push(row);
+          deleteBatchTag(params).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.tagList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleDeleteBatch: function() {
+      var that = this;
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中的标签删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteBatchTag(that.multipleSelection).then(response => {
             console.log(response);
             this.$message({
               type: "success",
@@ -342,6 +382,10 @@ export default {
           }
         });
       }
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
   }
 };
