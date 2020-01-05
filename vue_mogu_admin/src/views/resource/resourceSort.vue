@@ -4,24 +4,24 @@
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名称"></el-input>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>	      
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
 	    </div>
 
-    <el-table :data="tableData"  style="width: 100%"> 
+    <el-table :data="tableData"  style="width: 100%">
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
 	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
 	      </template>
 	    </el-table-column>
-		    
+
 	    <el-table-column label="分类名" width="160">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.sortName }}</span>
@@ -34,13 +34,13 @@
 	      </template>
 	    </el-table-column>
 
-	    
+
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -54,14 +54,14 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+
+	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
-          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>          
+          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
-	    </el-table-column>     	    
+	    </el-table-column>
 	  </el-table>
 
 		<!--分页-->
@@ -78,21 +78,21 @@
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
-		  	
+
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
-		    	</div>				
+		    	</div>
 		    </el-form-item>
-		    
+
 		    <el-form-item label="分类名" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.sortName" auto-complete="off"></el-input>
 		    </el-form-item>
-		    
+
 		    <el-form-item label="分类介绍" :label-width="formLabelWidth">
 		      <el-input type="textarea" v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
@@ -173,7 +173,7 @@ export default {
     },
     handleFind: function() {
       console.log(this.keyword);
-      this.pictureSortList();
+      this.resourceSortList();
     },
     getFormObject: function() {
       var formObject = {

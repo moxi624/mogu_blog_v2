@@ -25,7 +25,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         chmod 700 ~/.ssh && chmod 700 ~/.ssh/*
         ls -l ~/.ssh/
-    - name: download config file and replace
+    - name: Download config file and replace
       run: |
         git clone git@github.com:moxi624/mogu_prod_configuration.git
         mv -f ./mogu_prod_configuration/config/mogu_admin/application.yml ./mogu_admin/src/main/resources/application.yml
@@ -34,14 +34,14 @@ jobs:
         mv -f ./mogu_prod_configuration/config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/vue_mogu_admin/config.js ./vue_mogu_admin/static/ckeditor/config.js
-    - name: build jar
+    - name: Build SpringBoot jar
       run: | 
         mvn clean install
     - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:
         node-version: 12.x    
-    - name: build vue
+    - name: Build vue_mogu_admin and vue_mogu_web
       run: |
         cd ./vue_mogu_admin
         npm install
@@ -51,7 +51,7 @@ jobs:
         npm install
         npm run build
         cd ..
-    - name: move_to_files
+    - name: Move files and compress
       run: |
         mkdir -p transfer_files
         mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
@@ -62,7 +62,7 @@ jobs:
         mv ./vue_mogu_web/dist ./transfer_files/web_dist
         mv ./vue_mogu_admin/dist ./transfer_files/admin_dist
         tar -zcvf  transfer_files.tar.gz transfer_files/
-    - name: scp
+    - name: Scp file to aliyun
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -71,7 +71,7 @@ jobs:
         port: ${{ secrets.DOCKER_PORT }}
         source: "transfer_files.tar.gz"
         target: "/home"
-    - name: distribution and backup
+    - name: Distribution and backup
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -81,23 +81,102 @@ jobs:
         script: |
           cd /home
           tar -zxvf /home/transfer_files.tar.gz
-          mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+
+          echo "################# mogu_admin moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_admin.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_admin.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_sms moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_sms.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_sms.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_eureka moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_eureka.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_eureka.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_picture moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_picture.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_picture.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_web moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_web.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_web.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+
+          echo "################# vue_mogu_web moving #################"
+          if [ -d "/home/mogu_blog/vue_mogu_web/dist.bak/" ];then
+            echo "vue_mogu_web dist.bak exists and is being deleted"
+            cd /home/mogu_blog/vue_mogu_web
+            rm -rf dist.bak/
+          fi
+          if [ -d "/home/mogu_blog/vue_mogu_web/dist/" ];then
+            echo "vue_mogu_web dist exists and is being backup"
+            mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+          fi
           mv /home/transfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
-          mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+
+          echo "################# vue_mogu_admin moving #################"
+          if [ -d "/home/mogu_blog/vue_mogu_admin/dist.bak/" ];then
+            echo "vue_mogu_admin dist.bak exists and is being deleted"
+            cd /home/mogu_blog/vue_mogu_admin
+            rm -rf dist.bak/
+          fi
+          if [ -d "/home/mogu_blog/vue_mogu_admin/dist/" ];then
+            echo "vue_mogu_admin dist exists and is being backup"
+            mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+          fi
           mv /home/transfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
+
+          echo "################# rm transfer_files.tar.gz #################"
           rm -rf /home/transfer_files.tar.gz
+
+          echo "################# rm transfer_files #################"
           rm -rf /home/transfer_files
-    - name: start_eureka
+
+    - name: Start mogu_eureka
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -108,7 +187,7 @@ jobs:
           cd /home/mogu_blog/mogu_eureka/
           ./shutdown.sh
           ./startup.sh
-    - name: start_picture
+    - name: Start mogu_picture
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -119,7 +198,7 @@ jobs:
           cd /home/mogu_blog/mogu_picture/
           ./shutdown.sh
           ./startup.sh
-    - name: start_admin
+    - name: Start mogu_admin
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -130,7 +209,7 @@ jobs:
           cd /home/mogu_blog/mogu_admin/
           ./shutdown.sh
           ./startup.sh
-    - name: start_sms
+    - name: Start mogu_sms
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
@@ -141,7 +220,7 @@ jobs:
           cd /home/mogu_blog/mogu_sms/
           ./shutdown.sh
           ./startup.sh
-    - name: start_web
+    - name: Start mogu_web
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP }}
