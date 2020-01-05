@@ -92,6 +92,21 @@ public class User extends SuperEntity<User> {
     private Integer loginCount;
 
     /**
+     * 验证码
+     */
+    private String validCode;
+
+    /**
+     * 资料来源
+     */
+    private String source;
+
+    /**
+     * 平台uuid
+     */
+    private String uuid;
+
+    /**
      * 最后登录时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -112,19 +127,4 @@ public class User extends SuperEntity<User> {
     @TableField(exist = false)
     private String photoUrl;
 
-    /**
-     * 验证码
-     */
-    //@TableField(exist = false)
-    private String validCode;
-
-    /**
-     * 资料来源
-     */
-    private String source;
-
-    /**
-     * 平台uuid
-     */
-    private String uuid;
 }

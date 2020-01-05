@@ -5,7 +5,7 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
 
 /**
  * <p>
- * 管理员表 Mapper 接口
+ * 用户表 Mapper 接口
  * </p>
  *
  * @author xuzhixiang

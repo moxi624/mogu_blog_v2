@@ -83,18 +83,15 @@ public class UserVO extends BaseVO<UserVO> {
      */
     private String summary;
 
-    /**
-     * github地址
-     */
-    private String github;
 
     /**
-     * gitee地址
+     * 资料来源
      */
-    private String gitee;
+    private String source;
 
     /**
-     * 是否记住密码
+     * 平台uuid
      */
-    private Integer isRememberMe;
+    private String uuid;
+
 }
