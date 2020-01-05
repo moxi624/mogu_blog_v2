@@ -81,22 +81,101 @@ jobs:
         script: |
           cd /home
           tar -zxvf /home/transfer_files.tar.gz
-          mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+
+          echo "################# mogu_admin moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_admin.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_admin.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_sms moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_sms.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_sms.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_eureka moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_eureka.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_eureka.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_picture moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_picture.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_picture.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+
+
+          echo "################# mogu_web moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_web.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_web.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+          fi
           mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
-          mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+
+
+          echo "################# vue_mogu_web moving #################"
+
+          if [ -d "/home/mogu_blog/vue_mogu_web/dist.bak/" ];then
+            echo "vue_mogu_web dist.bak exists and is being deleted"
+            rm -f /home/mogu_blog/vue_mogu_web/dist.bak
+          fi
+          if [ -d "/home/mogu_blog/vue_mogu_web/dist/" ];then
+            echo "vue_mogu_web dist exists and is being backup"
+            mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+          fi
           mv /home/transfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
-          mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+
+          echo "################# vue_mogu_admin moving #################"
+
+          if [ -d "/home/mogu_blog/vue_mogu_admin/dist.bak/" ];then
+            echo "vue_mogu_admin dist.bak exists and is being deleted"
+            rm -f /home/mogu_blog/vue_mogu_admin/dist.bak
+          fi
+          if [ -d "/home/mogu_blog/vue_mogu_admin/dist/" ];then
+            echo "vue_mogu_admin dist exists and is being backup"
+            mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+          fi
           mv /home/transfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
+
+          echo "################# rm transfer_files.tar.gz #################"
           rm -rf /home/transfer_files.tar.gz
+          echo "################# rm transfer_files #################"
           rm -rf /home/transfer_files
+
     - name: start_eureka
       uses: appleboy/ssh-action@master
       with:
