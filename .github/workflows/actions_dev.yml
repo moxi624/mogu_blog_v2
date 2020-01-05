@@ -153,7 +153,8 @@ jobs:
 
           if [ -d "/home/mogu_blog/vue_mogu_web/dist.bak/" ];then
             echo "vue_mogu_web dist.bak exists and is being deleted"
-            rm -f /home/mogu_blog/vue_mogu_web/dist.bak
+            cd /home/mogu_blog/vue_mogu_web
+            rm -rf dist.bak/
           fi
           if [ -d "/home/mogu_blog/vue_mogu_web/dist/" ];then
             echo "vue_mogu_web dist exists and is being backup"
@@ -165,7 +166,8 @@ jobs:
 
           if [ -d "/home/mogu_blog/vue_mogu_admin/dist.bak/" ];then
             echo "vue_mogu_admin dist.bak exists and is being deleted"
-            rm -f /home/mogu_blog/vue_mogu_admin/dist.bak
+            cd /home/mogu_blog/vue_mogu_admin
+            rm -rf dist.bak/
           fi
           if [ -d "/home/mogu_blog/vue_mogu_admin/dist/" ];then
             echo "vue_mogu_admin dist exists and is being backup"
@@ -176,7 +178,7 @@ jobs:
           echo "################# rm transfer_files.tar.gz #################"
           rm -rf /home/transfer_files.tar.gz
           echo "################# rm transfer_files #################"
-
+          rm -rf /home/transfer_files
 
     - name: Start mogu_eureka
       uses: appleboy/ssh-action@master

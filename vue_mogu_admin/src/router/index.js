@@ -206,12 +206,6 @@ export const constantRouterMap = [
         meta: { title: '关于我', icon: 'aboutMe' }
       },
       {
-        path: 'solrIndex',
-        name: '索引管理',
-        component: () => import('@/views/system/solrIndex'),
-        meta: { title: '索引管理', icon: 'index' }
-      },
-      {
         path: 'blogLink',
         name: '友情链接',
         component: () => import('@/views/system/blogLink'),
@@ -278,6 +272,46 @@ export const constantRouterMap = [
         name: 'Web接口',
         component: () => import('@/views/restapi/webRestApi'),
         meta: { title: 'Web接口', icon: 'table' }
+      }
+    ]
+  },
+
+  {
+    path: '/monitor',
+    component: Layout,
+    redirect: '/monitor/springBootAdmin',
+    name: '监控中心',
+    meta: { title: '监控中心', icon: 'log' },
+    children: [
+      {
+        path: 'SpringBootAdmin',
+        name: 'SpringBootAdmin',
+        component: () => import('@/views/monitor/SpringBootAdmin'),
+        meta: { title: 'SpringBootAdmin', icon: 'log' }
+      },
+      {
+        path: 'Druid',
+        name: 'Druid',
+        component: () => import('@/views/monitor/Druid'),
+        meta: { title: 'Druid', icon: 'exception' }
+      },
+      {
+        path: 'Eureka',
+        name: 'Eureka',
+        component: () => import('@/views/monitor/Eureka'),
+        meta: { title: 'Eureka', icon: 'user1' }
+      },
+      {
+        path: 'RabbitMQ',
+        name: 'RabbitMQ',
+        component: () => import('@/views/monitor/RabbitMQ'),
+        meta: { title: 'RabbitMQ', icon: 'user1' }
+      },
+      {
+        path: 'Solr',
+        name: 'Solr',
+        component: () => import('@/views/system/solrIndex'),
+        meta: { title: 'Solr', icon: 'index' }
       }
     ]
   },
