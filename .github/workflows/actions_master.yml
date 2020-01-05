@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+      - with:
+          ref: master
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -34,7 +36,7 @@ jobs:
         mv -f ./mogu_prod_configuration/config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/vue_mogu_admin/config.js ./vue_mogu_admin/static/ckeditor/config.js
-    - name: Build SpringBoot jar
+    - name: Build Java jar
       run: | 
         mvn clean install
     - name: Use Node.js 12.x
