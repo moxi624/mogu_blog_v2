@@ -17,10 +17,12 @@ file:
   upload:
     path: D:/mogu_blog/data/
 
+# 邮箱验证
 moguBlog:
   email: mogublog@163.com
 
-DEFAULE_PWD: mogublog
+# 蘑菇博客默认密码
+DEFAULE_PWD: mogu2018
 
 #博客相关配置
 BLOG:

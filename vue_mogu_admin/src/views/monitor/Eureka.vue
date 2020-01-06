@@ -1,15 +1,24 @@
 <template>
-  <div>
-    <h1>Eureka监控中心</h1>
+  <div class="app-container">
+    <iframe  :src="adminSwaggerUrl" width="100%" height="780px;"></iframe>
   </div>
 </template>
 
 <script>
-    export default {
-        name: "Eureka"
+
+  export default {
+
+    data() {
+      return {
+        adminSwaggerUrl: "http://localhost:8761",
+      }
+    },
+    created() {
+
+    },
+    methods: {
+
     }
+  }
 </script>
 
-<style scoped>
-
-</style>

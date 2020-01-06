@@ -18,8 +18,9 @@ public class BaseMessageConf {
 
     public static final String ENTITY_EXIST = "该实体已存在";
 
-    public static final String LOGIN_DISABLE = "该账号已被封禁"; //
+    public static final String LOGIN_DISABLE = "该账号已被封禁";
     public static final String LOGIN_ERROR = "登录失败，用户名或密码错误";
+    public static final String NO_ROLE = "没有分配角色权限";
     public static final String INTERFACE_FREQUENTLY = "接口过于频繁调用";
     public static final String PARAM_INCORRECT = "传入参数有误！";
     public final static String INVALID_TOKEN = "token令牌未被识别";

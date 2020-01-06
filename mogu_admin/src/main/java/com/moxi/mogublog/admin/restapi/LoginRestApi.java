@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.jwt.Audience;
@@ -92,12 +93,16 @@ public class LoginRestApi {
         boolean isPassword = encoder.matches(password, admin.getPassWord());
         if (!isPassword) {
             //密码错误，返回提示
-            return ResultUtil.result(SysConf.ERROR, "用户名或密码错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.LOGIN_ERROR);
         }
 
         List<String> roleUids = new ArrayList<>();
         roleUids.add(admin.getRoleUid());
         List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
+
+        if(roles.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.NO_ROLE);
+        }
         String roleNames = null;
         for (Role role : roles) {
             roleNames += (role.getRoleName() + ",");

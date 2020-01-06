@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +31,7 @@ public class BlogListener {
 // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
 
     @RabbitListener(queues = "mogu.blog")
-    public void updateRedis(Map<String, String> map) {
+    public void updateRedis(Map<String, String> map) throws ParseException {
 
         if (map != null) {
 
@@ -51,10 +53,10 @@ public class BlogListener {
             } else {
                 String level = map.get(SysConf.LEVEL);
 
-
                 String createTime = map.get(SysConf.CREATE_TIME);
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
+                Date myString = DateFormat.getDateTimeInstance().parse(createTime);
+                String sd = sdf.format(myString);
                 String [] list = sd.split("-");
                 System.out.println(createTime);
                 String year = list[0];
