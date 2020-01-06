@@ -26,6 +26,13 @@
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 - 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因部署时遇到问题，无法完成正常部署，故搁置...欢迎有了解nuxt或者SEO优化的老哥一起探讨~）
 
+## 项目地址
+
+目前项目托管在Gitee和Github平台上中，欢迎大家star 和 fork 支持~
+
+- Gitee地址：https://gitee.com/moxi159753/mogu_blog_v2
+- Github地址：https://github.com/moxi624/mogu_blog_v2
+
 ## 目录介绍
 
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统。
@@ -45,8 +52,9 @@
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth、Druid
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
+- 自动化运维：Docker、Github Actions
 
 ## 项目特点
 
@@ -55,7 +63,7 @@
 - 利于SEO优化，让博客能够搜索到。
 - 页面交互使用Vue2.x，极大的提高了开发效率。
 - 引入swagger文档支持，方便编写API接口文档。
-- 引入RabbitMQ消息队列，用于邮件和短信发送。
+- 引入RabbitMQ消息队列，用于邮件发送、更新Redis和Solr
 - 引入JustAuth第三方登录开源库，支持Gitee、Github账号登录。
 - 引入Github Actions 完成蘑菇博客的持续集成、持续部署。
 
@@ -71,11 +79,9 @@
 
 参考[蘑菇博客如何部署到阿里云服务器](http://www.moguit.cn/#/info?blogUid=89defe3f4a3f317cba9aa0cdb9ff879e)，在你修改蘑菇博客源码后，将项目打包部署到云服务器
 
-## Github Action完成蘑菇博客持续集成
+## 使用Github Actions完成蘑菇博客持续集成
 
-这阵子一直在研究自动化部署这块，之前人肉运维的方式，虽说能够完成要求，但是每次都要编译、打包、上传到服务器，然后启动项目，这些步骤做多了就感觉非常的花费时间，因为每次进行这样一系列的操作，长年累月，大量的时间花费在这上面了，Github统一将上述操作称为Actions，其中里面的很多操作在项目中是相同的，完全可以共享，因此Github就想到了把每个操作写成一个独立的脚本文件，存放到代码仓库中，让其它用户可以直接引入某个action，从而不必自己写复杂的脚本，我们通过一系列的Action组合，在加上自己部分业务逻辑的脚本，就组合成了一个Actions，我们称这个Actions为持续集成。
-
-参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/#/info?blogUid=0762bfb392c2cf0a94c8a7934fe46f8f)
+参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/#/info?blogUid=0762bfb392c2cf0a94c8a7934fe46f8f) ，在你提交一个push请求后，通过Github Actions能够完成蘑菇博客自动化 编译、打包、部署等操作。
 
 ## 项目环境
 
@@ -99,6 +105,8 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 - **Mysql**：用户：root，密码：mogu2018
 - **Redis**：密码：mogu2018
 - **远程SSH初始密码**：用户：root，密码：mogu2018
+- **RabbitMQ管理页面：** 用户：guest，密码：guest
+- **Eureka管理页面：** 用户：user，密码：password123
 - 
 
 ## 致谢
