@@ -57,6 +57,7 @@ public class BlogListener {
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
                 Date myString = DateFormat.getDateTimeInstance().parse(createTime);
                 String sd = sdf.format(myString);
+//                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
                 String [] list = sd.split("-");
                 System.out.println(createTime);
                 String year = list[0];

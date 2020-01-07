@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -151,9 +152,9 @@ public class IndexRestApi {
             firstBlogList = setBlog(firstBlogList);
             secondBlogList = setBlog(secondBlogList);
 
-            //将从数据库查询的数据缓存到redis中
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList).toString());
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList).toString());
+            //将从数据库查询的数据缓存到redis中，设置1小时后过期
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList).toString(), 1, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList).toString(), 1, TimeUnit.HOURS);
 
             switch (level) {
                 case SysConf.ONE: {pageList.setRecords(firstBlogList);};break;
@@ -167,7 +168,8 @@ public class IndexRestApi {
         pageList.setRecords(list);
 
         //将从数据库查询的数据缓存到redis中
-        stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString());
+        String key = SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level;
+        stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 10, TimeUnit.SECONDS);
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }

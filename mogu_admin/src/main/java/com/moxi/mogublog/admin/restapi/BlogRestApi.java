@@ -366,7 +366,6 @@ public class BlogRestApi {
 
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.DELETE_BATCH);
-            map.put(SysConf.BLOG_UID, uids);
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
