@@ -18,6 +18,7 @@ import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/picture")
+@Slf4j
 public class PictureRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     PictureService pictureService;
     @Autowired

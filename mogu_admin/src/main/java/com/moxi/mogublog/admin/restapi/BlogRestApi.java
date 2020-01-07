@@ -27,6 +27,7 @@ import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -54,9 +55,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/blog")
 @Api(value = "博客RestApi", tags = {"BlogRestApi"})
+@Slf4j
 public class BlogRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     BlogService blogService;
     @Autowired

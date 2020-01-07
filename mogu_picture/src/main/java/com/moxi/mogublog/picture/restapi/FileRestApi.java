@@ -15,6 +15,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/file")
 @Api(value = "文件RestApi", tags = {"FileRestApi"})
+@Slf4j
 public class FileRestApi {
-
-    Logger log = LoggerFactory.getLogger(FileRestApi.class);
 
     @Autowired
     private FileService fileService;

@@ -16,6 +16,7 @@ import com.moxi.mogublog.xo.vo.WebConfigVO;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "系统配置RestApi", tags = {"WebConfigRestApi"})
 @RestController
 @RequestMapping("/webConfig")
+@Slf4j
 public class WebConfigRestApi {
 
     @Autowired

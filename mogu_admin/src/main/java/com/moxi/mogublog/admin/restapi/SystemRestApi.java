@@ -11,6 +11,7 @@ import com.moxi.mogublog.xo.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequestMapping("/system")
 @Api(value = "系统设置RestApi", tags = {"SystemRestApi"})
+@Slf4j
 public class SystemRestApi {
 
     @Autowired

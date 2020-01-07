@@ -18,6 +18,7 @@ import com.moxi.mougblog.base.vo.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,6 +39,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/auth")
 @Api(value = "登录管理RestApi", tags = {"loginRestApi"})
+@Slf4j
 public class LoginRestApi {
 
     @Autowired

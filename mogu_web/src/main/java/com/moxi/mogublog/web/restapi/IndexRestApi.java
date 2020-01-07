@@ -22,6 +22,7 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,9 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/index")
 @Api(value = "首页RestApi", tags = {"IndexRestApi"})
+@Slf4j
 public class IndexRestApi {
 
-    private static Logger log = LogManager.getLogger(IndexRestApi.class);
     @Autowired
     TagService tagService;
 

@@ -3,6 +3,7 @@ package com.moxi.mogublog.sms.listener;
 import com.moxi.mogublog.sms.global.SysConf;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -23,6 +24,7 @@ import java.util.Map;
  * @date 2018年11月3日下午12:53:23
  */
 @Component
+@Slf4j
 public class BlogListener {
 
     @Autowired
@@ -46,7 +48,7 @@ public class BlogListener {
             stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
 
             if(SysConf.DELETE_BATCH.equals(comment)) {
-
+                log.info("批量删除博客");
                 stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
                 stringRedisTemplate.opsForValue().set("MONTH_SET", "");
 
