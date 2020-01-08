@@ -1,17 +1,37 @@
 server:
   port: 8761
 
+
 spring:
   jmx:
     default-domain: mogu_eureka
+  application:
+    name: mogu-eureka
   security:
     user:
       name: user
       password: password123
-
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8888
+        username: admin
+        password: 123456
+        instance:
+          service-base-url: http://localhost:8601
 eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://user:password123@localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
