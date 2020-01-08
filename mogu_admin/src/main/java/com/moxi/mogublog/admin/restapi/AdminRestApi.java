@@ -159,15 +159,15 @@ public class AdminRestApi {
 
         QueryWrapper<Admin> wrapper = new QueryWrapper<>();
         if (admin == null) {
-            if (StringUtils.isNotEmpty(email)) {
-                wrapper.eq(SQLConf.EMAIL, email);
-            } else {
-                wrapper.eq(SQLConf.MOBILE, mobile);
-            }
-
-            if (adminService.getOne(wrapper) != null) {
-                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
-            }
+//            if (StringUtils.isNotEmpty(email)) {
+//                wrapper.eq(SQLConf.EMAIL, email);
+//            } else {
+//                wrapper.eq(SQLConf.MOBILE, mobile);
+//            }
+//
+//            if (adminService.getOne(wrapper) != null) {
+//                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
+//            }
 
             // 设置为未审核状态
             registered.setStatus(EStatus.ENABLE);
