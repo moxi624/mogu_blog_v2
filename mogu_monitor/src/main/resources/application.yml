@@ -6,16 +6,17 @@ spring:
     name: mogu-monitor
   security:
     user:
-      name: admin
-      password: 123456
+      name: user
+      password: password123
   boot:
     admin:
       ui:
-        title: 蘑菇博客
-        brand: 蘑菇博客
+        title: 蘑菇博客监控中心
+        brand: 蘑菇博客监控中心
       notify:
         mail:
           enabled: true
+          # 服务上下线会自动发送邮件
           from: mogublog@163.com
           to: moxi0624@163.com
           

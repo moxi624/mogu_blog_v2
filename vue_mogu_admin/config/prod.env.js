@@ -9,8 +9,6 @@ module.exports = {
     SOLR_API: '"http://101.132.194.128:8080/solr"',
     EUREKA_API: '"http://101.132.194.128:8761"',
     SPRING_BOOT_ADMIN: '"http://101.132.194.128:8888/wallboard"',
-    RABBIT_MQ_ADMIN: '"http://101.132.194.128:15672"',
-    DRUID_ADMIN: '"http://101.132.194.128:8601/druid/index.html"',
     BASE_IMAGE_URL: '"http://picture.moguit.cn"',
     BLOG_WEB_URL: '"http://www.moguit.cn"',
 

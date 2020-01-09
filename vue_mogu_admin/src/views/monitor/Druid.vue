@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <iframe  :src="druidAdminUrl" width="100%" height="780px;"></iframe>
+    <iframe id="myIframe"  :src="druidAdminUrl" width="100%" height="780px;"></iframe>
   </div>
 </template>
 

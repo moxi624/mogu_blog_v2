@@ -13,7 +13,7 @@ module.exports = merge(prodEnv, {
   EUREKA_API: '"http://localhost:8761"',
   SPRING_BOOT_ADMIN: '"http://localhost:8888/wallboard"',
   RABBIT_MQ_ADMIN: '"http://localhost:15672"',
-  DRUID_ADMIN: '"http://localhost:8601/druid/index.html"',
+  DRUID_ADMIN: '"http://localhost:8601/druid/login.html"',
   BASE_IMAGE_URL: '"http://localhost:8600"',
   BLOG_WEB_URL: '"http://localhost:9527"',
 
