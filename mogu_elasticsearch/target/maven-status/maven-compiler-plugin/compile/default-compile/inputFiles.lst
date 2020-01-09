@@ -1,0 +1,6 @@
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\pojo\Blog.java
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\service\SearchService.java
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\config\FeignConfiguration.java
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\Elasticsearch.java
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\client\BlogClient.java
+D:\java-photon\mogu\mogu_blog_v2\mogu_elasticsearch\src\main\java\com\moxi\blog\elasticsearch\reposlitory\BlogRepository.java
