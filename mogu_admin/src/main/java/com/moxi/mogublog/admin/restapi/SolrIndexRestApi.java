@@ -15,6 +15,7 @@ import com.moxi.mougblog.base.global.BaseSysConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/search")
 @Api(value = "索引维护RestApi", tags = {"solrIndexRestApi"})
+@Slf4j
 public class SolrIndexRestApi {
 
-    private static Logger log = LogManager.getLogger(SolrIndexRestApi.class);
     @Autowired
     private BlogSearchService blogSearchService;
     @Autowired

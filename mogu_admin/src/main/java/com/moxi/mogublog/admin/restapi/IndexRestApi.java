@@ -8,6 +8,7 @@ import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/index")
 @Api(value = "首页RestApi", tags = {"IndexRestApi"})
+@Slf4j
 public class IndexRestApi {
 
     @Autowired

@@ -27,3 +27,5 @@
 /.nb-gradle/
 
 /webapps/
+
+/logs/

@@ -24,6 +24,7 @@ import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,9 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/blogSort")
+@Slf4j
 public class BlogSortRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     BlogSortService blogSortService;
     @Autowired

@@ -28,6 +28,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,8 @@ import java.util.Map;
 @RestController
 @Api(value = "用户RestApi", tags = {"UserRestApi"})
 @RequestMapping("/user")
+@Slf4j
 public class UserRestApi {
-
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
 
     @Autowired
     UserService userService;

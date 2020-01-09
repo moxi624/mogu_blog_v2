@@ -11,6 +11,7 @@ import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
 import me.zhyd.oauth.model.AuthCallback;
@@ -42,9 +43,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/oauth")
 @Api(value = "认证RestApi", tags = {"AuthRestApi"})
+@Slf4j
 public class AuthRestApi {
-
-    private static Logger log = LogManager.getLogger(IndexRestApi.class);
 
     @Autowired
     private UserService userService;

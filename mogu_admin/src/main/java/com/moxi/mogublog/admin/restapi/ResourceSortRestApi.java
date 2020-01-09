@@ -17,6 +17,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,9 @@ import java.util.Map;
 @Api(value = "资源分类RestApi", tags = {"ResourceSortRestApi"})
 @RestController
 @RequestMapping("/resourceSort")
+@Slf4j
 public class ResourceSortRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     ResourceSortService resourceSortService;
     @Autowired

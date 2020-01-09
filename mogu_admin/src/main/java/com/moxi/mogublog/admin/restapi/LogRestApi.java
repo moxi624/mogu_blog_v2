@@ -17,6 +17,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Api(value = "管理员操作日志RestApi", tags = {"LogRestApi"})
 @RequestMapping("/log")
+@Slf4j
 public class LogRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     SysLogService sysLogService;
     @Autowired

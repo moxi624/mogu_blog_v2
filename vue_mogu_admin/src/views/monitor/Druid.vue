@@ -1,15 +1,24 @@
 <template>
-  <div>
-    <h1>Druid监控中心</h1>
+  <div class="app-container">
+    <iframe id="myIframe"  :src="druidAdminUrl" width="100%" height="780px;"></iframe>
   </div>
 </template>
 
 <script>
-    export default {
-        name: "Druid"
+
+  export default {
+
+    data() {
+      return {
+        druidAdminUrl: process.env.DRUID_ADMIN,
+      }
+    },
+    created() {
+
+    },
+    methods: {
+
     }
+  }
 </script>
 
-<style scoped>
-
-</style>

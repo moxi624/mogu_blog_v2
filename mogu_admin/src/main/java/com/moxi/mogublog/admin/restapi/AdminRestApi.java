@@ -21,6 +21,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/admin")
 @Api(value = "管理员RestApi", tags = {"AdminRestApi"})
+@Slf4j
 public class AdminRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -75,7 +76,6 @@ public class AdminRestApi {
         queryWrapper.select(Admin.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         IPage<Admin> pageList = adminService.page(page, queryWrapper);
         List<Admin> list = pageList.getRecords();
-        log.info(list);
 
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
@@ -159,15 +159,15 @@ public class AdminRestApi {
 
         QueryWrapper<Admin> wrapper = new QueryWrapper<>();
         if (admin == null) {
-            if (StringUtils.isNotEmpty(email)) {
-                wrapper.eq(SQLConf.EMAIL, email);
-            } else {
-                wrapper.eq(SQLConf.MOBILE, mobile);
-            }
-
-            if (adminService.getOne(wrapper) != null) {
-                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
-            }
+//            if (StringUtils.isNotEmpty(email)) {
+//                wrapper.eq(SQLConf.EMAIL, email);
+//            } else {
+//                wrapper.eq(SQLConf.MOBILE, mobile);
+//            }
+//
+//            if (adminService.getOne(wrapper) != null) {
+//                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
+//            }
 
             // 设置为未审核状态
             registered.setStatus(EStatus.ENABLE);

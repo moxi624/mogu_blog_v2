@@ -53,6 +53,7 @@
         <module>mogu_eureka</module>
         <module>mogu_sms</module>
         <module>mogu_elasticsearch</module>
+        <module>mogu_monitor</module>
     </modules>
 
     <dependencyManagement>

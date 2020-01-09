@@ -21,6 +21,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,9 @@ import java.util.List;
 @RestController
 @Api(value = "友链RestApi", tags = {"LinkRestApi"})
 @RequestMapping("/link")
+@Slf4j
 public class LinkRestApi {
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
+
     @Autowired
     LinkService linkService;
 

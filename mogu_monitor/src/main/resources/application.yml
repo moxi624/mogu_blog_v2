@@ -1,0 +1,55 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: mogu-monitor
+  security:
+    user:
+      name: user
+      password: password123
+  boot:
+    admin:
+      ui:
+        title: 蘑菇博客监控中心
+        brand: 蘑菇博客监控中心
+      notify:
+        mail:
+          enabled: true
+          # 服务上下线会自动发送邮件
+          from: mogublog@163.com
+          to: moxi0624@163.com
+          
+  #mail
+  mail:
+    username: mogublog@163.com
+    password: a1313375 #授权码开启SMTP服务里设置
+    host: smtp.163.com
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            
+#eureka相关配置
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    health-check-url-path: /actuator/health
+    metadata-map:
+      user.name: admin
+      user.password: 123456
+      zone: ABC      # eureka可以理解的元数据
+      lilizhou: BBC  # 不会影响客户端行为
+    lease-renewal-interval-in-seconds: 5

@@ -12,6 +12,7 @@ import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/about")
 @Api(value = "关于我 RestApi", tags = {"AboutMeRestApi"})
+@Slf4j
 public class AboutMeRestApi {
 
-    private static Logger log = LogManager.getLogger(AboutMeRestApi.class);
     @Autowired
     AdminService adminService;
     @Autowired

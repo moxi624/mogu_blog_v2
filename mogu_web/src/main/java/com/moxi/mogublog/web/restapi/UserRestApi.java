@@ -14,6 +14,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,12 +31,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @Api(value = "登录管理RestApi", tags = {"loginRestApi"})
+@Slf4j
 public class UserRestApi {
 
 
     @Autowired
     private UserService userService;
-
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping("/login")

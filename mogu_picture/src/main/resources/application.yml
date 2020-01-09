@@ -29,13 +29,21 @@ spring:
     user:
       name: user
       password: password123
-
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8888
+        username: user
+        password: password123
+        instance:
+          service-base-url: http://localhost:8601
   # DATABASE CONFIG
   datasource:
     username: root
     password: root
     url: jdbc:mysql://localhost:3306/mogu_picture?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&serverTimezone=GMT%2B8
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
     initialSize: 5
@@ -66,11 +74,16 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
-    metadata-map:
-      zone: ABC      # eureka可以理解的元数据
-      lilizhou: BBC  # 不会影响客户端行为
     lease-renewal-interval-in-seconds: 5
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 #mybatis
 mybatis-plus:
