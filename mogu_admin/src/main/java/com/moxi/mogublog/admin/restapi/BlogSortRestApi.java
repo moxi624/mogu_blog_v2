@@ -117,6 +117,7 @@ public class BlogSortRestApi {
         if (!blogSort.getSortName().equals(blogSortVO.getSortName())) {
             QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.SORT_NAME, blogSortVO.getSortName());
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             BlogSort tempSort = blogSortService.getOne(queryWrapper);
             if (tempSort != null) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
