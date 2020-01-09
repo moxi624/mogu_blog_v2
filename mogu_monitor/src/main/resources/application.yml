@@ -6,8 +6,8 @@ spring:
     name: mogu-monitor
   security:
     user:
-      name: user
-      password: password123
+      name: admin
+      password: 123456
   boot:
     admin:
       ui:

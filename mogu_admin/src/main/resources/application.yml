@@ -113,10 +113,8 @@ spring:
       client:
         enabled: true
         url: http://localhost:8888
-        username: user
-        password: password123
-        instance:
-          service-base-url: http://localhost:8601
+        username: admin
+        password: 123456
 
 #eureka相关配置
 eureka:
