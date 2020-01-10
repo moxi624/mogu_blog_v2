@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function getStudyVideoList(params) {
   return request({
     url: process.env.ADMIN_API + '/studyVideo/getList',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
@@ -24,10 +24,10 @@ export function editStudyVideo(params) {
   })
 }
 
-export function deleteStudyVideo(params) {
+export function deleteBatchStudyVideo(params) {
   return request({
-    url: process.env.ADMIN_API + '/studyVideo/delete',
+    url: process.env.ADMIN_API + '/studyVideo/deleteBatch',
     method: 'post',
-    params
+    data: params
   })
 }
