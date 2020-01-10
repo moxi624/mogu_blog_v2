@@ -11,7 +11,7 @@ module.exports = merge(prodEnv, {
   WEB_API: '"http://localhost:8603"',
   SOLR_API: '"http://localhost:8080/solr"',
   EUREKA_API: '"http://localhost:8761"',
-  SPRING_BOOT_ADMIN: '"http://localhost:8888/wallboard"',
+  SPRING_BOOT_ADMIN: '"http://localhost:8606/wallboard"',
   RABBIT_MQ_ADMIN: '"http://localhost:15672"',
   DRUID_ADMIN: '"http://localhost:8601/druid/login.html"',
   BASE_IMAGE_URL: '"http://localhost:8600"',
