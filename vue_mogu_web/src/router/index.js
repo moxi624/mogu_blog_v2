@@ -20,7 +20,9 @@ export const constantRouterMap = [
     ]
   },
   { path: '/login', component: () => import('@/views/login') },
+  { path: '/test', component: () => import('@/views/test') },
   { path: '/*', component: () => import('@/views/404') }
+
 ]
 
 const router = new Router({
