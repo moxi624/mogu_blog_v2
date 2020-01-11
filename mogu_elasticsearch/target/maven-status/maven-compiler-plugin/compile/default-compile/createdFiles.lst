@@ -1,6 +1,9 @@
-com\moxi\blog\elasticsearch\Elasticsearch.class
+com\moxi\blog\elasticsearch\ElasticsearchApplication.class
 com\moxi\blog\elasticsearch\config\FeignConfiguration.class
 com\moxi\blog\elasticsearch\reposlitory\BlogRepository.class
 com\moxi\blog\elasticsearch\pojo\Blog.class
 com\moxi\blog\elasticsearch\service\SearchService.class
 com\moxi\blog\elasticsearch\client\BlogClient.class
+com\moxi\blog\elasticsearch\config\WebSecurityConfig.class
+com\moxi\blog\elasticsearch\global\SysConf.class
+com\moxi\blog\elasticsearch\web\SearchController.class

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.moxi.blog.elasticsearch.reposlitory.BlogRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 40.422 s - in com.moxi.blog.elasticsearch.reposlitory.BlogRepositoryTest

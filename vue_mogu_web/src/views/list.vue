@@ -35,11 +35,11 @@
                 <span class="iconfont">&#xe60f;</span>
                 <a href="javascript:void(0);" @click="goToAuthor(item.author)">{{item.author}}</a>
               </li>
-              <li class="lmname" v-if="item.blogSort">
+              <li class="lmname" v-if="item.blogSortName">
                 <span class="iconfont">&#xe603;</span>
-                <a href="javascript:void(0);" @click="goToList(item.blogSortUid)">{{item.blogSort}}</a>
+                <a href="javascript:void(0);" @click="goToList(item.blogSortUid)">{{item.blogSortName}}</a>
               </li>
-              <li class="createTime"><span class="iconfont">&#xe606;</span>{{item.updateTime}}</li>
+              <li class="createTime"><span class="iconfont">&#xe606;</span>{{item.createTime}}</li>
             </ul>
           </div>
         </div>
@@ -206,14 +206,14 @@ export default {
         console.log("开始搜索");
         searchBlog(params).then(response => {
           console.log("返回的内容", response);
-          if (response.code == "success" && response.data.rows.length > 0) {
+          if (response.code == "success" && response.data.blogList.length > 0) {
             that.isEnd = false;
 
             //获取总页数
             that.totalPages = response.data.totalPages;
             that.pageSize = response.data.pageSize;
             that.currentPage = response.data.currentPage;
-            var blogData = response.data.rows;
+            var blogData = response.data.blogList;
 
             //全部加载完毕
             console.log(blogData.length, that.pageSize);
