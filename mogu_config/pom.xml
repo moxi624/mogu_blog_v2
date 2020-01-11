@@ -92,11 +92,11 @@
             <version>${lombok.version}</version>
         </dependency>
 
-        <!-- 使用Actuator的/info端点输出Git版本 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
 
     </dependencies>
 

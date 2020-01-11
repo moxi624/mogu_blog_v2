@@ -8,7 +8,7 @@ module.exports = {
     WEB_API: '"http://101.132.194.128:8603"',
     SOLR_API: '"http://101.132.194.128:8080/solr"',
     EUREKA_API: '"http://101.132.194.128:8761"',
-    SPRING_BOOT_ADMIN: '"http://101.132.194.128:8888/wallboard"',
+    SPRING_BOOT_ADMIN: '"http://101.132.194.128:8606/wallboard"',
     BASE_IMAGE_URL: '"http://picture.moguit.cn"',
     BLOG_WEB_URL: '"http://www.moguit.cn"',
 

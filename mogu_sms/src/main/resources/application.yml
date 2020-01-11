@@ -48,11 +48,9 @@ spring:
     admin:
       client:
         enabled: true
-        url: http://localhost:8888
+        url: http://localhost:8606
         username: user
         password: password123
-        instance:
-          service-base-url: http://localhost:8601
 
 eureka:
   client:
@@ -63,9 +61,6 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
-    metadata-map:
-      zone: ABC      # eureka可以理解的元数据
-      lilizhou: BBC  # 不会影响客户端行为
     lease-renewal-interval-in-seconds: 5
 
 management:
