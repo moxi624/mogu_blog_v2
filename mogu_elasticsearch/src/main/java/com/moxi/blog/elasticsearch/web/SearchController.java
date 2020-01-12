@@ -87,7 +87,6 @@ public class SearchController {
                     EBlog.setUid((String) blogRecords.get(i).get("uid"));
                     EBlog.setTitle((String) blogRecords.get(i).get("title"));
                     EBlog.setSummary((String) blogRecords.get(i).get("summary"));
-
                     EBlog.setBlogSortUid(blogSort.getUid());
                     EBlog.setBlogSort(blogSort);
                     EBlog.setIsPublish((String) blogRecords.get(i).get("isPublish"));
