@@ -63,7 +63,7 @@ jobs:
         mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
         mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
         mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
-        mv ./mogu_web/target/mogu_elasticsearch-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_elasticsearch-0.0.1-SNAPSHOT.jar
+        mv ./mogu_elasticsearch/target/mogu_elasticsearch-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_elasticsearch-0.0.1-SNAPSHOT.jar
         mv ./vue_mogu_web/dist ./transfer_files/web_dist
         mv ./vue_mogu_admin/dist ./transfer_files/admin_dist
         tar -zcvf  transfer_files.tar.gz transfer_files/
