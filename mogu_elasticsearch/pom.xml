@@ -73,30 +73,27 @@
 
     </dependencies>
 
+    <!--spring boot打包的话需要指定一个唯一的入门-->
     <build>
-        <resources>
-            <!--扫描到的mapper配置-->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <includes>
-                    <!--<include>contexts/</include>-->
-                    <!--<include>*.xml</include>-->
-                    <include>*.yml</include>
-                    <include>*.properties</include>
-                    <include>*.xml</include>
-                    <include>enc_pri</include>
-                </includes>
-            </resource>
-            <!--end-->
-        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 指定该Main Class为全局的唯一入口 -->
+                    <mainClass>com.moxi.mogublog.elasticsearch.ElasticsearchApplication</mainClass>
+                    <layout>ZIP</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
     </build>
 
 </project>
