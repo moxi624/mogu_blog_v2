@@ -3,25 +3,15 @@ package com.moxi.blog.elasticsearch.service;
 import com.moxi.blog.elasticsearch.client.BlogClient;
 import com.moxi.blog.elasticsearch.pojo.Blog;
 import com.moxi.blog.elasticsearch.reposlitory.BlogRepository;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.SearchResultMapper;
-import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
-import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
-import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
-import org.springframework.data.elasticsearch.core.query.Field;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +33,7 @@ public class SearchService {
 
         blogClient.getBlogByUid(eblog.getUid());
         //搜索字段
-        String all = eblog.getTitle() +" "+ eblog.getSummary();
+        String all = eblog.getTitle() + " " + eblog.getSummary();
 
         //构建blog对象
         Blog blog = new Blog();
@@ -53,7 +43,7 @@ public class SearchService {
         blog.setSummary(eblog.getSummary());
         blog.setAll(all);
 
-        if(eblog.getBlogSort() != null) {
+        if (eblog.getBlogSort() != null) {
             blog.setBlogSortName(eblog.getBlogSort().getSortName());
             blog.setBlogSortUid(eblog.getBlogSortUid());
         }
@@ -66,17 +56,16 @@ public class SearchService {
     }
 
     public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize) {
-        currentPage =Math.max(currentPage-1,0);
+        currentPage = Math.max(currentPage - 1, 0);
         //创建查询构造器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         //结果过滤
-        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"uid","title","summary","blogSortName","createTime","author","photoList","blogSortUid"},null));
+//        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"uid","title","summary","blogSortName","createTime","author","photoList","blogSortUid","highlight"},null));
         //分页
         pageSize = 10;
         queryBuilder.withPageable(PageRequest.of(currentPage, pageSize));
 
         //过滤
-        queryBuilder.withQuery(QueryBuilders.termQuery("isPublish","1"));
         queryBuilder.withQuery(QueryBuilders.matchQuery("title", keywords));
 
 //        HighlightBuilder highlightBuilder = new HighlightBuilder ();
@@ -86,14 +75,13 @@ public class SearchService {
 //        HighlightBuilder.Field allHighLight = new HighlightBuilder.Field("title").preTags(preTag).postTags(postTag);
 //        queryBuilder.withHighlightFields(allHighLight);
 
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.field("title");
-        highlightBuilder.preTags("<span style = 'color:red'>");
-        highlightBuilder.postTags("</span>");
-
-        queryBuilder.withHighlightBuilder(highlightBuilder);
-
+        queryBuilder.withHighlightFields(new HighlightBuilder
+                .Field("title")
+                .preTags("<span style = 'color:red'>")
+                .postTags("</span>"));
+        System.out.println("查询的语句:" + queryBuilder.build().getQuery().toString());
         //查询
+
         Page<Blog> result = blogRepository.search(queryBuilder.build());
 
 
