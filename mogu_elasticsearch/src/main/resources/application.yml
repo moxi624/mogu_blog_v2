@@ -12,9 +12,9 @@ spring:
   data:
     elasticsearch:
       cluster-name: elasticsearch
-      cluster-nodes: 101.132.122.175:9300
-#  jackson:
-#    default-property-inclusion: non_null
+      cluster-nodes: localhost:9300
+  #  jackson:
+  #    default-property-inclusion: non_null
   boot:
     admin:
       client:

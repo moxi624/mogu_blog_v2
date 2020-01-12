@@ -51,7 +51,7 @@ public class SearchController {
     }
 
     @PostMapping("/elasticSearchInit")
-    public void CreateIndex() throws ParseException {
+    public String CreateIndex() throws ParseException {
         elasticsearchTemplate.deleteIndex(Blog.class);
         elasticsearchTemplate.createIndex(Blog.class);
         elasticsearchTemplate.putMapping(Blog.class);
@@ -106,5 +106,6 @@ public class SearchController {
                 }
             }
         } while (size == 10);
+        return ResultUtil.result(SysConf.SUCCESS, null);
     }
 }
