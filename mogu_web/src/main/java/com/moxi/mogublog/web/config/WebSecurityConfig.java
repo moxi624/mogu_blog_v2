@@ -54,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/sort/**",
                         "/classify/**",
                         "/user/**",
-                        "/oauth/**"
+                        "/oauth/**",
+                        "/web/comment/**",
+                        "elasticSearchBlog/**"
                 ).permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();

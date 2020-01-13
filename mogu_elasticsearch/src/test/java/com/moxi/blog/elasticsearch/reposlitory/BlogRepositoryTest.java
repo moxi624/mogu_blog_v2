@@ -4,13 +4,13 @@
 //import com.moxi.blog.elasticsearch.pojo.Blog;
 //import com.moxi.blog.elasticsearch.service.SearchService;
 //import com.moxi.mogublog.utils.JsonUtils;
+//import com.moxi.mogublog.xo.entity.BlogSort;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 //import org.springframework.test.context.junit4.SpringRunner;
-//
 //import java.text.ParseException;
 //import java.text.SimpleDateFormat;
 //import java.util.ArrayList;
@@ -37,6 +37,7 @@
 //
 //    @Test
 //    public void testCreateIndex() {
+//        elasticsearchTemplate.deleteIndex(Blog.class);
 //        elasticsearchTemplate.createIndex(Blog.class);
 //        elasticsearchTemplate.putMapping(Blog.class);
 //    }
@@ -58,17 +59,26 @@
 //                List<Map<String, Object>> blogRecords = (List<Map<String, Object>>) blogData.get("records");
 //                size = blogData.size();
 //                for (int i = 0; i < blogData.size(); i++) {
+//
 //                    if (org.springframework.util.StringUtils.isEmpty(blogRecords.get(i).get("uid"))) {
 //                        continue;
 //                    }
 //                    List<com.moxi.mogublog.xo.entity.Blog> EBlogList = new ArrayList<>();
-//                    List<Map<String, Object>> blogSort = (List<Map<String, Object>>) blogRecords.get(i).get("tagList");
+//
+//                    List<Map<String, Object>> tagList = (List<Map<String, Object>>) blogRecords.get(i).get("tagList");
+//                    Map<String, Object> MapBlogSort = (Map<String, Object>) blogRecords.get(i).get("blogSort");
 //                    List photoList = (List) blogRecords.get(i).get("photoList");
 //                    com.moxi.mogublog.xo.entity.Blog EBlog = new com.moxi.mogublog.xo.entity.Blog();
+//                    BlogSort blogSort = new BlogSort();
+//                    blogSort.setSortName(MapBlogSort.get("sortName").toString());
+//                    blogSort.setContent(MapBlogSort.get("content").toString());
+//                    blogSort.setUid(MapBlogSort.get("uid").toString());
 //                    EBlog.setUid((String) blogRecords.get(i).get("uid"));
 //                    EBlog.setTitle((String) blogRecords.get(i).get("title"));
 //                    EBlog.setSummary((String) blogRecords.get(i).get("summary"));
-//                    EBlog.setBlogSortUid((String) blogSort.get(0).get("sortName"));
+//
+//                    EBlog.setBlogSortUid(blogSort.getUid());
+//                    EBlog.setBlogSort(blogSort);
 //                    EBlog.setIsPublish((String) blogRecords.get(i).get("isPublish"));
 //                    EBlog.setAuthor((String) blogRecords.get(i).get("author"));
 //                    Date createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(blogRecords.get(i).get("createTime").toString());
@@ -82,10 +92,7 @@
 //                    blogRepository.saveAll(blogList);
 //                    //翻页
 //                    page++;
-//
 //                }
-//
-//
 //            }
 //        } while (size == 10);
 //

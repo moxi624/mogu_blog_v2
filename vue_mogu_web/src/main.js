@@ -3,12 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
-
 Vue.use(ElementUI, { locale })
+
+import 'ant-design-vue/dist/antd.css';
+import Antd from 'ant-design-vue';
+Vue.use(Antd);
+
 
 // 引入公共JS
 import $ from 'jquery'
@@ -31,6 +36,8 @@ Vue.directive('highlight', function (el) {
 new Vue({
   el: '#app',
   router,
+  //需要将store和vue实例进行关联，这里将其传递进去
+  store,
   components: { App },
   template: '<App/>'
 })
