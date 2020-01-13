@@ -16,11 +16,11 @@ export const constantRouterMap = [
       { path: '/share', component: () => import('@/views/share') },
       { path: '/classify', component: () => import('@/views/classify') },
       { path: '/time', component: () => import('@/views/time') },
-      { path: '/info', component: () => import('@/views/info') }
+      { path: '/info', component: () => import('@/views/info') },
+      { path: '/messageBoard', component: () => import('@/views/messageBoard') },
     ]
   },
   { path: '/login', component: () => import('@/views/login') },
-  { path: '/test', component: () => import('@/views/test') },
   { path: '/*', component: () => import('@/views/404') }
 
 ]

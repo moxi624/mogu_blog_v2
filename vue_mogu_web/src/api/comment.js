@@ -16,9 +16,17 @@ export function addComment (params) {
   })
 }
 
-export function deleteBatchComment (params) {
+export function deleteComment (params) {
   return request({
-    url: process.env.WEB_API + '/web/comment/deleteBatch',
+    url: process.env.WEB_API + '/web/comment/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+export function reportComment (params) {
+  return request({
+    url: process.env.WEB_API + '/web/comment/report',
     method: 'post',
     data: params
   })

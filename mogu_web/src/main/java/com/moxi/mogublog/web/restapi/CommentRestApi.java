@@ -13,6 +13,7 @@ import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Comment;
+import com.moxi.mogublog.xo.entity.CommentReport;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.CommentVO;
@@ -20,6 +21,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -95,8 +97,12 @@ public class CommentRestApi {
                 userUidList.add(item.getToUserUid());
             }
         });
+        Collection<User> userList = new ArrayList<>();
 
-        Collection<User> userList = userService.listByIds(userUidList);
+        if(userUidList.size() > 0 ) {
+            userList = userService.listByIds(userUidList);
+        }
+
         // 获取用户头像
         StringBuffer fileUids = new StringBuffer();
         userList.forEach(item -> {
@@ -122,6 +128,7 @@ public class CommentRestApi {
             userMap.put(item.getUid(), item);
         });
 
+        Map<String, Comment> commentMap = new HashMap<>();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getUserUid())) {
                 item.setUser(userMap.get(item.getUserUid()));
@@ -129,9 +136,32 @@ public class CommentRestApi {
             if (StringUtils.isNotEmpty(item.getToUserUid())) {
                 item.setToUser(userMap.get(item.getToUserUid()));
             }
+            commentMap.put(item.getUid(), item);
         });
 
-        return ResultUtil.result(SysConf.SUCCESS, list);
+        Map<String, List<Comment>> toCommentListMap = new HashMap<>();
+
+        for(int a=0; a<list.size(); a++) {
+            List<Comment> tempList = new ArrayList<>();
+            for(int b=0; b<list.size(); b++) {
+                if(list.get(a).getUid().equals(list.get(b).getToUid())) {
+                    tempList.add(list.get(b));
+                }
+            }
+            toCommentListMap.put(list.get(a).getUid(), tempList);
+        }
+
+        List<Comment> firstComment = new ArrayList<>();
+        list.forEach(item -> {
+            if(StringUtils.isEmpty(item.getToUid())) {
+                firstComment.add(item);
+            }
+        });
+
+        getCommentReplys(firstComment, toCommentListMap);
+
+
+        return ResultUtil.result(SysConf.SUCCESS, getCommentReplys(firstComment, toCommentListMap));
     }
 
     @ApiOperation(value = "增加评论", notes = "增加评论")
@@ -149,41 +179,87 @@ public class CommentRestApi {
         comment.setStatus(EStatus.ENABLE);
         comment.insert();
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+//        User user = userService.getById(commentVO.getUserUid());
+//
+//        //获取图片
+//        if (StringUtils.isNotEmpty(user.getAvatar())) {
+//            String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
+//            if (WebUtils.getPicture(pictureList).size() > 0) {
+//                user.setPhotoUrl(WebUtils.getPicture(pictureList).get(0));
+//            }
+//        }
+//
+//        comment.setUser(user);
+
+        return ResultUtil.result(SysConf.SUCCESS, comment);
     }
 
-    @ApiOperation(value = "批量删除评论", notes = "增加评论")
-    @PostMapping("/deleteBatch")
-    public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody List<CommentVO> commentVOList, BindingResult result) {
+    @ApiOperation(value = "举报评论", notes = "举报评论")
+    @PostMapping("/report")
+    public String reportComment(HttpServletRequest request, @Validated({GetOne.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
 
-        if(commentVOList.size() <=0 ) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+
+        Comment comment = commentService.getById(commentVO.getUid());
+
+        if(comment == null || comment.getStatus() == EStatus.DISABLED) {
+
+            return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_NOT_EXIST);
         }
-        List<String> uids = new ArrayList<>();
 
-        commentVOList.forEach(item->{
-            uids.add(item.getUid());
-        });
+        CommentReport commentReport = new CommentReport();
+        commentReport.setContent(commentVO.getContent());
+        commentReport.setProgress(0);
+        // 从VO中获取举报的用户uid
+        commentReport.setUserUid(commentVO.getUserUid());
+        commentReport.setReportCommentUid(comment.getUid());
+        // 从entity中获取被举报的用户uid
+        commentReport.setReportUserUid(comment.getUserUid());
+        commentReport.setStatus(EStatus.ENABLE);
+        commentReport.insert();
 
-        Collection<Comment> blogSortList = commentService.listByIds(uids);
-
-        blogSortList.forEach(item -> {
-            item.setStatus(EStatus.DISABLED);
-        });
-
-        Boolean save = commentService.updateBatchById(blogSortList);
-
-        if(save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
-        } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
-        }
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
-    private List<Comment> getCommentReplys(String commentUid) {
-        return null;
+    @ApiOperation(value = "删除评论", notes = "增加评论")
+    @PostMapping("/delete")
+    public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+
+        ThrowableUtils.checkParamArgument(result);
+
+        Comment comment = commentService.getById(commentVO.getUid());
+
+        // 判断该评论是否能够删除
+        if(!comment.getUserUid().equals(commentVO.getUserUid())) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DATA_NO_PRIVILEGE);
+        }
+
+        comment.setStatus(EStatus.DISABLED);
+
+        comment.updateById();
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+    }
+
+    private List<Comment> getCommentReplys(List<Comment> list, Map<String, List<Comment>> toCommentListMap) {
+
+
+        if(list == null || list.size() == 0) {
+            return new ArrayList<>();
+        } else {
+
+            list.forEach(item-> {
+                String commentUid = item.getUid();
+                List<Comment> replyCommentList = toCommentListMap.get(commentUid);
+
+                List<Comment> replyComments = getCommentReplys(replyCommentList, toCommentListMap);
+
+                item.setReplyList(getCommentReplys(replyCommentList, toCommentListMap));
+            });
+
+            return  list;
+        }
     }
 
 }

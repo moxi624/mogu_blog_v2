@@ -18,6 +18,8 @@ public class BaseMessageConf {
 
     public static final String ENTITY_EXIST = "该实体已存在";
 
+    public static final String COMMENT_IS_NOT_EXIST = "该评论不存在";
+
     public static final String LOGIN_DISABLE = "该账号已被封禁";
     public static final String LOGIN_ERROR = "登录失败，用户名或密码错误";
     public static final String NO_ROLE = "没有分配角色权限";

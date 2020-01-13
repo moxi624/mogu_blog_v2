@@ -10,7 +10,6 @@ const app = {
   getters: {
     //类似于计算属性
     // 增加的方法
-
   },
   // 如果我们需要更改store中的状态，一定要通过mutations来进行操作
   mutations: {

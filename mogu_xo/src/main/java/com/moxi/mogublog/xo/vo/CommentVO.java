@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.validator.annotion.IdValid;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
@@ -24,7 +25,7 @@ public class CommentVO extends BaseVO<CommentVO> {
     /**
      * 用户uid
      */
-    @NotBlank(groups = {Insert.class})
+    @NotBlank(groups = {Insert.class, GetOne.class})
     private String userUid;
 
     /**

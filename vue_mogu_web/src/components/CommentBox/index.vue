@@ -1,11 +1,13 @@
 <template>
   <div>
     <a-comment>
+
       <a-avatar
         slot="avatar"
-        :src="userInfo.avatar"
-        alt="Han Solo"
+        :src="getUserPhoto"
+        alt="item.userName"
       />
+
       <div slot="content">
         <a-form-item>
           <a-textarea :rows="4" @change="handleChange" :value="value"></a-textarea>
@@ -14,7 +16,7 @@
           <a-button htmlType="submit" :loading="submitting" @click="handleSubmit" type="primary">
             添加评论
           </a-button>
-          <a-button v-if="showCancle" style="margin-left:5px;"  @click="handleCancle">
+          <a-button v-if="showCancel" style="margin-left:5px;"  @click="handleCancle">
             取消评论
           </a-button>
         </a-form-item>
@@ -24,36 +26,92 @@
 </template>
 <script>
 
+  import {mapGetters} from 'vuex';
+
   export default {
     props: {
       userInfo: {
         type: Object
       },
-      replyInfo: {
+      // 回复的对象
+      toInfo: {
         type: Object
       },
-      showCancle: {
+      // 博客信息
+      commentInfo: {
+        type: Object
+      },
+      showCancel: {
         type: Boolean,
         default: true
       }
     },
     data() {
       return {
+        PICTURE_HOST: process.env.PICTURE_HOST,
         comments: [],
         submitting: false,
         value: '',
+        user: {},
       };
     },
+    computed: {
+      ...mapGetters(['getUserPhoto'])
+    },
+    mounted() {
+
+    },
     methods: {
+
       handleSubmit() {
+        let info = this.$store.state.user.userInfo
+        let isLogin = this.$store.state.user.isLogin
+        console.log("是否登录", isLogin);
+        if(!isLogin) {
+
+          this.$notify.error({
+            title: '警告',
+            message: '登录后才可以评论哦~',
+            offset: 100
+          });
+          return;
+        }
+
+        if(this.value =="") {
+          this.$notify.error({
+            title: '警告',
+            message: '评论内容不能为空哦~',
+            offset: 100
+          });
+          return;
+        }
+
+        let userUid = info.uid;
+        let toUserUid = "";
+        let toCommentUid = "";
+        let blogUid = "";
+        // 来源( info, about) 代表来自某些页面的评论
+        let resource = "";
+        let content = this.value;
+        if(this.toInfo) {
+          toUserUid = this.toInfo.uid;
+          toCommentUid = this.toInfo.commentUid;
+        }
+        if(this.commentInfo) {
+          blogUid = this.commentInfo.blogUid;
+          resource = this.commentInfo.resource;
+        }
+
         this.comments = {
-          uid: this.$store.state.app.id,
-          replyUid: this.replyInfo.replyUid,
-          userName: this.userInfo.userName,
-          avatar: this.userInfo.avatar,
-          content: this.value,
+          userUid: userUid,
+          toCommentUid: toCommentUid,
+          toUserUid: toUserUid,
+          content: content,
+          blogUid: blogUid,
+          resource: resource,
           reply: []
         }
+
         this.value = '';
         this.$emit("submit-box", this.comments)
       },
@@ -62,7 +120,8 @@
       },
       handleCancle() {
         this.value = '';
-        this.$emit("cancel-box", this.replyInfo.replyUid)
+        // this.$emit("cancel-box", this.replyInfo.replyUid)
+        this.$emit("cancel-box", this.toInfo.commentUid)
       }
     },
   };

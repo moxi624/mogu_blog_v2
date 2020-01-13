@@ -60,6 +60,13 @@
             <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>
           </router-link>
         </li>
+
+        <li>
+          <router-link to="/messageBoard">
+            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>
+          </router-link>
+        </li>
+
       </ul>
 
 
@@ -126,6 +133,8 @@
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, deleteUserAccessToken} from "../api/user";
   import LoginBox from "../components/LoginBox";
+  // vuex中有mapState方法，相当于我们能够使用它的getset方法
+  import {mapMutations} from 'vuex';
 
   export default {
     name: "index",
@@ -205,16 +214,21 @@
       if (token != undefined) {
         authVerify(token).then(response => {
           if (response.code == "success") {
+            console.log("登录成功");
             this.isLogin = true;
             this.userInfo = response.data;
+            this.setUserInfo(this.userInfo)
           } else {
             this.isLogin = false;
             delCookie("token");
           }
+          this.setLoginState(this.isLogin);
         });
       } else {
         this.isLogin = false;
+        this.setLoginState(this.isLogin);
       }
+
       var tempValue = decodeURI(this.getUrlVars()["keyword"]);
       if (
         tempValue == null ||
@@ -247,9 +261,16 @@
       });
     },
     methods: {
+      //拿到vuex中的写的两个方法
+      ...mapMutations(['setUserInfo', 'setLoginState']),
       search: function () {
         if (this.keyword == "") {
-          alert("关键字不能为空");
+          this.$notify.error({
+            title: '错误',
+            message: "关键字不能为空",
+            type: 'success',
+            offset: 100
+          });
           return;
         }
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
@@ -287,7 +308,8 @@
           let list = url.split("?token");
           this.isLogin = false;
           window.location.href = list[0]
-
+          let userInfo = {};
+          this.setCommentList(userInfo)
         } else {
           window.location.reload()
         }
