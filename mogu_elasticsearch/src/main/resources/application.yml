@@ -13,8 +13,8 @@ spring:
     elasticsearch:
       cluster-name: elasticsearch
       cluster-nodes: localhost:9300
-  jackson:
-    default-property-inclusion: non_null
+  #  jackson:
+  #    default-property-inclusion: non_null
   boot:
     admin:
       client:
