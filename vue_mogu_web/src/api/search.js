@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function searchBlog (params) {
   return request({
-    url: process.env.ELASTICSEARCH + '/elasticSearchBlog',
+    url: process.env.ELASTICSEARCH + '/search/elasticSearchBlog',
     method: 'get',
     params
   })

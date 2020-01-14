@@ -1,4 +1,4 @@
-package com.moxi.blog.elasticsearch.web;
+package com.moxi.blog.elasticsearch.restapi;
 
 import com.moxi.blog.elasticsearch.client.BlogClient;
 import com.moxi.blog.elasticsearch.global.SysConf;
@@ -8,12 +8,11 @@ import com.moxi.blog.elasticsearch.service.SearchService;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.entity.BlogSort;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -24,9 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+/**
+ * ElasticSearch RestAPI
+ *@author: 陌溪
+ *@create: ${YEAR}-${MONTH}-${DAY}-${TIME}
+ */
+@RequestMapping("/search")
+@Api(value = "ElasticSearchRestApi", tags = {"ElasticSearchRestApi"})
 @RestController
-public class SearchController {
+public class ElasticSearchRestApi {
 
     @Autowired
     private SearchService searchService;
@@ -41,6 +46,7 @@ public class SearchController {
     private BlogClient blogClient;
 
 
+    @ApiOperation(value = "通过ElasticSearch搜索博客", notes = "通过ElasticSearch搜索博客", response = String.class)
     @GetMapping("/elasticSearchBlog")
     public String searchBlog(HttpServletRequest request,
                              @RequestParam(required = true) String keywords,
@@ -50,6 +56,7 @@ public class SearchController {
         return ResultUtil.result(SysConf.SUCCESS, searchService.search(keywords, currentPage, pageSize));
     }
 
+    @ApiOperation(value = "ElasticSearch初始化索引", notes = "ElasticSearch初始化索引", response = String.class)
     @PostMapping("/elasticSearchInit")
     public String CreateIndex() throws ParseException {
         elasticsearchTemplate.deleteIndex(Blog.class);

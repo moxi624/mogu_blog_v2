@@ -56,6 +56,7 @@ public class SearchRestApi {
     private WebVisitService webVisitService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
     @Value(value = "${spring.data.solr.core}")
     private String collection;
 
