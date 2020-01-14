@@ -34,6 +34,11 @@ eureka:
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 5
 
+  #redis
+redis:
+  host: 127.0.0.1 #redis的主机ip
+  port: 6379
+
 management:
   endpoints:
     web:

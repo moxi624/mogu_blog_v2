@@ -3,7 +3,6 @@ package com.moxi.blog.elasticsearch.client;
 import com.moxi.blog.elasticsearch.config.FeignConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -21,6 +20,7 @@ public interface BlogClient {
     @RequestMapping("/content/getSameBlogByBlogUid")
     public String getSameBlogByBlogUid(@RequestParam(name = "blogUid", required = true) String blogUid, Long currentPage, @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
 
-    @RequestMapping(value = "/index/getNewBlog", method = RequestMethod.GET)
-    public String getNewBlog(@RequestParam(name = "pageSize") Long currentPage, @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
+    @RequestMapping(value = "/index/getNewBlog")
+    public String getNewBlog(@RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
 }

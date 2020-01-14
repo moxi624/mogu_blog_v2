@@ -68,13 +68,14 @@ public class SearchController {
             if ("success".equals(blogMap.get("code"))) {
                 Map<String, Object> blogData = (Map<String, Object>) blogMap.get("data");
                 List<Map<String, Object>> blogRecords = (List<Map<String, Object>>) blogData.get("records");
-                size = blogData.size();
-                for (int i = 0; i < blogData.size(); i++) {
+                size = blogRecords.size();
+                List<com.moxi.mogublog.xo.entity.Blog> EBlogList = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
 
                     if (org.springframework.util.StringUtils.isEmpty(blogRecords.get(i).get("uid"))) {
                         continue;
                     }
-                    List<com.moxi.mogublog.xo.entity.Blog> EBlogList = new ArrayList<>();
+
 
                     List<Map<String, Object>> tagList = (List<Map<String, Object>>) blogRecords.get(i).get("tagList");
                     Map<String, Object> MapBlogSort = (Map<String, Object>) blogRecords.get(i).get("blogSort");
@@ -96,15 +97,16 @@ public class SearchController {
                     EBlog.setPhotoList(photoList);
                     EBlogList.add(EBlog);
 
-                    List<Blog> blogList = EBlogList.stream()
-                            .map(searchService::buidBlog).collect(Collectors.toList());
-                    //存入索引库
-                    blogRepository.saveAll(blogList);
-                    //翻页
-                    page++;
                 }
+                List<Blog> blogList = EBlogList.stream()
+                        .map(searchService::buidBlog).collect(Collectors.toList());
+                //存入索引库
+                blogRepository.saveAll(blogList);
+                //翻页
+                page++;
             }
-        } while (size == 10);
+            System.out.println(size);
+        } while (size == 15);
         return ResultUtil.result(SysConf.SUCCESS, null);
     }
 }
