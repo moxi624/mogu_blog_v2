@@ -23,7 +23,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.web.config",
         "com.moxi.mogublog.web.restapi",
-        "com.moxi.mogublog.web.auth",
         "com.moxi.mogublog.xo.service"})
 public class WebApplication {
 
