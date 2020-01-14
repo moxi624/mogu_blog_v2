@@ -1,38 +1,18 @@
 <template>
   <div class="banner">
-    <div class="carousel-wrap" id="carousel"  @mouseenter="inDiv" @mouseleave="outDiv">
-      <span v-show="isShow" class="left" @click="leftChange"><</span>
-      <span v-show="isShow" class="right" @click="rightChange">></span>
-      <transition-group tag="ul" class="slide-ul" name="list">
-        <li
-          v-for="(list,index) in slideList"
-          :key="index"
-          v-show="index===currentIndex"
-          @mouseenter="stop"
-          @mouseleave="go"
-        >
-          <a href="javascript:void(0);">
+    <el-carousel class="bannerBox" indicator-position="outside" >
+      <el-carousel-item  v-for="(list,index) in slideList" :key="index">
             <img
+              style="width:100%; height:100%; display:block;cursor:pointer;"
               v-if="list.photoList"
               :src="PICTURE_HOST + list.photoList[0]"
               :alt="list.title"
-              @click="goToInfo(list.uid)"
-            >
-          </a>
-          <div class="carousel-title">
-            <span>{{list.title}}</span>
-          </div>
-        </li>
-      </transition-group>
-      <div class="carousel-items">
-        <span
-          v-for="(item,index) in slideList.length"
-          :key="item.uid"
-          :class="{'active':index===currentIndex}"
-          @mouseover="change(index)"
-        ></span>
-      </div>
-    </div>
+              @click="goToInfo(list.uid)">
+            <div class="carousel-title" @click="goToInfo(list.uid)">
+              <span>{{list.title}}</span>
+            </div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
@@ -120,163 +100,101 @@ export default {
 </script>
 
 <style>
-.carousel-wrap {
-  position: relative;
-}
-
-.left:hover {
-  color: rgba(90, 88, 88, 0.8);
-}
-.right:hover {
-  color: rgba(90, 88, 88, 0.9);
-}
-
-.left {
-  font-size: 80px;
-  color: rgba(223, 219, 219, 0.8);
-  position: absolute;
-  z-index: 99999;
-  cursor: pointer;
-  top: 28%;
-}
-
-.right {
-  font-size: 80px;
-  color: rgba(223, 219, 219, 0.8);
-  position: absolute;
-  z-index: 99999;
-  cursor: pointer;
-  top: 28%;
-  right: 0%;
-}
-
-.carousel-wrap {
-  height: 453px;
-  width: 100%;
-  overflow: hidden;
-  background-color: #fff;
-}
-
+  .el-carousel__container {
+    height: 450px;
+  }
 .carousel-title span {
   color: white;
   font-size: 22px;
   display: inline-block;
 }
 
-@media only screen and (max-width: 1100px) {
-  .left {
-    width: 80px;
-    height: 80px;
-    font-size: 80px;
-    top: 27%;
-  }
-
-  .right {
-    width: 80px;
-    height: 80px;
-    font-size: 80px;
-    top: 27%;
-    right: 0%;
-  }
-  .carousel-wrap {
-    height: 380px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
-  }
-
-  .carousel-title span {
-    color: white;
-    font-size: 20px;
-    display: inline-block;
+@media only screen and (max-width: 1200px) {
+  .el-carousel__container {
+    height: 360px;
   }
 }
-
-@media only screen and (max-width: 900px) {
-  .carousel-wrap {
-    height: 300px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
+  @media only screen and (max-width: 1000px) {
+    .el-carousel__container {
+      height: 340px;
+    }
   }
 
-  .carousel-title span {
-    color: white;
-    font-size: 18px;
-    display: inline-block;
-  }
-}
-
-@media only screen and (max-width: 700px) {
-  .left {
-    width: 60px;
-    height: 60px;
-    font-size: 60px;
-    top: 27%;
+  @media only screen and (max-width: 960px) {
+    .el-carousel__container {
+      height: 280px;
+    }
   }
 
-  .right {
-    width: 60px;
-    height: 60px;
-    font-size: 60px;
-    top: 27%;
-    right: 0%;
-  }
-  .carousel-wrap {
-    height: 250px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
+  @media only screen and (max-width: 500px) {
+    .el-carousel__container {
+      height: 200px;
+    }
   }
 
-  .carousel-title span {
-    color: white;
-    font-size: 16px;
-    display: inline-block;
-  }
-}
+/*  .right {*/
+/*    width: 60px;*/
+/*    height: 60px;*/
+/*    font-size: 60px;*/
+/*    top: 27%;*/
+/*    right: 0%;*/
+/*  }*/
+/*  .carousel-wrap {*/
+/*    height: 250px;*/
+/*    width: 100%;*/
+/*    overflow: hidden;*/
+/*    background-color: #fff;*/
+/*  }*/
 
-@media only screen and (max-width: 500px) {
-  .left {
-    width: 50px;
-    height: 50px;
-    font-size: 50px;
-    top: 27%;
-  }
+/*  .carousel-title span {*/
+/*    color: white;*/
+/*    font-size: 16px;*/
+/*    display: inline-block;*/
+/*  }*/
+/*}*/
 
-  .right {
-    width: 50px;
-    height: 50px;
-    font-size: 50px;
-    top: 27%;
-    right: 0%;
-  }
+/*@media only screen and (max-width: 500px) {*/
+/*  .left {*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    font-size: 50px;*/
+/*    top: 27%;*/
+/*  }*/
 
-  .carousel-wrap {
-    height: 200px;
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
-  }
-}
+/*  .right {*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    font-size: 50px;*/
+/*    top: 27%;*/
+/*    right: 0%;*/
+/*  }*/
 
-.slide-ul {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+/*  .carousel-wrap {*/
+/*    height: 200px;*/
+/*    width: 100%;*/
+/*    overflow: hidden;*/
+/*    background-color: #fff;*/
+/*  }*/
+/*}*/
 
-.slide-ul li {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
+/*.slide-ul {*/
+/*  position: relative;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
 
-img {
-  width: 100%;
-  height: auto;
-}
+/*.slide-ul li {*/
+/*  position: absolute;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*}*/
+
+/*img {*/
+/*  width: 100%;*/
+/*  height: auto;*/
+/*}*/
 .carousel-title {
+  cursor: pointer;
   position: absolute;
   z-index: 10;
   bottom: 40px;
@@ -287,43 +205,59 @@ img {
   background: rgba(0, 0, 0, 0.3);
 }
 
-.carousel-items {
-  position: absolute;
-  z-index: 10;
-  bottom: 20px;
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 0;
+/*.carousel-items {*/
+/*  position: absolute;*/
+/*  z-index: 10;*/
+/*  bottom: 20px;*/
+/*  width: 100%;*/
+/*  margin: 0 auto;*/
+/*  text-align: center;*/
+/*  font-size: 0;*/
+/*}*/
+
+/*.carousel-items span {*/
+/*  display: inline-block;*/
+/*  height: 6px;*/
+/*  width: 30px;*/
+/*  margin: 0 3px;*/
+/*  background-color: #b2b2b2;*/
+/*  cursor: pointer;*/
+/*}*/
+/*.carousel-items .active {*/
+/*  background-color: orange;*/
+/*}*/
+
+/*.list-enter-to {*/
+/*  transition: all 1s ease;*/
+/*  transform: translateX(0);*/
+/*}*/
+
+/*.list-leave-active {*/
+/*  transition: all 1s ease;*/
+/*  transform: translateX(-100%);*/
+/*}*/
+
+/*.list-enter {*/
+/*  transform: translateX(100%);*/
+/*}*/
+
+/*.list-leave {*/
+/*  transform: translateX(0);*/
+/*}*/
+
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
 }
 
-.carousel-items span {
-  display: inline-block;
-  height: 6px;
-  width: 30px;
-  margin: 0 3px;
-  background-color: #b2b2b2;
-  cursor: pointer;
-}
-.carousel-items .active {
-  background-color: orange;
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
 }
 
-.list-enter-to {
-  transition: all 1s ease;
-  transform: translateX(0);
-}
-
-.list-leave-active {
-  transition: all 1s ease;
-  transform: translateX(-100%);
-}
-
-.list-enter {
-  transform: translateX(100%);
-}
-
-.list-leave {
-  transform: translateX(0);
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 </style>
