@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
 
 /**
  * ElasticSearch RestAPI
- *@author: 陌溪
- *@create: ${YEAR}-${MONTH}-${DAY}-${TIME}
+ *
+ * @author: 陌溪
+ * @create: ${YEAR}-${MONTH}-${DAY}-${TIME}
  */
 @RequestMapping("/search")
 @Api(value = "ElasticSearchRestApi", tags = {"ElasticSearchRestApi"})
@@ -54,6 +55,21 @@ public class ElasticSearchRestApi {
                              @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
         return ResultUtil.result(SysConf.SUCCESS, searchService.search(keywords, currentPage, pageSize));
+    }
+
+    @ApiOperation(value = "通过ElasticSearch删除博客", notes = "通过uid删除博客", response = String.class)
+    @PostMapping("/delBlogbyUid")
+    public String DelBlog(@RequestParam(required = true) Long uid) {
+        blogRepository.deleteById(uid);
+        return ResultUtil.result(SysConf.SUCCESS, null);
+    }
+
+    @ApiOperation(value = "ElasticSearch添加博客", notes = "添加博客", response = String.class)
+    @PostMapping("/addBlogbyUid")
+    public String AddBlog(@RequestParam(required = true) com.moxi.mogublog.xo.entity.Blog EBlog) {
+        Blog blog = searchService.buidBlog(EBlog);
+        blogRepository.save(blog);
+        return ResultUtil.result(SysConf.SUCCESS, null);
     }
 
     @ApiOperation(value = "ElasticSearch初始化索引", notes = "ElasticSearch初始化索引", response = String.class)

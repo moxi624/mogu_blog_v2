@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.feign.SearchFeignClient;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
@@ -68,6 +69,8 @@ public class BlogRestApi {
     AdminService adminService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private SearchFeignClient searchFeignClient;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Value(value = "${data.image.url}")
@@ -372,7 +375,10 @@ public class BlogRestApi {
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //删除solr索引
-            blogSearchService.deleteBatchIndex(collection, uids);
+//            blogSearchService.deleteBatchIndex(collection, uids);
+            for (String uid : uids) {
+                searchFeignClient.DelBlog(Long.parseLong(uid));
+            }
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -457,7 +463,9 @@ public class BlogRestApi {
             setPhoto(blog);
 
             //增加solr索引
-            blogSearchService.addIndex(collection, blog);
+//            blogSearchService.addIndex(collection, blog);
+            searchFeignClient.AddBlog(blog);
+
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
             //这是需要做的是，是删除redis中的该条博客数据
@@ -471,7 +479,8 @@ public class BlogRestApi {
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //当设置下架状态时，删除博客索引
-            blogSearchService.deleteIndex(collection, blog.getUid());
+//            blogSearchService.deleteIndex(collection, blog.getUid());
+            searchFeignClient.DelBlog(Long.parseLong(blog.getUid()));
         }
     }
 }
