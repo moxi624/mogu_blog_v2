@@ -33,57 +33,61 @@ public class BlogListener {
 // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
 
     @RabbitListener(queues = "mogu.blog")
-    public void updateRedis(Map<String, String> map) throws ParseException {
+    public void updateRedis(Map<String, String> map) {
 
-        if (map != null) {
+        try {
+            if (map != null) {
 
-            String comment = map.get(SysConf.COMMAND);
+                String comment = map.get(SysConf.COMMAND);
 
-            //从Redis清空对应的数据
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
-            stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
-            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
+                //从Redis清空对应的数据
+                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
+                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
+                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
+                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
+                stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
+                stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
 
-            if(SysConf.DELETE_BATCH.equals(comment)) {
-                log.info("批量删除博客");
-                stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
-                stringRedisTemplate.opsForValue().set("MONTH_SET", "");
+                if(SysConf.DELETE_BATCH.equals(comment)) {
+                    log.info("批量删除博客");
+                    stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
+                    stringRedisTemplate.opsForValue().set("MONTH_SET", "");
 
-            } else {
-                String level = map.get(SysConf.LEVEL);
+                } else {
+                    String level = map.get(SysConf.LEVEL);
 
-                String createTime = map.get(SysConf.CREATE_TIME);
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-                Date myString = DateFormat.getDateTimeInstance().parse(createTime);
-                String sd = sdf.format(myString);
+                    String createTime = map.get(SysConf.CREATE_TIME);
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
+                    Date myString = DateFormat.getDateTimeInstance().parse(createTime);
+                    String sd = sdf.format(myString);
 //                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
-                String [] list = sd.split("-");
-                System.out.println(createTime);
-                String year = list[0];
-                String month = list[1];
-                String key = year + "年" + month + "月";
-                System.out.println(key);
-                stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
+                    String [] list = sd.split("-");
+                    System.out.println(createTime);
+                    String year = list[0];
+                    String month = list[1];
+                    String key = year + "年" + month + "月";
+                    System.out.println(key);
+                    stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
 
-                String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
-                ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
-                Boolean haveMonth = false;
-                if(monthSet != null) {
-                    for (String item : monthSet) {
-                        if (item.equals(key)) {
-                            haveMonth = true;
-                            break;
+                    String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
+                    ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
+                    Boolean haveMonth = false;
+                    if(monthSet != null) {
+                        for (String item : monthSet) {
+                            if (item.equals(key)) {
+                                haveMonth = true;
+                                break;
+                            }
                         }
-                    }
-                    if(!haveMonth) {
-                        monthSet.add(key);
-                        stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                        if(!haveMonth) {
+                            monthSet.add(key);
+                            stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                        }
                     }
                 }
             }
+        }catch (Exception exception) {
+            System.out.println(exception);
         }
     }
 }

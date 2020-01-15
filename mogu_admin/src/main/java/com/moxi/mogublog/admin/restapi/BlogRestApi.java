@@ -219,9 +219,10 @@ public class BlogRestApi {
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
 
-        String addVerdictResult = addVerdict(count, blogVO.getLevel());
+        String addVerdictResult = addVerdict(count + 1, blogVO.getLevel());
 
         // 判断是否能够添加推荐
         if (StringUtils.isNotBlank(addVerdictResult)) {
@@ -272,10 +273,11 @@ public class BlogRestApi {
         Blog blog = blogService.getById(blogVO.getUid());
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
         if (blog != null) {
             //传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
-            if (blog.getLevel().equals(blogVO.getLevel())) {
+            if (!blog.getLevel().equals(blogVO.getLevel())) {
                 count += 1;
             }
         }
