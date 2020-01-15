@@ -118,13 +118,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        //得到请求头信息authorization信息
-        final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 
-        log.error("传递过来的token为:" + authHeader);
+        //得到请求头信息authorization信息
+        final String authHeader = request.getHeader(tokenHeader);
 
         //请求头 'Authorization': tokenHead + token
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
+
+            log.error("传递过来的token为:" + authHeader);
 
             final String token = authHeader.substring(tokenHead.length());
 

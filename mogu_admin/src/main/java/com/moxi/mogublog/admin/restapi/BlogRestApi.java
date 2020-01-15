@@ -219,10 +219,9 @@ public class BlogRestApi {
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
 
-        String addVerdictResult = addVerdict(count + 1, blogVO.getLevel());
+        String addVerdictResult = addVerdict(count, blogVO.getLevel());
 
         // 判断是否能够添加推荐
         if (StringUtils.isNotBlank(addVerdictResult)) {
@@ -273,11 +272,10 @@ public class BlogRestApi {
         Blog blog = blogService.getById(blogVO.getUid());
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
         if (blog != null) {
             //传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
-            if (!blog.getLevel().equals(blogVO.getLevel())) {
+            if (blog.getLevel().equals(blogVO.getLevel())) {
                 count += 1;
             }
         }
@@ -338,11 +336,15 @@ public class BlogRestApi {
             String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
             System.out.println(dateTime);
             map.put(SysConf.CREATE_TIME, dateTime);
+
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //删除solr索引
-            blogSearchService.deleteIndex(collection, blog.getUid());
+//            blogSearchService.deleteIndex(collection, blog.getUid());
+
+            searchFeignClient.delBlog(blog.getUid());
+
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -379,7 +381,7 @@ public class BlogRestApi {
             //删除solr索引
 //            blogSearchService.deleteBatchIndex(collection, uids);
             for (String uid : uids) {
-                searchFeignClient.DelBlog(Long.parseLong(uid));
+                searchFeignClient.delBlog(uid);
             }
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
@@ -466,7 +468,7 @@ public class BlogRestApi {
 
             //增加solr索引
 //            blogSearchService.addIndex(collection, blog);
-            searchFeignClient.AddBlog(blog);
+            searchFeignClient.addBlogIndex(blog);
 
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
@@ -482,7 +484,7 @@ public class BlogRestApi {
 
             //当设置下架状态时，删除博客索引
 //            blogSearchService.deleteIndex(collection, blog.getUid());
-            searchFeignClient.DelBlog(Long.parseLong(blog.getUid()));
+            searchFeignClient.delBlog(blog.getUid());
         }
     }
 }

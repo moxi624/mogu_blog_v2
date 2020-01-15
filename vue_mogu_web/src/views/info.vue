@@ -1,5 +1,8 @@
 <template>
   <article>
+    <el-dialog :visible.sync="dialogPictureVisible" width="80%">
+      <img width="100%" :src="dialogImageUrl" alt="dialogImageUrl">
+    </el-dialog>
     <h1 class="t_nav">
       <a href="/" class="n1">网站首页</a>
       <a
@@ -121,7 +124,9 @@
         blogUid: null, //传递过来的博客uid
         blogData: null,
         sameBlogData: [], //相关文章
-        linkData: [] //友情链接
+        linkData: [], //友情链接
+        dialogPictureVisible: false,
+        dialogImageUrl: ""
       };
     },
     components: {
@@ -199,7 +204,9 @@
         //首先需要判断点击的是否是图片
         var type = e.target.localName;
         if (type == "img") {
-          window.open(e.target.currentSrc);
+          // window.open(e.target.currentSrc);
+          this.dialogPictureVisible = true
+          this.dialogImageUrl = e.target.currentSrc
         }
       },
       //切割字符串
@@ -214,6 +221,7 @@
 </script>
 
 <style>
+
   .fixck {
     /* font-family: Arial, Verdana, sans-serif !important;
     font-size: 12px !important;

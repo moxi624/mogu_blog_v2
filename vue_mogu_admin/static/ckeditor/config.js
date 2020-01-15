@@ -73,10 +73,10 @@ CKEDITOR.editorConfig = function (config) {
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
 	//开启工具栏“图像”中文件上传功能，后面的url为待会要上传action要指向的的action或servlet
-	config.filebrowserImageUploadUrl = "http://101.132.194.128:8602/ckeditor/imgUpload?";
+	config.filebrowserImageUploadUrl = "http://localhost:8602/ckeditor/imgUpload?";
 
 	//开启插入\编辑超链接中文件上传功能，后面的url为待会要上传action要指向的的action或servlet
-	config.filebrowserUploadUrl = 'http://101.132.194.128:8602/ckeditor/fileUpload';
+	config.filebrowserUploadUrl = 'http://localhost:8602/ckeditor/fileUpload';
 
 	//开启flash中文件上传，这里因为不常用，我暂时就不配置了
 	//config.filebrowserFlashUploadUrl="";

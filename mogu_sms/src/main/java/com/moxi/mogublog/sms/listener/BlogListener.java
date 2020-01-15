@@ -58,9 +58,10 @@ public class BlogListener {
 
                     String createTime = map.get(SysConf.CREATE_TIME);
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-                    Date myString = DateFormat.getDateTimeInstance().parse(createTime);
-                    String sd = sdf.format(myString);
-//                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
+//                    Date myString = DateFormat.getDateTimeInstance().parse(createTime);
+//                    String sd = sdf.format(myString);
+
+                    String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
                     String [] list = sd.split("-");
                     System.out.println(createTime);
                     String year = list[0];

@@ -56,7 +56,7 @@
       </el-upload>
 		</el-dialog>
 
-    <el-dialog :visible.sync="dialogPictureVisible">
+    <el-dialog :visible.sync="dialogPictureVisible" width="80%">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
 

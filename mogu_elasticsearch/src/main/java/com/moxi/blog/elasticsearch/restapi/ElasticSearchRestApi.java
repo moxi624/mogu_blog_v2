@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * ElasticSearch RestAPI
  *
  * @author: 陌溪
- * @create: ${YEAR}-${MONTH}-${DAY}-${TIME}
+ * @create: 2020年1月15日16:26:16
  */
 @RequestMapping("/search")
 @Api(value = "ElasticSearchRestApi", tags = {"ElasticSearchRestApi"})
@@ -59,22 +59,22 @@ public class ElasticSearchRestApi {
 
     @ApiOperation(value = "通过ElasticSearch删除博客", notes = "通过uid删除博客", response = String.class)
     @PostMapping("/delBlogbyUid")
-    public String DelBlog(@RequestParam(required = true) Long uid) {
+    public String delBlog(@RequestParam(required = true) String uid) {
         blogRepository.deleteById(uid);
-        return ResultUtil.result(SysConf.SUCCESS, null);
+        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
 
     @ApiOperation(value = "ElasticSearch添加博客", notes = "添加博客", response = String.class)
     @PostMapping("/addBlogbyUid")
-    public String AddBlog(@RequestParam(required = true) com.moxi.mogublog.xo.entity.Blog EBlog) {
+    public String addBlog(@RequestBody com.moxi.mogublog.xo.entity.Blog EBlog) {
         Blog blog = searchService.buidBlog(EBlog);
         blogRepository.save(blog);
-        return ResultUtil.result(SysConf.SUCCESS, null);
+        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
 
     @ApiOperation(value = "ElasticSearch初始化索引", notes = "ElasticSearch初始化索引", response = String.class)
-    @PostMapping("/elasticSearchInit")
-    public String CreateIndex() throws ParseException {
+    @PostMapping("/initElasticSearchIndex")
+    public String initElasticSearchIndex() throws ParseException {
         elasticsearchTemplate.deleteIndex(Blog.class);
         elasticsearchTemplate.createIndex(Blog.class);
         elasticsearchTemplate.putMapping(Blog.class);
@@ -98,7 +98,6 @@ public class ElasticSearchRestApi {
                     if (org.springframework.util.StringUtils.isEmpty(blogRecords.get(i).get("uid"))) {
                         continue;
                     }
-
 
                     List<Map<String, Object>> tagList = (List<Map<String, Object>>) blogRecords.get(i).get("tagList");
                     Map<String, Object> MapBlogSort = (Map<String, Object>) blogRecords.get(i).get("blogSort");
