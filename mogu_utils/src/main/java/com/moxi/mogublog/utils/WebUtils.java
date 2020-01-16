@@ -16,16 +16,19 @@ import java.util.Map;
 public class WebUtils {
 
     /**
-     * HTML字符转义
+     *    HTML字符转义
      *
-     * @return String 过滤后的字符串
-     * @see 对输入参数中的敏感字符进行过滤替换,防止用户利用JavaScript等方式输入恶意代码
-     * @see String input = <img src='http://t1.baidu.com/it/fm=0&gp=0.jpg'/>
-     * @see HtmlUtils.htmlEscape(input);         //from spring.jar
-     * @see StringEscapeUtils.escapeHtml(input); //from commons-lang.jar
-     * @see 尽管Spring和Apache都提供了字符转义的方法,但Apache的StringEscapeUtils功能要更强大一些
-     * @see StringEscapeUtils提供了对HTML,Java,JavaScript,SQL,XML等字符的转义和反转义
-     * @see 但二者在转义HTML字符时,都不会对单引号和空格进行转义,而本方法则提供了对它们的转义
+     *      * @return String 过滤后的字符串
+     *      * @see 对输入参数中的敏感字符进行过滤替换,防止用户利用JavaScript等方式输入恶意代码
+     *      * @see String input = <img src='http://t1.baidu.com/it/fm=0&gp=0.jpg'/>
+     *      * @see HtmlUtils.htmlEscape(input);         //from spring.jar
+     *      * @see StringEscapeUtils.escapeHtml(input); //from commons-lang.jar
+     *      * @see 尽管Spring和Apache都提供了字符转义的方法,但Apache的StringEscapeUtils功能要更强大一些
+     *      * @see StringEscapeUtils提供了对HTML,Java,JavaScript,SQL,XML等字符的转义和反转义
+     *      * @see 但二者在转义HTML字符时,都不会对单引号和空格进行转义,而本方法则提供了对它们的转义
+     *
+     * @param input
+     * @return
      */
     public static String htmlEscape(String input) {
         if (StringUtils.isEmpty(input)) {
@@ -88,6 +91,25 @@ public class WebUtils {
             }
         }
         return resultList;
+    }
+
+    /**
+     * 获取结果集的内容
+     * @param result
+     * @return
+     */
+    public static <T> T getData(String result, Class<T> beanType) {
+        if(com.moxi.mogublog.utils.StringUtils.isEmpty(result)) {
+            return null;
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if("success".equals(dataMap.get("code"))) {
+
+            Map<String, Object> data = (Map<String, Object>) dataMap.get("data");
+            T t = JsonUtils.mapToPojo(data, beanType);
+            return t;
+        }
+        return null;
     }
 
 }

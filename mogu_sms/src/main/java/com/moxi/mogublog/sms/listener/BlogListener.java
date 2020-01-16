@@ -1,7 +1,7 @@
 package com.moxi.mogublog.sms.listener;
 
+import com.moxi.mogublog.sms.feign.SearchFeignClient;
 import com.moxi.mogublog.sms.global.SysConf;
-import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -10,11 +10,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,65 +28,100 @@ public class BlogListener {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private SearchFeignClient searchFeignClient;
+
 // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
 
     @RabbitListener(queues = "mogu.blog")
     public void updateRedis(Map<String, String> map) {
 
-        try {
-            if (map != null) {
+        if (map != null) {
 
-                String comment = map.get(SysConf.COMMAND);
+            String comment = map.get(SysConf.COMMAND);
 
-                //从Redis清空对应的数据
-                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
-                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
-                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
-                stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
-                stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
-                stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
+            String uid = map.get("blogUid");
 
-                if(SysConf.DELETE_BATCH.equals(comment)) {
-                    log.info("批量删除博客");
+            //从Redis清空对应的数据
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.THREE, "");
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
+            stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
+            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
+
+            switch (comment) {
+                case SysConf.DELETE_BATCH: {
+
+                    log.info("mogu-sms处理批量删除博客");
                     stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
                     stringRedisTemplate.opsForValue().set("MONTH_SET", "");
+                    searchFeignClient.deleteElasticSearchByUids(uid);
 
-                } else {
-                    String level = map.get(SysConf.LEVEL);
+                }
+                break;
 
-                    String createTime = map.get(SysConf.CREATE_TIME);
-                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
-//                    Date myString = DateFormat.getDateTimeInstance().parse(createTime);
-//                    String sd = sdf.format(myString);
+                case SysConf.ADD: {
+                    log.info("mogu-sms处理增加博客");
+                    updateSearch(map);
+                    searchFeignClient.addElasticSearchIndexByUid(uid);
+                }
+                break;
 
-                    String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
-                    String [] list = sd.split("-");
-                    System.out.println(createTime);
-                    String year = list[0];
-                    String month = list[1];
-                    String key = year + "年" + month + "月";
-                    System.out.println(key);
-                    stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
+                case SysConf.EDIT: {
+                    log.info("mogu-sms处理编辑博客");
+                    updateSearch(map);
+                    searchFeignClient.addElasticSearchIndexByUid(uid);
+                }
+                break;
 
-                    String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
-                    ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
-                    Boolean haveMonth = false;
-                    if(monthSet != null) {
-                        for (String item : monthSet) {
-                            if (item.equals(key)) {
-                                haveMonth = true;
-                                break;
-                            }
-                        }
-                        if(!haveMonth) {
-                            monthSet.add(key);
-                            stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
-                        }
+                case SysConf.DELETE: {
+                    log.info("mogu-sms处理删除博客： uid=" + uid);
+                    updateSearch(map);
+                    searchFeignClient.deleteElasticSearchByUid(uid);
+                }
+                break;
+            }
+        }
+    }
+
+
+    private void updateSearch(Map<String, String> map) {
+        try {
+
+            String level = map.get(SysConf.LEVEL);
+            String createTime = map.get(SysConf.CREATE_TIME);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            Date myString = DateFormat.getDateTimeInstance().parse(createTime);
+            String sd = sdf.format(myString);
+
+//        String sd = sdf.format(new Date(Long.parseLong(String.valueOf(createTime))));
+            String[] list = sd.split("-");
+            System.out.println(createTime);
+            String year = list[0];
+            String month = list[1];
+            String key = year + "年" + month + "月";
+            System.out.println(key);
+            stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:" + key, "");
+
+            String jsonResult = stringRedisTemplate.opsForValue().get("MONTH_SET");
+            ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
+            Boolean haveMonth = false;
+            if (monthSet != null) {
+                for (String item : monthSet) {
+                    if (item.equals(key)) {
+                        haveMonth = true;
+                        break;
                     }
                 }
+                if (!haveMonth) {
+                    monthSet.add(key);
+                    stringRedisTemplate.opsForValue().set("MONTH_SET", JsonUtils.objectToJson(monthSet));
+                }
             }
-        }catch (Exception exception) {
-            System.out.println(exception);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 }

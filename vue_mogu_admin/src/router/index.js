@@ -312,7 +312,13 @@ export const constantRouterMap = [
         name: 'Solr',
         component: () => import('@/views/system/solrIndex'),
         meta: { title: 'Solr', icon: 'index' }
-      }
+      },
+      {
+        path: 'ElasticSearch',
+        name: 'Druid',
+        component: () => import('@/views/monitor/ElasticSearch'),
+        meta: { title: 'ElasticSearch', icon: 'exception' }
+      },
     ]
   },
 

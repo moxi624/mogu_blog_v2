@@ -1,7 +1,11 @@
 package com.moxi.mogublog.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
@@ -10,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -137,6 +142,64 @@ public class JsonUtils {
             e.printStackTrace();
         }
         return map;
+    }
+
+    /**
+     * 将map转换成pojo
+     * @param map
+     * @param beanType
+     * @param <T>
+     * @return
+     * @date 2020年1月16日11:05:51
+     */
+    public static <T> T mapToPojo(Map<String, Object> map, Class<T> beanType) {
+
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(map);
+        T pojo = gson.fromJson(jsonElement, beanType);
+
+        return pojo;
+    }
+
+
+
+    // 定义jackson对象
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    /**
+     * 将json结果集转化为对象
+     * @param jsonData
+     * @param beanType
+     * @param <T>
+     * @return
+     */
+    public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
+        try {
+            T t = MAPPER.readValue(jsonData, beanType);
+            return t;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 将json数据转换成pojo对象list
+     * <p>Title: jsonToList</p>
+     * <p>Description: </p>
+     * @param jsonData
+     * @param beanType
+     * @return
+     */
+    public static <T> List<T> jsonToList(String jsonData, Class<T> beanType) {
+        JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
+        try {
+            List<T> list = MAPPER.readValue(jsonData, javaType);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

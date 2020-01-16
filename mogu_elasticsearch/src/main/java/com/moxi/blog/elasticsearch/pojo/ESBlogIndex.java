@@ -8,9 +8,12 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
+/**
+ * ESBlogIndex
+ */
 @Data
 @Document(indexName = "blog", type = "docs", shards = 1, replicas = 0)
-public class Blog {
+public class ESBlogIndex {
     @Id
     private String id;
 

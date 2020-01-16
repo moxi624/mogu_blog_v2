@@ -333,9 +333,7 @@ public class BlogRestApi {
             map.put(SysConf.COMMAND, SysConf.DELETE);
             map.put(SysConf.BLOG_UID, blog.getUid());
             map.put(SysConf.LEVEL, blog.getLevel());
-            String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
-            System.out.println(dateTime);
-            map.put(SysConf.CREATE_TIME, dateTime);
+            map.put(SysConf.CREATE_TIME, blog.getCreateTime());
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
@@ -343,7 +341,7 @@ public class BlogRestApi {
             //删除solr索引
 //            blogSearchService.deleteIndex(collection, blog.getUid());
 
-            searchFeignClient.delBlog(blog.getUid());
+//            searchFeignClient.delBlog(blog.getUid());
 
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
@@ -358,8 +356,10 @@ public class BlogRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
+        StringBuffer uidSbf = new StringBuffer();
         blogVoList.forEach(item->{
             uids.add(item.getUid());
+            uidSbf.append(item.getUid() + SysConf.FILE_SEGMENTATION);
         });
         Collection<Blog> blogList = blogService.listByIds(uids);
 
@@ -374,15 +374,16 @@ public class BlogRestApi {
 
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.DELETE_BATCH);
+            map.put(SysConf.UID, uidSbf);
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
             //删除solr索引
 //            blogSearchService.deleteBatchIndex(collection, uids);
-            for (String uid : uids) {
-                searchFeignClient.delBlog(uid);
-            }
+//            for (String uid : uids) {
+//                searchFeignClient.delBlog(uid);
+//            }
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -468,7 +469,7 @@ public class BlogRestApi {
 
             //增加solr索引
 //            blogSearchService.addIndex(collection, blog);
-            searchFeignClient.addBlogIndex(blog);
+//            searchFeignClient.addBlogIndex(blog);
 
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
@@ -484,7 +485,7 @@ public class BlogRestApi {
 
             //当设置下架状态时，删除博客索引
 //            blogSearchService.deleteIndex(collection, blog.getUid());
-            searchFeignClient.delBlog(blog.getUid());
+//            searchFeignClient.delBlog(blog.getUid());
         }
     }
 }

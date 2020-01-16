@@ -256,6 +256,7 @@ public class CommentRestApi {
                 List<Comment> replyComments = getCommentReplys(replyCommentList, toCommentListMap);
 
                 item.setReplyList(getCommentReplys(replyCommentList, toCommentListMap));
+
             });
 
             return  list;

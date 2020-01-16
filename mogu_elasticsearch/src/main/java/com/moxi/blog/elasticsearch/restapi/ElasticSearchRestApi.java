@@ -2,11 +2,14 @@ package com.moxi.blog.elasticsearch.restapi;
 
 import com.moxi.blog.elasticsearch.client.BlogClient;
 import com.moxi.blog.elasticsearch.global.SysConf;
-import com.moxi.blog.elasticsearch.pojo.Blog;
+import com.moxi.blog.elasticsearch.pojo.ESBlogIndex;
 import com.moxi.blog.elasticsearch.reposlitory.BlogRepository;
 import com.moxi.blog.elasticsearch.service.SearchService;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,17 +60,45 @@ public class ElasticSearchRestApi {
         return ResultUtil.result(SysConf.SUCCESS, searchService.search(keywords, currentPage, pageSize));
     }
 
-    @ApiOperation(value = "通过ElasticSearch删除博客", notes = "通过uid删除博客", response = String.class)
-    @PostMapping("/delBlogbyUid")
-    public String delBlog(@RequestParam(required = true) String uid) {
+    @ApiOperation(value = "通过uids删除ElasticSearch博客索引", notes = "通过uids删除ElasticSearch博客索引", response = String.class)
+    @PostMapping("/deleteElasticSearchByUids")
+    public String deleteElasticSearchByUids(@RequestParam(required = true) String uids) {
+
+        List<String> uidList = StringUtils.changeStringToString(uids, SysConf.FILE_SEGMENTATION);
+
+        for(String uid : uidList) {
+            blogRepository.deleteById(uid);
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+    }
+
+    @ApiOperation(value = "通过博客uid删除ElasticSearch博客索引", notes = "通过uid删除博客", response = String.class)
+    @PostMapping("/deleteElasticSearchByUid")
+    public String deleteElasticSearchByUid(@RequestParam(required = true) String uid) {
         blogRepository.deleteById(uid);
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
 
     @ApiOperation(value = "ElasticSearch添加博客", notes = "添加博客", response = String.class)
     @PostMapping("/addBlogbyUid")
-    public String addBlog(@RequestBody com.moxi.mogublog.xo.entity.Blog EBlog) {
-        Blog blog = searchService.buidBlog(EBlog);
+    public String addBlog(@RequestBody Blog EBlog) {
+        ESBlogIndex blog = searchService.buidBlog(EBlog);
+        blogRepository.save(blog);
+        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+    }
+
+    @ApiOperation(value = "ElasticSearch通过博客Uid添加索引", notes = "添加博客", response = String.class)
+    @PostMapping("/addElasticSearchIndexByUid")
+    public String addElasticSearchIndexByUid(@RequestParam(required = true) String uid) {
+
+        String result = blogClient.getBlogByUid(uid);
+
+        Blog eblog = WebUtils.getData(result, Blog.class);
+        if(eblog == null) {
+            return ResultUtil.result(SysConf.ERROR, "索引添加失败");
+        }
+        ESBlogIndex blog = searchService.buidBlog(eblog);
         blogRepository.save(blog);
         return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
@@ -75,9 +106,9 @@ public class ElasticSearchRestApi {
     @ApiOperation(value = "ElasticSearch初始化索引", notes = "ElasticSearch初始化索引", response = String.class)
     @PostMapping("/initElasticSearchIndex")
     public String initElasticSearchIndex() throws ParseException {
-        elasticsearchTemplate.deleteIndex(Blog.class);
-        elasticsearchTemplate.createIndex(Blog.class);
-        elasticsearchTemplate.putMapping(Blog.class);
+        elasticsearchTemplate.deleteIndex(ESBlogIndex.class);
+        elasticsearchTemplate.createIndex(ESBlogIndex.class);
+        elasticsearchTemplate.putMapping(ESBlogIndex.class);
 
         long page = 1;
         long row = 10;
@@ -120,7 +151,7 @@ public class ElasticSearchRestApi {
                     EBlogList.add(EBlog);
 
                 }
-                List<Blog> blogList = EBlogList.stream()
+                List<ESBlogIndex> blogList = EBlogList.stream()
                         .map(searchService::buidBlog).collect(Collectors.toList());
                 //存入索引库
                 blogRepository.saveAll(blogList);

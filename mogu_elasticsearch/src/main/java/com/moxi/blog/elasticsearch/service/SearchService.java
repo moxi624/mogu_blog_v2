@@ -1,14 +1,14 @@
 package com.moxi.blog.elasticsearch.service;
 
 import com.moxi.blog.elasticsearch.client.BlogClient;
-import com.moxi.blog.elasticsearch.pojo.Blog;
+import com.moxi.blog.elasticsearch.pojo.ESBlogIndex;
 import com.moxi.blog.elasticsearch.reposlitory.BlogRepository;
+import com.moxi.mogublog.xo.entity.Blog;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +19,17 @@ import java.util.Map;
 @Service
 public class SearchService {
 
-    @Autowired
-    BlogClient blogClient;
 
     @Autowired
     BlogRepository blogRepository;
 
-    @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    public ESBlogIndex buidBlog(Blog eblog) {
 
-
-    public Blog buidBlog(com.moxi.mogublog.xo.entity.Blog eblog) {
-
-        blogClient.getBlogByUid(eblog.getUid());
         //搜索字段
         String all = eblog.getTitle() + " " + eblog.getSummary();
 
         //构建blog对象
-        Blog blog = new Blog();
+        ESBlogIndex blog = new ESBlogIndex();
         blog.setId(eblog.getUid());
         blog.setUid(eblog.getUid());
         blog.setTitle(eblog.getTitle());
@@ -82,13 +75,13 @@ public class SearchService {
         System.out.println("查询的语句:" + queryBuilder.build().getQuery().toString());
         //查询
 
-        Page<Blog> result = blogRepository.search(queryBuilder.build());
+        Page<ESBlogIndex> result = blogRepository.search(queryBuilder.build());
 
 
         //解析结果
         long total = result.getTotalElements();
         int totalPage = result.getTotalPages();
-        List<Blog> blogList = result.getContent();
+        List<ESBlogIndex> blogList = result.getContent();
         Map<String, Object> map = new HashMap<>();
         map.put("totle", total);
         map.put("totlePage", totalPage);
