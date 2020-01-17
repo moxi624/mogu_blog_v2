@@ -36,4 +36,13 @@ public interface SearchFeignClient {
     @PostMapping("/search/initElasticSearchIndex")
     public String initElasticSearchIndex();
 
+    /**
+     * 初始化Solr索引
+     * @return
+     */
+    @PostMapping("/search/initSolrIndex")
+    public String initSolrIndex();
+
+
+
 }

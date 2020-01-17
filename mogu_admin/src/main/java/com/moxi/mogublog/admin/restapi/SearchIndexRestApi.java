@@ -33,7 +33,21 @@ public class SearchIndexRestApi {
     @OperationLogger(value = "初始化ElasticSearch索引")
     @ApiOperation(value = "初始化ElasticSearch索引", notes = "初始化solr索引")
     @PostMapping("/initElasticIndex")
-    public String initIndex(HttpServletRequest request) {
+    public String initElasticIndex(HttpServletRequest request) {
+
+        String result = searchFeignClient.initElasticSearchIndex();
+        Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if(SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
+            return ResultUtil.result(SysConf.SUCCESS, "初始化ElasticSearch索引成功");
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "初始化ElasticSearch索引失败");
+        }
+    }
+
+    @OperationLogger(value = "初始化Solr索引")
+    @ApiOperation(value = "初始化Solr索引", notes = "初始化solr索引")
+    @PostMapping("/initSolrIndex")
+    public String initSolrIndex(HttpServletRequest request) {
 
         String result = searchFeignClient.initElasticSearchIndex();
         Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);

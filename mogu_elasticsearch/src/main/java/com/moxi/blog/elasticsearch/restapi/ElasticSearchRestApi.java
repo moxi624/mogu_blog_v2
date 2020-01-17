@@ -4,7 +4,7 @@ import com.moxi.blog.elasticsearch.client.BlogClient;
 import com.moxi.blog.elasticsearch.global.SysConf;
 import com.moxi.blog.elasticsearch.pojo.ESBlogIndex;
 import com.moxi.blog.elasticsearch.reposlitory.BlogRepository;
-import com.moxi.blog.elasticsearch.service.SearchService;
+import com.moxi.blog.elasticsearch.service.ElasticSearchService;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class ElasticSearchRestApi {
 
     @Autowired
-    private SearchService searchService;
+    private ElasticSearchService searchService;
 
     @Autowired
     private BlogRepository blogRepository;
