@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.solr;
+package com.moxi.blog.elasticsearch.config;
 
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Value;

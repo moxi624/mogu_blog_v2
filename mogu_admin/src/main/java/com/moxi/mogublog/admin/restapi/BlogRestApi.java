@@ -85,10 +85,6 @@ public class BlogRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
-    @Value(value = "${spring.data.solr.core}")
-    private String collection;
-    @Autowired
-    private BlogSearchService blogSearchService;
 
     @ApiOperation(value = "获取博客列表", notes = "获取博客列表", response = String.class)
     @PostMapping("/getList")

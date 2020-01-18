@@ -2,16 +2,12 @@ package com.moxi.blog.elasticsearch.restapi;
 
 import com.moxi.blog.elasticsearch.client.BlogClient;
 import com.moxi.blog.elasticsearch.global.SysConf;
-import com.moxi.blog.elasticsearch.pojo.ESBlogIndex;
 import com.moxi.blog.elasticsearch.service.SolrSearchService;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.service.BlogSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
@@ -107,60 +101,15 @@ public class SolrRestApi {
         do {
             // 查询blog信息
             String result = blogClient.getNewBlog(page, row);
+
             //构建blog
+            List<Blog> blogList = WebUtils.getList(result, Blog.class);
 
-            List<Blog> blogList1 = WebUtils.getList(result, Blog.class);
-
-            for(Blog bl : blogList1) {
-                System.out.println(bl.getTitle());
-            }
             //存入索引库
-            solrSearchService.initIndex(collection, blogList1);
+            solrSearchService.initIndex(collection, blogList);
             //翻页
             page++;
 
-//            Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-//            if ("success".equals(blogMap.get("code"))) {
-//                Map<String, Object> blogData = (Map<String, Object>) blogMap.get("data");
-//
-//
-//                List<Map<String, Object>> blogRecords = (List<Map<String, Object>>) blogData.get("records");
-//                size = blogRecords.size();
-//                List<com.moxi.mogublog.xo.entity.Blog> EBlogList = new ArrayList<>();
-//                for (int i = 0; i < size; i++) {
-//
-//                    if (org.springframework.util.StringUtils.isEmpty(blogRecords.get(i).get("uid"))) {
-//                        continue;
-//                    }
-//
-//                    List<Map<String, Object>> tagList = (List<Map<String, Object>>) blogRecords.get(i).get("tagList");
-//                    Map<String, Object> MapBlogSort = (Map<String, Object>) blogRecords.get(i).get("blogSort");
-//                    List photoList = (List) blogRecords.get(i).get("photoList");
-//                    com.moxi.mogublog.xo.entity.Blog EBlog = new com.moxi.mogublog.xo.entity.Blog();
-//                    BlogSort blogSort = new BlogSort();
-//                    blogSort.setSortName(MapBlogSort.get("sortName").toString());
-//                    blogSort.setContent(MapBlogSort.get("content").toString());
-//                    blogSort.setUid(MapBlogSort.get("uid").toString());
-//                    EBlog.setUid((String) blogRecords.get(i).get("uid"));
-//                    EBlog.setTitle((String) blogRecords.get(i).get("title"));
-//                    EBlog.setSummary((String) blogRecords.get(i).get("summary"));
-//                    EBlog.setBlogSortUid(blogSort.getUid());
-//                    EBlog.setBlogSort(blogSort);
-//                    EBlog.setIsPublish((String) blogRecords.get(i).get("isPublish"));
-//                    EBlog.setAuthor((String) blogRecords.get(i).get("author"));
-//                    Date createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(blogRecords.get(i).get("createTime").toString());
-//                    EBlog.setCreateTime(createTime);
-//                    EBlog.setPhotoList(photoList);
-//                    EBlogList.add(EBlog);
-//
-//                }
-//
-//                //存入索引库
-//                solrSearchService.initIndex(collection, EBlogList);
-//                //翻页
-//                page++;
-//            }
-            System.out.println(size);
         } while (size == 15);
         return ResultUtil.result(SysConf.SUCCESS, null);
     }

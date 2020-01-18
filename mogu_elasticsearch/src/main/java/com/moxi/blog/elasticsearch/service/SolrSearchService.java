@@ -1,8 +1,8 @@
 package com.moxi.blog.elasticsearch.service;
 
+import com.moxi.blog.elasticsearch.pojo.SolrIndex;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.SolrIndex;
 import com.moxi.mogublog.xo.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;

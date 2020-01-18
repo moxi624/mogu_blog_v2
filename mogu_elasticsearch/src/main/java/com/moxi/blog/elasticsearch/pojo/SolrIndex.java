@@ -1,7 +1,6 @@
 package com.moxi.blog.elasticsearch.pojo;
-
 import lombok.Data;
-import org.springframework.data.elasticsearch.annotations.Field;
+import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.Date;
 
@@ -13,6 +12,7 @@ import java.util.Date;
  */
 @Data
 public class SolrIndex {
+
     /**
      * 博客uid
      */
@@ -79,5 +79,4 @@ public class SolrIndex {
      */
     @Field("photo_list")
     private String photoList;
-
 }

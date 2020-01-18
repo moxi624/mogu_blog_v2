@@ -20,16 +20,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableDiscoveryClient
 @EnableFeignClients
-//@ComponentScan(basePackages = {
-//        "com.moxi.mogublog.config",
-//        "com.moxi.blog.elasticsearch.config",
-//        "com.moxi.blog.elasticsearch.restapi",
-//        "com.moxi.blog.elasticsearch.service",
-//        "com.moxi.blog.elasticsearch.reposlitory",
-//        "com.moxi.mogublog.xo.service",
-//        "com.moxi.mogublog.xo.mapper",
-//        "com.moxi.mogublog.utils"
-//})
+@ComponentScan(basePackages = {
+        "com.moxi.blog.elasticsearch.client",
+        "com.moxi.blog.elasticsearch.config",
+        "com.moxi.blog.elasticsearch.restapi",
+        "com.moxi.blog.elasticsearch.service",
+        "com.moxi.blog.elasticsearch.pojo",
+        "com.moxi.blog.elasticsearch.reposlitory",
+        "com.moxi.mogublog.utils"
+})
 public class ElasticsearchApplication {
     public static void main(String[] args) {
         /**

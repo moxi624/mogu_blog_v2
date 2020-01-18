@@ -12,3 +12,15 @@ export function initElasticIndex(params) {
   })
 }
 
+/**
+ * 初始化solr索引
+ * @param params
+ */
+export function initSolrIndex(params) {
+  return request({
+    url: process.env.ADMIN_API + '/search/initSolrIndex',
+    method: 'post',
+    params
+  })
+}
+

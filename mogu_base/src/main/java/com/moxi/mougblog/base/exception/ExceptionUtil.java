@@ -1,8 +1,8 @@
 package com.moxi.mougblog.base.exception;
 
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.ErrorConstants;
 import com.moxi.mougblog.base.vo.Result;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Author: 陌溪

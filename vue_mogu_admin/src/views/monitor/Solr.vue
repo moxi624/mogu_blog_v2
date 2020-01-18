@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { initIndex } from "@/api/solrIndex";
+  import { initSolrIndex } from "@/api/searchIndex";
   export default {
     data() {
       return {
@@ -30,11 +30,16 @@
           type: "warning"
         })
           .then(() => {
-            initIndex().then(response => {
+            initSolrIndex().then(response => {
               if(response.code == "success") {
                 this.$message({
                   type: "success",
-                  message: "初始化成功!"
+                  message: response.data
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
                 });
               }
             })
