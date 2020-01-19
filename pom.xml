@@ -57,6 +57,7 @@
         <module>mogu_sms</module>
         <module>mogu_search</module>
         <module>mogu_monitor</module>
+        <module>mogu_gateway</module>
     </modules>
 
     <dependencyManagement>

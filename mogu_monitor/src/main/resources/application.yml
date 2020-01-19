@@ -15,7 +15,7 @@ spring:
         brand: 蘑菇博客监控中心
       notify:
         mail:
-          enabled: true
+          enabled: false
           # 服务上下线会自动发送邮件
           from: mogublog@163.com
           to: moxi0624@163.com
