@@ -121,6 +121,18 @@ public class Blog extends SuperEntity<Blog> {
     private BlogSort blogSort;
 
     /**
+     * 博客分类名
+     */
+    @TableField(exist = false)
+    private String blogSortName;
+
+    /**
+     * 博客标题图
+     */
+    @TableField(exist = false)
+    private String photoUrl;
+
+    /**
      * 点赞数
      */
     @TableField(exist = false)

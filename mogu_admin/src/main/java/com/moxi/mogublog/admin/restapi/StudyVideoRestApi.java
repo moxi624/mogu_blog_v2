@@ -129,6 +129,7 @@ public class StudyVideoRestApi {
         studyVideo.setFileUid(studyVideoVO.getFileUid());
         studyVideo.setBaiduPath(studyVideoVO.getBaiduPath());
         studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
+        studyVideo.setClickCount(SysConf.ZERO);
         studyVideo.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }

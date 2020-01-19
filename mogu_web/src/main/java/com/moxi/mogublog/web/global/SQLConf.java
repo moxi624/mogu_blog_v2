@@ -24,6 +24,7 @@ public final class SQLConf extends BaseSQLConf {
      */
     public final static String CLICK_COUNT = "click_count";
     public static final String LEVEL = "level";
+    public final static String SUMMARY = "summary";
     public static final String TagUid = "tag_uid";
     public static final String BLOG_UID = "blog_uid";
     public static final String BLOG_SORT_UID = "blog_sort_uid";

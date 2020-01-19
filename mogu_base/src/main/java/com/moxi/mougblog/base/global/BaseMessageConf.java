@@ -18,6 +18,8 @@ public class BaseMessageConf {
 
     public static final String ENTITY_EXIST = "该实体已存在";
 
+    public static final String KEYWORD_IS_NOT_EMPTY = "关键字不能为空";
+
     public static final String COMMENT_IS_NOT_EXIST = "该评论不存在";
 
     public static final String LOGIN_DISABLE = "该账号已被封禁";

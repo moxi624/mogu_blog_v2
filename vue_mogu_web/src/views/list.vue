@@ -25,7 +25,7 @@
           </h3>
           <span class="blogpic">
             <a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" title>
-              <img v-if="item.photoList" :src="PICTURE_HOST + item.photoList[0]" :alt="item.title">
+              <img v-if="item.photoUrl" :src="PICTURE_HOST + item.photoUrl" alt="">
             </a>
           </span>
           <p class="blogtext" v-html="item.summary">{{item.summary}}</p>
@@ -203,32 +203,22 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         params.append("keywords", that.keywords);
-        console.log("开始搜索");
         searchBlog(params).then(response => {
-          console.log("返回的内容", response);
           if (response.code == "success" && response.data.blogList.length > 0) {
             that.isEnd = false;
-
+            console.log("返回的搜索数据", response.data.blogList)
             //获取总页数
-            that.totalPages = response.data.totalPages;
+            that.totalPages = response.data.blogList.length;
+            that.total = response.data.total;
             that.pageSize = response.data.pageSize;
             that.currentPage = response.data.currentPage;
             var blogData = response.data.blogList;
-
             //全部加载完毕
             console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
               that.isEnd = true;
             }
 
-            for (var i = 0; i < blogData.length; i++) {
-              if (blogData[i].photoList) {
-                var tempList = blogData[i].photoList;
-                blogData[i].photoList = tempList;
-              } else {
-                blogData[i].photoList = [];
-              }
-            }
             blogData = that.searchBlogData.concat(blogData);
             that.searchBlogData = blogData;
             this.blogData = blogData;

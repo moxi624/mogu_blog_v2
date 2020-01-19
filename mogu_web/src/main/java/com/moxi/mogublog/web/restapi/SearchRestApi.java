@@ -8,6 +8,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
@@ -60,18 +61,110 @@ public class SearchRestApi {
     @Value(value = "${spring.data.solr.core}")
     private String collection;
 
+    /**
+     * 使用SQL语句搜索博客，如需使用Solr或者ElasticSearch 需要启动 mogu-search
+     * @param request
+     * @param keywords
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
-    @GetMapping("/searchBlog")
-    public String searchBlog(HttpServletRequest request,
+    @GetMapping("/sqlSearchBlog")
+    public String sqlSearchBlog(HttpServletRequest request,
                              @ApiParam(name = "keywords", value = "关键字", required = true) @RequestParam(required = true) String keywords,
                              @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
                              @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
         if (StringUtils.isEmpty(keywords)) {
-            return ResultUtil.result(SysConf.ERROR, "关键字不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
         }
 
-        return ResultUtil.result(SysConf.SUCCESS, "搜索成功");
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(SQLConf.TITLE, keywords).or().like(SQLConf.SUMMARY, keywords);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+        queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        IPage<Blog> iPage = blogService.page(page, queryWrapper);
+
+        List<Blog> blogList = iPage.getRecords();
+
+        List<String> blogSortUidList = new ArrayList<>();
+        Map<String, String> pictureMap = new HashMap<>();
+        final StringBuffer fileUids = new StringBuffer();
+        blogList.forEach(item -> {
+
+            blogSortUidList.add(item.getBlogSortUid());
+
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+
+        // 调用图片接口，获取图片
+        String pictureList = null;
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+
+        Collection<BlogSort> blogSortList = blogSortService.listByIds(blogSortUidList);
+
+        Map<String, String> blogSortMap = new HashMap<>();
+        blogSortList.forEach(item -> {
+            blogSortMap.put(item.getUid(), item.getSortName());
+        });
+
+        // 设置分类名 和 图片
+        blogList.forEach(item -> {
+            if(blogSortMap.get(item.getBlogSortUid()) != null) {
+                item.setBlogSortName(blogSortMap.get(item.getBlogSortUid()));
+            }
+
+            //获取图片
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
+
+                pictureUidsTemp.forEach(picture -> {
+                    pictureListTemp.add(pictureMap.get(picture));
+                });
+                // 只设置一张标题图
+                if(pictureListTemp.size() > 0) {
+                    item.setPhotoUrl(pictureListTemp.get(0));
+                } else {
+                    item.setPhotoUrl("");
+                }
+            }
+        });
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        // 返回总记录数
+        map.put(SysConf.TOTAL, iPage.getTotal());
+
+        // 返回总页数
+        map.put(SysConf.TOTAL_PAGE,iPage.getPages());
+
+        // 返回当前页大小
+        map.put(SysConf.PAGE_SIZE, pageSize);
+
+        // 返回当前页
+        map.put(SysConf.CURRENT_PAGE, iPage.getCurrent());
+
+        // 返回数据
+        map.put(SysConf.BLOG_LIST, blogList);
+
+        return ResultUtil.result(SysConf.SUCCESS, map);
 
     }
 
