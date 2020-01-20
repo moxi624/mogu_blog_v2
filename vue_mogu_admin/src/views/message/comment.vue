@@ -16,24 +16,57 @@
 	      </template>
 	    </el-table-column>
 
+      <el-table-column label="头像" width="160">
+        <template slot-scope="scope">
+          <img
+            v-if="scope.row.user.photoUrl"
+            :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            style="width: 100px;height: 100px;"
+          >
+        </template>
+      </el-table-column>
+
 	    <el-table-column label="评论人" width="100">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.userName }}</span>
+	        <span v-if="scope.row.user">{{ scope.row.user.nickName }}</span>
 	      </template>
 	    </el-table-column>
 
       <el-table-column label="被评论人" width="100">
         <template slot-scope="scope">
-          <span v-if="scope.row.toUserName">{{ scope.row.toUserName }}</span>
+          <span v-if="scope.row.toUser">{{ scope.row.toUser.nickName }}</span>
           <span v-else>无</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="内容" width="200">
+
+      <el-table-column label="内容" width="250">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.content }}</span>
+          <el-popover
+            placement="top-start"
+            width="400"
+            trigger="hover"
+            :content="scope.row.content">
+            <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>
+          </el-popover>
 	      </template>
 	    </el-table-column>
+
+        <el-table-column label="来源" width="150">
+          <template slot-scope="scope">
+            <template>
+              <el-tag type="warning" @click.native="goPage(scope.row.source, scope.row.blog)" style="cursor: pointer;">{{scope.row.sourceName}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="来源博客" width="160">
+          <template slot-scope="scope">
+            <template>
+              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
 
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
@@ -41,23 +74,8 @@
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="状态" width="100">
-	   	  <template slot-scope="scope">
-		   	  <template v-if="scope.row.status == 1">
-		        <span>正常</span>
-		      </template>
-		      <template v-if="scope.row.status == 2">
-		        <span>推荐</span>
-		      </template>
-		      <template v-if="scope.row.status == 0">
-		        <span>已删除</span>
-		      </template>
-	   	  </template>
-	    </el-table-column>
-
 	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
-          <el-button @click="handleShow(scope.row)" type="primary" size="small">详情</el-button>
           <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
@@ -83,6 +101,8 @@ import { formatData } from '@/utils/webUtils'
 export default {
   data() {
     return {
+      BLOG_WEB_URL: process.env.BLOG_WEB_URL,
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       keyword: "",
       currentPage: 1,
@@ -98,25 +118,42 @@ export default {
     this.commentList();
   },
   methods: {
+    // 跳转到该博客详情
+    onClick: function(row) {
+      console.log("点击跳转", row)
+      window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
+    },
+    // 跳转到前端页面
+    goPage: function(type, blog) {
+      switch (type) {
+        case 'MESSAGE_BOARD': {window.open( this.BLOG_WEB_URL + "/#/messageBoard")};break;
+        case 'ABOUT': {window.open( this.BLOG_WEB_URL + "/#/about")};break;
+        case 'BLOG_INFO': {window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + blog.uid);};break;
+      }
+    },
 		commentList: function() {
 			var params = new URLSearchParams();
 			params.append("keyword", this.keyword);
 			params.append("currentPage", this.currentPage);
 			params.append("pageSize", this.pageSize);
 			getCommentList(params).then(response => {
+			  console.log("得到的评论", response)
 				this.tableData = response.data.records;
 				this.currentPage = response.data.current;
 				this.pageSize = response.data.size;
 				this.total = response.data.total;
 			});
 		},
-
+    subComment(str, index) {
+		  if(str.length < index){
+		    return str;
+      } else {
+		    return str.substring(0, index) + "..."
+      }
+    },
 		handleFind: function() {
 			this.commentList();
 		},
-    handleShow: function(row) {
-      console.log("点击了查看详情");
-    },
     handleReply: function(row) {
       console.log("点击了回复");
     },

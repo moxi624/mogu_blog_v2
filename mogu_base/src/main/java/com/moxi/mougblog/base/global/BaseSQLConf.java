@@ -1,7 +1,5 @@
 package com.moxi.mougblog.base.global;
 
-import org.springframework.web.client.HttpClientErrorException;
-
 /**
  * SQL字段常量
  *

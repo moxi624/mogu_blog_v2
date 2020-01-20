@@ -1,4 +1,5 @@
 package com.moxi.mogublog.search.pojo;
+
 import lombok.Data;
 import org.apache.solr.client.solrj.beans.Field;
 

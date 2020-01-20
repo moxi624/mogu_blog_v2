@@ -20,6 +20,7 @@ public interface BlogMapper extends SuperMapper<Blog> {
 
     /**
      * 通过标签获取博客数量
+     *
      * @return
      */
     @Select("SELECT tag_uid, COUNT(tag_uid) as count FROM  t_blog GROUP BY tag_uid")
@@ -27,6 +28,7 @@ public interface BlogMapper extends SuperMapper<Blog> {
 
     /**
      * 通过分类获取博客数量
+     *
      * @return
      */
     @Select("SELECT blog_sort_uid, COUNT(blog_sort_uid) AS count FROM  t_blog where status = 1 GROUP BY blog_sort_uid")
@@ -34,6 +36,7 @@ public interface BlogMapper extends SuperMapper<Blog> {
 
     /**
      * 获取一年内的文章贡献数
+     *
      * @param startTime
      * @param endTime
      * @return

@@ -12,13 +12,9 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
-import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.ResourceSort;
-import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.ResourceSortService;
-import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
-import com.moxi.mogublog.xo.vo.TagVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -27,16 +23,15 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -174,11 +169,11 @@ public class ResourceSortRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        if(resourceSortVOList.size() <= 0 ) {
+        if (resourceSortVOList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
-        resourceSortVOList.forEach(item->{
+        resourceSortVOList.forEach(item -> {
             uids.add(item.getUid());
         });
         Collection<ResourceSort> tagList = resourceSortService.listByIds(uids);
@@ -189,7 +184,7 @@ public class ResourceSortRestApi {
 
         Boolean save = resourceSortService.updateBatchById(tagList);
 
-        if(save) {
+        if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);

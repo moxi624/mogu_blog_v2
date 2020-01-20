@@ -1,7 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,7 +14,10 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.CommentReport;
 import com.moxi.mogublog.xo.entity.User;
-import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.service.CommentReportService;
+import com.moxi.mogublog.xo.service.CommentService;
+import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
@@ -29,7 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -65,6 +70,7 @@ public class CommentRestApi {
 
     /**
      * 获取评论列表
+     *
      * @param request
      * @param commentVO
      * @param result
@@ -92,7 +98,7 @@ public class CommentRestApi {
         List<Comment> list = pageList.getRecords();
 
         List<String> userUidList = new ArrayList<>();
-        list.forEach(item ->{
+        list.forEach(item -> {
             String userUid = item.getUserUid();
             String toUserUid = item.getToUserUid();
             if (StringUtils.isNotEmpty(userUid)) {
@@ -104,14 +110,14 @@ public class CommentRestApi {
         });
         Collection<User> userList = new ArrayList<>();
 
-        if(userUidList.size() > 0 ) {
+        if (userUidList.size() > 0) {
             userList = userService.listByIds(userUidList);
         }
 
         // 获取用户头像
         StringBuffer fileUids = new StringBuffer();
         userList.forEach(item -> {
-            if (StringUtils.isNotEmpty(item.getAvatar()))  {
+            if (StringUtils.isNotEmpty(item.getAvatar())) {
                 fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
             }
         });
@@ -127,7 +133,7 @@ public class CommentRestApi {
 
         Map<String, User> userMap = new HashMap<>();
         userList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getAvatar()) && pictureMap.get(item.getAvatar()) != null) {
+            if (StringUtils.isNotEmpty(item.getAvatar()) && pictureMap.get(item.getAvatar()) != null) {
                 item.setPhotoUrl(pictureMap.get(item.getAvatar()));
             }
             userMap.put(item.getUid(), item);
@@ -146,10 +152,10 @@ public class CommentRestApi {
 
         Map<String, List<Comment>> toCommentListMap = new HashMap<>();
 
-        for(int a=0; a<list.size(); a++) {
+        for (int a = 0; a < list.size(); a++) {
             List<Comment> tempList = new ArrayList<>();
-            for(int b=0; b<list.size(); b++) {
-                if(list.get(a).getUid().equals(list.get(b).getToUid())) {
+            for (int b = 0; b < list.size(); b++) {
+                if (list.get(a).getUid().equals(list.get(b).getToUid())) {
                     tempList.add(list.get(b));
                 }
             }
@@ -158,7 +164,7 @@ public class CommentRestApi {
 
         List<Comment> firstComment = new ArrayList<>();
         list.forEach(item -> {
-            if(StringUtils.isEmpty(item.getToUid())) {
+            if (StringUtils.isEmpty(item.getToUid())) {
                 firstComment.add(item);
             }
         });
@@ -175,6 +181,9 @@ public class CommentRestApi {
 
         ThrowableUtils.checkParamArgument(result);
 
+        if (commentVO.getContent().length() > SysConf.TWO_TWO_FIVE) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_225);
+        }
         Comment comment = new Comment();
         comment.setSource(commentVO.getSource());
         comment.setBlogUid(commentVO.getBlogUid());
@@ -209,13 +218,13 @@ public class CommentRestApi {
         Comment comment = commentService.getById(commentVO.getUid());
 
         // 判断评论是否被删除
-        if(comment == null || comment.getStatus() == EStatus.DISABLED) {
+        if (comment == null || comment.getStatus() == EStatus.DISABLED) {
 
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_NOT_EXIST);
         }
 
         // 判断举报的评论是否是自己的
-        if(comment.getUserUid().equals(commentVO.getUserUid())) {
+        if (comment.getUserUid().equals(commentVO.getUserUid())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPORT_YOURSELF_COMMENTS);
         }
 
@@ -224,7 +233,7 @@ public class CommentRestApi {
         queryWrapper.eq(SQLConf.USER_UID, commentVO.getUserUid());
         queryWrapper.eq(SQLConf.REPORT_COMMENT_UID, comment.getUid());
         List<CommentReport> commentReportList = commentReportService.list(queryWrapper);
-        if(commentReportList.size() > 0) {
+        if (commentReportList.size() > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPEAT_REPORT_COMMENT);
         }
 
@@ -244,6 +253,7 @@ public class CommentRestApi {
 
     /**
      * 通过UID删除评论
+     *
      * @param request
      * @param commentVO
      * @param result
@@ -258,7 +268,7 @@ public class CommentRestApi {
         Comment comment = commentService.getById(commentVO.getUid());
 
         // 判断该评论是否能够删除
-        if(!comment.getUserUid().equals(commentVO.getUserUid())) {
+        if (!comment.getUserUid().equals(commentVO.getUserUid())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DATA_NO_PRIVILEGE);
         }
 
@@ -271,6 +281,7 @@ public class CommentRestApi {
 
     /**
      * 获取评论所有回复
+     *
      * @param list
      * @param toCommentListMap
      * @return
@@ -278,11 +289,11 @@ public class CommentRestApi {
     private List<Comment> getCommentReplys(List<Comment> list, Map<String, List<Comment>> toCommentListMap) {
 
 
-        if(list == null || list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return new ArrayList<>();
         } else {
 
-            list.forEach(item-> {
+            list.forEach(item -> {
                 String commentUid = item.getUid();
                 List<Comment> replyCommentList = toCommentListMap.get(commentUid);
 
@@ -292,7 +303,7 @@ public class CommentRestApi {
 
             });
 
-            return  list;
+            return list;
         }
     }
 

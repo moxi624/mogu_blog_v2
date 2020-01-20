@@ -1,7 +1,10 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -21,8 +24,6 @@ import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -101,14 +102,14 @@ public class AuthRestApi {
         //判断user是否存在
         if (data.get(SysConf.UUID) != null && data.get(SysConf.SOURCE) != null) {
             user = userService.getUserBySourceAnduuid(data.get(SysConf.SOURCE).toString(), data.get(SysConf.UUID).toString());
-            if(user != null) {
+            if (user != null) {
                 exist = true;
             } else {
                 user = new User();
             }
 
         } else {
-            return ;
+            return;
         }
         if (data.get(SysConf.EMAIL) != null) {
             String email = data.get(SysConf.EMAIL).toString();
@@ -126,12 +127,12 @@ public class AuthRestApi {
             fileVO.setUrlList(urlList);
             String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
             Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
-            if(resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
-                if(resultMap.get(SysConf.DATA) != null) {
-                    List<Map<String, Object>> listMap = (List<Map<String, Object>>)resultMap.get(SysConf.DATA);
-                    if(listMap != null && listMap.size() > 0) {
-                        Map<String,Object> pictureMap = listMap.get(0);
-                        if(pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+            if (resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
+                if (resultMap.get(SysConf.DATA) != null) {
+                    List<Map<String, Object>> listMap = (List<Map<String, Object>>) resultMap.get(SysConf.DATA);
+                    if (listMap != null && listMap.size() > 0) {
+                        Map<String, Object> pictureMap = listMap.get(0);
+                        if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
                             user.setAvatar(pictureMap.get(SysConf.UID).toString());
                             user.setPhotoUrl(pictureMap.get(SysConf.PIC_URL).toString());
                         }
@@ -142,7 +143,7 @@ public class AuthRestApi {
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());
         }
-        if(user.getLoginCount() == null) {
+        if (user.getLoginCount() == null) {
             user.setLoginCount(0);
         } else {
             user.setLoginCount(user.getLoginCount() + 1);
@@ -164,9 +165,12 @@ public class AuthRestApi {
             user.insert();
         }
 
+        // 过滤密码
+        user.setPassWord("");
+
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
-            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
         }
 
         httpServletResponse.sendRedirect(webSiteUrl + "?token=" + accessToken);

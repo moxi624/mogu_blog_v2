@@ -12,7 +12,6 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.vo.BlogSortVO;
@@ -25,8 +24,6 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -139,12 +136,12 @@ public class BlogSortRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        if(blogSortVoList.size() <=0 ) {
+        if (blogSortVoList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
 
-        blogSortVoList.forEach(item->{
+        blogSortVoList.forEach(item -> {
             uids.add(item.getUid());
         });
 
@@ -156,7 +153,7 @@ public class BlogSortRestApi {
 
         Boolean save = blogSortService.updateBatchById(blogSortList);
 
-        if(save) {
+        if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);

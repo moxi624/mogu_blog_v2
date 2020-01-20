@@ -20,7 +20,6 @@ export default {
   },
   created() {
     getWebConfig().then(response => {
-      console.log("head获取网站配置", response);
       if (response.code == "success") {
         this.info = response.data;
       }

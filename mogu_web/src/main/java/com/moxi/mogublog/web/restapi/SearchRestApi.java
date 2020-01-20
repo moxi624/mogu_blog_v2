@@ -14,7 +14,10 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
-import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.BlogSortService;
+import com.moxi.mogublog.xo.service.TagService;
+import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +67,7 @@ public class SearchRestApi {
 
     /**
      * 使用SQL语句搜索博客，如需使用Solr或者ElasticSearch 需要启动 mogu-search
+     *
      * @param request
      * @param keywords
      * @param currentPage
@@ -72,9 +77,9 @@ public class SearchRestApi {
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/sqlSearchBlog")
     public String sqlSearchBlog(HttpServletRequest request,
-                             @ApiParam(name = "keywords", value = "关键字", required = true) @RequestParam(required = true) String keywords,
-                             @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
-                             @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+                                @ApiParam(name = "keywords", value = "关键字", required = true) @RequestParam(required = true) String keywords,
+                                @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+                                @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
         if (StringUtils.isEmpty(keywords)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
@@ -125,7 +130,7 @@ public class SearchRestApi {
 
         // 设置分类名 和 图片
         blogList.forEach(item -> {
-            if(blogSortMap.get(item.getBlogSortUid()) != null) {
+            if (blogSortMap.get(item.getBlogSortUid()) != null) {
                 item.setBlogSortName(blogSortMap.get(item.getBlogSortUid()));
             }
 
@@ -138,7 +143,7 @@ public class SearchRestApi {
                     pictureListTemp.add(pictureMap.get(picture));
                 });
                 // 只设置一张标题图
-                if(pictureListTemp.size() > 0) {
+                if (pictureListTemp.size() > 0) {
                     item.setPhotoUrl(pictureListTemp.get(0));
                 } else {
                     item.setPhotoUrl("");
@@ -153,7 +158,7 @@ public class SearchRestApi {
         map.put(SysConf.TOTAL, iPage.getTotal());
 
         // 返回总页数
-        map.put(SysConf.TOTAL_PAGE,iPage.getPages());
+        map.put(SysConf.TOTAL_PAGE, iPage.getPages());
 
         // 返回当前页大小
         map.put(SysConf.PAGE_SIZE, pageSize);
@@ -381,7 +386,7 @@ public class SearchRestApi {
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
 
                 item.setBlogSort(sortMap.get(item.getBlogSortUid()));
-                if(sortMap.get(item.getBlogSortUid()) != null) {
+                if (sortMap.get(item.getBlogSortUid()) != null) {
                     item.setBlogSortName(sortMap.get(item.getBlogSortUid()).getSortName());
                 }
             }
@@ -409,7 +414,7 @@ public class SearchRestApi {
                 item.setPhotoList(pictureListTemp);
 
                 // 只设置一张标题图
-                if(pictureListTemp.size() > 0) {
+                if (pictureListTemp.size() > 0) {
                     item.setPhotoUrl(pictureListTemp.get(0));
                 } else {
                     item.setPhotoUrl("");

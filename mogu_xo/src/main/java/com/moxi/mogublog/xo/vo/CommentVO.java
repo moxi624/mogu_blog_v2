@@ -1,14 +1,11 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.moxi.mougblog.base.validator.annotion.IdValid;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
-import com.moxi.mougblog.base.validator.group.*;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.GetOne;
+import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * CommentVO

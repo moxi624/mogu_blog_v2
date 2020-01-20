@@ -130,7 +130,7 @@ public class WebUtils {
 
             List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("records");
             List<T> resultList = new ArrayList<>();
-            list.forEach(item->{
+            list.forEach(item -> {
                 resultList.add(JsonUtils.mapToPojo(item, beanType));
             });
             return resultList;

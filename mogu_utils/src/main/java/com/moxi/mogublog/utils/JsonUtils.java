@@ -1,6 +1,5 @@
 package com.moxi.mogublog.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -26,6 +25,8 @@ import java.util.Map;
  */
 public class JsonUtils {
 
+    // 定义jackson对象
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     public static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
@@ -146,6 +147,7 @@ public class JsonUtils {
 
     /**
      * 将map转换成pojo
+     *
      * @param map
      * @param beanType
      * @param <T>
@@ -161,13 +163,9 @@ public class JsonUtils {
         return pojo;
     }
 
-
-
-    // 定义jackson对象
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     /**
      * 将json结果集转化为对象
+     *
      * @param jsonData
      * @param beanType
      * @param <T>
@@ -187,6 +185,7 @@ public class JsonUtils {
      * 将json数据转换成pojo对象list
      * <p>Title: jsonToList</p>
      * <p>Description: </p>
+     *
      * @param jsonData
      * @param beanType
      * @return

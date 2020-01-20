@@ -35,7 +35,7 @@
       <CommentBox class="comment" :userInfo="userInfo" :toInfo="toInfo" :id="item.uid" :commentInfo="commentInfo"
                   @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>
 
-      <CommentList class="commentStyle" :id="'commentStyle:' + item.uid" :comments="item.replyList"></CommentList>
+      <CommentList class="commentStyle" :id="'commentStyle:' + item.uid" :comments="item.replyList" :commentInfo="commentInfo"></CommentList>
 
     </a-comment>
   </div>
@@ -104,7 +104,6 @@
         params.source = e.source
         addComment(params).then(response => {
             if (response.code == "success") {
-
               let commentData = response.data
               document.getElementById(commentData.toUid).style.display = 'none'
               let comments = this.$store.state.app.commentList;

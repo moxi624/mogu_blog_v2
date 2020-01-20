@@ -10,9 +10,9 @@ spring:
       name: user
       password: password123
   data:
-#    elasticsearch:
-#      cluster-name: elasticsearch
-#      cluster-nodes: localhost:9300
+    #    elasticsearch:
+    #      cluster-name: elasticsearch
+    #      cluster-nodes: localhost:9300
     solr:
       host: http://localhost:8080/solr
       core: collection1

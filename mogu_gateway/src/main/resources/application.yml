@@ -11,15 +11,15 @@ spring:
     user:
       name: user
       password: password123
-    
+
   boot:
     admin:
       client:
         enabled: true
         url: http://localhost:8606
-        username: user 
+        username: user
         password: password123
-           
+
   cloud:
     gateway:
       discovery:  #是否与服务发现组件进行结合，通过 serviceId(必须设置成大写) 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
@@ -27,31 +27,31 @@ spring:
           enabled: true #开启从注册中心动态创建路由的功能
           lowerCaseServiceId: true #使用小写服务名，默认是大写
       routes: # 配置路由规则, 
-        - id: api-eureka 
+        - id: api-eureka
           uri: lb://mogu-eureka
           predicates:
             - Path=/api-eureka/**
-            
+
         - id: api-monitor
           uri: lb://mogu-monitor
           predicates:
             - Path=/api-monitor/**
-            
+
         - id: api-picture
           uri: lb://mogu-picture
           predicates:
             - Path=/api-picture/**
-                
+
         - id: api-web
           uri: lb://mogu-web
           predicates:
             - Path=/api-web/**
-                
+
         - id: api-admin
           uri: lb://mogu-admin
           predicates:
             - Path=/api-admin/**
-                  
+
         - id: api-sms
           uri: lb://mogu-sms
           predicates:
@@ -102,7 +102,7 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 5
-    
+
 management:
   endpoints:
     web:

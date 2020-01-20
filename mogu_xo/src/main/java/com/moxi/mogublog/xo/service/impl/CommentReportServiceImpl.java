@@ -1,11 +1,8 @@
 package com.moxi.mogublog.xo.service.impl;
 
 import com.moxi.mogublog.xo.entity.CommentReport;
-import com.moxi.mogublog.xo.entity.Visitor;
 import com.moxi.mogublog.xo.mapper.CommentReportMapper;
-import com.moxi.mogublog.xo.mapper.VisitorMapper;
 import com.moxi.mogublog.xo.service.CommentReportService;
-import com.moxi.mogublog.xo.service.VisitorService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.stereotype.Service;
 

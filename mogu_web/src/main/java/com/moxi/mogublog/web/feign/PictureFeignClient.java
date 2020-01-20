@@ -31,6 +31,7 @@ public interface PictureFeignClient {
 
     /**
      * 通过URL List上传图片
+     *
      * @param fileVO
      * @return
      */

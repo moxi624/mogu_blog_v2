@@ -1,6 +1,5 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.JsonUtils;
@@ -11,10 +10,8 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.net.util.IPAddressUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Time;
 import java.util.Date;
 import java.util.Map;
 
@@ -57,7 +54,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         if (data.get("nickname") != null) {
             user.setNickName(data.get("nickname").toString());
         }
-        user.setLoginCount(user.getLoginCount()+1);
+        user.setLoginCount(user.getLoginCount() + 1);
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(IpUtils.getIpAddr(request));
         if (exist) {

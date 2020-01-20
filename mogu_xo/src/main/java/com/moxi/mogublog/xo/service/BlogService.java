@@ -91,6 +91,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 获取一年内的文章贡献数
+     *
      * @return
      */
     public Map<String, Object> getBlogContributeCount();

@@ -1,7 +1,6 @@
 package com.moxi.mogublog.xo.service;
 
 import com.moxi.mogublog.xo.entity.CommentReport;
-import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mougblog.base.service.SuperService;
 
 /**

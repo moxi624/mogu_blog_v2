@@ -33,7 +33,7 @@ BLOG:
   SECOND_COUNT: 2 #二级推荐
   THIRD_COUNT: 3 #三级推荐
   FOURTH_COUNT: 5 #四级推荐
-  USER_TOKEN_SURVIVAL_TIME: 6000 # toekn令牌存活时间, 100分钟
+  USER_TOKEN_SURVIVAL_TIME: 168 # toekn令牌存活时间, 7天  168 = 7*24
 
 
 #spring

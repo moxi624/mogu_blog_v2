@@ -18,7 +18,6 @@ export default {
   },
   created() {
     getHotTag().then(response => {
-      console.log("标签列表", response);
       this.hotTagData = response.data.records;
     });
   },

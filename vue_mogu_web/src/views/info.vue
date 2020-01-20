@@ -7,6 +7,7 @@
       <a href="/" class="n1">网站首页</a>
       <a
         href="javascript:void(0);"
+        v-if="blogData.blogSort.uid"
         @click="goToSortList(blogData.blogSort.uid)"
         class="n2"
       >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
@@ -14,7 +15,7 @@
     <div class="infosbox">
       <div class="newsview">
         <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
-        <div class="bloginfo" v-if="blogData.blogSort">
+        <div class="bloginfo" v-if="blogData.blogSort.uid">
           <ul>
             <li class="author">
               <span class="iconfont">&#xe60f;</span>
@@ -24,7 +25,7 @@
               <span class="iconfont">&#xe603;</span>
               <a
                 href="javascript:void(0);"
-                @click="goToSortList(blogData.blogSort == null ?'':blogData.blogSort.uid)"
+                @click="goToSortList(blogData.blogSort.uid)"
               >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
             </li>
             <li class="createTime"><span class="iconfont">&#xe606;</span>{{blogData.createTime}}</li>
@@ -73,7 +74,18 @@
       <div class="news_pl">
         <h2>文章评论</h2>
         <ul>
-          <ChangYan :sid="this.blogUid"></ChangYan>
+
+          <a-anchor>
+            <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
+                        :showCancel="showCancel" ></CommentBox>
+          </a-anchor>
+          <div class="message_infos">
+            <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
+            <div class="noComment" v-if="comments.length ==0">
+              还没有评论，快来抢沙发吧！
+            </div>
+          </div>
+
         </ul>
       </div>
     </div>
@@ -109,18 +121,35 @@
   import {getLink, recorderVisitPage} from "../api/index";
   import {getBlogByUid, getSameBlogByBlogUid} from "../api/blogContent";
 
+  import CommentList from "../components/CommentList";
+  import CommentBox from "../components/CommentBox";
+
+  // vuex中有mapState方法，相当于我们能够使用它的getset方法
+  import {mapMutations} from 'vuex';
   import ThirdRecommend from "../components/ThirdRecommend";
   import FourthRecommend from "../components/FourthRecommend";
   import TagCloud from "../components/TagCloud";
   import HotBlog from "../components/HotBlog";
   import FollowUs from "../components/FollowUs";
-  import ChangYan from "../components/ChangYan";
   import PayCode from "../components/PayCode";
+
+  import {addComment, getCommentList} from "../api/comment";
 
   export default {
     name: "info",
     data() {
       return {
+        source: "MESSAGE_BOARD",
+        showCancel: false,
+        submitting: false,
+        comments: [],
+        commentInfo: {
+          // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
+          source: "BLOG_INFO",
+          blogUid: this.$route.query.blogUid
+        },
+        toInfo: {},
+        userInfo: {},
         blogUid: null, //传递过来的博客uid
         blogData: null,
         sameBlogData: [], //相关文章
@@ -136,8 +165,9 @@
       TagCloud,
       HotBlog,
       FollowUs,
-      ChangYan,
-      PayCode
+      PayCode,
+      CommentList,
+      CommentBox
     },
     created() {
       getLink().then(response => {
@@ -145,10 +175,15 @@
       });
 
       var params = new URLSearchParams();
+
       this.blogUid = this.$route.query.blogUid;
+
+      this.commentInfo.blogUid = this.$route.query.blogUid;
+
       params.append("uid", this.blogUid);
       getBlogByUid(params).then(response => {
         if (response.code == "success") {
+          console.log("得到的评论", response.data)
           this.blogData = response.data;
         }
       });
@@ -165,8 +200,51 @@
       params.append("pageName", "INFO");
       recorderVisitPage(params).then(response => {
       });
+
+      this.getCommentList();
     },
     methods: {
+      //拿到vuex中的写的两个方法
+      ...mapMutations(['setCommentList']),
+      submitBox(e) {
+        let params = {};
+        params.blogUid = e.blogUid;
+        params.source = e.source;
+        params.userUid = e.userUid;
+        params.content = e.content;
+        params.blogUid = e.blogUid;
+        addComment(params).then(response => {
+            if (response.code == "success") {
+              this.$notify({
+                title: '成功',
+                message: "发表成功~",
+                type: 'success',
+                offset: 100
+              });
+            } else {
+              this.$notify.error({
+                title: '错误',
+                message: response.data,
+                offset: 100
+              });
+            }
+            this.getCommentList();
+          }
+        );
+      },
+      getCommentList: function () {
+        let params = {};
+        params.source = this.commentInfo.source;
+        params.blogUid = this.commentInfo.blogUid;
+        params.currentPage = 0;
+        params.pageSize = 10;
+        getCommentList(params).then(response => {
+          if (response.code == "success") {
+            this.comments = response.data;
+            this.setCommentList(this.comments);
+          }
+        });
+      },
       //跳转到文章详情
       goToInfo(uid) {
         let routeData = this.$router.resolve({
@@ -301,5 +379,27 @@
   .iconfont {
     font-size: 14px;
     margin-right: 3px;
+  }
+  .ant-comment-actions {
+    margin-top: -20px;
+  }
+  .ant-anchor-ink {
+    position: relative;
+  }
+  .ant-form-item {
+    margin-bottom: 1px;
+  }
+  .contain {
+    width: 600px;
+    margin: 0 auto;
+  }
+  .message_infos {
+    width: 96%;
+    min-height: 500px;
+    margin-left: 10px;
+  }
+  .noComment {
+    width: 100%;
+    text-align: center;
   }
 </style>

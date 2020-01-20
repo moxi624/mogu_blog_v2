@@ -12,25 +12,16 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Link;
-import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.entity.User;
-import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.UserService;
-import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -117,7 +108,7 @@ public class UserRestApi {
                         pictureListTemp.add(pictureMap.get(picture));
                     }
                 });
-                if(pictureListTemp.size() > 0) {
+                if (pictureListTemp.size() > 0) {
                     item.setPhotoUrl(pictureListTemp.get(0));
                 }
             }
@@ -151,9 +142,9 @@ public class UserRestApi {
 
         User user = userService.getById(userVO.getUid());
 
-        if(user.getStatus() == EStatus.FREEZE) {
+        if (user.getStatus() == EStatus.FREEZE) {
             user.setStatus(EStatus.ENABLE);
-        } else if(user.getStatus() == EStatus.DISABLED) {
+        } else if (user.getStatus() == EStatus.DISABLED) {
             user.setStatus(EStatus.DISABLED);
         } else {
             user.setStatus(EStatus.FREEZE);

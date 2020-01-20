@@ -208,7 +208,8 @@
       let token = this.getUrlVars()["token"];
       // 判断url中是否含有token
       if (token != undefined) {
-        setCookie("token", token, 1)
+        // 设置token七天过期
+        setCookie("token", token, 7)
       }
 
       // 从cookie中获取token

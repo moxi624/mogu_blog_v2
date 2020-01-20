@@ -8,9 +8,10 @@ import com.moxi.mogublog.utils.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class SearchIndexRestApi {
 
         String result = searchFeignClient.initElasticSearchIndex();
         Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if(SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
+        if (SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
             return ResultUtil.result(SysConf.SUCCESS, "初始化ElasticSearch索引成功");
         } else {
             return ResultUtil.result(SysConf.ERROR, "初始化ElasticSearch索引失败");
@@ -51,7 +52,7 @@ public class SearchIndexRestApi {
 
         String result = searchFeignClient.initSolrIndex();
         Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if(SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
+        if (SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
             return ResultUtil.result(SysConf.SUCCESS, "初始化Solr索引成功");
         } else {
             return ResultUtil.result(SysConf.ERROR, "初始化Solr索引失败");

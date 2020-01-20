@@ -38,5 +38,4 @@ public class FileVO extends BaseVO<FileVO> {
     private List<String> urlList;
 
 
-
 }

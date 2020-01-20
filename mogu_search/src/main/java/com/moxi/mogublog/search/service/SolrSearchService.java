@@ -40,12 +40,12 @@ public class SolrSearchService {
 
         List<SolrIndex> solrIndexs = new ArrayList<>();
 
-         for (Blog blog : blogList) {
+        for (Blog blog : blogList) {
             SolrIndex solrIndex = new SolrIndex();
             solrIndex.setFileUid(blog.getFileUid());
             //将图片存放索引中
-             if (blog.getPhotoList() != null && blog.getPhotoList().size() > 0) {
-                 solrIndex.setPhotoUrl(blog.getPhotoList().get(0));
+            if (blog.getPhotoList() != null && blog.getPhotoList().size() > 0) {
+                solrIndex.setPhotoUrl(blog.getPhotoList().get(0));
             } else {
                 solrIndex.setPhotoUrl("");
             }
@@ -56,7 +56,7 @@ public class SolrSearchService {
             List<Tag> tagList = blog.getTagList();
             List<String> tagContentList = new ArrayList<>();
 
-            if(tagList != null && tagList.size() > 0) {
+            if (tagList != null && tagList.size() > 0) {
                 tagList.forEach(item -> {
                     if (item != null) {
                         tagContentList.add(item.getContent());
@@ -64,11 +64,11 @@ public class SolrSearchService {
                 });
             }
 
-            if(tagContentList.size() > 0) {
+            if (tagContentList.size() > 0) {
                 solrIndex.setBlogTagName(StringUtils.listTranformString(tagContentList, ","));
             }
 
-            if(blog.getBlogSort() != null) {
+            if (blog.getBlogSort() != null) {
                 solrIndex.setBlogSortName(blog.getBlogSort().getSortName());
             }
 
@@ -98,14 +98,14 @@ public class SolrSearchService {
 
         List<Tag> tagList = blog.getTagList();
         List<String> tagContentList = new ArrayList<>();
-        if(tagList != null) {
+        if (tagList != null) {
             tagList.forEach(item -> {
                 tagContentList.add(item.getContent());
             });
         }
         solrIndex.setBlogTagName(StringUtils.listTranformString(tagContentList, ","));
 
-        if(blog.getBlogSort() != null) {
+        if (blog.getBlogSort() != null) {
             solrIndex.setBlogSortName(blog.getBlogSort().getSortName());
         }
 
@@ -139,14 +139,14 @@ public class SolrSearchService {
 
             List<Tag> tagList = blog.getTagList();
             List<String> tagContentList = new ArrayList<>();
-            if(tagList != null) {
+            if (tagList != null) {
                 tagList.forEach(item -> {
                     tagContentList.add(item.getContent());
                 });
             }
             solrIndex.get().setBlogTagName(StringUtils.listTranformString(tagContentList, ","));
 
-            if(blog.getBlogSort() != null) {
+            if (blog.getBlogSort() != null) {
                 solrIndex.get().setBlogSortName(blog.getBlogSort().getSortName());
             }
 
@@ -174,7 +174,6 @@ public class SolrSearchService {
         solrTemplate.delete(collection, query);
         solrTemplate.commit(collection);
     }
-
 
 
     private Map<String, Object> searchList(String collection, String keywords, Integer currentPage, Integer pageSize) {

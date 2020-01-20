@@ -6,7 +6,6 @@ import com.moxi.mogublog.search.global.SysConf;
 import com.moxi.mogublog.search.service.SolrSearchService;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import io.swagger.annotations.Api;
@@ -18,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/search")
@@ -38,9 +38,9 @@ public class SolrRestApi {
     @ApiOperation(value = "通过Solr搜索博客", notes = "通过Solr搜索博客", response = String.class)
     @GetMapping("/solrSearchBlog")
     public String solrSearchBlog(HttpServletRequest request,
-                             @RequestParam(required = false) String keywords,
-                             @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
-                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+                                 @RequestParam(required = false) String keywords,
+                                 @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+                                 @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
         if (StringUtils.isEmpty(keywords)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
@@ -59,7 +59,7 @@ public class SolrRestApi {
         String result = blogClient.getBlogByUid(uid);
 
         Blog blog = WebUtils.getData(result, Blog.class);
-        if(blog == null) {
+        if (blog == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INSERT_SUCCESS);
         }
         solrSearchService.addIndex(collection, blog);
@@ -71,7 +71,7 @@ public class SolrRestApi {
     public String updateSolrIndexByUid(@RequestParam(required = true) String uid) {
         String result = blogClient.getBlogByUid(uid);
         Blog blog = WebUtils.getData(result, Blog.class);
-        if(blog == null) {
+        if (blog == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.UPDATE_FAIL);
         }
         solrSearchService.updateIndex(collection, blog);

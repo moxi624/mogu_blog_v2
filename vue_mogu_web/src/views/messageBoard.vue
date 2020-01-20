@@ -29,8 +29,6 @@
   import CommentList from "../components/CommentList";
   import CommentBox from "../components/CommentBox";
   import {addComment, getCommentList} from "../api/comment";
-  import {authVerify} from "../api/user";
-  import {getCookie} from "@/utils/cookieUtils";
 
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
@@ -47,11 +45,8 @@
           // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
           source: "MESSAGE_BOARD"
         },
-        toInfo: {
-
-        },
+        toInfo: {},
         userInfo: {
-
         }
       };
     },
@@ -71,7 +66,6 @@
       //拿到vuex中的写的两个方法
       ...mapMutations(['setCommentList']),
       submitBox(e) {
-        console.log("开始提交内容", e)
         let params = {};
         params.source = e.source;
         params.userUid = e.userUid;
@@ -113,6 +107,9 @@
   ;
 </script>
 <style>
+  .ant-comment-actions {
+    margin-top: -20px;
+  }
   .ant-anchor-ink {
     position: relative;
   }
@@ -126,8 +123,6 @@
   .message_infos {
     width: 100%;
     min-height: 500px;
-    /*height: 800px;*/
-    /*overflow: auto;*/
     margin-left: 10px;
   }
   .noComment {

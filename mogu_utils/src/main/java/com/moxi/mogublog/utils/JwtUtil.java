@@ -5,8 +5,6 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -34,7 +32,7 @@ public class JwtUtil {
      * @return
      */
     public static Claims parseJWT(String jsonWebToken) {
-        log.info("解析jwt==========="+ jsonWebToken);
+        log.info("解析jwt===========" + jsonWebToken);
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))

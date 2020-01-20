@@ -273,15 +273,15 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         Map<String, Object> dateMap = new HashMap<>();
 
-        for(Map<String, Object> itemMap : blogContributeMap) {
+        for (Map<String, Object> itemMap : blogContributeMap) {
 
             dateMap.put(itemMap.get("DATE").toString(), itemMap.get("COUNT"));
         }
 
         List<List<Object>> resultList = new ArrayList<>();
-        for(String item : dateList) {
+        for (String item : dateList) {
             Integer count = 0;
-            if(dateMap.get(item) != null) {
+            if (dateMap.get(item) != null) {
                 count = Integer.valueOf(dateMap.get(item).toString());
             }
             List<Object> objectList = new ArrayList<>();

@@ -18,6 +18,7 @@ public enum SystemLanguageEnum {
 
     private final String code;
     private final String name;
+
     SystemLanguageEnum(String code, String name) {
         this.code = code;
         this.name = name;

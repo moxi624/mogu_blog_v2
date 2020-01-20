@@ -8,8 +8,15 @@ package com.moxi.mougblog.base.enums;
  */
 public class EPublish {
 
-    public static final String PUBLISH = "1"; //发布
-    public static final String NO_PUBLISH = "0"; //下架
+    /**
+     * 发布
+     */
+    public static final String PUBLISH = "1";
+
+    /**
+     * 下架
+     */
+    public static final String NO_PUBLISH = "0";
 
 
 }

@@ -4,21 +4,24 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.WebUtils;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.CommentService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +34,7 @@ import java.util.*;
  * </p>
  *
  * @author xzx19950624@qq.com
- * @since 2018年10月13日16:06:46
+ * @since 2020年1月20日16:44:25
  */
 @Api(value = "评论RestApi", tags = {"CommentRestApi"})
 @RestController
@@ -41,9 +44,12 @@ public class CommentRestApi {
 
     @Autowired
     CommentService commentService;
-
     @Autowired
     UserService userService;
+    @Autowired
+    BlogService blogService;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
@@ -65,28 +71,72 @@ public class CommentRestApi {
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
         List<Comment> commentList = pageList.getRecords();
         Set<String> userUidSet = new HashSet<>();
-
+        Set<String> blogUidSet = new HashSet<>();
         commentList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getUserUid())) {
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
                 userUidSet.add(item.getUserUid());
             }
-            if(StringUtils.isNotEmpty(item.getToUserUid())) {
+            if (StringUtils.isNotEmpty(item.getToUserUid())) {
                 userUidSet.add(item.getToUserUid());
+            }
+            if (StringUtils.isNotEmpty(item.getBlogUid())) {
+                blogUidSet.add(item.getBlogUid());
             }
         });
 
-        Collection<User> userCollection = userService.listByIds(userUidSet);
-        Map<String, String> nickNameMap = new HashMap<>();
+        // 获取博客
+        Collection<Blog> blogList = new ArrayList<>();
+        if (blogUidSet.size() > 0) {
+            blogList = blogService.listByIds(blogUidSet);
+        }
+        Map<String, Blog> blogMap = new HashMap<>();
+        blogList.forEach(item -> {
+            // 评论管理并不需要查看博客内容，因此将其排除
+            item.setContent("");
+            blogMap.put(item.getUid(), item);
+        });
+
+        // 获取头像
+        Collection<User> userCollection = new ArrayList<>();
+        if (userUidSet.size() > 0) {
+            userCollection = userService.listByIds(userUidSet);
+        }
+
+        final StringBuffer fileUids = new StringBuffer();
         userCollection.forEach(item -> {
-            nickNameMap.put(item.getUid(), item.getNickName());
+            if (StringUtils.isNotEmpty(item.getAvatar())) {
+                fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+        String pictureList = null;
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        Map<String, String> pictureMap = new HashMap<>();
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+        Map<String, User> userap = new HashMap<>();
+        userCollection.forEach(item -> {
+            if (pictureMap.get(item.getAvatar()) != null) {
+                item.setPhotoUrl(pictureMap.get(item.getAvatar()));
+                userap.put(item.getUid(), item);
+            }
         });
 
         commentList.forEach(item -> {
-            if(StringUtils.isNotEmpty(nickNameMap.get(item.getUserUid()))) {
-                item.setUserName(nickNameMap.get(item.getUserUid()));
+            ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
+            item.setSourceName(commentSource.getName());
+
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
+                item.setUser(userap.get(item.getUserUid()));
             }
-            if(StringUtils.isNotEmpty(nickNameMap.get(item.getToUserUid()))) {
-                item.setToUserName(nickNameMap.get(item.getToUserUid()));
+            if (StringUtils.isNotEmpty(item.getToUserUid())) {
+                item.setToUser(userap.get(item.getToUserUid()));
+            }
+            if (StringUtils.isNotEmpty(item.getBlogUid())) {
+                item.setBlog(blogMap.get(item.getBlogUid()));
             }
         });
 

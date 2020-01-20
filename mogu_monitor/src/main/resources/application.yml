@@ -19,7 +19,7 @@ spring:
           # 服务上下线会自动发送邮件
           from: mogublog@163.com
           to: moxi0624@163.com
-          
+
   #mail
   mail:
     username: mogublog@163.com
@@ -35,7 +35,7 @@ spring:
             required: true
           ssl:
             enable: true
-            
+
 #eureka相关配置
 eureka:
   client:

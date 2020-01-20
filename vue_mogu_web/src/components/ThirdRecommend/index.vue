@@ -18,18 +18,17 @@ export default {
         PICTURE_HOST: process.env.PICTURE_HOST,
         slideList: [],
 	      thirdData: [], //；一级推荐数据
-    	}       
+    	}
     },
     created() {
       var thirdParams = new URLSearchParams();
       thirdParams.append("currentPage", 0);
       thirdParams.append("pageSize", 3);
-      thirdParams.append("level", 3);    
+      thirdParams.append("level", 3);
       getBlogByLevel(thirdParams).then(response => {
-        console.log("三级推荐", response);
         if (response.code == "success") {
           this.thirdData = response.data.records;
-        }        
+        }
       });
     },
     methods: {

@@ -309,6 +309,7 @@ public class StringUtils {
 
     /**
      * 判断一个字符串是否为数字
+     *
      * @param str
      * @return
      */

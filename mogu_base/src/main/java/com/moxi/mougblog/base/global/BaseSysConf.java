@@ -83,5 +83,7 @@ public class BaseSysConf {
     public static final int NINE = 9;
     public static final int TEN = 10;
 
+    public static final int TWO_TWO_FIVE = 225;
+
 
 }
