@@ -18,22 +18,19 @@
       <!--      </span>-->
 
       <span class="author" slot="author" v-if="item.user">
-        <span class="s1">{{item.user.userName}}</span>
+        <span class="s1">{{item.user.nickName}}</span>
         <span class="s2">{{timeAgo(item.createTime)}}</span>
 
       </span>
       <a-avatar
         class="avatarPhoto"
         slot="avatar"
-        :src="item.user? PICTURE_HOST + item.user.photoUrl:''"
-        :alt="item.userName"
+        :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
+        :alt="item.nickName"
       />
       <p slot="content">
         {{item.content}}
       </p>
-
-      <!--      <CommentBox class="comment" :userInfo="userInfo" :reply-info="replyInfo" :id="item.uid"-->
-      <!--                  @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>-->
 
       <CommentBox class="comment" :userInfo="userInfo" :toInfo="toInfo" :id="item.uid" :commentInfo="commentInfo"
                   @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>
@@ -51,24 +48,18 @@
 
   export default {
     name: "CommentList",
-    props: ['comments'],
+    props: ['comments', 'userInfos', 'commentInfo'],
     data() {
       return {
         PICTURE_HOST: process.env.PICTURE_HOST,
         taggleStatue: true,
         submitting: false,
         value: '',
-        commentInfo: {
-          blogUid: "51fa6be01a7296c4fc380f7780db9641",
-          resource: "blogInfo"
-        },
         toInfo: {
           uid: "",
           commentUid: ""
         },
-        userInfo: {
-
-        }
+        userInfo: {}
       };
     },
     created() {
@@ -77,12 +68,21 @@
     components: {
       CommentBox
     },
+    mounted() {
 
+    },
     compute: {},
     methods: {
       ...mapMutations(['setCommentList', 'increment']),
       replyTo: function (item) {
-
+        if(!this.validLogin()) {
+          this.$notify.error({
+            title: '错误',
+            message: "登录后才能回复评论哦~",
+            offset: 100
+          });
+          return
+        }
         let userUid = item.userUid;
         let commentUid = item.uid;
         var lists = document.getElementsByClassName("comment");
@@ -94,13 +94,14 @@
         this.toInfo.uid = userUid
       },
       submitBox(e) {
+        console.log("添加内容", e)
         let params = {};
         params.userUid = e.userUid;
         params.content = e.content;
         params.blogUid = e.blogUid;
         params.toUid = e.toCommentUid;
         params.toUserUid = e.toUserUid;
-        params.resource = e.resource
+        params.source = e.source
         addComment(params).then(response => {
             if (response.code == "success") {
 
@@ -130,9 +131,6 @@
                 offset: 100
               });
             }
-            // let commentData = response.data
-            // document.getElementById(commentData.toUid).style.display = 'none'
-            // this.$emit("addComment", "")
           }
         )
         ;
@@ -167,33 +165,59 @@
       }
       ,
       report: function (item) {
+        if(!this.validLogin()) {
+          this.$notify.error({
+            title: '错误',
+            message: "登录后才能举报评论哦~",
+            offset: 100
+          });
+          return
+        }
+        let userUid = this.$store.state.user.userInfo.uid
+
+        if(userUid == item.userUid) {
+          this.$notify.error({
+            title: '错误',
+            message: "不能举报自己的评论哦~",
+            offset: 100
+          });
+          return;
+        }
+
         let params = {};
         params.uid = item.uid;
-        params.userUid = this.userInfo.uid;
+        params.userUid = userUid
         reportComment(params).then(response => {
           if (response.code == "success") {
             this.$notify({
               title: '成功',
-              message: "举报成功",
+              message: response.data,
               type: 'success',
               offset: 100
             });
           } else {
             this.$notify.error({
               title: '错误',
-              message: "举报失败",
+              message: response.data,
               type: 'success',
               offset: 100
             });
           }
         });
-      }
-      ,
+      },
       delComment: function (item) {
+        if(!this.validLogin()) {
+          this.$notify.error({
+            title: '错误',
+            message: "登录后才能删除评论哦~",
+            offset: 100
+          });
+          return
+        }
         var that = this;
         let params = {};
         params.uid = item.uid;
-        params.userUid = this.userInfo.uid;
+        params.userUid = this.$store.state.user.userInfo.uid
 
         deleteComment(params).then(response => {
           if (response.code == "success") {
@@ -215,12 +239,18 @@
           let comments = this.$store.state.app.commentList;
           this.deleteCommentList(comments, params.uid, null)
           this.$store.commit("setCommentList", comments);
-
           this.$emit("deleteComment", "")
-
         });
-      }
-      ,
+      },
+      // 校验是否登录
+      validLogin() {
+        let userInfo = this.$store.state.user.userInfo
+        if(userInfo.userName == undefined) {
+          return false;
+        } else {
+          return true;
+        }
+      },
       /**
        * dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
        * @param dateTimeStamp
@@ -235,10 +265,10 @@
         let halfamonth = day * 15;
         let month = day * 30;
         let now = new Date().getTime();   //获取当前时间毫秒
-
         dateTimeStamp = dateTimeStamp.substring(0, 18);
         //必须把日期'-'转为'/'
         dateTimeStamp = dateTimeStamp.replace(/-/g, '/');
+
         let timestamp = new Date(dateTimeStamp).getTime();
 
         let diffValue = now - timestamp;//时间差
@@ -251,6 +281,14 @@
         let dayC = diffValue / day;
         let weekC = diffValue / week;
         let monthC = diffValue / month;
+
+        minC = parseInt(minC)
+        hourC = parseInt(hourC)
+        dayC = parseInt(dayC)
+        weekC = parseInt(weekC)
+        monthC = parseInt(monthC)
+
+
         if (monthC >= 1 && monthC <= 3) {
           result = " " + parseInt(monthC) + "月前"
         } else if (weekC >= 1 && weekC <= 3) {

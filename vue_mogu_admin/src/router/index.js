@@ -272,6 +272,12 @@ export const constantRouterMap = [
         name: 'Web接口',
         component: () => import('@/views/restapi/webRestApi'),
         meta: { title: 'Web接口', icon: 'table' }
+      },
+      {
+        path: 'searchRestApi',
+        name: 'Search接口',
+        component: () => import('@/views/restapi/searchRestApi'),
+        meta: { title: 'Search接口', icon: 'table' }
       }
     ]
   },

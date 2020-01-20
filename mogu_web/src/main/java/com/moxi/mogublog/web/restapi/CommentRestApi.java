@@ -59,6 +59,9 @@ public class CommentRestApi {
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
+    @Autowired
+    private CommentReportService commentReportService;
+
 
     /**
      * 获取评论列表
@@ -77,6 +80,8 @@ public class CommentRestApi {
         if (StringUtils.isNotEmpty(commentVO.getBlogUid())) {
             queryWrapper.like(SQLConf.BLOG_UID, commentVO.getBlogUid());
         }
+
+        queryWrapper.eq(SQLConf.SOURCE, commentVO.getSource());
         //分页
         Page<Comment> page = new Page<>();
         page.setCurrent(commentVO.getCurrentPage());
@@ -171,6 +176,7 @@ public class CommentRestApi {
         ThrowableUtils.checkParamArgument(result);
 
         Comment comment = new Comment();
+        comment.setSource(commentVO.getSource());
         comment.setBlogUid(commentVO.getBlogUid());
         comment.setContent(commentVO.getContent());
         comment.setUserUid(commentVO.getUserUid());
@@ -179,17 +185,16 @@ public class CommentRestApi {
         comment.setStatus(EStatus.ENABLE);
         comment.insert();
 
-//        User user = userService.getById(commentVO.getUserUid());
-//
-//        //获取图片
-//        if (StringUtils.isNotEmpty(user.getAvatar())) {
-//            String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
-//            if (WebUtils.getPicture(pictureList).size() > 0) {
-//                user.setPhotoUrl(WebUtils.getPicture(pictureList).get(0));
-//            }
-//        }
-//
-//        comment.setUser(user);
+        User user = userService.getById(commentVO.getUserUid());
+
+        //获取图片
+        if (StringUtils.isNotEmpty(user.getAvatar())) {
+            String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
+            if (WebUtils.getPicture(pictureList).size() > 0) {
+                user.setPhotoUrl(WebUtils.getPicture(pictureList).get(0));
+            }
+        }
+        comment.setUser(user);
 
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
@@ -203,9 +208,24 @@ public class CommentRestApi {
 
         Comment comment = commentService.getById(commentVO.getUid());
 
+        // 判断评论是否被删除
         if(comment == null || comment.getStatus() == EStatus.DISABLED) {
 
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_NOT_EXIST);
+        }
+
+        // 判断举报的评论是否是自己的
+        if(comment.getUserUid().equals(commentVO.getUserUid())) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPORT_YOURSELF_COMMENTS);
+        }
+
+        // 查看该用户是否重复举报该评论
+        QueryWrapper<CommentReport> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.USER_UID, commentVO.getUserUid());
+        queryWrapper.eq(SQLConf.REPORT_COMMENT_UID, comment.getUid());
+        List<CommentReport> commentReportList = commentReportService.list(queryWrapper);
+        if(commentReportList.size() > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPEAT_REPORT_COMMENT);
         }
 
         CommentReport commentReport = new CommentReport();
@@ -222,7 +242,14 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
-    @ApiOperation(value = "删除评论", notes = "增加评论")
+    /**
+     * 通过UID删除评论
+     * @param request
+     * @param commentVO
+     * @param result
+     * @return
+     */
+    @ApiOperation(value = "删除评论", notes = "删除评论")
     @PostMapping("/delete")
     public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
@@ -242,6 +269,12 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    /**
+     * 获取评论所有回复
+     * @param list
+     * @param toCommentListMap
+     * @return
+     */
     private List<Comment> getCommentReplys(List<Comment> list, Map<String, List<Comment>> toCommentListMap) {
 
 

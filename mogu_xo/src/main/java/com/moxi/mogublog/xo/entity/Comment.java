@@ -31,21 +31,11 @@ public class Comment extends SuperEntity<Comment> {
      */
     private String toUid;
 
-    /**
-     * 一级评论Uid，如果该评论为一级评论，那么firstUid为uid，否者为一级评论的Uid
-     * 该字段是为了方便获取一级评论下所有的评论
-     */
-//    private String firstUid;
 
     /**
      * 回复某个人的uid
      */
     private String toUserUid;
-
-    /**
-     * 用户名
-     */
-    private String userName;
 
     /**
      * 评论内容
@@ -58,10 +48,28 @@ public class Comment extends SuperEntity<Comment> {
     private String blogUid;
 
     /**
+     * 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等
+     */
+    private String source;
+
+    /**
      * 本条评论是哪个用户说的
      */
     @TableField(exist = false)
     private User user;
+
+    /**
+     * 发表评论的用户名
+     */
+    @TableField(exist = false)
+    private String userName;
+
+    /**
+     * 被回复的用户名
+     */
+    @TableField(exist = false)
+    private String toUserName;
+
 
     /**
      * 本条评论对哪个用户说的，如果没有则为一级评论

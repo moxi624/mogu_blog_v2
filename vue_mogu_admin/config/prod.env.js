@@ -6,6 +6,7 @@ module.exports = {
     ADMIN_API: '"http://101.132.194.128:8601"',
     PICTURE_API: '"http://101.132.194.128:8602"',
     WEB_API: '"http://101.132.194.128:8603"',
+    Search_API: '"http://localhost:8605"',
     SOLR_API: '"http://101.132.194.128:8080/solr"',
     EUREKA_API: '"http://101.132.194.128:8761"',
     SPRING_BOOT_ADMIN: '"http://101.132.194.128:8606/wallboard"',

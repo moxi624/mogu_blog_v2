@@ -12,4 +12,8 @@ import com.moxi.mougblog.base.global.BaseSysConf;
  */
 public final class MessageConf extends BaseMessageConf {
 
+    public static final String CAN_NOT_REPORT_YOURSELF_COMMENTS = "不能举报自己的评论";
+
+    public static final String CAN_NOT_REPEAT_REPORT_COMMENT = "不能重复举报该评论";
+
 }

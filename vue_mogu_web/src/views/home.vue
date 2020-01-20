@@ -88,7 +88,7 @@
       </div>
 
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
-        <span class="el-dropdown-link" @click="userLogin">
+        <span class="el-dropdown-link" >
           <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
           <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl">
           <img v-if="isLogin&&userInfo.photoUrl==undefined"
@@ -96,9 +96,11 @@
         </span>
 
         <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="login" v-show="!isLogin">登录</el-dropdown-item>
           <el-dropdown-item command="goUserInfo" v-show="isLogin">主页</el-dropdown-item>
           <el-dropdown-item command="logout" v-show="isLogin">退出</el-dropdown-item>
         </el-dropdown-menu>
+
       </el-dropdown>
 
 

@@ -56,7 +56,12 @@ public class BlogListener {
                     log.info("mogu-sms处理批量删除博客");
                     stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
                     stringRedisTemplate.opsForValue().set("MONTH_SET", "");
-                    searchFeignClient.deleteElasticSearchByUids(uid);
+
+                    // 删除ElasticSearch博客索引
+//                    searchFeignClient.deleteElasticSearchByUids(uid);
+
+                    // 删除Solr博客索引
+                    searchFeignClient.deleteSolrIndexByUids(uid);
 
                 }
                 break;
@@ -64,21 +69,36 @@ public class BlogListener {
                 case SysConf.ADD: {
                     log.info("mogu-sms处理增加博客");
                     updateSearch(map);
-                    searchFeignClient.addElasticSearchIndexByUid(uid);
+
+                    // 增加ES索引
+//                    searchFeignClient.addElasticSearchIndexByUid(uid);
+
+                    // 增加solr索引
+                    searchFeignClient.addSolrIndexByUid(uid);
                 }
                 break;
 
                 case SysConf.EDIT: {
                     log.info("mogu-sms处理编辑博客");
                     updateSearch(map);
-                    searchFeignClient.addElasticSearchIndexByUid(uid);
+
+                    // 更新ES索引
+//                    searchFeignClient.addElasticSearchIndexByUid(uid);
+
+                    // 更新Solr索引
+                    searchFeignClient.updateSolrIndexByUid(uid);
                 }
                 break;
 
                 case SysConf.DELETE: {
                     log.info("mogu-sms处理删除博客： uid=" + uid);
                     updateSearch(map);
-                    searchFeignClient.deleteElasticSearchByUid(uid);
+
+                    // 删除ES索引
+//                    searchFeignClient.deleteElasticSearchByUid(uid);
+
+                    // 删除Solr索引
+                    searchFeignClient.deleteSolrIndexByUid(uid);
                 }
                 break;
             }

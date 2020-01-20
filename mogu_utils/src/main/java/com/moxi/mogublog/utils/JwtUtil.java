@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +20,12 @@ import java.util.Map;
  *
  * @author xzx19950624@qq.com
  */
+@Slf4j
 public class JwtUtil {
 
     private final static String base64Secret = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
-    private final static int expiresSecond = 1000 * 60 * 2 * 60;//过期时间
-    private static Logger log = LoggerFactory.getLogger(JwtUtil.class);
+    //过期时间
+    private final static int expiresSecond = 1000 * 60 * 2 * 60;
 
     /**
      * 解析jwt toke 获取数据
@@ -32,7 +34,7 @@ public class JwtUtil {
      * @return
      */
     public static Claims parseJWT(String jsonWebToken) {
-//	    	log.info("解析jwt==========="+ jsonWebToken);
+        log.info("解析jwt==========="+ jsonWebToken);
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))

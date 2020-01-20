@@ -23,5 +23,8 @@ public class BaseSQLConf {
     public static final String SOURCE = "source";
     public static final String UUID = "uuid";
     public static final String URL = "url";
+    public final static String USER_UID = "user_uid";
+    public final static String COMMENT_UID = "comment_uid";
+    public final static String REPORT_COMMENT_UID = "report_comment_uid";
 
 }

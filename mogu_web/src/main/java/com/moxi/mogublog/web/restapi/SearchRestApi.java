@@ -379,7 +379,11 @@ public class SearchRestApi {
 
             //设置分类
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+
                 item.setBlogSort(sortMap.get(item.getBlogSortUid()));
+                if(sortMap.get(item.getBlogSortUid()) != null) {
+                    item.setBlogSortName(sortMap.get(item.getBlogSortUid()).getSortName());
+                }
             }
 
             //获取标签
@@ -401,7 +405,16 @@ public class SearchRestApi {
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
                 });
+
                 item.setPhotoList(pictureListTemp);
+
+                // 只设置一张标题图
+                if(pictureListTemp.size() > 0) {
+                    item.setPhotoUrl(pictureListTemp.get(0));
+                } else {
+                    item.setPhotoUrl("");
+                }
+
             }
         }
         return list;

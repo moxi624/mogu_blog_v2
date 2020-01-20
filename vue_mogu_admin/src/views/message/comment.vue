@@ -3,24 +3,31 @@
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入评论名"></el-input>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>             
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
-      
+
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	    <el-table-column label="评论人" width="100">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.userName }}</span>
 	      </template>
 	    </el-table-column>
+
+      <el-table-column label="被评论人" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.toUserName">{{ scope.row.toUserName }}</span>
+          <span v-else>无</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="内容" width="200">
 	      <template slot-scope="scope">
@@ -33,7 +40,7 @@
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -47,14 +54,14 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+
+	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
           <el-button @click="handleShow(scope.row)" type="primary" size="small">详情</el-button>
           <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
-	    </el-table-column>     	    
+	    </el-table-column>
 	  </el-table>
 
     <!--分页-->
@@ -84,7 +91,7 @@ export default {
       title: "增加友链",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: '120px',
-      isEditForm: false 
+      isEditForm: false
     };
   },
   created() {
@@ -96,17 +103,17 @@ export default {
 			params.append("keyword", this.keyword);
 			params.append("currentPage", this.currentPage);
 			params.append("pageSize", this.pageSize);
-			getCommentList(params).then(response => {				
+			getCommentList(params).then(response => {
 				this.tableData = response.data.records;
 				this.currentPage = response.data.current;
 				this.pageSize = response.data.size;
-				this.total = response.data.total;      
+				this.total = response.data.total;
 			});
 		},
 
 		handleFind: function() {
 			this.commentList();
-		},			
+		},
     handleShow: function(row) {
       console.log("点击了查看详情");
     },

@@ -90,8 +90,8 @@
         let toUserUid = "";
         let toCommentUid = "";
         let blogUid = "";
-        // 来源( info, about) 代表来自某些页面的评论
-        let resource = "";
+        // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
+        let source = "";
         let content = this.value;
         if(this.toInfo) {
           toUserUid = this.toInfo.uid;
@@ -99,7 +99,7 @@
         }
         if(this.commentInfo) {
           blogUid = this.commentInfo.blogUid;
-          resource = this.commentInfo.resource;
+          source = this.commentInfo.source;
         }
 
         this.comments = {
@@ -108,7 +108,7 @@
           toUserUid: toUserUid,
           content: content,
           blogUid: blogUid,
-          resource: resource,
+          source: source,
           reply: []
         }
 

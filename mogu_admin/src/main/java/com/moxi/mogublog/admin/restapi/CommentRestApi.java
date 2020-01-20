@@ -9,7 +9,9 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Comment;
+import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.CommentService;
+import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * <p>
@@ -30,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author xzx19950624@qq.com
  * @since 2018年10月13日16:06:46
  */
-//@PreAuthorize("hasRole('Administrator')")
 @Api(value = "评论RestApi", tags = {"CommentRestApi"})
 @RestController
 @RequestMapping("/comment")
@@ -39,6 +41,9 @@ public class CommentRestApi {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    UserService userService;
 
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
@@ -58,7 +63,35 @@ public class CommentRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
-        log.info("返回结果");
+        List<Comment> commentList = pageList.getRecords();
+        Set<String> userUidSet = new HashSet<>();
+
+        commentList.forEach(item -> {
+            if(StringUtils.isNotEmpty(item.getUserUid())) {
+                userUidSet.add(item.getUserUid());
+            }
+            if(StringUtils.isNotEmpty(item.getToUserUid())) {
+                userUidSet.add(item.getToUserUid());
+            }
+        });
+
+        Collection<User> userCollection = userService.listByIds(userUidSet);
+        Map<String, String> nickNameMap = new HashMap<>();
+        userCollection.forEach(item -> {
+            nickNameMap.put(item.getUid(), item.getNickName());
+        });
+
+        commentList.forEach(item -> {
+            if(StringUtils.isNotEmpty(nickNameMap.get(item.getUserUid()))) {
+                item.setUserName(nickNameMap.get(item.getUserUid()));
+            }
+            if(StringUtils.isNotEmpty(nickNameMap.get(item.getToUserUid()))) {
+                item.setToUserName(nickNameMap.get(item.getToUserUid()));
+            }
+        });
+
+        pageList.setRecords(commentList);
+
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 

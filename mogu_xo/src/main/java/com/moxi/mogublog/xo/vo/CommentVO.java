@@ -3,10 +3,7 @@ package com.moxi.mogublog.xo.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.validator.annotion.IdValid;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
-import com.moxi.mougblog.base.validator.group.Delete;
-import com.moxi.mougblog.base.validator.group.GetOne;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
+import com.moxi.mougblog.base.validator.group.*;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -53,4 +50,10 @@ public class CommentVO extends BaseVO<CommentVO> {
      * 博客uid
      */
     private String blogUid;
+
+    /**
+     * 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等
+     */
+    @NotBlank(groups = {Insert.class, GetList.class})
+    private String source;
 }
