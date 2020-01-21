@@ -37,6 +37,11 @@ public class SysLog extends SuperEntity<SysLog> {
     private String ip;
 
     /**
+     * ip来源
+     */
+    private String ipSource;
+
+    /**
      * 请求地址
      */
     private String url;
@@ -65,4 +70,9 @@ public class SysLog extends SuperEntity<SysLog> {
      * 描述
      */
     private String operation;
+
+    /**
+     * 方法请求花费的时间，单位毫秒
+     */
+    private Long spendTime;
 }

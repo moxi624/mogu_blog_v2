@@ -1,7 +1,7 @@
 <template>
-  <div class="app-container">    
+  <div class="app-container">
     <textarea id="editor" rows="10" cols="80"></textarea>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -10,8 +10,10 @@ export default {
   props: ["content"],
   mounted() {
     var that = this;
-    //设置代码块风格为 zenburn
+
+    //使用ckeditor替换textarea，设置代码块风格为 zenburn
     CKEDITOR.replace('editor', {height: '275px', width: '100%', toolbar: 'toolbar_Full',codeSnippet_theme: 'zenburn'});
+
     this.editor = CKEDITOR.instances.editor;
     this.editor.setData(this.content); //初始化内容
 
@@ -30,30 +32,30 @@ export default {
 
   },
   watch: {
-    content: function() {      
-      this.textData = this.content;     
+    content: function() {
+      this.textData = this.content;
     }
   },
   data() {
     return {
       editor: null, //编辑器对象
-      textData: this.content, //初始化内容  
-    }    
+      textData: this.content, //初始化内容
+    }
   },
   methods: {
     //获取data
     getData: function() {
       return this.editor.getData();
-    }, 
+    },
     setData: function(data) {
       return this.editor.setData(data);
-    }, 
-    initData: function() {      
+    },
+    initData: function() {
       try {
-        this.editor.setData("");  
+        this.editor.setData("");
       } catch (error) {
         console.log("CKEditor还未加载");
-      }             
+      }
     },
     fun: function() {
       this.$emit("contentChange", "");

@@ -1,12 +1,15 @@
 package com.moxi.mogublog.picture.restapi;
 
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.picture.entity.FileSort;
+import com.moxi.mogublog.picture.feign.AdminFeignClient;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
+import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
@@ -16,8 +19,10 @@ import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,28 +55,14 @@ public class FileRestApi {
     private FileSortService fileSortService;
     @Value(value = "${data.image.url}")
     private String imgHost;
-    @Value(value = "${file.upload.path}") //获取上传路径
+
+    //获取上传路径
+    @Value(value = "${file.upload.path}")
     private String path;
 
-    /**
-     * 获取后缀名
-     *
-     * @param fileName
-     * @return
-     */
-    private static String getPicExpandedName(String fileName) {
-        String ext = "";
-        if (StringUtils.isNotBlank(fileName) &&
-                StringUtils.contains(fileName, ".")) {
-            ext = StringUtils.substring(fileName, fileName.lastIndexOf(".") + 1);
-        }
-        ext = ext.toLowerCase();
-        if (ext == null || ext.length() < 1) {
-            ext = "jpg";
-        }
+    @Autowired
+    AdminFeignClient adminFeignClient;
 
-        return ext;
-    }
 
     @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -112,9 +103,6 @@ public class FileRestApi {
      * 获取文件的信息接口
      * fileIds 获取文件信息的ids
      * code ids用什么分割的，默认“,”
-     *
-     * @param response
-     * @param request
      * @return
      */
 
@@ -139,9 +127,16 @@ public class FileRestApi {
                 for (com.moxi.mogublog.picture.entity.File file : fileList) {
                     if (file != null) {
                         Map<String, Object> remap = new HashMap<>();
-                        remap.put("url", file.getPicUrl());//，地址
-                        remap.put("expandedName", file.getPicExpandedName());//后缀名，也就是类型
-                        remap.put("name", file.getPicName());//名称
+
+                        // 获取七牛云地址
+                        remap.put("url", file.getQiNiuUrl());
+
+//                        remap.put("url", file.getPicUrl());
+
+                        // 后缀名，也就是类型
+                        remap.put("expandedName", file.getPicExpandedName());
+                        //名称
+                        remap.put("name", file.getPicName());
                         remap.put("uid", file.getUid());
                         list.add(remap);
                     }
@@ -166,15 +161,18 @@ public class FileRestApi {
     })
     @GetMapping("downloadFile")
     public Object downloadFile(HttpServletRequest request, HttpServletResponse response) {
+
         String fileId = request.getParameter("fileId");
 
         if (StringUtils.isEmpty(fileId)) {
 
             com.moxi.mogublog.picture.entity.File oneById = fileService.getById(fileId);
             if (oneById != null) {
-                String fileName = request.getParameter("fileName");//aim_test//文件名,不传就用默认的，或者是oldName
+                //aim_test//文件名,不传就用默认的，或者是oldName
+                String fileName = request.getParameter("fileName");
                 if (StringUtils.isEmpty(fileName)) {
-                    fileName = oneById.getFileOldName();//以前的名字
+                    //以前的名字
+                    fileName = oneById.getFileOldName();
                 }
 
                 String fileRealPath = path + oneById.getPicUrl();
@@ -229,9 +227,6 @@ public class FileRestApi {
      * projectName 传入的项目名称如 base 默认是base
      * sortName 传入的模块名， 如 shop ，user ,等，不在数据库中记录的是不会上传的
      *
-     * @param filedata
-     * @param response
-     * @param request
      * @return
      */
     @ApiOperation(value = "多图片上传接口", notes = "多图片上传接口")
@@ -244,109 +239,27 @@ public class FileRestApi {
     })
     @PostMapping("/pictures")
     public synchronized Object uploadPics(HttpServletResponse response, HttpServletRequest request, List<MultipartFile> filedatas) {
-        //上传者id
-        String userUid = request.getParameter("userUid"); //如果是用户上传，则包含用户uid
-        String adminUid = request.getParameter("adminUid"); //如果是管理员上传，则包含管理员uid
-        String projectName = request.getParameter("projectName");//项目名
-        String sortName = request.getParameter("sortName");//模块名
 
-        //projectName现在默认base
-        if (StringUtils.isEmpty(projectName)) {
-            projectName = "base";
-        }
+//        String result = adminFeignClient.getSystemConfig();
+//
+//        Map<String, Object> map = JsonUtils.jsonToMap(result);
+//
+//        if(map.get(SysConf.DATA) != null && SysConf.SUCCESS.equals(map.get(SysConf.DATA).toString())) {
+//            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
+//            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+//            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+//            log.error(qiNiuAccessKey + "--" + qiNiuSecretKey);
+//        }
 
-        //这里可以检测用户上传，如果不是网站的用户或会员就不能调用
-        if (StringUtils.isEmpty(userUid) && StringUtils.isEmpty(adminUid)) {
-            return ResultUtil.result(SysConf.ERROR, "请先注册");
-        } else {
-
-        }
-
-        log.info("####### fileSorts" + projectName + " ###### " + sortName);
-
-        QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.SORT_NAME, sortName);
-        queryWrapper.eq(SQLConf.PROJECT_NAME, projectName);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        List<FileSort> fileSorts = fileSortService.list(queryWrapper);
-
-        System.out.println("fileSorts" + JsonUtils.objectToJson(fileSorts));
-
-        FileSort fileSort = null;
-        if (fileSorts.size() > 0) {
-            fileSort = fileSorts.get(0);
-            log.info("====fileSort====" + JsonUtils.objectToJson(fileSort));
-        } else {
-            return ResultUtil.result(SysConf.ERROR, "文件不被允许上传");
-        }
-
-        String sortUrl = fileSort.getUrl();
-
-        //判断url是否为空，如果为空，使用默认
-        if (StringUtils.isEmpty(sortUrl)) {
-            sortUrl = "base/common/";
-        } else {
-            sortUrl = fileSort.getUrl();
-        }
-
-        List<com.moxi.mogublog.picture.entity.File> lists = new ArrayList<>();
-        //文件上传
-        if (filedatas != null && filedatas.size() > 0) {
-            for (MultipartFile filedata : filedatas) {
-
-                String oldName = filedata.getOriginalFilename();
-                long size = filedata.getSize();
-                //以前的文件名
-                log.info("上传文件====：" + oldName);
-                //文件大小
-                log.info("文件大小====：" + size);
-                //获取扩展名，默认是jpg
-                String picExpandedName = getPicExpandedName(oldName);
-                //获取新文件名
-                String newFileName = String.valueOf(System.currentTimeMillis() + "." + picExpandedName);
-                log.info(newFileName + ":" + oldName);
-                //文件路径问题
-                log.info("path====" + path);
-                String newPath = path + sortUrl + "/" + picExpandedName + "/" + DateUtils.getYears() + "/"
-                        + DateUtils.getMonth() + "/" + DateUtils.getDay() + "/";
-                //path = path.replaceAll("//", "/");
-                String picurl = sortUrl + "/" + picExpandedName + "/" + DateUtils.getYears() + "/"
-                        + DateUtils.getMonth() + "/" + DateUtils.getDay() + "/" + newFileName;
-                log.info("newPath====" + newPath);
-                String saveUrl = newPath + newFileName;
-                File file1 = new File(newPath);
-                if (!file1.exists()) {
-                    file1.mkdirs();
-                }
-                try {
-                    File saveFile = new File(saveUrl);
-                    saveFile.createNewFile();
-                    filedata.transferTo(saveFile);
-                } catch (Exception e) {
-                    log.info("==上传文件异常===url:" + saveUrl + "-----");
-                    e.printStackTrace();
-                    return ResultUtil.result(SysConf.ERROR, "文件上传失败");
-                }
-                com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
-                file.setCreateTime(new Date(System.currentTimeMillis()));
-                file.setFileSortUid(fileSort.getUid());
-                file.setFileOldName(oldName);
-                file.setFileSize(size);
-                file.setPicExpandedName(picExpandedName);
-                file.setPicName(newFileName);
-                file.setPicUrl(picurl);
-                file.setStatus(EStatus.ENABLE);
-                file.setUserUid(userUid);
-                file.setAdminUid(adminUid);
-                fileService.save(file);
-                lists.add(file);
-            }
-            //保存成功返回数据
-            return ResultUtil.result(SysConf.SUCCESS, lists);
-        }
-        return ResultUtil.result(SysConf.ERROR, "请上传图片");
+       return fileService.uploadImgs(path, request, filedatas);
     }
 
+    /**
+     * 通过URL将图片上传到自己服务器中
+     * @param fileVO
+     * @param result
+     * @return
+     */
     @ApiOperation(value = "通过URL上传图片", notes = "通过URL上传图片")
     @PostMapping("/uploadPicsByUrl")
     public synchronized Object uploadPicsByUrl(@Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
@@ -415,6 +328,18 @@ public class FileRestApi {
                 log.info("newPath:" + newPath);
                 log.info("saveUrl:" + saveUrl);
 
+                // 将图片上传到本地服务器中以及七牛云中
+                BufferedOutputStream out = null;
+                QiniuUtil qn = new QiniuUtil();
+                String qiNiuUrl = "";
+                List<String> list = new ArrayList<>();
+                java.io.File dest= null;
+
+                FileOutputStream os = null;
+
+                // 输入流
+                InputStream inputStream = null;
+
                 // 判断文件是否存在
                 File file1 = new File(newPath);
                 if (!file1.exists()) {
@@ -428,8 +353,9 @@ public class FileRestApi {
                     // 打开连接
                     URLConnection con = url.openConnection();
 
-                    // 输入流
-                    InputStream inputStream = null;
+                    // 设置10秒
+                    con.setConnectTimeout(10000);
+                    con.setReadTimeout(10000);
 
                     // 当获取的相片无法正常显示的时候，需要给一个默认图片
                     inputStream = con.getInputStream();
@@ -440,20 +366,61 @@ public class FileRestApi {
                     int len;
 
                     File file = new File(saveUrl);
-                    FileOutputStream os = new FileOutputStream(file, true);
+                    os = new FileOutputStream(file, true);
                     // 开始读取
                     while ((len = inputStream.read(bs)) != -1) {
                         os.write(bs, 0, len);
                     }
-                    // 完毕，关闭所有链接
-                    os.close();
-                    inputStream.close();
+
 
                 } catch (Exception e) {
                     log.info("==上传文件异常===url:" + saveUrl + "-----");
                     e.printStackTrace();
-                    return ResultUtil.result(SysConf.ERROR, "文件上传失败");
+                    return ResultUtil.result(SysConf.ERROR, "获取图片超时，文件上传失败");
+                } finally {
+                    try {
+                        // 完毕，关闭所有链接
+                        os.close();
+                        inputStream.close();
+                    }catch (Exception e) {
+                        log.error(e.getMessage());
+                    }
                 }
+
+                try {
+
+                    File pdfFile = new File(saveUrl);
+                    FileInputStream fileInputStream = new FileInputStream(pdfFile);
+                    MultipartFile fileData = new MockMultipartFile(pdfFile.getName(), pdfFile.getName(),
+                            ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+
+                    // 上传七牛云
+                    // 创建一个临时目录文件
+                    String tempFiles = "temp/" + newFileName;
+                    dest = new java.io.File(tempFiles);
+                    if (!dest.getParentFile().exists()) {
+                        dest.getParentFile().mkdirs();
+                    }
+                    out = new BufferedOutputStream(new FileOutputStream(dest));
+                    out.write(fileData.getBytes());
+                    qn = new QiniuUtil();
+                    qiNiuUrl = qn.uoloapQiniu(dest, picurl);
+
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                } finally {
+                    try {
+                        out.flush();
+                        out.close();
+                    }catch (Exception e) {
+                        log.error(e.getMessage());
+                    }
+
+                    if (dest != null && dest.getParentFile().exists()) {
+                        dest.delete();
+                    }
+                }
+
                 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
 
                 file.setCreateTime(new Date(System.currentTimeMillis()));
@@ -466,6 +433,7 @@ public class FileRestApi {
                 file.setStatus(EStatus.ENABLE);
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);
+                file.setQiNiuUrl(qiNiuUrl);
                 fileService.save(file);
                 lists.add(file);
             }

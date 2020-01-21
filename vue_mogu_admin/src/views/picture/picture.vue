@@ -72,6 +72,7 @@ import {
   deletePicture,
   setCover
 } from "@/api/picture";
+import { getToken } from '@/utils/auth'
 
 import { formatData } from "@/utils/webUtils";
 
@@ -133,10 +134,12 @@ export default {
 
     //其它数据
     that.otherData = {
+      source: "picture",
       userUid: "uid00000000000000000000000000000000",
       adminUid: "uid00000000000000000000000000000000",
       projectName: "blog",
-      sortName: "admin"
+      sortName: "admin",
+      token: getToken()
     };
   },
   methods: {

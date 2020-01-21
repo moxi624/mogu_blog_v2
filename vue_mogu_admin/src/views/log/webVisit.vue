@@ -2,7 +2,7 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="关键字"></el-input>        
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="关键字"></el-input>
         <el-date-picker
           clearable
           v-model="value5"
@@ -13,26 +13,32 @@
           end-placeholder="结束日期"
           align="right">
         </el-date-picker>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>         
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
-      
+
       <el-table-column type="selection"></el-table-column>
-      
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
-      <el-table-column label="IP" width="150">
+
+      <el-table-column label="IP" width="120">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.ip }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="平台" width="100">
+      <el-table-column label="IP来源" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ipSource }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="平台" width="150">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.os }}</span>
 	      </template>
@@ -49,7 +55,7 @@
 	        <span>{{ scope.row.behaviorContent }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
       <el-table-column label="内容" width="200">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.content }}</span>
@@ -61,7 +67,7 @@
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -75,7 +81,7 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-  	    
+
 	  </el-table>
 
     <!--分页-->
@@ -146,7 +152,7 @@ export default {
       params.startTime = "";
       if(this.value5) {
         params.startTime = this.value5[0] + "," + this.value5[1];
-      }      
+      }
       params.pageSize = this.pageSize;
       params.currentPage = this.currentPage;
 

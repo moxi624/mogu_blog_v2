@@ -95,11 +95,16 @@
 
 <script>
   import {login, register} from "@/api/user";
-
+  import { Loading } from 'element-ui';
   export default {
     name: "share",
     data() {
       return {
+        loading: null,
+        option: {
+          fullscreen: true,
+          lock: true
+        }, //loading
         // 显示登录页面
         showLogin: true,
         isLogin: false,
@@ -121,6 +126,7 @@
     },
     components: {},
     created() {
+
     },
     methods: {
       startLogin: function () {
@@ -154,11 +160,15 @@
         this.showLogin = false;
       },
       goAuth: function (source) {
+        this.loading = Loading.service({
+          lock: true,
+          text: '加载中……',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
         var params = new URLSearchParams();
         params.append("source", source);
         login(params).then(response => {
           if (response.code == "success") {
-            console.log(response.data.url);
             var token = response.data.token;
             console.log(response);
             window.location.href = response.data.url
@@ -184,7 +194,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 1000; /* 要比遮罩层大 */
+    z-index: 101; /* 要比遮罩层大 */
   }
 
   .registerBox {
@@ -254,7 +264,7 @@
     width: 200px;
     height: 100px;
     text-align: center;
-    z-index: 1000; /* 要比遮罩层大 */
+    z-index: 101; /* 要比遮罩层大 */
   }
 
   /* 遮罩层 */
@@ -265,6 +275,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 100;
   }
 </style>

@@ -14,26 +14,42 @@
           end-placeholder="结束日期"
           align="right">
         </el-date-picker>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>         
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
-      
+
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+
+              <el-form-item label="请求接口">
+                <span>{{ props.row.classPath + props.row.url }}</span>
+              </el-form-item>
+
+              <el-form-item label="请求参数">
+                <span>{{ props.row.params }}</span>
+              </el-form-item>
+
+            </el-form>
+          </template>
+        </el-table-column>
+
       <el-table-column type="selection"></el-table-column>
-      
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	    <el-table-column label="操作人" width="100">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.userName }}</span>
 	      </template>
 	    </el-table-column>
-	    
-      <el-table-column label="请求接口" width="250">
+
+      <el-table-column label="请求接口" width="150">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.url }}</span>
 	      </template>
@@ -44,25 +60,39 @@
 	        <span>{{ scope.row.type }}</span>
 	      </template>
 	    </el-table-column>
-	    
-      <el-table-column label="接口名" width="200">
+
+      <el-table-column label="接口名" width="150">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.operation }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP" width="150">
+      <el-table-column label="IP" width="100">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.ip }}</span>
 	      </template>
 	    </el-table-column>
 
-	    <el-table-column label="请求时间" width="160">
+      <el-table-column label="IP来源" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ipSource }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="请求耗时" width="160">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.spendTime < 2000">{{ scope.row.spendTime}} ms </el-tag>
+          <el-tag v-else-if="scope.row.spendTime < 5000 && scope.row.spendTime >= 2000" type="warning">{{ scope.row.spendTime}} ms </el-tag>
+          <el-tag v-else type="danger">{{ scope.row.spendTime}} ms </el-tag>
+        </template>
+      </el-table-column>
+
+	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -76,7 +106,7 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-  	    
+
 	  </el-table>
 
     <!--分页-->
@@ -152,10 +182,13 @@ export default {
       params.append("currentPage", this.currentPage);
       params.append("pageSize", this.pageSize);
       getLogList(params).then(response => {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        if(response.code == "success") {
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+          this.tableData = response.data.records;
+        }
+
       });
     },
     handleFind: function() {

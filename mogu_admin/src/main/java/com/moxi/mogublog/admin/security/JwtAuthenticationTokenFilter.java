@@ -132,6 +132,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 //刷新token过期时间
                 jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
                 log.info("token未过期，刷新token");
+
             } else {
                 chain.doFilter(request, response);
                 return;
@@ -154,8 +155,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
+
                     logger.info("authenticated user " + username + ", setting security context");
-                    SecurityContextHolder.getContext().setAuthentication(authentication);//以后可以security中取得SecurityUser信息
+
+                    //以后可以security中取得SecurityUser信息
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }

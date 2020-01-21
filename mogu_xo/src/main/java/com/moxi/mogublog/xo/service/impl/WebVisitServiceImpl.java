@@ -37,7 +37,9 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         String os = map.get("OS");
         String browser = map.get("BROWSER");
         WebVisit webVisit = new WebVisit();
-        webVisit.setIp(IpUtils.getIpAddr(request));
+        String ip = IpUtils.getIpAddr(request);
+        webVisit.setIp(ip);
+        webVisit.setIpSource(IpUtils.getAddresses("ip="+ip, "utf-8"));
         webVisit.setOs(os);
         webVisit.setBrowser(browser);
         webVisit.setUserUid(userUid);

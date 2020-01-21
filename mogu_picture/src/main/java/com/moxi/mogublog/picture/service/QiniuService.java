@@ -4,25 +4,23 @@ import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mougblog.base.service.SuperService;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- * 文件服务类
+ * 七牛云服务类
  * </p>
  *
  * @author xuzhixiang
- * @since 2018-09-17
+ * @since 2020年1月20日20:04:51
  */
-public interface FileService extends SuperService<File> {
+public interface QiniuService {
 
     /**
      * 多文件上传
-     * @param path
-     * @param request
-     * @param filedatas
+     * @param file
      * @return
      */
-    String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas);
+    Map<String, List<String>> uploadImgs(MultipartFile[] file);
 }

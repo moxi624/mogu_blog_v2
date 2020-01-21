@@ -1,6 +1,11 @@
 package com.moxi.mogublog.picture.restapi;
 
 import com.google.gson.Gson;
+import com.moxi.mogublog.picture.global.SysConf;
+import com.moxi.mogublog.picture.service.FileService;
+import com.moxi.mogublog.picture.service.QiniuService;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -9,14 +14,23 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
  * <p>
- * 骑牛图片上传RestApi
+ * 七牛图片上传RestApi
  * </p>
  *
  * @author xuzhixiang
@@ -28,17 +42,61 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class QiNiuRestApi {
 
+    @Autowired
+    private QiniuService qiniuService;
+
+
+    /**
+     * 多文件上传七牛云
+     * @param files
+     * @return
+     */
+    @ApiOperation(value = "多文件上传七牛云", notes = "多文件上传七牛云")
+    @RequestMapping(value="/imgs", method = RequestMethod.POST)
+    public String uploadImg(@RequestParam("file") MultipartFile[] files) {
+
+
+        // 验证非空
+        if (StringUtils.isBlank(files[0].getOriginalFilename())) {
+            return ResultUtil.result(SysConf.ERROR, "文件不能为空");
+        } else {
+            Map<String, List<String>> map = new HashMap<>();
+
+            map = qiniuService.uploadImgs(files);
+
+            List<String> resultList = map.get("result");
+
+            log.info("图片上传返回结果:"+resultList);
+
+            if ("error".equals(resultList.get(0))) {
+                return ResultUtil.result(SysConf.ERROR, "上传失败");
+            } else {
+                return ResultUtil.result(SysConf.SUCCESS, resultList);
+            }
+        }
+
+    }
 
     public static void main(String[] args) {
-        Configuration cfg = new Configuration(Zone.zone2());                //zong2() 代表华南地区
+        //zong2() 代表华南地区
+        Configuration cfg = new Configuration(Zone.zone2());
+
         UploadManager uploadManager = new UploadManager(cfg);
 
-        String accessKey = "";      //AccessKey的值
-        String secretKey = "";      //SecretKey的值
-        String bucket = "mogublog";                                          //存储空间名
-        String localFilePath = "D:\\CNN.png";     //上传图片路径
+        //AccessKey的值
+        String accessKey = "QKD378sek_yRy0AlpWEzT_U_oni0SfrrxaP2lgWX";
 
-        String key = "CNN.png";                                               //在七牛云中图片的命名
+        //SecretKey的值
+        String secretKey = "Vjh0zPBLrflxYn08YNIG4rkRYv7sqtlMccgd8QzL";
+
+        //存储空间名
+        String bucket = "mogublog";
+
+        //上传图片路径
+        String localFilePath = "D:\\1000.jpg";
+
+        //在七牛云中图片的命名
+        String key = "1000.png";
         Auth auth = Auth.create(accessKey, secretKey);
         String upToken = auth.uploadToken(bucket);
         try {

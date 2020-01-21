@@ -31,4 +31,3 @@ export function deleteRole(params) {
     data: params
   })
 }
-
