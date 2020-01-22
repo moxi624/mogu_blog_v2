@@ -15,6 +15,9 @@ public class BaseSysConf {
     public final static String TOKEN = "token";
     public final static String ACCESS_TOKEN = "accessToken";
 
+    // 不能评论
+    public final static String CAN_NOT_COMMENT = "0";
+
 
     public final static String CODE = "code";
     public final static String DATA = "data";

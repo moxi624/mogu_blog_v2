@@ -14,10 +14,8 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.CommentReport;
 import com.moxi.mogublog.xo.entity.User;
-import com.moxi.mogublog.xo.service.CommentReportService;
-import com.moxi.mogublog.xo.service.CommentService;
-import com.moxi.mogublog.xo.service.UserService;
-import com.moxi.mogublog.xo.service.WebVisitService;
+import com.moxi.mogublog.xo.entity.WebConfig;
+import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
@@ -54,6 +52,9 @@ public class CommentRestApi {
 
     @Autowired
     private WebVisitService webVisitService;
+
+    @Autowired
+    private WebConfigService webConfigService;
 
     @Autowired
     private CommentService commentService;
@@ -179,6 +180,12 @@ public class CommentRestApi {
     @PostMapping("/add")
     public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
+        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        WebConfig webConfig = webConfigService.getOne(queryWrapper);
+        if(SysConf.CAN_NOT_COMMENT.equals(webConfig.getStartComment())) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
+        }
         ThrowableUtils.checkParamArgument(result);
 
         if (commentVO.getContent().length() > SysConf.TWO_TWO_FIVE) {

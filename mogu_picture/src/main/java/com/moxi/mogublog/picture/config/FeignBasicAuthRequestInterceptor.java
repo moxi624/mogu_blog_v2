@@ -21,15 +21,6 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
                 .getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 
-        Enumeration<String> headerNames = request.getHeaderNames();
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                String name = headerNames.nextElement();
-                String values = request.getHeader(name);
-                requestTemplate.header(name, values);
-            }
-        }
-
         // 获取token，放入到feign的请求头
         String token = request.getParameter("token");
         requestTemplate.header("Authorization", token);

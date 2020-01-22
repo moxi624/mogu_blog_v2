@@ -4,9 +4,10 @@
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入评论名"></el-input>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
-      <el-table :data="tableData"  style="width: 100%">
+      <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
 
       <el-table-column type="selection"></el-table-column>
 
@@ -76,7 +77,7 @@
 
 	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
-          <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>
+<!--          <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>-->
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
 	    </el-table-column>
@@ -96,11 +97,11 @@
 </template>
 
 <script>
-import { getCommentList, addComment, editComment, deleteComment } from "@/api/comment";
-import { formatData } from '@/utils/webUtils'
+import { getCommentList, addComment, editComment, deleteComment,  deleteBatchComment} from "@/api/comment";
 export default {
   data() {
     return {
+      multipleSelection: [], //多选，用于批量删除
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
@@ -132,16 +133,18 @@ export default {
       }
     },
 		commentList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
+			let params = {}
+			params.keyword = this.keyword
+			params.currentPage =  this.currentPage
+			params.pageSize = this.pageSize
+      params.source = "all"
 			getCommentList(params).then(response => {
-			  console.log("得到的评论", response)
-				this.tableData = response.data.records;
-				this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;
+			  if(response.code == "success") {
+          this.tableData = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        }
 			});
 		},
     subComment(str, index) {
@@ -159,8 +162,8 @@ export default {
     },
     handleDelete: function(row) {
 			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
+			let params = {}
+			params.uid = row.uid
 			deleteComment(params).then(response=> {
           console.log(response);
           this.$message({
@@ -170,10 +173,46 @@ export default {
 					that.commentList();
 			})
     },
+    handleDeleteBatch: function() {
+      var that = this;
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中的评论删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteBatchComment(that.multipleSelection).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.commentList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
     handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
       this.commentList();
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
 
   }

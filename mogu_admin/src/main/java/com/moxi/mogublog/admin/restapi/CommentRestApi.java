@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -16,13 +18,22 @@ import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.CommentService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.vo.BlogVO;
+import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,20 +63,20 @@ public class CommentRestApi {
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表", response = String.class)
-    @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public String getList(HttpServletRequest request,
-                          @ApiParam(name = "keyword", value = "关键字", required = false) @RequestParam(name = "keyword", required = false) String keyword,
-                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    @PostMapping(value = "/getList")
+    public String getList(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
-        QueryWrapper<Comment> queryWrapper = new QueryWrapper<Comment>();
-        if (StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
-            queryWrapper.like(SQLConf.CONTENT, keyword.trim());
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(commentVO.getKeyword()) && !StringUtils.isEmpty(commentVO.getKeyword().trim())) {
+            queryWrapper.like(SQLConf.CONTENT, commentVO.getKeyword().trim());
         }
 
         Page<Comment> page = new Page<>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
+        page.setCurrent(commentVO.getCurrentPage());
+        page.setSize(commentVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
@@ -147,39 +158,82 @@ public class CommentRestApi {
 
     @ApiOperation(value = "增加评论", notes = "增加评论", response = String.class)
     @PostMapping("/add")
-    public String add(@RequestBody Comment comment) {
+    public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(comment.getUserUid()) || StringUtils.isEmpty(comment.getContent())) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
-        }
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        Comment comment = new Comment();
+        comment.setSource(commentVO.getSource());
+        comment.setBlogUid(commentVO.getBlogUid());
+        comment.setContent(commentVO.getContent());
+        comment.setUserUid(commentVO.getUserUid());
+        comment.setToUid(commentVO.getToUid());
+        comment.setToUserUid(commentVO.getToUserUid());
         comment.setStatus(EStatus.ENABLE);
         comment.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @ApiOperation(value = "编辑评论", notes = "编辑评论", response = String.class)
     @PostMapping("/edit")
-    public String edit(HttpServletRequest request, @RequestBody Comment comment) {
+    public String edit(HttpServletRequest request, @Validated({Update.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(comment.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
-        }
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        Comment comment = commentService.getById(commentVO.getUid());
+        comment.setSource(commentVO.getSource());
+        comment.setBlogUid(commentVO.getBlogUid());
+        comment.setContent(commentVO.getContent());
+        comment.setUserUid(commentVO.getUserUid());
+        comment.setToUid(commentVO.getToUid());
+        comment.setToUserUid(commentVO.getToUserUid());
+        comment.setStatus(EStatus.ENABLE);
         comment.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @ApiOperation(value = "删除评论", notes = "删除评论", response = String.class)
     @PostMapping("/delete")
-    public String delete(HttpServletRequest request,
-                         @ApiParam(name = "uid", value = "唯一UID", required = true) @RequestParam(name = "uid", required = true) String uid) {
+    public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
-        }
-        Comment comment = commentService.getById(uid);
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        Comment comment = commentService.getById(commentVO.getUid());
         comment.setStatus(EStatus.DISABLED);
         comment.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
+
+    @OperationLogger(value = "删除选中评论")
+    @ApiOperation(value = "删除选中评论", notes = "删除选中评论", response = String.class)
+    @PostMapping("/deleteBatch")
+    public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody List<CommentVO> commentVoList, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        if (commentVoList.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> uids = new ArrayList<>();
+        commentVoList.forEach(item -> {
+            uids.add(item.getUid());
+        });
+        Collection<Comment> commentList = commentService.listByIds(uids);
+
+        commentList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        commentService.updateBatchById(commentList);
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+    }
+
+
 }
 
