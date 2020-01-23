@@ -17,12 +17,22 @@ export default {
     this.editor = CKEDITOR.instances.editor;
     this.editor.setData(this.content); //初始化内容
 
+    // 一秒钟通知子组件，ckeditor中内容改变
     that.editor.on('change', function( event ) {
-      // 一秒钟通知子组件，ckeditor中内容改变
       that.timeout = setTimeout(function() {
         that.fun();
       }, 1000);
+    });
 
+    that.editor.on('fileUploadRequest', function (evt) {
+      let xhr = evt.data.fileLoader.xhr;
+      console.log('文件上传请求：', evt);
+      xhr.setRequestHeader('Cache-Control', 'no-cache');
+      let accessToken = sessionStorage.getItem('accessToken');
+      if (accessToken) {
+        xhr.setRequestHeader('Authorization', `Bearer ${sessionStorage.getItem('accessToken')}`);
+      }
+      xhr.withCredentials = true;
     });
 
 

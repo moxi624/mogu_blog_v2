@@ -22,5 +22,5 @@ public interface QiniuService {
      * @param file
      * @return
      */
-    Map<String, List<String>> uploadImgs(MultipartFile[] file);
+    Map<String, List<String>> uploadImgs(MultipartFile[] file, Map<String, String> qiNiuConfig);
 }

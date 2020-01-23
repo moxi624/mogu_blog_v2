@@ -12,6 +12,7 @@ import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -41,7 +43,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     FileSortService fileSortService;
 
     @Override
-    public String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas) {
+    public String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas, Map<String, String> qiNiuConfig) {
 
         // 判断来源
         String source = request.getParameter("source");
@@ -159,14 +161,18 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
                     out = new BufferedOutputStream(new FileOutputStream(dest));
                     out.write(filedata.getBytes());
-                    qiNiuUrl = qn.uoloapQiniu(dest, picurl);
+                    qiNiuUrl = qn.uoloapQiniu(dest, qiNiuConfig);
 
                     saveFile.createNewFile();
                     tempData.transferTo(saveFile);
 
+                }catch (QiniuException e) {
+                    log.info("==上传七牛云异常===url:" + saveUrl + "-----");
+                    log.error(e.getMessage());
+                    return ResultUtil.result(SysConf.ERROR, "七牛云配置有误");
                 } catch (Exception e) {
                     log.info("==上传文件异常===url:" + saveUrl + "-----");
-                    e.printStackTrace();
+                    log.error(e.getMessage());
                     return ResultUtil.result(SysConf.ERROR, "文件上传失败");
                 } finally{
                     try {

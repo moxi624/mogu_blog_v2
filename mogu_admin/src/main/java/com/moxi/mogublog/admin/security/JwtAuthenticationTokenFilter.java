@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.security;
 
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
+import com.moxi.mogublog.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -118,7 +119,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         //得到请求头信息authorization信息
-        final String authHeader = request.getHeader(tokenHeader);
+        String authHeader = request.getHeader(tokenHeader);
+
+        // 从picture服务传递过来的token，如果有说明执行了上传操作
+        final String pictureToken = request.getHeader("pictureToken");
+        if(StringUtils.isNotEmpty(pictureToken)) {
+            authHeader = pictureToken;
+        }
 
         //请求头 'Authorization': tokenHead + token
         if (authHeader != null && authHeader.startsWith(tokenHead)) {

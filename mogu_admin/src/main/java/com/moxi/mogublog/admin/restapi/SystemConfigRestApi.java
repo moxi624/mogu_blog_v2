@@ -68,6 +68,8 @@ public class SystemConfigRestApi {
             // 设置七牛云相关
             systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
             systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
+            systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
+            systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
 
             // 设置邮箱相关
             systemConfig.setEmail(systemConfigVO.getEmail());
@@ -83,6 +85,8 @@ public class SystemConfigRestApi {
             // 设置七牛云相关
             systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
             systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
+            systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
+            systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
 
             // 设置邮箱相关
             systemConfig.setEmail(systemConfigVO.getEmail());

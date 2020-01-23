@@ -18,10 +18,6 @@ public interface AdminFeignClient {
 
     /**
      * 获取系统配置信息
-     *
-     * @return
-     * @ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
-     * @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")
      */
     @RequestMapping(value = "/systemConfig/getSystemConfig", method = RequestMethod.GET)
     public String getSystemConfig();

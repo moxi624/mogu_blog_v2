@@ -25,6 +25,16 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
     private String qiNiuSecretKey;
 
     /**
+     * 七牛云上传空间
+     */
+    private String qiNiuBucket;
+
+    /**
+     * 七牛云存储区域 华东（z0），华北(z1)，华南(z2)，北美(na0)，东南亚(as0)
+     */
+    private String qiNiuArea;
+
+    /**
      * 邮箱账号
      */
     private String email;

@@ -1,10 +1,12 @@
 package com.moxi.mogublog.picture.restapi;
 
+import com.moxi.mogublog.picture.feign.AdminFeignClient;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.util.Aboutfile;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +52,10 @@ public class CkEditorRestApi {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    AdminFeignClient adminFeignClient;
+
     /**
      * 图像中的图片上传
      *
@@ -58,6 +64,24 @@ public class CkEditorRestApi {
      */
     @RequestMapping(value = "/imgUpload", method = RequestMethod.POST)
     public Object imgUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        // 进行七牛云校验
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
+            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
+            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
+            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
+            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
 
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
@@ -102,7 +126,7 @@ public class CkEditorRestApi {
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
-                String result = fileService.uploadImgs(basePath, request, fileData);
+                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
                 if(SysConf.SUCCESS.equals(code)) {
@@ -141,6 +165,24 @@ public class CkEditorRestApi {
     public Object fileUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 
+        // 进行七牛云校验
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
+            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
+            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
+            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
+            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+        
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
         //引用自己设计的一个工具类
@@ -182,7 +224,7 @@ public class CkEditorRestApi {
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
-                String result = fileService.uploadImgs(basePath, request, fileData);
+                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
                 if(SysConf.SUCCESS.equals(code)) {

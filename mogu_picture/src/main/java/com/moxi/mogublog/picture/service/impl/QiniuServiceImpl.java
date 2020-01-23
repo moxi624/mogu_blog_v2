@@ -27,7 +27,7 @@ import java.util.Map;
 public class QiniuServiceImpl implements QiniuService {
 
     @Override
-    public Map<String, List<String>> uploadImgs(MultipartFile[] file) {
+    public Map<String, List<String>> uploadImgs(MultipartFile[] file, Map<String, String> qiNiuConfig) {
         Map<String, List<String>> resultMap = new HashMap<>();
         List<String> list = new LinkedList<>();
         String result = null;
@@ -48,7 +48,7 @@ public class QiniuServiceImpl implements QiniuService {
             try {
                 out = new BufferedOutputStream(new FileOutputStream(dest));
                 out.write(file[i].getBytes());
-                result = qn.uoloapQiniu(dest,fileName);
+                result = qn.uoloapQiniu(dest, qiNiuConfig);
 
             } catch (Exception e) {
                 log.error(e.getMessage());

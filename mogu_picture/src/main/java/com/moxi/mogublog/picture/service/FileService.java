@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,5 +25,5 @@ public interface FileService extends SuperService<File> {
      * @param filedatas
      * @return
      */
-    String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas);
+    String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas, Map<String, String> qiNiuConfig);
 }

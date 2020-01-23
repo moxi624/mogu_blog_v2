@@ -2,6 +2,7 @@ package com.moxi.mogublog.picture.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -15,6 +16,7 @@ import java.util.Enumeration;
  * @create: 2020-01-21-22:34
  */
 public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
+
     @Override
     public void apply(RequestTemplate requestTemplate) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
@@ -23,6 +25,6 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
 
         // 获取token，放入到feign的请求头
         String token = request.getParameter("token");
-        requestTemplate.header("Authorization", token);
+        requestTemplate.header("pictureToken", token);
     }
 }

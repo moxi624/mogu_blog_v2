@@ -312,18 +312,27 @@ export default {
           var params = new URLSearchParams();
           params.append("fileUids", this.fileUids);
           params.append("pictureSortUid", this.pictureSortUid);
-          addPicture(params).then(response => {
-            if (response.code == "success") {
+          addPicture(params).then(res => {
+            if (res.code == "success") {
               this.$message({
                 type: "success",
-                message: response.data
+                message: res.data
               });
               that.pictureList();
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data
+              });
             }
           });
         }
+      } else {
+        this.$message({
+          type: "error",
+          message: response.data
+        });
       }
-
     }
   }
 };

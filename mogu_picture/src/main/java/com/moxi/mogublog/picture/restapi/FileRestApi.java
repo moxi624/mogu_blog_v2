@@ -240,18 +240,24 @@ public class FileRestApi {
     @PostMapping("/pictures")
     public synchronized Object uploadPics(HttpServletResponse response, HttpServletRequest request, List<MultipartFile> filedatas) {
 
-//        String result = adminFeignClient.getSystemConfig();
-//
-//        Map<String, Object> map = JsonUtils.jsonToMap(result);
-//
-//        if(map.get(SysConf.DATA) != null && SysConf.SUCCESS.equals(map.get(SysConf.DATA).toString())) {
-//            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
-//            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
-//            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
-//            log.error(qiNiuAccessKey + "--" + qiNiuSecretKey);
-//        }
+        String resultStr = adminFeignClient.getSystemConfig();
 
-       return fileService.uploadImgs(path, request, filedatas);
+        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
+            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
+            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
+            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
+            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+
+       return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
     }
 
     /**
@@ -263,6 +269,23 @@ public class FileRestApi {
     @ApiOperation(value = "通过URL上传图片", notes = "通过URL上传图片")
     @PostMapping("/uploadPicsByUrl")
     public synchronized Object uploadPicsByUrl(@Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
+
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
+            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
+            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
+            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
+            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
 
         String userUid = fileVO.getUserUid();
         String adminUid = fileVO.getAdminUid();
@@ -404,10 +427,11 @@ public class FileRestApi {
                     out = new BufferedOutputStream(new FileOutputStream(dest));
                     out.write(fileData.getBytes());
                     qn = new QiniuUtil();
-                    qiNiuUrl = qn.uoloapQiniu(dest, picurl);
+                    qiNiuUrl = qn.uoloapQiniu(dest, qiNiuConfig);
 
                 } catch (Exception e) {
                     log.error(e.getMessage());
+                    return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
                 } finally {
                     try {
                         out.flush();
