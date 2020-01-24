@@ -37,12 +37,35 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
     /**
      * 七牛云上传空间
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String qiNiuBucket;
 
     /**
      * 七牛云存储区域 华东（z0），华北(z1)，华南(z2)，北美(na0)，东南亚(as0)
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String qiNiuArea;
+
+    /**
+     * 图片是否上传七牛云 (0:否， 1：是)
+     */
+    private String uploadQiNiu;
+
+    /**
+     * 图片是否上传本地存储 (0:否， 1：是)
+     */
+    private String uploadLocal;
+
+    /**
+     * 图片显示优先级（ 1 展示 七牛云,  0 本地）
+     */
+    private String picturePriority;
+
+    /**
+     * 图片服务器，域名前缀：   http://localhost:8600  或 http://images.moguit.cn
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String pictureBaseUrl;
 
     /**
      * 邮箱账号

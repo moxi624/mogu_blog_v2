@@ -79,6 +79,10 @@ public class CkEditorRestApi {
             qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
             qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
             qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+            qiNiuConfig.put("uploadQiNiu", resultMap.get("uploadQiNiu"));
+            qiNiuConfig.put("uploadLocal", resultMap.get("uploadLocal"));
+            qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
+            qiNiuConfig.put("pictureBaseUrl", resultMap.get("pictureBaseUrl"));
         } else {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
@@ -134,11 +138,28 @@ public class CkEditorRestApi {
                     if(resultList.size() > 0) {
                         Map<String, Object> picture = resultList.get(0);
                         String fileName = picture.get("picName").toString();
-                        String qiNiuUrl = picture.get("qiNiuUrl").toString();
-                        String url = imgURL + picture.get("picUrl").toString();
+
+
                         map.put("uploaded", 1);
                         map.put("fileName", fileName);
-                        map.put("url", qiNiuUrl);
+
+                        // 设置显示方式
+                        if("1".equals(qiNiuConfig.get("picturePriority"))) {
+                            String qiNiuUrl = picture.get("qiNiuUrl").toString();
+                            map.put("url", qiNiuUrl);
+                        } else {
+                            String pictureBaseUrl = qiNiuConfig.get("pictureBaseUrl");
+                            String url = "";
+
+                            // 设置图片服务根域名
+                            if(StringUtils.isNotEmpty(pictureBaseUrl)) {
+                                url = imgURL + picture.get("picUrl").toString();
+                            } else {
+                                url = pictureBaseUrl + picture.get("picUrl").toString();
+                            }
+                            map.put("url", url);
+                        }
+
                     }
                     return map;
                 } else {
@@ -179,6 +200,10 @@ public class CkEditorRestApi {
             qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
             qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
             qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
+            qiNiuConfig.put("uploadQiNiu", resultMap.get("uploadQiNiu"));
+            qiNiuConfig.put("uploadLocal", resultMap.get("uploadLocal"));
+            qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
+            qiNiuConfig.put("pictureBaseUrl", resultMap.get("pictureBaseUrl"));
         } else {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }

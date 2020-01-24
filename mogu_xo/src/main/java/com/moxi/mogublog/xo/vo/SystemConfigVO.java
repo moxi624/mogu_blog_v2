@@ -35,6 +35,26 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
     private String qiNiuArea;
 
     /**
+     * 图片是否上传七牛云 (0:否， 1：是)
+     */
+    private String uploadQiNiu;
+
+    /**
+     * 图片是否上传本地存储 (0:否， 1：是)
+     */
+    private String uploadLocal;
+
+    /**
+     * 图片显示优先级（ 1 展示 七牛云,  0 本地）
+     */
+    private String picturePriority;
+
+    /**
+     * 图片服务器，域名前缀：   http://localhost:8600  或 http://images.moguit.cn
+     */
+    private String pictureBaseUrl;
+
+    /**
      * 邮箱账号
      */
     private String email;

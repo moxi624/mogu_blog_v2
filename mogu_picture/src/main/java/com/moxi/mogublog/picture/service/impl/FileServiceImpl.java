@@ -45,6 +45,9 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     @Override
     public String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas, Map<String, String> qiNiuConfig) {
 
+        String uploadQiNiu = qiNiuConfig.get("uploadQiNiu");
+        String uploadLocal = qiNiuConfig.get("uploadLocal");
+
         // 判断来源
         String source = request.getParameter("source");
         //如果是用户上传，则包含用户uid
@@ -135,36 +138,48 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         + DateUtils.getMonth() + "/" + DateUtils.getDay() + "/" + newFileName;
                 log.info("newPath====" + newPath);
                 String saveUrl = newPath + newFileName;
-                java.io.File file1 = new java.io.File(newPath);
-                if (!file1.exists()) {
-                    file1.mkdirs();
-                }
 
-                // 将图片上传到本地服务器中以及七牛云中
                 BufferedOutputStream out = null;
                 QiniuUtil qn = new QiniuUtil();
                 String qiNiuUrl = "";
                 List<String> list = new ArrayList<>();
                 java.io.File dest= null;
+                java.io.File saveFile = null;
                 try {
 
-                    // 保存本地
-                    java.io.File saveFile = new java.io.File(saveUrl);
+                    // 判断是否能够上传至本地
+                    if("1".equals(uploadLocal)) {
+                        // 保存本地，创建目录
+                        java.io.File file1 = new java.io.File(newPath);
+                        if (!file1.exists()) {
+                            file1.mkdirs();
+                        }
+                        saveFile = new java.io.File(saveUrl);
+                    }
+
+
                     MultipartFile tempData = filedata;
 
-                    // 上传七牛云
-                    // 创建一个临时目录文件
-                    String tempFiles = "temp/" + newFileName;
-                    dest = new java.io.File(tempFiles);
-                    if (!dest.getParentFile().exists()) {
-                        dest.getParentFile().mkdirs();
+                    // 上传七牛云，判断是否能够上传七牛云
+                    if("1".equals(uploadQiNiu)) {
+                        // 创建一个临时目录文件
+                        String tempFiles = "temp/" + newFileName;
+                        dest = new java.io.File(tempFiles);
+                        if (!dest.getParentFile().exists()) {
+                            dest.getParentFile().mkdirs();
+                        }
+                        out = new BufferedOutputStream(new FileOutputStream(dest));
+                        out.write(filedata.getBytes());
+                        qiNiuUrl = qn.uoloapQiniu(dest, qiNiuConfig);
                     }
-                    out = new BufferedOutputStream(new FileOutputStream(dest));
-                    out.write(filedata.getBytes());
-                    qiNiuUrl = qn.uoloapQiniu(dest, qiNiuConfig);
 
-                    saveFile.createNewFile();
-                    tempData.transferTo(saveFile);
+                    // 判断是否能够上传至本地
+                    if("1".equals(uploadLocal)) {
+                        // 序列化文件到本地
+                        saveFile.createNewFile();
+                        tempData.transferTo(saveFile);
+                    }
+
 
                 }catch (QiniuException e) {
                     log.info("==上传七牛云异常===url:" + saveUrl + "-----");

@@ -32,6 +32,8 @@ public class QiniuUtil {
     @Autowired
     AdminFeignClient adminFeignClient;
 
+
+
     /**
      * 七牛云上传图片
      * @param localFilePath
@@ -44,6 +46,7 @@ public class QiniuUtil {
         String secretKey = qiNiuConfig.get("qiNiuSecretKey");
         String bucket = qiNiuConfig.get("qiNiuBucket");
         String area = qiNiuConfig.get("qiNiuArea");
+        String pictureBaseUrl = qiNiuConfig.get("pictureBaseUrl");
 
         //构造一个带指定Zone对象的配置类
         Configuration cfg = null;
@@ -87,7 +90,7 @@ public class QiniuUtil {
 
         log.info("{七牛图片上传key: "+ putRet.key+",七牛图片上传hash: "+ putRet.hash+"}");
 
-        result = "http://image.moguit.cn/" + putRet.key;
+        result = pictureBaseUrl + putRet.key;
 
         return result;
     }

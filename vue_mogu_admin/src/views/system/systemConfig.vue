@@ -10,9 +10,13 @@
           style="margin-left: 20px;"
           label-position="left"
           :model="form"
-          label-width="100px"
+          label-width="120px"
           ref="from"
         >
+          <el-form-item label="图片域名">
+            <el-input v-model="form.pictureBaseUrl" style="width: 400px"></el-input>
+          </el-form-item>
+
           <el-form-item label="七牛云公钥">
             <el-input v-model="form.qiNiuAccessKey" style="width: 400px"></el-input>
           </el-form-item>
@@ -32,6 +36,32 @@
                          :label="item.label"
                          :value="item.value"></el-option>
             </el-select>
+          </el-form-item>
+
+          <el-form-item label="图片上传七牛云">
+            <el-switch
+              v-model="form.uploadQiNiu"
+              active-text="是"
+              inactive-text="否">
+            </el-switch>
+          </el-form-item>
+
+          <el-form-item label="图片上传本地">
+            <el-switch
+              v-model="form.uploadLocal"
+              active-text="是"
+              inactive-text="否">
+            </el-switch>
+          </el-form-item>
+
+          <el-form-item label="图片显示优先级">
+            <el-switch
+              v-model="form.picturePriority"
+              active-text="七牛云"
+              inactive-text="本地"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
           </el-form-item>
 
           <el-form-item>
@@ -110,19 +140,82 @@ export default {
 
   },
   created() {
-    getSystemConfig().then(response => {
-      if (response.code == "success") {
-        console.log("得到的结果", response);
-        if (response.data) {
-          this.form = response.data;
-        }
-      }
-    });
 
+    this.getSystemConfigList()
   },
   methods: {
+    getSystemConfigList: function() {
+      getSystemConfig().then(response => {
+        if (response.code == "success") {
+          console.log("得到的结果", response);
+          if (response.data) {
+
+            // 进行一些转换
+            var form = response.data;
+
+            this.form = this.formFormat(form, 1)
+
+          }
+        }
+      });
+    },
+    /**
+     * 格式化form，type = 1 为将 状态转换成true false
+     * @param form
+     * @param type
+     * @returns {*}
+     */
+    formFormat(form, type) {
+
+      if(type === 1) {
+
+        if(form.uploadLocal === "1") {
+          form.uploadLocal = true;
+        } else {
+          form.uploadLocal = false;
+        }
+
+        if(form.uploadQiNiu === "1") {
+          form.uploadQiNiu = true;
+        } else {
+          form.uploadQiNiu = false;
+        }
+
+        if(form.picturePriority === "1") {
+          form.picturePriority = true;
+        } else {
+          form.picturePriority = false;
+        }
+
+      } else {
+
+        if(form.uploadLocal === true) {
+          form.uploadLocal = "1";
+        } else {
+          form.uploadLocal = "0";
+        }
+
+        if(form.uploadQiNiu === true) {
+          form.uploadQiNiu = "1";
+        } else {
+          form.uploadQiNiu = "0";
+        }
+
+        if(form.picturePriority === true) {
+          form.picturePriority = "1";
+        } else {
+          form.picturePriority = "0";
+        }
+      }
+
+      return form;
+    },
     submitForm: function() {
-      editSystemConfig(this.form).then(response => {
+      var form = this.form
+      console.log("格式化前的form", form)
+      form = this.formFormat(form , 0)
+      console.log("格式化后的form", form)
+      editSystemConfig(form).then(response => {
         if ((response.code = "success")) {
           this.$notify({
             title: "成功",
@@ -135,6 +228,7 @@ export default {
             message: response.data
           });
         }
+        this.getSystemConfigList();
       });
     },
 

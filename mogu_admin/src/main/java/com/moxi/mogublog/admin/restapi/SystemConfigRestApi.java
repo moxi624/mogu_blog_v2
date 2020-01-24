@@ -59,17 +59,25 @@ public class SystemConfigRestApi {
     @OperationLogger(value = "修改系统配置")
     @ApiOperation(value = "修改系统配置", notes = "修改系统配置")
     @PostMapping("/editSystemConfig")
-    public String editSystemConfig( @RequestBody SystemConfigVO systemConfigVO, BindingResult result) {
+    public String editSystemConfig( @RequestBody SystemConfigVO systemConfigVO) {
 
+
+        if("0".equals(systemConfigVO.getUploadLocal()) && "0".equals(systemConfigVO.getUploadQiNiu())) {
+            return ResultUtil.result(SysConf.ERROR, "图片必须选择上传到一个区域");
+        }
         if (StringUtils.isEmpty(systemConfigVO.getUid())) {
 
             SystemConfig systemConfig = new SystemConfig();
 
             // 设置七牛云相关
+            systemConfig.setPictureBaseUrl(systemConfigVO.getPictureBaseUrl());
             systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
             systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
             systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
             systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
+            systemConfig.setUploadLocal(systemConfigVO.getUploadLocal());
+            systemConfig.setUploadQiNiu(systemConfigVO.getUploadQiNiu());
+            systemConfig.setPicturePriority(systemConfigVO.getPicturePriority());
 
             // 设置邮箱相关
             systemConfig.setEmail(systemConfigVO.getEmail());
@@ -83,10 +91,14 @@ public class SystemConfigRestApi {
 
             SystemConfig systemConfig = systemConfigService.getById(systemConfigVO.getUid());
             // 设置七牛云相关
+            systemConfig.setPictureBaseUrl(systemConfigVO.getPictureBaseUrl());
             systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
             systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
             systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
             systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
+            systemConfig.setUploadLocal(systemConfigVO.getUploadLocal());
+            systemConfig.setUploadQiNiu(systemConfigVO.getUploadQiNiu());
+            systemConfig.setPicturePriority(systemConfigVO.getPicturePriority());
 
             // 设置邮箱相关
             systemConfig.setEmail(systemConfigVO.getEmail());
@@ -95,6 +107,7 @@ public class SystemConfigRestApi {
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
             systemConfig.updateById();
+
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
