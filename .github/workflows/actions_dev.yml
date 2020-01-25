@@ -34,7 +34,7 @@ jobs:
         mv -f ./mogu_prod_configuration/dev_config/mogu_picture/application.yml ./mogu_picture/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/dev_config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/dev_config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/dev_config/mogu_elasticsearch/application.yml ./mogu_elasticsearch/src/main/resources/application.yml
+        mv -f ./mogu_prod_configuration/dev_config/mogu_search/application.yml ./mogu_search/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/dev_config/vue_mogu_admin/config.js ./vue_mogu_admin/static/ckeditor/config.js
         mv -f ./mogu_prod_configuration/dev_config/vue_mogu_admin/prod.env.js ./vue_mogu_admin/config/prod.env.js
         mv -f ./mogu_prod_configuration/dev_config/vue_mogu_web/prod.env.js ./vue_mogu_web/config/prod.env.js
@@ -63,7 +63,7 @@ jobs:
         mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
         mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
         mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
-        mv ./mogu_elasticsearch/target/mogu_elasticsearch-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_elasticsearch-0.0.1-SNAPSHOT.jar
+        mv ./mogu_search/target/mogu_search-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_search-0.0.1-SNAPSHOT.jar
         mv ./vue_mogu_web/dist ./transfer_files/web_dist
         mv ./vue_mogu_admin/dist ./transfer_files/admin_dist
         tar -zcvf  transfer_files.tar.gz transfer_files/
@@ -151,17 +151,17 @@ jobs:
           fi
           mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
           
-          echo "################# mogu_elasticsearch moving #################"
+          echo "################# mogu_search moving #################"
 
-          if [ -f "/home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar.bak" ];then
-            echo "mogu_elasticsearch.jar.bak exists and is being deleted"
-            rm -f /home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar.bak
+          if [ -f "/home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_search.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak
           fi
-          if [ -f "/home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar" ];then
-            echo "mogu_elasticsearch.jar exists and is being backup"
-            mv /home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar.bak
+          if [ -f "/home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_search.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak
           fi
-          mv /home/transfer_files/mogu_elasticsearch-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_elasticsearch/mogu_elasticsearch-0.0.1-SNAPSHOT.jar
+          mv /home/transfer_files/mogu_search-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar
 
 
           echo "################# vue_mogu_web moving #################"
@@ -251,7 +251,7 @@ jobs:
           cd /home/mogu_blog/mogu_web/
           ./shutdown.sh
           ./startup.sh
-    - name: Start mogu_elasticsearch
+    - name: Start mogu_search
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DOCKER_IP_DEV }}
@@ -259,6 +259,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
         script: |
-          cd /home/mogu_blog/mogu_elasticsearch/
+          cd /home/mogu_blog/mogu_search/
           ./shutdown.sh
           ./startup.sh
