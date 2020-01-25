@@ -322,7 +322,7 @@ export const constantRouterMap = [
       {
         path: 'Solr',
         name: 'Solr',
-        component: () => import('@/views/monitor/solr'),
+        component: () => import('@/views/monitor/Solr'),
         meta: { title: 'Solr', icon: 'index' }
       },
       {
