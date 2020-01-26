@@ -8,10 +8,9 @@
         <a href="/" class="n1">网站首页</a>
         <a href="/" class="n2">留言</a>
       </h1>
-      <a-anchor>
+
         <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                     :showCancel="showCancel" ></CommentBox>
-      </a-anchor>
 
 
       <div class="message_infos">
@@ -82,7 +81,7 @@
             } else {
               this.$notify.error({
                 title: '错误',
-                message: "发表失败，请稍后再试",
+                message: response.data,
                 offset: 100
               });
             }
@@ -96,6 +95,7 @@
         params.currentPage = 0;
         params.pageSize = 10;
         getCommentList(params).then(response => {
+          console.log("得到的评论内容", response)
           if (response.code == "success") {
             this.comments = response.data;
             this.setCommentList(this.comments);
@@ -106,20 +106,7 @@
   }
   ;
 </script>
-<style>
-  .ant-comment-actions {
-    margin-top: -20px;
-  }
-  .ant-anchor-ink {
-    position: relative;
-  }
-  .ant-form-item {
-    margin-bottom: 1px;
-  }
-  .contain {
-    width: 600px;
-    margin: 0 auto;
-  }
+<style scoped>
   .message_infos {
     width: 100%;
     min-height: 500px;

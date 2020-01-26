@@ -1,45 +1,40 @@
 <template>
   <div>
-    <a-comment v-for="item in comments" :key="item.uid">
-      <span class="actions" slot="actions">
-        <span class="sp1" @click="replyTo(item)">回复</span>
-      </span>
+    <div v-for="item in comments" :key="item.uid">
+      <div class="commentList">
+        <span class="left p1">
+          <img :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'" />
+        </span>
 
-      <span class="actions" slot="actions">
-        <span class="sp1" @click="report(item)">举报</span>
-      </span>
+        <span class="right p1">
+          <div class="rightTop" v-if="item.user">
+            <el-link class="userName" :underline="false">{{item.user.nickName}}</el-link>
+            <span class="timeAgo">{{timeAgo(item.createTime)}}</span>
+          </div>
 
-      <span class="actions" slot="actions">
-        <span class="sp1" @click="delComment(item)">删除</span>
-      </span>
+          <div class="rightCenter">
+            {{item.content}}
+          </div>
 
-      <!--      <span class="actions" slot="actions" v-if="item.replyList && item.replyList.length > 0">-->
-      <!--        <span class="sp1" @click="taggleAll(item)">收起</span>-->
-      <!--      </span>-->
+          <div class="rightBottom">
+            <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
+            <el-link class="b1" :underline="false" @click="report(item)">举报</el-link>
+            <el-link class="b1" :underline="false" @click="delComment(item)">删除</el-link>
+          </div>
 
-      <span class="author" slot="author" v-if="item.user">
-        <span class="s1">{{item.user.nickName}}</span>
-        <span class="s2">{{timeAgo(item.createTime)}}</span>
+          <div class="rightCommentList">
+            <CommentBox class="comment" :userInfo="userInfo" :toInfo="toInfo" :id="item.uid" :commentInfo="commentInfo"
+                        @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>
 
-      </span>
-      <a-avatar
-        class="avatarPhoto"
-        slot="avatar"
-        :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
-        :alt="item.nickName"
-      />
-      <p slot="content">
-        {{item.content}}
-      </p>
-
-      <CommentBox class="comment" :userInfo="userInfo" :toInfo="toInfo" :id="item.uid" :commentInfo="commentInfo"
-                  @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>
-
-      <CommentList class="commentStyle" :id="'commentStyle:' + item.uid" :comments="item.replyList" :commentInfo="commentInfo"></CommentList>
-
-    </a-comment>
+            <CommentList class="commentStyle" :id="'commentStyle:' + item.uid" :comments="item.replyList" :commentInfo="commentInfo"></CommentList>
+          </div>
+        </span>
+      </div>
+    </div>
   </div>
+
 </template>
+
 <script>
 
   import {mapMutations} from 'vuex';
@@ -341,39 +336,67 @@
     },
   };
 </script>
-<style>
+
+
+<style scoped>
+  .commentStyle {
+    display: block;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-left: 1px dashed SlateGray;
+  }
   .comment {
     display: none;
   }
-
-
-  .commentStyle {
-    display: block;
-    margin-left: 5px;
-    /*border-right: 1px solid #dfdfdf;*/
-    border-left: 1px dashed SlateGray;
+  .commentList {
+    width: 100%;
+    margin: 0 auto;
   }
-
-  .avatarPhoto {
+  .commentList .p1 {
+    float: left;
+  }
+  .commentList .left {
+    display: inline-block;
+    width: 4%;
+    height: 100%;
+  }
+  .commentList .left img {
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 50%;
+  }
+  .commentList .right {
+    display: inline-block;
+    width: 95%;
+    margin-left: 5px;
+  }
+  .commentList .rightTop {
+    height: 30px;
+  }
+  .commentList .rightTop .userName {
+    color: #303133;
     margin-left: 10px;
-  }
-  .actions .sp1 {
-    margin-left: 5px;
-  }
-
-  .author .s1 {
-    cursor: pointer;
-    color: #333333;
-    font-weight: bold;
     font-size: 16px;
-    margin-left: 5px;
+    font-weight: bold;
   }
-
-  .author .s1:hover {
-    color: cornflowerblue;
+  .commentList .rightTop .timeAgo {
+    color: #909399;
+    margin-left: 10px;
+    font-size: 15px;
   }
+  .commentList .rightCenter {
+    margin-left: 20px;
+    height: 50px;
+  }
+  .commentList .rightBottom {
+    margin-left: 10px;
+    height: 30px;
+  }
+  .commentList .rightBottom el-link {
 
-  .author .s2 {
+  }
+  .commentList .rightBottom .b1 {
     margin-left: 10px;
   }
+
 </style>

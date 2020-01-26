@@ -136,7 +136,7 @@ footer a { color: #a5a4a4 }
 /* zhuanti */
 .zhuanti { overflow: hidden }
 .zhuanti ul { width: 100%; overflow: hidden; display: block; clear: both; }
-.zhuanti li { margin: 0 0 20px 0; overflow: hidden; position: relative; }
+.zhuanti li { margin: 0 0 20px 0; overflow: hidden; height: 200px; position: relative; }
 .zhuanti li i { background: #000; display: block }
 .zhuanti img { width: 100%; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; opacity: 0.5 }
 .zhuanti p { position: absolute; top: 30%; left: 0; right: 0; color: #FFF; text-align: center; font-size: 15px; overflow: hidden; margin-top: 5px; padding: 0 40px; }

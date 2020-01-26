@@ -132,7 +132,11 @@ public class JsonUtils {
      */
     public static Map<String, Object> jsonToMap(String json) {
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls()
+                .create();
         Map<String, Object> map = null;
         try {
             Type type = new TypeToken<Map<String, Object>>() {
@@ -156,7 +160,12 @@ public class JsonUtils {
      */
     public static <T> T mapToPojo(Map<String, Object> map, Class<T> beanType) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls()
+                .create();
+
         JsonElement jsonElement = gson.toJsonTree(map);
         T pojo = gson.fromJson(jsonElement, beanType);
 

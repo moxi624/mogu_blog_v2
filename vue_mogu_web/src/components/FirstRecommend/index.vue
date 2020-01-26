@@ -101,7 +101,7 @@ export default {
 
 <style>
   .el-carousel__container {
-    height: 450px;
+    height: 450px !important;;
   }
 .carousel-title span {
   color: white;
@@ -111,24 +111,24 @@ export default {
 
 @media only screen and (max-width: 1200px) {
   .el-carousel__container {
-    height: 360px;
+    height: 360px !important;;
   }
 }
   @media only screen and (max-width: 1000px) {
     .el-carousel__container {
-      height: 340px;
+      height: 340px !important;;
     }
   }
 
   @media only screen and (max-width: 960px) {
     .el-carousel__container {
-      height: 280px;
+      height: 280px !important;;
     }
   }
 
   @media only screen and (max-width: 500px) {
     .el-carousel__container {
-      height: 200px;
+      height: 200px !important;;
     }
   }
 

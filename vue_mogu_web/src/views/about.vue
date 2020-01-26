@@ -8,10 +8,8 @@
         <a href="/" class="n2">关于我</a>
       </h1>
       <div class="news_infos">
-          <a-anchor>
             <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                         :showCancel="showCancel" ></CommentBox>
-          </a-anchor>
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
             <div class="noComment" v-if="comments.length ==0">
@@ -108,7 +106,7 @@ export default {
           } else {
             this.$notify.error({
               title: '错误',
-              message: "发表失败，请稍后再试",
+              message: response.data,
               offset: 100
             });
           }

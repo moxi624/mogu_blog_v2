@@ -1,34 +1,27 @@
 <template>
   <div>
-    <a-comment>
+    <div class="commentBox">
+    <span class="left">
+      <img :src="getUserPhoto" />
+    </span>
 
-      <a-avatar
-        slot="avatar"
-        :src="getUserPhoto"
-        alt="item.userName"
-      />
-
-      <div slot="content">
-        <a-form-item>
-          <a-textarea :rows="4" @change="handleChange" :value="value"></a-textarea>
-        </a-form-item>
-        <a-form-item>
-          <a-button htmlType="submit" :loading="submitting" @click="handleSubmit" type="primary">
-            添加评论
-          </a-button>
-          <a-button v-if="showCancel" style="margin-left:5px;"  @click="handleCancle">
-            取消评论
-          </a-button>
-        </a-form-item>
-      </div>
-    </a-comment>
+      <span class="right">
+      <textarea class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @input="vaildCount"></textarea>
+    </span>
+    </div>
+    <div class="bottom">
+      <el-button class="submit p2" type="primary"  @click="handleSubmit">发送评论</el-button>
+      <el-button class="cancel p2" type="info" @click="handleCancle">取消评论</el-button>
+      <span class="allow p2">还能输入{{count}}个字符</span>
+    </div>
   </div>
+
 </template>
+
 <script>
-
   import {mapGetters} from 'vuex';
-
   export default {
+    name: 'CommentBox',
     props: {
       userInfo: {
         type: Object
@@ -53,16 +46,21 @@
         submitting: false,
         value: '',
         user: {},
-      };
+        count: 255,
+      }
     },
     computed: {
       ...mapGetters(['getUserPhoto'])
     },
-    mounted() {
-
-    },
     methods: {
-
+      vaildCount: function() {
+        var count = 255 - this.value.length;
+        if(count <= 0) {
+          this.count = 0
+        } else {
+          this.count = count;
+        }
+      },
       handleSubmit() {
         let info = this.$store.state.user.userInfo
         let isLogin = this.$store.state.user.isLogin
@@ -113,16 +111,62 @@
         }
 
         this.value = '';
+        this.count = 255;
         this.$emit("submit-box", this.comments)
-      },
-      handleChange(e) {
-        this.value = e.target.value;
       },
       handleCancle() {
         this.value = '';
-        // this.$emit("cancel-box", this.replyInfo.replyUid)
+        this.count = 255;
         this.$emit("cancel-box", this.toInfo.commentUid)
       }
     },
   };
 </script>
+
+
+<style scoped>
+  .commentBox {
+    width: 100%;
+    height: 100px;
+    margin: 0 auto;
+  }
+  .commentBox .left {
+    display: inline-block;
+    width: 4%;
+    height: 100%;
+    padding-top: 3px;
+  }
+  .commentBox .left img {
+    cursor: pointer;
+    margin: 0 auto;
+    width: 90%;
+    border-radius: 50%;
+  }
+  .commentBox .right {
+    display: inline-block;
+    width: 95%;
+    height: 100%;
+  }
+  textarea::-webkit-input-placeholder {
+    color: #909399;
+  }
+  .commentBox .right textarea {
+    color: #606266;
+    padding:10px 5px 5px 10px;
+    resize: none;
+    width: 100%;
+    height: 100%;
+  }
+  .bottom {
+    width: 100%;
+    height: 60px;
+    line-height: 40px;
+    margin-top: 20px;
+  }
+  .bottom .p2 {
+    float: right;
+    margin-top: 5px;
+    margin-right: 10px;
+  }
+
+</style>

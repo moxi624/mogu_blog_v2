@@ -8,8 +8,9 @@ module.exports = {
   // WEB_API: '"http://101.132.194.128:8603"',
 
   //配置线上环境
-  WEB_API: '"http://101.132.194.128:8603"',
-  PICTURE_HOST: '"http://picture.moguit.cn"',
+  WEB_API: '"http://101.132.122.175:8603"',
+  PICTURE_HOST: '""',
+  ELASTICSEARCH: '"http://101.132.122.175:8605"',
 
   // 配置测试环境
   // WEB_API: '"http://192.168.1.101:8603"',
