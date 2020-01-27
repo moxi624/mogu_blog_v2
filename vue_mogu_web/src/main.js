@@ -12,12 +12,8 @@ import router from './router'
 import store from './store'
 
 // 引入公共JS
-import $ from 'jquery'
-import easyfader from '../static/js/jquery.easyfader.min.js'
-import scrollReveal from '../static/js/scrollReveal.js'
-import common from '../static/js/common.js'
 import "@/assets/iconfont/iconfont.css";
-// import nav from '../static/js/nav.js'
+import '../static/css/index.css';
 
 Vue.config.productionTip = false
 

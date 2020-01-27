@@ -13,5 +13,5 @@ export default {
 </script>
 
 <style>
- @import '../static/css/index.css';
+
 </style>

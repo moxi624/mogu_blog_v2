@@ -75,10 +75,8 @@
         <h2>文章评论</h2>
         <ul>
 
-          <a-anchor>
             <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                         :showCancel="showCancel" ></CommentBox>
-          </a-anchor>
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
             <div class="noComment" v-if="comments.length ==0">
@@ -90,6 +88,7 @@
       </div>
     </div>
     <div class="sidebar">
+      
       <!-- 三级推荐 -->
       <ThirdRecommend></ThirdRecommend>
 

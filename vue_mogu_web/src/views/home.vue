@@ -351,7 +351,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   #starlist li .title {
     color: #00a7eb;
   }

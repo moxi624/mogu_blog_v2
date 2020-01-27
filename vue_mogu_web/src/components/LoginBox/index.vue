@@ -48,7 +48,7 @@
           </el-tooltip>
 
         </el-row>
-        <div class="loginTip">登录过的用户请沿用之前的登录方式</div>
+        <div class="loginTip">目前仅支持码云和Github登录</div>
       </el-form>
     </div>
 
