@@ -8,14 +8,16 @@
         <a href="/" class="n2">关于我</a>
       </h1>
       <div class="news_infos">
-            <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
-                        :showCancel="showCancel" ></CommentBox>
-          <div class="message_infos">
-            <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
-            <div class="noComment" v-if="comments.length ==0">
-              还没有评论，快来抢沙发吧！
-            </div>
+        <sticky :sticky-top="60">
+          <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
+                      :showCancel="showCancel" ></CommentBox>
+        </sticky>
+        <div class="message_infos">
+          <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
+          <div class="noComment" v-if="comments.length ==0">
+            还没有评论，快来抢沙发吧！
           </div>
+        </div>
       </div>
       <div class="sidebar">
         <div class="about">
@@ -43,6 +45,7 @@ import CommentList from "../components/CommentList";
 import CommentBox from "../components/CommentBox";
 import {mapMutations} from 'vuex';
 import {addComment, getCommentList} from "../api/comment";
+import Sticky from '@/components/Sticky'
 
 export default {
   name: "about",
@@ -68,7 +71,8 @@ export default {
     //注册组件
     FollowUs,
     CommentList,
-    CommentBox
+    CommentBox,
+    Sticky
   },
 
   created() {

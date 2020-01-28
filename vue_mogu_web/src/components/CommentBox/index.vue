@@ -129,6 +129,7 @@
     width: 100%;
     height: 100px;
     margin: 0 auto;
+    background: #f6f6f6;
   }
   .commentBox .left {
     display: inline-block;
@@ -144,6 +145,7 @@
   }
   .commentBox .right {
     display: inline-block;
+    margin: 5px 2px 0 0;
     width: 95%;
     height: 100%;
   }
@@ -154,7 +156,7 @@
     color: #606266;
     padding:10px 5px 5px 10px;
     resize: none;
-    width: 100%;
+    width: 98%;
     height: 100%;
   }
   .bottom {

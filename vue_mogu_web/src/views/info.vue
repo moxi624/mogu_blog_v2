@@ -74,9 +74,10 @@
       <div class="news_pl">
         <h2>文章评论</h2>
         <ul>
-
+          <sticky :sticky-top="60">
             <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                         :showCancel="showCancel" ></CommentBox>
+          </sticky>
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
             <div class="noComment" v-if="comments.length ==0">
@@ -88,7 +89,7 @@
       </div>
     </div>
     <div class="sidebar">
-      
+
       <!-- 三级推荐 -->
       <ThirdRecommend></ThirdRecommend>
 
@@ -131,6 +132,7 @@
   import HotBlog from "../components/HotBlog";
   import FollowUs from "../components/FollowUs";
   import PayCode from "../components/PayCode";
+  import Sticky from '@/components/Sticky'
 
   import {addComment, getCommentList} from "../api/comment";
 
@@ -166,7 +168,8 @@
       FollowUs,
       PayCode,
       CommentList,
-      CommentBox
+      CommentBox,
+      Sticky
     },
     created() {
       getLink().then(response => {

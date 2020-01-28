@@ -8,9 +8,10 @@
         <a href="/" class="n1">网站首页</a>
         <a href="/" class="n2">留言</a>
       </h1>
-
+      <sticky :sticky-top="60">
         <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                     :showCancel="showCancel" ></CommentBox>
+      </sticky>
 
 
       <div class="message_infos">
@@ -27,6 +28,7 @@
 <script>
   import CommentList from "../components/CommentList";
   import CommentBox from "../components/CommentBox";
+  import Sticky from '@/components/Sticky'
   import {addComment, getCommentList} from "../api/comment";
 
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -53,7 +55,8 @@
     computed: {},
     components: {
       CommentList,
-      CommentBox
+      CommentBox,
+      Sticky
     },
     created() {
       this.getCommentList();
@@ -93,7 +96,7 @@
         let params = {};
         params.source = "MESSAGE_BOARD";
         params.currentPage = 0;
-        params.pageSize = 10;
+        params.pageSize = 100;
         getCommentList(params).then(response => {
           console.log("得到的评论内容", response)
           if (response.code == "success") {
