@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.CommentReport;
 import com.moxi.mogublog.xo.entity.User;
@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -68,6 +69,8 @@ public class CommentRestApi {
     @Autowired
     private CommentReportService commentReportService;
 
+    @Autowired
+    WebUtils webUtils;
 
     /**
      * 获取评论列表
@@ -126,7 +129,7 @@ public class CommentRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Map<String, String> pictureMap = new HashMap<>();
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -206,8 +209,8 @@ public class CommentRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(user.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
-            if (WebUtils.getPicture(pictureList).size() > 0) {
-                user.setPhotoUrl(WebUtils.getPicture(pictureList).get(0));
+            if (webUtils.getPicture(pictureList).size() > 0) {
+                user.setPhotoUrl(webUtils.getPicture(pictureList).get(0));
             }
         }
         comment.setUser(user);

@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,9 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "搜索RestApi", tags = {"SearchRestApi"})
 @Slf4j
 public class SearchRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     TagService tagService;
@@ -115,7 +119,7 @@ public class SearchRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -333,8 +337,8 @@ public class SearchRestApi {
      */
     private List<Blog> setBlog(List<Blog> list) {
         final StringBuffer fileUids = new StringBuffer();
-        List<String> sortUids = new ArrayList<String>();
-        List<String> tagUids = new ArrayList<String>();
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
@@ -352,7 +356,7 @@ public class SearchRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         if (sortUids.size() > 0) {

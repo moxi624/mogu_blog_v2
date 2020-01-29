@@ -9,9 +9,9 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -47,6 +48,9 @@ import java.util.*;
 @RequestMapping("/resourceSort")
 @Slf4j
 public class ResourceSortRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     ResourceSortService resourceSortService;
@@ -82,7 +86,7 @@ public class ResourceSortRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get("uid").toString(), item.get("url").toString());

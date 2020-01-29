@@ -30,4 +30,11 @@ public interface UserService extends SuperService<User> {
      * @return
      */
     User getUserBySourceAnduuid(String source, String uuid);
+
+    /**
+     * 获取用户数
+     * @param status
+     * @return
+     */
+    public Integer getUserCount(int status);
 }

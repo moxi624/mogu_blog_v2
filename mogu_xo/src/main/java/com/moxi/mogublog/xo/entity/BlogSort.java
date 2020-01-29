@@ -40,5 +40,5 @@ public class BlogSort extends SuperEntity<BlogSort> {
     /**
      * 排序字段，数值越大，越靠前
      */
-    private int sort;
+    private Integer sort;
 }

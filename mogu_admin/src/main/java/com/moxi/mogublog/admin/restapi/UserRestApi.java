@@ -9,9 +9,9 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.UserVO;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,9 @@ import java.util.Map;
 @RequestMapping("/user")
 @Slf4j
 public class UserRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     UserService userService;
@@ -90,7 +94,7 @@ public class UserRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());

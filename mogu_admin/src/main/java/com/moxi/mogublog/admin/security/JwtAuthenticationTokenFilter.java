@@ -123,7 +123,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 从picture服务传递过来的token，如果有说明执行了上传操作
         final String pictureToken = request.getHeader("pictureToken");
-        if(StringUtils.isNotEmpty(pictureToken)) {
+        if (StringUtils.isNotEmpty(pictureToken)) {
             authHeader = pictureToken;
         }
 

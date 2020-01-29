@@ -107,11 +107,23 @@ public class BlogVO extends BaseVO<BlogVO> {
     private String levelKeyword;
 
     /**
+     * 使用Sort字段进行排序 （0：不使用， 1：使用），默认为0
+     */
+    private Integer useSort;
+
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private Integer sort;
+
+
+    /**
      * 无参构造方法，初始化默认值
      */
     BlogVO() {
         this.level = 0;
         this.isOriginal = "1";
         this.isPublish = "1";
+        this.useSort = 0;
     }
 }

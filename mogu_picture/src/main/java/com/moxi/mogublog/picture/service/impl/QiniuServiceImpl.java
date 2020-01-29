@@ -48,7 +48,7 @@ public class QiniuServiceImpl implements QiniuService {
             try {
                 out = new BufferedOutputStream(new FileOutputStream(dest));
                 out.write(file[i].getBytes());
-                result = qn.uoloapQiniu(dest, qiNiuConfig);
+                result = qn.uploadQiniu(dest, qiNiuConfig);
 
             } catch (Exception e) {
                 log.error(e.getMessage());

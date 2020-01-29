@@ -39,6 +39,7 @@ export default {
 
     var params = new URLSearchParams();
     params.append("level", 1);
+    params.append("useSort", 1);
     getBlogByLevel(params).then(response => {
       this.slideList = response.data.records;
     });

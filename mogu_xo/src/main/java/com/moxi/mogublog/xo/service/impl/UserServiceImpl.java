@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,5 +81,12 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         queryWrapper.eq(BaseSQLConf.UUID, uuid).eq(BaseSQLConf.SOURCE, source);
         return userService.getOne(queryWrapper);
 
+    }
+
+    @Override
+    public Integer getUserCount(int status) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseSQLConf.STATUS, status);
+        return userService.count(queryWrapper);
     }
 }

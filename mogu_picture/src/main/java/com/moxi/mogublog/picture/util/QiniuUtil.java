@@ -1,9 +1,6 @@
 package com.moxi.mogublog.picture.util;
 
 import com.google.gson.Gson;
-import com.moxi.mogublog.picture.feign.AdminFeignClient;
-import com.moxi.mogublog.picture.global.SysConf;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EQiNiuArea;
 import com.qiniu.common.QiniuException;
@@ -14,7 +11,6 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -29,24 +25,18 @@ import java.util.Map;
 @Component
 public class QiniuUtil {
 
-    @Autowired
-    AdminFeignClient adminFeignClient;
-
-
-
     /**
      * 七牛云上传图片
      * @param localFilePath
      * @return
      */
-    public String uoloapQiniu (File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
+    public String uploadQiniu (File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
 
         //生成上传凭证，然后准备上传
         String accessKey = qiNiuConfig.get("qiNiuAccessKey");
         String secretKey = qiNiuConfig.get("qiNiuSecretKey");
         String bucket = qiNiuConfig.get("qiNiuBucket");
         String area = qiNiuConfig.get("qiNiuArea");
-        String pictureBaseUrl = qiNiuConfig.get("pictureBaseUrl");
 
         //构造一个带指定Zone对象的配置类
         Configuration cfg = null;
@@ -90,7 +80,7 @@ public class QiniuUtil {
 
         log.info("{七牛图片上传key: "+ putRet.key+",七牛图片上传hash: "+ putRet.hash+"}");
 
-        result = pictureBaseUrl + putRet.key;
+        result = putRet.key;
 
         return result;
     }

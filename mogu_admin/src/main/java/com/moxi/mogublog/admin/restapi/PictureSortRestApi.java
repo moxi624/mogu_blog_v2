@@ -8,9 +8,9 @@ import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,9 @@ import java.util.Map;
 public class PictureSortRestApi {
 
     @Autowired
+    WebUtils webUtils;
+
+    @Autowired
     PictureSortService pictureSortService;
     @Autowired
     PictureFeignClient pictureFeignClient;
@@ -59,7 +63,7 @@ public class PictureSortRestApi {
             queryWrapper.like(SQLConf.NAME, keyword.trim());
         }
 
-        Page<PictureSort> page = new Page<PictureSort>();
+        Page<PictureSort> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
@@ -80,7 +84,7 @@ public class PictureSortRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get("uid").toString(), item.get("url").toString());

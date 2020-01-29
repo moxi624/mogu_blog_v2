@@ -9,16 +9,15 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.CommentService;
 import com.moxi.mogublog.xo.service.UserService;
-import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -29,13 +28,16 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -52,6 +54,9 @@ import java.util.*;
 @RequestMapping("/comment")
 @Slf4j
 public class CommentRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     CommentService commentService;
@@ -123,7 +128,7 @@ public class CommentRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Map<String, String> pictureMap = new HashMap<>();
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());

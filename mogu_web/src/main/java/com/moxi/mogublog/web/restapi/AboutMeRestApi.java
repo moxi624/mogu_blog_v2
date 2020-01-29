@@ -4,10 +4,10 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.service.AdminService;
 import io.swagger.annotations.Api;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -31,7 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "关于我 RestApi", tags = {"AboutMeRestApi"})
 @Slf4j
 public class AboutMeRestApi {
-
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -55,7 +57,7 @@ public class AboutMeRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
-            admin.setPhotoList(WebUtils.getPicture(pictureList));
+            admin.setPhotoList(webUtils.getPicture(pictureList));
         }
         log.info("获取用户信息");
         Admin result = new Admin();

@@ -1,5 +1,7 @@
 package com.moxi.mogublog.xo.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 
@@ -50,9 +52,16 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
     private String picturePriority;
 
     /**
-     * 图片服务器，域名前缀：   http://localhost:8600  或 http://images.moguit.cn
+     * 本地存储图片服务器，域名前缀：   http://localhost:8600
      */
-    private String pictureBaseUrl;
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String localPictureBaseUrl;
+
+    /**
+     * 七牛云存储图片服务器，域名前缀： http://images.moguit.cn
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String qiNiuPictureBaseUrl;
 
     /**
      * 邮箱账号

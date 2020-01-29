@@ -100,6 +100,12 @@ public class Blog extends SuperEntity<Blog> {
      */
     private Integer level;
 
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private Integer sort;
+
+
     // 以下字段不存入数据库，封装为了方便使用
 
     /**

@@ -65,7 +65,14 @@ public class BlogListener {
 
                 }
                 break;
+                case SysConf.EDIT_BATCH: {
 
+                    log.info("mogu-sms处理批量编辑博客");
+                    stringRedisTemplate.opsForValue().set("BLOG_SORT_BY_MONTH:", "");
+                    stringRedisTemplate.opsForValue().set("MONTH_SET", "");
+
+                }
+                break;
                 case SysConf.ADD: {
                     log.info("mogu-sms处理增加博客");
                     updateSearch(map);

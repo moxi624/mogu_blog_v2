@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.*;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,9 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "文章详情RestApi", tags = {"BlogContentRestApi"})
 @Slf4j
 public class BlogContentRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     TagService tagService;
@@ -293,7 +297,7 @@ public class BlogContentRestApi {
         //获取标题图片
         if (blog != null && !StringUtils.isEmpty(blog.getFileUid())) {
             String result = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
-            List<String> picList = WebUtils.getPicture(result);
+            List<String> picList = webUtils.getPicture(result);
             log.info("##### picList: #######" + picList);
             if (picList != null && picList.size() > 0) {
                 blog.setPhotoList(picList);

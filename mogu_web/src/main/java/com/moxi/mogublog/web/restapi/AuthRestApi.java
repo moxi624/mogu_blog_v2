@@ -6,6 +6,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mougblog.base.vo.FileVO;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,7 +45,8 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "认证RestApi", tags = {"AuthRestApi"})
 @Slf4j
 public class AuthRestApi {
-
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -147,9 +150,9 @@ public class AuthRestApi {
         } else {
 
             String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
-            List<String> photoList = WebUtils.getPicture(pictureList);
+            List<String> photoList = webUtils.getPicture(pictureList);
             if(photoList.size() > 0) {
-                user.setPhotoUrl(WebUtils.getPicture(pictureList).get(0));
+                user.setPhotoUrl(photoList.get(0));
             }
         }
         if (data.get(SysConf.NICKNAME) != null) {

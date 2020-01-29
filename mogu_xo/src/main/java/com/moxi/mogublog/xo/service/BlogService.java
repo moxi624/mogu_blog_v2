@@ -58,6 +58,14 @@ public interface BlogService extends SuperService<Blog> {
     public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level);
 
     /**
+     * 通过推荐等级获取博客Page，是否排序
+     *
+     * @param level
+     * @return
+     */
+    public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level, Integer useSort);
+
+    /**
      * 通过状态获取博客数量
      *
      * @author xzx19950624@qq.com

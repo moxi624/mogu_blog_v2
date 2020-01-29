@@ -14,6 +14,7 @@ public class BaseSQLConf {
     public final static String STATUS = "status";
     public final static String IS_PUBLISH = "is_publish";
     public final static String LEVEL = "level";
+    public final static String SORT = "sort";
 
     //user表
     public static final String USERNAME = "user_name";

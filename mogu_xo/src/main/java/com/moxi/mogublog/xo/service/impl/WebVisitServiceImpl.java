@@ -3,17 +3,23 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.mapper.WebVisitMapper;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -29,6 +35,9 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
     @Autowired
     WebVisitMapper webVisitMapper;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public void addWebVisit(String userUid, HttpServletRequest request, String behavior, String moduleUid, String otherData) {
 
@@ -39,7 +48,16 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         WebVisit webVisit = new WebVisit();
         String ip = IpUtils.getIpAddr(request);
         webVisit.setIp(ip);
-        webVisit.setIpSource(IpUtils.getAddresses("ip="+ip, "utf-8"));
+
+        //从Redis中获取IP来源
+        String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
+        if(StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
+            webVisit.setIpSource(addresses);
+            stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+        } else {
+            webVisit.setIpSource(jsonResult);
+        }
         webVisit.setOs(os);
         webVisit.setBrowser(browser);
         webVisit.setUserUid(userUid);
@@ -59,7 +77,7 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         String endTime = DateUtils.getToDayEndTime();
         queryWrapper.between(BaseSQLConf.CREATE_TIME, startTime, endTime);
         List<WebVisit> list = webVisitMapper.selectList(queryWrapper);
-        Set<String> ipSet = new HashSet<String>();
+        Set<String> ipSet = new HashSet<>();
 
         // 根据IP统计访问今日访问次数
         for (WebVisit webVisit : list) {

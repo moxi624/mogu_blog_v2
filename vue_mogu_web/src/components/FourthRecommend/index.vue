@@ -31,6 +31,7 @@ export default {
       fourthParams.append("currentPage", 0);
       fourthParams.append("pageSize", 5);
       fourthParams.append("level", 4);
+      fourthParams.append("useSort", 1);
       getBlogByLevel(fourthParams).then(response => {
         this.fourthData = response.data.records;
       });

@@ -157,6 +157,7 @@ export default {
       if (response.code == "success") {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;
+        this.userTotal = response.data.userCount;
         this.visitAddTotal = response.data.visitCount;
       }
     });

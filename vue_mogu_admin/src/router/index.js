@@ -65,7 +65,12 @@ export const constantRouterMap = [
         component: () => import('@/views/blog/blogSort'),
         meta: { title: '分类管理', icon: 'sort' }
       },
-
+      {
+        path: 'blogRecommend',
+        name: '推荐管理',
+        component: () => import('@/views/blog/blogRecommend'),
+        meta: { title: '推荐管理', icon: 'sort' }
+      },
       {
         path: 'collect',
         name: '收藏管理',

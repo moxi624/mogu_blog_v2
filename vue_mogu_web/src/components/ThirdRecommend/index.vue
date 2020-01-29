@@ -25,6 +25,7 @@ export default {
       thirdParams.append("currentPage", 0);
       thirdParams.append("pageSize", 3);
       thirdParams.append("level", 3);
+      thirdParams.append("useSort", 1);
       getBlogByLevel(thirdParams).then(response => {
         if (response.code == "success") {
           this.thirdData = response.data.records;

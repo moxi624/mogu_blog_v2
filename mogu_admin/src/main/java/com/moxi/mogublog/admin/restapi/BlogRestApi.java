@@ -10,9 +10,9 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -64,6 +65,10 @@ public class BlogRestApi {
 
     @Autowired
     BlogService blogService;
+
+    @Autowired
+    WebUtils webUtils;
+
     @Autowired
     TagService tagService;
     @Autowired
@@ -121,7 +126,14 @@ public class BlogRestApi {
 
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        // 是否启动排序字段
+        if (blogVO.getUseSort() == 0) {
+            // 未使用，默认按时间倒序
+            queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        } else {
+            // 使用，默认按sort值大小倒序
+            queryWrapper.orderByDesc(SQLConf.SORT);
+        }
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
@@ -153,7 +165,8 @@ public class BlogRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
         Collection<Tag> tagList = tagService.listByIds(tagUids);
 
@@ -218,6 +231,7 @@ public class BlogRestApi {
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
 
         String addVerdictResult = addVerdict(count, blogVO.getLevel());
@@ -271,10 +285,11 @@ public class BlogRestApi {
         Blog blog = blogService.getById(blogVO.getUid());
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
         if (blog != null) {
             //传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
-            if (blog.getLevel().equals(blogVO.getLevel())) {
+            if (!blog.getLevel().equals(blogVO.getLevel())) {
                 count += 1;
             }
         }
@@ -314,6 +329,56 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @OperationLogger(value = "推荐博客排序调整")
+    @ApiOperation(value = "推荐博客排序调整", notes = "推荐博客排序调整", response = String.class)
+    @PostMapping("/editBatch")
+    public String editBatch(HttpServletRequest request, @RequestBody List<BlogVO> blogVOList) {
+
+        if (blogVOList.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> blogUidList = new ArrayList<>();
+        Map<String, BlogVO> blogVOMap = new HashMap<>();
+        blogVOList.forEach(item -> {
+            blogUidList.add(item.getUid());
+            blogVOMap.put(item.getUid(), item);
+        });
+
+        Collection<Blog> blogList = blogService.listByIds(blogUidList);
+        blogList.forEach(blog -> {
+            BlogVO blogVO = blogVOMap.get(blog.getUid());
+            if (blogVO != null) {
+                blog.setAuthor(blogVO.getAuthor());
+                blog.setArticlesPart(blogVO.getArticlesPart());
+                blog.setTitle(blogVO.getTitle());
+                blog.setSummary(blogVO.getSummary());
+                blog.setContent(blogVO.getContent());
+                blog.setTagUid(blogVO.getTagUid());
+                blog.setBlogSortUid(blogVO.getBlogSortUid());
+                blog.setFileUid(blogVO.getFileUid());
+                blog.setLevel(blogVO.getLevel());
+                blog.setIsOriginal(blogVO.getIsOriginal());
+                blog.setIsPublish(blogVO.getIsPublish());
+                blog.setSort(blogVO.getSort());
+                blog.setStatus(EStatus.ENABLE);
+            }
+        });
+        Boolean save = blogService.updateBatchById(blogList);
+
+        //保存成功后，需要发送消息到solr 和 redis
+        if (save) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(SysConf.COMMAND, SysConf.EDIT_BATCH);
+
+            //发送到RabbitMq
+            rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
+
     @OperationLogger(value = "删除博客")
     @ApiOperation(value = "删除博客", notes = "删除博客", response = String.class)
     @PostMapping("/delete")
@@ -336,11 +401,6 @@ public class BlogRestApi {
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
-
-            //删除solr索引
-//            blogSearchService.deleteIndex(collection, blog.getUid());
-
-//            searchFeignClient.delBlog(blog.getUid());
 
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
@@ -378,11 +438,6 @@ public class BlogRestApi {
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //删除solr索引
-//            blogSearchService.deleteBatchIndex(collection, uids);
-//            for (String uid : uids) {
-//                searchFeignClient.delBlog(uid);
-//            }
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -440,7 +495,8 @@ public class BlogRestApi {
     private void setPhoto(Blog blog) {
         if (StringUtils.isNotEmpty(blog.getFileUid())) {
             String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), SysConf.FILE_SEGMENTATION);
-            List<String> picList = WebUtils.getPicture(pictureList);
+
+            List<String> picList = webUtils.getPicture(pictureList);
             blog.setPhotoList(picList);
         }
     }
@@ -463,13 +519,6 @@ public class BlogRestApi {
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //设置图片
-            setPhoto(blog);
-
-            //增加solr索引
-//            blogSearchService.addIndex(collection, blog);
-//            searchFeignClient.addBlogIndex(blog);
-
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
             //这是需要做的是，是删除redis中的该条博客数据
@@ -482,9 +531,6 @@ public class BlogRestApi {
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //当设置下架状态时，删除博客索引
-//            blogSearchService.deleteIndex(collection, blog.getUid());
-//            searchFeignClient.delBlog(blog.getUid());
         }
     }
 }

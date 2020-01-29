@@ -13,8 +13,12 @@
           label-width="120px"
           ref="from"
         >
-          <el-form-item label="图片域名">
-            <el-input v-model="form.pictureBaseUrl" style="width: 400px"></el-input>
+          <el-form-item label="本地图片域名">
+            <el-input v-model="form.localPictureBaseUrl" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="七牛云图片域名">
+            <el-input v-model="form.qiNiuPictureBaseUrl" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="七牛云公钥">
@@ -147,7 +151,6 @@ export default {
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
         if (response.code == "success") {
-          console.log("得到的结果", response);
           if (response.data) {
 
             // 进行一些转换
@@ -212,20 +215,18 @@ export default {
     },
     submitForm: function() {
       var form = this.form
-      console.log("格式化前的form", form)
       form = this.formFormat(form , 0)
-      console.log("格式化后的form", form)
-      editSystemConfig(form).then(response => {
-        if ((response.code = "success")) {
-          this.$notify({
-            title: "成功",
-            message: response.data,
-            type: "success"
+      editSystemConfig(form).then(res => {
+        console.log(res);
+        if (res.code = "success") {
+          this.$message({
+            type: "info",
+            message: res.data
           });
         } else {
-          this.$notify.error({
-            title: "警告",
-            message: response.data
+          this.$message({
+            type: "error",
+            message: res.data
           });
         }
         this.getSystemConfigList();

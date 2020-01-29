@@ -25,6 +25,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.admin.log",
+        "com.moxi.mogublog.admin.util",
         "com.moxi.mogublog.admin.security",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",

@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -39,7 +40,8 @@ import java.util.*;
 @Api(value = "学习教程 RestApi", tags = {"ResourceRestApi"})
 @Slf4j
 public class ResourceRestApi {
-
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     private ResourceSortService resourceSortService;
     @Autowired
@@ -79,7 +81,7 @@ public class ResourceRestApi {
         }
         //PictureList
         String result = this.pictureFeignClient.getPicture(fileIds, ",");
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(result);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(result);
 
         //ResourceSort
         Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(resourceSortUids);

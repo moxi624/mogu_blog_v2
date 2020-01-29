@@ -62,10 +62,16 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
     private String picturePriority;
 
     /**
-     * 图片服务器，域名前缀：   http://localhost:8600  或 http://images.moguit.cn
+     * 本地存储图片服务器，域名前缀：   http://localhost:8600
      */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
-    private String pictureBaseUrl;
+    private String localPictureBaseUrl;
+
+    /**
+     * 七牛云存储图片服务器，域名前缀： http://images.moguit.cn
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String qiNiuPictureBaseUrl;
 
     /**
      * 邮箱账号

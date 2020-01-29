@@ -47,6 +47,7 @@ public class BaseSysConf {
     public final static String ADD = "add";
     public final static String DELETE = "delete";
     public final static String DELETE_BATCH = "deleteBatch";
+    public final static String EDIT_BATCH = "editBatch";
     public final static String DELETE_ALL = "deleteAll";
     public final static String EXCHANGE_DIRECT = "exchange.direct";
     public final static String MOGU_BLOG = "mogu.blog";

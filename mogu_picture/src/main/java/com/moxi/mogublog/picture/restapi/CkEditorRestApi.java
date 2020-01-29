@@ -75,14 +75,35 @@ public class CkEditorRestApi {
 
         if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
             Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
-            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
-            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
-            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
-            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
-            qiNiuConfig.put("uploadQiNiu", resultMap.get("uploadQiNiu"));
-            qiNiuConfig.put("uploadLocal", resultMap.get("uploadLocal"));
+            String uploadQiNiu = resultMap.get("uploadQiNiu");
+            String uploadLocal = resultMap.get("uploadLocal");
+            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+
+            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            String qiNiuBucket = resultMap.get("qiNiuBucket");
+            String qiNiuArea = resultMap.get("qiNiuArea");
+
+            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+            }
+
+            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+            }
+
+            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
+            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
+            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
+            qiNiuConfig.put("qiNiuArea", qiNiuArea);
+            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
+            qiNiuConfig.put("uploadLocal", uploadLocal);
             qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
-            qiNiuConfig.put("pictureBaseUrl", resultMap.get("pictureBaseUrl"));
+            qiNiuConfig.put("localPictureBaseUrl", resultMap.get("localPictureBaseUrl"));
+            qiNiuConfig.put("qiNiuPictureBaseUrl", resultMap.get("qiNiuPictureBaseUrl"));
+
         } else {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
@@ -139,24 +160,24 @@ public class CkEditorRestApi {
                         Map<String, Object> picture = resultList.get(0);
                         String fileName = picture.get("picName").toString();
 
-
                         map.put("uploaded", 1);
                         map.put("fileName", fileName);
 
                         // 设置显示方式
                         if("1".equals(qiNiuConfig.get("picturePriority"))) {
+
+                            String qiNiuPictureBaseUrl = qiNiuConfig.get("qiNiuPictureBaseUrl");
                             String qiNiuUrl = picture.get("qiNiuUrl").toString();
-                            map.put("url", qiNiuUrl);
+
+                            map.put("url", qiNiuPictureBaseUrl + qiNiuUrl);
                         } else {
-                            String pictureBaseUrl = qiNiuConfig.get("pictureBaseUrl");
-                            String url = "";
+
+                            String localPictureBaseUrl = qiNiuConfig.get("localPictureBaseUrl");
 
                             // 设置图片服务根域名
-                            if(StringUtils.isNotEmpty(pictureBaseUrl)) {
-                                url = imgURL + picture.get("picUrl").toString();
-                            } else {
-                                url = pictureBaseUrl + picture.get("picUrl").toString();
-                            }
+
+                            String url = localPictureBaseUrl + picture.get("picUrl").toString();
+
                             map.put("url", url);
                         }
 
@@ -196,14 +217,34 @@ public class CkEditorRestApi {
 
         if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
             Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
-            qiNiuConfig.put("qiNiuAccessKey", resultMap.get("qiNiuAccessKey"));
-            qiNiuConfig.put("qiNiuSecretKey", resultMap.get("qiNiuSecretKey"));
-            qiNiuConfig.put("qiNiuBucket", resultMap.get("qiNiuBucket"));
-            qiNiuConfig.put("qiNiuArea", resultMap.get("qiNiuArea"));
-            qiNiuConfig.put("uploadQiNiu", resultMap.get("uploadQiNiu"));
-            qiNiuConfig.put("uploadLocal", resultMap.get("uploadLocal"));
+            String uploadQiNiu = resultMap.get("uploadQiNiu");
+            String uploadLocal = resultMap.get("uploadLocal");
+            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+
+            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            String qiNiuBucket = resultMap.get("qiNiuBucket");
+            String qiNiuArea = resultMap.get("qiNiuArea");
+
+            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+            }
+
+            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+            }
+
+            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
+            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
+            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
+            qiNiuConfig.put("qiNiuArea", qiNiuArea);
+            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
+            qiNiuConfig.put("uploadLocal", uploadLocal);
             qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
-            qiNiuConfig.put("pictureBaseUrl", resultMap.get("pictureBaseUrl"));
+            qiNiuConfig.put("localPictureBaseUrl", resultMap.get("localPictureBaseUrl"));
+            qiNiuConfig.put("qiNiuPictureBaseUrl", resultMap.get("qiNiuPictureBaseUrl"));
         } else {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
@@ -257,11 +298,26 @@ public class CkEditorRestApi {
                     if(resultList.size() > 0) {
                         Map<String, Object> picture = resultList.get(0);
                         String fileName = picture.get("picName").toString();
-                        String qiNiuUrl = picture.get("qiNiuUrl").toString();
-                        String url = imgURL + picture.get("picUrl").toString();
                         map.put("uploaded", 1);
                         map.put("fileName", fileName);
-                        map.put("url", qiNiuUrl);
+
+                        // 设置显示方式
+                        if("1".equals(qiNiuConfig.get("picturePriority"))) {
+
+                            String qiNiuPictureBaseUrl = qiNiuConfig.get("qiNiuPictureBaseUrl");
+                            String qiNiuUrl = qiNiuPictureBaseUrl + picture.get("qiNiuUrl").toString();
+
+                            map.put("url", qiNiuUrl);
+                        } else {
+
+                            String localPictureBaseUrl = qiNiuConfig.get("localPictureBaseUrl");
+
+                            // 设置图片服务根域名
+
+                            String url = localPictureBaseUrl + picture.get("picUrl").toString();
+
+                            map.put("url", url);
+                        }
                     }
                     return map;
                 } else {

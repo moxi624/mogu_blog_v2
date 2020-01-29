@@ -6,28 +6,24 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.moxi.mogublog.config.security.SecurityUser;
 import com.moxi.mogublog.utils.AopUtils;
-import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.ExceptionLog;
 import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mogublog.xo.service.ExceptionLogService;
 import com.moxi.mogublog.xo.service.SysLogService;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.*;
-import org.apache.ibatis.javassist.bytecode.CodeAttribute;
-import org.apache.ibatis.javassist.bytecode.LocalVariableAttribute;
-import org.apache.ibatis.javassist.bytecode.MethodInfo;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 日志切面
@@ -40,6 +36,9 @@ public class LoggerAspect {
     private SysLog sysLog;
 
     private ExceptionLog exceptionLog;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 接口请求开始时间
@@ -69,7 +68,7 @@ public class LoggerAspect {
      * @param operationLogger
      */
     @Before(value = "pointcut(operationLogger)")
-    public void doBefore(JoinPoint joinPoint, OperationLogger operationLogger)  {
+    public void doBefore(JoinPoint joinPoint, OperationLogger operationLogger) {
         sysLog = new SysLog();
 
         // 设置接口开始请求时间
@@ -86,7 +85,7 @@ public class LoggerAspect {
             Object[] args = joinPoint.getArgs();
 
             // 获取参数名称和值
-            StringBuffer sb  = AopUtils.getNameAndArgs(this.getClass(), clazzName, methodName, args);
+            StringBuffer sb = AopUtils.getNameAndArgs(this.getClass(), clazzName, methodName, args);
             sysLog.setParams(sb.toString());
 
         } catch (Exception e) {
@@ -97,7 +96,15 @@ public class LoggerAspect {
         //获取ip地址
         String ip = IpUtils.getIpAddr(request);
 
-        sysLog.setIpSource(IpUtils.getAddresses("ip="+ip, "utf-8"));
+        //从Redis中获取IP来源
+        String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
+        if(StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
+            sysLog.setIpSource(addresses);
+            stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+        } else {
+            sysLog.setIpSource(jsonResult);
+        }
 
         //设置请求信息
         sysLog.setIp(ip);
@@ -140,7 +147,7 @@ public class LoggerAspect {
                 SerializerFeature.WriteMapNullValue));
         exceptionLog.setExceptionMessage(e.getMessage());
 
-        if(sysLog != null) {
+        if (sysLog != null) {
             exceptionLog.setIp(sysLog.getIp());
             exceptionLog.setIpSource(sysLog.getIpSource());
             exceptionLog.setMethod(sysLog.getMethod());

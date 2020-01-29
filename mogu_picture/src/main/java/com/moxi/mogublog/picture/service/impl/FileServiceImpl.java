@@ -170,7 +170,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         }
                         out = new BufferedOutputStream(new FileOutputStream(dest));
                         out.write(filedata.getBytes());
-                        qiNiuUrl = qn.uoloapQiniu(dest, qiNiuConfig);
+                        qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
                     }
 
                     // 判断是否能够上传至本地
