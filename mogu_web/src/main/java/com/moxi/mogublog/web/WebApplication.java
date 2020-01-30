@@ -21,9 +21,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients("com.moxi.mogublog.web.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
+        "com.moxi.mogublog.web.util",
         "com.moxi.mogublog.web.config",
         "com.moxi.mogublog.web.restapi",
-        "com.moxi.mogublog.web.auth",
         "com.moxi.mogublog.xo.service"})
 public class WebApplication {
 

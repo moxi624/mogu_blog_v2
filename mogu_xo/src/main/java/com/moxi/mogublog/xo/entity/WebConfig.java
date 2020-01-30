@@ -82,6 +82,43 @@ public class WebConfig extends SuperEntity<WebConfig> {
      */
     private String startComment;
 
+    /**
+     * github地址
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String github;
+
+    /**
+     * gitee地址
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String gitee;
+
+    /**
+     * QQ号
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String qqNumber;
+
+    /**
+     * QQ群
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String qqGroup;
+
+    /**
+     * 微信号
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String weChat;
+
+    /**
+     * 邮箱
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String email;
+
+
     // 以下字段不存入数据库，封装为了方便使用
 
     /**

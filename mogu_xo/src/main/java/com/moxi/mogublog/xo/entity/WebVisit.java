@@ -31,6 +31,11 @@ public class WebVisit extends SuperEntity<WebVisit> {
     private String ip;
 
     /**
+     * ip来源
+     */
+    private String ipSource;
+
+    /**
      * 操作系统
      */
     private String os;

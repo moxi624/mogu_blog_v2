@@ -2,6 +2,11 @@ package com.moxi.mogublog.picture.service;
 
 import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mougblog.base.service.SuperService;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +18,12 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface FileService extends SuperService<File> {
 
+    /**
+     * 多文件上传
+     * @param path
+     * @param request
+     * @param filedatas
+     * @return
+     */
+    String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas, Map<String, String> qiNiuConfig);
 }

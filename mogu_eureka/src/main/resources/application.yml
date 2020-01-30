@@ -4,6 +4,8 @@ server:
 spring:
   jmx:
     default-domain: mogu_eureka
+  application:
+    name: mogu-eureka
   security:
     user:
       name: user

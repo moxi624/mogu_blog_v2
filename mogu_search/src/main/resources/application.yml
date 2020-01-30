@@ -1,0 +1,52 @@
+server:
+  port: 8605
+spring:
+  application:
+    name: mogu_search
+  jmx:
+    default-domain: mogu_search
+  security:
+    user:
+      name: user
+      password: password123
+  data:
+    #    elasticsearch:
+    #      cluster-name: elasticsearch
+    #      cluster-nodes: localhost:9300
+    solr:
+      host: http://localhost:8080/solr
+      core: collection1
+      repositories:
+        enabled: true
+
+  #  jackson:
+  #    default-property-inclusion: non_null
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8606
+        username: user
+        password: password123
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    lease-renewal-interval-in-seconds: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

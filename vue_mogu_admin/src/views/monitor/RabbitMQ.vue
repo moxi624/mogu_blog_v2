@@ -1,15 +1,24 @@
 <template>
-  <div>
-    <h1>RabbitMQ监控中心</h1>
+  <div class="app-container">
+    <iframe  :src="rabbitMqAdminUrl" width="100%" height="780px;"></iframe>
   </div>
 </template>
 
 <script>
-    export default {
-        name: "RabbitMQ"
+
+  export default {
+
+    data() {
+      return {
+        rabbitMqAdminUrl: process.env.RABBIT_MQ_ADMIN,
+      }
+    },
+    created() {
+
+    },
+    methods: {
+
     }
+  }
 </script>
 
-<style scoped>
-
-</style>

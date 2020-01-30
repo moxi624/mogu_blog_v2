@@ -51,6 +51,13 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${springBootAdmin.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <!--spring boot打包的话需要指定一个唯一的入门-->
@@ -72,6 +79,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

@@ -19,6 +19,7 @@ import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.GetList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,7 @@ import java.util.*;
 @Api(value = "用户访问RestApi", tags = {"用户访问RestApi"})
 @RestController
 @RequestMapping("/webConfig")
+@Slf4j
 public class WebVisitRestApi {
 
     @Autowired

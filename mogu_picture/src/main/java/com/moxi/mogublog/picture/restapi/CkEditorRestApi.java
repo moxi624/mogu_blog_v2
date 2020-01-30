@@ -1,7 +1,14 @@
 package com.moxi.mogublog.picture.restapi;
 
+import com.moxi.mogublog.picture.feign.AdminFeignClient;
+import com.moxi.mogublog.picture.global.SysConf;
+import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.util.Aboutfile;
+import com.moxi.mogublog.utils.FileUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,42 +20,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/ckeditor")
 public class CkEditorRestApi {
 
-    @Value(value = "${file.upload.path}") //获取基本路径
+    /**
+     * 获取基本路径
+     */
+    @Value(value = "${file.upload.path}")
     private String basePath;
 
+    /**
+     * 图片路径前缀
+     */
     @Value(value = "${data.image.url}")
     private String imgURL;
 
-    private String uploadImageUrl = "ckEditorUploadImg";//图像存放路径
-
-    private String uploadFileUrl = "ckEditorUploadFile";//文件存放路径
+    /**
+     * 图像存放路径
+     * 图像存放路径
+     */
+    private String uploadImageUrl = "ckEditorUploadImg";
 
     /**
-     * 获取后缀名
-     *
-     * @param fileName
-     * @return
+     * 文件存放路径
      */
-    private static String getPicExpandedName(String fileName) {
-        String ext = "";
-        if (StringUtils.isNotBlank(fileName) &&
-                StringUtils.contains(fileName, ".")) {
-            ext = StringUtils.substring(fileName, fileName.lastIndexOf(".") + 1);
-        }
-        ext = ext.toLowerCase();
-        if (ext == null || ext.length() < 1)
-            ext = "jpg";
+    private String uploadFileUrl = "ckEditorUploadFile";
 
-        return ext;
-    }
+
+    @Autowired
+    FileService fileService;
+
+    @Autowired
+    AdminFeignClient adminFeignClient;
 
     /**
      * 图像中的图片上传
@@ -59,9 +65,53 @@ public class CkEditorRestApi {
     @RequestMapping(value = "/imgUpload", method = RequestMethod.POST)
     public Object imgUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> errorMap = new HashMap<String, Object>();
-        Aboutfile af = new Aboutfile();//引用自己设计的一个工具类
+        // 进行七牛云校验
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
+            String uploadQiNiu = resultMap.get("uploadQiNiu");
+            String uploadLocal = resultMap.get("uploadLocal");
+            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+
+            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            String qiNiuBucket = resultMap.get("qiNiuBucket");
+            String qiNiuArea = resultMap.get("qiNiuArea");
+
+            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+            }
+
+            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+            }
+
+            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
+            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
+            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
+            qiNiuConfig.put("qiNiuArea", qiNiuArea);
+            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
+            qiNiuConfig.put("uploadLocal", uploadLocal);
+            qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
+            qiNiuConfig.put("localPictureBaseUrl", resultMap.get("localPictureBaseUrl"));
+            qiNiuConfig.put("qiNiuPictureBaseUrl", resultMap.get("qiNiuPictureBaseUrl"));
+
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>();
+        //引用自己设计的一个工具类
+        Aboutfile af = new Aboutfile();
 
         // 转换成多部分request
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
@@ -71,43 +121,69 @@ public class CkEditorRestApi {
             MultipartFile file = multiRequest.getFile(iter.next());
             if (file != null) {
 
-                String oldName = file.getOriginalFilename(); //获取旧名称
-                String expandedName = getPicExpandedName(oldName); //获取扩展名
+                //获取旧名称
+                String oldName = file.getOriginalFilename();
 
-                if (!af.isPic(expandedName)) { //判断是否是图片
+                //获取扩展名
+                String expandedName = FileUtils.getPicExpandedName(oldName);
+
+                //判断是否是图片
+                if (!af.isPic(expandedName)) {
                     map.put("uploaded", 0);
                     errorMap.put("message", "请上传正确的图片");
                     map.put("error", errorMap);
                     return map;
                 }
 
-                if (file.getSize() > (2 * 1024 * 1024)) {//对图片大小进行限制
+                //对图片大小进行限制
+                if (file.getSize() > (5 * 1024 * 1024)) {
                     map.put("uploaded", 0);
-                    errorMap.put("message", "图片大小不能超过2M");
+                    errorMap.put("message", "图片大小不能超过5M");
                     map.put("error", errorMap);
                     return map;
                 }
 
-                //图片上传路径  
-                String uploadPath = basePath + uploadImageUrl;
-                String fileName = System.currentTimeMillis() + ""; // 采用时间格式命名
-                fileName += ("." + expandedName);
-                String fileLocation = uploadPath + "/" + fileName;
-                //上传文件用的是个人工具类上传文件
+                // 设置图片上传服务必要的信息
+                request.setAttribute("userUid", "uid00000000000000000000000000000000");
+                request.setAttribute("adminUid", "uid00000000000000000000000000000000");
+                request.setAttribute("projectName", "blog");
+                request.setAttribute("sortName", "admin");
 
-                File file1 = new File(uploadPath);
-                if (!file1.exists()) {
-                    file1.mkdirs();
-                }
-                try {
-                    File saveFile = new File(fileLocation);
-                    saveFile.createNewFile();
-                    file.transferTo(saveFile);
-                    map.put("uploaded", 1);
-                    map.put("fileName", fileName);
-                    map.put("url", imgURL + uploadImageUrl + "/" + fileName);
+                List<MultipartFile> fileData = new ArrayList<>();
+                fileData.add(file);
+                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
+                Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
+                String code = resultMap.get(SysConf.CODE).toString();
+                if(SysConf.SUCCESS.equals(code)) {
+                    List<HashMap<String, Object>> resultList = (List<HashMap<String, Object>>) resultMap.get(SysConf.DATA);
+                    if(resultList.size() > 0) {
+                        Map<String, Object> picture = resultList.get(0);
+                        String fileName = picture.get("picName").toString();
+
+                        map.put("uploaded", 1);
+                        map.put("fileName", fileName);
+
+                        // 设置显示方式
+                        if("1".equals(qiNiuConfig.get("picturePriority"))) {
+
+                            String qiNiuPictureBaseUrl = qiNiuConfig.get("qiNiuPictureBaseUrl");
+                            String qiNiuUrl = picture.get("qiNiuUrl").toString();
+
+                            map.put("url", qiNiuPictureBaseUrl + qiNiuUrl);
+                        } else {
+
+                            String localPictureBaseUrl = qiNiuConfig.get("localPictureBaseUrl");
+
+                            // 设置图片服务根域名
+
+                            String url = localPictureBaseUrl + picture.get("picUrl").toString();
+
+                            map.put("url", url);
+                        }
+
+                    }
                     return map;
-                } catch (Exception e) {
+                } else {
                     map.put("uploaded", 0);
                     errorMap.put("message", "上传失败");
                     map.put("error", errorMap);
@@ -131,9 +207,52 @@ public class CkEditorRestApi {
     public Object fileUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> errorMap = new HashMap<String, Object>();
-        Aboutfile af = new Aboutfile();//引用自己设计的一个工具类
+        // 进行七牛云校验
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
+            String uploadQiNiu = resultMap.get("uploadQiNiu");
+            String uploadLocal = resultMap.get("uploadLocal");
+            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+
+            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            String qiNiuBucket = resultMap.get("qiNiuBucket");
+            String qiNiuArea = resultMap.get("qiNiuArea");
+
+            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+            }
+
+            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+            }
+
+            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
+            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
+            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
+            qiNiuConfig.put("qiNiuArea", qiNiuArea);
+            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
+            qiNiuConfig.put("uploadLocal", uploadLocal);
+            qiNiuConfig.put("picturePriority", resultMap.get("picturePriority"));
+            qiNiuConfig.put("localPictureBaseUrl", resultMap.get("localPictureBaseUrl"));
+            qiNiuConfig.put("qiNiuPictureBaseUrl", resultMap.get("qiNiuPictureBaseUrl"));
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+        
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>();
+        //引用自己设计的一个工具类
+        Aboutfile af = new Aboutfile();
 
         // 转换成多部分request
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
@@ -143,43 +262,65 @@ public class CkEditorRestApi {
             MultipartFile file = multiRequest.getFile(iter.next());
             if (file != null) {
 
-                String oldName = file.getOriginalFilename(); //获取旧名称
-                String expandedName = getPicExpandedName(oldName); //获取扩展名
-
-                if (!af.isSafe(expandedName)) { //判断是否安全文件
+                // 获取旧名称
+                String oldName = file.getOriginalFilename();
+                // 获取扩展名
+                String expandedName = FileUtils.getPicExpandedName(oldName);
+                // 判断是否安全文件
+                if (!af.isSafe(expandedName)) {
                     map.put("uploaded", 0);
-                    errorMap.put("message", "请上传正确的图片");
+                    errorMap.put("message", "请上传正确格式的文件");
                     map.put("error", errorMap);
                     return map;
                 }
 
-                if (file.getSize() > (50 * 1024 * 1024)) {//对图片大小进行限制
+                //对文件大小进行限制
+                if (file.getSize() > (50 * 1024 * 1024)) {
                     map.put("uploaded", 0);
                     errorMap.put("message", "文件大小不能超过50M");
                     map.put("error", errorMap);
                     return map;
                 }
 
-                //图片上传路径  
-                String uploadPath = basePath + uploadFileUrl;
-                String fileName = System.currentTimeMillis() + ""; // 采用时间格式命名
-                fileName += ("." + expandedName);
-                String fileLocation = uploadPath + "/" + fileName;
-                //上传文件用的是个人工具类上传文件
+                // 设置文件上传服务必要的信息
+                request.setAttribute("userUid", "uid00000000000000000000000000000000");
+                request.setAttribute("adminUid", "uid00000000000000000000000000000000");
+                request.setAttribute("projectName", "blog");
+                request.setAttribute("sortName", "admin");
 
-                File file1 = new File(uploadPath);
-                if (!file1.exists()) {
-                    file1.mkdirs();
-                }
-                try {
-                    File saveFile = new File(fileLocation);
-                    saveFile.createNewFile();
-                    file.transferTo(saveFile);
-                    map.put("uploaded", 1);
-                    map.put("fileName", fileName);
-                    map.put("url", imgURL + uploadFileUrl + "/" + fileName);
+                List<MultipartFile> fileData = new ArrayList<>();
+                fileData.add(file);
+                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
+                Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
+                String code = resultMap.get(SysConf.CODE).toString();
+                if(SysConf.SUCCESS.equals(code)) {
+                    List<HashMap<String, Object>> resultList = (List<HashMap<String, Object>>) resultMap.get(SysConf.DATA);
+                    if(resultList.size() > 0) {
+                        Map<String, Object> picture = resultList.get(0);
+                        String fileName = picture.get("picName").toString();
+                        map.put("uploaded", 1);
+                        map.put("fileName", fileName);
+
+                        // 设置显示方式
+                        if("1".equals(qiNiuConfig.get("picturePriority"))) {
+
+                            String qiNiuPictureBaseUrl = qiNiuConfig.get("qiNiuPictureBaseUrl");
+                            String qiNiuUrl = qiNiuPictureBaseUrl + picture.get("qiNiuUrl").toString();
+
+                            map.put("url", qiNiuUrl);
+                        } else {
+
+                            String localPictureBaseUrl = qiNiuConfig.get("localPictureBaseUrl");
+
+                            // 设置图片服务根域名
+
+                            String url = localPictureBaseUrl + picture.get("picUrl").toString();
+
+                            map.put("url", url);
+                        }
+                    }
                     return map;
-                } catch (Exception e) {
+                } else {
                     map.put("uploaded", 0);
                     errorMap.put("message", "上传失败");
                     map.put("error", errorMap);

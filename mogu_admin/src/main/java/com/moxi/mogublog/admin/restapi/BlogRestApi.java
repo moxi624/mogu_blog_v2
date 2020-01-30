@@ -5,30 +5,35 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.feign.SearchFeignClient;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
-import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.service.AdminService;
+import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.BlogSortService;
+import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.enums.ELevel;
 import com.moxi.mougblog.base.enums.EOriginal;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.*;
+import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -54,11 +60,15 @@ import java.util.*;
 @RestController
 @RequestMapping("/blog")
 @Api(value = "博客RestApi", tags = {"BlogRestApi"})
+@Slf4j
 public class BlogRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     BlogService blogService;
+
+    @Autowired
+    WebUtils webUtils;
+
     @Autowired
     TagService tagService;
     @Autowired
@@ -67,6 +77,8 @@ public class BlogRestApi {
     AdminService adminService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private SearchFeignClient searchFeignClient;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Value(value = "${data.image.url}")
@@ -81,10 +93,6 @@ public class BlogRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
-    @Value(value = "${spring.data.solr.core}")
-    private String collection;
-    @Autowired
-    private BlogSearchService blogSearchService;
 
     @ApiOperation(value = "获取博客列表", notes = "获取博客列表", response = String.class)
     @PostMapping("/getList")
@@ -118,7 +126,14 @@ public class BlogRestApi {
 
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        // 是否启动排序字段
+        if (blogVO.getUseSort() == 0) {
+            // 未使用，默认按时间倒序
+            queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        } else {
+            // 使用，默认按sort值大小倒序
+            queryWrapper.orderByDesc(SQLConf.SORT);
+        }
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
@@ -150,7 +165,8 @@ public class BlogRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
         Collection<Tag> tagList = tagService.listByIds(tagUids);
 
@@ -215,6 +231,7 @@ public class BlogRestApi {
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
 
         String addVerdictResult = addVerdict(count, blogVO.getLevel());
@@ -268,10 +285,11 @@ public class BlogRestApi {
         Blog blog = blogService.getById(blogVO.getUid());
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
         if (blog != null) {
             //传递过来的和数据库中的不同，代表用户已经修改过等级了，那么需要将count数加1
-            if (blog.getLevel().equals(blogVO.getLevel())) {
+            if (!blog.getLevel().equals(blogVO.getLevel())) {
                 count += 1;
             }
         }
@@ -311,6 +329,56 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @OperationLogger(value = "推荐博客排序调整")
+    @ApiOperation(value = "推荐博客排序调整", notes = "推荐博客排序调整", response = String.class)
+    @PostMapping("/editBatch")
+    public String editBatch(HttpServletRequest request, @RequestBody List<BlogVO> blogVOList) {
+
+        if (blogVOList.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        List<String> blogUidList = new ArrayList<>();
+        Map<String, BlogVO> blogVOMap = new HashMap<>();
+        blogVOList.forEach(item -> {
+            blogUidList.add(item.getUid());
+            blogVOMap.put(item.getUid(), item);
+        });
+
+        Collection<Blog> blogList = blogService.listByIds(blogUidList);
+        blogList.forEach(blog -> {
+            BlogVO blogVO = blogVOMap.get(blog.getUid());
+            if (blogVO != null) {
+                blog.setAuthor(blogVO.getAuthor());
+                blog.setArticlesPart(blogVO.getArticlesPart());
+                blog.setTitle(blogVO.getTitle());
+                blog.setSummary(blogVO.getSummary());
+                blog.setContent(blogVO.getContent());
+                blog.setTagUid(blogVO.getTagUid());
+                blog.setBlogSortUid(blogVO.getBlogSortUid());
+                blog.setFileUid(blogVO.getFileUid());
+                blog.setLevel(blogVO.getLevel());
+                blog.setIsOriginal(blogVO.getIsOriginal());
+                blog.setIsPublish(blogVO.getIsPublish());
+                blog.setSort(blogVO.getSort());
+                blog.setStatus(EStatus.ENABLE);
+            }
+        });
+        Boolean save = blogService.updateBatchById(blogList);
+
+        //保存成功后，需要发送消息到solr 和 redis
+        if (save) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(SysConf.COMMAND, SysConf.EDIT_BATCH);
+
+            //发送到RabbitMq
+            rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
+
     @OperationLogger(value = "删除博客")
     @ApiOperation(value = "删除博客", notes = "删除博客", response = String.class)
     @PostMapping("/delete")
@@ -329,14 +397,11 @@ public class BlogRestApi {
             map.put(SysConf.COMMAND, SysConf.DELETE);
             map.put(SysConf.BLOG_UID, blog.getUid());
             map.put(SysConf.LEVEL, blog.getLevel());
-            String dateTime = DateUtils.dateTimeToStr(blog.getCreateTime());
-            System.out.println(dateTime);
-            map.put(SysConf.CREATE_TIME, dateTime);
+            map.put(SysConf.CREATE_TIME, blog.getCreateTime());
+
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //删除solr索引
-            blogSearchService.deleteIndex(collection, blog.getUid());
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -346,12 +411,14 @@ public class BlogRestApi {
     @PostMapping("/deleteBatch")
     public String deleteBatch(HttpServletRequest request, @RequestBody List<BlogVO> blogVoList) {
 
-        if(blogVoList.size() <=0 ) {
+        if (blogVoList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
-        blogVoList.forEach(item->{
+        StringBuffer uidSbf = new StringBuffer();
+        blogVoList.forEach(item -> {
             uids.add(item.getUid());
+            uidSbf.append(item.getUid() + SysConf.FILE_SEGMENTATION);
         });
         Collection<Blog> blogList = blogService.listByIds(uids);
 
@@ -366,12 +433,11 @@ public class BlogRestApi {
 
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.DELETE_BATCH);
+            map.put(SysConf.UID, uidSbf);
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //删除solr索引
-            blogSearchService.deleteBatchIndex(collection, uids);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -429,7 +495,8 @@ public class BlogRestApi {
     private void setPhoto(Blog blog) {
         if (StringUtils.isNotEmpty(blog.getFileUid())) {
             String pictureList = this.pictureFeignClient.getPicture(blog.getFileUid(), SysConf.FILE_SEGMENTATION);
-            List<String> picList = WebUtils.getPicture(pictureList);
+
+            List<String> picList = webUtils.getPicture(pictureList);
             blog.setPhotoList(picList);
         }
     }
@@ -452,11 +519,6 @@ public class BlogRestApi {
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //设置图片
-            setPhoto(blog);
-
-            //增加solr索引
-            blogSearchService.addIndex(collection, blog);
         } else if (EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
 
             //这是需要做的是，是删除redis中的该条博客数据
@@ -469,8 +531,6 @@ public class BlogRestApi {
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
 
-            //当设置下架状态时，删除博客索引
-            blogSearchService.deleteIndex(collection, blog.getUid());
         }
     }
 }

@@ -136,7 +136,7 @@ footer a { color: #a5a4a4 }
 /* zhuanti */
 .zhuanti { overflow: hidden }
 .zhuanti ul { width: 100%; overflow: hidden; display: block; clear: both; }
-.zhuanti li { margin: 0 0 20px 0; overflow: hidden; position: relative; }
+.zhuanti li { margin: 0 0 20px 0; overflow: hidden; height: 200px; position: relative; }
 .zhuanti li i { background: #000; display: block }
 .zhuanti img { width: 100%; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; opacity: 0.5 }
 .zhuanti p { position: absolute; top: 30%; left: 0; right: 0; color: #FFF; text-align: center; font-size: 15px; overflow: hidden; margin-top: 5px; padding: 0 40px; }
@@ -164,7 +164,7 @@ footer a { color: #a5a4a4 }
 /*tags*/
 .cloud { clear: both; overflow: hidden; background: #fff; margin-bottom: 20px }
 .cloud ul { overflow: hidden; font-size: 14px }
-.cloud ul a { line-height: 24px; height: 24px; display: block; background: #999; float: left; padding: 3px 11px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; transition: all 0.5s; color: #FFF }
+.cloud ul a { line-height: 24px;  display: block; background: #999; float: left; padding: 3px 11px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all .5s ease; -webkit-transition: all .5s ease; -ms-transition: all .5s ease; -o-transition: all .5s ease; transition: all .5s ease; transition: all 0.5s; color: #FFF }
 .cloud ul a:nth-child(8n-7) { background: #8A9B0F }
 .cloud ul a:nth-child(8n-6) { background: #EB6841 }
 .cloud ul a:nth-child(8n-5) { background: #3FB8AF }
@@ -209,7 +209,7 @@ footer a { color: #a5a4a4 }
 _margin-top: 100px; }
 /*content*/
 .news_infos { float: left; margin-bottom: 20px; width: 66%; background: #fff; -webkit-box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); -moz-box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); }
-.news_infos ul { padding: 30px 40px; text-align: justify; line-height: 1.8; font-size: 16px; }
+
 h1.t_nav span { float: right; color: #000; }
 h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: normal; line-height: 40px; width: 100%; overflow: hidden; margin-bottom: 20px }
 .n1, .n2 { width: 100px; display: block; text-align: center; float: left; color: #fff; }

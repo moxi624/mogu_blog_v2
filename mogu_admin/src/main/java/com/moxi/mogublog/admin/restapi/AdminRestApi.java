@@ -9,10 +9,10 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
@@ -21,8 +21,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -44,9 +44,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/admin")
 @Api(value = "管理员RestApi", tags = {"AdminRestApi"})
+@Slf4j
 public class AdminRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
+    @Autowired
+    WebUtils webUtils;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -75,7 +78,6 @@ public class AdminRestApi {
         queryWrapper.select(Admin.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         IPage<Admin> pageList = adminService.page(page, queryWrapper);
         List<Admin> list = pageList.getRecords();
-        log.info(list);
 
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
@@ -89,7 +91,7 @@ public class AdminRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -159,15 +161,15 @@ public class AdminRestApi {
 
         QueryWrapper<Admin> wrapper = new QueryWrapper<>();
         if (admin == null) {
-            if (StringUtils.isNotEmpty(email)) {
-                wrapper.eq(SQLConf.EMAIL, email);
-            } else {
-                wrapper.eq(SQLConf.MOBILE, mobile);
-            }
-
-            if (adminService.getOne(wrapper) != null) {
-                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
-            }
+//            if (StringUtils.isNotEmpty(email)) {
+//                wrapper.eq(SQLConf.EMAIL, email);
+//            } else {
+//                wrapper.eq(SQLConf.MOBILE, mobile);
+//            }
+//
+//            if (adminService.getOne(wrapper) != null) {
+//                return ResultUtil.result(SysConf.ERROR, "管理员账户已存在");
+//            }
 
             // 设置为未审核状态
             registered.setStatus(EStatus.ENABLE);

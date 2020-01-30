@@ -1,16 +1,22 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
+import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
 import me.zhyd.oauth.model.AuthCallback;
@@ -20,8 +26,6 @@ import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -42,10 +47,10 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/oauth")
 @Api(value = "认证RestApi", tags = {"AuthRestApi"})
+@Slf4j
 public class AuthRestApi {
-
-    private static Logger log = LogManager.getLogger(IndexRestApi.class);
-
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -64,6 +69,8 @@ public class AuthRestApi {
     private Long userTokenSurvivalTime;
     @Value(value = "${PROJECT_NAME_EN}")
     private String PROJECT_NAME_EN;
+    @Autowired
+    SystemConfigService systemConfigService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -101,48 +108,79 @@ public class AuthRestApi {
         //判断user是否存在
         if (data.get(SysConf.UUID) != null && data.get(SysConf.SOURCE) != null) {
             user = userService.getUserBySourceAnduuid(data.get(SysConf.SOURCE).toString(), data.get(SysConf.UUID).toString());
-            if(user != null) {
+            if (user != null) {
                 exist = true;
             } else {
                 user = new User();
             }
 
         } else {
-            return ;
+            return;
         }
         if (data.get(SysConf.EMAIL) != null) {
             String email = data.get(SysConf.EMAIL).toString();
             user.setEmail(email);
         }
-        if (data.get(SysConf.AVATAR) != null) {
+
+        // 通过头像uid获取图片
+        String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
+        List<String> photoList = webUtils.getPicture(pictureList);
+
+        if (photoList.size() == 0) {
+
+            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            queryWrapper.last("LIMIT 1");
+            Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
             // 获取到头像，然后上传到自己服务器
             FileVO fileVO = new FileVO();
             fileVO.setAdminUid("uid00000000000000000000000000000000");
-            fileVO.setUserUid(user.getUid());
+            fileVO.setUserUid("uid00000000000000000000000000000000");
             fileVO.setProjectName(SysConf.BLOG);
             fileVO.setSortName(SysConf.ADMIN);
+            fileVO.setSystemConfig(systemConfigMap);
             List<String> urlList = new ArrayList<>();
             urlList.add(data.get(SysConf.AVATAR).toString());
             fileVO.setUrlList(urlList);
             String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
             Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
-            if(resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
-                if(resultMap.get(SysConf.DATA) != null) {
-                    List<Map<String, Object>> listMap = (List<Map<String, Object>>)resultMap.get(SysConf.DATA);
-                    if(listMap != null && listMap.size() > 0) {
-                        Map<String,Object> pictureMap = listMap.get(0);
-                        if(pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
-                            user.setAvatar(pictureMap.get(SysConf.UID).toString());
-                            user.setPhotoUrl(pictureMap.get(SysConf.PIC_URL).toString());
+            if (resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
+                if (resultMap.get(SysConf.DATA) != null) {
+                    List<Map<String, Object>> listMap = (List<Map<String, Object>>) resultMap.get(SysConf.DATA);
+                    if (listMap != null && listMap.size() > 0) {
+                        Map<String, Object> pictureMap = listMap.get(0);
+
+                        String localPictureBaseUrl = systemConfigMap.get(SQLConf.LOCAL_PICTURE_BASE_URL).toString();
+                        String qiNiuPictureBaseUrl = systemConfigMap.get(SQLConf.QI_NIU_PICTURE_BASE_URL).toString();
+                        String picturePriority = systemConfigMap.get(SQLConf.PICTURE_PRIORITY).toString();
+
+                        user.setAvatar(pictureMap.get(SysConf.UID).toString());
+
+                        // 判断图片优先展示
+                        if("1".equals(picturePriority)) {
+                            // 使用七牛云
+                            if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());
+                            }
+                        } else {
+                            // 使用自建图片服务器
+                            if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
+                            }
                         }
+
                     }
                 }
             }
+        } else {
+
+            user.setPhotoUrl(photoList.get(0));
+
         }
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());
         }
-        if(user.getLoginCount() == null) {
+        if (user.getLoginCount() == null) {
             user.setLoginCount(0);
         } else {
             user.setLoginCount(user.getLoginCount() + 1);
@@ -164,9 +202,12 @@ public class AuthRestApi {
             user.insert();
         }
 
+        // 过滤密码
+        user.setPassWord("");
+
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
-            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
         }
 
         httpServletResponse.sendRedirect(webSiteUrl + "?token=" + accessToken);

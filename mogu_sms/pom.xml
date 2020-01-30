@@ -67,11 +67,6 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -98,13 +93,17 @@
             <version>${aliyun.java.sdk.core.version}</version>
         </dependency>
 
-        <!--
         <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-configuration-processor</artifactId>
-         <optional>true</optional>
-       </dependency>
-       -->
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${springBootAdmin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
     </dependencies>
 
 
@@ -127,6 +126,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

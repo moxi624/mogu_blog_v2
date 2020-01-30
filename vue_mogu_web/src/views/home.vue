@@ -60,6 +60,13 @@
             <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>
           </router-link>
         </li>
+
+        <li>
+          <router-link to="/messageBoard">
+            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>
+          </router-link>
+        </li>
+
       </ul>
 
 
@@ -81,7 +88,7 @@
       </div>
 
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
-        <span class="el-dropdown-link" @click="userLogin">
+        <span class="el-dropdown-link" >
           <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
           <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl">
           <img v-if="isLogin&&userInfo.photoUrl==undefined"
@@ -89,9 +96,11 @@
         </span>
 
         <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="login" v-show="!isLogin">登录</el-dropdown-item>
           <el-dropdown-item command="goUserInfo" v-show="isLogin">主页</el-dropdown-item>
           <el-dropdown-item command="logout" v-show="isLogin">退出</el-dropdown-item>
         </el-dropdown-menu>
+
       </el-dropdown>
 
 
@@ -126,6 +135,8 @@
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, deleteUserAccessToken} from "../api/user";
   import LoginBox from "../components/LoginBox";
+  // vuex中有mapState方法，相当于我们能够使用它的getset方法
+  import {mapMutations} from 'vuex';
 
   export default {
     name: "index",
@@ -197,7 +208,8 @@
       let token = this.getUrlVars()["token"];
       // 判断url中是否含有token
       if (token != undefined) {
-        setCookie("token", token, 1)
+        // 设置token七天过期
+        setCookie("token", token, 7)
       }
 
       // 从cookie中获取token
@@ -205,16 +217,21 @@
       if (token != undefined) {
         authVerify(token).then(response => {
           if (response.code == "success") {
+            console.log("登录成功");
             this.isLogin = true;
             this.userInfo = response.data;
+            this.setUserInfo(this.userInfo)
           } else {
             this.isLogin = false;
             delCookie("token");
           }
+          this.setLoginState(this.isLogin);
         });
       } else {
         this.isLogin = false;
+        this.setLoginState(this.isLogin);
       }
+
       var tempValue = decodeURI(this.getUrlVars()["keyword"]);
       if (
         tempValue == null ||
@@ -247,9 +264,16 @@
       });
     },
     methods: {
+      //拿到vuex中的写的两个方法
+      ...mapMutations(['setUserInfo', 'setLoginState']),
       search: function () {
         if (this.keyword == "") {
-          alert("关键字不能为空");
+          this.$notify.error({
+            title: '错误',
+            message: "关键字不能为空",
+            type: 'success',
+            offset: 100
+          });
           return;
         }
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
@@ -287,7 +311,8 @@
           let list = url.split("?token");
           this.isLogin = false;
           window.location.href = list[0]
-
+          let userInfo = {};
+          this.setCommentList(userInfo)
         } else {
           window.location.reload()
         }
@@ -326,7 +351,7 @@
   };
 </script>
 
-<style>
+<style scoped>
   #starlist li .title {
     color: #00a7eb;
   }

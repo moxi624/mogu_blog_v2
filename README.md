@@ -18,11 +18,11 @@
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 ## 项目介绍
-蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Nuxt +Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用Github Actions完成博客的持续集成。
+蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成。
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合目前流行的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
 - 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，在加上没怎么接触公司实际项目，故有能改正的地方，还请各位老哥能够指出~
-- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建。
+- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 - 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因部署时遇到问题，无法完成正常部署，故搁置...欢迎有了解nuxt或者SEO优化的老哥一起探讨~）
 
@@ -36,11 +36,13 @@
 ## 目录介绍
 
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统。
-- mogu_admin: 是admin端API接口服务；
-- mogu_web: 是web端API接口服务；
-- mogu_eureka: 服务发现服务器；
-- mogu_picture: 图片服务器，用于图片上传和下载；
-- mogu_sms: 消息发送服务器，用于邮件和短信发送
+- mogu_admin: 提供admin端API接口服务；
+- mogu_web：提供web端API接口服务；
+- mogu_eureka： 服务发现和注册
+- mogu_picture： 图片服务，用于图片上传和下载；
+- mogu_sms：消息服务，用于更新ElasticSearch、Solr索引、邮件和短信发送
+- mogu_monitor：监控服务，集成SpringBootAdmin用于管理和监控SpringBoot应用程序
+- mogu_search：搜索服务，ElasticSearch和Solr作为检索工具，可插拔配置
 - mogu_utils: 是常用工具类；
 - mogu_xo: 是存放 Entity，Service，Dao层的
 - mogu_base: 是一些Base基类
@@ -52,7 +54,7 @@
 
 ## 技术架构
 
-- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth、Druid
+- 后端采用的技术：SpringBoot、Spring cloud 、MyBatis-Plus、Spring Security + JWT、Solr, Redis , Mysql , Nginx , Swagger，Lombok、RabbitMQ，阿里大鱼、JustAuth、Druid、ElasticSearch、SpringBootAdmin、kibana
 - 前端采用的技术： Vue，Nuxt， Element， ES6， CKEditor，Highlight
 - 自动化运维：Docker、Github Actions
 
@@ -65,6 +67,7 @@
 - 引入swagger文档支持，方便编写API接口文档。
 - 引入RabbitMQ消息队列，用于邮件发送、更新Redis和Solr
 - 引入JustAuth第三方登录开源库，支持Gitee、Github账号登录。
+- 引入ElasticSearch和Solr作为全文检索服务，并支持可插拔配置
 - 引入Github Actions 完成蘑菇博客的持续集成、持续部署。
 
 ## Windows环境下搭建蘑菇博客
@@ -89,7 +92,7 @@
 - 安装 Maven (3.3.0+)
 - 安装Redis服务 (3.0+)
 - 安装 MySQL (5.6+)
-- 安装 Solr （7.0+）
+- 安装 Solr （7.0+）或 ElasticSearch（6.3.0）
 - 安装 RabbitMQ （3.7.4）
 - 安装 Erlang (20.3) （安装RabbitMQ还需要Erlang）
 - 安装 Nginx
@@ -107,7 +110,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 - **远程SSH初始密码**：用户：root，密码：mogu2018
 - **RabbitMQ管理页面：** 用户：guest，密码：guest
 - **Eureka管理页面：** 用户：user，密码：password123
-- 
+- **蘑菇博客监控页面**：用户：user，密码：password123
 
 ## 致谢
 
@@ -131,7 +134,7 @@ mogu_eureka ->  mogu_picture -> mogu_sms -> mogu_admin -> mogu_web
 - [x] 集成Github Actions，完成蘑菇博客持续集成服务
 - [x] 门户网站增加登录页面
 - [x] 支持第三方登录
-- [ ] 集成ElasticSearch，用于替换solr
+- [x] 集成ElasticSearch和Solr
 - [ ] 将图片存储在七牛云中
 - [ ] 写一个评论模块，用于替换搜狐畅言
 - [ ] 解决Nuxt_mogu_web中存在的问题，使博客能被搜索引擎收录

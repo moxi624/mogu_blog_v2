@@ -19,6 +19,31 @@ public class ExceptionLog extends SuperEntity<ExceptionLog> {
     private static final long serialVersionUID = -4851055162892178225L;
 
     /**
+     * 操作IP
+     */
+    private String ip;
+
+    /**
+     * ip来源
+     */
+    private String ipSource;
+
+    /**
+     * 请求方法
+     */
+    private String method;
+
+    /**
+     * 描述
+     */
+    private String operation;
+
+    /**
+     * 参数
+     */
+    private String params;
+
+    /**
      * 异常对象json格式
      */
     private String exceptionJson;

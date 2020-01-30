@@ -3,58 +3,84 @@
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入评论名"></el-input>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>             
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
-      <el-table :data="tableData"  style="width: 100%">
-      
+      <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
+
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
+      <el-table-column label="头像" width="160">
+        <template slot-scope="scope">
+          <img
+            v-if="scope.row.user.photoUrl"
+            :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            style="width: 100px;height: 100px;"
+          >
+        </template>
+      </el-table-column>
+
 	    <el-table-column label="评论人" width="100">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.userName }}</span>
+	        <span v-if="scope.row.user">{{ scope.row.user.nickName }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="内容" width="200">
+      <el-table-column label="被评论人" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.toUser">{{ scope.row.toUser.nickName }}</span>
+          <span v-else>无</span>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column label="内容" width="250">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.content }}</span>
+          <el-popover
+            placement="top-start"
+            width="400"
+            trigger="hover"
+            :content="scope.row.content">
+            <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>
+          </el-popover>
 	      </template>
 	    </el-table-column>
+
+        <el-table-column label="来源" width="150">
+          <template slot-scope="scope">
+            <template>
+              <el-tag type="warning" @click.native="goPage(scope.row.source, scope.row.blog)" style="cursor: pointer;">{{scope.row.sourceName}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="来源博客" width="160">
+          <template slot-scope="scope">
+            <template>
+              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>
+            </template>
+          </template>
+        </el-table-column>
 
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
-	   	<el-table-column label="状态" width="100">
-	   	  <template slot-scope="scope">
-		   	  <template v-if="scope.row.status == 1">
-		        <span>正常</span>
-		      </template>
-		      <template v-if="scope.row.status == 2">
-		        <span>推荐</span>
-		      </template>
-		      <template v-if="scope.row.status == 0">
-		        <span>已删除</span>
-		      </template>
-	   	  </template>
-	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
+
+	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
-          <el-button @click="handleShow(scope.row)" type="primary" size="small">详情</el-button>
-          <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>
+<!--          <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>-->
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
-	    </el-table-column>     	    
+	    </el-table-column>
 	  </el-table>
 
     <!--分页-->
@@ -71,11 +97,13 @@
 </template>
 
 <script>
-import { getCommentList, addComment, editComment, deleteComment } from "@/api/comment";
-import { formatData } from '@/utils/webUtils'
+import { getCommentList, addComment, editComment, deleteComment,  deleteBatchComment} from "@/api/comment";
 export default {
   data() {
     return {
+      multipleSelection: [], //多选，用于批量删除
+      BLOG_WEB_URL: process.env.BLOG_WEB_URL,
+      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       keyword: "",
       currentPage: 1,
@@ -84,39 +112,58 @@ export default {
       title: "增加友链",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: '120px',
-      isEditForm: false 
+      isEditForm: false
     };
   },
   created() {
     this.commentList();
   },
   methods: {
+    // 跳转到该博客详情
+    onClick: function(row) {
+      console.log("点击跳转", row)
+      window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
+    },
+    // 跳转到前端页面
+    goPage: function(type, blog) {
+      switch (type) {
+        case 'MESSAGE_BOARD': {window.open( this.BLOG_WEB_URL + "/#/messageBoard")};break;
+        case 'ABOUT': {window.open( this.BLOG_WEB_URL + "/#/about")};break;
+        case 'BLOG_INFO': {window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + blog.uid);};break;
+      }
+    },
 		commentList: function() {
-			var params = new URLSearchParams();
-			params.append("keyword", this.keyword);
-			params.append("currentPage", this.currentPage);
-			params.append("pageSize", this.pageSize);
-			getCommentList(params).then(response => {				
-				this.tableData = response.data.records;
-				this.currentPage = response.data.current;
-				this.pageSize = response.data.size;
-				this.total = response.data.total;      
+			let params = {}
+			params.keyword = this.keyword
+			params.currentPage =  this.currentPage
+			params.pageSize = this.pageSize
+      params.source = "all"
+			getCommentList(params).then(response => {
+			  if(response.code == "success") {
+          this.tableData = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        }
 			});
 		},
-
+    subComment(str, index) {
+		  if(str.length < index){
+		    return str;
+      } else {
+		    return str.substring(0, index) + "..."
+      }
+    },
 		handleFind: function() {
 			this.commentList();
-		},			
-    handleShow: function(row) {
-      console.log("点击了查看详情");
-    },
+		},
     handleReply: function(row) {
       console.log("点击了回复");
     },
     handleDelete: function(row) {
 			var that = this;
-			let params = new URLSearchParams();
-			params.append("uid", row.uid);
+			let params = {}
+			params.uid = row.uid
 			deleteComment(params).then(response=> {
           console.log(response);
           this.$message({
@@ -126,10 +173,46 @@ export default {
 					that.commentList();
 			})
     },
+    handleDeleteBatch: function() {
+      var that = this;
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中的评论删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteBatchComment(that.multipleSelection).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.commentList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
     handleCurrentChange: function(val) {
       console.log("点击了换页");
       this.currentPage = val;
       this.commentList();
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
 
   }

@@ -10,7 +10,7 @@
 
     data() {
       return {
-        adminSwaggerUrl: "http://localhost:8761",
+        adminSwaggerUrl: process.env.EUREKA_API,
       }
     },
     created() {

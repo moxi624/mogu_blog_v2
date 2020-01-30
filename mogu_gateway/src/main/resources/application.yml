@@ -1,0 +1,113 @@
+#端口
+server:
+  port: 8607
+
+spring:
+  jmx:
+    default-domain: mogu-gateway
+  application:
+    name: mogu-gateway
+  security:
+    user:
+      name: user
+      password: password123
+
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8606
+        username: user
+        password: password123
+
+  cloud:
+    gateway:
+      discovery:  #是否与服务发现组件进行结合，通过 serviceId(必须设置成大写) 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能
+          lowerCaseServiceId: true #使用小写服务名，默认是大写
+      routes: # 配置路由规则, 
+        - id: api-eureka
+          uri: lb://mogu-eureka
+          predicates:
+            - Path=/api-eureka/**
+
+        - id: api-monitor
+          uri: lb://mogu-monitor
+          predicates:
+            - Path=/api-monitor/**
+
+        - id: api-picture
+          uri: lb://mogu-picture
+          predicates:
+            - Path=/api-picture/**
+
+        - id: api-web
+          uri: lb://mogu-web
+          predicates:
+            - Path=/api-web/**
+
+        - id: api-admin
+          uri: lb://mogu-admin
+          predicates:
+            - Path=/api-admin/**
+
+        - id: api-sms
+          uri: lb://mogu-sms
+          predicates:
+            - Path=/api-sms/**
+
+#设置最大超时时间
+#ribbon:
+#  eager-load:
+#    enabled: true
+#  ServerListRefreshInterval: 10  #刷新服务列表源的间隔时间
+#  httpclient:
+#    enabled: false
+#  okhttp:
+#    enabled: true  
+#  ReadTimeout: 90000  
+#  ConnectTimeout: 90000 
+#  OkToRetryOnAllOperations: true
+#  MaxAutoRetries: 1
+#  MaxAutoRetriesNextServer: 1
+#  
+##设置最大容错超时时间
+#hystrix:
+#  threadpool:
+#    default:
+#      coreSize: 100
+#      maximumSize: 5000
+#      allowMaximumSizeToDivergeFromCoreSize: true
+#      maxQueueSize: -1
+#  command:
+#    default:
+#      circuitBreaker:
+#        foreOpen: false
+#      execution:
+#        timeout:
+#          enabled: true
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 900000
+#            
+#eureka相关配置
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://user:password123@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    lease-renewal-interval-in-seconds: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

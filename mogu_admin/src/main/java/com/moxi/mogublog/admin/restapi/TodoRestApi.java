@@ -18,8 +18,7 @@ import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,9 +40,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Api(value = "代办事项RestApi", tags = {"LinkRestApi"})
 @RequestMapping("/todo")
+@Slf4j
 public class TodoRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     TodoService todoService;
 

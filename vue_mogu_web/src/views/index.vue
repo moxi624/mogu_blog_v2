@@ -182,6 +182,7 @@
     created() {
       var secondParams = new URLSearchParams();
       secondParams.append("level", 2);
+      secondParams.append("useSort", 1);
       getBlogByLevel(secondParams).then(response => {
         this.secondData = response.data.records;
       });

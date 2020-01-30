@@ -24,6 +24,14 @@ export function editBlog(params) {
   })
 }
 
+export function editBatchBlog(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blog/editBatch',
+    method: 'post',
+    data: params
+  })
+}
+
 export function deleteBlog(params) {
   return request({
     url: process.env.ADMIN_API + '/blog/delete',

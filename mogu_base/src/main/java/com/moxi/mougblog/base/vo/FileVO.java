@@ -3,6 +3,7 @@ package com.moxi.mougblog.base.vo;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * FileVO
@@ -37,6 +38,10 @@ public class FileVO extends BaseVO<FileVO> {
      */
     private List<String> urlList;
 
+    /**
+     * 系统配置
+     */
+    private Map<String, Object> systemConfig;
 
 
 }

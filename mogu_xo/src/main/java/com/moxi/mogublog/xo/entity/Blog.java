@@ -100,6 +100,12 @@ public class Blog extends SuperEntity<Blog> {
      */
     private Integer level;
 
+    /**
+     * 排序字段，数值越大，越靠前
+     */
+    private Integer sort;
+
+
     // 以下字段不存入数据库，封装为了方便使用
 
     /**
@@ -119,6 +125,18 @@ public class Blog extends SuperEntity<Blog> {
      */
     @TableField(exist = false)
     private BlogSort blogSort;
+
+    /**
+     * 博客分类名
+     */
+    @TableField(exist = false)
+    private String blogSortName;
+
+    /**
+     * 博客标题图
+     */
+    @TableField(exist = false)
+    private String photoUrl;
 
     /**
      * 点赞数

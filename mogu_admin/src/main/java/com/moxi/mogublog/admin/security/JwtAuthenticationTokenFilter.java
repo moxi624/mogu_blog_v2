@@ -2,8 +2,8 @@ package com.moxi.mogublog.admin.security;
 
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import com.moxi.mogublog.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    private static Logger log = LogManager.getLogger(JwtAuthenticationTokenFilter.class);
 
     @Autowired
     private Audience audience;
@@ -117,13 +117,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        //得到请求头信息authorization信息
-        final String authHeader = request.getHeader(tokenHeader);//设定为Authorization
 
-        log.error("传递过来的token为:" + authHeader);
+        //得到请求头信息authorization信息
+        String authHeader = request.getHeader(tokenHeader);
+
+        // 从picture服务传递过来的token，如果有说明执行了上传操作
+        final String pictureToken = request.getHeader("pictureToken");
+        if (StringUtils.isNotEmpty(pictureToken)) {
+            authHeader = pictureToken;
+        }
 
         //请求头 'Authorization': tokenHead + token
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
+
+            log.error("传递过来的token为:" + authHeader);
 
             final String token = authHeader.substring(tokenHead.length());
 
@@ -132,6 +139,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 //刷新token过期时间
                 jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
                 log.info("token未过期，刷新token");
+
             } else {
                 chain.doFilter(request, response);
                 return;
@@ -154,8 +162,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
+
                     logger.info("authenticated user " + username + ", setting security context");
-                    SecurityContextHolder.getContext().setAuthentication(authentication);//以后可以security中取得SecurityUser信息
+
+                    //以后可以security中取得SecurityUser信息
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }

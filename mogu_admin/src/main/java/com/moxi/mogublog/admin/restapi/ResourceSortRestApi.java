@@ -5,28 +5,35 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.service.ResourceSortService;
+import com.moxi.mogublog.xo.vo.ResourceSortVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * <p>
@@ -34,35 +41,34 @@ import java.util.Map;
  * </p>
  *
  * @author xzx19950624@qq.com
- * @since 2018年10月19日21:36:02
+ * @since 2020年1月9日19:23:28
  */
-//@PreAuthorize("hasRole('Administrator')")
 @Api(value = "资源分类RestApi", tags = {"ResourceSortRestApi"})
 @RestController
 @RequestMapping("/resourceSort")
+@Slf4j
 public class ResourceSortRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
+    @Autowired
+    WebUtils webUtils;
+
     @Autowired
     ResourceSortService resourceSortService;
     @Autowired
     PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取资源分类列表", notes = "获取资源分类列表", response = String.class)
-    @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public String getList(HttpServletRequest request,
-                          @ApiParam(name = "keyword", value = "关键字", required = false) @RequestParam(name = "keyword", required = false) String keyword,
-                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    @PostMapping("/getList")
+    public String getList(@Validated({GetList.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
-        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<ResourceSort>();
-        if (StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
-            queryWrapper.like(SQLConf.SORT_NAME, keyword.trim());
+        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(resourceSortVO.getKeyword()) && !StringUtils.isEmpty(resourceSortVO.getKeyword().trim())) {
+            queryWrapper.like(SQLConf.SORT_NAME, resourceSortVO.getKeyword().trim());
         }
 
-        Page<ResourceSort> page = new Page<ResourceSort>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
+        Page<ResourceSort> page = new Page<>();
+        page.setCurrent(resourceSortVO.getCurrentPage());
+        page.setSize(resourceSortVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<ResourceSort> pageList = resourceSortService.page(page, queryWrapper);
@@ -71,16 +77,16 @@ public class ResourceSortRestApi {
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
         });
         String pictureResult = null;
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         if (fileUids != null) {
-            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get("uid").toString(), item.get("url").toString());
@@ -89,8 +95,8 @@ public class ResourceSortRestApi {
         for (ResourceSort item : list) {
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
                 });
@@ -104,69 +110,100 @@ public class ResourceSortRestApi {
     @OperationLogger(value = "增加资源分类")
     @ApiOperation(value = "增加资源分类", notes = "增加资源分类", response = String.class)
     @PostMapping("/add")
-    public String add(HttpServletRequest request,
-                      @ApiParam(name = "sortName", value = "资源分类名", required = false) @RequestParam(name = "sortName", required = false) String sortName,
-                      @ApiParam(name = "content", value = "分类介绍", required = false) @RequestParam(name = "content", required = false) String content,
-                      @ApiParam(name = "fileUid", value = "分类资源UID", required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
+    public String add(@Validated({Insert.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(sortName)) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        /**
+         * 判断需要增加的分类是否存在
+         */
+        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.SORT_NAME, resourceSortVO.getSortName());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
+        if (tempSort != null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
         }
+
         ResourceSort resourceSort = new ResourceSort();
-        resourceSort.setSortName(sortName);
-        resourceSort.setContent(content);
-        resourceSort.setFileUid(fileUid);
+        resourceSort.setSortName(resourceSortVO.getSortName());
+        resourceSort.setContent(resourceSortVO.getContent());
+        resourceSort.setFileUid(resourceSortVO.getFileUid());
         resourceSort.setStatus(EStatus.ENABLE);
         resourceSort.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑资源分类")
     @ApiOperation(value = "编辑资源分类", notes = "编辑资源分类", response = String.class)
     @PostMapping("/edit")
-    public String edit(HttpServletRequest request,
-                       @ApiParam(name = "uid", value = "唯一UID", required = true) @RequestParam(name = "uid", required = true) String uid,
-                       @ApiParam(name = "sortName", value = "资源分类名", required = false) @RequestParam(name = "sortName", required = false) String sortName,
-                       @ApiParam(name = "content", value = "分类介绍", required = false) @RequestParam(name = "content", required = false) String content,
-                       @ApiParam(name = "fileUid", value = "分类资源UID", required = false) @RequestParam(name = "fileUid", required = false) String fileUid) {
+    public String edit(@Validated({Update.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        ResourceSort resourceSort = resourceSortService.getById(resourceSortVO.getUid());
+
+        /**
+         * 判断需要编辑的分类是否存在
+         */
+        if (!resourceSort.getSortName().equals(resourceSortVO.getSortName())) {
+            QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.SORT_NAME, resourceSortVO.getSortName());
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
+            if (tempSort != null) {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+            }
         }
 
-        ResourceSort resourceSort = resourceSortService.getById(uid);
-        resourceSort.setSortName(sortName);
-        resourceSort.setContent(content);
-        resourceSort.setFileUid(fileUid);
+        resourceSort.setSortName(resourceSortVO.getSortName());
+        resourceSort.setContent(resourceSortVO.getContent());
+        resourceSort.setFileUid(resourceSortVO.getFileUid());
         resourceSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
-    @OperationLogger(value = "删除资源分类")
-    @ApiOperation(value = "删除资源分类", notes = "删除资源分类", response = String.class)
-    @PostMapping("/delete")
-    public String delete(HttpServletRequest request,
-                         @ApiParam(name = "uid", value = "唯一UID", required = true) @RequestParam(name = "uid", required = true) String uid) {
+    @OperationLogger(value = "批量删除资源分类")
+    @ApiOperation(value = "批量删除资源分类", notes = "批量删除资源分类", response = String.class)
+    @PostMapping("/deleteBatch")
+    public String delete(@Validated({Delete.class}) @RequestBody List<ResourceSortVO> resourceSortVOList, BindingResult result) {
 
-        if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        if (resourceSortVOList.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-        ResourceSort resourceSort = resourceSortService.getById(uid);
-        resourceSort.setStatus(EStatus.DISABLED);
-        resourceSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        List<String> uids = new ArrayList<>();
+        resourceSortVOList.forEach(item -> {
+            uids.add(item.getUid());
+        });
+        Collection<ResourceSort> tagList = resourceSortService.listByIds(uids);
+
+        tagList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        Boolean save = resourceSortService.updateBatchById(tagList);
+
+        if (save) {
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+        }
     }
 
     @OperationLogger(value = "置顶资源分类")
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)
     @PostMapping("/stick")
-    public String stick(HttpServletRequest request,
-                        @ApiParam(name = "uid", value = "唯一UID", required = true) @RequestParam(name = "uid", required = true) String uid) {
+    public String stick(@Validated({Delete.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
-        }
-        ResourceSort resourceSort = resourceSortService.getById(uid);
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        ResourceSort resourceSort = resourceSortService.getById(resourceSortVO.getUid());
 
         //查找出最大的那一个
         QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
@@ -179,10 +216,10 @@ public class ResourceSortRestApi {
         ResourceSort maxSort = list.get(0);
 
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(resourceSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
@@ -191,7 +228,7 @@ public class ResourceSortRestApi {
 
         resourceSort.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, "置顶成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 }
 

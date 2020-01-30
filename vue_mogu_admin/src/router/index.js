@@ -65,7 +65,12 @@ export const constantRouterMap = [
         component: () => import('@/views/blog/blogSort'),
         meta: { title: '分类管理', icon: 'sort' }
       },
-
+      {
+        path: 'blogRecommend',
+        name: '推荐管理',
+        component: () => import('@/views/blog/blogRecommend'),
+        meta: { title: '推荐管理', icon: 'sort' }
+      },
       {
         path: 'collect',
         name: '收藏管理',
@@ -216,6 +221,12 @@ export const constantRouterMap = [
         name: '网站配置',
         component: () => import('@/views/system/webConfig'),
         meta: { title: '网站配置', icon: 'web' }
+      },
+      {
+        path: 'systemConfig',
+        name: '系统配置',
+        component: () => import('@/views/system/systemConfig'),
+        meta: { title: '系统配置', icon: 'web' }
       }
     ]
   },
@@ -272,6 +283,12 @@ export const constantRouterMap = [
         name: 'Web接口',
         component: () => import('@/views/restapi/webRestApi'),
         meta: { title: 'Web接口', icon: 'table' }
+      },
+      {
+        path: 'searchRestApi',
+        name: 'Search接口',
+        component: () => import('@/views/restapi/searchRestApi'),
+        meta: { title: 'Search接口', icon: 'table' }
       }
     ]
   },
@@ -310,8 +327,36 @@ export const constantRouterMap = [
       {
         path: 'Solr',
         name: 'Solr',
-        component: () => import('@/views/system/solrIndex'),
+        component: () => import('@/views/monitor/Solr'),
         meta: { title: 'Solr', icon: 'index' }
+      },
+      {
+        path: 'ElasticSearch',
+        name: 'Druid',
+        component: () => import('@/views/monitor/ElasticSearch'),
+        meta: { title: 'ElasticSearch', icon: 'exception' }
+      },
+    ]
+  },
+
+  {
+    path: '/test',
+    component: Layout,
+    redirect: '/test/markdown',
+    name: '测试页面',
+    meta: { title: '测试页面', icon: 'log' },
+    children: [
+      {
+        path: 'CropperPicture',
+        name: 'CropperPicture',
+        component: () => import('@/views/test/CropperPicture'),
+        meta: { title: '图片裁剪', icon: 'log' }
+      },
+      {
+        path: 'Markdown',
+        name: 'Markdown',
+        component: () => import('@/views/test/Markdown'),
+        meta: { title: 'Markdown', icon: 'exception' }
       }
     ]
   },

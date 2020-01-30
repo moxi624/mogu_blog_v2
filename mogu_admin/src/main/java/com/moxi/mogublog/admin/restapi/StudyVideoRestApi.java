@@ -5,30 +5,37 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
+import com.moxi.mogublog.xo.vo.StudyVideoVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Delete;
+import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * <p>
@@ -36,15 +43,17 @@ import java.util.Map;
  * </p>
  *
  * @author xzx19950624@qq.com
- * @since 2018年10月19日21:35:55
+ * @since 2020年1月10日22:44:35
  */
-//@PreAuthorize("hasRole('Administrator')")
 @RestController
 @RequestMapping("/studyVideo")
 @Api(value = "视频RestApi", tags = {"StudyVideoRestApi"})
+@Slf4j
 public class StudyVideoRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
+    @Autowired
+    WebUtils webUtils;
+
     @Autowired
     StudyVideoService studyVideoService;
     @Autowired
@@ -53,20 +62,20 @@ public class StudyVideoRestApi {
     PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取学习视频列表", notes = "获取学习视频列表", response = String.class)
-    @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public String getList(HttpServletRequest request,
-                          @ApiParam(name = "keyword", value = "关键字", required = false) @RequestParam(name = "keyword", required = false) String keyword,
-                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    @PostMapping(value = "/getList")
+    public String getList(@Validated({GetList.class}) @RequestBody StudyVideoVO studyVideoVO, BindingResult result) {
 
-        QueryWrapper<StudyVideo> queryWrapper = new QueryWrapper<StudyVideo>();
-        if (StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
-            queryWrapper.like(SQLConf.NAME, keyword.trim());
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        QueryWrapper<StudyVideo> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(studyVideoVO.getKeyword()) && !StringUtils.isEmpty(studyVideoVO.getKeyword().trim())) {
+            queryWrapper.like(SQLConf.NAME, studyVideoVO.getKeyword().trim());
         }
 
-        Page<StudyVideo> page = new Page<StudyVideo>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
+        Page<StudyVideo> page = new Page<>();
+        page.setCurrent(studyVideoVO.getCurrentPage());
+        page.setSize(studyVideoVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         IPage<StudyVideo> pageList = studyVideoService.page(page, queryWrapper);
@@ -75,26 +84,26 @@ public class StudyVideoRestApi {
         final StringBuffer fileUids = new StringBuffer();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
         });
         String pictureResult = null;
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         if (fileUids != null) {
-            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
 
         for (StudyVideo item : list) {
             //获取分类资源
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
                 });
@@ -106,47 +115,78 @@ public class StudyVideoRestApi {
                 item.setResourceSort(resourceSort);
             }
         }
-        log.info("返回结果");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
     @OperationLogger(value = "增加学习视频")
     @ApiOperation(value = "增加学习视频", notes = "增加学习视频", response = String.class)
     @PostMapping("/add")
-    public String add(HttpServletRequest request, @RequestBody StudyVideo studyVideo) {
+    public String add(@Validated({Insert.class}) @RequestBody StudyVideoVO studyVideoVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(studyVideo.getName()) || StringUtils.isEmpty(studyVideo.getResourceSortUid())) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
-        }
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+        StudyVideo studyVideo = new StudyVideo();
+        studyVideo.setName(studyVideoVO.getName());
+        studyVideo.setSummary(studyVideoVO.getSummary());
+        studyVideo.setContent(studyVideoVO.getContent());
+        studyVideo.setFileUid(studyVideoVO.getFileUid());
+        studyVideo.setBaiduPath(studyVideoVO.getBaiduPath());
+        studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
+        studyVideo.setClickCount(SysConf.ZERO);
         studyVideo.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "添加成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
     @OperationLogger(value = "编辑学习视频")
     @ApiOperation(value = "编辑学习视频", notes = "编辑学习视频", response = String.class)
     @PostMapping("/edit")
-    public String edit(HttpServletRequest request, @RequestBody StudyVideo studyVideo) {
+    public String edit(@Validated({Update.class}) @RequestBody StudyVideoVO studyVideoVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(studyVideo.getName()) || StringUtils.isEmpty(studyVideo.getResourceSortUid())) {
-            return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
-        }
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        StudyVideo studyVideo = studyVideoService.getById(studyVideoVO.getUid());
+        studyVideo.setName(studyVideoVO.getName());
+        studyVideo.setSummary(studyVideoVO.getSummary());
+        studyVideo.setContent(studyVideoVO.getContent());
+        studyVideo.setFileUid(studyVideoVO.getFileUid());
+        studyVideo.setBaiduPath(studyVideoVO.getBaiduPath());
+        studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
         studyVideo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @OperationLogger(value = "删除学习视频")
     @ApiOperation(value = "删除学习视频", notes = "删除学习视频", response = String.class)
-    @PostMapping("/delete")
-    public String delete(HttpServletRequest request,
-                         @ApiParam(name = "uid", value = "唯一UID", required = true) @RequestParam(name = "uid", required = true) String uid) {
+    @PostMapping("/deleteBatch")
+    public String deleteBatch(@Validated({Delete.class}) @RequestBody List<StudyVideoVO> studyVideoVO, BindingResult result) {
 
-        if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "数据错误");
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        if (studyVideoVO.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-        StudyVideo studyVideo = studyVideoService.getById(uid);
-        studyVideo.setStatus(EStatus.DISABLED);
-        studyVideo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "删除成功");
+        List<String> uids = new ArrayList<>();
+
+        studyVideoVO.forEach(item -> {
+            uids.add(item.getUid());
+        });
+
+        Collection<StudyVideo> blogSortList = studyVideoService.listByIds(uids);
+
+        blogSortList.forEach(item -> {
+            item.setStatus(EStatus.DISABLED);
+        });
+
+        Boolean save = studyVideoService.updateBatchById(blogSortList);
+
+        if (save) {
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+        }
     }
+
 }
 

@@ -4,33 +4,34 @@
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名称"></el-input>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>	      
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
+        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
-    <el-table :data="tableData"  style="width: 100%"> 
+    <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
-  		
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
 	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
 	      </template>
 	    </el-table-column>
-		  
+
+      <el-table-column label="名称" width="160">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="分类名" width="160">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.resourceSort.sortName }}</span>
-	      </template>
-	    </el-table-column>
-
-	    <el-table-column label="名称" width="160">
-	      <template slot-scope="scope">
-	        <span>{{ scope.row.name }}</span>
+          <el-tag type="danger">{{ scope.row.resourceSort.sortName }}</el-tag>
 	      </template>
 	    </el-table-column>
 
@@ -51,13 +52,13 @@
 	        <span>{{ scope.row.baiduPath }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	    <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -71,13 +72,13 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-	    
-	    <el-table-column label="操作" fixed="right" min-width="150"> 
-	      <template slot-scope="scope" >          
+
+	    <el-table-column label="操作" fixed="right" min-width="150">
+	      <template slot-scope="scope" >
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
 	      </template>
-	    </el-table-column>     	    
+	    </el-table-column>
 	  </el-table>
 
 		<!--分页-->
@@ -94,36 +95,34 @@
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
 		  <el-form :model="form">
-		  	
+
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>	    		 
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
-		    	</div>				
+		    	</div>
 		    </el-form-item>
-		    
-		    <el-form-item label="分类名" :label-width="formLabelWidth" required>
-		      <el-select
+
+        <el-form-item label="分类" :label-width="formLabelWidth" required>
+          <el-select
             v-model="form.resourceSortUid"
-            filterable
-            clearable
-            remote
-            reserve-keyword
-            placeholder="请输入分类名"
-            :remote-method="sortRemoteMethod"
-            :loading="loading">
+            size="small"
+            placeholder="请选择"
+            style="width:150px"
+          >
             <el-option
-              v-for="item in sortOptions"
+              v-for="item in resourceSortData"
               :key="item.uid"
               :label="item.sortName"
-              :value="item.uid">
-            </el-option>
+              :value="item.uid"
+            ></el-option>
           </el-select>
+
 		    </el-form-item>
-		    
+
 		    <el-form-item label="名称" :label-width="formLabelWidth">
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
@@ -143,7 +142,7 @@
         <el-form-item label="正文" :label-width="formLabelWidth">
 		      <CKEditor ref="ckeditor" :content="form.content"></CKEditor>
 		    </el-form-item>
-        
+
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -165,7 +164,7 @@ import {
   getStudyVideoList,
   addStudyVideo,
   editStudyVideo,
-  deleteStudyVideo
+  deleteBatchStudyVideo
 } from "@/api/studyVideo";
 
 import { getResourceSortList } from "@/api/resourceSort";
@@ -181,11 +180,21 @@ export default {
   },
   created() {
     this.studyVideoList();
+
+    var resourceSortParams = {};
+    resourceSortParams.pageSize = 100;
+    resourceSortParams.currentPage = 1;
+    getResourceSortList(resourceSortParams).then(response => {
+      this.resourceSortData = response.data.records;
+    });
+
   },
   data() {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
+      multipleSelection: [], //多选，用于批量删除
       tableData: [],
+      resourceSortData: [], //资源分类列表
       form: {
         uid: null,
         name: null,
@@ -199,7 +208,7 @@ export default {
       total: null,
       pageSize: 10,
       keyword: "",
-      title: "增加分类",
+      title: "增加视频",
       formLabelWidth: "120px", //弹框的label边框
       dialogFormVisible: false,
       isEditForm: false,
@@ -211,29 +220,16 @@ export default {
   },
   methods: {
     studyVideoList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
       getStudyVideoList(params).then(response => {
         console.log("获取的响应", response);
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
         this.pageSize = response.data.size;
         this.total = response.data.total;
-
-        //给每个评分参考增加指标 和专业
-        for (let a = 0; a < response.data.records.length; a++) {
-          let tag1 = false;
-          this.sortOptions.forEach(element => {
-            if (element.uid == response.data.records[a].resourceSort.uid) {
-              tag1 = true;
-            }
-          });
-          if (!tag1) {
-            this.sortOptions.push(response.data.records[a].resourceSort);
-          }
-        }
       });
     },
     handleFind: function() {
@@ -251,19 +247,6 @@ export default {
         clickCount: 0
       };
       return formObject;
-    },
-    //分类远程搜索函数
-    sortRemoteMethod: function(query) {
-      if (query !== "") {
-        var params = new URLSearchParams();
-        params.append("keyword", query);
-        getResourceSortList(params).then(response => {
-          console.log(response);
-          this.sortOptions = response.data.records;
-        });
-      } else {
-        this.sortOptions = [];
-      }
     },
     //弹出选择图片框
     checkPhoto: function() {
@@ -320,7 +303,6 @@ export default {
     handleEdit: function(row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
       var that = this;
       try {
@@ -338,9 +320,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
-          deleteStudyVideo(params).then(response => {
+          var params = [];
+          params.push(row);
+          deleteBatchStudyVideo(params).then(response => {
             console.log(response);
             if (response.code == "success") {
               this.$message({
@@ -349,6 +331,38 @@ export default {
               });
               this.studyVideoList();
             }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleDeleteBatch: function() {
+      var that = this;
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中的视频删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteBatchStudyVideo(that.multipleSelection).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.studyVideoList();
           });
         })
         .catch(() => {
@@ -389,6 +403,10 @@ export default {
           this.studyVideoList();
         });
       }
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
   }
 };

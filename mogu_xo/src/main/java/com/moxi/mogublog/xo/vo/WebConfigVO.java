@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
@@ -66,6 +67,37 @@ public class WebConfigVO extends BaseVO<WebConfigVO> {
      * 是否开启评论(0:否， 1:是)
      */
     private String startComment;
+
+
+    /**
+     * github地址
+     */
+    private String github;
+
+    /**
+     * gitee地址
+     */
+    private String gitee;
+
+    /**
+     * QQ号
+     */
+    private String qqNumber;
+
+    /**
+     * QQ群
+     */
+    private String qqGroup;
+
+    /**
+     * 微信号
+     */
+    private String weChat;
+
+    /**
+     * 邮箱
+     */
+    private String email;
 
 
     // 以下字段不存入数据库，封装为了方便使用

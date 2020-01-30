@@ -24,8 +24,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,9 +46,9 @@ import java.util.*;
 @Api(value = "标签RestApi", tags = {"TagRestApi"})
 @RestController
 @RequestMapping("/tag")
+@Slf4j
 public class TagRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
     @Autowired
     TagService tagService;
     @Autowired
@@ -133,11 +132,11 @@ public class TagRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        if(tagVoList.size() <=0 ) {
+        if (tagVoList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
-        tagVoList.forEach(item->{
+        tagVoList.forEach(item -> {
             uids.add(item.getUid());
         });
         Collection<Tag> tagList = tagService.listByIds(uids);
@@ -148,7 +147,7 @@ public class TagRestApi {
 
         Boolean save = tagService.updateBatchById(tagList);
 
-        if(save) {
+        if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);

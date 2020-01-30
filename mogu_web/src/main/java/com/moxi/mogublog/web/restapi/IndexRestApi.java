@@ -7,11 +7,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
@@ -22,8 +22,7 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -31,6 +30,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -47,9 +48,10 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/index")
 @Api(value = "首页RestApi", tags = {"IndexRestApi"})
+@Slf4j
 public class IndexRestApi {
-
-    private static Logger log = LogManager.getLogger(IndexRestApi.class);
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     TagService tagService;
 
@@ -87,7 +89,8 @@ public class IndexRestApi {
     @GetMapping("/getBlogByLevel")
     public String getBlogByLevel(HttpServletRequest request,
                                  @ApiParam(name = "level", value = "推荐等级", required = false) @RequestParam(name = "level", required = false, defaultValue = "0") Integer level,
-                                 @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage) {
+                                 @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                                 @ApiParam(name = "useSort", value = "使用排序", required = false) @RequestParam(name = "useSort", required = false, defaultValue = "0") Integer useSort) {
 
         //从Redis中获取内容
         String jsonResult = stringRedisTemplate.opsForValue().get("BOLG_LEVEL:" + level);
@@ -123,11 +126,11 @@ public class IndexRestApi {
             }
             break;
         }
-        IPage<Blog> pageList = blogService.getBlogPageByLevel(page, level);
+        IPage<Blog> pageList = blogService.getBlogPageByLevel(page, level, useSort);
         List<Blog> list = pageList.getRecords();
 
         // 一级推荐或者二级推荐没有内容时，自动把top5填充至一级推荐和二级推荐中
-        if((level == SysConf.ONE || level == SysConf.TWO) && list.size() == 0) {
+        if ((level == SysConf.ONE || level == SysConf.TWO) && list.size() == 0) {
             QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
             Page<Blog> hotPage = new Page<>();
             page.setCurrent(1);
@@ -140,9 +143,9 @@ public class IndexRestApi {
             List<Blog> hotBlogList = hotPageList.getRecords();
             List<Blog> secondBlogList = new ArrayList<>();
             List<Blog> firstBlogList = new ArrayList<>();
-            for(int a=0; a<hotBlogList.size(); a++) {
+            for (int a = 0; a < hotBlogList.size(); a++) {
                 // 当推荐大于两个的时候
-                if((hotBlogList.size() - firstBlogList.size()) > BLOG_SECOND_COUNT) {
+                if ((hotBlogList.size() - firstBlogList.size()) > BLOG_SECOND_COUNT) {
                     firstBlogList.add(hotBlogList.get(a));
                 } else {
                     secondBlogList.add(hotBlogList.get(a));
@@ -157,8 +160,16 @@ public class IndexRestApi {
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList).toString(), 1, TimeUnit.HOURS);
 
             switch (level) {
-                case SysConf.ONE: {pageList.setRecords(firstBlogList);};break;
-                case SysConf.TWO: {pageList.setRecords(secondBlogList);};break;
+                case SysConf.ONE: {
+                    pageList.setRecords(firstBlogList);
+                }
+                ;
+                break;
+                case SysConf.TWO: {
+                    pageList.setRecords(secondBlogList);
+                }
+                ;
+                break;
             }
             return ResultUtil.result(SysConf.SUCCESS, pageList);
         }
@@ -224,7 +235,7 @@ public class IndexRestApi {
         log.info("获取首页最新的博客");
 
         // 只缓存第一页的内容
-        if(currentPage == 1L) {
+        if (currentPage == 1L) {
             //从Redis中获取内容
             String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.NEW_BLOG);
 
@@ -258,7 +269,7 @@ public class IndexRestApi {
         list = setBlog(list);
 
         //将从最新博客缓存到redis中
-        if(currentPage == 1L) {
+        if (currentPage == 1L) {
             stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString());
             log.info("将数据缓存至Redis中");
         }
@@ -361,22 +372,22 @@ public class IndexRestApi {
 
         if (StringUtils.isNotEmpty(webConfig.getLogo())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), SysConf.FILE_SEGMENTATION);
-            webConfig.setPhotoList(WebUtils.getPicture(pictureList));
+            webConfig.setPhotoList(webUtils.getPicture(pictureList));
         }
 
         //获取支付宝收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), SysConf.FILE_SEGMENTATION);
-            if (WebUtils.getPicture(pictureList).size() > 0) {
-                webConfig.setAliPayPhoto(WebUtils.getPicture(pictureList).get(0));
+            if (webUtils.getPicture(pictureList).size() > 0) {
+                webConfig.setAliPayPhoto(webUtils.getPicture(pictureList).get(0));
             }
 
         }
         //获取微信收款二维码
         if (webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), SysConf.FILE_SEGMENTATION);
-            if (WebUtils.getPicture(pictureList).size() > 0) {
-                webConfig.setWeixinPayPhoto(WebUtils.getPicture(pictureList).get(0));
+            if (webUtils.getPicture(pictureList).size() > 0) {
+                webConfig.setWeixinPayPhoto(webUtils.getPicture(pictureList).get(0));
             }
 
         }
@@ -426,7 +437,7 @@ public class IndexRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         if (sortUids.size() > 0) {

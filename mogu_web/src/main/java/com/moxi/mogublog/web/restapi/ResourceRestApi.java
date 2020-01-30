@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.ResourceSort;
 import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
@@ -18,14 +18,14 @@ import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -38,9 +38,10 @@ import java.util.*;
 @RestController
 @RequestMapping("/resource")
 @Api(value = "学习教程 RestApi", tags = {"ResourceRestApi"})
+@Slf4j
 public class ResourceRestApi {
-
-    private static Logger log = LogManager.getLogger(ResourceRestApi.class);
+    @Autowired
+    WebUtils webUtils;
     @Autowired
     private ResourceSortService resourceSortService;
     @Autowired
@@ -80,7 +81,7 @@ public class ResourceRestApi {
         }
         //PictureList
         String result = this.pictureFeignClient.getPicture(fileIds, ",");
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(result);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(result);
 
         //ResourceSort
         Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(resourceSortUids);

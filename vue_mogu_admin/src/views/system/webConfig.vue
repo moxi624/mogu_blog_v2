@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+
     <el-tabs type="border-card">
       <el-tab-pane>
         <span slot="label">
@@ -94,6 +95,50 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
+
+      <el-tab-pane>
+        <span slot="label">
+          <i class="el-icon-date"></i> 关注我们
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="80px"
+          ref="from"
+        >
+
+          <el-form-item label="邮箱" prop="oldPwd">
+            <el-input v-model="form.email" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="QQ号" prop="newPwd1">
+            <el-input v-model="form.qqNumber" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="QQ群" prop="newPwd2">
+            <el-input v-model="form.qqGroup" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="github" prop="newPwd1">
+            <el-input v-model="form.github" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="gitee" prop="newPwd2">
+            <el-input v-model="form.gitee" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="微信" prop="newPwd2">
+            <el-input v-model="form.weChat" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()">保 存</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
     </el-tabs>
 
     <CheckPhoto

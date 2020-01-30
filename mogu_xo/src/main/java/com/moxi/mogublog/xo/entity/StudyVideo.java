@@ -55,7 +55,7 @@ public class StudyVideo extends SuperEntity<StudyVideo> {
     /**
      * 点击数
      */
-    private String clickCount;
+    private Integer clickCount;
 
     /**
      * 学习视频标题图

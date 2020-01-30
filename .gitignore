@@ -1,4 +1,5 @@
 /target/
+/temp/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -27,3 +28,5 @@
 /.nb-gradle/
 
 /webapps/
+
+/logs/

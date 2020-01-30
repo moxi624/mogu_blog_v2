@@ -81,7 +81,7 @@
 		      <el-input v-model="form.uid" auto-complete="off"></el-input>
 		    </el-form-item>
 
-				<el-form-item label="图片" :label-width="formLabelWidth">
+				<el-form-item label="封面" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
 	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>
@@ -94,6 +94,10 @@
 		    <el-form-item label="标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
+
+        <el-form-item label="tip" :label-width="formLabelWidth" v-if="!isEditForm">
+          <el-tag type="success">首次创建图片分类，可以先不设置封面，待到有图片时在设置即可</el-tag>
+        </el-form-item>
 
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">

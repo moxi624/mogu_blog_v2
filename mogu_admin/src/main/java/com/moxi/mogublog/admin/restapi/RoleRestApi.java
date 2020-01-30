@@ -20,8 +20,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -41,9 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/role")
 @Api(value = "角色管理RestApi", tags = {"RoleRestApi"})
+@Slf4j
 public class RoleRestApi {
 
-    private static Logger log = LogManager.getLogger(RoleRestApi.class);
     @Autowired
     private RoleService roleService;
 

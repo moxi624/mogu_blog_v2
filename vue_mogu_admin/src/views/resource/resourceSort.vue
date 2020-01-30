@@ -5,9 +5,10 @@
 	      <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名称"></el-input>
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
+        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
-    <el-table :data="tableData"  style="width: 100%">
+    <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60">
@@ -118,7 +119,7 @@ import {
   getResourceSortList,
   addResourceSort,
   editResourceSort,
-  deleteResourceSort,
+  deleteBatchResourceSort,
   stickResourceSort
 } from "@/api/resourceSort";
 
@@ -136,6 +137,7 @@ export default {
   data() {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
+      multipleSelection: [], //多选，用于批量删除
       tableData: [],
       form: {
         uid: null,
@@ -160,10 +162,12 @@ export default {
   },
   methods: {
     resourceSortList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+
+      var params = {};
+      params.keyword = this.keyword;
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
+
       getResourceSortList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
@@ -243,8 +247,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          var params = {};
+          params.uid = row.uid;
           stickResourceSort(params).then(response => {
             if (response.code == "success") {
               this.resourceSortList();
@@ -274,9 +278,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
-          deleteResourceSort(params).then(response => {
+          var params = [];
+          params.push(row);
+          deleteBatchResourceSort(params).then(response => {
             console.log(response);
             if (response.code == "success") {
               this.$message({
@@ -294,11 +298,42 @@ export default {
           });
         });
     },
+    handleDeleteBatch: function() {
+      var that = this;
+      var that = this;
+      if(that.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要删除的内容！"
+        });
+        return;
+      }
+      this.$confirm("此操作将把选中的分类删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteBatchResourceSort(that.multipleSelection).then(response => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: response.data
+            });
+            that.resourceSortList();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
     submitForm: function() {
-      console.log("提交表单", this.form);
-      var params = formatData(this.form);
+
       if (this.isEditForm) {
-        editResourceSort(params).then(response => {
+        editResourceSort(this.form).then(response => {
           console.log(response);
           this.$message({
             type: "success",
@@ -308,8 +343,7 @@ export default {
           this.resourceSortList();
         });
       } else {
-        addResourceSort(params).then(response => {
-          console.log(response);
+        addResourceSort(this.form).then(response => {
           if (response.code == "success") {
             this.$message({
               type: "success",
@@ -326,6 +360,10 @@ export default {
           this.resourceSortList();
         });
       }
+    },
+    // 改变多选
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
     }
   }
 };

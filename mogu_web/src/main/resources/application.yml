@@ -33,7 +33,7 @@ BLOG:
   SECOND_COUNT: 2 #二级推荐
   THIRD_COUNT: 3 #三级推荐
   FOURTH_COUNT: 5 #四级推荐
-  USER_TOKEN_SURVIVAL_TIME: 6000 # toekn令牌存活时间, 100分钟
+  USER_TOKEN_SURVIVAL_TIME: 168 # toekn令牌存活时间, 7天  168 = 7*24
 
 
 #spring
@@ -44,13 +44,17 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-web
+  security:
+    user:
+      name: user
+      password: password123
 
   # DATABASE CONFIG
   datasource:
     username: root
     password: root
     url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&serverTimezone=GMT%2B8
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
     # 初始化大小，最小，最大
@@ -96,23 +100,40 @@ spring:
     host: 127.0.0.1 #redis的主机ip
     port: 6379
 
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8606
+        username: user
+        password: password123
+
 #eureka相关配置
 eureka:
   client:
     healthcheck:
       enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
-      defaultZone: http://user:password123@localhost:8761/eureka
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
-    metadata-map:
-      zone: ABC      # eureka可以理解的元数据
-      lilizhou: BBC  # 不会影响客户端行为
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 5
 
 # 或者：
 feign.hystrix.enabled: false ## 索性禁用feign的hystrix支持
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 #mybatis
 mybatis-plus:

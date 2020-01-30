@@ -5,25 +5,30 @@ import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.CheckUtils;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.CategoryMenu;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
-import com.moxi.mougblog.base.vo.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -38,7 +43,11 @@ import java.util.*;
 @RestController
 @RequestMapping("/auth")
 @Api(value = "登录管理RestApi", tags = {"loginRestApi"})
+@Slf4j
 public class LoginRestApi {
+
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     private AdminService adminService;
@@ -100,7 +109,7 @@ public class LoginRestApi {
         roleUids.add(admin.getRoleUid());
         List<Role> roles = (List<Role>) roleService.listByIds(roleUids);
 
-        if(roles.size() <= 0) {
+        if (roles.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_ROLE);
         }
         String roleNames = null;
@@ -136,7 +145,7 @@ public class LoginRestApi {
                        @ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
 
         Map<String, Object> map = new HashMap<>();
-        if (request.getAttribute(SysConf.ADMIN_UID) ==  null) {
+        if (request.getAttribute(SysConf.ADMIN_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, "token用户过期");
         }
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
@@ -144,9 +153,9 @@ public class LoginRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), SysConf.FILE_SEGMENTATION);
-            admin.setPhotoList(WebUtils.getPicture(pictureList));
+            admin.setPhotoList(webUtils.getPicture(pictureList));
 
-            List<String> list = WebUtils.getPicture(pictureList);
+            List<String> list = webUtils.getPicture(pictureList);
 
             if (list.size() > 0) {
                 map.put(SysConf.AVATAR, list.get(0));

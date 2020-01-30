@@ -22,8 +22,7 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +43,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/sort")
 @Api(value = "归档 RestApi", tags = {"SortRestApi"})
+@Slf4j
 public class SortRestApi {
 
-    private static Logger log = LogManager.getLogger(SortRestApi.class);
     @Autowired
     BlogService blogService;
     @Autowired
@@ -116,7 +115,7 @@ public class SortRestApi {
 
         // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
         map.forEach((key, value) -> {
-            stringRedisTemplate.opsForValue().set( SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
         });
 
         //将从数据库查询的数据缓存到redis中
@@ -182,7 +181,7 @@ public class SortRestApi {
 
         // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
         map.forEach((key, value) -> {
-            stringRedisTemplate.opsForValue().set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION  + key, JsonUtils.objectToJson(value).toString());
+            stringRedisTemplate.opsForValue().set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
         });
 
         //将从数据库查询的数据缓存到redis中

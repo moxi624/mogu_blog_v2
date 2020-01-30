@@ -1,8 +1,8 @@
 package com.moxi.mougblog.base.validator.constraint;
 
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.validator.Messages;
 import com.moxi.mougblog.base.validator.annotion.Range;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

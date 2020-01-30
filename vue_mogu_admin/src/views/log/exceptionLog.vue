@@ -12,19 +12,19 @@
           end-placeholder="结束日期"
           align="right">
         </el-date-picker>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>         
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">
-      
+
       <el-table-column type="selection"></el-table-column>
-      
+
       <el-table-column label="序号" width="60">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 
       <!-- <el-table-column label="异常Json格式" width="300">
 	      <template slot-scope="scope">
@@ -32,18 +32,37 @@
 	      </template>
 	    </el-table-column> -->
 
-      <el-table-column label="异常内容" width="700">
+      <el-table-column label="异常内容" width="300">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.exceptionMessage }}</span>
 	      </template>
 	    </el-table-column>
-	    
-	    <el-table-column label="创建时间" width="160">
+
+      <el-table-column label="接口名" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operation }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="IP" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ip }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="IP来源" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ipSource }}</span>
+        </template>
+      </el-table-column>
+
+
+        <el-table-column label="创建时间" width="160">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
-	    
+
 	   	<el-table-column label="状态" width="100">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
@@ -57,7 +76,13 @@
 		      </template>
 	   	  </template>
 	    </el-table-column>
-  	    
+
+      <el-table-column label="操作" fixed="right" min-width="150">
+        <template slot-scope="scope">
+          <el-button @click="handleShow(scope.row)" type="primary" size="small">详情</el-button>
+        </template>
+      </el-table-column>
+
 	  </el-table>
 
     <!--分页-->
@@ -71,6 +96,15 @@
         </el-pagination>
     </div>
 
+    <el-dialog
+      title="异常详情"
+      :visible.sync="dialogVisible"
+      :fullscreen = "true">
+      <h3>请求参数</h3>
+      <span>{{params}}</span>
+      <h3>异常详情</h3>
+      <span>{{this.exceptionJson}}}</span>
+    </el-dialog>
 
   </div>
 </template>
@@ -81,12 +115,15 @@ export default {
   data() {
     return {
       tableData: [],
+      params: "",
+      exceptionJson: "",
       userName: "",
       operation: "",
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
       formLabelWidth: "120px",
+      dialogVisible: false,
       pickerOptions2: {
         shortcuts: [
           {
@@ -144,9 +181,13 @@ export default {
       this.exceptionLogList();
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.exceptionLogList();
+    },
+    handleShow: function(row) {
+      this.exceptionJson = row.exceptionJson;
+      this.params = row.params;
+      this.dialogVisible = true;
     }
   }
 };

@@ -10,9 +10,9 @@
 	    </div>
 
       <div class= "imgAll">
-        <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" @click="checked(picture)">
-              <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0">
-              <img class= "img" :src="BASE_IMAGE_URL + picture.pictureUrl"/>
+        <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" >
+              <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
+              <img class= "img" :src="BASE_IMAGE_URL + picture.pictureUrl" @click="showPicture(BASE_IMAGE_URL + picture.pictureUrl)"/>
         </div>
         <div class= "removeFloat"></div>
       </div>
@@ -30,17 +30,37 @@
 
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
+
+
       <!-- 相册分类 -->
-    <el-upload class="upload-demo"  ref="upload" name="filedatas" :action="uploadPictureHost"
-    :on-preview="handlePreview" :on-remove="handleRemove" :data="otherData"
-          :multiple="true"
-          :file-list="fileList"
-          :on-success = "fileSuccess"
-          :auto-upload="false">
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitNormalUpload">上传到服务器</el-button>
+<!--    <el-upload class="upload-demo"  ref="upload" name="filedatas" :action="uploadPictureHost"-->
+<!--    :on-preview="handlePreview" :on-remove="handleRemove" :data="otherData"-->
+<!--          :multiple="true"-->
+<!--          :file-list="fileList"-->
+<!--          :on-success = "fileSuccess"-->
+<!--          :auto-upload="false">-->
+<!--        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+<!--        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitNormalUpload">上传到服务器</el-button>-->
+<!--      </el-upload>-->
+
+      <el-upload
+        class="upload-demo"
+        drag
+        ref="upload" name="filedatas" :action="uploadPictureHost"
+        :on-preview="handlePreview" :on-remove="handleRemove" :data="otherData"
+        :on-success = "fileSuccess"
+        multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
 		</el-dialog>
+
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen="true" style="text-align: center">
+      <img :src="dialogImageUrl" alt="">
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -52,6 +72,7 @@ import {
   deletePicture,
   setCover
 } from "@/api/picture";
+import { getToken } from '@/utils/auth'
 
 import { formatData } from "@/utils/webUtils";
 
@@ -61,6 +82,8 @@ export default {
   data() {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
+      dialogImageUrl: "", //图片显示地址
+      dialogPictureVisible: false,
       tableData: [],
       uploadPictureHost: null,
       fileList: [],
@@ -111,10 +134,12 @@ export default {
 
     //其它数据
     that.otherData = {
+      source: "picture",
       userUid: "uid00000000000000000000000000000000",
       adminUid: "uid00000000000000000000000000000000",
       projectName: "blog",
-      sortName: "admin"
+      sortName: "admin",
+      token: getToken()
     };
   },
   methods: {
@@ -146,6 +171,11 @@ export default {
         pictureSortUid: null
       };
       return formObject;
+    },
+    showPicture: function(url) {
+      console.log("点击图片");
+      this.dialogPictureVisible = true
+      this.dialogImageUrl = url
     },
     //点击单选
     checked: function(data) {
@@ -282,18 +312,27 @@ export default {
           var params = new URLSearchParams();
           params.append("fileUids", this.fileUids);
           params.append("pictureSortUid", this.pictureSortUid);
-          addPicture(params).then(response => {
-            if (response.code == "success") {
+          addPicture(params).then(res => {
+            if (res.code == "success") {
               this.$message({
                 type: "success",
-                message: response.data
+                message: res.data
               });
               that.pictureList();
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data
+              });
             }
           });
         }
+      } else {
+        this.$message({
+          type: "error",
+          message: response.data
+        });
       }
-
     }
   }
 };

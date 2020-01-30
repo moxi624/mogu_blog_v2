@@ -22,8 +22,7 @@ import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,9 +42,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/classify")
 @Api(value = "分类RestApi", tags = {"ClassifyRestApi"})
+@Slf4j
 public class ClassifyRestApi {
 
-    private static Logger log = LogManager.getLogger(ClassifyRestApi.class);
     @Autowired
     BlogService blogService;
     @Autowired

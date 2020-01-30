@@ -31,10 +31,11 @@ public interface PictureFeignClient {
 
     /**
      * 通过URL List上传图片
+     *
      * @param fileVO
      * @return
      */
-    @RequestMapping(value = "/file/uploadPicsByUrl", method = RequestMethod.POST)
+    @RequestMapping(value = "/file/uploadPicsByUrl2", method = RequestMethod.POST)
     public String uploadPicsByUrl(FileVO fileVO);
 
     @RequestMapping(value = "/file/hello", method = RequestMethod.GET)

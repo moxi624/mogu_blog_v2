@@ -15,10 +15,22 @@ public class BaseSysConf {
     public final static String TOKEN = "token";
     public final static String ACCESS_TOKEN = "accessToken";
 
+    // 不能评论
+    public final static String CAN_NOT_COMMENT = "0";
+
 
     public final static String CODE = "code";
     public final static String DATA = "data";
     public final static String UID = "uid";
+
+    /**
+     * 分页相关
+     */
+    public final static String TOTAL = "total";
+    public final static String TOTAL_PAGE = "totalPage";
+    public final static String CURRENT_PAGE = "currentPage";
+    public final static String BLOG_LIST = "blogList";
+    public final static String PAGE_SIZE = "pageSize";
 
     /**
      * blog
@@ -35,6 +47,7 @@ public class BaseSysConf {
     public final static String ADD = "add";
     public final static String DELETE = "delete";
     public final static String DELETE_BATCH = "deleteBatch";
+    public final static String EDIT_BATCH = "editBatch";
     public final static String DELETE_ALL = "deleteAll";
     public final static String EXCHANGE_DIRECT = "exchange.direct";
     public final static String MOGU_BLOG = "mogu.blog";
@@ -73,6 +86,19 @@ public class BaseSysConf {
     public static final int EIGHT = 8;
     public static final int NINE = 9;
     public static final int TEN = 10;
+
+    public static final int TWO_TWO_FIVE = 225;
+
+    // SystemConfig相关
+    public final static String UPLOAD_QI_NIU = "uploadQiNiu";
+    public final static String UPLOAD_LOCAL = "uploadLocal";
+    public final static String LOCAL_PICTURE_BASE_URL = "localPictureBaseUrl";
+    public final static String QI_NIU_PICTURE_BASE_URL = "qiNiuPictureBaseUrl";
+    public final static String QI_NIU_ACCESS_KEY = "qiNiuAccessKey";
+    public final static String QI_NIU_SECRET_KEY = "qiNiuSecretKey";
+    public final static String QI_NIU_BUCKET = "qiNiuBucket";
+    public final static String QI_NIU_AREA = "qiNiuArea";
+    public final static String PICTURE_PRIORITY = "picturePriority";
 
 
 }

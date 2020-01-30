@@ -17,15 +17,24 @@ public interface UserService extends SuperService<User> {
 
     /**
      * 记录用户信息
+     *
      * @param response
      */
     User insertUserInfo(HttpServletRequest request, String response);
 
     /**
      * 通过source uuid获取用户类
+     *
      * @param source
      * @param uuid
      * @return
      */
     User getUserBySourceAnduuid(String source, String uuid);
+
+    /**
+     * 获取用户数
+     * @param status
+     * @return
+     */
+    public Integer getUserCount(int status);
 }

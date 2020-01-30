@@ -50,7 +50,7 @@
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>[7.2.0, 7.2.99]</version>
+            <version>${qiniu.version}</version>
         </dependency>
 
         <dependency>
@@ -83,6 +83,22 @@
             <version>${startFeign.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${springBootAdmin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
     </dependencies>
 
     <!--spring boot打包的话需要指定一个唯一的入门-->
@@ -104,6 +120,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

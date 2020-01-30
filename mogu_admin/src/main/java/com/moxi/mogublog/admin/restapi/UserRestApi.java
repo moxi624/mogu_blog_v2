@@ -9,27 +9,19 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.utils.WebUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Link;
-import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.entity.User;
-import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.UserService;
-import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,9 +47,11 @@ import java.util.Map;
 @RestController
 @Api(value = "用户RestApi", tags = {"UserRestApi"})
 @RequestMapping("/user")
+@Slf4j
 public class UserRestApi {
 
-    private static Logger log = LogManager.getLogger(AdminRestApi.class);
+    @Autowired
+    WebUtils webUtils;
 
     @Autowired
     UserService userService;
@@ -99,7 +94,7 @@ public class UserRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = WebUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -117,7 +112,7 @@ public class UserRestApi {
                         pictureListTemp.add(pictureMap.get(picture));
                     }
                 });
-                if(pictureListTemp.size() > 0) {
+                if (pictureListTemp.size() > 0) {
                     item.setPhotoUrl(pictureListTemp.get(0));
                 }
             }
@@ -151,9 +146,9 @@ public class UserRestApi {
 
         User user = userService.getById(userVO.getUid());
 
-        if(user.getStatus() == EStatus.FREEZE) {
+        if (user.getStatus() == EStatus.FREEZE) {
             user.setStatus(EStatus.ENABLE);
-        } else if(user.getStatus() == EStatus.DISABLED) {
+        } else if (user.getStatus() == EStatus.DISABLED) {
             user.setStatus(EStatus.DISABLED);
         } else {
             user.setStatus(EStatus.FREEZE);

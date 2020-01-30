@@ -15,6 +15,7 @@ import com.moxi.mogublog.xo.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -36,6 +37,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/auth")
 @Api(value = "需放行接口RestApi", tags = {"AuthRestApi"})
+@Slf4j
 public class AuthRestApi {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;

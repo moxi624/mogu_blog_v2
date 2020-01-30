@@ -21,7 +21,7 @@ file:
 moguBlog:
   email: mogublog@163.com
 
-# 蘑菇博客默认密码
+# 蘑菇博客后台登录默认密码
 DEFAULE_PWD: mogu2018
 
 #博客相关配置
@@ -44,13 +44,18 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-admin
+  security:
+    user:
+      name: user
+      password: password123
+
 
   # DATABASE CONFIG
   datasource:
     username: root
     password: root
     url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&serverTimezone=GMT%2B8
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
     # 初始化大小，最小，最大
@@ -66,6 +71,8 @@ spring:
 
     #配置连接在池中的最小生存时间
     minEvictableIdleTimeMillis: 300000
+
+    validationQuery: SELECT 1 FROM DUAL
 
     dbcp:
       remove-abandoned: true
@@ -83,13 +90,6 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
-  #Solr
-  data:
-    solr:
-      host: http://localhost:8080/solr
-      core: collection1
-      repositories:
-        enabled: true
   #redis
   redis:
     host: 127.0.0.1 #redis的主机ip
@@ -101,23 +101,39 @@ spring:
     username: guest
     password: guest
 
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8606
+        username: user
+        password: password123
+
 #eureka相关配置
 eureka:
   client:
     healthcheck:
       enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
     serviceUrl:
-      defaultZone: http://user:password123@localhost:8761/eureka
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}}
-    metadata-map:
-      zone: ABC      # eureka可以理解的元数据
-      lilizhou: BBC  # 不会影响客户端行为
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 5
 
 # 或者：
 feign.hystrix.enabled: false ## 索性禁用feign的hystrix支持
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 #mybatis
 mybatis-plus:

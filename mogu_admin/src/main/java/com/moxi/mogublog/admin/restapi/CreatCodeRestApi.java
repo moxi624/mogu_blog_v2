@@ -7,6 +7,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/creatCode")
 @Api(value = "生成验证码RestApi", tags = {"creatCodeRestApi"})
+@Slf4j
 public class CreatCodeRestApi {
 
     @Autowired
@@ -61,7 +63,7 @@ public class CreatCodeRestApi {
         }
         //生成6位随机数
         final String code = (long) (Math.random() * 1000000) + "";
-        System.out.println("验证码:" + code);
+        log.info("验证码:" + code);
 
         String text =
                 "<html>\r\n" +

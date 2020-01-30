@@ -3,7 +3,6 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ctc.wstx.util.DataUtil;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
@@ -16,6 +15,7 @@ import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,6 +98,25 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         //因为首页并不需要显示内容，所以需要排除掉内容字段
 //		queryWrapper.excludeColumns(Blog.class, "content");
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
+
+        return blogMapper.selectPage(page, queryWrapper);
+    }
+
+    @Override
+    public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level, Integer useSort) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseSQLConf.LEVEL, level);
+        queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+
+        if(useSort == 0) {
+            queryWrapper.orderByDesc(BaseSQLConf.CREATE_TIME);
+        } else {
+            queryWrapper.orderByDesc(BaseSQLConf.SORT);
+        }
+
+        //因为首页并不需要显示内容，所以需要排除掉内容字段
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals("content"));
 
         return blogMapper.selectPage(page, queryWrapper);
@@ -274,15 +293,15 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         Map<String, Object> dateMap = new HashMap<>();
 
-        for(Map<String, Object> itemMap : blogContributeMap) {
+        for (Map<String, Object> itemMap : blogContributeMap) {
 
             dateMap.put(itemMap.get("DATE").toString(), itemMap.get("COUNT"));
         }
 
         List<List<Object>> resultList = new ArrayList<>();
-        for(String item : dateList) {
+        for (String item : dateList) {
             Integer count = 0;
-            if(dateMap.get(item) != null) {
+            if (dateMap.get(item) != null) {
                 count = Integer.valueOf(dateMap.get(item).toString());
             }
             List<Object> objectList = new ArrayList<>();
