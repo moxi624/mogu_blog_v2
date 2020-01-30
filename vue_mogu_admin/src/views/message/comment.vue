@@ -20,8 +20,13 @@
       <el-table-column label="头像" width="160">
         <template slot-scope="scope">
           <img
-            v-if="scope.row.user.photoUrl"
+            v-if="scope.row.user"
             :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            style="width: 100px;height: 100px;"
+          >
+          <img
+            v-else
+            src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
             style="width: 100px;height: 100px;"
           >
         </template>

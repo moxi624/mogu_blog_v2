@@ -3,7 +3,8 @@
     <div v-for="item in comments" :key="item.uid">
       <div class="commentList">
         <span class="left p1">
-          <img :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'" />
+          <img v-if="item.user" :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+          <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
         </span>
 
         <span class="right p1">
