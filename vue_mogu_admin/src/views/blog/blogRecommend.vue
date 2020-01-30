@@ -49,6 +49,8 @@
         params.useSort = 1;
         getBlogList(params).then(response => {
           if(response.code == "success") {
+            console.log("推荐等级", level)
+            console.log("推荐博客",response.data)
             switch (level) {
               case 1: {
                 this.list1 = response.data.records;

@@ -9,7 +9,9 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
+import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.AdminService;
+import com.moxi.mogublog.xo.service.WebConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,9 @@ public class AboutMeRestApi {
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
+    @Autowired
+    WebConfigService webConfigService;
+
     /**
      * 获取关于我的信息
      *
@@ -52,8 +57,10 @@ public class AboutMeRestApi {
 
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, SysConf.ADMIN);
+        queryWrapper.last("LIMIT 1");
+        //清空密码，防止泄露
         Admin admin = adminService.getOne(queryWrapper);
-        admin.setPassWord(null); //清空密码，防止泄露
+        admin.setPassWord(null);
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
@@ -77,26 +84,29 @@ public class AboutMeRestApi {
 
     @ApiOperation(value = "获取联系方式", notes = "获取联系方式")
     @GetMapping("/getContact")
-    public String getContact(HttpServletRequest request) {
+    public String getContact() {
 
-        Admin admin = adminService.getById("1f01cd1d2f474743b241d74008b12333");
+        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
 
-        if (admin != null) {
+        // getOne结果集为多个的时候，会抛异常，随机取一条加上限制条件 queryWrapper.last("LIMIT 1")
+        queryWrapper.last("LIMIT 1");
+        WebConfig webConfig = webConfigService.getOne(queryWrapper);
 
-            Admin result = new Admin();
-            result.setWeChat(admin.getWeChat());
-            result.setQqNumber(admin.getQqNumber());
-            result.setEmail(admin.getEmail());
-            result.setMobile(admin.getMobile());
-            result.setGithub(admin.getGithub());
-            result.setGitee(admin.getGitee());
+        if (webConfig != null) {
+
+            WebConfig result = new WebConfig();
+            result.setWeChat(webConfig.getWeChat());
+            result.setQqNumber(webConfig.getQqNumber());
+            result.setQqGroup(webConfig.getQqGroup());
+            result.setEmail(webConfig.getEmail());
+            result.setGithub(webConfig.getGithub());
+            result.setGitee(webConfig.getGitee());
             return ResultUtil.result(SysConf.SUCCESS, result);
         } else {
             return ResultUtil.result(SysConf.ERROR, "获取失败");
         }
 
     }
-
 
 }
 

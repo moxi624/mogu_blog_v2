@@ -100,6 +100,15 @@ public class WebConfigRestApi {
             webConfig.setWeixinPay(webConfigVO.getWeixinPay());
             webConfig.setStartComment(webConfigVO.getStartComment());
 
+            // 设置关注我们
+            webConfig.setEmail(webConfigVO.getEmail());
+            webConfig.setQqNumber(webConfigVO.getQqNumber());
+            webConfig.setQqGroup(webConfigVO.getQqGroup());
+            webConfig.setGithub(webConfigVO.getGithub());
+            webConfig.setGitee(webConfigVO.getGitee());
+            webConfig.setWeChat(webConfigVO.getWeChat());
+
+
             webConfigService.save(webConfig);
         } else {
             WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
@@ -113,6 +122,15 @@ public class WebConfigRestApi {
             webConfig.setAliPay(webConfigVO.getAliPay());
             webConfig.setWeixinPay(webConfigVO.getWeixinPay());
             webConfig.setStartComment(webConfigVO.getStartComment());
+
+            // 设置关注我们
+            webConfig.setEmail(webConfigVO.getEmail());
+            webConfig.setQqNumber(webConfigVO.getQqNumber());
+            webConfig.setQqGroup(webConfigVO.getQqGroup());
+            webConfig.setGithub(webConfigVO.getGithub());
+            webConfig.setGitee(webConfigVO.getGitee());
+            webConfig.setWeChat(webConfigVO.getWeChat());
+
             webConfigService.updateById(webConfig);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);

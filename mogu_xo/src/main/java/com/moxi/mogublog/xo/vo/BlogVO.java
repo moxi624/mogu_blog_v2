@@ -122,8 +122,6 @@ public class BlogVO extends BaseVO<BlogVO> {
      */
     BlogVO() {
         this.level = 0;
-        this.isOriginal = "1";
-        this.isPublish = "1";
         this.useSort = 0;
     }
 }

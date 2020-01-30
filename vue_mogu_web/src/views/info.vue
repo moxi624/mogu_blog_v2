@@ -1,7 +1,7 @@
 <template>
   <article>
-    <el-dialog :visible.sync="dialogPictureVisible" width="80%">
-      <img width="100%" :src="dialogImageUrl" alt="dialogImageUrl">
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen="true" >
+      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;">
     </el-dialog>
     <h1 class="t_nav">
       <a href="/" class="n1">网站首页</a>

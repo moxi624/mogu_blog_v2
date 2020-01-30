@@ -53,8 +53,10 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
         if(StringUtils.isEmpty(jsonResult)) {
             String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
-            webVisit.setIpSource(addresses);
-            stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            if(StringUtils.isNotEmpty(addresses)) {
+                webVisit.setIpSource(addresses);
+                stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            }
         } else {
             webVisit.setIpSource(jsonResult);
         }

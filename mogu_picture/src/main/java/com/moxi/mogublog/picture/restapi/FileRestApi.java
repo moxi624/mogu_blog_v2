@@ -73,35 +73,15 @@ public class FileRestApi {
     @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello(String urlString, int i) throws IOException {
-        // 构造URL
-        URL url = new URL(urlString);
-        // 打开连接
-        URLConnection con = url.openConnection();
-        // 输入流
-        InputStream inputStream = null;
-        // 当获取的相片无法正常显示的时候，需要给一个默认图片
-        try {
-            inputStream = con.getInputStream();
-        } catch (Exception exception) {
-            return ResultUtil.result(SysConf.ERROR, "无法获取头像");
-        }
 
-        // 1K的数据缓冲
-        byte[] bs = new byte[1024];
-        // 读取到的数据长度
-        int len;
-        // 输出的文件流
-        String filename = "D:\\" + i + ".jpg";  //下载路径及下载图片名称
-        File file = new File(filename);
-        FileOutputStream os = new FileOutputStream(file, true);
-        // 开始读取
-        while ((len = inputStream.read(bs)) != -1) {
-            os.write(bs, 0, len);
-        }
-        System.out.println(i);
-        // 完毕，关闭所有链接
-        os.close();
-        inputStream.close();
+        QueryWrapper<com.moxi.mogublog.picture.entity.File> queryWrapper = new QueryWrapper<>();
+        List<com.moxi.mogublog.picture.entity.File> fileList = fileService.list(queryWrapper);
+        fileList.forEach(item ->{
+            String str = item.getPicUrl();
+            String[] array = str.split("/");
+            item.setQiNiuUrl(array[array.length - 1]);
+        });
+        fileService.updateBatchById(fileList);
         return "hello";
     }
 
