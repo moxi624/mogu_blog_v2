@@ -339,6 +339,28 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/test',
+    component: Layout,
+    redirect: '/test/markdown',
+    name: '测试页面',
+    meta: { title: '测试页面', icon: 'log' },
+    children: [
+      {
+        path: 'CropperPicture',
+        name: 'CropperPicture',
+        component: () => import('@/views/test/CropperPicture'),
+        meta: { title: '图片裁剪', icon: 'log' }
+      },
+      {
+        path: 'Markdown',
+        name: 'Markdown',
+        component: () => import('@/views/test/Markdown'),
+        meta: { title: 'Markdown', icon: 'exception' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
