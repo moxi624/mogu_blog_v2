@@ -1,14 +1,18 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
+import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +70,8 @@ public class AuthRestApi {
     @Value(value = "${PROJECT_NAME_EN}")
     private String PROJECT_NAME_EN;
     @Autowired
+    SystemConfigService systemConfigService;
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private PictureFeignClient pictureFeignClient;
@@ -115,13 +121,24 @@ public class AuthRestApi {
             String email = data.get(SysConf.EMAIL).toString();
             user.setEmail(email);
         }
-        if (data.get(SysConf.AVATAR) != null && StringUtils.isEmpty(user.getAvatar())) {
+
+        // 通过头像uid获取图片
+        String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
+        List<String> photoList = webUtils.getPicture(pictureList);
+
+        if (photoList.size() == 0) {
+
+            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            queryWrapper.last("LIMIT 1");
+            Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
             // 获取到头像，然后上传到自己服务器
             FileVO fileVO = new FileVO();
             fileVO.setAdminUid("uid00000000000000000000000000000000");
-            fileVO.setUserUid(user.getUid());
+            fileVO.setUserUid("uid00000000000000000000000000000000");
             fileVO.setProjectName(SysConf.BLOG);
             fileVO.setSortName(SysConf.ADMIN);
+            fileVO.setSystemConfig(systemConfigMap);
             List<String> urlList = new ArrayList<>();
             urlList.add(data.get(SysConf.AVATAR).toString());
             fileVO.setUrlList(urlList);
@@ -133,27 +150,32 @@ public class AuthRestApi {
                     if (listMap != null && listMap.size() > 0) {
                         Map<String, Object> pictureMap = listMap.get(0);
 
-                        // 使用七牛云
-                        if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
-                            user.setAvatar(pictureMap.get(SysConf.UID).toString());
-                            user.setPhotoUrl(pictureMap.get(SysConf.QI_NIU_URL).toString());
+                        String localPictureBaseUrl = systemConfigMap.get(SQLConf.LOCAL_PICTURE_BASE_URL).toString();
+                        String qiNiuPictureBaseUrl = systemConfigMap.get(SQLConf.QI_NIU_PICTURE_BASE_URL).toString();
+                        String picturePriority = systemConfigMap.get(SQLConf.PICTURE_PRIORITY).toString();
+
+                        user.setAvatar(pictureMap.get(SysConf.UID).toString());
+
+                        // 判断图片优先展示
+                        if("1".equals(picturePriority)) {
+                            // 使用七牛云
+                            if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());
+                            }
+                        } else {
+                            // 使用自建图片服务器
+                            if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
+                            }
                         }
 
-                        // 使用自建服务器
-//                        if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
-//                            user.setAvatar(pictureMap.get(SysConf.UID).toString());
-//                            user.setPhotoUrl(pictureMap.get(SysConf.PIC_URL).toString());
-//                        }
                     }
                 }
             }
         } else {
 
-            String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
-            List<String> photoList = webUtils.getPicture(pictureList);
-            if(photoList.size() > 0) {
-                user.setPhotoUrl(photoList.get(0));
-            }
+            user.setPhotoUrl(photoList.get(0));
+
         }
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());

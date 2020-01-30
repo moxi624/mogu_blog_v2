@@ -26,4 +26,15 @@ public class BaseSQLConf {
     public final static String COMMENT_UID = "comment_uid";
     public final static String REPORT_COMMENT_UID = "report_comment_uid";
 
+    // SystemConfig相关
+    public final static String UPLOAD_QI_NIU = "upload_qi_niu";
+    public final static String UPLOAD_LOCAL = "upload_local";
+    public final static String LOCAL_PICTURE_BASE_URL = "local_picture_base_url";
+    public final static String QI_NIU_PICTURE_BASE_URL = "qi_niu_picture_base_url";
+    public final static String QI_NIU_ACCESS_KEY = "qi_niu_access_key";
+    public final static String QI_NIU_SECRET_KEY = "qi_niu_secret_key";
+    public final static String QI_NIU_BUCKET = "qi_niu_bucket";
+    public final static String QI_NIU_AREA = "qi_niu_area";
+    public final static String PICTURE_PRIORITY = "picture_priority";
+
 }

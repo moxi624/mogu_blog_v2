@@ -89,5 +89,16 @@ public class BaseSysConf {
 
     public static final int TWO_TWO_FIVE = 225;
 
+    // SystemConfig相关
+    public final static String UPLOAD_QI_NIU = "uploadQiNiu";
+    public final static String UPLOAD_LOCAL = "uploadLocal";
+    public final static String LOCAL_PICTURE_BASE_URL = "localPictureBaseUrl";
+    public final static String QI_NIU_PICTURE_BASE_URL = "qiNiuPictureBaseUrl";
+    public final static String QI_NIU_ACCESS_KEY = "qiNiuAccessKey";
+    public final static String QI_NIU_SECRET_KEY = "qiNiuSecretKey";
+    public final static String QI_NIU_BUCKET = "qiNiuBucket";
+    public final static String QI_NIU_AREA = "qiNiuArea";
+    public final static String PICTURE_PRIORITY = "picturePriority";
+
 
 }

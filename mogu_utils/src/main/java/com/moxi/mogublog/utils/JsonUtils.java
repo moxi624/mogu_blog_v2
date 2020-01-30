@@ -10,9 +10,12 @@ import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -208,6 +211,41 @@ public class JsonUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * 将任意pojo转化成map
+     *
+     * @param t pojo对象
+     * @return
+     */
+    public static <T>  Map<String, Object> pojoToMap(T t){
+        Map<String, Object> result = new HashMap<String, Object>();
+        Method[] methods = t.getClass().getMethods();
+        try {
+            for (Method method : methods) {
+                Class<?>[] paramClass = method.getParameterTypes();
+                // 如果方法带参数，则跳过
+                if (paramClass.length > 0) {
+                    continue;
+                }
+                String methodName = method.getName() ;
+                if (methodName.startsWith("get")) {
+                    Object value = method.invoke(t);
+                    result.put(methodName, value);
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }
