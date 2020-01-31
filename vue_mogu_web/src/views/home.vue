@@ -114,7 +114,7 @@
   <footer>
     <p>
       <a href="http://localhost:9527/" target="_blank">&nbsp;&nbsp;</a>
-      <a href="javasrcipt:void(0);" @click="goIndex()">Copyright 2019-2010&nbsp;{{info.name}}&nbsp;</a>
+      <a href="javasrcipt:void(0);" @click="goIndex()">Copyright 2019-2020&nbsp;{{info.name}}&nbsp;</a>
       <a href="http://www.beian.miit.gov.cn">{{info.recordNum}}</a>
     </p>
   </footer>

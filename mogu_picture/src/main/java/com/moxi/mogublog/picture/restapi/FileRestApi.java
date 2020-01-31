@@ -87,55 +87,53 @@ public class FileRestApi {
         return "hello";
     }
 
-    @ApiOperation(value = "裁剪图片上传接口", notes = "裁剪图片上传接口")
+    @ApiOperation(value = "截图上传", notes = "截图上传")
     @RequestMapping(value = "/cropperPicture", method = RequestMethod.POST)
-    public String cropperPicture(@RequestParam String base64Data, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String cropperPicture( @RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        try{
-            String dataPrix = "";
-            String data = "";
-            if(base64Data == null || "".equals(base64Data)){
-                throw new Exception("上传失败，上传图片数据为空");
-            }else{
-                String [] d = base64Data.split("base64,");
-                if(d != null && d.length == 2){
-                    dataPrix = d[0];
-                    data = d[1];
-                }else{
-                    throw new Exception("上传失败，数据不合法");
-                }
-            }
-            String suffix = "";
-            if("data:image/jpeg;".equalsIgnoreCase(dataPrix)){
-                //data:image/jpeg;base64,base64编码的jpeg图片数据
-                suffix = ".jpg";
-            } else if("data:image/x-icon;".equalsIgnoreCase(dataPrix)){
-                //data:image/x-icon;base64,base64编码的icon图片数据
-                suffix = ".ico";
-            } else if("data:image/gif;".equalsIgnoreCase(dataPrix)){
-                //data:image/gif;base64,base64编码的gif图片数据
-                suffix = ".gif";
-            } else if("data:image/png;".equalsIgnoreCase(dataPrix)){
-                //data:image/png;base64,base64编码的png图片数据
-                suffix = ".png";
-            }else{
-                throw new Exception("上传图片格式不合法");
-            }
-            String tempFileName = UUID.randomUUID().toString() + suffix;
+        List<MultipartFile> filedatas = new ArrayList<>();
+        filedatas.add(file);
 
-            //因为BASE64Decoder的jar问题，此处使用spring框架提供的工具包
-            byte[] bs = Base64Utils.decodeFromString(data);
-            try{
-                //使用apache提供的工具类操作流
-                System.out.println(request.getServletContext().getRealPath("/upload"));
-                FileUtils.writeByteArrayToFile(new File(request.getServletContext().getRealPath("/upload"), tempFileName), bs);
-            }catch(Exception ee){
-                throw new Exception("上传失败，写入文件失败，"+ee.getMessage());
+        String resultStr = adminFeignClient.getSystemConfig();
+
+        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+
+        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
+            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
+            String uploadQiNiu = resultMap.get("uploadQiNiu");
+            String uploadLocal = resultMap.get("uploadLocal");
+            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+
+            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            String qiNiuBucket = resultMap.get("qiNiuBucket");
+            String qiNiuArea = resultMap.get("qiNiuArea");
+
+            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
-            return "success";
-        }catch (Exception e) {
-            return "error";
+
+            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+            }
+
+            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
+            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
+            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
+            qiNiuConfig.put("qiNiuArea", qiNiuArea);
+            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
+            qiNiuConfig.put("uploadLocal", uploadLocal);
+
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "获取系统配置失败");
         }
+
+        return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
     }
 
 

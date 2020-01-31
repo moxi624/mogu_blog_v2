@@ -35,7 +35,9 @@
 </template>
 
 <script>
+  import {cropperPicture} from "@/api/test"
   import { VueCropper } from 'vue-cropper'
+  import { getToken } from '@/utils/auth'
   // import * as OSS from 'ali-oss';
   export default {
     components: {
@@ -81,7 +83,21 @@
           // console.log(data)
           // console.log(this.toBlob(data))
 
+          console.log("开始上传", this.toBlob(data))
+
           //将图片上传服务器中
+          let params = new FormData();
+          params.append("file", this.toBlob(data))
+          params.append("token", getToken())
+          params.append("source", "picture")
+          params.append("userUid", "uid00000000000000000000000000000000")
+          params.append("adminUid", "uid00000000000000000000000000000000")
+          params.append("projectName", "blog")
+          params.append("sortName", "admin")
+
+          cropperPicture(params).then(response => {
+            console.log(response)
+          });
 
         })
 
@@ -115,6 +131,7 @@
         // reader.readAsDataURL(file)
         // 转化为blobcs
         reader.readAsArrayBuffer(file)
+
       },
       // base64转blob
       toBlob(ndata) {

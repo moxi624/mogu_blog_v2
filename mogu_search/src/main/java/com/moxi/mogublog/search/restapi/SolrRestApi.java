@@ -47,7 +47,7 @@ public class SolrRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
         }
 
-        log.info("使用Solr搜索：keywords=" + keywords);
+        log.error("使用Solr搜索：keywords=" + keywords);
 
         Map<String, Object> map = solrSearchService.search(collection, keywords, currentPage, pageSize);
         return ResultUtil.result(SysConf.SUCCESS, map);
