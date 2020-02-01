@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function cropperPicture(params) {
   return request({
-    url: 'http://localhost:8602/file/cropperPicture',
+    url: process.env.PICTURE_API + '/file/cropperPicture',
     method: 'POST',
     data: params
   })

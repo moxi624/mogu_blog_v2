@@ -9,7 +9,7 @@
     <div class="content">
 
       <div class="show-info">
-        <h2>自动生成截图框 固定比例 w : h => 4 : 3</h2>
+        <h2>拖动截图框进行截图</h2>
         <div class="test">
           <vueCropper ref="cropper2"
                       :img="example2.img"
