@@ -65,4 +65,9 @@ public final class SQLConf extends BaseSQLConf {
      * t_todo
      */
     public final static String TEXT = "text";
+
+    /**
+     * blog表
+     */
+    public final static String FILE_UID = "file_uid";
 }

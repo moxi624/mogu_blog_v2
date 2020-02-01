@@ -24,12 +24,14 @@
                       :fixedNumber="example2.fixedNumber"
                       :enlarge="4"></vueCropper>
         </div>
-        <label class="btn" for="upload2">上传</label>
-        <input type="file" id="upload2" style="position:absolute; clip:rect(0 0 0 0);"
-               accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event,2)">
-        <button @click="finish2()" class="btn">裁剪</button>
 
-        <div style="margin-top: 20px">
+        <div style="margin-top: 10px">
+          <el-button @click="cropper" type="primary">裁剪</el-button>
+          <el-button @click="cancel" type="danger">撤销</el-button>
+          <el-button @click="submit" type="success">提交</el-button>
+        </div>
+
+        <div style="margin-top: 20px" v-if="picUrl">
           <div>裁剪后的图片</div>
           <img style="width: 200px" :src="picUrl"/>
         </div>
@@ -45,45 +47,50 @@
   import { VueCropper } from 'vue-cropper'
   import { getToken } from '@/utils/auth'
   export default {
+    name: 'PictureCropper',
     components: {
       VueCropper,
     },
+    props: ['modelSrc'],
     data() {
       return {
         model: false,
-        modelSrc: '',
         crap: false,
         previews: {},
         form: {
           head: ''
         },
+        bakPicUrl: "",
         picUrl: "",
         example2: {
           //img的路径自行修改
-          img: '$oss.url + \'/\' + form.head ',
+          img: this.modelSrc,
           info: true,
           size: 1,
           outputType: 'jpeg',
           canScale: true,
           autoCrop: true,
           // 只有自动截图开启 宽度高度才生效
-          autoCropWidth: 300,
-          autoCropHeight: 250,
+          autoCropWidth: 260,
+          autoCropHeight: 140,
           fixed: true,
           // 真实的输出宽高
           infoTrue: true,
-          fixedNumber: [4, 3]
+          fixedNumber: [13, 7]
         },
         downImg: '#'
       }
     },
+    created() {
+      this.bakPicUrl = this.modelSrc;
+    },
     methods: {
       //点击裁剪，这一步是可以拿到处理后的地址
-      finish2() {
+      cropper() {
         this.$refs.cropper2.getCropData((data) => {
           this.modelSrc = data
           this.model = false;
-
+          this.picUrl = data;
           //裁剪后的图片显示
           this.example2.img = this.modelSrc;
 
@@ -91,66 +98,7 @@
           // console.log(data)
           // console.log(this.toBlob(data))
 
-          console.log("开始上传", this.toBlob(data))
-
-          //将图片上传服务器中
-          let params = new FormData();
-          params.append("file", this.toBlob(data))
-          params.append("token", getToken())
-          params.append("source", "picture")
-          params.append("userUid", "uid00000000000000000000000000000000")
-          params.append("adminUid", "uid00000000000000000000000000000000")
-          params.append("projectName", "blog")
-          params.append("sortName", "admin")
-
-          cropperPicture(params).then(response => {
-            console.log(response)
-            if(response.code == "success") {
-              this.$message({
-                type: "success",
-                data: "裁剪成功"
-              })
-              this.picUrl = response.data[0].url;
-            } else {
-              this.$message({
-                type: "success",
-                data: response.data
-              })
-            }
-          });
-
         })
-
-      },
-
-      uploadImg(e, num) {
-        //上传图片
-        this.example2.img = ''
-        var file = e.target.files[0]
-        if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-          alert('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种')
-          return false
-        }
-        var reader = new FileReader()
-        reader.onload = (e) => {
-          let data
-          data = e.target.result
-          if (typeof e.target.result === 'object') {
-            // 把Array Buffer转化为blob 如果是base64不需要
-            data = window.URL.createObjectURL(new Blob([e.target.result]))
-          } else {
-            data = e.target.result
-          }
-          if (num === 1) {
-            this.option.img = data
-          } else if (num === 2) {
-            this.example2.img = data
-          }
-        }
-        // 转化为base64
-        // reader.readAsDataURL(file)
-        // 转化为blobcs
-        reader.readAsArrayBuffer(file)
 
       },
       // base64转blob
@@ -168,6 +116,50 @@
         return new Blob([u8arr], {
           type: mime
         })
+      },
+
+      /**
+       * 撤销截图
+       */
+      cancel: function() {
+        this.modelSrc = this.bakPicUrl;
+        this.example2.img = this.bakPicUrl;
+        this.picUrl = "";
+        this.$message({
+          type: "success",
+          message: "撤销成功"
+        })
+      },
+      submit: function() {
+        console.log("开始提交");
+        if(this.picUrl == "") {
+          this.$message({
+            type: "warning",
+            message: "请先裁剪图片"
+          })
+          return;
+        }
+        //将图片上传服务器中
+        let params = new FormData();
+        params.append("file", this.toBlob(this.picUrl))
+        params.append("token", getToken())
+        params.append("source", "picture")
+        params.append("userUid", "uid00000000000000000000000000000000")
+        params.append("adminUid", "uid00000000000000000000000000000000")
+        params.append("projectName", "blog")
+        params.append("sortName", "admin")
+
+        cropperPicture(params).then(response => {
+          if(response.code == "success") {
+            this.picUrl = response.data[0].url;
+            this.$emit("cropperSuccess", response.data[0])
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            })
+          }
+        });
       }
     },
 
@@ -184,38 +176,6 @@
     margin: auto;
     max-width: 585px;
     margin-bottom: 100px;
-  }
-
-  .test-button {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    display: inline-block;
-    line-height: 1;
-    white-space: nowrap;
-    cursor: pointer;
-    background: #fff;
-    border: 1px solid #c0ccda;
-    color: #1f2d3d;
-    text-align: center;
-    box-sizing: border-box;
-    outline: none;
-    margin: 20px 10px 0px 0px;
-    padding: 9px 15px;
-    font-size: 14px;
-    border-radius: 4px;
-    color: #fff;
-    background-color: #50bfff;
-    border-color: #50bfff;
-    transition: all .2s ease;
-    text-decoration: none;
-    user-select: none;
-  }
-
-  .des {
-    line-height: 30px;
   }
 
   code.language-html {

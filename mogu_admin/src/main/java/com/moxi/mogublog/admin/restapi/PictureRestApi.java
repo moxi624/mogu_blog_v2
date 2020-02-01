@@ -11,20 +11,24 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Picture;
 import com.moxi.mogublog.xo.entity.PictureSort;
+import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +51,19 @@ public class PictureRestApi {
 
     @Autowired
     PictureService pictureService;
+
+    @Autowired
+    BlogService blogService;
+
     @Autowired
     PictureSortService pictureSortService;
+
     @Autowired
     private PictureFeignClient pictureFeignClient;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Value(value = "${data.image.url}")
     private String IMG_HOST;
 
@@ -119,17 +132,17 @@ public class PictureRestApi {
             return ResultUtil.result(SysConf.ERROR, "必填项不能为空");
         }
         List<String> list = StringUtils.changeStringToString(fileUids, ",");
+        List<Picture> pictureList = new ArrayList<>();
         if (list.size() > 0) {
             for (String fileUid : list) {
                 Picture picture = new Picture();
                 picture.setFileUid(fileUid);
                 picture.setPictureSortUid(pictureSortUid);
                 picture.setStatus(EStatus.ENABLE);
-                picture.insert();
+                pictureList.add(picture);
             }
+            pictureService.saveBatch(pictureList);
         }
-
-
         return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
 
@@ -146,6 +159,25 @@ public class PictureRestApi {
             return ResultUtil.result(SysConf.ERROR, "数据错误");
         }
         Picture picture = pictureService.getById(uid);
+
+        // 这里需要更新所有的博客，将图片替换成 裁剪的图片
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.FILE_UID, picture.getFileUid());
+        List<Blog> blogList = blogService.list(queryWrapper);
+        if(blogList.size() > 0) {
+            blogList.forEach(item -> {
+                item.setFileUid(fileUid);
+            });
+            blogService.updateBatchById(blogList);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(SysConf.COMMAND, SysConf.EDIT_BATCH);
+
+            //发送到RabbitMq
+            rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+        }
+
         picture.setFileUid(fileUid);
         picture.setPicName(picName);
         picture.setPictureSortUid(pictureSortUid);

@@ -10,10 +10,7 @@ import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.util.QiniuUtil;
-import com.moxi.mogublog.utils.DateUtils;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
@@ -101,17 +98,29 @@ public class FileRestApi {
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
 
+        String uploadQiNiu = "";
+        String uploadLocal = "";
+        String localPictureBaseUrl = "";
+        String qiNiuPictureBaseUrl = "";
+
+        String qiNiuAccessKey = "";
+        String qiNiuSecretKey = "";
+        String qiNiuBucket = "";
+        String qiNiuArea = "";
+        String picturePriority = "";
+
         if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
             Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
-            String uploadQiNiu = resultMap.get("uploadQiNiu");
-            String uploadLocal = resultMap.get("uploadLocal");
-            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
-            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+            uploadQiNiu = resultMap.get("uploadQiNiu");
+            uploadLocal = resultMap.get("uploadLocal");
+            localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
+            qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
 
-            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
-            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
-            String qiNiuBucket = resultMap.get("qiNiuBucket");
-            String qiNiuArea = resultMap.get("qiNiuArea");
+            qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
+            qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
+            qiNiuBucket = resultMap.get("qiNiuBucket");
+            qiNiuArea = resultMap.get("qiNiuArea");
+            picturePriority = resultMap.get("picturePriority");
 
             if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
@@ -133,7 +142,29 @@ public class FileRestApi {
             return ResultUtil.result(SysConf.ERROR, "获取系统配置失败");
         }
 
-        return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
+        String result = fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
+
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if ("success".equals(picMap.get("code"))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
+            if (picData.size() > 0) {
+                for (int i = 0; i < picData.size(); i++) {
+                    Map<String, Object> item = new HashMap<>();
+
+                    item.put("uid",  picData.get(i).get("uid"));
+
+                    if ("1".equals(picturePriority)) {
+                        item.put("url",  qiNiuPictureBaseUrl + picData.get(i).get("qiNiuUrl"));
+                    } else {
+                        item.put("url",  localPictureBaseUrl + picData.get(i).get("picUrl"));
+                    }
+                    listMap.add(item);
+                }
+            }
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, listMap);
     }
 
 

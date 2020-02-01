@@ -7,6 +7,7 @@
         <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
         <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
         <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
+        <el-button class="filter-item" type="warning" @click="handleCropper" icon="el-icon-s-open">裁剪图片</el-button>
 	    </div>
 
       <div class= "imgAll">
@@ -52,12 +53,16 @@
         multiple>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        <div class="el-upload__tip" slot="tip">只能上传图片，且不超过5MB</div>
       </el-upload>
 		</el-dialog>
 
-    <el-dialog :visible.sync="dialogPictureVisible" fullscreen="true" style="text-align: center">
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen style="text-align: center">
       <img :src="dialogImageUrl" alt="">
+    </el-dialog>
+
+    <el-dialog :visible.sync="pictureCropperVisible" fullscreen>
+      <PictureCropper :modelSrc="checkedPicture.pictureUrl" @cropperSuccess="cropperSuccess"></PictureCropper>
     </el-dialog>
 
 
@@ -74,15 +79,22 @@ import {
 } from "@/api/picture";
 import { getToken } from '@/utils/auth'
 
+import PictureCropper from '@/components/PictureCropper'
+
 import { formatData } from "@/utils/webUtils";
 
 import { Loading } from "element-ui";
 
 export default {
+  components: {
+    PictureCropper
+  },
   data() {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       dialogImageUrl: "", //图片显示地址
+      checkedPicture: {}, // 单选的图片
+      pictureCropperVisible: false, // 裁剪图片框是否显示
       dialogPictureVisible: false,
       tableData: [],
       uploadPictureHost: null,
@@ -179,6 +191,8 @@ export default {
     },
     //点击单选
     checked: function(data) {
+      this.checkedPicture = data;
+      console.log("裁剪的图片", data)
       let idIndex = this.pictureUids.indexOf(data.uid);
       if (idIndex >= 0) {
         //选过了
@@ -274,6 +288,43 @@ export default {
         });
 
     },
+    handleCropper: function() {
+      if (this.pictureUids.length != 1) {
+        this.$message({
+          type: "error",
+          message: "选择一张图片进行裁剪！"
+        });
+        return;
+      }
+      this.pictureCropperVisible = true;
+    },
+    // 裁剪成功后的回调
+    cropperSuccess: function(picture) {
+      this.pictureCropperVisible = false;
+      var checkedPicture = this.checkedPicture
+      checkedPicture.fileUid =  picture.uid
+      let params = new URLSearchParams();
+      params.append("uid", checkedPicture.uid);
+      params.append("fileUid", checkedPicture.fileUid);
+      params.append("picName", checkedPicture.picName);
+      params.append("pictureSortUid", checkedPicture.pictureSortUid);
+
+      editPicture(params).then(response => {
+        if (response.code == "success") {
+          this.$message({
+            type: "success",
+            message: response.data
+          });
+          this.pictureList();
+        } else {
+          this.$message({
+            type: "error",
+            message: response.data
+          });
+        }
+      });
+
+    },
     handleReturn: function() {
       this.$router.push({
         path: "pictureSort",
@@ -300,6 +351,7 @@ export default {
       this.$refs.upload.submit();
     },
     fileSuccess: function(response, file, fileList) {
+
       var that = this;
       if (response.code == "success") {
         let file = response.data;
@@ -325,6 +377,10 @@ export default {
                 message: res.data
               });
             }
+
+            this.$refs.upload.clearFiles();
+            this.fileUids = "";
+
           });
         }
       } else {

@@ -19,7 +19,7 @@
 
 	   	<el-table-column label="标题图" width="160">
 	      <template slot-scope="scope">
-	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 100px;height: 100px;"/>
+	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 105px;height: 70px;"/>
 	      </template>
 	    </el-table-column>
 
@@ -99,7 +99,7 @@
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 150px;height: 150px;"/>
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -426,22 +426,22 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
+  width: 195px;
+  height: 105px;
+  line-height: 105px;
   text-align: center;
 }
 .imgBody {
-  width: 150px;
-  height: 150px;
+  width: 195px;
+  height: 105px;
   border: solid 2px #ffffff;
   float: left;
   position: relative;
 }
 .uploadImgBody {
   margin-left: 5px;
-  width: 150px;
-  height: 150px;
+  width: 195px;
+  height: 105px;
   border: dashed 1px #c0c0c0;
   float: left;
   position: relative;
