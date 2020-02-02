@@ -108,8 +108,8 @@ spring:
         url: http://localhost:8606
         username: user
         password: password123
-    instance:
-      service-base-url: http://localhost:8601
+        instance:
+          service-base-url: http://localhost:8601
 
 #eureka相关配置
 eureka:
