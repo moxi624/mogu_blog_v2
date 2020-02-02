@@ -36,6 +36,9 @@ spring:
         url: http://localhost:8606
         username: user
         password: password123
+        instance:
+          service-base-url: http://localhost:8602
+
 
   # DATABASE CONFIG
   datasource:

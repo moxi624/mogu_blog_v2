@@ -19,8 +19,6 @@ spring:
       repositories:
         enabled: true
 
-  #  jackson:
-  #    default-property-inclusion: non_null
   boot:
     admin:
       client:
@@ -28,7 +26,8 @@ spring:
         url: http://localhost:8606
         username: user
         password: password123
-
+      instance:
+        service-base-url: http://localhost:8605
 eureka:
   client:
     healthcheck:

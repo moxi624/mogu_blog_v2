@@ -17,8 +17,8 @@ spring:
         mail:
           enabled: false
           # 服务上下线会自动发送邮件
-          from: mogublog@163.com
-          to: moxi0624@163.com
+          #from: mogublog@163.com
+          #to: moxi0624@163.com
 
   #mail
   mail:

@@ -6,8 +6,6 @@ server:
 accessKeyId: LTAI99t3H0yGpC8E#修改成自己的
 accessKeySecret: RQVwPjFJks3v8ZgIYvFRjDN2KXar9U#修改成自己的
 
-
-
 #spring
 spring:
   jmx:
@@ -16,7 +14,10 @@ spring:
     cache: true   #关闭缓存
   application:
     name: mogu-sms
-
+  security:
+    user:
+      name: user
+      password: password123
   #redis
   redis:
     host: 127.0.0.1 #redis的主机ip
@@ -51,6 +52,8 @@ spring:
         url: http://localhost:8606
         username: user
         password: password123
+      instance:
+        service-base-url: http://localhost:8604
 
 eureka:
   client:

@@ -6,10 +6,12 @@
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像">
+
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" />	    		 
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" />
             </div>
+
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
             </div>
@@ -23,11 +25,11 @@
               <el-radio v-model="form.gender" label="1" border size="medium">男</el-radio>
               <el-radio v-model="form.gender" label="2" border size="medium">女</el-radio>
             </el-form-item>
-          
+
           <!-- <el-form-item label="手机号">
             <el-input v-model="form.mobile" style="width: 400px"></el-input>
           </el-form-item> -->
-          
+
           <el-form-item label="邮箱">
             <el-input v-model="form.email" style="width: 400px"></el-input>
           </el-form-item>
@@ -47,7 +49,7 @@
           <!-- <el-form-item label="微信号">
             <el-input v-model="form.weChat" style="width: 400px"></el-input>
           </el-form-item> -->
-          
+
           <el-form-item label="职业">
             <el-input v-model="form.occupation" style="width: 400px"></el-input>
           </el-form-item>
@@ -61,7 +63,7 @@
               v-model="form.summary">
             </el-input>
           </el-form-item>
-          
+
           <el-form-item>
             <el-button type="primary" @click="submitForm('changeAdminForm')">保 存</el-button>
             <!-- <el-button @click="cancel('changeAdminForm')">重 置</el-button>             -->
@@ -73,7 +75,7 @@
       <!-- <el-tab-pane label="显示配置" name="second">
       <span slot="label"><i class="el-icon-setting"></i> 显示配置</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px">
-        
+
         <el-tag style="font-size: 15px; margin:10px 0 10px 0;" type="warning" >这里主要是控制web前端，关于我页面中，一些个人信息的显示</el-tag>
 
         <el-form-item label="手机">
@@ -94,11 +96,11 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm">保 存</el-button>
-          <el-button @click="cancel">重 置</el-button>          
+          <el-button @click="cancel">重 置</el-button>
         </el-form-item>
-        
+
         </el-form>
-        
+
       </el-tab-pane> -->
 
       <el-tab-pane label="修改密码" name="third">
@@ -107,7 +109,7 @@
           <el-form-item label="旧密码" prop="oldPwd">
             <el-input type="password" v-model="changePwdForm.oldPwd" style="width: 400px"></el-input>
           </el-form-item>
-          
+
           <el-form-item label="新密码" prop="newPwd1">
             <el-input type="password" v-model="changePwdForm.newPwd1" style="width: 400px"></el-input>
           </el-form-item>
@@ -115,14 +117,14 @@
           <el-form-item label="重复输入" prop="newPwd2">
             <el-input type="password" v-model="changePwdForm.newPwd2" style="width: 400px"></el-input>
           </el-form-item>
-          
+
           <el-form-item>
             <el-button type="primary" @click="submitForm('changePwdForm')">保 存</el-button>
-            <el-button @click="cancel('changePwdForm')">重 置</el-button>          
+            <el-button @click="cancel('changePwdForm')">重 置</el-button>
           </el-form-item>
 
         </el-form>
-      </el-tab-pane>   
+      </el-tab-pane>
 
     </el-tabs>
 
@@ -186,13 +188,6 @@ export default {
     });
   },
   methods: {
-    //弹出选择图片框
-    checkPhoto: function() {
-      console.log(this.photoVisible);
-      console.log("点击了选择图");
-      this.photoVisible = true;
-      console.log(this.photoVisible);
-    },
     getChooseData(data) {
       var that = this;
       this.photoVisible = false;
@@ -214,10 +209,12 @@ export default {
       this.form.fileUid = "";
       this.icon = false;
     },
+    //弹出选择图片框
     checkPhoto() {
-      this.photoList = [];
-      this.fileIds = "";
-      this.photoVisible = true;
+      // this.photoList = [];
+      // this.fileIds = "";
+      // this.photoVisible = true;
+
     },
 
     submitForm: function(type) {
@@ -286,7 +283,7 @@ export default {
       }
     },
     cancel: function(type) {
-      console.log("点击了重置", type);      
+      console.log("点击了重置", type);
       this.$refs[type].resetFields();
     }
   }
