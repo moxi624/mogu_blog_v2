@@ -234,10 +234,8 @@
 
   ![image text](./doc/images/admin/blogRecommend.png)
   
-  ![image text](./doc/images/admin/blogSort.png)
-
   ![image text](./doc/images/admin/blogLink.png)
-  
+
   ![image text](./doc/images/admin/systemConf.png)
   
   ![image text](./doc/images/admin/aboutMe.png)
