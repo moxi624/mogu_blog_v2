@@ -211,6 +211,7 @@ export default {
     },
     //弹出选择图片框
     checkPhoto() {
+
       // this.photoList = [];
       // this.fileIds = "";
       // this.photoVisible = true;
