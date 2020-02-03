@@ -39,7 +39,6 @@ const user = {
         params.append('password', password)
 
         login(params).then(response => {
-          console.log(response)
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
@@ -54,7 +53,6 @@ const user = {
     GetMenu({ commit }) {
       return new Promise((resolve, reject) => {
         getMenu().then(response => {
-          console.log(response)
           const data = response.data
           commit('SET_MENU', data)
           resolve(response)

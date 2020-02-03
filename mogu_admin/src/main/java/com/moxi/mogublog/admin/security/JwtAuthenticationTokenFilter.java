@@ -141,6 +141,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 log.info("token未过期，刷新token");
 
             } else {
+
                 chain.doFilter(request, response);
                 return;
             }

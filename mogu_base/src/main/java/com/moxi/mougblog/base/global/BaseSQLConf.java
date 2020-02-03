@@ -37,4 +37,6 @@ public class BaseSQLConf {
     public final static String QI_NIU_AREA = "qi_niu_area";
     public final static String PICTURE_PRIORITY = "picture_priority";
 
+    // web_visit表
+    public final static String IP = "ip";
 }

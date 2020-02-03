@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.restapi;
 
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.CommentService;
@@ -43,6 +44,7 @@ public class IndexRestApi {
     @Autowired
     UserService userService;
 
+    @OperationLogger(value = "获取首页数据")
     @ApiOperation(value = "首页初始化数据", notes = "首页初始化数据", response = String.class)
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String init() {

@@ -72,23 +72,10 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
     @Override
     public int getWebVisitCount() {
 
-        QueryWrapper<WebVisit> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         // 获取今日开始和结束时间
         String startTime = DateUtils.getToDayStartTime();
         String endTime = DateUtils.getToDayEndTime();
-        queryWrapper.between(BaseSQLConf.CREATE_TIME, startTime, endTime);
-        List<WebVisit> list = webVisitMapper.selectList(queryWrapper);
-        Set<String> ipSet = new HashSet<>();
-
-        // 根据IP统计访问今日访问次数
-        for (WebVisit webVisit : list) {
-            if (!"".equals(webVisit.getIp())) {
-                ipSet.add(webVisit.getIp());
-            }
-        }
-
-        return ipSet.size();
+        return webVisitMapper.getIpCount(startTime, endTime);
     }
 
     @Override
@@ -109,8 +96,8 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         // 获得最近七天的独立用户
         List<Map<String, Object>> uvMap = webVisitMapper.getUVByWeek(sevenDays, todayEndTime);
 
-        Map<String, Object> countPVMap = new HashMap<String, Object>();
-        Map<String, Object> countUVMap = new HashMap<String, Object>();
+        Map<String, Object> countPVMap = new HashMap<>();
+        Map<String, Object> countUVMap = new HashMap<>();
 
         for (Map<String, Object> item : pvMap) {
             countPVMap.put(item.get("DATE").toString(), item.get("COUNT"));

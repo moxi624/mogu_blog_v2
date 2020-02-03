@@ -128,22 +128,29 @@
 
     </el-tabs>
 
-  <!--
-    作者：xzx19950624@qq.com
-    时间：2018年9月23日16:16:09
-    描述：图片选择器
-  -->
-	<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
+
   </div>
 </template>
 
 <script>
-import CheckPhoto from "../../components/CheckPhoto";
-import CKEditor from "../../components/CKEditor";
+import AvatarCropper from '@/components/AvatarCropper'
 import { getMe, editMe, changePwd } from "@/api/system";
 export default {
   data() {
     return {
+      imagecropperShow: false,
+      imagecropperKey: 0,
+      url: process.env.PICTURE_API + "/file/cropperPicture",
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {},
       changePwdForm: {
@@ -173,8 +180,7 @@ export default {
     };
   },
   components: {
-    CheckPhoto,
-    CKEditor
+    AvatarCropper
   },
   created() {
     var tagParams = new URLSearchParams();
@@ -183,39 +189,29 @@ export default {
       if (response.code == "success") {
         this.form = response.data;
         this.fileIds = this.form.avatar;
-        this.photoList = this.form.photoList;
       }
     });
   },
   methods: {
-    getChooseData(data) {
-      var that = this;
-      this.photoVisible = false;
-      this.photoList = data.photoList;
-      this.fileIds = data.fileIds;
-      var fileId = this.fileIds.replace(",", "");
-      if (this.photoList.length >= 1) {
-        this.form.fileUid = fileId;
-        this.form.photoList = this.photoList;
-      }
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      let photoList = []
+      photoList.push(resData[0].url);
+      this.form.photoList = photoList;
+      this.form.avatar = resData[0].uid
     },
-    //关闭模态框
-    cancelModel() {
-      this.photoVisible = false;
+    close() {
+      this.imagecropperShow = false
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
       this.form.photoList = null;
       this.form.fileUid = "";
       this.icon = false;
     },
     //弹出选择图片框
     checkPhoto() {
-
-      // this.photoList = [];
-      // this.fileIds = "";
-      // this.photoVisible = true;
-
+      this.imagecropperShow = true
     },
 
     submitForm: function(type) {
@@ -223,7 +219,6 @@ export default {
         // 1、改变用户信息
         case "changeAdminForm":
           {
-            this.form.avatar = this.fileIds;
             console.log("提交的内容", this.form);
             editMe(this.form).then(response => {
               console.log(response);
@@ -284,7 +279,6 @@ export default {
       }
     },
     cancel: function(type) {
-      console.log("点击了重置", type);
       this.$refs[type].resetFields();
     }
   }
