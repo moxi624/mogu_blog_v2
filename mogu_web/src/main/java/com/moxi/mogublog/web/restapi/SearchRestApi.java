@@ -450,23 +450,75 @@ public class SearchRestApi {
             return str;
         }
 
-        String [] array = str.split(keyword);
-        String start = "<span style = 'color:red'>";
-        String end = "</span>";
+        String lowerCaseStr = str.toLowerCase();
+        String lowerKeyword = keyword.toLowerCase();
+        String [] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
+
+        Boolean isEndWith = lowerCaseStr.endsWith(lowerKeyword);
+
+        // 计算分割后的字符串位置
+        Integer count = 0;
+        List<Map<String, Integer>> list = new ArrayList<>();
+        List<Map<String, Integer>> keyList = new ArrayList<>();
+        for(int a=0; a<lowerCaseArray.length; a++) {
+
+            // 将切割出来的存储map
+            Map<String, Integer> map = new HashMap<>();
+            Map<String, Integer> keyMap = new HashMap<>();
+            map.put("startIndex", count);
+            Integer len = lowerCaseArray[a].length();
+            count += len;
+            map.put("endIndex", count);
+            list.add(map);
+
+            if(a < lowerCaseArray.length -1 || isEndWith) {
+                // 将keyword存储map
+                keyMap.put("startIndex", count);
+                count += keyword.length();
+                keyMap.put("endIndex", count);
+                keyList.add(keyMap);
+            }
+
+        }
+
+        // 截取切割对象
+        List<String> arrayList = new ArrayList<>();
+        for(Map<String, Integer> item : list) {
+            Integer start = item.get("startIndex");
+            Integer end = item.get("endIndex");
+            String itemStr = str.substring(start, end);
+            arrayList.add(itemStr);
+        }
+
+        // 截取关键字
+        List<String> keyArrayList = new ArrayList<>();
+        for(Map<String, Integer> item : keyList) {
+            Integer start = item.get("startIndex");
+            Integer end = item.get("endIndex");
+            String itemStr = str.substring(start, end);
+            keyArrayList.add(itemStr);
+        }
+
+        String startStr = "<span style = 'color:red'>";
+        String endStr = "</span>";
         StringBuffer sb = new StringBuffer();
-        Boolean isStartWith = str.startsWith(keyword);
-        Boolean isEndWith = str.endsWith(keyword);
 
-        for(int a = 0; a<array.length; a++) {
+        for(int a=0; a<arrayList.size(); a++) {
 
-            sb.append(array[a]);
+            sb.append(arrayList.get(a));
 
-            if(a < array.length - 1 || isEndWith) {
-                sb.append(start);
-                sb.append(keyword);
-                sb.append(end);
+            if(a < arrayList.size() - 1 || isEndWith) {
+                sb.append(startStr);
+                sb.append(keyArrayList.get(a));
+                sb.append(endStr);
             }
         }
+
         return sb.toString();
     }
+
+//    public static void main(String [] args) {
+//        String str = "Nginx是非常好的nginx服务器nginx";
+//        System.out.println(getHitCode(str, "Nginx"));
+//    }
 }
