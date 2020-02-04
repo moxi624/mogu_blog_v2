@@ -68,6 +68,10 @@
 
 ## 技术选型
 
+### 系统架构图
+
+![image text](./doc/images/gitee/server.jpg)
+
 ### 后端技术
 
 |      技术      |          说明           |                             官网                             |

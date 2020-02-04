@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/search")
-@Api(value = "搜索RestApi", tags = {"SearchRestApi"})
+@Api(value = "SQL搜索RestApi", tags = {"SearchRestApi"})
 @Slf4j
 public class SearchRestApi {
 
@@ -105,13 +105,19 @@ public class SearchRestApi {
         List<String> blogSortUidList = new ArrayList<>();
         Map<String, String> pictureMap = new HashMap<>();
         final StringBuffer fileUids = new StringBuffer();
+
         blogList.forEach(item -> {
 
+            // 获取图片uid
             blogSortUidList.add(item.getBlogSortUid());
-
             if (StringUtils.isNotEmpty(item.getFileUid())) {
                 fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
+
+            // 给标题和简介设置高亮
+            item.setTitle(getHitCode(item.getTitle(), keywords));
+            item.setSummary(getHitCode(item.getTitle(), keywords));
+
         });
 
         // 调用图片接口，获取图片
@@ -125,7 +131,10 @@ public class SearchRestApi {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
 
-        Collection<BlogSort> blogSortList = blogSortService.listByIds(blogSortUidList);
+        Collection<BlogSort> blogSortList = new ArrayList<>();
+        if(blogSortUidList.size() > 0) {
+            blogSortList = blogSortService.listByIds(blogSortUidList);
+        }
 
         Map<String, String> blogSortMap = new HashMap<>();
         blogSortList.forEach(item -> {
@@ -367,9 +376,9 @@ public class SearchRestApi {
         }
 
 
-        Map<String, BlogSort> sortMap = new HashMap<String, BlogSort>();
-        Map<String, Tag> tagMap = new HashMap<String, Tag>();
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         sortList.forEach(item -> {
             sortMap.put(item.getUid(), item);
@@ -429,5 +438,35 @@ public class SearchRestApi {
         return list;
     }
 
+    /**
+     * 添加高亮
+     * @param str
+     * @param keyword
+     * @return
+     */
+    private String getHitCode(String str , String keyword) {
 
+        if(StringUtils.isEmpty(keyword) || StringUtils.isEmpty(str)) {
+            return str;
+        }
+
+        String [] array = str.split(keyword);
+        String start = "<span style = 'color:red'>";
+        String end = "</span>";
+        StringBuffer sb = new StringBuffer();
+        Boolean isStartWith = str.startsWith(keyword);
+        Boolean isEndWith = str.endsWith(keyword);
+
+        for(int a = 0; a<array.length; a++) {
+
+            sb.append(array[a]);
+
+            if(a < array.length - 1 || isEndWith) {
+                sb.append(start);
+                sb.append(keyword);
+                sb.append(end);
+            }
+        }
+        return sb.toString();
+    }
 }
