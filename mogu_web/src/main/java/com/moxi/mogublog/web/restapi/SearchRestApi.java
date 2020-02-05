@@ -516,9 +516,4 @@ public class SearchRestApi {
 
         return sb.toString();
     }
-
-//    public static void main(String [] args) {
-//        String str = "Nginx是非常好的nginx服务器nginx";
-//        System.out.println(getHitCode(str, "Nginx"));
-//    }
 }

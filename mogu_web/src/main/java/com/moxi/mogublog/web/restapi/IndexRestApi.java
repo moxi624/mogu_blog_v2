@@ -180,7 +180,7 @@ public class IndexRestApi {
 
         //将从数据库查询的数据缓存到redis中
         String key = SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level;
-        stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 10, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
@@ -220,7 +220,7 @@ public class IndexRestApi {
         list = setBlog(list);
 
         //将从热门博客缓存到redis中
-        stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, JsonUtils.objectToJson(list).toString());
+        stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
 
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -270,7 +270,7 @@ public class IndexRestApi {
 
         //将从最新博客缓存到redis中
         if (currentPage == 1L) {
-            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString());
+            stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
             log.info("将数据缓存至Redis中");
         }
         pageList.setRecords(list);
