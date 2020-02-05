@@ -89,14 +89,14 @@
 |     Docker     |       容器化部署        |      [ https://www.docker.com](https://www.docker.com/)      |
 |     Druid      |      数据库连接池       | [ https://github.com/alibaba/druid](https://github.com/alibaba/druid) |
 |     七牛云     |    七牛云 - 对象储存    |         https://developer.qiniu.com/sdk#official-sdk         |
-|      JWT       |       WT登录支持        |                 https://github.com/jwtk/jjwt                 |
+|      JWT       |       JWT登录支持       |                 https://github.com/jwtk/jjwt                 |
 |     SLF4J      |        日志框架         |                    http://www.slf4j.org/                     |
 |     Lombok     |    简化对象封装工具     | [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok) |
 |     Nginx      | HTTP和反向代理web服务器 |                      http://nginx.org/                       |
 |    JustAuth    |    第三方登录的工具     |             https://github.com/justauth/JustAuth             |
 |     Hutool     |     Java工具包类库      |                  https://hutool.cn/docs/#/                   |
 |    阿里大于    |      短信发送平台       |            https://doc.alidayu.com/doc2/index.htm            |
-| Github Actions |       自动化部署        | https://help.github.com/en/actions/automating-your-workflow-with-github-actions |
+| Github Actions |       自动化部署        |              https://help.github.com/en/actions              |
 
 ### 前端技术
 

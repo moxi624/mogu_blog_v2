@@ -55,11 +55,6 @@
             <version>${swagger.ui.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
-        </dependency>
-
         <!-- 添加Eureka相关依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

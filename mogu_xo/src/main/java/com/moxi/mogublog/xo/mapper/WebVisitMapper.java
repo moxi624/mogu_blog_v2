@@ -25,7 +25,7 @@ public interface WebVisitMapper extends SuperMapper<WebVisit> {
      * @param endTime
      * @return
      */
-    @Select("SELECT COUNT(ip) FROM t_web_visit where create_time >= #{startTime} AND create_time <= #{endTime} GROUP BY ip")
+    @Select("SELECT COUNT(ip) FROM (SELECT ip FROM t_web_visit WHERE create_time >= #{startTime} AND create_time <= #{endTime} GROUP BY ip) AS tmp")
     Integer getIpCount(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     /**
