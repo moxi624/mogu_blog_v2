@@ -307,6 +307,12 @@ export const constantRouterMap = [
         meta: { title: 'SpringBootAdmin', icon: 'log' }
       },
       {
+        path: 'Zipkin',
+        name: 'Zipkin',
+        component: () => import('@/views/monitor/Zipkin'),
+        meta: { title: 'Zipkin链路追踪', icon: 'log' }
+      },
+      {
         path: 'Druid',
         name: 'Druid',
         component: () => import('@/views/monitor/Druid'),

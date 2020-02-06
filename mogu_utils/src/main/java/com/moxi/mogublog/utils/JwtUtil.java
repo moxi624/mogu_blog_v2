@@ -115,46 +115,4 @@ public class JwtUtil {
         return compact;
     }
 
-
-    /**
-     * 判断小程序是否登陆 isUser是不是用户登陆
-     *
-     * @param rd_session
-     * @return
-     */
-    public static Map<String, Object> booleanLogin(String rd_session) {
-
-        boolean flag = false;
-        Map<String, Object> remap = new HashMap<>();
-        Claims parseJWT = parseJWT(rd_session);
-
-        long userId = 0L;
-        long shopId = 0L;
-        boolean isUser = true;
-        String userOpenId = "";
-        try {
-            if (parseJWT != null) {
-                userId = StringUtils.getLong(parseJWT.get("user_id").toString(), 0l);
-                shopId = StringUtils.getLong(parseJWT.get("shop_id").toString(), 0l);
-                isUser = (boolean) parseJWT.get("is_user");
-                userOpenId = (String) parseJWT.get("user_open_id");
-                log.info("user_open_id" + parseJWT.get("user_open_id"));
-                log.info("userOpenId" + userOpenId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (userId > 0 && shopId > 0) {
-            flag = true;
-        }
-        remap.put("userId", userId);
-        remap.put("shopId", shopId);
-        remap.put("isUser", isUser);
-        remap.put("userOpenId", userOpenId);
-        remap.put("flag", flag);
-
-        return remap;
-    }
-
 }

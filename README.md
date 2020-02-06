@@ -18,7 +18,7 @@
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 ## 项目介绍
-蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成。
+蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云。
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合目前流行的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
 - 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，在加上没怎么接触公司实际项目，故有能改正的地方，还请各位老哥能够指出~
@@ -38,6 +38,7 @@
 - 引入Github Actions 完成蘑菇博客的持续集成、持续部署。
 - 引入七牛云对象存储，同时支持本地文件存储
 - 引入RBAC权限管理设计，灵活的权限控制，满足绝大部分的权限需求。(后期考虑到按钮级别)
+- 引入Zipkin链路追踪，聚合各业务系统调用延迟数据，可以一眼看出延迟高的服务
 - 自定义参数校验注解，轻松实现后端参数校验
 
 ## 项目地址
@@ -61,6 +62,7 @@
 - mogu_xo: 是存放 Entity，Service，Dao层的
 - mogu_base: 是一些Base基类
 - mogu_config: 是存放一些配置
+- mogu_zipkin：链路追踪服务，目前使用java -jar的方式启动
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
@@ -97,6 +99,7 @@
 |     Hutool     |     Java工具包类库      |                  https://hutool.cn/docs/#/                   |
 |    阿里大于    |      短信发送平台       |            https://doc.alidayu.com/doc2/index.htm            |
 | Github Actions |       自动化部署        |              https://help.github.com/en/actions              |
+|     Zipkin     |        链路追踪         |             https://github.com/openzipkin/zipkin             |
 
 ### 前端技术
 
@@ -140,6 +143,10 @@
 ### 配置七牛云对象存储
 
 参考[蘑菇博客切换七牛云存储](http://moguit.cn/#/info?blogUid=735ed389c4ad1efd321fed9ac58e646b)，配置文件的七牛云对象存储，及本地文件存储
+
+### 使用Zipkin搭建蘑菇博客链路追踪
+
+参考[使用Zipkin搭建蘑菇博客链路追踪](http://moguit.cn/#/info?blogUid=35bd93cabc08611c7f74ce4564753ef9)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
 
 ## 环境搭建
 
@@ -273,6 +280,8 @@
   ![image text](./doc/images/admin/monitor_druid.png)
   
   ![image text](./doc/images/admin/monitor_admin.png)
+  
+  ![image text](./doc/images/admin/monitor_zipkin.png)
   
   ![image text](./doc/images/admin/monitor_elastic.png)
   

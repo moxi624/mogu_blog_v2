@@ -1,6 +1,6 @@
 <template>
 <div class="app-container">
-    <iframe id="myIframe"  :src="druidAdminUrl" width="100%" height="780px;"></iframe>
+    <iframe id="myIframe"  :src="zipkinUrl" width="100%" height="780px;"></iframe>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 
     data() {
       return {
-        druidAdminUrl: process.env.DRUID_ADMIN,
+        zipkinUrl: process.env.Zipkin_Admin,
       }
     },
     created() {
