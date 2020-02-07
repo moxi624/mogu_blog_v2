@@ -71,7 +71,7 @@
 
 
       <div class="searchbox">
-        <div id="search_bar" :class="showSearch?'search_bar search_open':'search_bar'">
+        <div id="search_bar" :class="(showSearch || keyword.length > 0)?'search_bar search_open':'search_bar'">
           <input
             ref="searchInput"
             class="input"
@@ -289,6 +289,9 @@
         return vars;
       },
       clickSearchIco: function () {
+        if(this.keyword != "") {
+          this.search();
+        }
         this.showSearch = !this.showSearch;
         //获取焦点
         this.$refs.searchInput.focus();
