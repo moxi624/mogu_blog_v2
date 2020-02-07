@@ -261,4 +261,3 @@ jobs:
         script: |
           cd /home/mogu_blog/mogu_search/
           ./shutdown.sh
-          ./startup.sh

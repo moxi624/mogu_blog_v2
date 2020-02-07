@@ -8,7 +8,7 @@
       <!-- 二级推荐 -->
       <div class="toppic">
         <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
-          <a href="javascript:void(0);">
+          <a :href="VUE_MOGU_WEB + '/#/info?blogUid=' + item.uid">
             <i>
               <img :src="PICTURE_HOST + item.photoList[0]">
             </i>
@@ -29,7 +29,7 @@
         data-scroll-reveal="enter bottom over 1s"
       >
         <h3 class="blogtitle">
-          <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
+          <a :href="VUE_MOGU_WEB + '/#/info?blogUid=' + item.uid" @click="goToInfo(item.uid)">{{item.title}}</a>
         </h3>
 
         <span class="blogpic">
@@ -133,6 +133,7 @@
     },
     data() {
       return {
+        VUE_MOGU_WEB: process.env.VUE_MOGU_WEB,
         PICTURE_HOST: process.env.PICTURE_HOST,
         firstData: [], //；一级推荐数据
         secondData: [], //；二级级推荐数据
@@ -200,20 +201,20 @@
     methods: {
       //跳转到文章详情
       goToInfo(uid) {
-        let routeData = this.$router.resolve({
-          path: "/info",
-          query: {blogUid: uid}
-        });
-        window.open(routeData.href, "_blank");
+        // let routeData = this.$router.resolve({
+        //   path: "/info",
+        //   query: {blogUid: uid}
+        // });
+        // window.open(routeData.href, "_blank");
       },
 
       //跳转到搜索详情页
       goToList(uid) {
-        let routeData = this.$router.resolve({
-          path: "/list",
-          query: {sortUid: uid}
-        });
-        window.open(routeData.href, "_blank");
+        // let routeData = this.$router.resolve({
+        //   path: "/list",
+        //   query: {sortUid: uid}
+        // });
+        // window.open(routeData.href, "_blank");
       },
 
       //跳转到搜索详情页
