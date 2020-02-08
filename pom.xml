@@ -59,6 +59,7 @@
         <module>mogu_monitor</module>
         <module>mogu_gateway</module>
         <module>mogu_zipkin</module>
+        <module>mogu_spider</module>
     </modules>
 
     <dependencyManagement>

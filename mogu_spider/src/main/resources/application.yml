@@ -1,0 +1,116 @@
+#app
+server:
+  port: 8608
+
+#spring
+spring:
+  jmx:
+    default-domain: mogu_spider
+  thymeleaf:
+    cache: true   #关闭缓存
+  application:
+    name: mogu-spider
+  security:
+    user:
+      name: user
+      password: password123
+  boot:
+    admin:
+      client:
+        enabled: true
+        url: http://localhost:8606
+        username: user
+        password: password123
+        instance:
+          service-base-url: http://localhost:8608
+
+  #redis
+  redis:
+    host: 127.0.0.1 #redis的主机ip
+    port: 6379
+
+  # sleuth 配置
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      probability: 1.0 # 采样比例为: 0.1(即10%),设置的值介于0.0到1.0之间，1.0则表示全部采集。
+  # zipkin 配置
+  zipkin:
+    base-url: http://localhost:9411  # 指定了Zipkin服务器的地址
+
+  # DATABASE CONFIG
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/mogu_blog?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}}
+    lease-renewal-interval-in-seconds: 5
+    appname: mogu-spider
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.moxi.mogublog.spider.entity
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: UUID
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: NOT_EMPTY
+      #驼峰下划线转换
+      column-underline: true
+      #数据库大写下划线转换
+      #capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      db-type: mysql
+    #刷新mapper 调试神器
+    refresh: true
+  # 原生配置
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false

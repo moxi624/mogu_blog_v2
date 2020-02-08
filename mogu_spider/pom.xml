@@ -8,23 +8,24 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>mogu_admin</artifactId>
+    <artifactId>mogu_spider</artifactId>
     <packaging>jar</packaging>
-    <name>mogu_admin</name>
+    <name>mogu_spider</name>
     <description>Demo project for Spring Boot</description>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
     <dependencies>
 
         <dependency>
-            <artifactId>mogu_xo</artifactId>
+            <artifactId>mogu_base</artifactId>
             <groupId>com.moxi</groupId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -37,6 +38,11 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions> -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
         </dependency>
 
         <dependency>
@@ -57,18 +63,6 @@
             <version>${swagger.ui.version}</version>
         </dependency>
 
-        <!--spring切面aop依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <!-- RabbitMq  -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-
         <!-- 添加Eureka相关依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -77,7 +71,8 @@
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+            <version>${startFeign.version}</version>
         </dependency>
 
         <dependency>
@@ -86,8 +81,36 @@
             <version>${springBootAdmin.version}</version>
         </dependency>
 
-    </dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-core</artifactId>
+            <version>0.7.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-extension</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
 
     <!--spring boot打包的话需要指定一个唯一的入门-->
     <build>
@@ -97,7 +120,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定该Main Class为全局的唯一入口 -->
-                    <mainClass>com.moxi.mogublog.admin.AdminApplication</mainClass>
+                    <mainClass>com.moxi.mogublog.spider.SpiderApplication</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>
@@ -108,6 +131,8 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+
 </project>
