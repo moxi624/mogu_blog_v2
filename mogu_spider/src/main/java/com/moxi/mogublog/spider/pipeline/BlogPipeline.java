@@ -3,6 +3,8 @@ package com.moxi.mogublog.spider.pipeline;
 import com.moxi.mogublog.spider.entity.BlogSpider;
 import com.moxi.mogublog.spider.mapper.BlogSpiderMapper;
 import com.moxi.mogublog.spider.util.IdWorker;
+import com.moxi.mougblog.base.enums.EPublish;
+import com.moxi.mougblog.base.enums.EStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -33,23 +35,20 @@ public class BlogPipeline implements Pipeline {
 
             try {
                 BlogSpider blog = new BlogSpider();
-                blog.setUid(idWorker.nextId() + ""); //主键
-                blog.setTitle(title);                   //标题
-                blog.setSummary("爬取到的页面");
-                blog.setContent(content);              //博客内容
-                blog.setTagUid("1");
-                blog.setClickCount(0); //点击数
-                blog.setCollectCount(0); //收藏数
-                blog.setStatus(1);     //状态1
-                Date now = new Date();
-                blog.setCreateTime(now);//创建时间
-                blog.setUpdateTime(now);
-                blog.setAdminUid("1f01cd1d2f474743b241d74008b12333");//管理员uid 写死
-                blog.setAuthor("作者");
-                blog.setArticlesPart("辉皇博客");
-                blog.setBlogSortUid("1");
-                blog.setLevel(1);
-                blog.setIsPublish("1");
+                blog.setUid(idWorker.nextId() + "");
+                blog.setTitle(title);
+                blog.setSummary(title);
+                blog.setContent(content);
+                blog.setTagUid("5c4c541e600ff422ccb371ee788f59d6");
+                blog.setClickCount(0);
+                blog.setCollectCount(0);
+                blog.setStatus(EStatus.ENABLE);
+                blog.setAdminUid("1f01cd1d2f474743b241d74008b12333");
+                blog.setAuthor("陌溪");
+                blog.setArticlesPart("蘑菇博客");
+                blog.setBlogSortUid("6a1c7a50c0e7b8e8657949bf02d5d0ca");
+                blog.setLevel(0);
+                blog.setIsPublish(EPublish.PUBLISH);
                 blog.setSort(0);
                 blog.insert();
 
