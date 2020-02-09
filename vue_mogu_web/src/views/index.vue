@@ -8,7 +8,7 @@
       <!-- 二级推荐 -->
       <div class="toppic">
         <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
-          <a :href="VUE_MOGU_WEB + '/#/info?blogUid=' + item.uid">
+          <a href="javascript:void(0);">
             <i>
               <img :src="PICTURE_HOST + item.photoList[0]">
             </i>
@@ -29,7 +29,7 @@
         data-scroll-reveal="enter bottom over 1s"
       >
         <h3 class="blogtitle">
-          <a :href="VUE_MOGU_WEB + '/#/info?blogUid=' + item.uid" @click="goToInfo(item.uid)">{{item.title}}</a>
+          <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
         </h3>
 
         <span class="blogpic">
@@ -201,29 +201,28 @@
     methods: {
       //跳转到文章详情
       goToInfo(uid) {
-        // let routeData = this.$router.resolve({
-        //   path: "/info",
-        //   query: {blogUid: uid}
-        // });
-        // window.open(routeData.href, "_blank");
+
+        let routeData = this.$router.push({
+          path: "/info",
+          query: {blogUid: uid}
+        });
       },
 
       //跳转到搜索详情页
       goToList(uid) {
-        // let routeData = this.$router.resolve({
-        //   path: "/list",
-        //   query: {sortUid: uid}
-        // });
-        // window.open(routeData.href, "_blank");
+        let routeData = this.$router.push({
+          path: "/list",
+          query: {sortUid: uid}
+        });
+
       },
 
       //跳转到搜索详情页
       goToAuthor(author) {
-        let routeData = this.$router.resolve({
+        let routeData = this.$router.push({
           path: "/list",
           query: {author: author}
         });
-        window.open(routeData.href, "_blank");
       },
 
       //最新博客列表

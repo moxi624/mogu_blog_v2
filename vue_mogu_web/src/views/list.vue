@@ -173,19 +173,17 @@ export default {
   methods: {
     //跳转到文章详情
     goToInfo(uid) {
-      let routeData = this.$router.resolve({
+      let routeData = this.$router.push({
         path: "/info",
         query: { blogUid: uid }
       });
-      window.open(routeData.href, "_blank");
     },
     //点击了分类
     goToList(uid) {
-      let routeData = this.$router.resolve({
+      let routeData = this.$router.push({
         path: "/list",
         query: { sortUid: uid }
       });
-      window.open(routeData.href, "_blank");
     },
     // 加载内容
     loadContent: function() {
@@ -206,7 +204,6 @@ export default {
         searchBlog(params).then(response => {
           if (response.code == "success" && response.data.blogList.length > 0) {
             that.isEnd = false;
-            console.log("返回的搜索数据", response.data.blogList)
             //获取总页数
             that.totalPages = response.data.blogList.length;
             that.total = response.data.total;
@@ -223,6 +220,14 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
           } else {
+
+            this.$notify.error({
+              title: '错误',
+              message: response.data,
+              type: 'success',
+              offset: 100
+            });
+
             that.isEnd = true;
           }
           that.loading = false;
@@ -261,6 +266,14 @@ export default {
             this.blogData = blogData;
             that.loading = false;
           } else {
+
+            this.$notify.error({
+              title: '错误',
+              message: response.data,
+              type: 'success',
+              offset: 100
+            });
+
             that.isEnd = true;
             that.loading = false;
           }
@@ -298,6 +311,14 @@ export default {
             this.blogData = blogData;
             that.loading = false;
           } else {
+
+            this.$notify.error({
+              title: '错误',
+              message: response.data,
+              type: 'success',
+              offset: 100
+            });
+
             that.isEnd = true;
             that.loading = false;
           }
@@ -340,6 +361,14 @@ export default {
             this.blogData = blogData;
             that.loading = false;
           } else {
+
+            this.$notify.error({
+              title: '错误',
+              message: response.data,
+              type: 'success',
+              offset: 100
+            });
+
             that.isEnd = true;
             that.loading = false;
           }

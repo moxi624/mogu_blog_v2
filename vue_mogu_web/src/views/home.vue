@@ -267,7 +267,7 @@
       //拿到vuex中的写的两个方法
       ...mapMutations(['setUserInfo', 'setLoginState']),
       search: function () {
-        if (this.keyword == "") {
+        if (this.keyword == "" || this.keyword.trim() == "") {
           this.$notify.error({
             title: '错误',
             message: "关键字不能为空",

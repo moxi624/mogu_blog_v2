@@ -129,7 +129,6 @@
     width: 100%;
     height: 100px;
     margin: 0 auto;
-    background: #f6f6f6;
   }
   .commentBox .left {
     display: inline-block;

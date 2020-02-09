@@ -85,12 +85,14 @@ public class SearchRestApi {
                                 @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
                                 @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
-        if (StringUtils.isEmpty(keywords)) {
+        if (StringUtils.isEmpty(keywords) || StringUtils.isEmpty(keywords.trim()) ) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
         }
 
+        final String keyword = keywords.trim();
+
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(SQLConf.TITLE, keywords).or().like(SQLConf.SUMMARY, keywords);
+        queryWrapper.like(SQLConf.TITLE, keyword).or().like(SQLConf.SUMMARY, keyword);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
@@ -115,8 +117,8 @@ public class SearchRestApi {
             }
 
             // 给标题和简介设置高亮
-            item.setTitle(getHitCode(item.getTitle(), keywords));
-            item.setSummary(getHitCode(item.getTitle(), keywords));
+            item.setTitle(getHitCode(item.getTitle(), keyword));
+            item.setSummary(getHitCode(item.getTitle(), keyword));
 
         });
 
