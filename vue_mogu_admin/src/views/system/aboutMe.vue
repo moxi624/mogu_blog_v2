@@ -219,6 +219,7 @@ export default {
       this.$refs.ckeditor.setData(this.form.personResume);
     },
     cropSuccess(resData) {
+      console.log("裁剪成功", resData)
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       let photoList = []

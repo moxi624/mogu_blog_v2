@@ -56,10 +56,11 @@
           <el-form-item label="阿里支付">
             <el-upload
               class="avatar-uploader"
-              name="filedatas"
+              name="file"
               :action="uploadPictureHost"
               :file-list="fileList"
               :show-file-list="false"
+              :before-upload="beforeUpload"
               :on-success="fileSuccess_ali"
               :data="otherData"
             >
@@ -71,10 +72,11 @@
           <el-form-item label="微信支付">
             <el-upload
               class="avatar-uploader"
-              name="filedatas"
+              name="file"
               :action="uploadPictureHost"
               :file-list="fileList"
               :show-file-list="false"
+              :before-upload="beforeUpload"
               :on-success="fileSuccess_weixin"
               :data="otherData"
             >
@@ -154,9 +156,9 @@
 
 <script>
 import CheckPhoto from "../../components/CheckPhoto";
-
+import { getToken } from '@/utils/auth'
 import { getWebConfig, editWebConfig } from "@/api/webConfig";
-
+import { Loading } from 'element-ui';
 export default {
   data() {
     return {
@@ -175,6 +177,7 @@ export default {
         aliPayPhoto: "",
         weixinPayPhoto: ""
       },
+      loadingInstance: null, // loading对象
       fileList: [],
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
@@ -212,14 +215,16 @@ export default {
     });
 
     //图片上传地址
-    this.uploadPictureHost = process.env.PICTURE_API + "/file/pictures";
+    this.uploadPictureHost = process.env.PICTURE_API + "/file/cropperPicture";
 
     //其它数据
     this.otherData = {
+      source: "picture",
       userUid: "uid00000000000000000000000000000000",
       adminUid: "uid00000000000000000000000000000000",
       projectName: "blog",
-      sortName: "admin"
+      sortName: "admin",
+      token: getToken()
     };
 
   },
@@ -273,33 +278,45 @@ export default {
       });
     },
 
+    beforeUpload: function(file) {
+      this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力上传中~' });
+    },
     fileSuccess_ali: function(response, file, fileList) {
       console.log(response);
       if (response.code == "success") {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.aliPay = fileList[0].uid;
-          this.form.aliPayPhoto = fileList[0].picUrl;
+          this.form.aliPayPhoto = fileList[0].url;
           var tempForm = this.form;
           this.form = {};
           this.form = tempForm;
         }
+        this.$message({
+          type: 'success',
+          message: "上传成功"
+        })
       }
+      this.loadingInstance.close();
     },
 
     fileSuccess_weixin: function(response, file, fileList) {
-      console.log(response);
+
       if (response.code == "success") {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.weixinPay = fileList[0].uid;
-          this.form.weixinPayPhoto = fileList[0].picUrl;
+          this.form.weixinPayPhoto = fileList[0].url;
           var tempForm = this.form;
           this.form = {};
           this.form = tempForm;
-          console.log(this.form);
         }
+        this.$message({
+          type: 'success',
+          message: "上传成功"
+        })
       }
+      this.loadingInstance.close();
     }
   }
 };
