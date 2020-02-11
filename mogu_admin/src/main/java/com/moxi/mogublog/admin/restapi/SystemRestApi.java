@@ -59,7 +59,8 @@ public class SystemRestApi {
         }
 
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
-        admin.setPassWord(null); //清空密码，防止泄露
+        //清空密码，防止泄露
+        admin.setPassWord(null);
 
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {

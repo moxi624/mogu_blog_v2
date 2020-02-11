@@ -78,6 +78,11 @@ public class AdminVO extends BaseVO<AdminVO> {
     private String summary;
 
     /**
+     * 个人履历
+     */
+    private String personResume;
+
+    /**
      * github地址
      */
     private String github;

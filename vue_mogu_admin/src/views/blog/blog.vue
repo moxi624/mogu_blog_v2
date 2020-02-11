@@ -323,7 +323,7 @@
         </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" required>
-          <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange"></CKEditor>
+          <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
         </el-form-item>
       </el-form>
 

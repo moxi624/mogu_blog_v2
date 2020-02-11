@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <!-- 查询和其他操作 -->
-    <el-tabs type="border-card">
-      <el-tab-pane label="关于我">
+    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="关于我" name="one">
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像">
@@ -103,7 +103,19 @@
 
       </el-tab-pane> -->
 
-      <el-tab-pane label="修改密码" name="third">
+      <el-tab-pane label="个人履历" name="third">
+        <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
+        <div class="editor-container">
+          <CKEditor ref="ckeditor" :content="form.personResume" :height="500"></CKEditor>
+        </div>
+
+        <div style="margin-top: 5px; margin-left: 10px;" >
+          <el-button type="primary" @click="submitForm('personResume')">保 存</el-button>
+        </div>
+
+      </el-tab-pane>
+
+      <el-tab-pane label="修改密码" name="four">
         <span slot="label"><i class="el-icon-edit"></i> 修改密码</span>
         <el-form :rules="rules" style="margin-left: 20px;" label-position="left" :model="changePwdForm"  label-width="80px" ref="changePwdForm">
           <el-form-item label="旧密码" prop="oldPwd">
@@ -145,9 +157,12 @@
 <script>
 import AvatarCropper from '@/components/AvatarCropper'
 import { getMe, editMe, changePwd } from "@/api/system";
+import CKEditor from "@/components/CKEditor";
+import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
 export default {
   data() {
     return {
+      activeName: "one",
       imagecropperShow: false,
       imagecropperKey: 0,
       url: process.env.PICTURE_API + "/file/cropperPicture",
@@ -180,7 +195,13 @@ export default {
     };
   },
   components: {
-    AvatarCropper
+    AvatarCropper,
+    CKEditor
+  },
+  computed: {
+    language() {
+      return this.languageTypeList['zh']
+    }
   },
   created() {
     var tagParams = new URLSearchParams();
@@ -193,6 +214,10 @@ export default {
     });
   },
   methods: {
+    handleClick(tab, event) {
+      //设置富文本内容
+      this.$refs.ckeditor.setData(this.form.personResume);
+    },
     cropSuccess(resData) {
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
@@ -230,6 +255,22 @@ export default {
             });
           }
           break;
+
+        // 2、改变个人履历
+        case "personResume":
+        {
+          //获取CKEditor中的内容
+          this.form.personResume = this.$refs.ckeditor.getData();
+          editMe(this.form).then(response => {
+            console.log(response);
+            this.$notify({
+              title: "成功",
+              message: "保存成功！",
+              type: "success"
+            });
+          });
+        }
+        break;
 
         //3、改变密码
         case "changePwdForm":
@@ -333,5 +374,9 @@ export default {
 img {
   width: 100px;
   height: 100px;
+}
+
+.editor-container{
+  margin-bottom: 30px;
 }
 </style>

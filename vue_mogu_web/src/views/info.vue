@@ -1,6 +1,6 @@
 <template>
   <article>
-    <el-dialog :visible.sync="dialogPictureVisible" fullscreen="true" >
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen >
       <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;">
     </el-dialog>
     <h1 class="t_nav">
@@ -381,19 +381,6 @@
   .iconfont {
     font-size: 14px;
     margin-right: 3px;
-  }
-  .ant-comment-actions {
-    margin-top: -20px;
-  }
-  .ant-anchor-ink {
-    position: relative;
-  }
-  .ant-form-item {
-    margin-bottom: 1px;
-  }
-  .contain {
-    width: 600px;
-    margin: 0 auto;
   }
   .message_infos {
     width: 96%;

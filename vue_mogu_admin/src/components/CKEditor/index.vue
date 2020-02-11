@@ -8,14 +8,14 @@
   import { getToken } from '@/utils/auth'
 import CKEDITOR from 'CKEDITOR';
 export default {
-  props: ["content"],
+  props: ["content", "height"],
   mounted() {
     var that = this;
 
     //使用ckeditor替换textarea，设置代码块风格为 zenburn
     // 上传时，携带token信息，以便于被feign拦截后传递给mogu-admin获取七牛云相关配置
     CKEDITOR.replace('editor',
-      {height: '275px',
+      {height: this.height,
         width: '100%',
         toolbar: 'toolbar_Full',
         codeSnippet_theme: 'zenburn',

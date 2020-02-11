@@ -79,6 +79,7 @@ public class AboutMeRestApi {
         result.setPhotoList(admin.getPhotoList());
         result.setGithub(admin.getGithub());
         result.setGitee(admin.getGitee());
+        result.setPersonResume(admin.getPersonResume());
         return ResultUtil.result(SysConf.SUCCESS, result);
     }
 

@@ -29,8 +29,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         "com.moxi.mogublog.admin.security",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",
-        "com.moxi.mogublog.xo.service",
-        "com.moxi.mogublog.utils"
+        "com.moxi.mogublog.xo.service"
 })
 public class AdminApplication {
 

@@ -8,6 +8,16 @@
         <a href="/" class="n2">关于我</a>
       </h1>
       <div class="news_infos">
+
+        <div
+          class="news_con fixck newsview"
+          v-html="info.personResume"
+          v-highlight
+        >{{info.personResume}}
+        </div>
+
+        <el-divider></el-divider>
+
         <sticky :sticky-top="60">
           <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
                       :showCancel="showCancel" ></CommentBox>
@@ -18,6 +28,7 @@
             还没有评论，快来抢沙发吧！
           </div>
         </div>
+
       </div>
       <div class="sidebar">
         <div class="about">
@@ -78,6 +89,7 @@ export default {
   created() {
     var that = this;
     getMe().then(response => {
+      console.log("getMe", response);
       if (response.code == "success") {
         this.info = response.data;
       }
@@ -135,19 +147,86 @@ export default {
 </script>
 
 <style>
-  .ant-comment-actions {
-    margin-top: -20px;
+  .news_infos .newsview img {
+    max-width: 650px;
+    height: auto;
   }
-  .ant-anchor-ink {
-    position: relative;
+  .fixck {
+    /* font-family: Arial, Verdana, sans-serif !important;
+    font-size: 12px !important;
+    color: #222 !important;
+    line-height: normal !important; */
   }
-  .ant-form-item {
-    margin-bottom: 1px;
+
+  .fixck p {
+    margin: 12px 0 !important;
   }
-  .contain {
-    width: 600px;
-    margin: 0 auto;
+
+  .fixck a {
+    text-decoration: underline !important;
+    color: #00e !important;
   }
+
+  .fixck ul li {
+    list-style: disc;
+  }
+
+  .fixck ol li {
+    list-style: decimal;
+  }
+
+  .fixck ul,
+  .fixck ol {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+
+  .fixck li {
+    display: list-item !important;
+  }
+
+  .fixck h1 {
+    font-weight: bold !important;
+    font-size: 32px !important;
+    margin: 21px 0 !important;
+  }
+
+  .fixck h2 {
+    font-weight: bold !important;
+    font-size: 24px !important;
+    margin: 19px 0 !important;
+  }
+
+  .fixck h3 {
+    font-weight: bold !important;
+    font-size: 19px !important;
+    margin: 18px 0 !important;
+  }
+
+  .fixck h4 {
+    font-weight: bold !important;
+    font-size: 16px !important;
+    margin: 21px 0 !important;
+  }
+
+  .fixck h5 {
+    font-weight: bold !important;
+    font-size: 13px !important;
+    margin: 22px 0 !important;
+  }
+
+  .fixck h6 {
+    font-weight: bold !important;
+    font-size: 11px !important;
+    margin: 24px 0 !important;
+  }
+
+  .news_con {
+    line-height: 1.8;
+    font-size: 16px;
+    text-align: justify;
+  }
+
   .message_infos {
     width: 100%;
     min-height: 500px;
@@ -156,5 +235,9 @@ export default {
   .noComment {
     width: 100%;
     text-align: center;
+  }
+  .personResume {
+    margin: 20px 20px 20px 20px;
+    font-size: 16px;
   }
 </style>

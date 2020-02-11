@@ -155,11 +155,11 @@
     color: #606266;
     padding:10px 5px 5px 10px;
     resize: none;
-    width: 98%;
+    width: 95%;
     height: 100%;
   }
   .bottom {
-    width: 100%;
+    width: 98%;
     height: 60px;
     line-height: 40px;
     margin-top: 20px;

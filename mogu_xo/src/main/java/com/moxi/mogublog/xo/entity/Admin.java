@@ -92,6 +92,11 @@ public class Admin extends SuperEntity<Admin> {
     private String summary;
 
     /**
+     * 个人履历（Markdown）
+     */
+    private String personResume;
+
+    /**
      * 登录次数
      */
     private Integer loginCount;

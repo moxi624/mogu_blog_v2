@@ -43,7 +43,7 @@
 
 ## 项目文档
 
-文档地址：http://moxi159753.gitee.io/mogu_blog_doc
+文档地址：http://doc.moguit.cn
 
 ## 项目地址
 
