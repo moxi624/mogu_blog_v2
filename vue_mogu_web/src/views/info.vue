@@ -123,7 +123,6 @@
 
   import CommentList from "../components/CommentList";
   import CommentBox from "../components/CommentBox";
-
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
   import ThirdRecommend from "../components/ThirdRecommend";
@@ -133,14 +132,14 @@
   import FollowUs from "../components/FollowUs";
   import PayCode from "../components/PayCode";
   import Sticky from '@/components/Sticky'
-
   import {addComment, getCommentList} from "../api/comment";
+  import { Loading } from 'element-ui';
 
   export default {
     name: "info",
     data() {
       return {
-        source: "MESSAGE_BOARD",
+        loadingInstance: null, // loading对象
         showCancel: false,
         submitting: false,
         comments: [],
@@ -172,6 +171,9 @@
       Sticky
     },
     created() {
+
+      this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+
       getLink().then(response => {
         this.linkData = response.data.records;
       });
@@ -185,7 +187,7 @@
       params.append("uid", this.blogUid);
       getBlogByUid(params).then(response => {
         if (response.code == "success") {
-          console.log("得到的评论", response.data)
+          this.loadingInstance.close();
           this.blogData = response.data;
         }
       });

@@ -110,30 +110,39 @@
           label-width="80px"
           ref="from"
         >
+          <el-checkbox-group v-model="form.showList">
 
-          <el-form-item label="邮箱" prop="oldPwd">
+          <el-form-item label="邮箱">
             <el-input v-model="form.email" style="width: 400px"></el-input>
+            <el-checkbox label="1" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
 
-          <el-form-item label="QQ号" prop="newPwd1">
+          <el-form-item label="QQ号">
             <el-input v-model="form.qqNumber" style="width: 400px"></el-input>
+            <el-checkbox label="2" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
 
-          <el-form-item label="QQ群" prop="newPwd2">
+          <el-form-item label="QQ群">
             <el-input v-model="form.qqGroup" style="width: 400px"></el-input>
+            <el-checkbox label="3" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
 
-          <el-form-item label="github" prop="newPwd1">
+          <el-form-item label="github" >
             <el-input v-model="form.github" style="width: 400px"></el-input>
+            <el-checkbox label="4" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
 
-          <el-form-item label="gitee" prop="newPwd2">
+          <el-form-item label="Gitee">
             <el-input v-model="form.gitee" style="width: 400px"></el-input>
+            <el-checkbox label="5" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
 
-          <el-form-item label="微信" prop="newPwd2">
+          <el-form-item label="微信">
             <el-input v-model="form.weChat" style="width: 400px"></el-input>
+            <el-checkbox label="6" style="margin-left: 10px">在首页显示</el-checkbox>
           </el-form-item>
+
+          </el-checkbox-group>
 
           <el-form-item>
             <el-button type="primary" @click="submitForm()">保 存</el-button>
@@ -175,7 +184,8 @@ export default {
         aliPay: "",
         weixinPay: "",
         aliPayPhoto: "",
-        weixinPayPhoto: ""
+        weixinPayPhoto: "",
+        showList: [],
       },
       loadingInstance: null, // loading对象
       fileList: [],
@@ -204,15 +214,9 @@ export default {
     CheckPhoto
   },
   created() {
-    getWebConfig().then(response => {
-      if (response.code == "success") {
-        if (response.data) {
-          this.form = response.data;
-          this.fileIds = this.form.logo;
-          this.photoList = this.form.photoList;
-        }
-      }
-    });
+
+    // 获取配置
+    this.getWebConfigFun();
 
     //图片上传地址
     this.uploadPictureHost = process.env.PICTURE_API + "/file/cropperPicture";
@@ -229,6 +233,27 @@ export default {
 
   },
   methods: {
+    getWebConfigFun: function() {
+      getWebConfig().then(response => {
+        console.log("得到的配置", response)
+        if (response.code == "success") {
+
+          let data = response.data;
+
+          if (data.showList) {
+            let showList = JSON.parse(data.showList)
+            console.log("showList", showList)
+            data.showList = showList;
+            this.form = data;
+          } else {
+            data.showList = []
+            this.form = data;
+          }
+          this.fileIds = this.form.logo;
+          this.photoList = this.form.photoList;
+        }
+      });
+    },
     //弹出选择图片框
     checkPhoto: function() {
       this.photoVisible = true;
@@ -261,8 +286,12 @@ export default {
       this.photoVisible = true;
     },
     submitForm: function() {
-      this.form.logo = this.fileIds;
-      editWebConfig(this.form).then(response => {
+
+      let form = this.form;
+      form.logo = this.fileIds;
+      form.showList = JSON.stringify(this.form.showList)
+
+      editWebConfig(form).then(response => {
         if ((response.code = "success")) {
           this.$notify({
             title: "成功",
@@ -275,6 +304,7 @@ export default {
             message: response.data
           });
         }
+        this.getWebConfigFun();
       });
     },
 

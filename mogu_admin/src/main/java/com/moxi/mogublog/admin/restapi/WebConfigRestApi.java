@@ -107,6 +107,7 @@ public class WebConfigRestApi {
             webConfig.setGithub(webConfigVO.getGithub());
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
+            webConfig.setShowList(webConfigVO.getShowList());
 
 
             webConfigService.save(webConfig);
@@ -130,6 +131,7 @@ public class WebConfigRestApi {
             webConfig.setGithub(webConfigVO.getGithub());
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
+            webConfig.setShowList(webConfigVO.getShowList());
 
             webConfigService.updateById(webConfig);
         }

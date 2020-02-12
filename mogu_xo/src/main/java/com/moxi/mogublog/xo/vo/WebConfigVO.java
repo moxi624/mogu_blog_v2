@@ -99,6 +99,11 @@ public class WebConfigVO extends BaseVO<WebConfigVO> {
      */
     private String email;
 
+    /**
+     * 显示的列表（用于控制邮箱、QQ、QQ群、Github、Gitee、微信是否显示在前端）
+     */
+    private String showList;
+
 
     // 以下字段不存入数据库，封装为了方便使用
 

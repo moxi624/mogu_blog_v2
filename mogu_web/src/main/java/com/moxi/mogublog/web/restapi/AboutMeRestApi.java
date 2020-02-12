@@ -2,6 +2,7 @@ package com.moxi.mogublog.web.restapi;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
@@ -12,6 +13,7 @@ import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.WebConfigService;
+import com.moxi.mougblog.base.enums.EAccountType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 关于我 RestApi
@@ -95,13 +98,33 @@ public class AboutMeRestApi {
 
         if (webConfig != null) {
 
+            // 过滤一些不需要显示的用户账号信息
+            String showListJson = webConfig.getShowList();
+
             WebConfig result = new WebConfig();
-            result.setWeChat(webConfig.getWeChat());
-            result.setQqNumber(webConfig.getQqNumber());
-            result.setQqGroup(webConfig.getQqGroup());
-            result.setEmail(webConfig.getEmail());
-            result.setGithub(webConfig.getGithub());
-            result.setGitee(webConfig.getGitee());
+
+            List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
+
+            for(String item : showList) {
+                if(EAccountType.EMail.getCode().equals(item)) {
+                    result.setEmail(webConfig.getEmail());
+                }
+                if(EAccountType.QQNumber.getCode().equals(item)) {
+                    result.setQqNumber(webConfig.getQqNumber());
+                }
+                if(EAccountType.QQGroup.getCode().equals(item)) {
+                    result.setQqGroup(webConfig.getQqGroup());
+                }
+                if(EAccountType.Github.getCode().equals(item)) {
+                    result.setGithub(webConfig.getGithub());
+                }
+                if(EAccountType.Gitee.getCode().equals(item)) {
+                    result.setGitee(webConfig.getGitee());
+                }
+                if(EAccountType.WeChat.getCode().equals(item)) {
+                    result.setWeChat(webConfig.getWeChat());
+                }
+            }
             return ResultUtil.result(SysConf.SUCCESS, result);
         } else {
             return ResultUtil.result(SysConf.ERROR, "获取失败");

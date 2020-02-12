@@ -14,10 +14,7 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.service.*;
-import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.enums.ELevel;
-import com.moxi.mougblog.base.enums.EPublish;
-import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -392,7 +389,41 @@ public class IndexRestApi {
 
         }
 
-        return ResultUtil.result(SysConf.SUCCESS, webConfig);
+        // 过滤一些不需要显示的用户账号信息
+        String showListJson = webConfig.getShowList();
+
+        WebConfig result = webConfig;
+        result.setEmail("");
+        result.setQqNumber("");
+        result.setQqGroup("");
+        result.setGithub("");
+        result.setGitee("");
+        result.setWeChat("");
+
+        List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
+
+        for(String item : showList) {
+            if(EAccountType.EMail.getCode().equals(item)) {
+                result.setEmail(webConfig.getEmail());
+            }
+            if(EAccountType.QQNumber.getCode().equals(item)) {
+                result.setQqNumber(webConfig.getQqNumber());
+            }
+            if(EAccountType.QQGroup.getCode().equals(item)) {
+                result.setQqGroup(webConfig.getQqGroup());
+            }
+            if(EAccountType.Github.getCode().equals(item)) {
+                result.setGithub(webConfig.getGithub());
+            }
+            if(EAccountType.Gitee.getCode().equals(item)) {
+                result.setGitee(webConfig.getGitee());
+            }
+            if(EAccountType.WeChat.getCode().equals(item)) {
+                result.setWeChat(webConfig.getWeChat());
+            }
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, result);
     }
 
     @ApiOperation(value = "记录访问页面", notes = "记录访问页面")
