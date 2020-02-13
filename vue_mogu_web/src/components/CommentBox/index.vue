@@ -88,6 +88,7 @@
         let toUserUid = "";
         let toCommentUid = "";
         let blogUid = "";
+
         // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
         let source = "";
         let content = this.value;

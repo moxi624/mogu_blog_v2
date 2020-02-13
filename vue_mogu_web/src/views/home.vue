@@ -183,11 +183,78 @@
     },
     watch: {
       $route(to, from) {
-        if (to.path == "/list" || to.path == "/about") {
-          this.$router.go(0);
-        }
+        this.getCurrentPageTitle()
+      }
+    },
+    created() {
 
-        // 获取当前所在页面kbs
+      this.getToken()
+      this.getKeyword()
+      this.getCurrentPageTitle()
+      this.getWebConfigInfo()
+
+    },
+    methods: {
+      //拿到vuex中的写的方法
+      ...mapMutations(['setUserInfo', 'setLoginState', 'setWebConfigData']),
+
+      // 搜索
+      search: function () {
+        if (this.keyword == "" || this.keyword.trim() == "") {
+          this.$notify.error({
+            title: '错误',
+            message: "关键字不能为空",
+            type: 'success',
+            offset: 100
+          });
+          return;
+        }
+        this.$router.push({path: "/list", query: {keyword: this.keyword}});
+      },
+
+      getToken: function() {
+        let token = this.getUrlVars()["token"];
+        // 判断url中是否含有token
+        if (token != undefined) {
+          // 设置token七天过期
+          setCookie("token", token, 7)
+        }
+        // 从cookie中获取token
+        token = getCookie("token")
+        if (token != undefined) {
+          authVerify(token).then(response => {
+            if (response.code == "success") {
+              console.log("登录成功");
+              this.isLogin = true;
+              this.userInfo = response.data;
+              this.setUserInfo(this.userInfo)
+            } else {
+              this.isLogin = false;
+              delCookie("token");
+            }
+            this.setLoginState(this.isLogin);
+          });
+        } else {
+          this.isLogin = false;
+          this.setLoginState(this.isLogin);
+        }
+      },
+      getKeyword: function() {
+        var tempValue = decodeURI(this.getUrlVars()["keyword"]);
+        if (
+          tempValue == null ||
+          tempValue == undefined ||
+          tempValue == "undefined"
+        ) {
+        } else {
+          this.keyword = tempValue;
+        }
+      },
+      /**
+       * 获取当前所在页面的标题
+       * @returns {{}}
+       */
+      getCurrentPageTitle: function() {
         var test = window.location.href;
         var start = 0;
         var end = test.length;
@@ -201,83 +268,31 @@
         }
         var result = test.substring(start + 1, end);
         this.saveTitle = result;
-      }
-    },
-    created() {
-
-      let token = this.getUrlVars()["token"];
-      // 判断url中是否含有token
-      if (token != undefined) {
-        // 设置token七天过期
-        setCookie("token", token, 7)
-      }
-
-      // 从cookie中获取token
-      token = getCookie("token")
-      if (token != undefined) {
-        authVerify(token).then(response => {
-          if (response.code == "success") {
-            console.log("登录成功");
-            this.isLogin = true;
-            this.userInfo = response.data;
-            this.setUserInfo(this.userInfo)
-          } else {
-            this.isLogin = false;
-            delCookie("token");
-          }
-          this.setLoginState(this.isLogin);
-        });
-      } else {
-        this.isLogin = false;
-        this.setLoginState(this.isLogin);
-      }
-
-      var tempValue = decodeURI(this.getUrlVars()["keyword"]);
-      if (
-        tempValue == null ||
-        tempValue == undefined ||
-        tempValue == "undefined"
-      ) {
-      } else {
-        this.keyword = tempValue;
-      }
-
-      // 获取当前所在页面
-      var test = window.location.href;
-      var start = 0;
-      var end = test.length;
-      for (var i = 0; i < test.length; i++) {
-        if (test[i] == "#") {
-          start = i;
-        }
-        if (test[i] == "?" && i > start) {
-          end = i;
-        }
-      }
-      var result = test.substring(start + 1, end);
-      this.saveTitle = result;
-
-      getWebConfig().then(response => {
-        if (response.code == "success") {
-          this.info = response.data;
-        }
-      });
-    },
-    methods: {
-      //拿到vuex中的写的两个方法
-      ...mapMutations(['setUserInfo', 'setLoginState']),
-      search: function () {
-        if (this.keyword == "" || this.keyword.trim() == "") {
-          this.$notify.error({
-            title: '错误',
-            message: "关键字不能为空",
-            type: 'success',
-            offset: 100
-          });
-          return;
-        }
-        this.$router.push({path: "/list", query: {keyword: this.keyword}});
       },
+      /**
+       * 获取网站配置
+        */
+      getWebConfigInfo: function() {
+        let webConfigData = this.$store.state.app.webConfigData
+        if(webConfigData.createTime) {
+          console.log("webConfigData home", webConfigData)
+          this.contact = webConfigData;
+          this.mailto = "mailto:" + this.contact.email;
+        } else {
+          getWebConfig().then(response => {
+            if (response.code == "success") {
+              console.log("加载Home")
+              this.info = response.data;
+              // 存储在Vuex中
+              this.setWebConfigData(response.data)
+            }
+          });
+        }
+      },
+      /**
+       * 截取URL中的参数
+       * @returns {{}}
+       */
       getUrlVars: function () {
         var vars = {};
         var parts = window.location.href.replace(

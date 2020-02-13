@@ -392,38 +392,43 @@ public class IndexRestApi {
         // 过滤一些不需要显示的用户账号信息
         String showListJson = webConfig.getShowList();
 
-        WebConfig result = webConfig;
-        result.setEmail("");
-        result.setQqNumber("");
-        result.setQqGroup("");
-        result.setGithub("");
-        result.setGitee("");
-        result.setWeChat("");
+        String email = webConfig.getEmail();
+        webConfig.setEmail("");
+        String qqNumber = webConfig.getQqNumber();
+        webConfig.setQqNumber("");
+        String qqGroup = webConfig.getQqGroup();
+        webConfig.setQqGroup("");
+        String github = webConfig.getGithub();
+        webConfig.setGithub("");
+        String gitee = webConfig.getGitee();
+        webConfig.setGitee("");
+        String weChat = webConfig.getWeChat();
+        webConfig.setWeChat("");
 
         List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
 
         for(String item : showList) {
             if(EAccountType.EMail.getCode().equals(item)) {
-                result.setEmail(webConfig.getEmail());
+                webConfig.setEmail(email);
             }
             if(EAccountType.QQNumber.getCode().equals(item)) {
-                result.setQqNumber(webConfig.getQqNumber());
+                webConfig.setQqNumber(qqNumber);
             }
             if(EAccountType.QQGroup.getCode().equals(item)) {
-                result.setQqGroup(webConfig.getQqGroup());
+                webConfig.setQqGroup(qqGroup);
             }
             if(EAccountType.Github.getCode().equals(item)) {
-                result.setGithub(webConfig.getGithub());
+                webConfig.setGithub(github);
             }
             if(EAccountType.Gitee.getCode().equals(item)) {
-                result.setGitee(webConfig.getGitee());
+                webConfig.setGitee(gitee);
             }
             if(EAccountType.WeChat.getCode().equals(item)) {
-                result.setWeChat(webConfig.getWeChat());
+                webConfig.setWeChat(weChat);
             }
         }
 
-        return ResultUtil.result(SysConf.SUCCESS, result);
+        return ResultUtil.result(SysConf.SUCCESS, webConfig);
     }
 
     @ApiOperation(value = "记录访问页面", notes = "记录访问页面")

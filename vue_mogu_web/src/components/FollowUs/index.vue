@@ -15,8 +15,9 @@
 </template>
 
 <script>
-import { getContact } from "../../api/about";
-import $ from 'jquery'
+import {getWebConfig} from "@/api/index";
+// vuex中有mapState方法，相当于我们能够使用它的getset方法
+import {mapMutations} from 'vuex';
 export default {
   name: "FollowUs",
   data() {
@@ -27,15 +28,29 @@ export default {
   },
   created() {
 
-    getContact().then(response => {
-      if (response.code == "success") {
-        this.contact = response.data;
-        console.log("返回的github", this.contact);
-        this.mailto = "mailto:" + this.contact.email;
-      }
-    });
+    this.getContactData()
+
   },
   methods: {
+    //拿到vuex中的写的方法
+    ...mapMutations(['setWebConfigData']),
+
+    getContactData: function() {
+      let webConfigData = this.$store.state.app.webConfigData;
+      if(webConfigData.createTime) {
+        console.log("webConfigData followUs", webConfigData)
+        this.contact = webConfigData;
+        this.mailto = "mailto:" + this.contact.email;
+      } else {
+        getWebConfig().then(response => {
+          if (response.code == "success") {
+            this.contact = response.data;
+            this.mailto = "mailto:" + this.contact.email;
+            this.setWebConfigData(response.data)
+          }
+        });
+      }
+    },
     click: function() {
       console.log("top", this.$refs.follow.getBoundingClientRect().top)
     }

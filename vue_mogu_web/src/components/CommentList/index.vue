@@ -69,7 +69,7 @@
     },
     compute: {},
     methods: {
-      ...mapMutations(['setCommentList', 'increment']),
+      ...mapMutations(['setCommentList']),
       replyTo: function (item) {
         if(!this.validLogin()) {
           this.$notify.error({
