@@ -57,7 +57,7 @@
       </div>
 
       <!--付款码和点赞-->
-      <PayCode :blogUid="blogUid"></PayCode>
+      <PayCode :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
 
       <div class="otherlink" v-if="sameBlogData.length > 0">
         <h2>相关文章</h2>
@@ -202,7 +202,7 @@
 
       var params = new URLSearchParams();
       params.append("pageName", "INFO");
-      recorderVisitPage(params).then(response => {
+        recorderVisitPage(params).then(response => {
       });
 
       this.getCommentList();

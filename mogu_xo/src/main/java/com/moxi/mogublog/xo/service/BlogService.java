@@ -90,14 +90,6 @@ public interface BlogService extends SuperService<Blog> {
     public List<Map<String, Object>> getBlogCountByBlogSort();
 
     /**
-     * 设置博客版权
-     *
-     * @param blog
-     * @return
-     */
-    public void setBlogCopyright(Blog blog);
-
-    /**
      * 获取一年内的文章贡献数
      *
      * @return

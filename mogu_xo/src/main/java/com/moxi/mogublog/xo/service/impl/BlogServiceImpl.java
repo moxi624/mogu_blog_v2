@@ -264,19 +264,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     }
 
     @Override
-    public void setBlogCopyright(Blog blog) {
-
-        //如果是原创的话
-        if (blog.getIsOriginal().equals("1")) {
-            String str = "本文为蘑菇博客原创文章, 转载无需和我联系, 但请注明来自蘑菇博客 http://www.moguit.cn";
-            blog.setCopyright(str);
-        } else {
-            String str = "本着开源共享、共同学习的精神, 本文转载自 " + blog.getArticlesPart() + " , 版权归 " + blog.getAuthor() + " 所有，如果侵权之处，请联系博主进行删除，谢谢~";
-            blog.setCopyright(str);
-        }
-    }
-
-    @Override
     public Map<String, Object> getBlogContributeCount() {
 
         // 获取今天结束时间

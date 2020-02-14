@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +69,12 @@ public class BlogContentRestApi {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Value(value = "${BLOG.ORIGINAL_TEMPLATE}")
+    private String ORIGINAL_TEMPLATE;
+
+    @Value(value = "${BLOG.REPRINTED_TEMPLATE}")
+    private String REPRINTED_TEMPLATE;
+
     @ApiOperation(value = "通过Uid获取博客内容", notes = "通过Uid获取博客内容")
     @GetMapping("/getBlogByUid")
     public String getBlogByUid(HttpServletRequest request,
@@ -84,7 +92,7 @@ public class BlogContentRestApi {
         if (blog != null) {
 
             // 设置文章版权申明
-            blogService.setBlogCopyright(blog);
+            setBlogCopyright(blog);
 
             //设置博客标签
             blogService.setTagByBlog(blog);
@@ -98,9 +106,6 @@ public class BlogContentRestApi {
             //从Redis取出数据，判断该用户是否点击过
             String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + uid);
 
-            //从Redis取出用户点赞数据
-            String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
-
             if (StringUtils.isEmpty(jsonResult)) {
 
                 //给博客点击数增加
@@ -113,12 +118,6 @@ public class BlogContentRestApi {
                         24, TimeUnit.HOURS);
             }
 
-            if (!StringUtils.isEmpty(pariseJsonResult)) {
-                Integer pariseCount = Integer.parseInt(pariseJsonResult);
-                blog.setPraiseCount(pariseCount);
-            } else {
-                blog.setPraiseCount(0);
-            }
 
             //增加记录（可以考虑使用AOP）
             webVisitService.addWebVisit(null, request, EBehavior.BLOG_CONTNET.getBehavior(), blog.getUid(), null);
@@ -159,6 +158,7 @@ public class BlogContentRestApi {
         queryWrapper.eq(SQLConf.IP, ip);
         queryWrapper.eq(SQLConf.MODULE_UID, uid);
         queryWrapper.eq(SQLConf.BEHAVIOR, EBehavior.BLOG_PRAISE);
+        queryWrapper.last("LIMIT 1");
         WebVisit webVisit = webVisitService.getOne(queryWrapper);
         if (webVisit != null) {
             return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！");
@@ -175,14 +175,15 @@ public class BlogContentRestApi {
 
         if (StringUtils.isEmpty(pariseJsonResult)) {
 
-            //给该博客点赞数置为1
+            //给该博客点赞数
             stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, "1");
 
             blog.setCollectCount(1);
             blog.updateById();
 
         } else {
-            Integer count = Integer.valueOf(pariseJsonResult) + 1;
+
+            Integer count = blog.getCollectCount() + 1;
 
             //给该博客点赞 +1
             stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, count.toString());
@@ -194,7 +195,7 @@ public class BlogContentRestApi {
         //增加记录（可以考虑使用AOP）
         webVisitService.addWebVisit(null, request, EBehavior.BLOG_PRAISE.getBehavior(), blog.getUid(), null);
 
-        return ResultUtil.result(SysConf.SUCCESS, "");
+        return ResultUtil.result(SysConf.SUCCESS, blog.getCollectCount());
     }
 
     @ApiOperation(value = "根据标签Uid获取相关的博客", notes = "根据标签获取相关的博客")
@@ -302,6 +303,23 @@ public class BlogContentRestApi {
             if (picList != null && picList.size() > 0) {
                 blog.setPhotoList(picList);
             }
+        }
+    }
+
+    /**
+     * 设置博客版权
+     * @param blog
+     */
+    private void setBlogCopyright(Blog blog) {
+
+        //如果是原创的话
+        if (blog.getIsOriginal().equals("1")) {
+            blog.setCopyright(ORIGINAL_TEMPLATE);
+        } else {
+            String reprintedTemplate = REPRINTED_TEMPLATE;
+            String [] variable = {blog.getArticlesPart(), blog.getAuthor()};
+            String str = String.format(reprintedTemplate, variable);
+            blog.setCopyright(str);
         }
     }
 }

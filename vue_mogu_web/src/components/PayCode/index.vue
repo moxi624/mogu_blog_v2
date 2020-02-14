@@ -2,10 +2,9 @@
   <div class="share">
     <p class="diggit" @click="praiseBlog(blogUid)">
       <a href="javascript:void(0);">很赞哦！</a>
-      <span v-if="praiseCount!=0">
+      <span v-if="praiseCount!= 0">
         (<b id="diggnum">{{praiseCount}}</b>)
       </span>
-      
     </p>
     <p class="dasbox">
       <a href="javascript:void(0)" @click="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a>
@@ -56,6 +55,15 @@ import {
 } from "../../api/blogContent";
 export default {
   name: "PayCode",
+  props: {
+    praiseCount: {
+      type: Number,
+      default: 0
+    },
+    blogUid: {
+      type: String
+    }
+  },
   data() {
     return {
       PICTURE_HOST: process.env.PICTURE_HOST,
@@ -63,15 +71,10 @@ export default {
       showPay: false, //是否显示支付
       payMethod: 1, // 1: 支付宝  2：微信
       payCode: "", //支付码图片
-      praiseCount: 0
     };
   },
-  props: ["blogUid"],
   created() {
-
-    this.getPraiseCount(this.blogUid);
     getWebConfig().then(response => {
-      console.log("获取网站配置", response);
       if (response.code == "success") {
         this.webConfigData = response.data;
         this.payCode = this.webConfigData.aliPayPhoto;
@@ -80,12 +83,10 @@ export default {
   },
   methods: {
     dashangToggle: function() {
-      console.log("点击了打赏", this.showPay);
       this.showPay = !this.showPay;
     },
     // 支付方式
     choosePay: function(type) {
-      console.log("点击了选择", type);
       this.payMethod = type;
       if (type == 1) {
         this.payCode = this.webConfigData.aliPayPhoto;
@@ -95,16 +96,27 @@ export default {
     },
     //博客点赞
     praiseBlog: function(uid) {
-      console.log("开始点赞");
       var params = new URLSearchParams();
       params.append("uid", uid);
       praiseBlogByUid(params).then(response => {
         console.log(response);
         if (response.code == "success") {
-          alert("点赞成功！");
-              this.getPraiseCount(uid);
+
+          this.$notify({
+            title: '成功',
+            message: "点赞成功",
+            type: 'success',
+            offset: 100
+          });
+
+          this.praiseCount = response.data;
+
         } else {
-          alert(response.data);
+          this.$notify.error({
+            title: '错误',
+            message: response.data,
+            offset: 100
+          });
         }
       });
     },
@@ -123,4 +135,7 @@ export default {
 </script>
 
 <style>
+  .diggit {
+    cursor: pointer;
+  }
 </style>
