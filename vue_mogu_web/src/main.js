@@ -14,6 +14,7 @@ import store from './store'
 // 引入公共JS
 import "@/assets/iconfont/iconfont.css";
 import '../static/css/index.css';
+import '../static/css/ckeditor.css';
 
 Vue.config.productionTip = false
 

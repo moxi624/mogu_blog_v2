@@ -10,7 +10,7 @@
       <div class="news_infos">
 
         <div
-          class="news_con fixck newsview"
+          class="news_con fixck newsview ck-content"
           v-html="info.personResume"
           v-highlight
         >{{info.personResume}}

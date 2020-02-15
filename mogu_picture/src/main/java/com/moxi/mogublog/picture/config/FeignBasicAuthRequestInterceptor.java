@@ -25,6 +25,12 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
 
         // 获取token，放入到feign的请求头
         String token = request.getParameter("token");
+
+        // 如果带有？说明还带有其它参数，我们只截取到token即可
+        if(token.indexOf("?") != -1) {
+            String [] params = token.split("\\?url=");
+            token = params[0];
+        }
         requestTemplate.header("pictureToken", token);
     }
 }

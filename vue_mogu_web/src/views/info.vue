@@ -48,7 +48,7 @@
           {{blogData.copyright}}
         </div>
         <div
-          class="news_con fixck"
+          class="news_con ck-content"
           v-html="blogData.content"
           v-highlight
           @click="imageChange"
@@ -303,82 +303,6 @@
 </script>
 
 <style>
-
-  .fixck {
-    /* font-family: Arial, Verdana, sans-serif !important;
-    font-size: 12px !important;
-    color: #222 !important;
-    line-height: normal !important; */
-  }
-
-  .fixck p {
-    margin: 12px 0 !important;
-  }
-
-  .fixck a {
-    text-decoration: underline !important;
-    color: #00e !important;
-  }
-
-  .fixck ul li {
-    list-style: disc;
-  }
-
-  .fixck ol li {
-    list-style: decimal;
-  }
-
-  .fixck ul,
-  .fixck ol {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
-  }
-
-  .fixck li {
-    display: list-item !important;
-  }
-
-  .fixck h1 {
-    font-weight: bold !important;
-    font-size: 32px !important;
-    margin: 21px 0 !important;
-  }
-
-  .fixck h2 {
-    font-weight: bold !important;
-    font-size: 24px !important;
-    margin: 19px 0 !important;
-  }
-
-  .fixck h3 {
-    font-weight: bold !important;
-    font-size: 19px !important;
-    margin: 18px 0 !important;
-  }
-
-  .fixck h4 {
-    font-weight: bold !important;
-    font-size: 16px !important;
-    margin: 21px 0 !important;
-  }
-
-  .fixck h5 {
-    font-weight: bold !important;
-    font-size: 13px !important;
-    margin: 22px 0 !important;
-  }
-
-  .fixck h6 {
-    font-weight: bold !important;
-    font-size: 11px !important;
-    margin: 24px 0 !important;
-  }
-
-  .news_con {
-    line-height: 1.8;
-    font-size: 16px;
-    text-align: justify;
-  }
 
   .iconfont {
     font-size: 14px;

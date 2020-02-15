@@ -153,6 +153,31 @@ public class JsonUtils {
     }
 
     /**
+     * 将Json转换成Map<String, ?>
+     * @param json
+     * @param clazz
+     * @return
+     */
+    public static Map<String, ?> jsonToMap(String json, Class<?> clazz) {
+
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .serializeNulls()
+                .create();
+        Map<String, ?> map = null;
+        try {
+            Type type = new TypeToken<Map<String, ?>>() {
+            }.getType();
+
+            map = gson.fromJson(json, type);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    /**
      * 将map转换成pojo
      *
      * @param map

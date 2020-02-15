@@ -730,6 +730,9 @@ public class FileRestApi {
                         // 打开连接
                         URLConnection con = url.openConnection();
 
+                        // 设置用户代理
+                        con.setRequestProperty("User-agent", "	Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0");
+
                         // 设置10秒
                         con.setConnectTimeout(10000);
                         con.setReadTimeout(10000);

@@ -21,6 +21,7 @@ export default {
         codeSnippet_theme: 'zenburn',
         filebrowserImageUploadUrl: process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken(),
         filebrowserUploadUrl: process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken(),
+        pasteUploadFileApi: process.env.PICTURE_API + '/ckeditor/imgUploadByUrl?token=' + getToken(),
       });
 
     this.editor = CKEDITOR.instances.editor;
