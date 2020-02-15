@@ -35,7 +35,6 @@ jobs:
         mv -f ./mogu_prod_configuration/config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/mogu_search/application.yml ./mogu_search/src/main/resources/application.yml
-        
         mv -f ./mogu_prod_configuration/config/vue_mogu_admin/prod.env.js ./vue_mogu_admin/config/prod.env.js
         mv -f ./mogu_prod_configuration/config/vue_mogu_web/prod.env.js ./vue_mogu_web/config/prod.env.js
     - name: Build Java jar

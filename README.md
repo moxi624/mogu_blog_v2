@@ -227,6 +227,8 @@
 
 ## 贡献代码
 
+开源项目离不开大家的支持，如果您有好的想法或者代码实现，欢迎提交Pull Request~
+
 1. fork本项目到自己的repo
 2. 把fork过去的项目也就是你仓库中的项目clone到你的本地
 3. 修改代码
@@ -234,84 +236,38 @@
 5. 发起PR（pull request） 请求，提交到`dev`分支
 6. 等待作者合并
 
+## 赞赏
+
+服务器和域名等服务的购买和续费都会产生一定的费用，为了维持项目的正常运作，如果觉得本项目对您有帮助的话，欢迎朋友能够给予一些支持，非常感谢~
+
+|                       微信                       |                      支付宝                       |
+| :----------------------------------------------: | :-----------------------------------------------: |
+| <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
+
 ## 相关截图
 
-- ### admin端
-
-  ![image text](./doc/images/admin/login.png)
-
-  ![image text](./doc/images/admin/dashboard.png)
-
-  ![image text](./doc/images/admin/blog.png)
-  
-  ![image text](./doc/images/admin/blogEdit.png)
-  
-  ![image text](./doc/images/admin/addPicture.png)
-  
-  ![image text](./doc/images/admin/blogSort.png)
-  
-  ![image text](./doc/images/admin/blogTag.png)
-
-  ![image text](./doc/images/admin/blogRecommend.png)
-  
-  ![image text](./doc/images/admin/blogLink.png)
-
-  ![image text](./doc/images/admin/systemConf.png)
-  
-  ![image text](./doc/images/admin/aboutMe.png)
-  
-  ![image text](./doc/images/admin/user.png)
-  
-  ![image text](./doc/images/admin/comment.png)
-  
-  ![image text](./doc/images/admin/webConf.png)
-  
-  ![image text](./doc/images/admin/admin.png)
-  
-  ![image text](./doc/images/admin/categoryMenu.png)
-  
-  ![image text](./doc/images/admin/sysLog.png)
-  
-  ![image text](./doc/images/admin/exception.png)
-  
-  ![image text](./doc/images/admin/visit.png)
-  
-  ![image text](./doc/images/admin/pictureSort.png)
-  
-  ![image text](./doc/images/admin/picture.png)
-  
-  ![image text](./doc/images/admin/swagger.png)
-  
-  ![image text](./doc/images/admin/monitor_solr.png)
-  
-  ![image text](./doc/images/admin/monitor_eureka.png)
-  
-  ![image text](./doc/images/admin/monitor_druid.png)
-  
-  ![image text](./doc/images/admin/monitor_admin.png)
-  
-  ![image text](./doc/images/admin/monitor_zipkin.png)
-  
-  ![image text](./doc/images/admin/monitor_elastic.png)
-  
-  ![image text](./doc/images/admin/monitor_rabbitmq.png)
-  
-- ### Web端
-
-  ![image text](./doc/images/web/index.png)
-
-  ![image text](./doc/images/web/index2.png)
-
-  ![image text](./doc/images/web/content.png)
-
-  ![image text](./doc/images/web/login.png)
-
-  ![image text](./doc/images/web/about.png)
-
-  ![image text](./doc/images/web/sort.png)
-
-  ![image text](./doc/images/web/classify.png)
-
-  ![image text](./doc/images/web/time.png)
-
-  ![image text](./doc/images/web/messageBox.png)
+|                        Admin端                         |                                                       |
+| :----------------------------------------------------: | :---------------------------------------------------: |
+|      ![image text](./doc/images/admin/login.png)       |    ![image text](./doc/images/admin/dashboard.png)    |
+|       ![image text](./doc/images/admin/blog.png)       |    ![image text](./doc/images/admin/blogEdit.png)     |
+|    ![image text](./doc/images/admin/addPicture.png)    |    ![image text](./doc/images/admin/blogSort.png)     |
+|     ![image text](./doc/images/admin/blogTag.png)      |  ![image text](./doc/images/admin/blogRecommend.png)  |
+|     ![image text](./doc/images/admin/blogLink.png)     |   ![image text](./doc/images/admin/systemConf.png)    |
+|     ![image text](./doc/images/admin/aboutMe.png)      |      ![image text](./doc/images/admin/user.png)       |
+|     ![image text](./doc/images/admin/comment.png)      |     ![image text](./doc/images/admin/webConf.png)     |
+|      ![image text](./doc/images/admin/admin.png)       |  ![image text](./doc/images/admin/categoryMenu.png)   |
+|                                                        |                                                       |
+|      ![image text](./doc/images/admin/sysLog.png)      |    ![image text](./doc/images/admin/exception.png)    |
+|      ![image text](./doc/images/admin/visit.png)       |     ![image text](./doc/images/admin/picture.png)     |
+|     ![image text](./doc/images/admin/swagger.png)      |   ![image text](./doc/images/admin/pictureSort.png)   |
+|                                                        |                                                       |
+|   ![image text](./doc/images/admin/monitor_solr.png)   | ![image text](./doc/images/admin/monitor_eureka.png)  |
+|  ![image text](./doc/images/admin/monitor_druid.png)   |  ![image text](./doc/images/admin/monitor_admin.png)  |
+|  ![image text](./doc/images/admin/monitor_zipkin.png)  | ![image text](./doc/images/admin/monitor_elastic.png) |
+| ![image text](./doc/images/admin/monitor_rabbitmq.png) |                                                       |
+|                       **Web端**                        |                                                       |
+|       ![image text](./doc/images/web/index.png)        |      ![image text](./doc/images/web/index2.png)       |
+|       ![image text](./doc/images/web/index2.png)       |      ![image text](./doc/images/web/content.png)      |
+|       ![image text](./doc/images/web/login.png)        |       ![image text](./doc/images/web/about.png)       |
+|        ![image text](./doc/images/web/sort.png)        |     ![image text](./doc/images/web/classify.png)      |
+|        ![image text](./doc/images/web/time.png)        |    ![image text](./doc/images/web/messageBox.png)     |
