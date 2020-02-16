@@ -433,7 +433,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -473,10 +473,6 @@ export default {
 }
 .inputClass {
   position: absolute;
-}
-.img {
-  width: 100%;
-  height: 100%;
 }
 img {
   width: 100px;

@@ -217,6 +217,18 @@ export const constantRouterMap = [
         meta: { title: '友情链接', icon: 'blogLink' }
       },
       {
+        path: 'sysDictType',
+        name: '字典管理',
+        component: () => import('@/views/system/SysDictType'),
+        meta: { title: '字典管理', icon: 'web' }
+      },
+      {
+        path: 'SysDictData',
+        name: '字典数据',
+        component: () => import('@/views/system/SysDictData'),
+        meta: { title: '字典数据', icon: 'web' }
+      },
+      {
         path: 'webConfig',
         name: '网站配置',
         component: () => import('@/views/system/webConfig'),

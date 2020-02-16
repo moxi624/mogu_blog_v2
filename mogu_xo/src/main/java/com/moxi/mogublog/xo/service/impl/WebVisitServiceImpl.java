@@ -1,19 +1,14 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.mapper.WebVisitMapper;
 import com.moxi.mogublog.xo.service.WebVisitService;
-import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -51,9 +46,9 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 
         //从Redis中获取IP来源
         String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
-        if(StringUtils.isEmpty(jsonResult)) {
+        if (StringUtils.isEmpty(jsonResult)) {
             String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
-            if(StringUtils.isNotEmpty(addresses)) {
+            if (StringUtils.isNotEmpty(addresses)) {
                 webVisit.setIpSource(addresses);
                 stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
             }
@@ -127,9 +122,9 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         // 不含年份的数组格式
         List<String> resultSevenDaysList = DateUtils.getDaysByN(7, "MM-dd");
 
-        resultMap.put("date", resultSevenDaysList);
-        resultMap.put("pv", pvList);
-        resultMap.put("uv", uvList);
+        resultMap.put("date" , resultSevenDaysList);
+        resultMap.put("pv" , pvList);
+        resultMap.put("uv" , uvList);
 
         return resultMap;
     }

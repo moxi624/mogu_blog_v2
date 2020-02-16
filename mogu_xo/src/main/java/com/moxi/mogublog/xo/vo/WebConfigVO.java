@@ -1,6 +1,5 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;

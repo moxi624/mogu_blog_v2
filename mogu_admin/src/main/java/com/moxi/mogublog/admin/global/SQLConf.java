@@ -70,4 +70,12 @@ public final class SQLConf extends BaseSQLConf {
      * blog表
      */
     public final static String FILE_UID = "file_uid";
+
+    /**
+     * 字典表相关
+     */
+    public final static String DICT_TYPE = "dict_type";
+    public final static String DICT_TYPE_UID = "dict_type_UID";
+    public final static String DICT_NAME = "dict_name";
+    public final static String DICT_LABEL = "dict_label";
 }

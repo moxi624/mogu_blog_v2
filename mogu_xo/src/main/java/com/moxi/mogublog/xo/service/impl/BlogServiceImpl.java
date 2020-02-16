@@ -15,7 +15,6 @@ import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
-import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,7 +109,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
 
-        if(useSort == 0) {
+        if (useSort == 0) {
             queryWrapper.orderByDesc(BaseSQLConf.CREATE_TIME);
         } else {
             queryWrapper.orderByDesc(BaseSQLConf.SORT);
@@ -196,9 +195,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 Integer count = entry.getValue();
 
                 Map<String, Object> itemResultMap = new HashMap<>();
-                itemResultMap.put("tagUid", tagUid);
-                itemResultMap.put("name", tagName);
-                itemResultMap.put("value", count);
+                itemResultMap.put("tagUid" , tagUid);
+                itemResultMap.put("name" , tagName);
+                itemResultMap.put("value" , count);
                 resultMap.add(itemResultMap);
             }
         }
@@ -252,9 +251,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 Integer count = entry.getValue();
 
                 Map<String, Object> itemResultMap = new HashMap<>();
-                itemResultMap.put("blogSortUid", blogSortUid);
-                itemResultMap.put("name", blogSortName);
-                itemResultMap.put("value", count);
+                itemResultMap.put("blogSortUid" , blogSortUid);
+                itemResultMap.put("name" , blogSortName);
+                itemResultMap.put("value" , count);
                 resultMap.add(itemResultMap);
             }
         }
@@ -301,8 +300,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         List<String> contributeDateList = new ArrayList<>();
         contributeDateList.add(startTime);
         contributeDateList.add(endTime);
-        resultMap.put("contributeDate", contributeDateList);
-        resultMap.put("blogContributeCount", resultList);
+        resultMap.put("contributeDate" , contributeDateList);
+        resultMap.put("blogContributeCount" , resultList);
 
         return resultMap;
     }

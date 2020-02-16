@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth' // 验权
 import { constantRouterMap } from './router/index'
 
 const whiteList = ['/login'] // 不重定向白名单
-const whiteListActiveList = ['/', '/dashboard', '/picture/picture', '/404', '/401']
+const whiteListActiveList = ['/', '/dashboard', '/picture/picture', '/system/sysDictData', '/404', '/401']
 const allList = []
 
 router.beforeEach((to, from, next) => {

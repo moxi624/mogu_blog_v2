@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +66,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
             user.setSource(data.get("source").toString());
             user.setUserName("mg".concat(user.getSource()).concat(user.getUuid()));
             Integer randNum = (int) (Math.random() * (999999) + 1);//产生(0,999999]之间的随机数
-            String workPassWord = String.format("%06d", randNum);//进行六位数补全
+            String workPassWord = String.format("%06d" , randNum);//进行六位数补全
             user.setPassWord(workPassWord);
             user.insert();
             System.out.println("insert");
