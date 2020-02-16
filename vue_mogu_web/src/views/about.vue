@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- 图片全屏显示 -->
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen >
+      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;">
+    </el-dialog>
+
     <div class="pagebg ab"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -12,6 +17,7 @@
         <div
           class="news_con fixck newsview ck-content"
           v-html="info.personResume"
+          @click="imageChange"
           v-highlight
         >{{info.personResume}}
         </div>
@@ -63,6 +69,8 @@ export default {
   data() {
     return {
       source: "MESSAGE_BOARD",
+      dialogPictureVisible: false,
+      dialogImageUrl: "",
       showCancel: false,
       submitting: false,
       comments: [],
@@ -104,6 +112,15 @@ export default {
   methods: {
     //拿到vuex中的写的两个方法
     ...mapMutations(['setCommentList']),
+    imageChange: function (e) {
+      //首先需要判断点击的是否是图片
+      var type = e.target.localName;
+      if (type == "img") {
+        // window.open(e.target.currentSrc);
+        this.dialogPictureVisible = true
+        this.dialogImageUrl = e.target.currentSrc
+      }
+    },
     submitBox(e) {
       let params = {};
       params.blogUid = e.blogUid;
