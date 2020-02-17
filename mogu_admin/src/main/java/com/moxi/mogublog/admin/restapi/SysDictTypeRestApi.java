@@ -31,6 +31,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,9 @@ public class SysDictTypeRestApi {
     
     @Autowired
     SysDictTypeService sysDictTypeService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @ApiOperation(value = "获取字典类型列表", notes = "获取字典类型列表", response = String.class)
     @PostMapping("/getList")
@@ -148,6 +152,11 @@ public class SysDictTypeRestApi {
         sysDictType.setUpdateByUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         sysDictType.setUpdateTime(new Date());
         sysDictType.updateById();
+
+        // 获取Redis中特定前缀
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        stringRedisTemplate.delete(keys);
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
@@ -178,6 +187,10 @@ public class SysDictTypeRestApi {
         });
 
         Boolean save = sysDictTypeService.updateBatchById(sysDictTypeList);
+
+        // 获取Redis中特定前缀
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        stringRedisTemplate.delete(keys);
 
         if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);

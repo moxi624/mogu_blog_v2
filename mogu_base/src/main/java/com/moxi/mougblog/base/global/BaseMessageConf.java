@@ -17,6 +17,7 @@ public class BaseMessageConf {
     public static final String DELETE_FAIL = "删除失败";
 
     public static final String ENTITY_EXIST = "该实体已存在";
+    public static final String ENTITY_NOT_EXIST = "该实体不存在";
 
     public static final String KEYWORD_IS_NOT_EMPTY = "关键字不能为空";
 

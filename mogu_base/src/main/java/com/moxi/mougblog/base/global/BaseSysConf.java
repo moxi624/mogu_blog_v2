@@ -65,6 +65,9 @@ public class BaseSysConf {
     // 最新博客
     public final static String NEW_BLOG = "NEW_BLOG";
 
+    // 字典类型
+    public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";
+
     // token令牌
     public final static String USER_TOEKN = "userToken";
 

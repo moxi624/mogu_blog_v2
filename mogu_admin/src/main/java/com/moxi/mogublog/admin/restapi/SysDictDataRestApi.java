@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.SysDictData;
@@ -16,6 +17,7 @@ import com.moxi.mogublog.xo.service.SysDictDataService;
 import com.moxi.mogublog.xo.service.SysDictDataService;
 import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.vo.SysDictDataVO;
+import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -26,15 +28,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -55,6 +56,9 @@ public class SysDictDataRestApi {
 
     @Autowired
     SysDictTypeService sysDictTypeService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @ApiOperation(value = "获取字典数据列表", notes = "获取字典数据列表", response = String.class)
     @PostMapping("/getList")
@@ -181,6 +185,11 @@ public class SysDictDataRestApi {
         sysDictData.setCreateByUid(adminUid);
         sysDictData.setUpdateByUid(adminUid);
         sysDictData.updateById();
+
+        // 获取Redis中特定前缀
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        stringRedisTemplate.delete(keys);
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
@@ -197,6 +206,7 @@ public class SysDictDataRestApi {
         if (sysDictDataVoList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
+
         List<String> uids = new ArrayList<>();
 
         sysDictDataVoList.forEach(item -> {
@@ -212,11 +222,52 @@ public class SysDictDataRestApi {
 
         Boolean save = sysDictDataService.updateBatchById(sysDictDataList);
 
+        // 获取Redis中特定前缀
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        stringRedisTemplate.delete(keys);
+
+
         if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
         }
     }
+
+    @OperationLogger(value = "根据字典类型获取字典数据")
+    @ApiOperation(value = "批量删除字典数据", notes = "批量删除字典数据", response = String.class)
+    @PostMapping("/getListByDictType")
+    public String getListByDictType(@RequestParam("dictType") String dictType) {
+
+        //从Redis中获取内容
+        String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType);
+
+        //判断redis中是否有字典
+        if (StringUtils.isNotEmpty(jsonResult)) {
+            List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+            return ResultUtil.result(SysConf.SUCCESS, list);
+        }
+
+        QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.DICT_TYPE, dictType);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.last("LIMIT 1");
+        SysDictType sysDictType = sysDictTypeService.getOne(queryWrapper);
+        if(sysDictType == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_NOT_EXIST);
+        }
+        QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
+        sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        sysDictDataQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictType.getUid());
+        List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
+
+        stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.DAYS);
+
+        return ResultUtil.result(SysConf.SUCCESS, list);
+    }
+
+
 }
 

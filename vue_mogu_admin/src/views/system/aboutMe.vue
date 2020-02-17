@@ -22,8 +22,7 @@
           </el-form-item>
 
             <el-form-item label="性别">
-              <el-radio v-model="form.gender" label="1" border size="medium">男</el-radio>
-              <el-radio v-model="form.gender" label="2" border size="medium">女</el-radio>
+              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
             </el-form-item>
 
           <!-- <el-form-item label="手机号">
@@ -158,10 +157,12 @@
 import AvatarCropper from '@/components/AvatarCropper'
 import { getMe, editMe, changePwd } from "@/api/system";
 import CKEditor from "@/components/CKEditor";
-import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
+import {getListByDictType} from "@/api/sysDictData"
+
 export default {
   data() {
     return {
+      genderDictList: [], //字典列表
       activeName: "one",
       imagecropperShow: false,
       imagecropperKey: 0,
@@ -204,19 +205,35 @@ export default {
     }
   },
   created() {
-    var tagParams = new URLSearchParams();
-    getMe(tagParams).then(response => {
-      console.log(response);
-      if (response.code == "success") {
-        this.form = response.data;
-        this.fileIds = this.form.avatar;
-      }
-    });
+    this.getDictList();
+    this.getMeInfo();
   },
   methods: {
+    getMeInfo: function() {
+      var tagParams = new URLSearchParams();
+      getMe(tagParams).then(response => {
+        if (response.code == "success") {
+          this.form = response.data;
+          this.fileIds = this.form.avatar;
+        }
+      });
+    },
     handleClick(tab, event) {
       //设置富文本内容
       this.$refs.ckeditor.setData(this.form.personResume);
+    },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+      var params = {};
+      params.dictType = 'sys_user_sex';
+      getListByDictType(params).then(response => {
+        console.log('得到的字典', response)
+        if (response.code == "success") {
+          this.genderDictList = response.data;
+        }
+      });
     },
     cropSuccess(resData) {
       console.log("裁剪成功", resData)

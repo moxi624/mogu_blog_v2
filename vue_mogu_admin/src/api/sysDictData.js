@@ -8,6 +8,14 @@ export function getSysDictDataList(params) {
   })
 }
 
+export function getListByDictType(params) {
+  return request({
+    url: process.env.ADMIN_API + '/sysDictData/getListByDictType',
+    method: 'post',
+    params
+  })
+}
+
 export function addSysDictData(params) {
   return request({
     url: process.env.ADMIN_API + '/sysDictData/add',

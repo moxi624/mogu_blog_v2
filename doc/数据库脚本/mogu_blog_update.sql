@@ -54,3 +54,11 @@ CREATE TABLE `t_sys_dict_data` (
   PRIMARY KEY (`uid`),
   KEY `oid` (`oid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典数据表'
+
+
+/*
+   修改t_admin和t_user的email字段 默认为空
+   @date 2020年2月17日10:17:31
+*/
+ALTER TABLE t_user MODIFY COLUMN email VARCHAR(60) DEFAULT NULL COMMENT '邮箱';
+ALTER TABLE t_admin MODIFY COLUMN email VARCHAR(60) DEFAULT NULL COMMENT '邮箱';
