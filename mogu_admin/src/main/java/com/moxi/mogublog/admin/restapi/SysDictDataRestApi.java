@@ -83,7 +83,7 @@ public class SysDictDataRestApi {
         page.setCurrent(sysDictDataVO.getCurrentPage());
         page.setSize(sysDictDataVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
+        queryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
         IPage<SysDictData> pageList = sysDictDataService.page(page, queryWrapper);
 
         List<SysDictData> sysDictDataList = pageList.getRecords();
@@ -141,6 +141,7 @@ public class SysDictDataRestApi {
         sysDictData.setListClass(sysDictDataVO.getListClass());
         sysDictData.setRemark(sysDictDataVO.getRemark());
         sysDictData.setIsPublish(sysDictDataVO.getIsPublish());
+        sysDictData.setSort(sysDictDataVO.getSort());
         sysDictData.setCreateByUid(adminUid);
         sysDictData.setUpdateByUid(adminUid);
         sysDictData.insert();
@@ -235,7 +236,7 @@ public class SysDictDataRestApi {
     }
 
     @OperationLogger(value = "根据字典类型获取字典数据")
-    @ApiOperation(value = "批量删除字典数据", notes = "批量删除字典数据", response = String.class)
+    @ApiOperation(value = "根据字典类型获取字典数据", notes = "根据字典类型获取字典数据", response = String.class)
     @PostMapping("/getListByDictType")
     public String getListByDictType(@RequestParam("dictType") String dictType) {
 
@@ -244,8 +245,8 @@ public class SysDictDataRestApi {
 
         //判断redis中是否有字典
         if (StringUtils.isNotEmpty(jsonResult)) {
-            List list = JsonUtils.jsonArrayToArrayList(jsonResult);
-            return ResultUtil.result(SysConf.SUCCESS, list);
+            Map<String, Object> map = JsonUtils.jsonToMap(jsonResult);
+            return ResultUtil.result(SysConf.SUCCESS, map);
         }
 
         QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
@@ -261,13 +262,94 @@ public class SysDictDataRestApi {
         sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         sysDictDataQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictType.getUid());
+        sysDictDataQueryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
         List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
 
-        stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.DAYS);
+        String defaultValue = null;
+        for (SysDictData sysDictData : list) {
+            // 获取默认值
+            if(sysDictData.getIsDefault() == SysConf.ONE) {
+                defaultValue = sysDictData.getDictValue();
+                break;
+            }
+        }
 
-        return ResultUtil.result(SysConf.SUCCESS, list);
+        Map<String, Object> result = new HashMap<>();
+        result.put(SysConf.DEFAULT_VALUE, defaultValue);
+        result.put(SysConf.LIST, list);
+
+        stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType, JsonUtils.objectToJson(result).toString(), 1, TimeUnit.DAYS);
+
+        return ResultUtil.result(SysConf.SUCCESS, result);
     }
 
+    @OperationLogger(value = "根据字典类型数组获取字典数据")
+    @ApiOperation(value = "根据字典类型数组获取字典数据", notes = "根据字典类型数组获取字典数据", response = String.class)
+    @PostMapping("/getListByDictTypeList")
+    public String getListByDictTypeList(@RequestBody List<String> dictTypeList) {
+
+        if(dictTypeList.size() <= 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+        }
+
+        Map<String, Map<String, Object>> map = new HashMap<>();
+        List<String> tempTypeList = new ArrayList<>();
+        dictTypeList.forEach(item -> {
+            //从Redis中获取内容
+            String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item);
+
+            //判断redis中是否有字典
+            if (StringUtils.isNotEmpty(jsonResult)) {
+
+                Map<String, Object> tempMap = JsonUtils.jsonToMap(jsonResult);
+                map.put(item, tempMap);
+
+            } else {
+                // 如果redis中没有该字典，那么从数据库中查询
+                tempTypeList.add(item);
+            }
+
+        });
+
+        // 表示数据全部从redis中获取到了，直接返回即可
+        if(tempTypeList.size() <=0 ) {
+            return ResultUtil.result(SysConf.SUCCESS, map);
+        }
+
+        // 查询 dict_type 在 tempTypeList中的
+        QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(SQLConf.DICT_TYPE, tempTypeList);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        List<SysDictType> sysDictTypeList = sysDictTypeService.list(queryWrapper);
+
+        sysDictTypeList.forEach(item -> {
+            QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
+            sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+            sysDictDataQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, item.getUid());
+            sysDictDataQueryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
+            List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
+
+            String defaultValue = null;
+            for (SysDictData sysDictData : list) {
+                // 获取默认值
+                if(sysDictData.getIsDefault() == SysConf.ONE) {
+                    defaultValue = sysDictData.getDictValue();
+                    break;
+                }
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            result.put(SysConf.DEFAULT_VALUE, defaultValue);
+            result.put(SysConf.LIST, list);
+
+            map.put(item.getDictType(), result);
+
+            stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item.getDictType(), JsonUtils.objectToJson(result).toString(), 1, TimeUnit.DAYS);
+        });
+        return ResultUtil.result(SysConf.SUCCESS, map);
+    }
 
 }
 

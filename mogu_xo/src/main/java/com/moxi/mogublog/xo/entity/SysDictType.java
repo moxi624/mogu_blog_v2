@@ -53,4 +53,10 @@ public class SysDictType extends SuperEntity<SysDictType> {
      * 备注
      */
     private String remark;
+
+    /**
+     * 排序字段
+     */
+    private Integer sort;
+
 }

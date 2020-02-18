@@ -35,9 +35,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="字典类型" width="150">
+      <el-table-column label="字典类型" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.dictType }}</span>
+          <el-tag type="warning" style="cursor: pointer"  @click.native="handleList(scope.row)">{{ scope.row.dictType }}</el-tag>
         </template>
       </el-table-column>
 
@@ -57,6 +57,12 @@
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.isPublish == '1' ">上架</el-tag>
           <el-tag type="danger" v-else>下架</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" width="50">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
 
@@ -116,6 +122,10 @@
           <el-input v-model="form.dictName" auto-complete="off"></el-input>
         </el-form-item>
 
+        <el-form-item label="排序" :label-width="formLabelWidth">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        </el-form-item>
+
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="form.remark" auto-complete="off"></el-input>
         </el-form-item>
@@ -166,6 +176,7 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getSysDictTypeList(params).then(response => {
+        console.log("得到的类型", response)
         if(response.code == "success") {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
@@ -177,7 +188,8 @@ export default {
     // 这里可以设置一些初始值
     getFormObject: function() {
       var formObject = {
-        isPublish: '1'
+        isPublish: '1',
+        sort: 0
       };
       return formObject;
     },

@@ -14,19 +14,19 @@
           ref="from"
         >
           <el-form-item label="本地图片域名">
-            <el-input v-model="form.localPictureBaseUrl" style="width: 400px"></el-input>
+            <el-input v-model="form.localPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="七牛云图片域名">
-            <el-input v-model="form.qiNiuPictureBaseUrl" style="width: 400px"></el-input>
+            <el-input v-model="form.qiNiuPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="七牛云公钥">
-            <el-input v-model="form.qiNiuAccessKey" style="width: 400px"></el-input>
+            <el-input v-model="form.qiNiuAccessKey" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="七牛云私钥">
-            <el-input type="password" v-model="form.qiNiuSecretKey" style="width: 400px"></el-input>
+            <el-input type="password" v-model="form.qiNiuSecretKey" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="上传空间">
@@ -34,38 +34,25 @@
           </el-form-item>
 
           <el-form-item label="存储区域">
-            <el-select v-model="form.qiNiuArea" placeholder="请选择存储区域">
-              <el-option v-for="item in options"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="form.qiNiuArea" placeholder="请选择存储区域" clearable>
+              <el-option v-for="item in areaDictList"
+                         :key="item.dictValue"
+                         :label="item.dictLabel"
+                         :value="item.dictValue"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="图片上传七牛云">
-            <el-switch
-              v-model="form.uploadQiNiu"
-              active-text="是"
-              inactive-text="否">
-            </el-switch>
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadQiNiu" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item label="图片上传本地">
-            <el-switch
-              v-model="form.uploadLocal"
-              active-text="是"
-              inactive-text="否">
-            </el-switch>
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadLocal" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
+
           <el-form-item label="图片显示优先级">
-            <el-switch
-              v-model="form.picturePriority"
-              active-text="七牛云"
-              inactive-text="本地"
-              active-color="#13ce66"
-              inactive-color="#ff4949">
-            </el-switch>
+            <el-radio v-for="item in picturePriorityDictList" :key="item.uid" v-model="form.picturePriority" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item>
@@ -112,29 +99,18 @@
 
 <script>
 import { getSystemConfig, editSystemConfig } from "@/api/systemConfig";
-
+import {getListByDictTypeList} from "@/api/sysDictData"
+import { Loading } from 'element-ui';
 export default {
   data() {
     return {
       form: {
 
       },
-      options: [{
-        value: 'z0',
-        label: '华东'
-      }, {
-        value: 'z1',
-        label: '华北'
-      }, {
-        value: 'z2',
-        label: '华南'
-      }, {
-        value: 'na0',
-        label: '北美'
-      }, {
-        value: 'as0',
-        label: '东南亚'
-      }],
+      areaDictList: [], //存储区域字典
+      yesNoDictList: [], //是否字典
+      picturePriorityDictList: [], //图片显示优先级字典
+      loadingInstance: null, // loading对象
     };
   },
   watch: {
@@ -144,92 +120,63 @@ export default {
 
   },
   created() {
+    this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+    // 获取字典
+    this.getDictList()
 
+    // 获取系统配置
     this.getSystemConfigList()
   },
   methods: {
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+
+      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region']
+
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == "success") {
+          var dictMap = response.data;
+
+          this.areaDictList = dictMap.sys_storage_region.list
+
+          this.yesNoDictList = dictMap.sys_yes_no.list
+
+          this.picturePriorityDictList = dictMap.sys_picture_priority.list
+
+          this.loadingInstance.close();
+        } else {
+          this.loadingInstance.close();
+        }
+      });
+
+
+    },
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
         if (response.code == "success") {
           if (response.data) {
-
-            // 进行一些转换
-            var form = response.data;
-
-            this.form = this.formFormat(form, 1)
-
+            this.form = response.data;
           }
         }
       });
     },
-    /**
-     * 格式化form，type = 1 为将 状态转换成true false
-     * @param form
-     * @param type
-     * @returns {*}
-     */
-    formFormat(form, type) {
 
-      if(type === 1) {
-
-        if(form.uploadLocal === "1") {
-          form.uploadLocal = true;
-        } else {
-          form.uploadLocal = false;
-        }
-
-        if(form.uploadQiNiu === "1") {
-          form.uploadQiNiu = true;
-        } else {
-          form.uploadQiNiu = false;
-        }
-
-        if(form.picturePriority === "1") {
-          form.picturePriority = true;
-        } else {
-          form.picturePriority = false;
-        }
-
-      } else {
-
-        if(form.uploadLocal === true) {
-          form.uploadLocal = "1";
-        } else {
-          form.uploadLocal = "0";
-        }
-
-        if(form.uploadQiNiu === true) {
-          form.uploadQiNiu = "1";
-        } else {
-          form.uploadQiNiu = "0";
-        }
-
-        if(form.picturePriority === true) {
-          form.picturePriority = "1";
-        } else {
-          form.picturePriority = "0";
-        }
-      }
-
-      return form;
-    },
     submitForm: function() {
-      var form = this.form
-      form = this.formFormat(form , 0)
-      editSystemConfig(form).then(res => {
+      editSystemConfig(this.form).then(res => {
         console.log(res);
         if (res.code = "success") {
           this.$message({
-            type: "info",
+            type: "success",
             message: res.data
           });
         } else {
           this.$message({
-            type: "error",
+            type: "warning",
             message: res.data
           });
         }
-        this.getSystemConfigList();
       });
     },
 

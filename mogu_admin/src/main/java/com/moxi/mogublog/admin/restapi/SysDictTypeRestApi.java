@@ -88,6 +88,7 @@ public class SysDictTypeRestApi {
         page.setCurrent(sysDictTypeVO.getCurrentPage());
         page.setSize(sysDictTypeVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
         IPage<SysDictType> pageList = sysDictTypeService.page(page, queryWrapper);
         log.info("获取字典类型列表");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -116,6 +117,7 @@ public class SysDictTypeRestApi {
         sysDictType.setDictType(sysDictTypeVO.getDictType());
         sysDictType.setRemark(sysDictTypeVO.getRemark());
         sysDictType.setIsPublish(sysDictTypeVO.getIsPublish());
+        sysDictType.setSort(sysDictTypeVO.getSort());
         sysDictType.setCreateByUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         sysDictType.setUpdateByUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         sysDictType.insert();
@@ -149,6 +151,7 @@ public class SysDictTypeRestApi {
         sysDictType.setDictType(sysDictTypeVO.getDictType());
         sysDictType.setRemark(sysDictTypeVO.getRemark());
         sysDictType.setIsPublish(sysDictTypeVO.getIsPublish());
+        sysDictType.setSort(sysDictTypeVO.getSort());
         sysDictType.setUpdateByUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         sysDictType.setUpdateTime(new Date());
         sysDictType.updateById();

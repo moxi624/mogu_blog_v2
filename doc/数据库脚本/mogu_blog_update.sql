@@ -30,10 +30,11 @@ CREATE TABLE `t_sys_dict_type` (
   `status` tinyint(1) DEFAULT '1' COMMENT '状态',
   `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
-  `is_publish` varchar(1) NOT NULL DEFAULT '1' COMMENT '是否发布(1:是，0:否)',
+  `is_publish` varchar(1) NOT NULL DEFAULT '1' COMMENT '是否发布(1:是，0:否)',  
   PRIMARY KEY (`uid`),
   KEY `oid` (`oid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='字典类型表'
+
 
 CREATE TABLE `t_sys_dict_data` (
   `uid` varchar(32) NOT NULL COMMENT '主键',
@@ -53,7 +54,8 @@ CREATE TABLE `t_sys_dict_data` (
   `is_publish` varchar(1) NOT NULL DEFAULT '1' COMMENT '是否发布(1:是，0:否)',
   PRIMARY KEY (`uid`),
   KEY `oid` (`oid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典数据表'
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='字典数据表'
+
 
 
 /*
@@ -62,3 +64,7 @@ CREATE TABLE `t_sys_dict_data` (
 */
 ALTER TABLE t_user MODIFY COLUMN email VARCHAR(60) DEFAULT NULL COMMENT '邮箱';
 ALTER TABLE t_admin MODIFY COLUMN email VARCHAR(60) DEFAULT NULL COMMENT '邮箱';
+
+ALTER TABLE  t_sys_dict_type ADD sort int(11) NOT NULL DEFAULT '0' COMMENT '排序字段';
+ALTER TABLE  t_sys_dict_data ADD sort int(11) NOT NULL DEFAULT '0' COMMENT '排序字段';
+

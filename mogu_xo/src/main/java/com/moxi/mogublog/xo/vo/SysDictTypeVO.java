@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
@@ -47,5 +48,11 @@ public class SysDictTypeVO extends BaseVO<SysDictTypeVO> {
      * 备注
      */
     private String remark;
+
+    /**
+     * 排序字段
+     */
+    @IntegerNotNull(groups = {Insert.class, Update.class})
+    private Integer sort;
 
 }

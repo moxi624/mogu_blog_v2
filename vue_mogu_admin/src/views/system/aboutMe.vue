@@ -210,8 +210,9 @@ export default {
   },
   methods: {
     getMeInfo: function() {
-      var tagParams = new URLSearchParams();
-      getMe(tagParams).then(response => {
+      var getMeParams = new URLSearchParams();
+      getMe(getMeParams).then(response => {
+        console.log("得到的用户列表", response)
         if (response.code == "success") {
           this.form = response.data;
           this.fileIds = this.form.avatar;
@@ -231,7 +232,7 @@ export default {
       getListByDictType(params).then(response => {
         console.log('得到的字典', response)
         if (response.code == "success") {
-          this.genderDictList = response.data;
+          this.genderDictList = response.data.list;
         }
       });
     },

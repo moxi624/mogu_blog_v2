@@ -86,10 +86,7 @@
           </el-form-item>
 
           <el-form-item label="网站评论">
-            <template>
-              <el-radio v-model="form.startComment" label="0">关闭</el-radio>
-              <el-radio v-model="form.startComment" label="1">开启</el-radio>
-            </template>
+            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item>
@@ -168,6 +165,8 @@ import CheckPhoto from "../../components/CheckPhoto";
 import { getToken } from '@/utils/auth'
 import { getWebConfig, editWebConfig } from "@/api/webConfig";
 import { Loading } from 'element-ui';
+import {getListByDictType} from "@/api/sysDictData"
+
 export default {
   data() {
     return {
@@ -193,7 +192,8 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
-      otherData: {}
+      otherData: {},
+      openDictList: [], //字典
     };
   },
   watch: {
@@ -221,6 +221,9 @@ export default {
     //图片上传地址
     this.uploadPictureHost = process.env.PICTURE_API + "/file/cropperPicture";
 
+    // 查询字典
+    this.getDictList()
+
     //其它数据
     this.otherData = {
       source: "picture",
@@ -233,6 +236,19 @@ export default {
 
   },
   methods: {
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+      // 获取系统开关
+      var params = {};
+      params.dictType = 'sys_normal_disable';
+      getListByDictType(params).then(response => {
+        if (response.code == "success") {
+          this.openDictList = response.data.list;
+        }
+      });
+    },
     getWebConfigFun: function() {
       getWebConfig().then(response => {
         console.log("得到的配置", response)

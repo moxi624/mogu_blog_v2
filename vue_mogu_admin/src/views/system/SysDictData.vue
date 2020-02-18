@@ -56,9 +56,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="字典类型" width="150">
+      <el-table-column label="字典类型" width="200">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.sysDictType.dictType}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="是否默认" width="100">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.isDefault==1">是</el-tag>
+          <el-tag type="warning" v-if="scope.row.isDefault==0">否</el-tag>
         </template>
       </el-table-column>
 

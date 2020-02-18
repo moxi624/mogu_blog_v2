@@ -23,6 +23,8 @@ public class BaseSysConf {
     public final static String DATA = "data";
     public final static String UID = "uid";
 
+    public final static String DEFAULT_VALUE = "defaultValue";
+
     /**
      * 分页相关
      */
@@ -102,6 +104,6 @@ public class BaseSysConf {
     public final static String QI_NIU_BUCKET = "qiNiuBucket";
     public final static String QI_NIU_AREA = "qiNiuArea";
     public final static String PICTURE_PRIORITY = "picturePriority";
-
+    public final static String LIST = "list";
 
 }
