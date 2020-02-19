@@ -34,19 +34,19 @@
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="字典标签" width="100">
+      <el-table-column label="字典标签" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.dictLabel }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="字典键值" width="100">
+      <el-table-column label="字典键值" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.$index%5 == 0" type="warning">{{scope.row.dictValue}}</el-tag>
           <el-tag v-if="scope.$index%5 == 1" type="success">{{scope.row.dictValue}}</el-tag>
@@ -56,45 +56,56 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="字典类型" width="200">
+      <el-table-column label="字典类型" width="200" align="center">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.sysDictType.dictType}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="是否默认" width="100">
+      <el-table-column label="是否默认" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.isDefault==1">是</el-tag>
           <el-tag type="warning" v-if="scope.row.isDefault==0">否</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" width="50">
+      <el-table-column label="回显样式" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.listClass == 'default'">{{scope.row.listClass}}</el-tag>
+          <el-tag v-if="scope.row.listClass == 'success'" type="success">{{scope.row.listClass}}</el-tag>
+          <el-tag v-if="scope.row.listClass == 'primary'" type="primary">{{scope.row.listClass}}</el-tag>
+          <el-tag v-if="scope.row.listClass == 'info'" type="info">{{scope.row.listClass}}</el-tag>
+          <el-tag v-if="scope.row.listClass == 'warning'" type="warning">{{scope.row.listClass}}</el-tag>
+          <el-tag v-if="scope.row.listClass == 'danger'" type="danger">{{scope.row.listClass}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" width="50" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="发布状态" width="100">
+      <el-table-column label="发布状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.isPublish == '1' ">上架</el-tag>
           <el-tag type="danger" v-else>下架</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="备注" width="200" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -159,14 +170,6 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="样式属性" :label-width="formLabelWidth">
-          <el-input v-model="form.cssClass" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="排序" :label-width="formLabelWidth">
-          <el-input v-model="form.sort" auto-complete="off"></el-input>
-        </el-form-item>
-
         <el-form-item label="回显样式" :label-width="formLabelWidth">
           <el-select v-model="form.listClass" clearable placeholder="推荐等级" style="width:140px">
             <el-option
@@ -176,6 +179,14 @@
               :value="item.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+
+        <el-form-item label="扩展样式" :label-width="formLabelWidth">
+          <el-input v-model="form.cssClass" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="排序" :label-width="formLabelWidth">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="备注" :label-width="formLabelWidth">
@@ -228,12 +239,12 @@
         isEditForm: false,
         form: {},
         listClassType: [
-          {label: "默认", value: ''},
-          {label: "主要", value: 'primary'},
-          {label: "成功", value: 'success'},
-          {label: "信息", value: 'info'},
-          {label: "警告", value: 'warning'},
-          {label: "危险", value: 'danger'}
+          {label: "default", value: ''},
+          {label: "primary", value: 'primary'},
+          {label: "success", value: 'success'},
+          {label: "info", value: 'info'},
+          {label: "warning", value: 'warning'},
+          {label: "danger", value: 'danger'}
         ],
       };
     },

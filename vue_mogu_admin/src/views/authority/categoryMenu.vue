@@ -26,8 +26,7 @@
 
               <el-table-column label width="100">
                 <template slot-scope="scope_child">
-                  <el-tag v-if="scope_child.row.menuLevel == 1" type="success">一级菜单</el-tag>
-                  <el-tag v-if="scope_child.row.menuLevel == 2" type="warring">二级菜单</el-tag>
+                  <el-tag v-for="item in menuLevelDictList" :key="item.uid" v-if="scope_child.row.menuLevel == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
                 </template>
               </el-table-column>
 
@@ -103,8 +102,7 @@
 
       <el-table-column label="菜单级别" width="100">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.menuLevel == 1" type="success">一级菜单</el-tag>
-          <el-tag v-if="scope.row.menuLevel == 2" type="warring">二级菜单</el-tag>
+          <el-tag v-for="item in menuLevelDictList" :key="item.uid" v-if="scope.row.menuLevel == item.dictValue" :type="item.listClass">一级菜单</el-tag>
         </template>
       </el-table-column>
 
@@ -172,10 +170,10 @@
         <el-form-item label="菜单等级" :label-width="formLabelWidth" required>
           <el-select v-model="form.menuLevel" size="small" placeholder="请选择">
             <el-option
-              v-for="item in menuLevelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in menuLevelDictList"
+              :key="item.uid"
+              :label="item.dictLabel"
+              :value="parseInt(item.dictValue)"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -234,6 +232,7 @@ import {
   deleteMenu,
   stickMenu
 } from "@/api/categoryMenu";
+import {getListByDictType} from "@/api/sysDictData"
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
@@ -249,10 +248,7 @@ export default {
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
-      menuLevelList: [
-        { label: "一级菜单", value: 1 },
-        { label: "二级菜单", value: 2 }
-      ],
+      menuLevelDictList: [], //菜单等级字典
       form: {
         uid: null,
         name: "",
@@ -266,16 +262,29 @@ export default {
     };
   },
   created() {
+    this.getDictList();
     this.menuList();
   },
   methods: {
     menuList: function() {
-
       getAllMenu().then(response => {
         console.log("getAllMenu", response);
         if (response.code == "success") {
           this.tableData = response.data;
           this.menuOptions = response.data;
+        }
+      });
+    },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+      var params = {};
+      params.dictType = 'sys_menu_level';
+      getListByDictType(params).then(response => {
+        console.log("得到的字典列表")
+        if (response.code == "success") {
+          this.menuLevelDictList = response.data.list;
         }
       });
     },
@@ -302,7 +311,7 @@ export default {
       this.dialogFormVisible = true;
       this.isEditForm = true;
       var parentUid = row.parentUid;
-      
+
       this.form = row;
     },
     handleStick: function(row) {

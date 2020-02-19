@@ -150,8 +150,6 @@ export default {
           this.loadingInstance.close();
         }
       });
-
-
     },
     getSystemConfigList: function() {
       getSystemConfig().then(response => {

@@ -140,11 +140,9 @@
           <el-input v-model="form.nickName"></el-input>
         </el-form-item>
 
-        <el-form-item label="性别" :label-width="formLabelWidth" required>
-          <template>
-            <el-radio v-model="form.gender" label="1">男</el-radio>
-            <el-radio v-model="form.gender" label="2">女</el-radio>
-          </template>
+
+        <el-form-item label="性别"  :label-width="formLabelWidth" required>
+          <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" >{{gender.dictLabel}}</el-radio>
         </el-form-item>
 
         <el-form-item label="邮箱" :label-width="formLabelWidth">
@@ -195,7 +193,7 @@ import {
 } from "@/api/admin";
 
 import { getRoleList } from "@/api/role";
-
+import {getListByDictType} from "@/api/sysDictData"
 
 
 import CheckPhoto from "../../components/CheckPhoto";
@@ -214,7 +212,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加标签",
+      title: "增加管理员",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -222,14 +220,15 @@ export default {
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
       fileIds: "",
-      icon: false //控制删除图标的显示
+      icon: false, //控制删除图标的显示
+      genderDictList: [], //字典列表
     };
   },
   components: {
     CheckPhoto
   },
   created() {
-
+    this.getDictList();
     this.adminList();
     this.roleList();
   },
@@ -241,11 +240,26 @@ export default {
       params.append("pageSize", this.pageSize);
       getAdminList(params).then(response => {
         if(response.code == "success") {
-          console.log("得到的admin", response);
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
           this.total = response.data.total;
+        }
+      });
+    },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+      var params = {};
+      params.dictType = 'sys_user_sex';
+      getListByDictType(params).then(response => {
+        if (response.code == "success") {
+          this.genderDictList = response.data.list;
+          // 设置默认值
+          if(response.data.defaultValue) {
+            this.genderDefaultValue =response.data.defaultValue
+          }
         }
       });
     },
@@ -280,7 +294,6 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
       this.form.photoList = null;
       this.form.fileUid = "";
       this.icon = false;
@@ -294,7 +307,7 @@ export default {
     getFormObject: function() {
       var formObject = {
         uid: null,
-        gender: "1"
+        gender: this.genderDefaultValue
       };
       return formObject;
     },

@@ -52,28 +52,28 @@
 
       <el-select v-model="levelKeyword" clearable placeholder="推荐等级" style="width:140px">
         <el-option
-          v-for="item in blogLevelList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in blogLevelDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
         ></el-option>
       </el-select>
 
       <el-select v-model="publishKeyword" clearable placeholder="是否发布" style="width:140px">
         <el-option
-          v-for="item in blogPublishList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in blogPublishDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
         ></el-option>
       </el-select>
 
       <el-select v-model="originalKeyword" clearable placeholder="是否原创" style="width:140px">
         <el-option
-          v-for="item in blogOriginalList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in blogOriginalDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
         ></el-option>
       </el-select>
 
@@ -85,13 +85,13 @@
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="标题图" width="160">
+      <el-table-column label="标题图" width="160" align="center">
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
@@ -101,26 +101,26 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="标题" width="160">
+      <el-table-column label="标题" width="160" align="center">
         <template slot-scope="scope">
           <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="作者" width="100">
+      <el-table-column label="作者" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="是否原创" width="100">
+      <el-table-column label="是否原创" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isOriginal==1" type="success">原创</el-tag>
           <el-tag v-if="scope.row.isOriginal==0" type="info">转载</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="分类" width="100">
+      <el-table-column label="分类" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.blogSort.sortName }}</span>
         </template>
@@ -132,7 +132,7 @@
 	      </template>
       </el-table-column>-->
 
-      <el-table-column label="标签" width="100">
+      <el-table-column label="标签" width="100" align="center">
         <template slot-scope="scope">
           <template>
             <el-tag
@@ -145,38 +145,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="推荐等级" width="100">
+      <el-table-column label="推荐等级" width="100" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.level==0">正常</span>
-          <span v-if="scope.row.level==1">一级推荐</span>
-          <span v-if="scope.row.level==2">二级推荐</span>
-          <span v-if="scope.row.level==3">三级推荐</span>
-          <span v-if="scope.row.level==4">四级推荐</span>
+          <el-tag v-for="item in blogLevelDictList" :key="item.uid" v-if="scope.row.level == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="点击数" width="70">
+      <el-table-column label="点击数" width="70" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.clickCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="发布状态" width="100" align="center">
         <template slot-scope="scope">
-          <template v-if="scope.row.status == 1 && scope.row.isPublish == 1">
-            <span>已发布</span>
-          </template>
-          <template v-if="scope.row.status == 1 && scope.row.isPublish == 0">
-            <span>已下架</span>
-          </template>
-          <template v-if="scope.row.status == 0">
-            <span>已删除</span>
+          <template>
+            <el-tag v-for="item in blogPublishDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.isPublish == item.dictValue">{{item.dictLabel}}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -286,10 +276,10 @@
             <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" required>
               <el-select v-model="form.level" size="small" placeholder="请选择" style="width:120px">
                 <el-option
-                  v-for="item in blogLevelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in blogLevelDictList"
+                  :key="item.uid"
+                  :label="item.dictLabel"
+                  :value="parseInt(item.dictValue)"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -298,8 +288,7 @@
           <el-col :span="5">
             <el-form-item label="是否发布" :label-width="lineLabelWidth" required>
               <el-radio-group v-model="form.isPublish" size="small">
-                <el-radio label="1" border>是</el-radio>
-                <el-radio label="0" border>否</el-radio>
+                <el-radio v-for="item in blogPublishDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -307,8 +296,7 @@
           <el-col :span="5">
             <el-form-item label="是否原创" :label-width="formLabelWidth" required>
               <el-radio-group v-model="form.isOriginal" size="small">
-                <el-radio label="1" border>原创</el-radio>
-                <el-radio label="0" border>转载</el-radio>
+                <el-radio v-for="item in blogOriginalDictList" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -360,7 +348,7 @@ import {
 } from "@/utils/webUtils";
 
 import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
-
+import {getListByDictTypeList} from "@/api/sysDictData"
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
 var querystring = require("querystring");
@@ -406,21 +394,13 @@ export default {
       fileIds: "",
       icon: false, //控制删除图标的显示
       interval: null, //定义触发器
-      blogOriginalList: [
-        { label: "原创", value: 1 },
-        { label: "转载", value: 0 },
-      ],
-      blogPublishList: [
-        { label: "已下架", value: 0 },
-        { label: "已发布", value: 1 },
-      ],
-      blogLevelList: [
-        { label: "正常", value: 0 },
-        { label: "一级推荐", value: 1 },
-        { label: "二级推荐", value: 2 },
-        { label: "三级推荐", value: 3 },
-        { label: "四级推荐", value: 4 }
-      ],
+
+      blogOriginalDictList: [], //存储区域字典
+      blogPublishDictList: [], //是否字典
+      blogLevelDictList: [], //图片显示优先级字典
+      blogOriginalDefault: null, //博客原创默认值
+      blogLevelDefault: null, //博客等级默认值
+      blogPublishDefault: null, //博客发布默认值
       form: {
         uid: null,
         title: null,
@@ -451,23 +431,36 @@ export default {
       this.sortKeyword = tempBlogSort.blogSortUid;
     }
 
-    this.blogList(); //获取博客列表
+    // 获取字典
+    this.getDictList()
 
-    var tagParams = {};
-    tagParams.pageSize = 100;
-    tagParams.currentPage = 1;
-    getTagList(tagParams).then(response => {
-      this.tagData = response.data.records;
-    });
+    // 获取标签列表
+    this.tagList()
 
-    var blogSortParams = {};
-    blogSortParams.pageSize = 100;
-    blogSortParams.currentPage = 1;
-    getBlogSortList(blogSortParams).then(response => {
-      this.blogSortData = response.data.records;
-    });
+    // 获取博客分类
+    this.blogSortList()
+
+    //获取博客列表
+    this.blogList()
+
   },
   methods: {
+    tagList: function() {
+      var tagParams = {};
+      tagParams.pageSize = 100;
+      tagParams.currentPage = 1;
+      getTagList(tagParams).then(response => {
+        this.tagData = response.data.records;
+      });
+    },
+    blogSortList: function() {
+      var blogSortParams = {};
+      blogSortParams.pageSize = 100;
+      blogSortParams.currentPage = 1;
+      getBlogSortList(blogSortParams).then(response => {
+        this.blogSortData = response.data.records;
+      });
+    },
     blogList: function() {
       var params = {};
       params.keyword = this.keyword;
@@ -487,7 +480,39 @@ export default {
         }
       });
     },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
 
+      var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status']
+
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == "success") {
+
+          var dictMap = response.data;
+
+          this.blogOriginalDictList = dictMap.sys_original_status.list
+
+          this.blogPublishDictList = dictMap.sys_publish_status.list
+
+          this.blogLevelDictList = dictMap.sys_recommend_level.list
+
+          if(dictMap.sys_original_status.defaultValue) {
+            this.blogOriginalDefault = dictMap.sys_original_status.defaultValue;
+          }
+
+          if(dictMap.sys_publish_status.defaultValue) {
+            this.blogPublishDefault = dictMap.sys_publish_status.defaultValue;
+          }
+
+          if(dictMap.sys_recommend_level.defaultValue) {
+            this.blogLevelDefault = dictMap.sys_recommend_level.defaultValue;
+          }
+
+        }
+      });
+    },
     getFormObject: function() {
       var formObject = {
         uid: null,
@@ -496,11 +521,10 @@ export default {
         content: null,
         tagUid: null,
         fileUid: null,
-        isOriginal: "1", //是否原创
-        isPublish: "1", //是否发布
-        clickCount: 0,
+        isOriginal: this.blogOriginalDefault, //是否原创
+        isPublish: this.blogOriginalDefault, //是否发布
         author: null, //作者
-        level: 0, //推荐等级，默认是正常
+        level: parseInt(this.blogLevelDefault), //推荐等级，默认是正常
         articlesPart: null //文章出处，默认蘑菇博客
       };
       return formObject;
@@ -608,7 +632,9 @@ export default {
               // 暂时还没有想到可能解决的方法
             }
             this.dialogFormVisible = true;
+
             this.form = this.getFormObject();
+
             try {
               that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
             } catch (error) {
