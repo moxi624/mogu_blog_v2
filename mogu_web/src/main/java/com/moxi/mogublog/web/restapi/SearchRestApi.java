@@ -452,6 +452,14 @@ public class SearchRestApi {
             return str;
         }
 
+        String startStr = "<span style = 'color:red'>";
+        String endStr = "</span>";
+
+        // 判断关键字是否直接是搜索的内容，否者直接返回
+        if(str.equals(keyword)) {
+            return startStr + str + endStr;
+        }
+
         String lowerCaseStr = str.toLowerCase();
         String lowerKeyword = keyword.toLowerCase();
         String [] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
@@ -501,8 +509,6 @@ public class SearchRestApi {
             keyArrayList.add(itemStr);
         }
 
-        String startStr = "<span style = 'color:red'>";
-        String endStr = "</span>";
         StringBuffer sb = new StringBuffer();
 
         for(int a=0; a<arrayList.size(); a++) {

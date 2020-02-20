@@ -296,7 +296,7 @@
           <el-col :span="5">
             <el-form-item label="是否原创" :label-width="formLabelWidth" required>
               <el-radio-group v-model="form.isOriginal" size="small">
-                <el-radio v-for="item in blogOriginalDictList" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
+                <el-radio v-for="item in blogOriginalDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

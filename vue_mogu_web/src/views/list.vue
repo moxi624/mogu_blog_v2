@@ -221,13 +221,6 @@ export default {
             this.blogData = blogData;
           } else {
 
-            this.$notify.error({
-              title: '错误',
-              message: response.data,
-              type: 'success',
-              offset: 100
-            });
-
             that.isEnd = true;
           }
           that.loading = false;
@@ -265,14 +258,8 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
             that.loading = false;
-          } else {
 
-            this.$notify.error({
-              title: '错误',
-              message: response.data,
-              type: 'success',
-              offset: 100
-            });
+          } else {
 
             that.isEnd = true;
             that.loading = false;
@@ -312,12 +299,6 @@ export default {
             that.loading = false;
           } else {
 
-            this.$notify.error({
-              title: '错误',
-              message: response.data,
-              type: 'success',
-              offset: 100
-            });
 
             that.isEnd = true;
             that.loading = false;
@@ -361,13 +342,6 @@ export default {
             this.blogData = blogData;
             that.loading = false;
           } else {
-
-            this.$notify.error({
-              title: '错误',
-              message: response.data,
-              type: 'success',
-              offset: 100
-            });
 
             that.isEnd = true;
             that.loading = false;
