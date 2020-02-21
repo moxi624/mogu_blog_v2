@@ -55,8 +55,8 @@ CKEDITOR.editorConfig = function (config) {
 	config.format_tags = 'p;h1;h2;h3;h4;pre';
 
 	//添加插件，多个插件用逗号隔开
-	// codesnippet: 代码块   ， uploadimage: 上传图片,  colorbutton: 颜色按钮  justify: 对齐方式   tableresize:table调整   wordcount: 单词计数， notification: 通知   video: html5视频插件   fakeobjects: 用于api请求   pastefromexcel: 从excel中复制   uicolor: ui颜色选择   pasteUploadImage:配置复制图片上传
-	config.extraPlugins = 'codesnippet,panelbutton,floatpanel,colorbutton,markdown,colordialog,dialog,dialogui,smiley,widget,lineutils,eqneditor,justify,tableresize,wordcount,notification,video,fakeobjects,pastefromexcel,liststyle,pasteUploadImage';
+	// codesnippet: 代码块   ， uploadimage: 上传图片,  colorbutton: 颜色按钮  justify: 对齐方式   tableresize:table调整   wordcount: 单词计数， notification: 通知   video: html5视频插件   fakeobjects: 用于api请求   uicolor: ui颜色选择   pasteUploadImage:配置复制图片上传
+	config.extraPlugins = 'codesnippet,panelbutton,floatpanel,colorbutton,markdown,colordialog,dialog,dialogui,smiley,widget,lineutils,eqneditor,justify,tableresize,wordcount,notification,video,fakeobjects,liststyle,pasteUploadImage';
 
 	//设置前景色的取值 plugins/colorbutton/plugin.js
 	config.colorButton_colors = "000,800000,8B4513,2F4F4F,008080,000080,4B0082,696969,B22222,A52A2A,DAA520,006400,40E0D0,0000CD,800080,808080,F00,FF8C00,FFD700,008000,0FF,00F,EE82EE,A9A9A9,FFA07A,FFA500,FFFF00,00FF00,AFEEEE,ADD8E6,DDA0DD,D3D3D3,FFF0F5,FAEBD7,FFFFE0,F0FFF0,F0FFFF,F0F8FF,E6E6FA,FFF";
