@@ -93,6 +93,7 @@ public class BlogSortRestApi {
         BlogSort blogSort = new BlogSort();
         blogSort.setContent(blogSortVO.getContent());
         blogSort.setSortName(blogSortVO.getSortName());
+        blogSort.setSort(blogSortVO.getSort());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -123,6 +124,7 @@ public class BlogSortRestApi {
 
         blogSort.setContent(blogSortVO.getContent());
         blogSort.setSortName(blogSortVO.getSortName());
+        blogSort.setSort(blogSortVO.getSort());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);

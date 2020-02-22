@@ -57,6 +57,11 @@ public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparabl
     private Integer sort;
 
     /**
+     * 是否显示  1: 是  0: 否
+     */
+    private Integer isShow;
+
+    /**
      * 父菜单
      */
     @TableField(exist = false)

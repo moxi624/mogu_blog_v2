@@ -37,49 +37,49 @@
 
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
 
-	    <el-table-column label="操作人" width="100">
+	    <el-table-column label="操作人" width="100" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.userName }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="请求接口" width="150">
+      <el-table-column label="请求接口" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.url }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="请求方式" width="100">
+      <el-table-column label="请求方式" width="100" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.type }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="接口名" width="150">
+      <el-table-column label="接口名" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.operation }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP" width="150">
+      <el-table-column label="IP" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.ip }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP来源" width="200">
+      <el-table-column label="IP来源" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ipSource }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="请求耗时" width="160">
+      <el-table-column label="请求耗时" width="160" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.spendTime < 2000">{{ scope.row.spendTime}} ms </el-tag>
           <el-tag v-else-if="scope.row.spendTime < 5000 && scope.row.spendTime >= 2000" type="warning">{{ scope.row.spendTime}} ms </el-tag>
@@ -87,13 +87,13 @@
         </template>
       </el-table-column>
 
-	    <el-table-column label="创建时间" width="160">
+	    <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="状态" width="100">
+	   	<el-table-column label="状态" width="100" align="center">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
 		        <span>正常</span>

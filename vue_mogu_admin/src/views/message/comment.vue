@@ -11,13 +11,13 @@
 
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="头像" width="160">
+      <el-table-column label="头像" width="160" align="center">
         <template slot-scope="scope">
           <img
             v-if="scope.row.user"
@@ -32,13 +32,13 @@
         </template>
       </el-table-column>
 
-	    <el-table-column label="评论人" width="100">
+	    <el-table-column label="评论人" width="100" align="center">
 	      <template slot-scope="scope">
 	        <span v-if="scope.row.user">{{ scope.row.user.nickName }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="被评论人" width="100">
+      <el-table-column label="被评论人" width="100" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.toUser">{{ scope.row.toUser.nickName }}</span>
           <span v-else>无</span>
@@ -46,7 +46,7 @@
       </el-table-column>
 
 
-      <el-table-column label="内容" width="250">
+      <el-table-column label="内容" width="250" align="center">
 	      <template slot-scope="scope">
           <el-popover
             placement="top-start"
@@ -58,7 +58,7 @@
 	      </template>
 	    </el-table-column>
 
-        <el-table-column label="来源" width="150">
+        <el-table-column label="来源" width="150" align="center">
           <template slot-scope="scope">
             <template>
               <el-tag type="warning" @click.native="goPage(scope.row.source, scope.row.blog)" style="cursor: pointer;">{{scope.row.sourceName}}</el-tag>
@@ -66,7 +66,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="来源博客" width="160">
+        <el-table-column label="来源博客" width="160" align="center">
           <template slot-scope="scope">
             <template>
               <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>
@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
 
-	    <el-table-column label="创建时间" width="160">
+	    <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>

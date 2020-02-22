@@ -1,13 +1,13 @@
 <template>
   <div class="menu-wrapper">
     <template v-for="(item,index) in items" v-if="items.length>0">
-      <el-submenu v-if="hasOneShowingChildren(item)" :key="index" :index="index+''">
+      <el-submenu :key="index" :index="index+''" v-if="checkShowOrHidden(item)">
         <template slot="title">
           <svg-icon v-if="item.parent.icon" :icon-class="item.parent.icon"></svg-icon>
           <span v-if="item.parent.name" slot="title">{{item.parent.name}}</span>
         </template>
 
-        <template v-for="(child,index2) in item.sonItem">
+        <template v-for="(child,index2) in item.sonItem" v-if="hasOneShowingChildren(child)">
           <router-link :to="child.url" :key="index2">
             <el-menu-item :index="child.url" :key="child.name">
               <svg-icon v-if="child.icon" :icon-class="child.icon"></svg-icon>
@@ -45,19 +45,11 @@ export default {
   },
   methods: {
     hasOneShowingChildren(children) {
-      // const showingChildren = children.filter(item => {
-      //   console.log('判断是否显示', item.hidden)
-      //   return !item.hidden
-      // })
-
-      console.log('判断是否显示', !children.hidden)
-
-      return !children.hidden
-
-      // if (showingChildren.length === 1) {
-      //   return true
-      // }
-      // return false
+      return (children.isShow == 1)
+    },
+    // 检测父菜单是否隐藏
+    checkShowOrHidden(item) {
+      return (item.parent.isShow == 1)
     }
   }
 }

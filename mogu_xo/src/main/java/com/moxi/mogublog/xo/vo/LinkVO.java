@@ -31,6 +31,11 @@ public class LinkVO extends BaseVO<LinkVO> {
     private String url;
 
     /**
+     * 排序字段
+     */
+    private Integer sort;
+
+    /**
      * 无参构造方法，初始化默认值
      */
     LinkVO() {

@@ -84,6 +84,7 @@ public class LinkRestApi {
         link.setSummary(linkVO.getSummary());
         link.setUrl(linkVO.getUrl());
         link.setClickCount(0);
+        link.setSort(linkVO.getSort());
         link.setStatus(EStatus.ENABLE);
         link.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -101,6 +102,7 @@ public class LinkRestApi {
         link.setTitle(linkVO.getTitle());
         link.setSummary(linkVO.getSummary());
         link.setUrl(linkVO.getUrl());
+        link.setSort(linkVO.getSort());
         link.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }

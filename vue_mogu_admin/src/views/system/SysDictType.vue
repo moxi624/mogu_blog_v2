@@ -29,50 +29,50 @@
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="字典类型" width="200">
+      <el-table-column label="字典类型" width="200" align="center">
         <template slot-scope="scope">
           <el-tag type="warning" style="cursor: pointer"  @click.native="handleList(scope.row)">{{ scope.row.dictType }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="字典名称" width="150">
+      <el-table-column label="字典名称" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.dictName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" width="200">
+      <el-table-column label="备注" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.remark }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="发布状态" width="100">
+      <el-table-column label="发布状态" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.isPublish == '1' ">上架</el-tag>
           <el-tag type="danger" v-else>下架</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" width="50">
+      <el-table-column label="排序" width="50" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>

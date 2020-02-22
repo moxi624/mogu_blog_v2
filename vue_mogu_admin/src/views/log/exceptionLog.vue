@@ -19,7 +19,7 @@
 
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
@@ -32,38 +32,38 @@
 	      </template>
 	    </el-table-column> -->
 
-      <el-table-column label="异常内容" width="300">
+      <el-table-column label="异常内容" width="600" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.exceptionMessage }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="接口名" width="150">
+      <el-table-column label="接口名" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="IP" width="150">
+      <el-table-column label="IP" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ip }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="IP来源" width="200">
+      <el-table-column label="IP来源" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ipSource }}</span>
         </template>
       </el-table-column>
 
 
-        <el-table-column label="创建时间" width="160">
+        <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="状态" width="100">
+	   	<el-table-column label="状态" width="100" align="center">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
 		        <span>正常</span>

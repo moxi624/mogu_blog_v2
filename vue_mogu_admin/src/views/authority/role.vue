@@ -15,31 +15,31 @@
 
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="角色名称" width="150">
+      <el-table-column label="角色名称" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.roleName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="角色介绍" width="300">
+      <el-table-column label="角色介绍" width="300" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>

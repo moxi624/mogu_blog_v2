@@ -20,55 +20,55 @@
 
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP" width="120">
+      <el-table-column label="IP" width="120" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.ip }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP来源" width="200">
+      <el-table-column label="IP来源" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ipSource }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="平台" width="150">
+      <el-table-column label="平台" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.os }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="浏览器" width="200">
+      <el-table-column label="浏览器" width="200" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.browser }}</span>
 	      </template>
 	    </el-table-column>
 
-	    <el-table-column label="用户行为" width="150">
+	    <el-table-column label="用户行为" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.behaviorContent }}</span>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="内容" width="200">
+      <el-table-column label="内容" width="200" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.content }}</span>
 	      </template>
 	    </el-table-column>
 
-	    <el-table-column label="请求时间" width="160">
+	    <el-table-column label="请求时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="状态" width="100">
+	   	<el-table-column label="状态" width="100" align="center">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
 		        <span>正常</span>

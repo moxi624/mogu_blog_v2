@@ -12,6 +12,10 @@ spring:
       password: password123
 
 eureka:
+  server:
+    enable-self-preservation: true
+    peer-node-read-timeout-ms: 3000
+    peer-node-connect-timeout-ms: 3000
   client:
     registerWithEureka: false
     fetchRegistry: false

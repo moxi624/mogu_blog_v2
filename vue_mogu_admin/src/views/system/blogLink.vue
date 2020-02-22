@@ -17,43 +17,49 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="友链名" width="100">
+      <el-table-column label="友链名" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="友链简介" width="200">
+      <el-table-column label="友链简介" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="友链URL" width="200">
+      <el-table-column label="友链URL" width="200" align="center">
         <template slot-scope="scope">
           <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.url }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="点击数" width="100">
+      <el-table-column label="点击数" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.clickCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="排序" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -113,6 +119,10 @@
 
         <el-form-item label="友链URL" :label-width="formLabelWidth">
           <el-input v-model="form.url" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="排序" :label-width="formLabelWidth">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
         <!-- <el-form-item label="友链点击数" :label-width="formLabelWidth">
@@ -178,7 +188,8 @@ export default {
         title: null,
         summary: null,
         url: null,
-        clickCount: 0
+        clickCount: 0,
+        sort: 0
       };
       return formObject;
     },

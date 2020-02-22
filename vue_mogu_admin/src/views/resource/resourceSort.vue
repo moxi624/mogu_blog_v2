@@ -11,38 +11,38 @@
     <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
 	      <template slot-scope="scope">
 	        <span >{{scope.$index + 1}}</span>
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="标题图" width="160">
+	   	<el-table-column label="标题图" width="160" align="center">
 	      <template slot-scope="scope">
 	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 130px;height: 70px;"/>
 	      </template>
 	    </el-table-column>
 
-	    <el-table-column label="分类名" width="160">
+	    <el-table-column label="分类名" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.sortName }}</span>
 	      </template>
 	    </el-table-column>
 
-        <el-table-column label="分类名" width="160">
+        <el-table-column label="分类名" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.content }}</span>
 	      </template>
 	    </el-table-column>
 
 
-	    <el-table-column label="创建时间" width="160">
+	    <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
 
-	   	<el-table-column label="状态" width="100">
+	   	<el-table-column label="状态" width="100" align="center">
 	   	  <template slot-scope="scope">
 		   	  <template v-if="scope.row.status == 1">
 		        <span>正常</span>

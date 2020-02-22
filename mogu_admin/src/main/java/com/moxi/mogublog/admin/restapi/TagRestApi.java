@@ -94,6 +94,7 @@ public class TagRestApi {
         tag.setContent(tagVO.getContent());
         tag.setClickCount(0);
         tag.setStatus(EStatus.ENABLE);
+        tag.setSort(tagVO.getSort());
         tag.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
@@ -120,6 +121,7 @@ public class TagRestApi {
 
         tag.setContent(tagVO.getContent());
         tag.setStatus(EStatus.ENABLE);
+        tag.setSort(tagVO.getSort());
         tag.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }

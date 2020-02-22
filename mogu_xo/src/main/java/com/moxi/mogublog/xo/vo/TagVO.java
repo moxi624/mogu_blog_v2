@@ -22,6 +22,11 @@ public class TagVO extends BaseVO<TagVO> {
     private String content;
 
     /**
+     * 排序字段
+     */
+    private Integer sort;
+
+    /**
      * 无参构造方法，初始化默认值
      */
     TagVO() {

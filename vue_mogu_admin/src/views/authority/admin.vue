@@ -16,13 +16,13 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="头像" width="120">
+      <el-table-column label="头像" width="120" align="center">
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
@@ -32,44 +32,44 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名" width="100">
+      <el-table-column label="用户名" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="拥有角色" width="150">
+      <el-table-column label="拥有角色" width="150" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.role" type="danger">{{scope.row.role.roleName}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="性别" width="100">
+      <el-table-column label="性别" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>
           <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录次数" width="100">
+      <el-table-column label="登录次数" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录IP" width="160">
+      <el-table-column label="登录IP" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginIp }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="最后登录时间" width="160">
+      <el-table-column label="最后登录时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -83,7 +83,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="150">
+      <el-table-column label="操作" fixed="right" min-width="150" >
         <template slot-scope="scope">
           <el-button @click="handRest(scope.row)" type="warning" size="small">重置密码</el-button>
           <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>

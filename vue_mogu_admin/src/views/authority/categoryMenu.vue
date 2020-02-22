@@ -12,25 +12,25 @@
           <el-form label-position="left" inline class="demo-table-expand">
 
             <el-table :data="scope.row.childCategoryMenu" :show-header="showHeader" style="width: 100%">
-              <el-table-column label width="60">
+              <el-table-column label width="60" align="center">
                 <template slot-scope="scope_child">
                   <span>{{scope_child.$index + 1}}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100">
+              <el-table-column label width="150" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.name }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100">
+              <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
                   <el-tag v-for="item in menuLevelDictList" :key="item.uid" v-if="scope_child.row.menuLevel == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100">
+              <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
                   <span
                     v-if="scope_child.row.parentCategoryMenu"
@@ -38,31 +38,37 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="200">
+              <el-table-column label width="200" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.summary }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100">
+              <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.icon }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="150">
+              <el-table-column label width="200" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.url }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="160">
+              <el-table-column width="100" align="center">
+                <template slot-scope="scope">
+                  <el-tag v-for="item in yesNoDictList" :key="item.uid" v-if="scope.row.isShow == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
+                </template>
+              </el-table-column>
+
+              <el-table-column label width="160" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.createTime }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100">
+              <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
                   <template v-if="scope_child.row.status == 1">
                     <span>正常</span>
@@ -88,55 +94,61 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单名称" width="100">
+      <el-table-column label="菜单名称" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单级别" width="100">
+      <el-table-column label="菜单级别" width="100" align="center">
         <template slot-scope="scope">
           <el-tag v-for="item in menuLevelDictList" :key="item.uid" v-if="scope.row.menuLevel == item.dictValue" :type="item.listClass">一级菜单</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="父菜单名" width="100">
+      <el-table-column label="父菜单名" width="100" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.parentCategoryMenu">{{ scope.row.parentCategoryMenu.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单简介" width="200">
+      <el-table-column label="菜单简介" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="ICON" width="100">
+      <el-table-column label="ICON" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.icon }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="URL" width="150">
+      <el-table-column label="URL" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="是否显示" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag v-for="item in yesNoDictList" :key="item.uid" v-if="scope.row.isShow == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100">
+      <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.status == 1">
             <span>正常</span>
@@ -214,6 +226,14 @@
         <el-form-item label="URL" :label-width="formLabelWidth" required>
           <el-input v-model="form.url" auto-complete="off"></el-input>
         </el-form-item>
+
+        <el-form-item label="是否显示" :label-width="formLabelWidth" required>
+          <el-radio-group v-model="form.isShow" size="small">
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -232,7 +252,7 @@ import {
   deleteMenu,
   stickMenu
 } from "@/api/categoryMenu";
-import {getListByDictType} from "@/api/sysDictData"
+import {getListByDictTypeList} from "@/api/sysDictData"
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
@@ -249,6 +269,8 @@ export default {
       formLabelWidth: "120px",
       isEditForm: false,
       menuLevelDictList: [], //菜单等级字典
+      yesNoDictList: [], // 是否字典
+      yesNoDefault: null,
       form: {
         uid: null,
         name: "",
@@ -279,12 +301,23 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-      var params = {};
-      params.dictType = 'sys_menu_level';
-      getListByDictType(params).then(response => {
-        console.log("得到的字典列表")
+
+
+      var dictTypeList =  ['sys_menu_level', 'sys_yes_no']
+
+      getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
-          this.menuLevelDictList = response.data.list;
+
+          var dictMap = response.data;
+
+          this.menuLevelDictList = dictMap.sys_menu_level.list
+
+          this.yesNoDictList = dictMap.sys_yes_no.list
+
+          if(dictMap.sys_yes_no.defaultValue) {
+            this.yesNoDefault = parseInt(dictMap.sys_yes_no.defaultValue);
+          }
+
         }
       });
     },
@@ -295,7 +328,8 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: ""
+        sort: "",
+        isShow: this.yesNoDefault
       };
       return formObject;
     },
@@ -311,7 +345,6 @@ export default {
       this.dialogFormVisible = true;
       this.isEditForm = true;
       var parentUid = row.parentUid;
-
       this.form = row;
     },
     handleStick: function(row) {
