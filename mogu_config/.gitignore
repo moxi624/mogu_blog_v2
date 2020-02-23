@@ -1,4 +1,5 @@
 /target/
+/temp/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -9,12 +10,14 @@
 .settings
 .springBeans
 .sts4-cache
+.settings
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+*.iml
 
 ### NetBeans ###
 /nbproject/private/
@@ -24,5 +27,6 @@
 /nbdist/
 /.nb-gradle/
 
-### Maven ###
-.mvn
+/webapps/
+
+/logs/
