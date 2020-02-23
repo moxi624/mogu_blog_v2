@@ -44,7 +44,6 @@ public class IndexRestApi {
     @Autowired
     UserService userService;
 
-    @OperationLogger(value = "获取首页数据")
     @ApiOperation(value = "首页初始化数据", notes = "首页初始化数据", response = String.class)
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String init() {

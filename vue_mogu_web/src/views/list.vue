@@ -167,6 +167,7 @@ export default {
       this.keywords = this.$route.query.keyword;
       this.tagUid = this.$route.query.tagUid;
       this.sortUid = this.$route.query.sortUid;
+      this.searchBlogData = [] // 清空查询出来的博客
       this.search();
     }
   },

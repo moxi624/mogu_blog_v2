@@ -235,7 +235,6 @@ public class SysDictDataRestApi {
         }
     }
 
-    @OperationLogger(value = "根据字典类型获取字典数据")
     @ApiOperation(value = "根据字典类型获取字典数据", notes = "根据字典类型获取字典数据", response = String.class)
     @PostMapping("/getListByDictType")
     public String getListByDictType(@RequestParam("dictType") String dictType) {
@@ -283,7 +282,6 @@ public class SysDictDataRestApi {
         return ResultUtil.result(SysConf.SUCCESS, result);
     }
 
-    @OperationLogger(value = "根据字典类型数组获取字典数据")
     @ApiOperation(value = "根据字典类型数组获取字典数据", notes = "根据字典类型数组获取字典数据", response = String.class)
     @PostMapping("/getListByDictTypeList")
     public String getListByDictTypeList(@RequestBody List<String> dictTypeList) {
