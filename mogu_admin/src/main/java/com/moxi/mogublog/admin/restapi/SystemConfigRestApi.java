@@ -61,6 +61,7 @@ public class SystemConfigRestApi {
         if ("0".equals(systemConfigVO.getPicturePriority()) && "0".equals(systemConfigVO.getUploadLocal())) {
             return ResultUtil.result(SysConf.ERROR, "图片显示优先级为本地优先，必须开启图片上传本地");
         }
+
         if ("1".equals(systemConfigVO.getPicturePriority()) && "0".equals(systemConfigVO.getUploadQiNiu())) {
             return ResultUtil.result(SysConf.ERROR, "图片显示优先级为七牛云优先，必须开启图片上传七牛云");
         }

@@ -170,6 +170,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         }
                         out = new BufferedOutputStream(new FileOutputStream(dest));
                         out.write(filedata.getBytes());
+                        out.flush();
+                        out.close();
                         qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
                     }
 
@@ -190,19 +192,12 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     log.error(e.getMessage());
                     return ResultUtil.result(SysConf.ERROR, "文件上传失败");
                 } finally{
-                    try {
-                        if (null != out) {
-                            out.flush();
-                            out.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
                     if (dest != null && dest.getParentFile().exists()) {
                         dest.delete();
                     }
                 }
+
+
 
                 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
                 file.setCreateTime(new Date(System.currentTimeMillis()));

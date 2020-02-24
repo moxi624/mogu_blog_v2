@@ -110,13 +110,13 @@ public class QiNiuRestApi {
         String secretKey = "Vjh0zPBLrflxYn08YNIG4rkRYv7sqtlMccgd8QzL";
 
         //存储空间名
-        String bucket = "mogublog";
+        String bucket = "testmogublog";
 
         //上传图片路径
-        String localFilePath = "D:\\1000.jpg";
+        String localFilePath = "D:\\1582507567527.png";
 
         //在七牛云中图片的命名
-        String key = "1000.png";
+        String key = "1582507567527.png";
         Auth auth = Auth.create(accessKey, secretKey);
         String upToken = auth.uploadToken(bucket);
         try {
