@@ -8,6 +8,20 @@ package com.moxi.mougblog.base.global;
  */
 public class BaseSysConf {
 
+    // picture相关
+    public final static String USER_UID = "userUid";
+    public final static String ADMIN_UID = "adminUid";
+    public final static String PROJECT_NAME = "projectName";
+    public final static String SORT_NAME = "sortName";
+    public final static String PIC_NAME = "picName";
+    public final static String FILE_NAME = "fileName";
+    public final static String UPLOADED = "uploaded";
+    public final static String QI_NIU_URL = "qiNiuUrl";
+    public final static String PIC_URL = "picUrl";
+    public final static String URL = "url";
+    public final static String MESSAGE = "message";
+
+
     public final static String SUCCESS = "success";
     public final static String ERROR = "error";
     public final static String STATUS = "status";
@@ -66,6 +80,8 @@ public class BaseSysConf {
     public final static String HOT_BLOG = "HOT_BLOG";
     // 最新博客
     public final static String NEW_BLOG = "NEW_BLOG";
+    // 管理员Token
+    public final static String ADMIN_TOKEN = "ADMIN_TOKEN";
 
     // 字典类型
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";
@@ -105,5 +121,7 @@ public class BaseSysConf {
     public final static String QI_NIU_AREA = "qiNiuArea";
     public final static String PICTURE_PRIORITY = "picturePriority";
     public final static String LIST = "list";
+    public final static String JPG = "jpg";
+
 
 }

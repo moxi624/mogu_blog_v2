@@ -11,6 +11,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.UserOperationLogger;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.WebVisit;
@@ -75,6 +76,7 @@ public class BlogContentRestApi {
     @Value(value = "${BLOG.REPRINTED_TEMPLATE}")
     private String REPRINTED_TEMPLATE;
 
+    @UserOperationLogger(value = "通过Uid获取博客内容", behavior=EBehavior.BLOG_CONTNET)
     @ApiOperation(value = "通过Uid获取博客内容", notes = "通过Uid获取博客内容")
     @GetMapping("/getBlogByUid")
     public String getBlogByUid(HttpServletRequest request,
@@ -146,6 +148,7 @@ public class BlogContentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pariseCount);
     }
 
+    @UserOperationLogger(value = "通过Uid给博客点赞", behavior=EBehavior.BLOG_PRAISE)
     @ApiOperation(value = "通过Uid给博客点赞", notes = "通过Uid给博客点赞")
     @GetMapping("/praiseBlogByUid")
     public String praiseBlogByUid(HttpServletRequest request,

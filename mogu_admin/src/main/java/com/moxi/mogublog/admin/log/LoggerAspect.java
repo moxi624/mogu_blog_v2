@@ -15,6 +15,7 @@ import com.moxi.mogublog.xo.service.SysLogService;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -61,14 +62,9 @@ public class LoggerAspect {
 
     }
 
-    /**
-     * 前置通知
-     *
-     * @param joinPoint
-     * @param operationLogger
-     */
-    @Before(value = "pointcut(operationLogger)")
-    public void doBefore(JoinPoint joinPoint, OperationLogger operationLogger) {
+    @Around(value = "pointcut(operationLogger)")
+    public Object doAround(ProceedingJoinPoint joinPoint, OperationLogger operationLogger) throws Throwable {
+
         sysLog = new SysLog();
 
         // 设置接口开始请求时间
@@ -127,17 +123,19 @@ public class LoggerAspect {
         sysLog.setUserName(securityUser.getUsername());
         sysLog.setAdminUid(securityUser.getUid());
 
+        //先执行业务
+        Object result = joinPoint.proceed();
 
-    }
-
-    @AfterReturning(value = "pointcut(operationLogger)")
-    public void doAfterReturning(OperationLogger operationLogger) {
         Date endTime = new Date();
         Long spendTime = DateUtil.between(startTime, endTime, DateUnit.MS);
         // 计算请求接口花费的时间，单位毫秒
         sysLog.setSpendTime(spendTime);
         sysLogService.save(sysLog);
+
+        return result;
     }
+
+
 
     @AfterThrowing(value = "pointcut(operationLogger)", throwing = "e")
     public void doAfterThrowing(OperationLogger operationLogger, Throwable e) {

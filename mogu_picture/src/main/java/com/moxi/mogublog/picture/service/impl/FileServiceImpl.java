@@ -197,8 +197,6 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
                 }
 
-
-
                 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
                 file.setCreateTime(new Date(System.currentTimeMillis()));
                 file.setFileSortUid(fileSort.getUid());

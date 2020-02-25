@@ -10,6 +10,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.UserOperationLogger;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -78,6 +79,7 @@ public class SearchRestApi {
      * @param pageSize
      * @return
      */
+    @UserOperationLogger(value = "搜索Blog", behavior=EBehavior.BLOG_SEARCH)
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/sqlSearchBlog")
     public String sqlSearchBlog(HttpServletRequest request,
@@ -188,6 +190,7 @@ public class SearchRestApi {
 
     }
 
+    @UserOperationLogger(value = "根据标签获取相关的博客", behavior=EBehavior.BLOG_TAG)
     @ApiOperation(value = "根据标签获取相关的博客", notes = "根据标签获取相关的博客")
     @GetMapping("/searchBlogByTag")
     public String searchBlogByTag(HttpServletRequest request,
@@ -248,6 +251,7 @@ public class SearchRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @UserOperationLogger(value = "根据分类获取相关的博客", behavior=EBehavior.BLOG_SORT)
     @ApiOperation(value = "根据分类获取相关的博客", notes = "根据标签获取相关的博客")
     @GetMapping("/searchBlogBySort")
     public String searchBlogBySort(HttpServletRequest request,
@@ -306,6 +310,7 @@ public class SearchRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @UserOperationLogger(value = "根据作者获取相关的博客", behavior=EBehavior.BLOG_AUTHOR)
     @ApiOperation(value = "根据作者获取相关的博客", notes = "根据作者获取相关的博客")
     @GetMapping("/searchBlogByAuthor")
     public String searchBlogByAuthor(HttpServletRequest request,
