@@ -10,6 +10,7 @@ public class BaseSysConf {
 
     // picture相关
     public final static String USER_UID = "userUid";
+    public final static String USER_NAME = "userName";
     public final static String ADMIN_UID = "adminUid";
     public final static String PROJECT_NAME = "projectName";
     public final static String SORT_NAME = "sortName";
@@ -123,5 +124,13 @@ public class BaseSysConf {
     public final static String LIST = "list";
     public final static String JPG = "jpg";
 
+    // AOP相关
+    public static final String AUTHOR = "author";
+    public static final String BLOG_SORT_UID = "blogSortUid";
+    public static final String TAG_UID = "tagUid";
+    public static final String KEYWORDS = "keywords";
+    public static final String MONTH_DATE = "monthDate";
+    public static final String MODULE_UID = "moduleUid";
+    public static final String OTHER_DATA = "otherData";
 
 }

@@ -17,8 +17,7 @@ import java.util.Map;
 public interface WebVisitService extends SuperService<WebVisit> {
 
     /**
-     * 增加访问记录
-     *
+     * 增加访问记录（异步接口）
      * @param userUid
      * @param request
      * @param behavior

@@ -69,7 +69,6 @@
 </template>
 
 <script>
-import { recorderVisitPage } from "../api/index";
 import { getBlogSortList, getArticleByBlogSortUid } from "../api/classify";
 export default {
   data() {
@@ -108,9 +107,6 @@ export default {
       }
     });
 
-    var params = new URLSearchParams();
-    params.append("pageName", "CLASSIFY");
-    recorderVisitPage(params).then(response => { });
   },
   methods: {
     getBlogList(blogSortUid) {

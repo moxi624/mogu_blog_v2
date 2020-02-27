@@ -56,7 +56,6 @@
 
 <script>
 import FollowUs from "../components/FollowUs";
-import { recorderVisitPage } from "../api/index";
 import { getMe } from "../api/about";
 import CommentList from "../components/CommentList";
 import CommentBox from "../components/CommentBox";
@@ -102,10 +101,6 @@ export default {
         this.info = response.data;
       }
     });
-
-    var params = new URLSearchParams();
-    params.append("pageName", "ABOUT");
-    recorderVisitPage(params).then(response => {});
 
     this.getCommentList();
   },

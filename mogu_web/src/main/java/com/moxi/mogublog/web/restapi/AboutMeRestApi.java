@@ -8,12 +8,14 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mougblog.base.enums.EAccountType;
+import com.moxi.mougblog.base.enums.EBehavior;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +55,7 @@ public class AboutMeRestApi {
      * @author xzx19950624@qq.com
      * @date 2018年11月6日下午8:57:48
      */
-
+    @BussinessLog(value = "关于我", behavior= EBehavior.VISIT_PAGE)
     @ApiOperation(value = "关于我", notes = "关于我")
     @GetMapping("/getMe")
     public String getMe(HttpServletRequest request) {

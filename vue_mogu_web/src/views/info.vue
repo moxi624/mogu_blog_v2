@@ -118,7 +118,7 @@
 </template>
 
 <script>
-  import {getLink, recorderVisitPage} from "../api/index";
+  import {getLink} from "../api/index";
   import {getBlogByUid, getSameBlogByBlogUid} from "../api/blogContent";
 
   import CommentList from "../components/CommentList";
@@ -198,11 +198,6 @@
         if (response.code == "success") {
           this.sameBlogData = response.data.records;
         }
-      });
-
-      var params = new URLSearchParams();
-      params.append("pageName", "INFO");
-        recorderVisitPage(params).then(response => {
       });
 
       this.getCommentList();

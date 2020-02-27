@@ -8,6 +8,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
@@ -124,6 +125,7 @@ public class SortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, monthSet);
     }
 
+    @BussinessLog(value = "点击归档", behavior=EBehavior.VISIT_SORT)
     @ApiOperation(value = "通过月份获取文章", notes = "通过月份获取文章")
     @GetMapping("/getArticleByMonth")
     public String getArticleByMonth(HttpServletRequest request,
@@ -134,7 +136,7 @@ public class SortRestApi {
         }
 
         //增加点击记录
-        webVisitService.addWebVisit(null, request, EBehavior.VISIT_SORT.getBehavior(), null, monthDate);
+        // webVisitService.addWebVisit(null, request, EBehavior.VISIT_SORT.getBehavior(), null, monthDate);
 
         //从Redis中获取内容
         String contentResult = stringRedisTemplate.opsForValue().get(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + monthDate);
@@ -198,8 +200,8 @@ public class SortRestApi {
      */
     private List<Blog> setBlog(List<Blog> list) {
         final StringBuffer fileUids = new StringBuffer();
-        List<String> sortUids = new ArrayList<String>();
-        List<String> tagUids = new ArrayList<String>();
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {

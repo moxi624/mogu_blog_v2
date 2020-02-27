@@ -20,7 +20,6 @@ export const constantRouterMap = [
       { path: '/messageBoard', component: () => import('@/views/messageBoard') },
     ]
   },
-  { path: '/login', component: () => import('@/views/login') },
   { path: '/*', component: () => import('@/views/404') }
 
 ]

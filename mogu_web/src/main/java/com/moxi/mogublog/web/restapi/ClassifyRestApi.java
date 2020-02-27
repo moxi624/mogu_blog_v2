@@ -8,6 +8,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
@@ -74,7 +75,8 @@ public class ClassifyRestApi {
         return ResultUtil.result(SysConf.SUCCESS, blogSortList);
     }
 
-    @ApiOperation(value = "通过blogUid获取文章", notes = "通过blogUid获取文章")
+    @BussinessLog(value = "点击分类", behavior=EBehavior.VISIT_CLASSIFY)
+    @ApiOperation(value = "通过blogSortUid获取文章", notes = "通过blogSortUid获取文章")
     @GetMapping("/getArticleByBlogSortUid")
     public String getArticleByBlogSortUid(HttpServletRequest request,
                                           @ApiParam(name = "blogSortUid", value = "分类UID", required = false) @RequestParam(name = "blogSortUid", required = false) String blogSortUid,
@@ -90,7 +92,8 @@ public class ClassifyRestApi {
         if (blogSort == null) {
             return ResultUtil.result(SysConf.ERROR, "BlogSort不存在");
         }
-        webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
+
+        //webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
 
         //分页
         Page<Blog> page = new Page<>();

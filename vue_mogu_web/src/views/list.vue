@@ -95,7 +95,6 @@ import FourthRecommend from "../components/FourthRecommend";
 import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
-import { recorderVisitPage } from "../api/index";
 import {
   searchBlog,
   searchBlogByTag,
@@ -133,10 +132,6 @@ export default {
     this.tagUid = this.$route.query.tagUid;
     this.sortUid = this.$route.query.sortUid;
     this.author = this.$route.query.author;
-
-    var params = new URLSearchParams();
-    params.append("pageName", "LIST");
-    recorderVisitPage(params).then(response => {});
 
     if (
       this.keywords == undefined &&

@@ -188,8 +188,6 @@
         this.secondData = response.data.records;
       });
 
-      console.log("测试地址", this.PICTURE_HOST);
-
       // 获取最新博客
       this.newBlogList();
 

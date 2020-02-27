@@ -10,6 +10,7 @@ import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Async
     @Override
     public void addWebVisit(String userUid, HttpServletRequest request, String behavior, String moduleUid, String otherData) {
 

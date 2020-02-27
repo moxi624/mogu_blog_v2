@@ -1,12 +1,15 @@
 package com.moxi.mogublog.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -52,6 +55,30 @@ public class IpUtils {
             }
         }
         return ipAddress;
+    }
+
+    /**
+     * 获取真实IP
+     *
+     * @param request
+     * @return
+     */
+    public static String getRealIp(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        return checkIp(ip) ? ip : (
+                checkIp(ip = request.getHeader("Proxy-Client-IP")) ? ip : (
+                        checkIp(ip = request.getHeader("WL-Proxy-Client-IP")) ? ip :
+                                request.getRemoteAddr()));
+    }
+
+    /**
+     * 校验IP
+     *
+     * @param ip
+     * @return
+     */
+    private static boolean checkIp(String ip) {
+        return !StringUtils.isEmpty(ip) && !"unknown".equalsIgnoreCase(ip);
     }
 
 
@@ -124,7 +151,20 @@ public class IpUtils {
     }
 
     /**
-     *
+     * 判断是否是内网IP
+     * @param ip
+     * @return
+     */
+    public static boolean isInner(String ip)
+    {
+        String reg = "(10|172|192)\\.([0-1][0-9]{0,2}|[2][0-5]{0,2}|[3-9][0-9]{0,1})\\.([0-1][0-9]{0,2}|[2][0-5]{0,2}|[3-9][0-9]{0,1})\\.([0-1][0-9]{0,2}|[2][0-5]{0,2}|[3-9][0-9]{0,1})";
+        Pattern p = Pattern.compile(reg);
+        Matcher matcher = p.matcher(ip);
+        return matcher.find();
+    }
+
+    /**
+     * 获取IP地址来源
      * @param content
      *            请求的参数 格式为：name=xxx&pwd=xxx
      * @param encodingString
@@ -134,7 +174,11 @@ public class IpUtils {
      */
     public static String getAddresses(String content, String encodingString) {
 
-
+        String ip = content.substring(3);
+        // 判断是否是内网op
+        if(isInner(ip)) {
+            return "XX|XX|内网IP|内网IP";
+        }
 
         try {
             // 这里调用pconline的接口

@@ -76,7 +76,6 @@
 </template>
 
 <script>
-import { recorderVisitPage } from "../api/index";
 import { getSortList, getArticleByMonth } from "../api/sort";
 export default {
   data() {
@@ -110,9 +109,6 @@ export default {
       }
     });
 
-    var params = new URLSearchParams();
-    params.append("pageName", "SORT");
-    recorderVisitPage(params).then(response => {});
   },
   methods: {
     clickTime(content) {

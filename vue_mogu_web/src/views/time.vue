@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getBlogByTime, recorderVisitPage } from "../api/index";
+import { getBlogByTime } from "../api/index";
 export default {
   data() {
     return {
@@ -55,10 +55,6 @@ export default {
       that.currentPage = response.data.current;
       this.isEnd = false;
     });
-
-    var params = new URLSearchParams();
-    params.append("pageName", "TIME");
-    recorderVisitPage(params).then(response => {});
   },
   methods: {
     //跳转到文章详情
