@@ -54,6 +54,24 @@ public class JsonUtils {
     }
 
     /**
+     * 将Object转换成Map
+     * @param obj
+     * @return
+     */
+    public static Map<String, Object> objectToMap(Object obj) {
+
+        try {
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+            String json = gson.toJson(obj);
+            return jsonToMap(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
      * 把json字符串转化为对象
      *
      * @param jsonString

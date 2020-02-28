@@ -10,6 +10,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.CommentReport;
@@ -180,6 +181,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, getCommentReplys(firstComment, toCommentListMap));
     }
 
+    @BussinessLog(value = "发表评论", behavior=EBehavior.PUBLISH_COMMENT)
     @ApiOperation(value = "增加评论", notes = "增加评论")
     @PostMapping("/add")
     public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -219,6 +221,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
 
+    @BussinessLog(value = "举报评论", behavior=EBehavior.REPORT_COMMENT)
     @ApiOperation(value = "举报评论", notes = "举报评论")
     @PostMapping("/report")
     public String reportComment(HttpServletRequest request, @Validated({GetOne.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -270,6 +273,7 @@ public class CommentRestApi {
      * @param result
      * @return
      */
+    @BussinessLog(value = "删除评论", behavior=EBehavior.DELETE_COMMENT)
     @ApiOperation(value = "删除评论", notes = "删除评论")
     @PostMapping("/delete")
     public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {

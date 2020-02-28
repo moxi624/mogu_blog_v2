@@ -23,7 +23,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="友链名" width="100" align="center">
+      <el-table-column label="友链名" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>

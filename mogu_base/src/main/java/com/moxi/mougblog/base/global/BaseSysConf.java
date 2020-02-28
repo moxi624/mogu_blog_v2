@@ -132,5 +132,8 @@ public class BaseSysConf {
     public static final String MONTH_DATE = "monthDate";
     public static final String MODULE_UID = "moduleUid";
     public static final String OTHER_DATA = "otherData";
+    public static final String COMMENT_VO = "commentVO";
+    public static final String CONTENT = "content";
+    public static final String TARGET = "target";
 
 }

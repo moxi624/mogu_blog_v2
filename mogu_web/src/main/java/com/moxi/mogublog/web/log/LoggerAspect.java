@@ -62,13 +62,11 @@ public class LoggerAspect {
     @Around(value = "pointcut(bussinessLog)")
     public Object doAround(ProceedingJoinPoint joinPoint, BussinessLog bussinessLog) throws Throwable {
 
-        System.out.println("进来了");
-
         //先执行业务
         Object result = joinPoint.proceed();
 
         try {
-            // 日志手机
+            // 日志收集
             handle(joinPoint);
         } catch (Exception e) {
             log.error("日志记录出错!", e);
@@ -97,7 +95,6 @@ public class LoggerAspect {
         if (!save) {
             return;
         }
-
 
         String classType = point.getTarget().getClass().getName();
         Class<?> clazz = Class.forName(classType);

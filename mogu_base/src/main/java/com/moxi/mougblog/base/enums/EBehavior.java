@@ -1,5 +1,6 @@
 package com.moxi.mougblog.base.enums;
 
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
 
 import java.util.HashMap;
@@ -17,6 +18,9 @@ public enum EBehavior {
     VISIT_PAGE("访问页面", "visit_page"),
     VISIT_SORT("点击归档", "visit_sort"),
     BLOG_AUTHOR("点击作者", "blog_author"),
+    PUBLISH_COMMENT("发表评论", "publish_comment"),
+    DELETE_COMMENT("删除评论", "delete_comment"),
+    REPORT_COMMENT("举报评论", "report_comment"),
     VISIT_CLASSIFY("点击分类", "visit_classify");
 
 
@@ -98,10 +102,42 @@ public enum EBehavior {
                 // 访问页面
                 otherData = bussinessName;
             };break;
+            case PUBLISH_COMMENT: {
+                Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
+                Map<String, Object> map = JsonUtils.objectToMap(object);
+                if(map.get(BaseSysConf.TARGET) != null) {
+                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
+                    if(target.get(BaseSysConf.CONTENT) != null) {
+                        otherData = map.get(BaseSysConf.CONTENT).toString();
+                    }
+                }
+            };break;
+            case REPORT_COMMENT: {
+                // 举报评论
+                Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
+                Map<String, Object> map = JsonUtils.objectToMap(object);
+                if(map.get(BaseSysConf.TARGET) != null) {
+                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
+                    if(target.get(BaseSysConf.CONTENT) != null) {
+                        otherData = map.get(BaseSysConf.CONTENT).toString();
+                    }
+                }
+            };break;
+            case DELETE_COMMENT: {
+                // 删除评论
+                Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
+                Map<String, Object> map = JsonUtils.objectToMap(object);
+                if(map.get(BaseSysConf.TARGET) != null) {
+                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
+                    if(target.get(BaseSysConf.CONTENT) != null) {
+                        otherData = map.get(BaseSysConf.CONTENT).toString();
+                    }
+                }
+            };break;
         }
         Map<String, String> result = new HashMap<>();
-        result.put("moduleUid", moduleUid);
-        result.put("otherData", otherData);
+        result.put(BaseSysConf.MODULE_UID, moduleUid);
+        result.put(BaseSysConf.OTHER_DATA, otherData);
         return result;
     }
 
