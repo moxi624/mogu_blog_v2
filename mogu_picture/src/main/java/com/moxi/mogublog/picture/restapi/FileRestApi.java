@@ -9,6 +9,7 @@ import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
+import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -62,6 +63,9 @@ public class FileRestApi {
     @Autowired
     AdminFeignClient adminFeignClient;
 
+    @Autowired
+    FeignUtil feignUtil;
+
     /**
      * 图片路径前缀
      */
@@ -73,14 +77,14 @@ public class FileRestApi {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String hello(String urlString, int i) throws IOException {
 
-        QueryWrapper<com.moxi.mogublog.picture.entity.File> queryWrapper = new QueryWrapper<>();
-        List<com.moxi.mogublog.picture.entity.File> fileList = fileService.list(queryWrapper);
-        fileList.forEach(item ->{
-            String str = item.getPicUrl();
-            String[] array = str.split("/");
-            item.setQiNiuUrl(array[array.length - 1]);
-        });
-        fileService.updateBatchById(fileList);
+//        QueryWrapper<com.moxi.mogublog.picture.entity.File> queryWrapper = new QueryWrapper<>();
+//        List<com.moxi.mogublog.picture.entity.File> fileList = fileService.list(queryWrapper);
+//        fileList.forEach(item ->{
+//            String str = item.getPicUrl();
+//            String[] array = str.split("/");
+//            item.setQiNiuUrl(array[array.length - 1]);
+//        });
+//        fileService.updateBatchById(fileList);
         return "hello";
     }
 
@@ -89,11 +93,13 @@ public class FileRestApi {
     public String cropperPicture( @RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         List<MultipartFile> filedatas = new ArrayList<>();
+
         filedatas.add(file);
 
-        String resultStr = adminFeignClient.getSystemConfig();
+        String token = request.getParameter(SysConf.TOKEN);
 
-        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+        // 获取七牛云配置文件
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
@@ -109,21 +115,23 @@ public class FileRestApi {
         String qiNiuArea = "";
         String picturePriority = "";
 
-        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
-            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
-            uploadQiNiu = resultMap.get("uploadQiNiu");
-            uploadLocal = resultMap.get("uploadLocal");
-            localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
-            qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+        if(qiNiuConfig == null) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        } else {
 
-            qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
-            qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
-            qiNiuBucket = resultMap.get("qiNiuBucket");
-            qiNiuArea = resultMap.get("qiNiuArea");
-            picturePriority = resultMap.get("picturePriority");
+            uploadQiNiu = qiNiuResultMap.get("uploadQiNiu");
+            uploadLocal = qiNiuResultMap.get("uploadLocal");
+            localPictureBaseUrl = qiNiuResultMap.get("localPictureBaseUrl");
+            qiNiuPictureBaseUrl = qiNiuResultMap.get("qiNiuPictureBaseUrl");
+
+            qiNiuAccessKey = qiNiuResultMap.get("qiNiuAccessKey");
+            qiNiuSecretKey = qiNiuResultMap.get("qiNiuSecretKey");
+            qiNiuBucket = qiNiuResultMap.get("qiNiuBucket");
+            qiNiuArea = qiNiuResultMap.get("qiNiuArea");
+            picturePriority = qiNiuResultMap.get("picturePriority");
 
             if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
-                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket)) || StringUtils.isEmpty(qiNiuArea)) {
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
@@ -137,9 +145,6 @@ public class FileRestApi {
             qiNiuConfig.put("qiNiuArea", qiNiuArea);
             qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
             qiNiuConfig.put("uploadLocal", uploadLocal);
-
-        } else {
-            return ResultUtil.result(SysConf.ERROR, "获取系统配置失败");
         }
 
         String result = fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
@@ -242,15 +247,21 @@ public class FileRestApi {
             if (oneById != null) {
                 //aim_test//文件名,不传就用默认的，或者是oldName
                 String fileName = request.getParameter("fileName");
+
                 if (StringUtils.isEmpty(fileName)) {
                     //以前的名字
                     fileName = oneById.getFileOldName();
                 }
 
                 String fileRealPath = path + oneById.getPicUrl();
+
                 File file = new File(fileRealPath);
-                response.setContentType("application/force-download"); //设置强制下载不打开
-                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+
+                //设置强制下载不打开
+                response.setContentType("application/force-download");
+
+                // 设置文件名
+                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = null;
@@ -312,24 +323,39 @@ public class FileRestApi {
     @PostMapping("/pictures")
     public synchronized Object uploadPics(HttpServletResponse response, HttpServletRequest request, List<MultipartFile> filedatas) {
 
-        String resultStr = adminFeignClient.getSystemConfig();
+        String token = request.getParameter(SysConf.TOKEN);
 
-        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+        // 获取七牛云配置文件
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
 
-        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
-            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
-            String uploadQiNiu = resultMap.get("uploadQiNiu");
-            String uploadLocal = resultMap.get("uploadLocal");
-            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
-            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+        String uploadQiNiu = "";
+        String uploadLocal = "";
+        String localPictureBaseUrl = "";
+        String qiNiuPictureBaseUrl = "";
 
-            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
-            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
-            String qiNiuBucket = resultMap.get("qiNiuBucket");
-            String qiNiuArea = resultMap.get("qiNiuArea");
+        String qiNiuAccessKey = "";
+        String qiNiuSecretKey = "";
+        String qiNiuBucket = "";
+        String qiNiuArea = "";
+        String picturePriority = "";
+
+        if(qiNiuConfig == null) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        } else {
+
+            uploadQiNiu = qiNiuResultMap.get("uploadQiNiu");
+            uploadLocal = qiNiuResultMap.get("uploadLocal");
+            localPictureBaseUrl = qiNiuResultMap.get("localPictureBaseUrl");
+            qiNiuPictureBaseUrl = qiNiuResultMap.get("qiNiuPictureBaseUrl");
+
+            qiNiuAccessKey = qiNiuResultMap.get("qiNiuAccessKey");
+            qiNiuSecretKey = qiNiuResultMap.get("qiNiuSecretKey");
+            qiNiuBucket = qiNiuResultMap.get("qiNiuBucket");
+            qiNiuArea = qiNiuResultMap.get("qiNiuArea");
+            picturePriority = qiNiuResultMap.get("picturePriority");
 
             if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
@@ -346,9 +372,6 @@ public class FileRestApi {
             qiNiuConfig.put("qiNiuArea", qiNiuArea);
             qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
             qiNiuConfig.put("uploadLocal", uploadLocal);
-
-        } else {
-            return ResultUtil.result(SysConf.ERROR, "获取系统配置失败");
         }
 
        return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
@@ -362,27 +385,41 @@ public class FileRestApi {
      */
     @ApiOperation(value = "通过URL上传图片", notes = "通过URL上传图片")
     @PostMapping("/uploadPicsByUrl")
-    public synchronized Object uploadPicsByUrl(@Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
+    public synchronized Object uploadPicsByUrl(HttpServletRequest request, @Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
 
-        String resultStr = adminFeignClient.getSystemConfig();
+        String token = request.getParameter(SysConf.TOKEN);
 
-        Map<String, Object> map = JsonUtils.jsonToMap(resultStr);
+        // 获取七牛云配置文件
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
 
-        if(map.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(map.get(SysConf.CODE).toString())) {
+        String uploadQiNiu = "";
+        String uploadLocal = "";
+        String localPictureBaseUrl = "";
+        String qiNiuPictureBaseUrl = "";
 
-            Map<String, String> resultMap = (Map<String, String>) map.get(SysConf.DATA);
-            String uploadQiNiu = resultMap.get("uploadQiNiu");
-            String uploadLocal = resultMap.get("uploadLocal");
-            String localPictureBaseUrl = resultMap.get("localPictureBaseUrl");
-            String qiNiuPictureBaseUrl = resultMap.get("qiNiuPictureBaseUrl");
+        String qiNiuAccessKey = "";
+        String qiNiuSecretKey = "";
+        String qiNiuBucket = "";
+        String qiNiuArea = "";
+        String picturePriority = "";
 
-            String qiNiuAccessKey = resultMap.get("qiNiuAccessKey");
-            String qiNiuSecretKey = resultMap.get("qiNiuSecretKey");
-            String qiNiuBucket = resultMap.get("qiNiuBucket");
-            String qiNiuArea = resultMap.get("qiNiuArea");
+        if(qiNiuConfig == null) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        } else {
+
+            uploadQiNiu = qiNiuResultMap.get("uploadQiNiu");
+            uploadLocal = qiNiuResultMap.get("uploadLocal");
+            localPictureBaseUrl = qiNiuResultMap.get("localPictureBaseUrl");
+            qiNiuPictureBaseUrl = qiNiuResultMap.get("qiNiuPictureBaseUrl");
+
+            qiNiuAccessKey = qiNiuResultMap.get("qiNiuAccessKey");
+            qiNiuSecretKey = qiNiuResultMap.get("qiNiuSecretKey");
+            qiNiuBucket = qiNiuResultMap.get("qiNiuBucket");
+            qiNiuArea = qiNiuResultMap.get("qiNiuArea");
+            picturePriority = qiNiuResultMap.get("picturePriority");
 
             if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
@@ -399,9 +436,6 @@ public class FileRestApi {
             qiNiuConfig.put("qiNiuArea", qiNiuArea);
             qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
             qiNiuConfig.put("uploadLocal", uploadLocal);
-
-        } else {
-            return ResultUtil.result(SysConf.ERROR, "获取系统配置失败");
         }
 
         String userUid = fileVO.getUserUid();
@@ -450,11 +484,6 @@ public class FileRestApi {
         }
 
         List<com.moxi.mogublog.picture.entity.File> lists = new ArrayList<>();
-
-        String uploadQiNiu = qiNiuConfig.get("uploadQiNiu");
-        String uploadLocal = qiNiuConfig.get("uploadLocal");
-        String localPictureBaseUrl = qiNiuConfig.get("localPictureBaseUrl");
-        String qiNiuPictureBaseUrl = qiNiuConfig.get("qiNiuPictureBaseUrl");
 
         //文件上传
         if (urlList != null && urlList.size() > 0) {
@@ -603,7 +632,7 @@ public class FileRestApi {
 
 
     /**
-     * 通过URL将图片上传到自己服务器中
+     * 通过URL将图片上传到自己服务器中（用于Github和Gitee的头像上传）
      * @param fileVO
      * @param result
      * @return

@@ -8,6 +8,7 @@ import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.util.Aboutfile;
+import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -74,7 +75,7 @@ public class CkEditorRestApi {
     AdminFeignClient adminFeignClient;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    FeignUtil feignUtil;
 
     /**
      * 图像中的图片上传
@@ -88,7 +89,7 @@ public class CkEditorRestApi {
         String token = request.getParameter(SysConf.TOKEN);
 
         // 从Redis中获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = getQiNiuConfig(token);
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
@@ -236,7 +237,7 @@ public class CkEditorRestApi {
         Map<String, String> qiNiuConfig = new HashMap<>();
 
         // 从Redis中获取七牛云配置文件
-        Map<String, String> resultMap = getQiNiuConfig(token);
+        Map<String, String> resultMap = feignUtil.getQiNiuConfig(token);
 
         String uploadQiNiu = resultMap.get(SysConf.UPLOAD_QI_NIU);
         String uploadLocal = resultMap.get(SysConf.UPLOAD_LOCAL);
@@ -481,7 +482,7 @@ public class CkEditorRestApi {
         String token = request.getParameter(SysConf.TOKEN);
 
         // 从Redis中获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = getQiNiuConfig(token);
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
@@ -599,34 +600,5 @@ public class CkEditorRestApi {
             }
         }
         return null;
-    }
-
-    private Map<String, String> getQiNiuConfig(String token) {
-
-        // 从Redis中获取的SystemConf 或者 通过feign获取的
-        Map<String, String> resultMap = new HashMap<>();
-
-        //从Redis中获取内容
-        String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token);
-
-        // 判断Redis中是否有数据
-        if(StringUtils.isNotEmpty(jsonResult)) {
-
-            resultMap = (Map<String, String>) JsonUtils.jsonToMap(jsonResult, String.class);
-
-        } else {
-
-            // 进行七牛云校验
-            String resultStr = adminFeignClient.getSystemConfig();
-
-            Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
-
-            if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
-                resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
-                //将从token存储到redis中，设置30分钟后过期
-                stringRedisTemplate.opsForValue().set(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(resultMap), 30, TimeUnit.MINUTES);
-            }
-        }
-        return resultMap;
     }
 }

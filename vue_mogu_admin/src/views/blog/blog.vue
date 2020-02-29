@@ -253,13 +253,13 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="标签" :label-width="lineLabelWidth" required>
+            <el-form-item label="标签" label-width="80px" required>
               <el-select
                 v-model="tagValue"
                 multiple
                 size="small"
                 placeholder="请选择"
-                style="width:170px"
+                style="width:210px"
                 filterable
               >
                 <el-option
@@ -272,9 +272,9 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="5">
+          <el-col :span="4.5">
             <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" required>
-              <el-select v-model="form.level" size="small" placeholder="请选择" style="width:120px">
+              <el-select v-model="form.level" size="small" placeholder="请选择" style="width:100px">
                 <el-option
                   v-for="item in blogLevelDictList"
                   :key="item.uid"
@@ -285,7 +285,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="5">
+          <el-col :span="4.5">
             <el-form-item label="是否发布" :label-width="lineLabelWidth" required>
               <el-radio-group v-model="form.isPublish" size="small">
                 <el-radio v-for="item in blogPublishDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
@@ -386,7 +386,7 @@ export default {
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
-      lineLabelWidth: "90px", //一行的间隔数
+      lineLabelWidth: "120px", //一行的间隔数
       maxLineLabelWidth: "100px",
       isEditForm: false,
       photoVisible: false, //控制图片选择器的显示
@@ -596,9 +596,22 @@ export default {
       return str;
     },
     closeDialog(done) {
-      // 清空触发器
-      clearInterval(this.interval);
-      done();
+      this.$confirm("是否关闭博客编辑窗口", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 清空触发器
+          clearInterval(this.interval);
+          done();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消关闭"
+          });
+        });
     },
     handleFind: function() {
       this.blogList();
@@ -622,7 +635,13 @@ export default {
                 this.tagValue.push(tagValue[a]);
               }
             }
-            this.isEditForm = false;
+            if(this.form.uid) {
+              this.title = "编辑博客";
+              this.isEditForm = true;
+            } else {
+              this.title = "新增博客";
+              this.isEditForm = false;
+            }
           })
           .catch(() => {
             try {
@@ -643,6 +662,7 @@ export default {
             }
             this.tagValue = [];
             this.isEditForm = false;
+            this.title = "新增博客";
             delCookie("form");
           });
       } else {
@@ -660,7 +680,6 @@ export default {
       }
     },
     contentChange: function() {
-      console.log("开始备份");
       var that = this;
       //存放到cookie中，时间10天
       that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
@@ -788,6 +807,10 @@ export default {
               type: "success",
               message: response.data
             });
+
+            // 清空cookie中的内容
+            delCookie("form");
+
             this.dialogFormVisible = false;
             this.blogList();
           } else {
@@ -810,6 +833,7 @@ export default {
             // 清空cookie中的内容
             // Cookie("form", JSON.stringify(this.getFormObject()), 1);
             delCookie("form");
+
             // 清空触发器
             clearInterval(this.interval);
 
