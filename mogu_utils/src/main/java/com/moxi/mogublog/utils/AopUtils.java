@@ -6,10 +6,17 @@ import org.apache.ibatis.javassist.*;
 import org.apache.ibatis.javassist.bytecode.CodeAttribute;
 import org.apache.ibatis.javassist.bytecode.LocalVariableAttribute;
 import org.apache.ibatis.javassist.bytecode.MethodInfo;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.DefaultParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,6 +128,8 @@ public class AopUtils {
             }
             int pos = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
             for (int i = 0; i < cm.getParameterTypes().length; i++) {
+                String variableName = attr.variableName(i + pos);
+                System.out.println("参数名" + attr.variableName(i + pos));
                 // paramNames即参数名
                 nameAndArgs.put(attr.variableName(i + pos), args[i]);
             }
@@ -130,5 +139,26 @@ public class AopUtils {
         }
 
         return nameAndArgs;
+    }
+
+    /**
+     * 获取参数名和值
+     * @param joinPoint
+     * @return
+     */
+    public static Map getFieldsName(ProceedingJoinPoint joinPoint) throws ClassNotFoundException, NoSuchMethodException {
+        // 参数值
+        Object[] args = joinPoint.getArgs();
+
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        String[] parameterNames = methodSignature.getParameterNames();
+
+        // 通过map封装参数和参数值
+        HashMap<String, Object> paramMap = new HashMap();
+        for (int i = 0; i < parameterNames.length; i++) {
+            paramMap.put(parameterNames[i], args[i]);
+        }
+        return paramMap;
     }
 }

@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * 日志记录、自定义注解
+ *
  * @author 陌溪
  * @date 2020年2月27日08:55:02
  */
@@ -19,12 +20,14 @@ public @interface BussinessLog {
 
     /**
      * 业务名称
+     *
      * @return
      */
     String value() default "";
 
     /**
      * 用户行为
+     *
      * @return
      */
     EBehavior behavior();

@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -407,23 +406,23 @@ public class IndexRestApi {
 
         List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
 
-        for(String item : showList) {
-            if(EAccountType.EMail.getCode().equals(item)) {
+        for (String item : showList) {
+            if (EAccountType.EMail.getCode().equals(item)) {
                 webConfig.setEmail(email);
             }
-            if(EAccountType.QQNumber.getCode().equals(item)) {
+            if (EAccountType.QQNumber.getCode().equals(item)) {
                 webConfig.setQqNumber(qqNumber);
             }
-            if(EAccountType.QQGroup.getCode().equals(item)) {
+            if (EAccountType.QQGroup.getCode().equals(item)) {
                 webConfig.setQqGroup(qqGroup);
             }
-            if(EAccountType.Github.getCode().equals(item)) {
+            if (EAccountType.Github.getCode().equals(item)) {
                 webConfig.setGithub(github);
             }
-            if(EAccountType.Gitee.getCode().equals(item)) {
+            if (EAccountType.Gitee.getCode().equals(item)) {
                 webConfig.setGitee(gitee);
             }
-            if(EAccountType.WeChat.getCode().equals(item)) {
+            if (EAccountType.WeChat.getCode().equals(item)) {
                 webConfig.setWeChat(weChat);
             }
         }

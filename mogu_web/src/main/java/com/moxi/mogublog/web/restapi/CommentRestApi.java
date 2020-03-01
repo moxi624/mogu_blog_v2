@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -54,25 +53,19 @@ public class CommentRestApi {
 
 
     @Autowired
+    WebUtils webUtils;
+    @Autowired
     private WebVisitService webVisitService;
-
     @Autowired
     private WebConfigService webConfigService;
-
     @Autowired
     private CommentService commentService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private PictureFeignClient pictureFeignClient;
-
     @Autowired
     private CommentReportService commentReportService;
-
-    @Autowired
-    WebUtils webUtils;
 
     /**
      * 获取评论列表
@@ -181,15 +174,15 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, getCommentReplys(firstComment, toCommentListMap));
     }
 
-    @BussinessLog(value = "发表评论", behavior=EBehavior.PUBLISH_COMMENT)
+    @BussinessLog(value = "发表评论", behavior = EBehavior.PUBLISH_COMMENT)
     @ApiOperation(value = "增加评论", notes = "增加评论")
     @PostMapping("/add")
-    public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
-        if(SysConf.CAN_NOT_COMMENT.equals(webConfig.getStartComment())) {
+        if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getStartComment())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
         }
         ThrowableUtils.checkParamArgument(result);
@@ -221,7 +214,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
 
-    @BussinessLog(value = "举报评论", behavior=EBehavior.REPORT_COMMENT)
+    @BussinessLog(value = "举报评论", behavior = EBehavior.REPORT_COMMENT)
     @ApiOperation(value = "举报评论", notes = "举报评论")
     @PostMapping("/report")
     public String reportComment(HttpServletRequest request, @Validated({GetOne.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -273,7 +266,7 @@ public class CommentRestApi {
      * @param result
      * @return
      */
-    @BussinessLog(value = "删除评论", behavior=EBehavior.DELETE_COMMENT)
+    @BussinessLog(value = "删除评论", behavior = EBehavior.DELETE_COMMENT)
     @ApiOperation(value = "删除评论", notes = "删除评论")
     @PostMapping("/delete")
     public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {

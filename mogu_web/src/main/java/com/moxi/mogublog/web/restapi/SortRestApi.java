@@ -125,7 +125,7 @@ public class SortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, monthSet);
     }
 
-    @BussinessLog(value = "点击归档", behavior=EBehavior.VISIT_SORT)
+    @BussinessLog(value = "点击归档", behavior = EBehavior.VISIT_SORT)
     @ApiOperation(value = "通过月份获取文章", notes = "通过月份获取文章")
     @GetMapping("/getArticleByMonth")
     public String getArticleByMonth(HttpServletRequest request,

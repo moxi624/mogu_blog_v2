@@ -82,8 +82,8 @@ public enum EBehavior {
             };break;
             case VISIT_SORT: {
                 // 判断是否点击归档
-                if(nameAndArgsMap.get(BaseSysConf.BLOG_LIST) != null) {
-                    otherData = nameAndArgsMap.get(BaseSysConf.BLOG_LIST).toString();
+                if(nameAndArgsMap.get(BaseSysConf.MONTH_DATE) != null) {
+                    otherData = nameAndArgsMap.get(BaseSysConf.MONTH_DATE).toString();
                 }
             };break;
             case BLOG_CONTNET: {
@@ -105,33 +105,24 @@ public enum EBehavior {
             case PUBLISH_COMMENT: {
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.TARGET) != null) {
-                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
-                    if(target.get(BaseSysConf.CONTENT) != null) {
-                        otherData = map.get(BaseSysConf.CONTENT).toString();
-                    }
+                if(map.get(BaseSysConf.CONTENT) != null) {
+                    otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             };break;
             case REPORT_COMMENT: {
                 // 举报评论
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.TARGET) != null) {
-                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
-                    if(target.get(BaseSysConf.CONTENT) != null) {
-                        otherData = map.get(BaseSysConf.CONTENT).toString();
-                    }
+                if(map.get(BaseSysConf.CONTENT) != null) {
+                    otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             };break;
             case DELETE_COMMENT: {
                 // 删除评论
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.TARGET) != null) {
-                    Map<String, Object> target = JsonUtils.objectToMap(map.get(BaseSysConf.TARGET));
-                    if(target.get(BaseSysConf.CONTENT) != null) {
-                        otherData = map.get(BaseSysConf.CONTENT).toString();
-                    }
+                if(map.get(BaseSysConf.CONTENT) != null) {
+                    otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             };break;
         }

@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +78,7 @@ public class SearchRestApi {
      * @param pageSize
      * @return
      */
-    @BussinessLog(value = "搜索Blog", behavior=EBehavior.BLOG_SEARCH)
+    @BussinessLog(value = "搜索Blog", behavior = EBehavior.BLOG_SEARCH)
     @ApiOperation(value = "搜索Blog", notes = "搜索Blog")
     @GetMapping("/sqlSearchBlog")
     public String sqlSearchBlog(HttpServletRequest request,
@@ -87,7 +86,7 @@ public class SearchRestApi {
                                 @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer currentPage,
                                 @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
 
-        if (StringUtils.isEmpty(keywords) || StringUtils.isEmpty(keywords.trim()) ) {
+        if (StringUtils.isEmpty(keywords) || StringUtils.isEmpty(keywords.trim())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
         }
 
@@ -136,7 +135,7 @@ public class SearchRestApi {
         });
 
         Collection<BlogSort> blogSortList = new ArrayList<>();
-        if(blogSortUidList.size() > 0) {
+        if (blogSortUidList.size() > 0) {
             blogSortList = blogSortService.listByIds(blogSortUidList);
         }
 
@@ -190,7 +189,7 @@ public class SearchRestApi {
 
     }
 
-    @BussinessLog(value = "根据标签获取相关的博客", behavior=EBehavior.BLOG_TAG)
+    @BussinessLog(value = "根据标签获取相关的博客", behavior = EBehavior.BLOG_TAG)
     @ApiOperation(value = "根据标签获取相关的博客", notes = "根据标签获取相关的博客")
     @GetMapping("/searchBlogByTag")
     public String searchBlogByTag(HttpServletRequest request,
@@ -251,7 +250,7 @@ public class SearchRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
-    @BussinessLog(value = "根据分类获取相关的博客", behavior=EBehavior.BLOG_SORT)
+    @BussinessLog(value = "根据分类获取相关的博客", behavior = EBehavior.BLOG_SORT)
     @ApiOperation(value = "根据分类获取相关的博客", notes = "根据标签获取相关的博客")
     @GetMapping("/searchBlogBySort")
     public String searchBlogBySort(HttpServletRequest request,
@@ -310,7 +309,7 @@ public class SearchRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
-    @BussinessLog(value = "根据作者获取相关的博客", behavior=EBehavior.BLOG_AUTHOR)
+    @BussinessLog(value = "根据作者获取相关的博客", behavior = EBehavior.BLOG_AUTHOR)
     @ApiOperation(value = "根据作者获取相关的博客", notes = "根据作者获取相关的博客")
     @GetMapping("/searchBlogByAuthor")
     public String searchBlogByAuthor(HttpServletRequest request,
@@ -447,13 +446,14 @@ public class SearchRestApi {
 
     /**
      * 添加高亮
+     *
      * @param str
      * @param keyword
      * @return
      */
-    private String getHitCode(String str , String keyword) {
+    private String getHitCode(String str, String keyword) {
 
-        if(StringUtils.isEmpty(keyword) || StringUtils.isEmpty(str)) {
+        if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(str)) {
             return str;
         }
 
@@ -461,13 +461,13 @@ public class SearchRestApi {
         String endStr = "</span>";
 
         // 判断关键字是否直接是搜索的内容，否者直接返回
-        if(str.equals(keyword)) {
+        if (str.equals(keyword)) {
             return startStr + str + endStr;
         }
 
         String lowerCaseStr = str.toLowerCase();
         String lowerKeyword = keyword.toLowerCase();
-        String [] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
+        String[] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
 
         Boolean isEndWith = lowerCaseStr.endsWith(lowerKeyword);
 
@@ -475,7 +475,7 @@ public class SearchRestApi {
         Integer count = 0;
         List<Map<String, Integer>> list = new ArrayList<>();
         List<Map<String, Integer>> keyList = new ArrayList<>();
-        for(int a=0; a<lowerCaseArray.length; a++) {
+        for (int a = 0; a < lowerCaseArray.length; a++) {
 
             // 将切割出来的存储map
             Map<String, Integer> map = new HashMap<>();
@@ -486,7 +486,7 @@ public class SearchRestApi {
             map.put("endIndex", count);
             list.add(map);
 
-            if(a < lowerCaseArray.length -1 || isEndWith) {
+            if (a < lowerCaseArray.length - 1 || isEndWith) {
                 // 将keyword存储map
                 keyMap.put("startIndex", count);
                 count += keyword.length();
@@ -498,7 +498,7 @@ public class SearchRestApi {
 
         // 截取切割对象
         List<String> arrayList = new ArrayList<>();
-        for(Map<String, Integer> item : list) {
+        for (Map<String, Integer> item : list) {
             Integer start = item.get("startIndex");
             Integer end = item.get("endIndex");
             String itemStr = str.substring(start, end);
@@ -507,7 +507,7 @@ public class SearchRestApi {
 
         // 截取关键字
         List<String> keyArrayList = new ArrayList<>();
-        for(Map<String, Integer> item : keyList) {
+        for (Map<String, Integer> item : keyList) {
             Integer start = item.get("startIndex");
             Integer end = item.get("endIndex");
             String itemStr = str.substring(start, end);
@@ -516,11 +516,11 @@ public class SearchRestApi {
 
         StringBuffer sb = new StringBuffer();
 
-        for(int a=0; a<arrayList.size(); a++) {
+        for (int a = 0; a < arrayList.size(); a++) {
 
             sb.append(arrayList.get(a));
 
-            if(a < arrayList.size() - 1 || isEndWith) {
+            if (a < arrayList.size() - 1 || isEndWith) {
                 sb.append(startStr);
                 sb.append(keyArrayList.get(a));
                 sb.append(endStr);

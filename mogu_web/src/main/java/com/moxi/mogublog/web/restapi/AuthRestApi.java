@@ -2,7 +2,10 @@ package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -34,7 +37,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -51,6 +53,8 @@ import java.util.concurrent.TimeUnit;
 public class AuthRestApi {
     @Autowired
     WebUtils webUtils;
+    @Autowired
+    SystemConfigService systemConfigService;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -69,8 +73,6 @@ public class AuthRestApi {
     private Long userTokenSurvivalTime;
     @Value(value = "${PROJECT_NAME_EN}")
     private String PROJECT_NAME_EN;
-    @Autowired
-    SystemConfigService systemConfigService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -157,7 +159,7 @@ public class AuthRestApi {
                         user.setAvatar(pictureMap.get(SysConf.UID).toString());
 
                         // 判断图片优先展示
-                        if("1".equals(picturePriority)) {
+                        if ("1".equals(picturePriority)) {
                             // 使用七牛云
                             if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
                                 user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());

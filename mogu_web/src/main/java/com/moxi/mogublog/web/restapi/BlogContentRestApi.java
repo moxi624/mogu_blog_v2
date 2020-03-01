@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
@@ -18,6 +17,7 @@ import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,12 +75,12 @@ public class BlogContentRestApi {
     @Value(value = "${BLOG.REPRINTED_TEMPLATE}")
     private String REPRINTED_TEMPLATE;
 
-    @BussinessLog(value = "点击博客", behavior=EBehavior.BLOG_CONTNET)
+    @BussinessLog(value = "点击博客", behavior = EBehavior.BLOG_CONTNET)
     @ApiOperation(value = "通过Uid获取博客内容", notes = "通过Uid获取博客内容")
     @GetMapping("/getBlogByUid")
-    public String getBlogByUid(HttpServletRequest request,
-                               @ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
+    public String getBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
 
+        HttpServletRequest request = RequestHolder.getRequest();
         String ip = IpUtils.getIpAddr(request);
 
         if (StringUtils.isEmpty(uid)) {
@@ -132,8 +131,10 @@ public class BlogContentRestApi {
 
     @ApiOperation(value = "通过Uid获取博客点赞数", notes = "通过Uid获取博客点赞数")
     @GetMapping("/getBlogPraiseCountByUid")
-    public String getBlogPraiseCountByUid(HttpServletRequest request,
-                                          @ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
+    public String getBlogPraiseCountByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
+
+        HttpServletRequest request = RequestHolder.getRequest();
+        String ip = IpUtils.getIpAddr(request);
 
         if (StringUtils.isEmpty(uid)) {
             return ResultUtil.result(SysConf.ERROR, "UID不能为空");
@@ -148,12 +149,12 @@ public class BlogContentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pariseCount);
     }
 
-    @BussinessLog(value = "通过Uid给博客点赞", behavior=EBehavior.BLOG_PRAISE)
+    @BussinessLog(value = "通过Uid给博客点赞", behavior = EBehavior.BLOG_PRAISE)
     @ApiOperation(value = "通过Uid给博客点赞", notes = "通过Uid给博客点赞")
     @GetMapping("/praiseBlogByUid")
-    public String praiseBlogByUid(HttpServletRequest request,
-                                  @ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
+    public String praiseBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
 
+        HttpServletRequest request = RequestHolder.getRequest();
         String ip = IpUtils.getIpAddr(request);
 
         //判断该IP是否点赞过
@@ -311,6 +312,7 @@ public class BlogContentRestApi {
 
     /**
      * 设置博客版权
+     *
      * @param blog
      */
     private void setBlogCopyright(Blog blog) {
@@ -320,7 +322,7 @@ public class BlogContentRestApi {
             blog.setCopyright(ORIGINAL_TEMPLATE);
         } else {
             String reprintedTemplate = REPRINTED_TEMPLATE;
-            String [] variable = {blog.getArticlesPart(), blog.getAuthor()};
+            String[] variable = {blog.getArticlesPart(), blog.getAuthor()};
             String str = String.format(reprintedTemplate, variable);
             blog.setCopyright(str);
         }

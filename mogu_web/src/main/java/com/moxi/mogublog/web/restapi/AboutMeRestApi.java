@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -44,10 +43,9 @@ public class AboutMeRestApi {
     @Autowired
     AdminService adminService;
     @Autowired
-    private PictureFeignClient pictureFeignClient;
-
-    @Autowired
     WebConfigService webConfigService;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
 
     /**
      * 获取关于我的信息
@@ -55,7 +53,7 @@ public class AboutMeRestApi {
      * @author xzx19950624@qq.com
      * @date 2018年11月6日下午8:57:48
      */
-    @BussinessLog(value = "关于我", behavior= EBehavior.VISIT_PAGE)
+    @BussinessLog(value = "关于我", behavior = EBehavior.VISIT_PAGE)
     @ApiOperation(value = "关于我", notes = "关于我")
     @GetMapping("/getMe")
     public String getMe(HttpServletRequest request) {
@@ -107,23 +105,23 @@ public class AboutMeRestApi {
 
             List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
 
-            for(String item : showList) {
-                if(EAccountType.EMail.getCode().equals(item)) {
+            for (String item : showList) {
+                if (EAccountType.EMail.getCode().equals(item)) {
                     result.setEmail(webConfig.getEmail());
                 }
-                if(EAccountType.QQNumber.getCode().equals(item)) {
+                if (EAccountType.QQNumber.getCode().equals(item)) {
                     result.setQqNumber(webConfig.getQqNumber());
                 }
-                if(EAccountType.QQGroup.getCode().equals(item)) {
+                if (EAccountType.QQGroup.getCode().equals(item)) {
                     result.setQqGroup(webConfig.getQqGroup());
                 }
-                if(EAccountType.Github.getCode().equals(item)) {
+                if (EAccountType.Github.getCode().equals(item)) {
                     result.setGithub(webConfig.getGithub());
                 }
-                if(EAccountType.Gitee.getCode().equals(item)) {
+                if (EAccountType.Gitee.getCode().equals(item)) {
                     result.setGitee(webConfig.getGitee());
                 }
-                if(EAccountType.WeChat.getCode().equals(item)) {
+                if (EAccountType.WeChat.getCode().equals(item)) {
                     result.setWeChat(webConfig.getWeChat());
                 }
             }

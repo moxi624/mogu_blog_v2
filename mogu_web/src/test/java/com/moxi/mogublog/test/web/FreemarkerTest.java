@@ -15,11 +15,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
  * Freemark静态文件生成
+ *
  * @author Administrator
  * @version 1.0
  * @create 2020年2月20日10:36:12
@@ -34,7 +38,7 @@ public class FreemarkerTest {
     @Test
     public void testGenerateHtml() throws IOException, TemplateException {
         //创建配置类
-        Configuration configuration=new Configuration(Configuration.getVersion());
+        Configuration configuration = new Configuration(Configuration.getVersion());
         String classpath = this.getClass().getResource("/").getPath();
         //设置模板路径
         configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
@@ -58,10 +62,10 @@ public class FreemarkerTest {
     @Test
     public void testGenerateHtmlByString() throws IOException, TemplateException {
         //创建配置类
-        Configuration configuration=new Configuration(Configuration.getVersion());
+        Configuration configuration = new Configuration(Configuration.getVersion());
         //获取模板内容
         //模板内容，这里测试时使用简单的字符串作为模板
-        String templateString="" +
+        String templateString = "" +
                 "<html>\n" +
                 "    <head></head>\n" +
                 "    <body>\n" +
@@ -72,9 +76,9 @@ public class FreemarkerTest {
         //加载模板
         //模板加载器
         StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
-        stringTemplateLoader.putTemplate("template",templateString);
+        stringTemplateLoader.putTemplate("template", templateString);
         configuration.setTemplateLoader(stringTemplateLoader);
-        Template template = configuration.getTemplate("template","utf-8");
+        Template template = configuration.getTemplate("template", "utf-8");
 
         //数据模型
         Map map = getMap();
@@ -89,10 +93,10 @@ public class FreemarkerTest {
     }
 
     //数据模型
-    private Map getMap(){
+    private Map getMap() {
         Map<String, Object> map = new HashMap<>();
         //向数据模型放数据
-        map.put("name","小黑程序员");
+        map.put("name", "小黑程序员");
         Student stu1 = new Student();
         stu1.setName("小明");
         stu1.setAge(18);
@@ -111,15 +115,15 @@ public class FreemarkerTest {
         stus.add(stu1);
         stus.add(stu2);
         //向数据模型放数据
-        map.put("stus",stus);
+        map.put("stus", stus);
         //准备map数据
-        HashMap<String,Student> stuMap = new HashMap<>();
-        stuMap.put("stu1",stu1);
-        stuMap.put("stu2",stu2);
+        HashMap<String, Student> stuMap = new HashMap<>();
+        stuMap.put("stu1", stu1);
+        stuMap.put("stu2", stu2);
         //向数据模型放数据
-        map.put("stu1",stu1);
+        map.put("stu1", stu1);
         //向数据模型放数据
-        map.put("stuMap",stuMap);
+        map.put("stuMap", stuMap);
         return map;
     }
 }

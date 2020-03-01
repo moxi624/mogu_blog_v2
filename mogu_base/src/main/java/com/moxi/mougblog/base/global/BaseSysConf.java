@@ -37,6 +37,7 @@ public class BaseSysConf {
     public final static String CODE = "code";
     public final static String DATA = "data";
     public final static String UID = "uid";
+    public final static String THIS = "this";
 
     public final static String DEFAULT_VALUE = "defaultValue";
 

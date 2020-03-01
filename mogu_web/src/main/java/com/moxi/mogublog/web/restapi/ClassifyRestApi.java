@@ -75,7 +75,7 @@ public class ClassifyRestApi {
         return ResultUtil.result(SysConf.SUCCESS, blogSortList);
     }
 
-    @BussinessLog(value = "点击分类", behavior=EBehavior.VISIT_CLASSIFY)
+    @BussinessLog(value = "点击分类", behavior = EBehavior.VISIT_CLASSIFY)
     @ApiOperation(value = "通过blogSortUid获取文章", notes = "通过blogSortUid获取文章")
     @GetMapping("/getArticleByBlogSortUid")
     public String getArticleByBlogSortUid(HttpServletRequest request,

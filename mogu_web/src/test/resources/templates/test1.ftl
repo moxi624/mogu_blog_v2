@@ -19,7 +19,7 @@ Hello ${name}!
             <td>${stu_index + 1}</td>
             <td <#if stu.name =='小明'>style="background:red;"</#if>>${stu.name}</td>
             <td>${stu.age}</td>
-            <td >${stu.mondy}</td>
+            <td>${stu.mondy}</td>
         </tr>
     </#list>
 
@@ -39,14 +39,14 @@ Hello ${name}!
         <td>年龄</td>
         <td>钱包</td>
     </tr>
-<#list stuMap?keys as k>
-<tr>
-    <td>${k_index + 1}</td>
-    <td>${stuMap[k].name}</td>
-    <td>${stuMap[k].age}</td>
-    <td >${stuMap[k].mondy}</td>
-</tr>
-</#list>
+    <#list stuMap?keys as k>
+        <tr>
+            <td>${k_index + 1}</td>
+            <td>${stuMap[k].name}</td>
+            <td>${stuMap[k].age}</td>
+            <td>${stuMap[k].mondy}</td>
+        </tr>
+    </#list>
 </table>
 </br>
 <table>
@@ -60,30 +60,30 @@ Hello ${name}!
         <td>朋友列表</td>
     </tr>
     <#if stus??>
-    <#list stus as stu>
-        <tr>
-            <td>${stu.name!''}</td>
-            <td>${stu.age}</td>
-            <td>${(stu.birthday?date)!''}</td>
-            <td>${stu.mondy}</td>
-            <td>${(stu.bestFriend.name)!''}</td>
-            <td>${(stu.friends?size)!0}</td>
-            <td>
-                <#if stu.friends??>
-                <#list stu.friends as firend>
-                    ${firend.name!''}<br/>
-                </#list>
-                </#if>
-            </td>
-        </tr>
-    </#list>
+        <#list stus as stu>
+            <tr>
+                <td>${stu.name!''}</td>
+                <td>${stu.age}</td>
+                <td>${(stu.birthday?date)!''}</td>
+                <td>${stu.mondy}</td>
+                <td>${(stu.bestFriend.name)!''}</td>
+                <td>${(stu.friends?size)!0}</td>
+                <td>
+                    <#if stu.friends??>
+                        <#list stu.friends as firend>
+                            ${firend.name!''}<br/>
+                        </#list>
+                    </#if>
+                </td>
+            </tr>
+        </#list>
     </#if>
 
 </table>
 <br/>
 <#assign text="{'bank':'工商银行','account':'10101920201920212'}" />
 <#assign data=text?eval />
-开户行：${data.bank}  账号：${data.account}
+开户行：${data.bank} 账号：${data.account}
 
 </body>
 </html>
