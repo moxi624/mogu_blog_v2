@@ -169,17 +169,26 @@ export default {
   methods: {
     //跳转到文章详情
     goToInfo(uid) {
-      let routeData = this.$router.push({
+      let routeData = this.$router.resolve({
         path: "/info",
         query: { blogUid: uid }
       });
+      window.open(routeData.href, '_blank');
     },
     //点击了分类
     goToList(uid) {
-      let routeData = this.$router.push({
+      let routeData = this.$router.resolve({
         path: "/list",
         query: { sortUid: uid }
       });
+      window.open(routeData.href, '_blank');
+    },
+    goToAuthor(author) {
+      let routeData = this.$router.resolve({
+        path: "/list",
+        query: {author: author}
+      });
+      window.open(routeData.href, '_blank');
     },
     // 加载内容
     loadContent: function() {
@@ -198,7 +207,7 @@ export default {
         params.append("pageSize", that.pageSize);
         params.append("keywords", that.keywords);
         searchBlog(params).then(response => {
-          if (response.code == "success" && response.data.blogList.length > 0) {
+          if (response.code == "success") {
             that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.blogList.length;
@@ -206,8 +215,16 @@ export default {
             that.pageSize = response.data.pageSize;
             that.currentPage = response.data.currentPage;
             var blogData = response.data.blogList;
+
+            // 判断搜索的博客是否有
+            if(response.data.total <= 0) {
+              that.isEnd = true;
+              that.loading = false;
+              this.blogData = []
+              return;
+            }
+
             //全部加载完毕
-            console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
               that.isEnd = true;
             }
@@ -216,7 +233,6 @@ export default {
             that.searchBlogData = blogData;
             this.blogData = blogData;
           } else {
-
             that.isEnd = true;
           }
           that.loading = false;
@@ -240,7 +256,6 @@ export default {
             that.currentPage = response.data.current;
 
             //全部加载完毕
-            console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
               that.isEnd = true;
             }
@@ -280,7 +295,6 @@ export default {
             that.currentPage = response.data.current;
 
             //全部加载完毕
-            console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
               that.isEnd = true;
             }
@@ -320,7 +334,6 @@ export default {
             that.currentPage = response.data.current;
 
             //全部加载完毕
-            console.log(blogData.length, that.pageSize);
             if (blogData.length < that.pageSize) {
               that.isEnd = true;
             }

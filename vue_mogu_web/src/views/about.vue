@@ -96,7 +96,6 @@ export default {
   created() {
     var that = this;
     getMe().then(response => {
-      console.log("getMe", response);
       if (response.code == "success") {
         this.info = response.data;
       }

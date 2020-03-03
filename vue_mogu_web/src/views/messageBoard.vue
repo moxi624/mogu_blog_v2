@@ -98,7 +98,6 @@
         params.currentPage = 0;
         params.pageSize = 100;
         getCommentList(params).then(response => {
-          console.log("得到的评论内容", response)
           if (response.code == "success") {
             this.comments = response.data;
             this.setCommentList(this.comments);

@@ -19,10 +19,9 @@ export default {
   },
   created() {
     getLink().then(response => {
-      console.log("友情链接列表", response);
       if(response.code == "success") {
         this.linkData = response.data.records;
-      }      
+      }
     });
   },
   methods: {
@@ -31,10 +30,10 @@ export default {
       params.append("uid", item.uid);
       addLinkCount(params).then(response => {
         if(response.code == "success") {
-          window.location.href = item.url;    
+          window.location.href = item.url;
         }
       })
-      
+
     }
   }
 };

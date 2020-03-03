@@ -106,6 +106,7 @@
       <Link></Link>
 
     </div>
+
   </article>
 </template>
 
@@ -118,6 +119,7 @@
   import FollowUs from "../components/FollowUs";
   import Link from "../components/Link";
   import {getBlogByLevel, getNewBlog, recorderVisitPage} from "../api/index";
+  import { Loading } from 'element-ui';
 
   export default {
     name: "index",
@@ -133,12 +135,13 @@
     },
     data() {
       return {
+        loadingInstance: null, // loading对象
         VUE_MOGU_WEB: process.env.VUE_MOGU_WEB,
         PICTURE_HOST: process.env.PICTURE_HOST,
         firstData: [], //；一级推荐数据
         secondData: [], //；二级级推荐数据
         thirdData: [], //三级推荐
-        fourthData: [], //四级推按
+        fourthData: [], //四级推荐
         newBlogData: [], //最新文章
         hotBlogData: [], //最热文章
         hotTagData: [], //最新标签
@@ -181,11 +184,15 @@
       // });
     },
     created() {
+
       var secondParams = new URLSearchParams();
       secondParams.append("level", 2);
+      // 是否排序
       secondParams.append("useSort", 1);
       getBlogByLevel(secondParams).then(response => {
-        this.secondData = response.data.records;
+        if(response.code == "success") {
+          this.secondData = response.data.records;
+        }
       });
 
       // 获取最新博客
@@ -193,17 +200,18 @@
 
       var params = new URLSearchParams();
       params.append("pageName", "INDEX");
-      recorderVisitPage(params).then(response => {
+        recorderVisitPage(params).then(response => {
       });
     },
     methods: {
       //跳转到文章详情
       goToInfo(uid) {
 
-        let routeData = this.$router.push({
+        let routeData = this.$router.resolve({
           path: "/info",
           query: {blogUid: uid}
         });
+        window.open(routeData.href, '_blank');
       },
 
       //跳转到搜索详情页
@@ -225,16 +233,26 @@
 
       //最新博客列表
       newBlogList() {
+        var that = this;
+        that.loadingInstance = Loading.service({
+          lock: true,
+          text: '正在努力加载中……',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+
         var params = new URLSearchParams();
         params.append("currentPage", this.currentPage);
         params.append("pageSize", this.pageSize);
         getNewBlog(params).then(response => {
           if (response.code == "success") {
-            this.newBlogData = response.data.records;
-            this.total = response.data.total;
-            this.pageSize = response.data.size;
-            this.currentPage = response.data.current;
+            that.newBlogData = response.data.records;
+            that.total = response.data.total;
+            that.pageSize = response.data.size;
+            that.currentPage = response.data.current;
           }
+          that.loadingInstance.close();
+        },function(err){
+          that.loadingInstance.close();
         });
       },
 
@@ -269,6 +287,9 @@
 </script>
 
 <style>
+  .el-loading-mask {
+    z-index: 2002;
+  }
   .isEnd {
     float: left;
     width: 100%;
@@ -428,4 +449,5 @@
     font-size: 15px;
     margin-right: 2px;
   }
+
 </style>

@@ -96,7 +96,6 @@ export default {
     getSortList().then(response => {
       if (response.code == "success") {
         var activities = response.data;
-        console.log("返回的内容", response);
         var result = [];
         for (var a = 0; a < activities.length; a++) {
           var temp = activities[a].replace("年", "-").replace("月", "-") + "1";
@@ -116,7 +115,6 @@ export default {
       var params = new URLSearchParams();
       params.append("monthDate", content);
       getArticleByMonth(params).then(response => {
-        console.log("返回的内容", response);
         if (response.code == "success") {
           this.itemByDate = response.data;
         }

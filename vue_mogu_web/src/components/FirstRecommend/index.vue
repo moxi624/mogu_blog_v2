@@ -31,12 +31,6 @@ export default {
     };
   },
   created() {
-    this.$nextTick(() => {
-      this.timer = setInterval(() => {
-        this.autoPlay();
-      }, 4000);
-    });
-
     var params = new URLSearchParams();
     params.append("level", 1);
     params.append("useSort", 1);
@@ -45,57 +39,13 @@ export default {
     });
   },
   methods: {
-    go() {
-      this.timer = setInterval(() => {
-        this.autoPlay();
-      }, 4000);
-    },
-    stop() {
-      clearInterval(this.timer);
-      this.timer = null;
-    },
-    inDiv: function() {
-      this.isShow = true;
-    },
-    outDiv: function() {
-      this.isShow = false;
-    },
-    leftChange: function() {
-      var currentIndex = this.currentIndex - 1;
-      if (currentIndex < 0) {
-        this.currentIndex = this.slideList.length - 1;
-      } else {
-        this.currentIndex = currentIndex;
-      }
-
-      console.log(this.currentIndex);
-    },
-    rightChange: function() {
-      var currentIndex = this.currentIndex + 1;
-      if (currentIndex >= this.slideList.length) {
-        this.currentIndex = 0;
-      } else {
-        this.currentIndex = currentIndex;
-      }
-    },
-
-    change(index) {
-      this.currentIndex = index;
-    },
-    autoPlay() {
-      this.currentIndex++;
-      if (this.currentIndex > this.slideList.length - 1) {
-        this.currentIndex = 0;
-      }
-    },
     //跳转到文章详情
     goToInfo(uid) {
-
-      let routeData = this.$router.push({
+      let routeData = this.$router.resolve({
         path: "/info",
         query: { blogUid: uid }
       });
-
+      window.open(routeData.href, '_blank');
     }
   }
 };

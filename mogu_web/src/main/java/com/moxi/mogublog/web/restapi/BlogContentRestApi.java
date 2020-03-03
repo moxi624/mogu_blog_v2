@@ -16,7 +16,9 @@ import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.ECode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -88,6 +90,10 @@ public class BlogContentRestApi {
         }
 
         Blog blog = blogService.getById(uid);
+
+        if(blog == null || blog.getStatus() == EStatus.DISABLED || blog.getIsPublish() == EPublish.NO_PUBLISH) {
+            return ResultUtil.result(ECode.ERROR, "该文章已下架或被删除");
+        }
 
 
         if (blog != null) {

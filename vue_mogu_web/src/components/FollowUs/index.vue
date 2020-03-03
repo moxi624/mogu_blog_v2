@@ -1,5 +1,5 @@
 <template>
-    <div class="guanzhu" id="follow-us" ref="follow" @click="click">
+    <div class="guanzhu" id="follow-us" ref="follow">
       <h2 class="hometitle">关注我们 么么哒！</h2>
       <ul>
         <!-- <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>蘑菇博客</a></li>         -->
@@ -38,7 +38,6 @@ export default {
     getContactData: function() {
       let webConfigData = this.$store.state.app.webConfigData;
       if(webConfigData.createTime) {
-        console.log("webConfigData followUs", webConfigData)
         this.contact = webConfigData;
         this.mailto = "mailto:" + this.contact.email;
       } else {
@@ -51,9 +50,6 @@ export default {
         });
       }
     },
-    click: function() {
-      console.log("top", this.$refs.follow.getBoundingClientRect().top)
-    }
   }
 };
 </script>

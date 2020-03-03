@@ -104,13 +104,13 @@ public class QiNiuRestApi {
         UploadManager uploadManager = new UploadManager(cfg);
 
         //AccessKey的值
-        String accessKey = "QKD378sek_yRy0AlpWEzT_U_oni0SfrrxaP2lgWX";
+        String accessKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
         //SecretKey的值
-        String secretKey = "Vjh0zPBLrflxYn08YNIG4rkRYv7sqtlMccgd8QzL";
+        String secretKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
         //存储空间名
-        String bucket = "testmogublog";
+        String bucket = "XXXXXXXXXXX";
 
         //上传图片路径
         String localFilePath = "D:\\1582507567527.png";

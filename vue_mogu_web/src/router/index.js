@@ -20,6 +20,8 @@ export const constantRouterMap = [
       { path: '/messageBoard', component: () => import('@/views/messageBoard') },
     ]
   },
+  { path: '/404', component: () => import('@/views/404') },
+  { path: '/500', component: () => import('@/views/500') },
   { path: '/*', component: () => import('@/views/404') }
 
 ]

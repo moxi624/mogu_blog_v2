@@ -40,8 +40,8 @@ export default {
       //跳转到文章详情
 	    goToInfo(uid) {
 
-        let routeData = this.$router.push({ path: "/info", query: { blogUid: uid } });
-
+        let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
+        window.open(routeData.href, '_blank');
 	    }
     },
 

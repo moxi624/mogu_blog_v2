@@ -17,8 +17,8 @@ public class ResultUtil {
      * @author xuzhixiang
      * 2018年9月9日19:22:16
      */
-    public static String result(String code, Object data) {
-        Map<String, Object> map = new HashMap<>();
+    public static String result(Object code, Object data) {
+        Map<Object, Object> map = new HashMap<>();
         map.put("code", code);
         map.put("data", data);
         return JsonUtils.objectToJson(map);

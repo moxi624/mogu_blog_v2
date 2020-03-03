@@ -59,7 +59,6 @@ export default {
   },
   created() {
     getStudyVideoBySort().then(response => {
-      console.log(response);
       if (response.code == "success") {
         this.studyVideoData = response.data.records;
         this.total = response.data.total;

@@ -224,7 +224,6 @@
         if (token != undefined) {
           authVerify(token).then(response => {
             if (response.code == "success") {
-              console.log("登录成功");
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
@@ -275,13 +274,11 @@
       getWebConfigInfo: function() {
         let webConfigData = this.$store.state.app.webConfigData
         if(webConfigData.createTime) {
-          console.log("webConfigData home", webConfigData)
           this.contact = webConfigData;
           this.mailto = "mailto:" + this.contact.email;
         } else {
           getWebConfig().then(response => {
             if (response.code == "success") {
-              console.log("加载Home")
               this.info = response.data;
               // 存储在Vuex中
               this.setWebConfigData(response.data)

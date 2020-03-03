@@ -187,9 +187,9 @@
       params.append("uid", this.blogUid);
       getBlogByUid(params).then(response => {
         if (response.code == "success") {
-          this.loadingInstance.close();
           this.blogData = response.data;
         }
+        this.loadingInstance.close();
       });
 
       var blogParams = new URLSearchParams();
