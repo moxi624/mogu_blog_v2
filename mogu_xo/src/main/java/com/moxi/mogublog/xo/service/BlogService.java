@@ -96,4 +96,18 @@ public interface BlogService extends SuperService<Blog> {
      */
     public Map<String, Object> getBlogContributeCount();
 
+    /**
+     * 通过uid获取博客内容
+     * @param uid
+     * @return
+     */
+    public Blog getBlogByUid(String uid);
+
+    /**
+     * 根据BlogUid获取相关的博客
+     * @param blogUid
+     * @return
+     */
+    public List<Blog> getSameBlogByBlogUid(String blogUid);
+
 }

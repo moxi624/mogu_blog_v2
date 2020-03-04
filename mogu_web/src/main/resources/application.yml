@@ -41,8 +41,13 @@ BLOG:
 spring:
   jmx:
     default-domain: mogu_web
-  thymeleaf:
-    cache: true   #关闭缓存
+  # freemarker相关配置
+  freemarker:
+    charset: utf-8
+    suffix: .ftl
+    content-type: text/html
+    template-loader-path: classpath:/templates
+
   application:
     name: mogu-web
   security:

@@ -25,6 +25,7 @@ public class BaseSQLConf {
     public final static String USER_UID = "user_uid";
     public final static String COMMENT_UID = "comment_uid";
     public final static String REPORT_COMMENT_UID = "report_comment_uid";
+    public static final String TAG_UID = "tag_uid";
 
     // SystemConfig相关
     public final static String UPLOAD_QI_NIU = "upload_qi_niu";

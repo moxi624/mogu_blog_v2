@@ -13,4 +13,9 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface WebConfigService extends SuperService<WebConfig> {
 
+    /**
+     * 获取网站配置
+     * @return
+     */
+    public WebConfig getWebConfig();
 }

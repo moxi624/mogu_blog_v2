@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
@@ -15,10 +16,12 @@ import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -32,13 +35,13 @@ import java.util.*;
 @Service
 public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implements BlogService {
 
-    @Autowired
+    @Resource
     TagMapper tagMapper;
 
-    @Autowired
+    @Resource
     BlogSortMapper blogSortMapper;
 
-    @Autowired
+    @Resource
     BlogMapper blogMapper;
 
     @Override
@@ -306,4 +309,41 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         return resultMap;
     }
 
+    @Override
+    public Blog getBlogByUid(String uid) {
+        Blog blog = blogMapper.selectById(uid);
+
+        if(blog != null && blog.getStatus() != EStatus.DISABLED) {
+            blog = setTagByBlog(blog);
+            blog = setSortByBlog(blog);
+            return blog;
+        }
+        return null;
+    }
+
+    @Override
+    public List<Blog> getSameBlogByBlogUid(String blogUid) {
+        Blog blog = blogMapper.selectById(blogUid);
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+        Page<Blog> page = new Page<>();
+        page.setCurrent(1);
+        page.setSize(10);
+
+        // 因为tagUid可能存在多个，需要切割进行拼接操作
+        List<String> tagList = StringUtils.changeStringToString(blog.getTagUid(), ",");
+        for (int a = 0; a < tagList.size(); a++) {
+            if (a < tagList.size() - 1) {
+                queryWrapper.eq(BaseSQLConf.TAG_UID, tagList.get(a)).or();
+            } else {
+                queryWrapper.eq(BaseSQLConf.TAG_UID, tagList.get(a));
+            }
+        }
+
+        queryWrapper.orderByDesc(BaseSQLConf.CREATE_TIME);
+
+        IPage<Blog> pageList = blogMapper.selectPage(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        return list;
+    }
 }

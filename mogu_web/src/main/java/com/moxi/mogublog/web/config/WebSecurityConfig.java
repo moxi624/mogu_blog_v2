@@ -3,6 +3,7 @@ package com.moxi.mogublog.web.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -11,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -56,10 +56,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user/**",
                         "/oauth/**",
                         "/web/comment/**",
+                        "/freemarker/**",
                         "elasticSearchBlog/**"
                 ).permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
+
+
 
         // 禁用缓存
         httpSecurity.headers().cacheControl();

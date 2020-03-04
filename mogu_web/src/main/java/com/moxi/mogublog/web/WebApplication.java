@@ -6,6 +6,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
@@ -19,12 +20,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableEurekaServer
 @EnableFeignClients("com.moxi.mogublog.web.feign")
+@EnableAsync // 开启异步
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.web.util",
         "com.moxi.mogublog.web.log",
         "com.moxi.mogublog.web.config",
         "com.moxi.mogublog.web.restapi",
+        "com.moxi.mogublog.web.controller",
         "com.moxi.mogublog.xo.service"})
 public class WebApplication {
 
@@ -48,7 +51,7 @@ public class WebApplication {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", buildConfig()); // 4  
+        source.registerCorsConfiguration("/**", buildConfig());
         return new CorsFilter(source);
     }
 }
