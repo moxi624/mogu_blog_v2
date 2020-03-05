@@ -20,7 +20,7 @@ export default {
   created() {
     getLink().then(response => {
       if(response.code == "success") {
-        this.linkData = response.data.records;
+        this.linkData = response.data;
       }
     });
   },

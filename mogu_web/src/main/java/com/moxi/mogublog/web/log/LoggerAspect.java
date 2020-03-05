@@ -18,6 +18,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -30,9 +31,8 @@ import java.util.Map;
 @Slf4j
 public class LoggerAspect {
 
-    private SysLog sysLog;
-
-    private ExceptionLog exceptionLog;
+    @Autowired
+    SysLogHandle sysLogHandle;
 
     @Autowired
     private WebVisitService webVisitService;
@@ -52,6 +52,7 @@ public class LoggerAspect {
         try {
             // 日志收集
             handle(joinPoint);
+
         } catch (Exception e) {
             log.error("日志记录出错!", e);
         }
@@ -92,7 +93,9 @@ public class LoggerAspect {
             if (request.getAttribute(SysConf.USER_UID) != null) {
                 userUid = request.getAttribute(SysConf.USER_UID).toString();
             }
-            webVisitService.addWebVisit(userUid, request, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA));
+            // 异步存储日志
+            sysLogHandle.setSysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA));
+            sysLogHandle.onRun();
         }
     }
 }

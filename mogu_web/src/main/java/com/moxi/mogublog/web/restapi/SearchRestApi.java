@@ -335,9 +335,6 @@ public class SearchRestApi {
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
         list = setBlog(list);
-
-        //增加记录（可以考虑使用AOP）
-        webVisitService.addWebVisit(null, request, EBehavior.BLOG_AUTHOR.getBehavior(), null, author);
         pageList.setRecords(list);
 
         return ResultUtil.result(SysConf.SUCCESS, pageList);

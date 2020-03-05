@@ -103,6 +103,7 @@
       <!--点击排行-->
       <HotBlog></HotBlog>
 
+      <!-- 友情链接-->
       <Link></Link>
 
     </div>

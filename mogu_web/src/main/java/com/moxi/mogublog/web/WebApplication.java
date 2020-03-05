@@ -23,6 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAsync // 开启异步
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
+        "com.moxi.mogublog.utils",
         "com.moxi.mogublog.web.util",
         "com.moxi.mogublog.web.log",
         "com.moxi.mogublog.web.config",

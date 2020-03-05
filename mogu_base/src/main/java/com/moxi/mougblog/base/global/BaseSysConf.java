@@ -22,6 +22,16 @@ public class BaseSysConf {
     public final static String URL = "url";
     public final static String MESSAGE = "message";
 
+    /**
+     * IP相关
+     */
+    public final static String OS = "OS";
+    public final static String BROWSER = "BROWSER";
+    public final static String IP_SOURCE = "IP_SOURCE";
+    public final static String IP = "ip";
+    public final static String UTF_8 = "utf-8";
+
+
 
     public final static String SUCCESS = "success";
     public final static String ERROR = "error";
@@ -37,7 +47,7 @@ public class BaseSysConf {
     public final static String CODE = "code";
     public final static String DATA = "data";
     public final static String UID = "uid";
-    public final static String THIS = "this";
+    public final static String PAGE_NAME = "pageName";
 
     public final static String DEFAULT_VALUE = "defaultValue";
 
@@ -74,6 +84,7 @@ public class BaseSysConf {
     public final static String BLOG_SORT_BY_MONTH = "BLOG_SORT_BY_MONTH";
     // redis分割符
     public final static String REDIS_SEGMENTATION = ":";
+    public final static String EQUAL_TO = "=";
     // 月份集合
     public final static String MONTH_SET = "MONTH_SET";
     // 博客等级

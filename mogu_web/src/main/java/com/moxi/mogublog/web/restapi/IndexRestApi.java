@@ -11,6 +11,7 @@ import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.service.*;
@@ -80,6 +81,8 @@ public class IndexRestApi {
     private Integer BLOG_THIRD_COUNT;
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
+    @Value(value = "${BLOG.FRIENDLY_LINK_COUNT}")
+    private Integer FRIENDLY_LINK_COUNT;
 
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
     @GetMapping("/getBlogByLevel")
@@ -318,21 +321,14 @@ public class IndexRestApi {
 
     @ApiOperation(value = "获取友情链接", notes = "获取友情链接")
     @GetMapping("/getLink")
-    public String getLink(HttpServletRequest request,
-                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    public String getLink() {
 
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-        Page<Link> page = new Page<>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
-        IPage<Link> pageList = linkService.page(page, queryWrapper);
+        List<Link> linkList = linkService.getListByPageSize(FRIENDLY_LINK_COUNT);
         log.info("获取友情链接");
-        return ResultUtil.result(SysConf.SUCCESS, pageList);
+        return ResultUtil.result(SysConf.SUCCESS, linkList);
     }
 
+    @BussinessLog(value = "点击友情链接", behavior = EBehavior.FRIENDSHIP_LINK)
     @ApiOperation(value = "增加友情链接点击数", notes = "增加友情链接点击数")
     @GetMapping("/addLinkCount")
     public String addLinkCount(HttpServletRequest request,
@@ -343,10 +339,6 @@ public class IndexRestApi {
         }
         Link link = linkService.getById(uid);
         if (link != null) {
-
-            //增加记录（可以考虑使用AOP）
-            webVisitService.addWebVisit(null, request, EBehavior.FRIENDSHIP_LINK.getBehavior(), uid, null);
-
             int count = link.getClickCount() + 1;
             link.setClickCount(count);
             link.updateById();
@@ -430,6 +422,7 @@ public class IndexRestApi {
         return ResultUtil.result(SysConf.SUCCESS, webConfig);
     }
 
+    @BussinessLog(value = "记录访问页面", behavior = EBehavior.VISIT_PAGE)
     @ApiOperation(value = "记录访问页面", notes = "记录访问页面")
     @GetMapping("/recorderVisitPage")
     public String recorderVisitPage(HttpServletRequest request,
@@ -439,7 +432,7 @@ public class IndexRestApi {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.PARAM_INCORRECT);
         }
 
-        webVisitService.addWebVisit(null, request, EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
+        // webVisitService.addWebVisit(null, request, EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }

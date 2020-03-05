@@ -25,6 +25,7 @@ file:
 BLOG:
   HOT_COUNT: 5 #热门博客数量
   HOT_TAG_COUNT: 20 #热门标签数量
+  FRIENDLY_LINK_COUNT: 20 #友情链接数
   NEW_COUNT: 15 #最新博客数据
   FIRST_COUNT: 5 #一级推荐
   SECOND_COUNT: 2 #二级推荐

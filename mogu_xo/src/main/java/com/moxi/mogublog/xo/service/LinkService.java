@@ -1,7 +1,10 @@
 package com.moxi.mogublog.xo.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mougblog.base.service.SuperService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface LinkService extends SuperService<Link> {
 
+    /**
+     * 通过页大小获取标签列表
+     * @param pageSize
+     * @return
+     */
+    public List<Link> getListByPageSize(Integer pageSize);
 }

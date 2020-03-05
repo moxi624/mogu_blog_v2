@@ -11,6 +11,7 @@ import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
 import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.*;
+import com.moxi.mougblog.base.enums.ELevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,14 @@ public class FreemarkerController {
         // fc98d2ae7756d2587390ae441b82f52d
         List<Blog> sameBlog = blogService.getSameBlogByBlogUid(uid);
         sameBlog  = setBlog(sameBlog);
+
+        List<Blog> thirdBlog = blogService.getBlogListByLevel(ELevel.THIRD);
+        thirdBlog  = setBlog(thirdBlog);
+
+        List<Blog> fourthBlog = blogService.getBlogListByLevel(ELevel.FOURTH);
+        fourthBlog  = setBlog(fourthBlog);
+
+
         map.put("webConfig", webConfigService.getWebConfig());
         map.put("blog", blogService.getBlogByUid(uid));
         map.put("sameBlog", sameBlog);

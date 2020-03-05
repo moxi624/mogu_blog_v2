@@ -98,9 +98,20 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
             };break;
+            case FRIENDSHIP_LINK: {
+                // 判断是否点击友链
+                if(nameAndArgsMap.get(BaseSysConf.UID) != null) {
+                    moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
+                }
+                otherData = bussinessName;
+            };break;
             case VISIT_PAGE: {
                 // 访问页面
-                otherData = bussinessName;
+                if(nameAndArgsMap.get(BaseSysConf.PAGE_NAME) != null) {
+                    otherData = nameAndArgsMap.get(BaseSysConf.PAGE_NAME).toString();
+                } else {
+                    otherData = bussinessName;
+                }
             };break;
             case PUBLISH_COMMENT: {
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);

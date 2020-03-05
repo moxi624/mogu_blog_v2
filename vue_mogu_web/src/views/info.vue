@@ -90,11 +90,14 @@
     </div>
     <div class="sidebar">
 
-      <!-- 三级推荐 -->
-      <ThirdRecommend></ThirdRecommend>
-
       <!--标签云-->
       <TagCloud></TagCloud>
+
+      <!--关注我们-->
+      <FollowUs></FollowUs>
+
+      <!-- 三级推荐 -->
+      <ThirdRecommend></ThirdRecommend>
 
       <!--四级推荐-->
       <FourthRecommend></FourthRecommend>
@@ -102,17 +105,9 @@
       <!--点击排行-->
       <HotBlog></HotBlog>
 
-      <div class="links">
-        <h2 class="hometitle">友情链接</h2>
-        <ul>
-          <li v-for="item in linkData" :key="item.uid">
-            <a :href="item.url" target="_blank" v-if="item.title">{{item.title}}</a>
-          </li>
-        </ul>
-      </div>
+      <!-- 友情链接-->
+      <Link></Link>
 
-      <!--关注我们-->
-      <FollowUs></FollowUs>
     </div>
   </article>
 </template>
@@ -132,6 +127,7 @@
   import FollowUs from "../components/FollowUs";
   import PayCode from "../components/PayCode";
   import Sticky from '@/components/Sticky'
+  import Link from "../components/Link";
   import {addComment, getCommentList} from "../api/comment";
   import { Loading } from 'element-ui';
 
@@ -168,7 +164,8 @@
       PayCode,
       CommentList,
       CommentBox,
-      Sticky
+      Sticky,
+      Link
     },
     created() {
 
