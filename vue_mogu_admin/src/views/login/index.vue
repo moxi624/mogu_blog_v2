@@ -15,10 +15,12 @@
         </span>
         <el-input
           v-model="loginForm.username"
+          ref="userNameInput"
           name="username"
           type="text"
           auto-complete="on"
           placeholder="username"
+          @keyup.enter.native="handleLogin"
         />
       </el-form-item>
       <el-form-item prop="password">
@@ -104,7 +106,7 @@ export default {
       },
       loading: false,
       pwdType: "password",
-      redirect: undefined
+      redirect: undefined,
     };
   },
   watch: {
@@ -115,7 +117,21 @@ export default {
     //   immediate: true
     // }
   },
+  mounted() {
+    // mounted钩子函数，dom已经渲染完毕，可以直接获取到dom对象进行聚焦
+
+    // this.$refs.userNameInput.focus()
+  },
+  created() {
+    // created，dom还未开始渲染，因此需要使用this.$nextTick 将其放置在下一个dom渲染操作时执行
+    this.$refs.userNameInput.focus()
+  },
   methods: {
+    inputFocus: function() {
+      this.$nextTick(x => {
+        this.$refs.userNameInput.focus()
+      })
+    },
     showPwd() {
       if (this.pwdType === "password") {
         this.pwdType = "";
