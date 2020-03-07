@@ -28,4 +28,9 @@ public class ECode {
      */
     public static final Integer SERVER_ERROR = 500;
 
+    /**
+     * 请求次数过于频繁
+     */
+    public static final Integer REQUEST_OVER_LIMIT = 502;
+
 }

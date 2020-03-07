@@ -12,6 +12,7 @@ import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
+import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.service.*;
@@ -84,6 +85,7 @@ public class IndexRestApi {
     @Value(value = "${BLOG.FRIENDLY_LINK_COUNT}")
     private Integer FRIENDLY_LINK_COUNT;
 
+    @RequestLimit(amount = 200, time = 60000)
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
     @GetMapping("/getBlogByLevel")
     public String getBlogByLevel(HttpServletRequest request,

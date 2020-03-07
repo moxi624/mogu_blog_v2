@@ -21,6 +21,11 @@ file:
   upload:
     path: D:/mogu_blog/data/
 
+#请求限制参数
+request-limit:
+  amount: 100 # 100次
+  time: 60000 # 1分钟
+
 #博客相关配置
 BLOG:
   HOT_COUNT: 5 #热门博客数量

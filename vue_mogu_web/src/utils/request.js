@@ -40,6 +40,9 @@ service.interceptors.response.use(
     } else if (res.code === 500) {
       router.push('500')
       return Promise.reject('error')
+    } else if (res.code === 502) {
+      router.push('502')
+      return Promise.reject('error')
     } else {
       return Promise.reject('error')
     }

@@ -22,6 +22,7 @@ export const constantRouterMap = [
   },
   { path: '/404', component: () => import('@/views/404') },
   { path: '/500', component: () => import('@/views/500') },
+  { path: '/502', component: () => import('@/views/502') },
   { path: '/*', component: () => import('@/views/404') }
 
 ]

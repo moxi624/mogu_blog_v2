@@ -93,6 +93,12 @@
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
 
+        <!-- 引入SpringBoot配置文件处理类-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
 
