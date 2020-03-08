@@ -581,19 +581,16 @@ public class FileRestApi {
                         out = new BufferedOutputStream(new FileOutputStream(dest));
                         out.write(fileData.getBytes());
                         qn = new QiniuUtil();
-                        qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
 
+                        // TODO 不关闭流，小图片就无法显示？
+                        out.flush();
+                        out.close();
+
+                        qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
                     } catch (Exception e) {
                         log.error(e.getMessage());
                         return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
                     } finally {
-                        try {
-                            out.flush();
-                            out.close();
-                        }catch (Exception e) {
-                            log.error(e.getMessage());
-                        }
-
                         if (dest != null && dest.getParentFile().exists()) {
                             dest.delete();
                         }
@@ -815,19 +812,16 @@ public class FileRestApi {
                         out = new BufferedOutputStream(new FileOutputStream(dest));
                         out.write(fileData.getBytes());
                         qn = new QiniuUtil();
-                        qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
 
+                        // TODO 不关闭流，小图片就无法显示？
+                        out.flush();
+                        out.close();
+
+                        qiNiuUrl = qn.uploadQiniu(dest, qiNiuConfig);
                     } catch (Exception e) {
                         log.error(e.getMessage());
                         return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
                     } finally {
-                        try {
-                            out.flush();
-                            out.close();
-                        }catch (Exception e) {
-                            log.error(e.getMessage());
-                        }
-
                         if (dest != null && dest.getParentFile().exists()) {
                             dest.delete();
                         }

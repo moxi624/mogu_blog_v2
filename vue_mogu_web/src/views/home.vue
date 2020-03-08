@@ -90,7 +90,7 @@
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
         <span class="el-dropdown-link" >
           <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl">
+          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'">
           <img v-if="isLogin&&userInfo.photoUrl==undefined"
                src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>

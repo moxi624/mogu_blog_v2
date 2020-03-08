@@ -2,7 +2,7 @@
   <div>
     <div class="commentBox">
     <span class="left">
-      <img :src="getUserPhoto" />
+      <img :src="getUserPhoto" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"/>
     </span>
 
       <span class="right">
