@@ -141,6 +141,17 @@ public class TagRestApi {
         tagVoList.forEach(item -> {
             uids.add(item.getUid());
         });
+
+        // 判断要删除的分类，是否有博客
+        QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
+        blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        blogQueryWrapper.in(SQLConf.TAG_UID, uids);
+        Integer blogCount = blogService.count(blogQueryWrapper);
+        if(blogCount > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_TAG);
+        }
+
+
         Collection<Tag> tagList = tagService.listByIds(uids);
 
         tagList.forEach(item -> {
@@ -180,7 +191,7 @@ public class TagRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxTag.getUid().equals(tag.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_TAG_IS_TOP);
         }
 
         Integer sortCount = maxTag.getSort() + 1;

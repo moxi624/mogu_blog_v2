@@ -81,8 +81,7 @@ public class CategoryMenuRestApi {
 
         if (ids.size() > 0) {
             Collection<CategoryMenu> parentList = categoryMenuService.listByIds(ids);
-
-            Map<String, CategoryMenu> map = new HashMap<String, CategoryMenu>();
+            Map<String, CategoryMenu> map = new HashMap<>();
             parentList.forEach(item -> {
                 map.put(item.getUid(), item);
             });
@@ -110,6 +109,7 @@ public class CategoryMenuRestApi {
         QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.MENU_LEVEL, "1");
         queryWrapper.orderByDesc(SQLConf.SORT);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         List<CategoryMenu> list = categoryMenuService.list(queryWrapper);
 
         //获取所有的ID，去寻找他的子目录
@@ -122,6 +122,7 @@ public class CategoryMenuRestApi {
 
         QueryWrapper<CategoryMenu> childWrapper = new QueryWrapper<>();
         childWrapper.in(SQLConf.PARENT_UID, ids);
+        childWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Collection<CategoryMenu> childList = categoryMenuService.list(childWrapper);
         for (CategoryMenu parentItem : list) {
 
@@ -212,6 +213,14 @@ public class CategoryMenuRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+
+        QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.in(SQLConf.PARENT_UID, categoryMenuVO.getUid());
+        Integer menuCount = categoryMenuService.count(queryWrapper);
+        if(menuCount > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.CHILDREN_MENU_UNDER_THIS_MENU);
+        }
 
         CategoryMenu categoryMenu = categoryMenuService.getById(categoryMenuVO.getUid());
         categoryMenu.setStatus(EStatus.DISABLED);

@@ -383,11 +383,17 @@ export default {
           adminUids.push(row.uid);
           params.append("adminUids", adminUids);
           deleteAdmin(params).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
             that.adminList();
           });
         })

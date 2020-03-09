@@ -298,10 +298,17 @@ export default {
           var params = [];
           params.push(row);
           deleteBatchBlogSort(params).then(response => {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
             that.blogSortList();
           });
         })
@@ -329,11 +336,14 @@ export default {
       })
         .then(() => {
           deleteBatchBlogSort(that.multipleSelection).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message.error(response.data);
+            }
             that.blogSortList();
           });
         })

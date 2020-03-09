@@ -12,8 +12,11 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.ResourceSort;
+import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
+import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
@@ -54,6 +57,10 @@ public class ResourceSortRestApi {
 
     @Autowired
     ResourceSortService resourceSortService;
+
+    @Autowired
+    StudyVideoService studyVideoService;
+
     @Autowired
     PictureFeignClient pictureFeignClient;
 
@@ -130,6 +137,7 @@ public class ResourceSortRestApi {
         resourceSort.setSortName(resourceSortVO.getSortName());
         resourceSort.setContent(resourceSortVO.getContent());
         resourceSort.setFileUid(resourceSortVO.getFileUid());
+        resourceSort.setSort(resourceSortVO.getSort());
         resourceSort.setStatus(EStatus.ENABLE);
         resourceSort.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -161,6 +169,7 @@ public class ResourceSortRestApi {
         resourceSort.setSortName(resourceSortVO.getSortName());
         resourceSort.setContent(resourceSortVO.getContent());
         resourceSort.setFileUid(resourceSortVO.getFileUid());
+        resourceSort.setSort(resourceSortVO.getSort());
         resourceSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -180,13 +189,23 @@ public class ResourceSortRestApi {
         resourceSortVOList.forEach(item -> {
             uids.add(item.getUid());
         });
-        Collection<ResourceSort> tagList = resourceSortService.listByIds(uids);
 
-        tagList.forEach(item -> {
+        // 判断要删除的分类，是否有资源
+        QueryWrapper<StudyVideo> studyVideoQueryWrapper = new QueryWrapper<>();
+        studyVideoQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        studyVideoQueryWrapper.in(SQLConf.RESOURCE_SORT_UID, uids);
+        Integer count = studyVideoService.count(studyVideoQueryWrapper);
+        if(count > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.RESOURCE_UNDER_THIS_SORT);
+        }
+
+        Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(uids);
+
+        resourceSortList.forEach(item -> {
             item.setStatus(EStatus.DISABLED);
         });
 
-        Boolean save = resourceSortService.updateBatchById(tagList);
+        Boolean save = resourceSortService.updateBatchById(resourceSortList);
 
         if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
@@ -219,7 +238,7 @@ public class ResourceSortRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(resourceSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
         }
 
         Integer sortCount = maxSort.getSort() + 1;

@@ -9,7 +9,10 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.entity.Admin;
+import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Role;
+import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.vo.RoleVO;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -45,6 +48,9 @@ public class RoleRestApi {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private AdminService adminService;
 
     @ApiOperation(value = "获取角色信息列表", notes = "获取角色信息列表")
     @PostMapping("/getList")
@@ -117,6 +123,15 @@ public class RoleRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+
+        // 判断该角色下是否绑定了管理员
+        QueryWrapper<Admin> blogQueryWrapper = new QueryWrapper<>();
+        blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        blogQueryWrapper.in(SQLConf.ROLEUID, roleVO.getUid());
+        Integer adminCount = adminService.count(blogQueryWrapper);
+        if(adminCount > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ADMIN_UNDER_THIS_ROLE);
+        }
 
         Role role = roleService.getById(roleVO.getUid());
         role.setStatus(EStatus.DISABLED);

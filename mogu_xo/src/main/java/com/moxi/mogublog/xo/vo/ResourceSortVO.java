@@ -31,6 +31,11 @@ public class ResourceSortVO extends BaseVO<ResourceSortVO> {
     private String fileUid;
 
     /**
+     * 排序字段
+     */
+    private Integer sort;
+
+    /**
      * 无参构造方法
      */
     ResourceSortVO() {

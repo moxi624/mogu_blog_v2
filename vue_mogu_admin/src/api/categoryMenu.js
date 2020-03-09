@@ -36,7 +36,7 @@ export function deleteMenu(params) {
   return request({
     url: process.env.ADMIN_API + '/categoryMenu/delete',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -44,7 +44,7 @@ export function stickMenu(params) {
   return request({
     url: process.env.ADMIN_API + '/categoryMenu/stick',
     method: 'post',
-    params
+    data: params
   })
 }
 

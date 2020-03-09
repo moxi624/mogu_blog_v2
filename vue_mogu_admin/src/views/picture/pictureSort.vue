@@ -28,6 +28,12 @@
 	      </template>
 	    </el-table-column>
 
+      <el-table-column label="排序" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
+        </template>
+      </el-table-column>
+
 	    <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
@@ -94,6 +100,10 @@
 		    <el-form-item label="标题" :label-width="formLabelWidth" required>
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
+
+        <el-form-item label="排序" :label-width="formLabelWidth">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="tip" :label-width="formLabelWidth" v-if="!isEditForm">
           <el-tag type="success">首次创建图片分类，可以先不设置封面，待到有图片时在设置即可</el-tag>
@@ -201,7 +211,8 @@ export default {
       var formObject = {
         uid: null,
         name: null,
-        fileUid: null
+        fileUid: null,
+        sort: 0
       };
       return formObject;
     },
@@ -298,14 +309,18 @@ export default {
           let params = new URLSearchParams();
           params.append("uid", row.uid);
           deletePictureSort(params).then(response => {
-            console.log(response);
-            if (response.code == "success") {
+            if(response.code == "success") {
               this.$message({
                 type: "success",
                 message: response.data
               });
-              this.pictureSortList();
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
             }
+            this.pictureSortList();
           });
         })
         .catch(() => {

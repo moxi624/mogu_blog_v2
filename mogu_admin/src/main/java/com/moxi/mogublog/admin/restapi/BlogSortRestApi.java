@@ -49,6 +49,7 @@ public class BlogSortRestApi {
 
     @Autowired
     BlogSortService blogSortService;
+
     @Autowired
     BlogService blogService;
 
@@ -147,6 +148,15 @@ public class BlogSortRestApi {
             uids.add(item.getUid());
         });
 
+        // 判断要删除的分类，是否有博客
+        QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
+        blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        blogQueryWrapper.in(SQLConf.BLOG_SORT_UID, uids);
+        Integer blogCount = blogService.count(blogQueryWrapper);
+        if(blogCount > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_SORT);
+        }
+
         Collection<BlogSort> blogSortList = blogSortService.listByIds(uids);
 
         blogSortList.forEach(item -> {
@@ -185,7 +195,7 @@ public class BlogSortRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(blogSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
@@ -205,6 +215,7 @@ public class BlogSortRestApi {
         QueryWrapper<BlogSort> queryWrapper = new QueryWrapper();
 
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+
         // 按点击从高到低排序
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
 

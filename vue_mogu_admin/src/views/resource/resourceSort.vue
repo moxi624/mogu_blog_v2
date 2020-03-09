@@ -29,12 +29,17 @@
 	      </template>
 	    </el-table-column>
 
-        <el-table-column label="分类名" width="160" align="center">
+        <el-table-column label="分类介绍" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.content }}</span>
 	      </template>
 	    </el-table-column>
 
+      <el-table-column label="排序" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
+        </template>
+      </el-table-column>
 
 	    <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
@@ -56,7 +61,7 @@
 	   	  </template>
 	    </el-table-column>
 
-	    <el-table-column label="操作" fixed="right" min-width="150">
+	    <el-table-column label="操作" fixed="right" min-width="220">
 	      <template slot-scope="scope" >
           <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
@@ -97,6 +102,10 @@
 		    <el-form-item label="分类介绍" :label-width="formLabelWidth">
 		      <el-input type="textarea" v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
+
+        <el-form-item label="排序" :label-width="formLabelWidth">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        </el-form-item>
 
 		  </el-form>
 		  <div slot="footer" class="dialog-footer">
@@ -210,8 +219,6 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
-
       this.form.photoList = null;
       this.form.fileUid = "";
     },
@@ -221,13 +228,11 @@ export default {
     //改变页码
     handleCurrentChange(val) {
       var that = this;
-      console.log(`当前页: ${val}`);
       this.currentPage = val; //改变当前所指向的页数
       this.resourceSortList();
     },
     //点击新增
     handleAdd: function() {
-      console.log("点击了添加");
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -238,7 +243,6 @@ export default {
       this.isEditForm = true;
       console.log(row);
       this.form = row;
-      console.log("点击编辑", this.form);
     },
     handleStick: function(row) {
       this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
@@ -272,7 +276,7 @@ export default {
         });
     },
     handleDelete: function(row) {
-      this.$confirm("此操作将会把分类下全部图片删除, 是否继续?", "提示", {
+      this.$confirm("此操作将会把该分类删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -281,14 +285,18 @@ export default {
           var params = [];
           params.push(row);
           deleteBatchResourceSort(params).then(response => {
-            console.log(response);
             if (response.code == "success") {
               this.$message({
                 type: "success",
                 message: response.data
               });
-              this.resourceSortList();
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
             }
+            this.resourceSortList();
           });
         })
         .catch(() => {
@@ -315,11 +323,17 @@ export default {
       })
         .then(() => {
           deleteBatchResourceSort(that.multipleSelection).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if (response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
             that.resourceSortList();
           });
         })
@@ -331,7 +345,6 @@ export default {
         });
     },
     submitForm: function() {
-
       if (this.isEditForm) {
         editResourceSort(this.form).then(response => {
           console.log(response);

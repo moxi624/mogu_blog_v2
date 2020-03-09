@@ -5,13 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
+import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.Picture;
 import com.moxi.mogublog.xo.entity.PictureSort;
+import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
@@ -34,9 +38,8 @@ import java.util.Map;
  * </p>
  *
  * @author xzx19950624@qq.com
- * @since 22018年9月17日16:37:13
+ * @since 2018年9月17日16:37:13
  */
-//@PreAuthorize("hasRole('Administrator')")
 @Api(value = "图片分类RestApi", tags = {"PictureSortRestApi"})
 @RestController
 @RequestMapping("/pictureSort")
@@ -48,6 +51,10 @@ public class PictureSortRestApi {
 
     @Autowired
     PictureSortService pictureSortService;
+
+    @Autowired
+    PictureService pictureService;
+
     @Autowired
     PictureFeignClient pictureFeignClient;
 
@@ -58,7 +65,7 @@ public class PictureSortRestApi {
                           @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                           @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
-        QueryWrapper<PictureSort> queryWrapper = new QueryWrapper<PictureSort>();
+        QueryWrapper<PictureSort> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(keyword) && !StringUtils.isEmpty(keyword.trim())) {
             queryWrapper.like(SQLConf.NAME, keyword.trim());
         }
@@ -79,7 +86,7 @@ public class PictureSortRestApi {
         });
 
         String pictureResult = null;
-        Map<String, String> pictureMap = new HashMap<String, String>();
+        Map<String, String> pictureMap = new HashMap<>();
 
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
@@ -156,6 +163,16 @@ public class PictureSortRestApi {
         if (StringUtils.isEmpty(uid)) {
             return ResultUtil.result(SysConf.ERROR, "数据错误");
         }
+
+        // 判断要删除的分类，是否有图片
+        QueryWrapper<Picture> pictureQueryWrapper = new QueryWrapper<>();
+        pictureQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        pictureQueryWrapper.eq(SQLConf.PICTURE_SORT_UID, uid);
+        Integer pictureCount = pictureService.count(pictureQueryWrapper);
+        if(pictureCount > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PICTURE_UNDER_THIS_SORT);
+        }
+
         PictureSort pictureSort = pictureSortService.getById(uid);
         pictureSort.setStatus(EStatus.DISABLED);
         pictureSort.updateById();
@@ -188,7 +205,7 @@ public class PictureSortRestApi {
             return ResultUtil.result(SysConf.ERROR, "数据错误");
         }
         if (maxSort.getUid().equals(pictureSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, "该分类已经在顶端");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
