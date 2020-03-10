@@ -74,3 +74,12 @@ ALTER TABLE  t_sys_dict_data ADD sort int(11) NOT NULL DEFAULT '0' COMMENT '排�
    @date 2020年2月21日21:23:28
 */
 ALTER TABLE  t_category_menu ADD is_show tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否显示 1:是 0:否';
+
+/*
+   修改t_user表，增加comment_status字段
+   @date 2020年2月21日21:23:28
+*/
+ALTER TABLE  t_user ADD comment_status tinyint(1) NOT NULL DEFAULT 1 COMMENT '评论状态 1:正常 0:禁言';
+ALTER TABLE  t_user ADD ip_source varchar(255) NULL COMMENT 'ip来源';
+ALTER TABLE  t_user ADD browser varchar(255) NULL COMMENT '浏览器';
+ALTER TABLE  t_user ADD os varchar(255) NULL COMMENT '操作系统';

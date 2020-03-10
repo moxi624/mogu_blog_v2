@@ -10,9 +10,7 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.SysDictType;
+import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.entity.SysDictType;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.SysDictTypeService;
@@ -181,6 +179,15 @@ public class SysDictTypeRestApi {
         sysDictTypeVoList.forEach(item -> {
             uids.add(item.getUid());
         });
+
+        // 判断要删除的分类，是否有博客
+        QueryWrapper<SysDictData> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.in(SQLConf.DICT_TYPE_UID, uids);
+        Integer count = sysDictDataService.count(queryWrapper);
+        if(count > 0) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.DICT_DATA_UNDER_THIS_SORT);
+        }
 
         Collection<SysDictType> sysDictTypeList = sysDictTypeService.listByIds(uids);
 

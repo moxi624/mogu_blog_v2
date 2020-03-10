@@ -117,6 +117,25 @@ public class User extends SuperEntity<User> {
      */
     private String lastLoginIp;
 
+    /**
+     * 评论状态，0 禁言， 1 正常
+     */
+    private Integer commentStatus;
+
+    /**
+     * 操作系统
+     */
+    private String os;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
+
+    /**
+     * ip来源
+     */
+    private String ipSource;
 
     // 以下字段不存入数据库
 

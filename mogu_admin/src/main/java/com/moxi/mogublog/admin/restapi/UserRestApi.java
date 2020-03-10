@@ -10,6 +10,7 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.util.WebUtils;
+import com.moxi.mogublog.utils.MD5Utils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.User;
@@ -23,6 +24,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,10 +58,13 @@ public class UserRestApi {
     @Autowired
     UserService userService;
 
+    @Value(value = "${DEFAULE_PWD}")
+    private String DEFAULE_PWD;
+
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
-    @ApiOperation(value = "获取友链列表", notes = "获取友链列表", response = String.class)
+    @ApiOperation(value = "获取用户列表", notes = "获取用户列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody UserVO userVO, BindingResult result) {
 
@@ -67,8 +72,15 @@ public class UserRestApi {
         ThrowableUtils.checkParamArgument(result);
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        // 查询用户名
         if (StringUtils.isNotEmpty(userVO.getKeyword()) && !StringUtils.isEmpty(userVO.getKeyword().trim())) {
-            queryWrapper.like(SQLConf.USER_NAME, userVO.getKeyword().trim());
+            queryWrapper.like(SQLConf.USER_NAME, userVO.getKeyword().trim()).or().like(SQLConf.NICK_NAME, userVO.getKeyword().trim());
+        }
+        if (StringUtils.isNotEmpty(userVO.getSource()) && !StringUtils.isEmpty(userVO.getSource().trim())) {
+            queryWrapper.eq(SQLConf.SOURCE, userVO.getSource().trim());
+        }
+        if (userVO.getCommentStatus() != null) {
+            queryWrapper.eq(SQLConf.COMMENT_STATUS, userVO.getCommentStatus());
         }
         queryWrapper.select(User.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         Page<User> page = new Page<>();
@@ -137,7 +149,8 @@ public class UserRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
-    @ApiOperation(value = "冻结/解冻用户", notes = "冻结/解冻用户", response = String.class)
+    @OperationLogger(value = "禁言/解禁用户")
+    @ApiOperation(value = "禁言/解禁用户", notes = "禁言/解禁用户", response = String.class)
     @PostMapping("/freeze")
     public String freezeUser(@Validated({Delete.class}) @RequestBody UserVO userVO, BindingResult result) {
 
@@ -146,13 +159,26 @@ public class UserRestApi {
 
         User user = userService.getById(userVO.getUid());
 
-        if (user.getStatus() == EStatus.FREEZE) {
-            user.setStatus(EStatus.ENABLE);
-        } else if (user.getStatus() == EStatus.DISABLED) {
-            user.setStatus(EStatus.DISABLED);
-        } else {
-            user.setStatus(EStatus.FREEZE);
+        if (user.getCommentStatus() == SysConf.ZERO) {
+            user.setCommentStatus(SysConf.ONE);
+        } else if (user.getStatus() == SysConf.ONE) {
+            user.setCommentStatus(SysConf.ZERO);
         }
+        user.updateById();
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+    }
+
+    @OperationLogger(value = "重置用户密码")
+    @ApiOperation(value = "重置用户密码", notes = "重置用户密码", response = String.class)
+    @PostMapping("/resetUserPassword")
+    public String resetUserPassword(@Validated({Delete.class}) @RequestBody UserVO userVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        User user = userService.getById(userVO.getUid());
+        user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
         user.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

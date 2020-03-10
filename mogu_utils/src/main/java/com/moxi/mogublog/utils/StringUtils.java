@@ -253,9 +253,9 @@ public class StringUtils {
 
     /**
      * list小于0的数据就过滤了
-     * 把list的数组变成1，3，4，5，6，
-     *
-     * @param stringList
+     * 把list的数组变成1，3，4，5，6
+     * @param list
+     * @param code
      * @return
      */
     public static String listToString(List<Long> list, String code) {
@@ -275,8 +275,8 @@ public class StringUtils {
 
     /**
      * 按code把list的数组转换成字符串
-     *
-     * @param stringList
+     * @param list
+     * @param code
      * @return
      */
     public static String listTranformString(List<String> list, String code) {
@@ -325,6 +325,12 @@ public class StringUtils {
         }
     }
 
+    /**
+     * 某个子串是否在字符串内
+     * @param str
+     * @param searchChar
+     * @return
+     */
     public static boolean contains(String str, String searchChar) {
         if (isEmpty(str)) {
             return false;
@@ -357,5 +363,35 @@ public class StringUtils {
         }
 
         return str.substring(start);
+    }
+
+    /**
+     * 判断评论是否为垃圾评论（仅通过单一字符重复出现来判断，以后可以扩展更多的检测方法）
+     * @param content
+     * @return
+     */
+    public static Boolean isCommentSpam(String content) {
+        if(content == null) {
+            return true;
+        }
+        char [] chars = content.toCharArray();
+        // 最大重复次数
+        Integer maxCount = 4;
+        for(int a=0; a<chars.length; a++) {
+            Integer count = 1;
+            for(int b=a; b<chars.length-1; b++) {
+                if(chars[b+1] == chars[b]) {
+                    count++;
+                    // 判断字符重复的次数是否大于阈值
+                    if(count >= maxCount) {
+                        return true;
+                    }
+                    continue;
+                } else {
+                    break;
+                }
+            }
+        }
+        return false;
     }
 }

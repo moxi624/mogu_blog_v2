@@ -239,7 +239,7 @@
         isEditForm: false,
         form: {},
         listClassType: [
-          {label: "default", value: ''},
+          {label: "default", value: 'default'},
           {label: "primary", value: 'primary'},
           {label: "success", value: 'success'},
           {label: "info", value: 'info'},

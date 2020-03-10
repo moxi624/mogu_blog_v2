@@ -20,11 +20,10 @@ public class MD5Utils {
      *
      * @param inStr
      * @return
-     * @throws NoSuchAlgorithmException
      * @author xuzhixiang
      * @date 2017年9月24日17:22:13
      */
-    public static String string2MD5(String inStr) throws NoSuchAlgorithmException {
+    public static String string2MD5(String inStr) {
         MessageDigest md5;
         String string = "";
         try {

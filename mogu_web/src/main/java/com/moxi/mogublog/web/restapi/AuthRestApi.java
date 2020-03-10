@@ -2,10 +2,7 @@ package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -73,6 +70,8 @@ public class AuthRestApi {
     private Long userTokenSurvivalTime;
     @Value(value = "${PROJECT_NAME_EN}")
     private String PROJECT_NAME_EN;
+    @Value(value = "${DEFAULE_PWD}")
+    private String DEFAULE_PWD;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -101,6 +100,10 @@ public class AuthRestApi {
         AuthResponse response = authRequest.login(callback);
         String result = JSONObject.toJSONString(response);
         Map<String, Object> map = JsonUtils.jsonToMap(result);
+        if(response.getCode() == 5000) {
+            // 跳转到500错误页面
+            httpServletResponse.sendRedirect(webSiteUrl + "500");
+        }
         Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get(SysConf.DATA)));
         Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
         String accessToken = token.get(SysConf.ACCESS_TOKEN).toString();
@@ -115,7 +118,6 @@ public class AuthRestApi {
             } else {
                 user = new User();
             }
-
         } else {
             return;
         }
@@ -175,9 +177,7 @@ public class AuthRestApi {
                 }
             }
         } else {
-
             user.setPhotoUrl(photoList.get(0));
-
         }
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());
@@ -188,19 +188,17 @@ public class AuthRestApi {
             user.setLoginCount(user.getLoginCount() + 1);
         }
 
-        user.setLastLoginTime(new Date());
-        user.setLastLoginIp(IpUtils.getIpAddr(request));
+        // 获取浏览器，IP来源，以及操作系统
+        user = userService.serRequestInfo(user);
+
         if (exist) {
             user.updateById();
         } else {
             user.setUuid(data.get(SysConf.UUID).toString());
             user.setSource(data.get(SysConf.SOURCE).toString());
             user.setUserName(PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid()));
-            //产生(0,999999]之间的随机数
-            Integer randNum = (int) (Math.random() * (999999) + 1);
-            //进行六位数补全
-            String workPassWord = String.format("%06d", randNum);
-            user.setPassWord(workPassWord);
+            // 默认密码
+            user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
             user.insert();
         }
 

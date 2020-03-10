@@ -18,14 +18,14 @@
         </el-tooltip>
 
         <el-dropdown class="avatar-container" trigger="click">
-          <div class="avatar-wrapper">            
-            <img :src="BASE_IMAGE_URL + avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">            
-            <i class="el-icon-caret-bottom"/>            
+          <div class="avatar-wrapper">
+            <img :src="BASE_IMAGE_URL + avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <i class="el-icon-caret-bottom"/>
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <router-link class="inlineBlock" to="/">
-              <el-dropdown-item>主页</el-dropdown-item>
-            </router-link>
+            <el-dropdown-item>
+              <span style="display:block;" @click="aboutMe">关于我</span>
+            </el-dropdown-item>
             <el-dropdown-item divided>
               <span style="display:block;" @click="showLog">更新日志</span>
             </el-dropdown-item>
@@ -96,6 +96,9 @@ export default {
     showLog: function() {
       console.log("点击了显示日志");
       this.dialogFormVisible = true;
+    },
+    aboutMe: function () {
+      this.$router.push({path:'/system/aboutMe'})
     }
   }
 };

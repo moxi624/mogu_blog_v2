@@ -37,7 +37,7 @@
 
       <el-table-column label="字典类型" width="200" align="center">
         <template slot-scope="scope">
-          <el-tag type="warning" style="cursor: pointer"  @click.native="handleList(scope.row)">{{ scope.row.dictType }}</el-tag>
+          <el-tag type="warning" style="cursor: pointer" >{{ scope.row.dictType }}</el-tag>
         </template>
       </el-table-column>
 
@@ -221,11 +221,17 @@ export default {
           let deleteList = []
           deleteList.push(sysDictType)
           deleteBatchSysDictType(deleteList).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
             that.sysDictTypeList();
           });
         })
@@ -252,10 +258,17 @@ export default {
       })
         .then(() => {
           deleteBatchSysDictType(that.multipleSelection).then(response => {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            if(response.code == "success") {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data
+              });
+            }
             that.sysDictTypeList();
           });
         })

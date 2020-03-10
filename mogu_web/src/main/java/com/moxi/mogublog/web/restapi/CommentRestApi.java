@@ -4,10 +4,13 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
+import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
@@ -19,8 +22,10 @@ import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.GetOne;
@@ -38,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 评论RestApi
@@ -51,7 +57,8 @@ import java.util.*;
 @Slf4j
 public class CommentRestApi {
 
-
+    @Autowired
+    RedisUtil redisUtil;
     @Autowired
     WebUtils webUtils;
     @Autowired
@@ -178,7 +185,6 @@ public class CommentRestApi {
     @ApiOperation(value = "增加评论", notes = "增加评论")
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
-
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
@@ -186,6 +192,37 @@ public class CommentRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
         }
         ThrowableUtils.checkParamArgument(result);
+
+        String userUid = commentVO.getUserUid();
+        User user = userService.getById(userUid);
+
+        // 判断该用户是否被禁言
+        if(user.getCommentStatus() == SysConf.ZERO) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_SPEAK);
+        }
+
+        // 判断是否发送过多无意义评论
+        String jsonResult = redisUtil.get(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid);
+        if(!StringUtils.isEmpty(jsonResult)) {
+            Integer count = Integer.valueOf(jsonResult);
+            if(count >= 5) {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
+            }
+        }
+
+        String content = commentVO.getContent();
+
+        // 判断是否垃圾评论
+        if(StringUtils.isCommentSpam(content)) {
+            if (StringUtils.isEmpty(jsonResult)) {
+                Integer count = 0;
+                redisUtil.setEx(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid, count.toString(), 1, TimeUnit.HOURS);
+            } else {
+                redisUtil.incrBy(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid, 1);
+            }
+
+            return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_SPAM);
+        }
 
         if (commentVO.getContent().length() > SysConf.TWO_TWO_FIVE) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_225);
@@ -199,8 +236,6 @@ public class CommentRestApi {
         comment.setToUserUid(commentVO.getToUserUid());
         comment.setStatus(EStatus.ENABLE);
         comment.insert();
-
-        User user = userService.getById(commentVO.getUserUid());
 
         //获取图片
         if (StringUtils.isNotEmpty(user.getAvatar())) {
@@ -221,12 +256,10 @@ public class CommentRestApi {
 
         ThrowableUtils.checkParamArgument(result);
 
-
         Comment comment = commentService.getById(commentVO.getUid());
 
         // 判断评论是否被删除
         if (comment == null || comment.getStatus() == EStatus.DISABLED) {
-
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_NOT_EXIST);
         }
 

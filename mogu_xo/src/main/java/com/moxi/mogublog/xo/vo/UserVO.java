@@ -94,4 +94,8 @@ public class UserVO extends BaseVO<UserVO> {
      */
     private String uuid;
 
+    /**
+     * 评论状态，0 禁言， 1 正常
+     */
+    private Integer commentStatus;
 }

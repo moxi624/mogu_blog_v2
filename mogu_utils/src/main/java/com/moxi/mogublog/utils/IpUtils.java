@@ -89,7 +89,6 @@ public class IpUtils {
      * @return
      */
     public static Map<String, String> getOsAndBrowserInfo(HttpServletRequest request) {
-
         String browserDetails = request.getHeader("User-Agent");
         String userAgent = browserDetails;
         String user = userAgent.toLowerCase();

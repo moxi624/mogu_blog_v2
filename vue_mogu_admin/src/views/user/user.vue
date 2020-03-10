@@ -10,6 +10,25 @@
         v-model="keyword"
         placeholder="请输入用户名"
       ></el-input>
+
+      <el-select v-model="accountSourceKeyword" clearable placeholder="账号类型" style="width:140px">
+        <el-option
+          v-for="item in accountSourceDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
+        ></el-option>
+      </el-select>
+
+      <el-select v-model="commentStatusKeyword" clearable placeholder="评论状态" style="width:140px">
+        <el-option
+          v-for="item in commentStatusDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
+        ></el-option>
+      </el-select>
+
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
 <!--      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加用户</el-button>-->
     </div>
@@ -17,13 +36,13 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60">
+      <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="头像" width="120">
+      <el-table-column label="头像" width="120" align="center">
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoUrl"
@@ -33,44 +52,72 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名" width="100">
+      <el-table-column label="用户名" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.userName }}</span>
+          <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="性别" width="100">
+<!--      <el-table-column label="性别" width="100">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>-->
+<!--          <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+
+      <el-table-column label="账号来源" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>
-          <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>
+          <template>
+            <el-tag v-for="item in accountSourceDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.source == item.dictValue">{{item.dictLabel}}</el-tag>
+          </template>
         </template>
       </el-table-column>
 
-      <el-table-column label="邮箱" width="200">
+      <el-table-column label="评论状态" width="100" align="center">
+        <template slot-scope="scope">
+          <template>
+            <el-tag v-for="item in commentStatusDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.commentStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+          </template>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="邮箱" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="来源" width="100">
-        <template slot-scope="scope">
-          <span>{{ scope.row.source }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="登录次数" width="100">
+      <el-table-column label="登录次数" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录IP" width="160">
+      <el-table-column label="登录IP" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginIp }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="最后登录时间" width="160">
+      <el-table-column label="IP来源" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ipSource }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作系统" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.os }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="浏览器" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.browser }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="最后登录时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginTime }}</span>
         </template>
@@ -90,11 +137,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="230">
+      <el-table-column label="操作" fixed="right" min-width="250">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status == 2" @click="handleStick(scope.row)" type="success" size="small">解结</el-button>
-          <el-button v-if="scope.row.status == 1" @click="handleStick(scope.row)" type="warning" size="small">冻结</el-button>
-<!--          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>-->
+          <el-button v-if="scope.row.commentStatus == 0" @click="handleStick(scope.row)" type="success" size="small">解禁</el-button>
+          <el-button v-if="scope.row.commentStatus == 1" @click="handleStick(scope.row)" type="warning" size="small">禁言</el-button>
+          <el-button @click="handleUpdatePassword(scope.row)" type="primary" size="small">重置密码</el-button>
           <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -147,8 +194,11 @@
   import {
     getUserList,
     deleteUser,
-    freezeUser
+    freezeUser,
+    resetUserPassword
   } from "@/api/user";
+
+  import {getListByDictTypeList} from "@/api/sysDictData"
 
   export default {
     data() {
@@ -156,6 +206,8 @@
         BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
         tableData: [],
         keyword: "",
+        accountSourceKeyword: "",
+        commentStatusKeyword: "",
         currentPage: 1,
         pageSize: 10,
         total: 0, //总数量
@@ -165,16 +217,22 @@
         isEditForm: false,
         form: {
           uid: null,
-        }
+        },
+        accountSourceDictList: [], //账号来源字典
+        commentStatusDictList: [] //评论状态字典
       };
     },
     created() {
+      // 字典查询
+      this.getDictList();
       this.userList();
     },
     methods: {
       userList: function() {
         var params = {};
         params.keyword = this.keyword;
+        params.commentStatus = this.commentStatusKeyword;
+        params.source = this.accountSourceKeyword;
         params.currentPage = this.currentPage;
         params.pageSize = this.pageSize;
 
@@ -185,6 +243,21 @@
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
             this.total = response.data.total;
+          }
+        });
+      },
+      /**
+       * 字典查询
+       */
+      getDictList: function () {
+
+        var dictTypeList =  ['sys_account_source', 'sys_comment_status']
+
+        getListByDictTypeList(dictTypeList).then(response => {
+          if (response.code == "success") {
+            var dictMap = response.data;
+            this.accountSourceDictList = dictMap.sys_account_source.list
+            this.commentStatusDictList = dictMap.sys_comment_status.list
           }
         });
       },
@@ -209,7 +282,7 @@
         this.form = row;
       },
       handleStick: function(row) {
-        this.$confirm("此操作将会冻结/解冻, 是否继续?", "提示", {
+        this.$confirm("此操作将该用户禁言/解禁, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -250,6 +323,31 @@
             var params = {};
             params.uid = row.uid;
             deleteUser(params).then(response => {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              that.userList();
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
+          });
+      },
+      handleUpdatePassword: function(row) {
+        var that = this;
+        this.$confirm("此操作将把用户密码重置为初始密码?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            var params = {};
+            params.uid = row.uid;
+            resetUserPassword(params).then(response => {
               this.$message({
                 type: "success",
                 message: response.data

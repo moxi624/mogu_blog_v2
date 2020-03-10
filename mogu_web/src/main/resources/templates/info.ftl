@@ -1,28 +1,28 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="gbk">
+    <META http-equiv="content-type" content="text/html; charset=utf-8">
     <title>${webConfig.name}</title>
     <meta name="keywords" content="${webConfig.keyword}" />
     <meta name="description" content="${webConfig.summary}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://localhost:8600/static/css/index.css" rel="stylesheet">
-    <link href="http://localhost:8600/static/css/ckeditor.css" rel="stylesheet">
+    <link href="${staticBasePath}/static/css/index.css" rel="stylesheet">
+    <link href="${staticBasePath}/static/css/ckeditor.css" rel="stylesheet">
     <link href="https://apps.bdimg.com/libs/highlight.js/9.1.0/styles/monokai-sublime.min.css" rel="stylesheet">
     <![endif]-->
 </head>
 <body>
 <header class="header-navigation" id="header">
     <nav>
-        <div class="logo"><a href="http://localhost:9527/#/">${webConfig.name}</a></div>
+        <div class="logo"><a href="${vueWebBasePath}">${webConfig.name}</a></div>
         <h2 id="mnavh"><span class="navicon"></span></h2>
         <ul id="starlist">
-            <li><a href="http://localhost:9527/#/">网站首页</a></li>
-            <li><a href="http://localhost:9527/#/about">关于我</a> </li>
-            <li><a href="http://localhost:9527/#/sort">归档</a>
-            <li><a href="http://localhost:9527/#/classify">归档</a>
-            <li><a href="http://localhost:9527/#/time">时间轴</a> </li>
-            <li><a href="http://localhost:9527/#/messageBoard">留言板</a> </li>
+            <li><a href="${vueWebBasePath}">网站首页</a></li>
+            <li><a href="${vueWebBasePath}about">关于我</a> </li>
+            <li><a href="${vueWebBasePath}sort">归档</a>
+            <li><a href="${vueWebBasePath}classify">归档</a>
+            <li><a href="${vueWebBasePath}time">时间轴</a> </li>
+            <li><a href="${vueWebBasePath}messageBoard">留言板</a> </li>
         </ul>
         <div class="searchbox">
             <div id="search_bar" class="search_bar">
@@ -40,7 +40,7 @@
 </header>
 
 <article>
-    <h1 class="t_nav"><a href="/" class="n1">网站首页</a><a href="/" class="n2">${blog.title}</a></h1>
+    <h1 class="t_nav"><a href="/" class="n1">网站首页</a><a href="/" class="n2">${blog.blogSort.sortName}</a></h1>
     <div class="infosbox">
         <div class="newsview">
             <h3 class="news_title">${blog.title}</h3>
@@ -75,7 +75,7 @@
                 <div class="shang_tit">
                     <p>感谢您的支持，我会继续努力的!</p>
                 </div>
-                <div class="shang_payimg"> <img src="http://localhost:8600/images/alipayimg.jpg" alt="扫码支持" title="扫一扫"> </div>
+                <div class="shang_payimg"> <img src="${staticBasePath}/images/alipayimg.jpg" alt="扫码支持" title="扫一扫"> </div>
                 <div class="pay_explain">扫码打赏，你说多少就多少</div>
                 <div class="shang_payselect">
                     <div class="pay_item checked" data-id="alipay"> <span class="radiobox"></span> <span class="pay_logo"><img src="images/alipay.jpg" alt="支付宝"></span> </div>
@@ -106,7 +106,7 @@
             <ul>
                 <#if sameBlog??>
                     <#list sameBlog as blog>
-                        <li><a href="http://localhost:8603/freemarker/info/${blog.uid}" title="${blog.title}">${blog.title}</a></li>
+                        <li><a href="${webBasePath}/freemarker/info/${blog.uid}" title="${blog.title}">${blog.title}</a></li>
                     </#list>
                 </#if>
                 </ul>
@@ -122,13 +122,13 @@
         <div class="zhuanti">
             <h2 class="hometitle">特别推荐</h2>
             <ul>
-                <li> <i><img src="http://localhost:8600/static/images/banner03.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/banner03.jpg"></i>
                     <p>帝国cms调用方法 <span><a href="/">阅读</a></span> </p>
                 </li>
-                <li> <i><img src="http://localhost:8600/static/images/b04.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/b04.jpg"></i>
                     <p>5.20 我想对你说 <span><a href="/">阅读</a></span></p>
                 </li>
-                <li> <i><img src="http://localhost:8600/static/images/b05.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/b05.jpg"></i>
                     <p>个人博客，属于我的小世界！ <span><a href="/">阅读</a></span></p>
                 </li>
             </ul>
@@ -136,20 +136,20 @@
         <div class="tuijian">
             <h2 class="hometitle">推荐文章</h2>
             <ul class="tjpic">
-                <i><img src="http://localhost:8600/static/images/toppic01.jpg"></i>
+                <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                 <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
             </ul>
             <ul class="sidenews">
-                <li> <i><img src="http://localhost:8600/static/images/toppic01.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/toppic02.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/v1.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/v1.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/v2.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/v2.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
                     <span>2018-05-13</span> </li>
             </ul>
@@ -157,20 +157,20 @@
         <div class="tuijian">
             <h2 class="hometitle">点击排行</h2>
             <ul class="tjpic">
-                <i><img src="http://localhost:8600/static/images/toppic01.jpg"></i>
+                <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                 <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
             </ul>
             <ul class="sidenews">
-                <li> <i><img src="http://localhost:8600/static/images/toppic01.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                     <p><a href="/">别让这些闹心的套路</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/toppic02.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/v1.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/v1.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
                     <span>2018-05-13</span> </li>
-                <li> <i><img src="http://localhost:8600/static/images/v2.jpg"></i>
+                <li> <i><img src="${staticBasePath}/static/images/v2.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
                     <span>2018-05-13</span> </li>
             </ul>
@@ -189,7 +189,7 @@
                 <li class="qq"><a href="/" target="_blank"><span>QQ号</span>476847113</a></li>
                 <li class="email"><a href="/" target="_blank"><span>邮箱帐号</span>dancesmiling@qq.com</a></li>
                 <li class="wxgzh"><a href="/" target="_blank"><span>微信号</span>yangqq_1987</a></li>
-                <li class="wx"><img src="http://localhost:8600/static/images/wx.jpg"></li>
+                <li class="wx"><img src="${staticBasePath}/static/images/wx.jpg"></li>
             </ul>
         </div>
     </div>
@@ -201,9 +201,9 @@
 </body>
 <script src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script src="http://localhost:8600/static/js/jquery.min.js" ></script>
-<script src="http://localhost:8600/static/js/nav.js"></script>
-<script src="http://localhost:8600/static/js/scrollReveal.js"></script>
+<script src="${staticBasePath}/static/js/jquery.min.js" ></script>
+<script src="${staticBasePath}/static/js/nav.js"></script>
+<script src="${staticBasePath}/static/js/scrollReveal.js"></script>
 <!--[if lt IE 9]>
-<script src="http://localhost:8600/static/js/modernizr.js"></script>
+<script src="${staticBasePath}/static/js/modernizr.js"></script>
 </html>

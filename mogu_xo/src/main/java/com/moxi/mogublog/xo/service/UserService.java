@@ -38,4 +38,11 @@ public interface UserService extends SuperService<User> {
      * @return
      */
     public Integer getUserCount(int status);
+
+    /**
+     * 设置Request相关，如浏览器，IP，IP来源
+     * @param user
+     * @return
+     */
+    public User serRequestInfo(User user);
 }

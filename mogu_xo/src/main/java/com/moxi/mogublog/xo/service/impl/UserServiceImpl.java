@@ -3,17 +3,23 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.mapper.UserMapper;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mougblog.base.global.BaseSQLConf;
+import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -28,6 +34,9 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public User insertUserInfo(HttpServletRequest request, String response) {
@@ -69,7 +78,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
             String workPassWord = String.format("%06d" , randNum);//进行六位数补全
             user.setPassWord(workPassWord);
             user.insert();
-            System.out.println("insert");
         }
         return user;
     }
@@ -87,5 +95,30 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseSQLConf.STATUS, status);
         return userService.count(queryWrapper);
+    }
+
+    @Override
+    public User serRequestInfo(User user) {
+        HttpServletRequest request = RequestHolder.getRequest();
+        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+        String os = map.get("OS");
+        String browser = map.get("BROWSER");
+        String ip = IpUtils.getIpAddr(request);
+        user.setLastLoginIp(ip);
+        user.setOs(os);
+        user.setLastLoginTime(new Date());
+
+        //从Redis中获取IP来源
+        String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
+        if (StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
+            if (StringUtils.isNotEmpty(addresses)) {
+                user.setIpSource(addresses);
+                stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            }
+        } else {
+            user.setIpSource(jsonResult);
+        }
+        return user;
     }
 }

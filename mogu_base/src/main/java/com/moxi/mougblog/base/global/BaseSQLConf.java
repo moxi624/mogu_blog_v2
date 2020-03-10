@@ -20,6 +20,7 @@ public class BaseSQLConf {
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "email";
     public static final String SOURCE = "source";
+    public static final String COMMENT_STATUS = "comment_status";
     public static final String UUID = "uuid";
     public static final String URL = "url";
     public final static String USER_UID = "user_uid";

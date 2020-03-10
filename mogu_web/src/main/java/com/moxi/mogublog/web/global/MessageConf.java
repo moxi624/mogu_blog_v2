@@ -16,4 +16,10 @@ public final class MessageConf extends BaseMessageConf {
 
     public static final String COMMENT_CAN_NOT_MORE_THAN_225 = "评论不能超过225个字符";
 
+    public static final String COMMENT_IS_SPAM = "请输入有意义的评论内容！";
+
+    public static final String YOU_DONT_HAVE_PERMISSION_TO_SPEAK = "您没有发言权限！";
+
+    public static final String PLEASE_TRY_AGAIN_IN_AN_HOUR = "由于发送过多无意义评论，您已被禁言一小时，请稍后在试~";
+
 }

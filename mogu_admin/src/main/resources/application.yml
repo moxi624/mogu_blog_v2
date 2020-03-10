@@ -21,7 +21,7 @@ file:
 moguBlog:
   email: mogublog@163.com
 
-# 蘑菇博客后台登录默认密码
+# 蘑菇博客登录默认密码
 DEFAULE_PWD: mogu2018
 
 #博客相关配置

@@ -23,3 +23,11 @@ export function freezeUser(params) {
     data: params
   })
 }
+
+export function resetUserPassword(params) {
+  return request({
+    url: process.env.ADMIN_API + '/user/resetUserPassword',
+    method: 'post',
+    data: params
+  })
+}

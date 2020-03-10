@@ -161,7 +161,7 @@ public class SysDictDataRestApi {
 
 
         SysDictData sysDictData = sysDictDataService.getById(sysDictDataVO.getUid());
-        // 但更改了标签名时，判断更改的字典数据是否存在
+        // 更改了标签名时，判断更改的字典数据是否存在
         if(!sysDictData.getDictLabel().equals(sysDictDataVO.getDictLabel())) {
             QueryWrapper<SysDictData> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.DICT_LABEL, sysDictDataVO.getDictLabel());

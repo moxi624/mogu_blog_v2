@@ -63,4 +63,9 @@ public class BaseRedisConf {
      */
     public final static String USER_TOEKN = "userToken";
 
+    /**
+     * token令牌
+     */
+    public final static String USER_PUBLISH_SPAM_COMMENT_COUNT= "USER_PUBLISH_SPAM_COMMENT_COUNT";
+
 }

@@ -21,6 +21,9 @@ file:
   upload:
     path: D:/mogu_blog/data/
 
+# 蘑菇博客登录默认密码
+DEFAULE_PWD: mogu2018
+
 #请求限制参数
 request-limit:
   amount: 100 # 100次
