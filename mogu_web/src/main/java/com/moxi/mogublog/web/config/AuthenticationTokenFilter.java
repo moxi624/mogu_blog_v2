@@ -39,6 +39,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
             if (!StringUtils.isEmpty(userInfo)) {
                 Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
                 //把userUid存储到 request中
+                request.setAttribute(SysConf.TOKEN, accessToken);
                 request.setAttribute(SysConf.USER_UID, map.get("uid"));
                 request.setAttribute(SysConf.USER_NAME, map.get("nickName"));
             }

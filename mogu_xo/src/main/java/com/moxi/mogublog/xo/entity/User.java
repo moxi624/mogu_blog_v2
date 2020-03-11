@@ -56,8 +56,8 @@ public class User extends SuperEntity<User> {
     /**
      * 出生年月日
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     /**

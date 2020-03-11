@@ -15,6 +15,14 @@ export function authVerify(params) {
   })
 }
 
+export function editUser(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/editUser',
+    method: 'post',
+    data: params
+  })
+}
+
 export function deleteUserAccessToken(params) {
   return request({
     url: process.env.WEB_API + '/oauth/delete/' + params,

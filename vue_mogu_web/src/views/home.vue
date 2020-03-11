@@ -97,8 +97,8 @@
 
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="login" v-show="!isLogin">登录</el-dropdown-item>
-          <el-dropdown-item command="goUserInfo" v-show="isLogin">主页</el-dropdown-item>
-          <el-dropdown-item command="logout" v-show="isLogin">退出</el-dropdown-item>
+          <el-dropdown-item command="goUserInfo" v-show="isLogin">个人中心</el-dropdown-item>
+          <el-dropdown-item command="logout" v-show="isLogin">退出登录</el-dropdown-item>
         </el-dropdown-menu>
 
       </el-dropdown>
@@ -107,6 +107,92 @@
     </nav>
   </header>
   <LoginBox v-if="showLogin" @closeLoginBox="closeLoginBox"></LoginBox>
+
+  <el-drawer
+    :show-close="true"
+    :visible.sync="drawer"
+    :with-header="false">
+
+      <el-tabs type="border-card" tab-position="left" style="margin-top: 50px; height: 100%;">
+      <el-tab-pane label="个人中心">
+        <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
+        <el-form style="margin-left: 20px;" label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+          <el-form-item label="用户头像" :label-width="labelWidth">
+
+            <div class="imgBody" v-if="userInfo.photoUrl">
+              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl" />
+            </div>
+
+            <div v-else class="uploadImgBody" @click="checkPhoto">
+              <i class="el-icon-plus avatar-uploader-icon"></i>
+            </div>
+          </el-form-item>
+
+          <el-form-item label="昵称" :label-width="labelWidth">
+            <el-input v-model="userInfo.nickName" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="性别" :label-width="labelWidth">
+            <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item label="生日" :label-width="labelWidth">
+            <el-date-picker
+              v-model="userInfo.birthday"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="邮箱" :label-width="labelWidth">
+            <el-input v-model="userInfo.email" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="QQ号" :label-width="labelWidth">
+            <el-input v-model="userInfo.qqNumber" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="职业" :label-width="labelWidth">
+            <el-input v-model="userInfo.occupation" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="简介" :label-width="labelWidth">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 10}"
+              placeholder="请输入内容"
+              style="width: 100%"
+              v-model="userInfo.summary">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('editUser')">保 存</el-button>
+          </el-form-item>
+
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="我的评论">我的评论</el-tab-pane>
+      <el-tab-pane label="我的回复">我的回复</el-tab-pane>
+      <el-tab-pane label="我的点赞">我的点赞</el-tab-pane>
+      <el-tab-pane label="我的收藏">我的收藏</el-tab-pane>
+      <el-tab-pane label="修改密码">修改密码</el-tab-pane>
+    </el-tabs>
+  </el-drawer>
+
+  <!--头像裁剪-->
+  <avatar-cropper
+    v-show="imagecropperShow"
+    :key="imagecropperKey"
+    :width="300"
+    :height="300"
+    :url="url"
+    lang-type="zh"
+    @close="close"
+    @crop-upload-success="cropSuccess"
+  />
+
   <div>
     <router-view/>
   </div>
@@ -131,20 +217,28 @@
 </template>
 
 <script>
+  import AvatarCropper from '@/components/AvatarCropper'
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
-  import {authVerify, deleteUserAccessToken} from "../api/user";
+  import {authVerify, editUser, deleteUserAccessToken} from "../api/user";
   import LoginBox from "../components/LoginBox";
+  import {getListByDictType} from "@/api/sysDictData"
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
 
   export default {
     name: "index",
     components: {
-      LoginBox
+      LoginBox,
+      AvatarCropper
     },
     data() {
       return {
+        genderDictList: [], //字典列表
+        imagecropperShow: false,
+        imagecropperKey: 0,
+        url: process.env.PICTURE_API + "/file/cropperPicture",
+        drawer: false,
         PICTURE_HOST: process.env.PICTURE_HOST,
         info: {},
         saveTitle: "",
@@ -157,6 +251,8 @@
         showLogin: false, //显示登录框
         userInfo: { // 用户信息
         },
+        icon: false, //控制删除图标的显示
+        labelWidth: "70px"
       };
     },
     mounted() {
@@ -187,7 +283,8 @@
       }
     },
     created() {
-
+      // 字典查询
+      this.getDictList();
       this.getToken()
       this.getKeyword()
       this.getCurrentPageTitle()
@@ -212,6 +309,63 @@
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
       },
 
+      //弹出选择图片框
+      checkPhoto() {
+        this.imagecropperShow = true
+      },
+
+      cropSuccess(resData) {
+        console.log("裁剪成功", resData)
+        this.imagecropperShow = false
+        this.imagecropperKey = this.imagecropperKey + 1
+        this.userInfo.photoUrl = resData[0].url
+        this.userInfo.avatar = resData[0].uid
+      },
+      deletePhoto: function() {
+        this.userInfo.photoUrl = null;
+        this.userInfo.avatar = "";
+        this.icon = false;
+      },
+      close() {
+        this.imagecropperShow = false
+      },
+
+      submitForm: function(type) {
+        switch (type) {
+          case "editUser": {
+            console.log('提交用户信息', this.userInfo);
+            editUser(this.userInfo).then(response => {
+              console.log('返回的状态', response)
+              if(response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: "更新成功"
+                })
+              } else {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                })
+              }
+            });
+          }; break;
+        }
+      },
+
+      /**
+       * 字典查询
+       */
+      getDictList: function () {
+        var params = {};
+        params.dictType = 'sys_user_sex';
+        getListByDictType(params).then(response => {
+          console.log('得到的字典', response)
+          if (response.code == "success") {
+            this.genderDictList = response.data.list;
+          }
+        });
+      },
+
       getToken: function() {
         let token = this.getUrlVars()["token"];
         // 判断url中是否含有token
@@ -224,6 +378,7 @@
         if (token != undefined) {
           authVerify(token).then(response => {
             if (response.code == "success") {
+              console.log('得到的用户信息', response.data)
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
@@ -338,24 +493,13 @@
         switch (command) {
           case "logout" : {
             this.userLogout();
-          }
-            ;
-            break;
+          };break;
           case "login" : {
             this.userLogin();
-          }
-            ;
-            break;
+          };break;
           case "goUserInfo" : {
-            this.$message('click on item ' + command);
-          }
-            ;
-            break;
-          case "changePwd" : {
-            this.$message('click on item ' + command);
-          }
-            ;
-            break;
+            this.drawer = true;
+          };break;
         }
       },
       closeLoginBox: function () {
@@ -367,13 +511,12 @@
 </script>
 
 <style scoped>
+
   #starlist li .title {
     color: #00a7eb;
   }
 
-  .el-dropdown {
-    position: static;
-  }
+
   .userInfoAvatar {
 
     width: 35px;
@@ -404,4 +547,50 @@
       top: 0
     }
   }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    margin: 0, 0, 0, 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .imgBody {
+    width: 100px;
+    height: 100px;
+    border: solid 2px #ffffff;
+    float: left;
+    position: relative;
+  }
+  .imgBody img {
+    width: 100px;
+    height: 100px;
+  }
+  .uploadImgBody {
+    margin-left: 5px;
+    width: 100px;
+    height: 100px;
+    border: dashed 1px #c0c0c0;
+    float: left;
+    position: relative;
+  }
+  .uploadImgBody :hover {
+    border: dashed 1px #00ccff;
+  }
+  .inputClass {
+    position: absolute;
+  }
+
 </style>

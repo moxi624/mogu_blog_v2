@@ -43,6 +43,7 @@ public class SystemConfigRestApi {
         QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.last("LIMIT 1");
         SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
 
         return ResultUtil.result(SysConf.SUCCESS, SystemConfig);

@@ -8,10 +8,12 @@ import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
+import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
@@ -29,10 +31,8 @@ import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -244,6 +244,59 @@ public class AuthRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    /**
+     * 通过token获取七牛云配置
+     * @param token
+     * @return
+     */
+    @GetMapping("/getSystemConfig")
+    public String getSystemConfig(@RequestParam("token") String token) {
+        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token);
+        if (StringUtils.isEmpty(userInfo)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.last("LIMIT 1");
+        SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
+        return ResultUtil.result(SysConf.SUCCESS, SystemConfig);
+    }
+
+    /**
+     * 获取关于我的信息
+     *
+     * @author xzx19950624@qq.com
+     * @date 2018年11月6日下午8:57:48
+     */
+
+    @ApiOperation(value = "编辑用户信息", notes = "编辑用户信息")
+    @PostMapping("/editUser")
+    public String editUser(HttpServletRequest request, @RequestBody UserVO userVO) {
+        if(request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+        String token = request.getAttribute(SysConf.TOKEN).toString();
+        User user = userService.getById(userUid);
+        user.setNickName(userVO.getNickName());
+        user.setAvatar(userVO.getAvatar());
+        user.setEmail(userVO.getEmail());
+        user.setBirthday(userVO.getBirthday());
+        user.setSummary(userVO.getSummary());
+        user.setGender(userVO.getGender());
+        user.setQqNumber(userVO.getQqNumber());
+        user.setOccupation(userVO.getOccupation());
+        user.updateById();
+
+        user.setPassWord("");
+        user.setPhotoUrl(userVO.getPhotoUrl());
+
+        // 修改成功后，更新Redis中的用户信息
+        stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+
+        return ResultUtil.result(SysConf.SUCCESS, user);
+    }
 
     private AuthRequest getAuthRequest(String source) {
         AuthRequest authRequest = null;

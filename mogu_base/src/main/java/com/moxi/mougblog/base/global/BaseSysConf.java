@@ -38,6 +38,7 @@ public class BaseSysConf {
     public final static String STATUS = "status";
     public final static String CREATE_TIME = "createTime";
     public final static String TOKEN = "token";
+    public final static String PLATFORM = "platform";
     public final static String ACCESS_TOKEN = "accessToken";
 
     // 不能评论
@@ -50,6 +51,12 @@ public class BaseSysConf {
     public final static String PAGE_NAME = "pageName";
 
     public final static String DEFAULT_VALUE = "defaultValue";
+
+    /**
+     * platform平台相关
+     */
+    public final static String WEB = "web";
+    public final static String ADMIN = "admin";
 
     /**
      * 分页相关
@@ -95,6 +102,8 @@ public class BaseSysConf {
     public final static String NEW_BLOG = "NEW_BLOG";
     // 管理员Token
     public final static String ADMIN_TOKEN = "ADMIN_TOKEN";
+    // Web端用户Token
+    public final static String WEB_TOKEN = "WEB_TOKEN";
 
     // 字典类型
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";

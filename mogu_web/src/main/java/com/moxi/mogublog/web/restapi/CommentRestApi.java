@@ -120,9 +120,20 @@ public class CommentRestApi {
             userList = userService.listByIds(userUidList);
         }
 
+        // 过滤掉用户的敏感信息
+        List<User> filterUserList = new ArrayList<>();
+        userList.forEach(item -> {
+            User user = new User();
+            user.setAvatar(item.getAvatar());
+            user.setUid(item.getUid());
+            user.setNickName(item.getNickName());
+            filterUserList.add(user);
+        });
+
+
         // 获取用户头像
         StringBuffer fileUids = new StringBuffer();
-        userList.forEach(item -> {
+        filterUserList.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getAvatar())) {
                 fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
             }
@@ -138,7 +149,7 @@ public class CommentRestApi {
         });
 
         Map<String, User> userMap = new HashMap<>();
-        userList.forEach(item -> {
+        filterUserList.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getAvatar()) && pictureMap.get(item.getAvatar()) != null) {
                 item.setPhotoUrl(pictureMap.get(item.getAvatar()));
             }

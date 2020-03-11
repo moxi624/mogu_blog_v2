@@ -56,6 +56,10 @@ spring:
     suffix: .ftl
     content-type: text/html
     template-loader-path: classpath:/templates
+  # jackson配置响应时间格式、时区
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
 
   application:
     name: mogu-web

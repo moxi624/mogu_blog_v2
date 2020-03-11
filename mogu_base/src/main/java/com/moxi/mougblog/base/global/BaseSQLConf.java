@@ -16,6 +16,14 @@ public class BaseSQLConf {
     public final static String LEVEL = "level";
     public final static String SORT = "sort";
 
+    /**
+     * 字典表相关
+     */
+    public final static String DICT_TYPE = "dict_type";
+    public final static String DICT_TYPE_UID = "dict_type_UID";
+    public final static String DICT_NAME = "dict_name";
+    public final static String DICT_LABEL = "dict_label";
+
     //user表
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "email";

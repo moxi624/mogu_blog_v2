@@ -77,7 +77,7 @@ ALTER TABLE  t_category_menu ADD is_show tinyint(1) NOT NULL DEFAULT 1 COMMENT '
 
 /*
    修改t_user表，增加comment_status字段
-   @date 2020年2月21日21:23:28
+   @date 2020年3月10日15:35:04
 */
 ALTER TABLE  t_user ADD comment_status tinyint(1) NOT NULL DEFAULT 1 COMMENT '评论状态 1:正常 0:禁言';
 ALTER TABLE  t_user ADD ip_source varchar(255) NULL COMMENT 'ip来源';

@@ -9,6 +9,7 @@ module.exports = {
 
   //配置线上环境
   VUE_MOGU_WEB: '"http://www.moguit.cn"',
+  PICTURE_API: '"http://101.132.194.128:8602"',
   WEB_API: '"http://101.132.194.128:8603"',
   PICTURE_HOST: '""',
   ELASTICSEARCH: '"http://101.132.194.128:8605"',

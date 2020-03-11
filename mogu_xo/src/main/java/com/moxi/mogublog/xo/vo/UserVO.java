@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.GetOne;
@@ -54,8 +55,8 @@ public class UserVO extends BaseVO<UserVO> {
     /**
      * 出生年月日
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     /**
@@ -98,4 +99,11 @@ public class UserVO extends BaseVO<UserVO> {
      * 评论状态，0 禁言， 1 正常
      */
     private Integer commentStatus;
+
+    /**
+     * 用户头像
+     */
+    @TableField(exist = false)
+    private String photoUrl;
+
 }

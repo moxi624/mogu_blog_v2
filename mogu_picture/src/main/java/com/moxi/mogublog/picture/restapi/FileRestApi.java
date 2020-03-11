@@ -96,10 +96,20 @@ public class FileRestApi {
 
         filedatas.add(file);
 
+        String platform = request.getParameter(SysConf.PLATFORM);
         String token = request.getParameter(SysConf.TOKEN);
 
         // 获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
+        Map<String, String> qiNiuResultMap = new HashMap<>();
+
+        // 判断是否是web端发送过来的请求
+        if(SysConf.WEB.equals(platform)) {
+            // 如果是调用web端获取配置的接口
+            qiNiuResultMap = feignUtil.getQiNiuConfigByWebToken(token);
+        } else {
+            // 调用admin端获取配置接口
+            qiNiuResultMap = feignUtil.getQiNiuConfig(token);
+        }
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
