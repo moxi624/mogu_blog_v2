@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.vo;
 
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
@@ -55,10 +56,12 @@ public class BlogVO extends BaseVO<BlogVO> {
     /**
      * 是否发布
      */
+    @NotBlank(groups = {Insert.class, Update.class})
     private String isPublish;
     /**
      * 是否原创
      */
+    @NotBlank(groups = {Insert.class, Update.class})
     private String isOriginal;
     /**
      * 如果原创，作者为管理员名
@@ -77,6 +80,7 @@ public class BlogVO extends BaseVO<BlogVO> {
      * 3：三级推荐 ()
      * 4：四级 推荐 (特别推荐)
      */
+    @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer level;
     /**
      * 标签,一篇博客对应多个标签

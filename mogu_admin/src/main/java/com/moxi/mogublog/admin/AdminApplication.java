@@ -14,6 +14,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @EnableTransactionManagement
 //redis和velocity的包会起冲突
 @SpringBootApplication
@@ -34,6 +37,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class AdminApplication {
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         SpringApplication.run(AdminApplication.class, args);
     }
 
@@ -43,6 +47,14 @@ public class AdminApplication {
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         return corsConfiguration;
+    }
+
+    /**
+     * 设置时区
+     */
+    @PostConstruct
+    void setDefaultTimezone() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
     /**
