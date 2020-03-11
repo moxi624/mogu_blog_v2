@@ -1,6 +1,7 @@
 package com.moxi.mogublog.web.restapi;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -360,26 +361,24 @@ public class IndexRestApi {
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
 
-        if (StringUtils.isNotEmpty(webConfig.getLogo())) {
+        if (ObjectUtil.isNotNull(webConfig) && StringUtils.isNotEmpty(webConfig.getLogo())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), SysConf.FILE_SEGMENTATION);
             webConfig.setPhotoList(webUtils.getPicture(pictureList));
         }
 
         //获取支付宝收款二维码
-        if (webConfig != null && StringUtils.isNotEmpty(webConfig.getAliPay())) {
+        if (StringUtils.isNotEmpty(webConfig.getAliPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), SysConf.FILE_SEGMENTATION);
             if (webUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setAliPayPhoto(webUtils.getPicture(pictureList).get(0));
             }
-
         }
         //获取微信收款二维码
-        if (webConfig != null && StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
+        if (StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), SysConf.FILE_SEGMENTATION);
             if (webUtils.getPicture(pictureList).size() > 0) {
                 webConfig.setWeixinPayPhoto(webUtils.getPicture(pictureList).get(0));
             }
-
         }
 
         // 过滤一些不需要显示的用户账号信息
