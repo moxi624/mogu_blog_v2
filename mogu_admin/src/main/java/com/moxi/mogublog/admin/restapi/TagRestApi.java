@@ -147,7 +147,7 @@ public class TagRestApi {
         blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         blogQueryWrapper.in(SQLConf.TAG_UID, uids);
         Integer blogCount = blogService.count(blogQueryWrapper);
-        if(blogCount > 0) {
+        if (blogCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_TAG);
         }
 

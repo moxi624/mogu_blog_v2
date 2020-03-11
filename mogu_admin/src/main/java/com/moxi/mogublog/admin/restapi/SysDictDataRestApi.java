@@ -14,7 +14,6 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.SysDictData;
 import com.moxi.mogublog.xo.entity.SysDictType;
 import com.moxi.mogublog.xo.service.SysDictDataService;
-import com.moxi.mogublog.xo.service.SysDictDataService;
 import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.vo.SysDictDataVO;
 import com.moxi.mougblog.base.enums.EPublish;
@@ -92,12 +91,12 @@ public class SysDictDataRestApi {
             dictTypeUidList.add(item.getDictTypeUid());
         });
 
-        Collection<SysDictType>  dictTypeList = new ArrayList<>();
-        if(dictTypeUidList.size() > 0) {
+        Collection<SysDictType> dictTypeList = new ArrayList<>();
+        if (dictTypeUidList.size() > 0) {
             dictTypeList = sysDictTypeService.listByIds(dictTypeUidList);
         }
         Map<String, SysDictType> dictTypeMap = new HashMap<>();
-        dictTypeList.forEach(item-> {
+        dictTypeList.forEach(item -> {
             dictTypeMap.put(item.getUid(), item);
         });
 
@@ -162,7 +161,7 @@ public class SysDictDataRestApi {
 
         SysDictData sysDictData = sysDictDataService.getById(sysDictDataVO.getUid());
         // 更改了标签名时，判断更改的字典数据是否存在
-        if(!sysDictData.getDictLabel().equals(sysDictDataVO.getDictLabel())) {
+        if (!sysDictData.getDictLabel().equals(sysDictDataVO.getDictLabel())) {
             QueryWrapper<SysDictData> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.DICT_LABEL, sysDictDataVO.getDictLabel());
             queryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictDataVO.getDictTypeUid());
@@ -188,7 +187,7 @@ public class SysDictDataRestApi {
         sysDictData.updateById();
 
         // 获取Redis中特定前缀
-        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         stringRedisTemplate.delete(keys);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
@@ -224,7 +223,7 @@ public class SysDictDataRestApi {
         Boolean save = sysDictDataService.updateBatchById(sysDictDataList);
 
         // 获取Redis中特定前缀
-        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         stringRedisTemplate.delete(keys);
 
 
@@ -254,7 +253,7 @@ public class SysDictDataRestApi {
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.last("LIMIT 1");
         SysDictType sysDictType = sysDictTypeService.getOne(queryWrapper);
-        if(sysDictType == null) {
+        if (sysDictType == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_NOT_EXIST);
         }
         QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
@@ -267,7 +266,7 @@ public class SysDictDataRestApi {
         String defaultValue = null;
         for (SysDictData sysDictData : list) {
             // 获取默认值
-            if(sysDictData.getIsDefault() == SysConf.ONE) {
+            if (sysDictData.getIsDefault() == SysConf.ONE) {
                 defaultValue = sysDictData.getDictValue();
                 break;
             }
@@ -286,7 +285,7 @@ public class SysDictDataRestApi {
     @PostMapping("/getListByDictTypeList")
     public String getListByDictTypeList(@RequestBody List<String> dictTypeList) {
 
-        if(dictTypeList.size() <= 0) {
+        if (dictTypeList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
@@ -310,7 +309,7 @@ public class SysDictDataRestApi {
         });
 
         // 表示数据全部从redis中获取到了，直接返回即可
-        if(tempTypeList.size() <=0 ) {
+        if (tempTypeList.size() <= 0) {
             return ResultUtil.result(SysConf.SUCCESS, map);
         }
 
@@ -332,7 +331,7 @@ public class SysDictDataRestApi {
             String defaultValue = null;
             for (SysDictData sysDictData : list) {
                 // 获取默认值
-                if(sysDictData.getIsDefault() == SysConf.ONE) {
+                if (sysDictData.getIsDefault() == SysConf.ONE) {
                     defaultValue = sysDictData.getDictValue();
                     break;
                 }

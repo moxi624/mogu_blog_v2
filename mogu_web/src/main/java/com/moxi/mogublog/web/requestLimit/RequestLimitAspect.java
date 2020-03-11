@@ -6,7 +6,6 @@ import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mougblog.base.global.ECode;
-import com.moxi.mougblog.base.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -32,13 +31,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RequestLimitAspect {
 
+    private final String POINT = "execution(* com.moxi.mogublog.web.restapi..*.*(..))";
     @Autowired
     private RedisUtil redisUtil;
-
     @Autowired
     private RequestLimitConfig requestLimitConfig;
-
-    private final String POINT = "execution(* com.moxi.mogublog.web.restapi..*.*(..))";
 
     @Pointcut(POINT)
     public void pointcut() {
@@ -62,7 +59,7 @@ public class RequestLimitAspect {
         //获取方法名称
         String methodName = point.getSignature().getName();
 
-        String key = RedisConf.REQUEST_LIMIT + RedisConf.SEGMENTATION + ip + RedisConf.SEGMENTATION+ methodName;
+        String key = RedisConf.REQUEST_LIMIT + RedisConf.SEGMENTATION + ip + RedisConf.SEGMENTATION + methodName;
 
         Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
 
@@ -70,14 +67,14 @@ public class RequestLimitAspect {
         if (currentMethod.isAnnotationPresent(RequestLimit.class)) {
             //获取注解
             RequestLimit requestLimit = currentMethod.getAnnotation(RequestLimit.class);
-            boolean checkResult = checkWithRedis(requestLimit.amount(),requestLimit.time(), key);
+            boolean checkResult = checkWithRedis(requestLimit.amount(), requestLimit.time(), key);
             if (checkResult) {
                 log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimit.amount());
                 return ResultUtil.result(ECode.REQUEST_OVER_LIMIT, "接口请求过于频繁");
             }
             return point.proceed();
         }
-        boolean checkResult = checkWithRedis(requestLimitConfig.getAmount(),requestLimitConfig.getTime(), key);
+        boolean checkResult = checkWithRedis(requestLimitConfig.getAmount(), requestLimitConfig.getTime(), key);
         if (checkResult) {
             log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimitConfig.getAmount());
             return ResultUtil.result(ECode.REQUEST_OVER_LIMIT, "接口请求过于频繁");

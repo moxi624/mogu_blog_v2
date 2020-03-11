@@ -4,7 +4,6 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -22,7 +21,6 @@ import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
@@ -208,15 +206,15 @@ public class CommentRestApi {
         User user = userService.getById(userUid);
 
         // 判断该用户是否被禁言
-        if(user.getCommentStatus() == SysConf.ZERO) {
+        if (user.getCommentStatus() == SysConf.ZERO) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_SPEAK);
         }
 
         // 判断是否发送过多无意义评论
         String jsonResult = redisUtil.get(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid);
-        if(!StringUtils.isEmpty(jsonResult)) {
+        if (!StringUtils.isEmpty(jsonResult)) {
             Integer count = Integer.valueOf(jsonResult);
-            if(count >= 5) {
+            if (count >= 5) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
             }
         }
@@ -224,7 +222,7 @@ public class CommentRestApi {
         String content = commentVO.getContent();
 
         // 判断是否垃圾评论
-        if(StringUtils.isCommentSpam(content)) {
+        if (StringUtils.isCommentSpam(content)) {
             if (StringUtils.isEmpty(jsonResult)) {
                 Integer count = 0;
                 redisUtil.setEx(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid, count.toString(), 1, TimeUnit.HOURS);

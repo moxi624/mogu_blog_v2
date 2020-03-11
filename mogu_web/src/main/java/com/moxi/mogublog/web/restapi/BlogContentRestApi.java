@@ -91,7 +91,7 @@ public class BlogContentRestApi {
 
         Blog blog = blogService.getById(uid);
 
-        if(blog == null || blog.getStatus() == EStatus.DISABLED || blog.getIsPublish() == EPublish.NO_PUBLISH) {
+        if (blog == null || blog.getStatus() == EStatus.DISABLED || blog.getIsPublish() == EPublish.NO_PUBLISH) {
             return ResultUtil.result(ECode.ERROR, "该文章已下架或被删除");
         }
 

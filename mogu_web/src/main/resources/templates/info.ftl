@@ -3,8 +3,8 @@
 <head>
     <META http-equiv="content-type" content="text/html; charset=utf-8">
     <title>${webConfig.name}</title>
-    <meta name="keywords" content="${webConfig.keyword}" />
-    <meta name="description" content="${webConfig.summary}" />
+    <meta name="keywords" content="${webConfig.keyword}"/>
+    <meta name="description" content="${webConfig.summary}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="${staticBasePath}/static/css/index.css" rel="stylesheet">
     <link href="${staticBasePath}/static/css/ckeditor.css" rel="stylesheet">
@@ -18,11 +18,11 @@
         <h2 id="mnavh"><span class="navicon"></span></h2>
         <ul id="starlist">
             <li><a href="${vueWebBasePath}">网站首页</a></li>
-            <li><a href="${vueWebBasePath}about">关于我</a> </li>
+            <li><a href="${vueWebBasePath}about">关于我</a></li>
             <li><a href="${vueWebBasePath}sort">归档</a>
             <li><a href="${vueWebBasePath}classify">归档</a>
-            <li><a href="${vueWebBasePath}time">时间轴</a> </li>
-            <li><a href="${vueWebBasePath}messageBoard">留言板</a> </li>
+            <li><a href="${vueWebBasePath}time">时间轴</a></li>
+            <li><a href="${vueWebBasePath}messageBoard">留言板</a></li>
         </ul>
         <div class="searchbox">
             <div id="search_bar" class="search_bar">
@@ -32,7 +32,7 @@
                     <input type="hidden" name="tempid" value="1">
                     <input type="hidden" name="tbname" value="news">
                     <input type="hidden" name="Submit" value="搜索">
-                    <p class="search_ico"> <span></span></p>
+                    <p class="search_ico"><span></span></p>
                 </form>
             </div>
         </div>
@@ -68,29 +68,40 @@
             </div>
         </div>
         <div class="share">
-            <p class="diggit"><a href="JavaScript:makeRequest('/e/public/digg/?classid=3&amp;id=19&amp;dotop=1&amp;doajax=1&amp;ajaxarea=diggnum','EchoReturnedText','GET','');"> 很赞哦！ </a>(<b id="diggnum"><script type="text/javascript" src="/e/public/ViewClick/?classid=2&id=20&down=5"></script>13</b>)</p>
-            <p class="dasbox"><a href="javascript:void(0)" onClick="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a></p>
+            <p class="diggit"><a
+                        href="JavaScript:makeRequest('/e/public/digg/?classid=3&amp;id=19&amp;dotop=1&amp;doajax=1&amp;ajaxarea=diggnum','EchoReturnedText','GET','');">
+                    很赞哦！ </a>(<b id="diggnum">
+                    <script type="text/javascript" src="/e/public/ViewClick/?classid=2&id=20&down=5"></script>
+                    13</b>)
+            </p>
+            <p class="dasbox"><a href="javascript:void(0)" onClick="dashangToggle()" class="dashang" title="打赏，支持一下">打赏本站</a>
+            </p>
             <div class="hide_box"></div>
-            <div class="shang_box"> <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()" title="关闭">关闭</a>
+            <div class="shang_box"><a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()"
+                                      title="关闭">关闭</a>
                 <div class="shang_tit">
                     <p>感谢您的支持，我会继续努力的!</p>
                 </div>
-                <div class="shang_payimg"> <img src="${staticBasePath}/images/alipayimg.jpg" alt="扫码支持" title="扫一扫"> </div>
+                <div class="shang_payimg"><img src="${staticBasePath}/images/alipayimg.jpg" alt="扫码支持" title="扫一扫">
+                </div>
                 <div class="pay_explain">扫码打赏，你说多少就多少</div>
                 <div class="shang_payselect">
-                    <div class="pay_item checked" data-id="alipay"> <span class="radiobox"></span> <span class="pay_logo"><img src="images/alipay.jpg" alt="支付宝"></span> </div>
-                    <div class="pay_item" data-id="weipay"> <span class="radiobox"></span> <span class="pay_logo"><img src="images/wechat.jpg" alt="微信"></span> </div>
+                    <div class="pay_item checked" data-id="alipay"><span class="radiobox"></span> <span
+                                class="pay_logo"><img src="images/alipay.jpg" alt="支付宝"></span></div>
+                    <div class="pay_item" data-id="weipay"><span class="radiobox"></span> <span class="pay_logo"><img
+                                    src="images/wechat.jpg" alt="微信"></span></div>
                 </div>
                 <script type="text/javascript">
-                    $(function(){
-                        $(".pay_item").click(function(){
+                    $(function () {
+                        $(".pay_item").click(function () {
                             $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
-                            var dataid=$(this).attr('data-id');
-                            $(".shang_payimg img").attr("src","images/"+dataid+"img.jpg");
-                            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+                            var dataid = $(this).attr('data-id');
+                            $(".shang_payimg img").attr("src", "images/" + dataid + "img.jpg");
+                            $("#shang_pay_txt").text(dataid == "alipay" ? "支付宝" : "微信");
                         });
                     });
-                    function dashangToggle(){
+
+                    function dashangToggle() {
                         $(".hide_box").fadeToggle();
                         $(".shang_box").fadeToggle();
                     }
@@ -106,15 +117,16 @@
             <ul>
                 <#if sameBlog??>
                     <#list sameBlog as blog>
-                        <li><a href="${webBasePath}/freemarker/info/${blog.uid}" title="${blog.title}">${blog.title}</a></li>
+                        <li><a href="${webBasePath}/freemarker/info/${blog.uid}" title="${blog.title}">${blog.title}</a>
+                        </li>
                     </#list>
                 </#if>
-                </ul>
+            </ul>
         </div>
         <div class="news_pl">
             <h2>文章评论</h2>
             <ul>
-                <div class="gbko"> </div>
+                <div class="gbko"></div>
             </ul>
         </div>
     </div>
@@ -122,13 +134,13 @@
         <div class="zhuanti">
             <h2 class="hometitle">特别推荐</h2>
             <ul>
-                <li> <i><img src="${staticBasePath}/static/images/banner03.jpg"></i>
-                    <p>帝国cms调用方法 <span><a href="/">阅读</a></span> </p>
+                <li><i><img src="${staticBasePath}/static/images/banner03.jpg"></i>
+                    <p>帝国cms调用方法 <span><a href="/">阅读</a></span></p>
                 </li>
-                <li> <i><img src="${staticBasePath}/static/images/b04.jpg"></i>
+                <li><i><img src="${staticBasePath}/static/images/b04.jpg"></i>
                     <p>5.20 我想对你说 <span><a href="/">阅读</a></span></p>
                 </li>
-                <li> <i><img src="${staticBasePath}/static/images/b05.jpg"></i>
+                <li><i><img src="${staticBasePath}/static/images/b05.jpg"></i>
                     <p>个人博客，属于我的小世界！ <span><a href="/">阅读</a></span></p>
                 </li>
             </ul>
@@ -140,18 +152,18 @@
                 <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
             </ul>
             <ul class="sidenews">
-                <li> <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
+                <li><i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/v1.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/v1.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/v2.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/v2.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span> </li>
+                    <span>2018-05-13</span></li>
             </ul>
         </div>
         <div class="tuijian">
@@ -161,27 +173,29 @@
                 <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
             </ul>
             <ul class="sidenews">
-                <li> <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
+                <li><i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
                     <p><a href="/">别让这些闹心的套路</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/v1.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/v1.jpg"></i>
                     <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span> </li>
-                <li> <i><img src="${staticBasePath}/static/images/v2.jpg"></i>
+                    <span>2018-05-13</span></li>
+                <li><i><img src="${staticBasePath}/static/images/v2.jpg"></i>
                     <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span> </li>
+                    <span>2018-05-13</span></li>
             </ul>
         </div>
         <div class="cloud">
             <h2 class="hometitle">标签云</h2>
             <ul>
-                <a href="/">陌上花开</a> <a href="/">校园生活</a> <a href="/">html5</a> <a href="/">SumSung</a> <a href="/">青春</a> <a href="/">温暖</a> <a href="/">阳光</a> <a href="/">三星</a><a href="/">索尼</a> <a href="/">华维荣耀</a> <a href="/">三星</a> <a href="/">索尼</a>
+                <a href="/">陌上花开</a> <a href="/">校园生活</a> <a href="/">html5</a> <a href="/">SumSung</a> <a
+                        href="/">青春</a> <a href="/">温暖</a> <a href="/">阳光</a> <a href="/">三星</a><a href="/">索尼</a> <a
+                        href="/">华维荣耀</a> <a href="/">三星</a> <a href="/">索尼</a>
             </ul>
         </div>
-        <div class="guanzhu"  id="gd">
+        <div class="guanzhu" id="gd">
             <h2 class="hometitle">关注我们 么么哒！</h2>
             <ul>
                 <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>杨青博客</a></li>
@@ -201,7 +215,7 @@
 </body>
 <script src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
-<script src="${staticBasePath}/static/js/jquery.min.js" ></script>
+<script src="${staticBasePath}/static/js/jquery.min.js"></script>
 <script src="${staticBasePath}/static/js/nav.js"></script>
 <script src="${staticBasePath}/static/js/scrollReveal.js"></script>
 <!--[if lt IE 9]>

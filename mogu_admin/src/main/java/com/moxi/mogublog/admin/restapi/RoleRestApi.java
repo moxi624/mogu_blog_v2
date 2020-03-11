@@ -10,7 +10,6 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
@@ -129,7 +128,7 @@ public class RoleRestApi {
         blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         blogQueryWrapper.in(SQLConf.ROLEUID, roleVO.getUid());
         Integer adminCount = adminService.count(blogQueryWrapper);
-        if(adminCount > 0) {
+        if (adminCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ADMIN_UNDER_THIS_ROLE);
         }
 

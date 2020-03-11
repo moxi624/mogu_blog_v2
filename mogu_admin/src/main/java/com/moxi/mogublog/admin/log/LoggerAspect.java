@@ -14,9 +14,11 @@ import com.moxi.mogublog.xo.service.ExceptionLogService;
 import com.moxi.mogublog.xo.service.SysLogService;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -94,9 +96,9 @@ public class LoggerAspect {
 
         //从Redis中获取IP来源
         String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
-        if(StringUtils.isEmpty(jsonResult)) {
+        if (StringUtils.isEmpty(jsonResult)) {
             String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
-            if(StringUtils.isNotEmpty(addresses)) {
+            if (StringUtils.isNotEmpty(addresses)) {
                 sysLog.setIpSource(addresses);
                 stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
             }
@@ -134,7 +136,6 @@ public class LoggerAspect {
 
         return result;
     }
-
 
 
     @AfterThrowing(value = "pointcut(operationLogger)", throwing = "e")

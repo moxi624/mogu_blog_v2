@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
@@ -20,12 +21,7 @@ import java.util.Locale;
 public class SpringUtils implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringUtils.applicationContext = applicationContext;
-    }
-
-    public static <T> T getBean(Class<T> tClass){
+    public static <T> T getBean(Class<T> tClass) {
         return applicationContext.getBean(tClass);
     }
 
@@ -45,5 +41,10 @@ public class SpringUtils implements ApplicationContextAware {
         LocaleResolver localeResolver = getBean(LocaleResolver.class);
         Locale locale = localeResolver.resolveLocale(getCurrentReq());
         return applicationContext.getMessage(code, args, locale);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringUtils.applicationContext = applicationContext;
     }
 }

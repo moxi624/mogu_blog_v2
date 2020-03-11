@@ -7,16 +7,15 @@ import java.util.regex.Pattern;
 
 /**
  * 正则表达式工具类
+ *
  * @author 陌溪
  * @date 2020年2月27日08:44:28
  */
 public class RegexUtils {
 
     /**
-     * @param regex
-     *         正则表达式字符串
-     * @param str
-     *         要匹配的字符串
+     * @param regex 正则表达式字符串
+     * @param str   要匹配的字符串
      * @return 如果str 符合 regex的正则表达式格式,返回true, 否则返回 false;
      */
     public static List<String> match(String str, String regex) {

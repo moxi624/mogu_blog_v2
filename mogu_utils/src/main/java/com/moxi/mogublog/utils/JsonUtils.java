@@ -55,6 +55,7 @@ public class JsonUtils {
 
     /**
      * 将Object转换成Map
+     *
      * @param obj
      * @return
      */
@@ -172,6 +173,7 @@ public class JsonUtils {
 
     /**
      * 将Json转换成Map<String, ?>
+     *
      * @param json
      * @param clazz
      * @return
@@ -263,7 +265,7 @@ public class JsonUtils {
      * @param t pojo对象
      * @return
      */
-    public static <T>  Map<String, Object> pojoToMap(T t){
+    public static <T> Map<String, Object> pojoToMap(T t) {
         Map<String, Object> result = new HashMap<String, Object>();
         Method[] methods = t.getClass().getMethods();
         try {
@@ -273,7 +275,7 @@ public class JsonUtils {
                 if (paramClass.length > 0) {
                     continue;
                 }
-                String methodName = method.getName() ;
+                String methodName = method.getName();
                 if (methodName.startsWith("get")) {
                     Object value = method.invoke(t);
                     result.put(methodName, value);

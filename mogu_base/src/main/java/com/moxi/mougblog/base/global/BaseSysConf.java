@@ -32,7 +32,6 @@ public class BaseSysConf {
     public final static String UTF_8 = "utf-8";
 
 
-
     public final static String SUCCESS = "success";
     public final static String ERROR = "error";
     public final static String STATUS = "status";

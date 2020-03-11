@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,7 +164,7 @@ public class PictureRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.FILE_UID, picture.getFileUid());
         List<Blog> blogList = blogService.list(queryWrapper);
-        if(blogList.size() > 0) {
+        if (blogList.size() > 0) {
             blogList.forEach(item -> {
                 item.setFileUid(fileUid);
             });

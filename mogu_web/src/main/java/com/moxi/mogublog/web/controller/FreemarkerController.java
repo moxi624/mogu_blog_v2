@@ -10,7 +10,6 @@ import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.BlogSort;
 import com.moxi.mogublog.xo.entity.Tag;
-import com.moxi.mogublog.xo.entity.WebConfig;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.ELevel;
 import com.moxi.mougblog.base.enums.EPublish;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,16 +66,16 @@ public class FreemarkerController {
     private String fileUploadPath;
 
     @RequestMapping("/info/{uid}")
-    public String index(Map<String,Object> map, @PathVariable("uid") String uid) {
+    public String index(Map<String, Object> map, @PathVariable("uid") String uid) {
         // fc98d2ae7756d2587390ae441b82f52d
         List<Blog> sameBlog = blogService.getSameBlogByBlogUid(uid);
-        sameBlog  = setBlog(sameBlog);
+        sameBlog = setBlog(sameBlog);
 
         List<Blog> thirdBlog = blogService.getBlogListByLevel(ELevel.THIRD);
-        thirdBlog  = setBlog(thirdBlog);
+        thirdBlog = setBlog(thirdBlog);
 
         List<Blog> fourthBlog = blogService.getBlogListByLevel(ELevel.FOURTH);
-        fourthBlog  = setBlog(fourthBlog);
+        fourthBlog = setBlog(fourthBlog);
 
         map.put("vueWebBasePath", "http://localhost:9527/#/");
         map.put("webBasePath", "http://localhost:8603");
@@ -91,6 +89,7 @@ public class FreemarkerController {
 
     /**
      * 生成静态文件
+     *
      * @throws IOException
      * @throws TemplateException
      */
@@ -109,13 +108,13 @@ public class FreemarkerController {
             Map map = new HashMap();
 
             List<Blog> sameBlog = blogService.getSameBlogByBlogUid(uid);
-            sameBlog  = setBlog(sameBlog);
+            sameBlog = setBlog(sameBlog);
 
             List<Blog> thirdBlog = blogService.getBlogListByLevel(ELevel.THIRD);
-            thirdBlog  = setBlog(thirdBlog);
+            thirdBlog = setBlog(thirdBlog);
 
             List<Blog> fourthBlog = blogService.getBlogListByLevel(ELevel.FOURTH);
-            fourthBlog  = setBlog(fourthBlog);
+            fourthBlog = setBlog(fourthBlog);
 
             map.put("vueWebBasePath", "http://localhost:9527/#/");
             map.put("webBasePath", "http://localhost:8603");
@@ -167,14 +166,14 @@ public class FreemarkerController {
             List<Blog> fourthBlog = new ArrayList<>();
             blogList.forEach(item -> {
 
-                if(item.getLevel() == ELevel.THIRD) {
+                if (item.getLevel() == ELevel.THIRD) {
                     thirdBlog.add(item);
-                } else if(item.getLevel() == ELevel.FOURTH) {
+                } else if (item.getLevel() == ELevel.FOURTH) {
                     fourthBlog.add(item);
                 }
 
                 List<Blog> tempList = blogMap.get(item.getBlogSortUid());
-                if(tempList != null && tempList.size() > 0) {
+                if (tempList != null && tempList.size() > 0) {
                     tempList.add(item);
                     blogMap.put(item.getBlogSortUid(), tempList);
                 } else {
@@ -184,7 +183,7 @@ public class FreemarkerController {
                 }
             });
 
-            for(int a=0; a<blogList.size(); a++) {
+            for (int a = 0; a < blogList.size(); a++) {
                 //数据模型
                 Map map = new HashMap();
                 List<Blog> sameBlog = blogMap.get(blogList.get(a).getBlogSortUid());

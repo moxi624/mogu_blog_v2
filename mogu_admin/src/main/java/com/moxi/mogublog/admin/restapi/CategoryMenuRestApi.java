@@ -20,14 +20,12 @@ import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -218,7 +216,7 @@ public class CategoryMenuRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.in(SQLConf.PARENT_UID, categoryMenuVO.getUid());
         Integer menuCount = categoryMenuService.count(queryWrapper);
-        if(menuCount > 0) {
+        if (menuCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CHILDREN_MENU_UNDER_THIS_MENU);
         }
 

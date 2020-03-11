@@ -1,13 +1,15 @@
 package com.moxi.mogublog.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * ProtoStuffSerializerUtil
  *
@@ -17,6 +19,7 @@ import com.dyuproject.protostuff.runtime.RuntimeSchema;
 public class ProtoStuffSerializerUtil {
     /**
      * 序列化对象
+     *
      * @param obj
      * @return
      */
@@ -40,6 +43,7 @@ public class ProtoStuffSerializerUtil {
 
     /**
      * 反序列化对象
+     *
      * @param paramArrayOfByte
      * @param targetClass
      * @return
@@ -51,9 +55,9 @@ public class ProtoStuffSerializerUtil {
         T instance = null;
         try {
             instance = targetClass.newInstance();
-        } catch (InstantiationException  e1) {
+        } catch (InstantiationException e1) {
             throw new RuntimeException("反序列化过程中依据类型创建对象失败!", e1);
-        } catch(IllegalAccessException e2){
+        } catch (IllegalAccessException e2) {
             throw new RuntimeException("反序列化过程中依据类型创建对象失败!", e2);
         }
         Schema<T> schema = RuntimeSchema.getSchema(targetClass);
@@ -63,6 +67,7 @@ public class ProtoStuffSerializerUtil {
 
     /**
      * 序列化列表
+     *
      * @param objList
      * @return
      */
@@ -97,6 +102,7 @@ public class ProtoStuffSerializerUtil {
 
     /**
      * 反序列化列表
+     *
      * @param paramArrayOfByte
      * @param targetClass
      * @return

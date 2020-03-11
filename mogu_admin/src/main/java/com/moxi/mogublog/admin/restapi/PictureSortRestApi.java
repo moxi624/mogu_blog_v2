@@ -12,7 +12,6 @@ import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Blog;
 import com.moxi.mogublog.xo.entity.Picture;
 import com.moxi.mogublog.xo.entity.PictureSort;
 import com.moxi.mogublog.xo.service.PictureService;
@@ -25,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,7 +167,7 @@ public class PictureSortRestApi {
         pictureQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         pictureQueryWrapper.eq(SQLConf.PICTURE_SORT_UID, uid);
         Integer pictureCount = pictureService.count(pictureQueryWrapper);
-        if(pictureCount > 0) {
+        if (pictureCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PICTURE_UNDER_THIS_SORT);
         }
 

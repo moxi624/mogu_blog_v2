@@ -10,15 +10,11 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.*;
+import com.moxi.mogublog.xo.entity.SysDictData;
 import com.moxi.mogublog.xo.entity.SysDictType;
-import com.moxi.mogublog.xo.service.BlogService;
-import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.service.SysDictDataService;
 import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.vo.SysDictTypeVO;
-import com.moxi.mogublog.xo.vo.SysDictTypeVO;
-import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -56,7 +52,7 @@ public class SysDictTypeRestApi {
 
     @Autowired
     SysDictDataService sysDictDataService;
-    
+
     @Autowired
     SysDictTypeService sysDictTypeService;
 
@@ -134,7 +130,7 @@ public class SysDictTypeRestApi {
         SysDictType sysDictType = sysDictTypeService.getById(sysDictTypeVO.getUid());
 
         // 判断编辑的字典类型是否存在
-        if(!sysDictType.getDictType().equals(sysDictTypeVO.getDictType())) {
+        if (!sysDictType.getDictType().equals(sysDictTypeVO.getDictType())) {
             QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.DICT_TYPE, sysDictTypeVO.getDictType());
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
@@ -155,7 +151,7 @@ public class SysDictTypeRestApi {
         sysDictType.updateById();
 
         // 获取Redis中特定前缀
-        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         stringRedisTemplate.delete(keys);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
@@ -185,7 +181,7 @@ public class SysDictTypeRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.in(SQLConf.DICT_TYPE_UID, uids);
         Integer count = sysDictDataService.count(queryWrapper);
-        if(count > 0) {
+        if (count > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DICT_DATA_UNDER_THIS_SORT);
         }
 
@@ -199,7 +195,7 @@ public class SysDictTypeRestApi {
         Boolean save = sysDictTypeService.updateBatchById(sysDictTypeList);
 
         // 获取Redis中特定前缀
-        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION  + "*");
+        Set<String> keys = stringRedisTemplate.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         stringRedisTemplate.delete(keys);
 
         if (save) {

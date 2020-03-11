@@ -10,7 +10,7 @@ public class BaseRedisConf {
 
     /**
      * 请求限制
-      */
+     */
     public final static String REQUEST_LIMIT = "REQUEST_LIMIT";
 
     /**
@@ -66,6 +66,6 @@ public class BaseRedisConf {
     /**
      * token令牌
      */
-    public final static String USER_PUBLISH_SPAM_COMMENT_COUNT= "USER_PUBLISH_SPAM_COMMENT_COUNT";
+    public final static String USER_PUBLISH_SPAM_COMMENT_COUNT = "USER_PUBLISH_SPAM_COMMENT_COUNT";
 
 }

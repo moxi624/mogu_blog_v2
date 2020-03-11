@@ -4,8 +4,6 @@ import com.moxi.mogublog.utils.AopUtils;
 import com.moxi.mogublog.utils.AspectUtil;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.xo.entity.ExceptionLog;
-import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.holder.RequestHolder;
@@ -18,7 +16,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Map;

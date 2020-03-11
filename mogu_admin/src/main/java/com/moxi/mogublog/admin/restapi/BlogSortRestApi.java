@@ -153,7 +153,7 @@ public class BlogSortRestApi {
         blogQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         blogQueryWrapper.in(SQLConf.BLOG_SORT_UID, uids);
         Integer blogCount = blogService.count(blogQueryWrapper);
-        if(blogCount > 0) {
+        if (blogCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_SORT);
         }
 

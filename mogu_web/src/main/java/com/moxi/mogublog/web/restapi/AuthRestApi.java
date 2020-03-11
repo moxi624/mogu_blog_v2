@@ -2,13 +2,15 @@ package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.MD5Utils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.SystemConfigService;
@@ -32,12 +34,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
-import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -100,7 +104,7 @@ public class AuthRestApi {
         AuthResponse response = authRequest.login(callback);
         String result = JSONObject.toJSONString(response);
         Map<String, Object> map = JsonUtils.jsonToMap(result);
-        if(response.getCode() == 5000) {
+        if (response.getCode() == 5000) {
             // 跳转到500错误页面
             httpServletResponse.sendRedirect(webSiteUrl + "500");
         }
@@ -246,6 +250,7 @@ public class AuthRestApi {
 
     /**
      * 通过token获取七牛云配置
+     *
      * @param token
      * @return
      */
@@ -273,7 +278,7 @@ public class AuthRestApi {
     @ApiOperation(value = "编辑用户信息", notes = "编辑用户信息")
     @PostMapping("/editUser")
     public String editUser(HttpServletRequest request, @RequestBody UserVO userVO) {
-        if(request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
         String userUid = request.getAttribute(SysConf.USER_UID).toString();

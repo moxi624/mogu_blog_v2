@@ -34,12 +34,13 @@ public enum EBehavior {
 
     /**
      * 根据value返回枚举类型，主要在switch中使用
+     *
      * @param value
      * @return
      */
     public static EBehavior getByValue(String value) {
-        for(EBehavior behavior: values()) {
-            if(behavior.getBehavior() == value) {
+        for (EBehavior behavior : values()) {
+            if (behavior.getBehavior() == value) {
                 return behavior;
             }
         }
@@ -52,90 +53,116 @@ public enum EBehavior {
         switch (behavior) {
             case BLOG_AUTHOR: {
                 // 判断是否是点击作者
-                if(nameAndArgsMap.get(BaseSysConf.AUTHOR) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.AUTHOR) != null) {
                     otherData = nameAndArgsMap.get(BaseSysConf.AUTHOR).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case BLOG_SORT: {
                 // 判断是否点击博客分类
-                if(nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case BLOG_TAG: {
                 // 判断是否点击博客标签
-                if(nameAndArgsMap.get(BaseSysConf.TAG_UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.TAG_UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.TAG_UID).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case BLOG_SEARCH: {
                 // 判断是否进行搜索
-                if(nameAndArgsMap.get(BaseSysConf.KEYWORDS) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.KEYWORDS) != null) {
                     otherData = nameAndArgsMap.get(BaseSysConf.KEYWORDS).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case VISIT_CLASSIFY: {
                 // 判断是否点击分类
-                if(nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case VISIT_SORT: {
                 // 判断是否点击归档
-                if(nameAndArgsMap.get(BaseSysConf.MONTH_DATE) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.MONTH_DATE) != null) {
                     otherData = nameAndArgsMap.get(BaseSysConf.MONTH_DATE).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case BLOG_CONTNET: {
                 // 判断是否博客详情
-                if(nameAndArgsMap.get(BaseSysConf.UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case BLOG_PRAISE: {
                 // 判断是否给博客点赞
-                if(nameAndArgsMap.get(BaseSysConf.UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case FRIENDSHIP_LINK: {
                 // 判断是否点击友链
-                if(nameAndArgsMap.get(BaseSysConf.UID) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
                 otherData = bussinessName;
-            };break;
+            }
+            ;
+            break;
             case VISIT_PAGE: {
                 // 访问页面
-                if(nameAndArgsMap.get(BaseSysConf.PAGE_NAME) != null) {
+                if (nameAndArgsMap.get(BaseSysConf.PAGE_NAME) != null) {
                     otherData = nameAndArgsMap.get(BaseSysConf.PAGE_NAME).toString();
                 } else {
                     otherData = bussinessName;
                 }
-            };break;
+            }
+            ;
+            break;
             case PUBLISH_COMMENT: {
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.CONTENT) != null) {
+                if (map.get(BaseSysConf.CONTENT) != null) {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case REPORT_COMMENT: {
                 // 举报评论
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.CONTENT) != null) {
+                if (map.get(BaseSysConf.CONTENT) != null) {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
-            };break;
+            }
+            ;
+            break;
             case DELETE_COMMENT: {
                 // 删除评论
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
-                if(map.get(BaseSysConf.CONTENT) != null) {
+                if (map.get(BaseSysConf.CONTENT) != null) {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
-            };break;
+            }
+            ;
+            break;
         }
         Map<String, String> result = new HashMap<>();
         result.put(BaseSysConf.MODULE_UID, moduleUid);

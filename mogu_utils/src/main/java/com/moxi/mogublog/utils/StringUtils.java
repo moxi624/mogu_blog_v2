@@ -254,6 +254,7 @@ public class StringUtils {
     /**
      * list小于0的数据就过滤了
      * 把list的数组变成1，3，4，5，6
+     *
      * @param list
      * @param code
      * @return
@@ -275,6 +276,7 @@ public class StringUtils {
 
     /**
      * 按code把list的数组转换成字符串
+     *
      * @param list
      * @param code
      * @return
@@ -327,6 +329,7 @@ public class StringUtils {
 
     /**
      * 某个子串是否在字符串内
+     *
      * @param str
      * @param searchChar
      * @return
@@ -367,23 +370,24 @@ public class StringUtils {
 
     /**
      * 判断评论是否为垃圾评论（仅通过单一字符重复出现来判断，以后可以扩展更多的检测方法）
+     *
      * @param content
      * @return
      */
     public static Boolean isCommentSpam(String content) {
-        if(content == null) {
+        if (content == null) {
             return true;
         }
-        char [] chars = content.toCharArray();
+        char[] chars = content.toCharArray();
         // 最大重复次数
         Integer maxCount = 4;
-        for(int a=0; a<chars.length; a++) {
+        for (int a = 0; a < chars.length; a++) {
             Integer count = 1;
-            for(int b=a; b<chars.length-1; b++) {
-                if(chars[b+1] == chars[b]) {
+            for (int b = a; b < chars.length - 1; b++) {
+                if (chars[b + 1] == chars[b]) {
                     count++;
                     // 判断字符重复的次数是否大于阈值
-                    if(count >= maxCount) {
+                    if (count >= maxCount) {
                         return true;
                     }
                     continue;

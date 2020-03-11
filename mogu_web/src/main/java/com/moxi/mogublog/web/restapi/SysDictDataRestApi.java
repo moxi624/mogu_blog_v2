@@ -21,7 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,7 +69,7 @@ public class SysDictDataRestApi {
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.last("LIMIT 1");
         SysDictType sysDictType = sysDictTypeService.getOne(queryWrapper);
-        if(sysDictType == null) {
+        if (sysDictType == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_NOT_EXIST);
         }
         QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
@@ -79,7 +82,7 @@ public class SysDictDataRestApi {
         String defaultValue = null;
         for (SysDictData sysDictData : list) {
             // 获取默认值
-            if(sysDictData.getIsDefault() == SysConf.ONE) {
+            if (sysDictData.getIsDefault() == SysConf.ONE) {
                 defaultValue = sysDictData.getDictValue();
                 break;
             }
@@ -98,7 +101,7 @@ public class SysDictDataRestApi {
     @PostMapping("/getListByDictTypeList")
     public String getListByDictTypeList(@RequestBody List<String> dictTypeList) {
 
-        if(dictTypeList.size() <= 0) {
+        if (dictTypeList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
@@ -122,7 +125,7 @@ public class SysDictDataRestApi {
         });
 
         // 表示数据全部从redis中获取到了，直接返回即可
-        if(tempTypeList.size() <=0 ) {
+        if (tempTypeList.size() <= 0) {
             return ResultUtil.result(SysConf.SUCCESS, map);
         }
 
@@ -144,7 +147,7 @@ public class SysDictDataRestApi {
             String defaultValue = null;
             for (SysDictData sysDictData : list) {
                 // 获取默认值
-                if(sysDictData.getIsDefault() == SysConf.ONE) {
+                if (sysDictData.getIsDefault() == SysConf.ONE) {
                     defaultValue = sysDictData.getDictValue();
                     break;
                 }
