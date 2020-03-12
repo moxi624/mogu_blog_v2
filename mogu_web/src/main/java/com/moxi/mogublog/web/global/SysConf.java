@@ -18,7 +18,9 @@ public final class SysConf extends BaseSysConf {
     public static final String BLOG = "blog";
     public static final String EMAIL = "email";
 
-    // 用于第三方登录
+    /**
+     * 用于第三方登录
+     */
     public static final String GITHUB = "github";
     public static final String GITEE = "gitee";
     public static final String PIC_URL = "picUrl";
@@ -27,4 +29,9 @@ public final class SysConf extends BaseSysConf {
     public static final String UUID = "uuid";
     public static final String SOURCE = "source";
 
+    /**
+     *  评论相关
+      */
+    public static final String COMMENT_LIST = "commentList";
+    public static final String REPLY_LIST = "replyList";
 }

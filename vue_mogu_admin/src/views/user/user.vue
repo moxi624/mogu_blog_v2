@@ -81,7 +81,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="邮箱" width="150" align="center">
+      <el-table-column label="邮箱" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>

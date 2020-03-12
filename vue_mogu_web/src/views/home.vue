@@ -113,10 +113,10 @@
     :visible.sync="drawer"
     :with-header="false">
 
-      <el-tabs type="border-card" tab-position="left" style="margin-top: 50px; height: 100%;">
-      <el-tab-pane label="个人中心">
-        <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
-        <el-form style="margin-left: 20px;" label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+      <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
+      <el-tab-pane label="个人中心" name="0">
+        <span slot="label"><i class="el-icon-user-solid"></i> 个人中心</span>
+        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像" :label-width="labelWidth">
 
             <div class="imgBody" v-if="userInfo.photoUrl">
@@ -143,6 +143,10 @@
               type="date"
               placeholder="选择日期">
             </el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="评论邮件通知" :label-width="labelWidth">
+            <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item label="邮箱" :label-width="labelWidth">
@@ -173,11 +177,81 @@
 
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="我的评论">我的评论</el-tab-pane>
-      <el-tab-pane label="我的回复">我的回复</el-tab-pane>
-      <el-tab-pane label="我的点赞">我的点赞</el-tab-pane>
-      <el-tab-pane label="我的收藏">我的收藏</el-tab-pane>
-      <el-tab-pane label="修改密码">修改密码</el-tab-pane>
+
+      <el-tab-pane label="我的评论" name="1">
+        <span slot="label"><i class="el-icon-message-solid"></i> 我的评论</span>
+        <div style="width: 100%; height: 840px;overflow:auto;" v-infinite-scroll="getCommentList">
+          <el-timeline>
+            <el-timeline-item v-for="comment in commentList" :timestamp="timeAgo(comment.createTime)" placement="top">
+              <el-card>
+                <div class="commentList">
+                <span class="left p1">
+                  <img v-if="comment.user" :src="comment.user.photoUrl ? PICTURE_HOST + comment.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                  <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
+                </span>
+
+                  <span class="right p1">
+                  <div class="rightTop">
+                    <el-link class="userName" :underline="false">{{comment.user.nickName}}</el-link>
+                    <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
+                  </div>
+
+                  <div class="rightCenter">
+                    {{comment.content}}
+                  </div>
+                </span>
+                </div>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </el-tab-pane>
+
+      <el-tab-pane label="我的回复" name="2">
+        <span slot="label"><i class="el-icon-s-promotion"></i> 我的回复</span>
+        <div style="width: 100%; height: 840px;overflow:auto" v-infinite-scroll="getCommentList">
+          <el-timeline>
+            <el-timeline-item v-for="reply in replyList" :timestamp="timeAgo(reply.createTime)" placement="top">
+              <el-card>
+                <div class="commentList">
+                  <span class="left p1">
+                    <img v-if="reply.user" :src="reply.user.photoUrl ? PICTURE_HOST + reply.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                    <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
+                  </span>
+
+                  <span class="right p1">
+
+                      <div class="rightTop">
+                        <el-link class="userName" :underline="false">{{reply.user.nickName}}</el-link>
+                        <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
+                      </div>
+
+                      <div class="rightCenter">
+                        {{reply.content}}
+                      </div>
+                  </span>
+                </div>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="我的点赞" name="3">
+        <span slot="label"><i class="el-icon-star-on"></i> 我的点赞</span>
+        我的点赞
+      </el-tab-pane>
+      <el-tab-pane label="我的反馈" name="4">
+        <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
+        我的反馈
+      </el-tab-pane>
+      <el-tab-pane label="申请友链" name="5">
+        <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
+        申请友链
+      </el-tab-pane>
+      <el-tab-pane label="修改密码" name="6">
+        <span slot="label"><i class="el-icon-s-tools"></i> 修改密码</span>
+        修改密码
+      </el-tab-pane>
     </el-tabs>
   </el-drawer>
 
@@ -221,10 +295,12 @@
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, editUser, deleteUserAccessToken} from "../api/user";
+  import {getCommentListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictType} from "@/api/sysDictData"
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
+  import {timeAgo} from "../utils/webUtils";
 
   export default {
     name: "index",
@@ -234,6 +310,7 @@
     },
     data() {
       return {
+        activeName: "0", // 激活的标签
         genderDictList: [], //字典列表
         imagecropperShow: false,
         imagecropperKey: 0,
@@ -252,7 +329,9 @@
         userInfo: { // 用户信息
         },
         icon: false, //控制删除图标的显示
-        labelWidth: "70px"
+        labelWidth: "100px",
+        commentList: [], //我的评论
+        replyList: [], // 我的回复
       };
     },
     mounted() {
@@ -289,12 +368,10 @@
       this.getKeyword()
       this.getCurrentPageTitle()
       this.getWebConfigInfo()
-
     },
     methods: {
       //拿到vuex中的写的方法
       ...mapMutations(['setUserInfo', 'setLoginState', 'setWebConfigData']),
-
       // 搜索
       search: function () {
         if (this.keyword == "" || this.keyword.trim() == "") {
@@ -309,9 +386,86 @@
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
       },
 
+      // 跳转到资源详情
+      goSource: function(comment) {
+        console.log('点击跳转', comment)
+        let source = comment.source
+        switch(source) {
+          case "MESSAGE_BOARD": {
+            console.log('我来了1')
+            let routeData = this.$router.resolve({
+              path: "/messageBoard"
+            });
+            window.open(routeData.href, '_blank');
+          };break;
+          case "BLOG_INFO": {
+            let routeData = this.$router.resolve({
+              path: "/info",
+              query: {blogUid: comment.blogUid}
+            });
+            window.open(routeData.href, '_blank');
+          };break;
+          case "ABOUT": {
+            let routeData = this.$router.resolve({
+              path: "/about"
+            });
+            window.open(routeData.href, '_blank');
+          };break;
+        }
+      },
+      // 获取评论列表
+      getCommentList: function() {
+        let params = {}
+        params.pageSize = 10;
+        params.currentPage = 1;
+        getCommentListByUser(params).then(response => {
+          console.log('得到的评论', response)
+          if(response.code == "success") {
+            this.commentList = response.data.commentList
+            this.replyList = response.data.replyList
+          }
+        })
+      },
+
+      // 标签选择
+      handleClick(tab, event) {
+        switch(tab.index) {
+          case "0": {
+            console.log("点击个人中心")
+          }; break;
+          case "1": {
+            console.log("点击我的评论")
+          }; break;
+          case "2": {
+            console.log("点击我的回复")
+          }; break;
+          case "3": {
+            console.log("点击我的点赞")
+          }; break;
+          case "4": {
+            console.log("点击我的反馈")
+          }; break;
+          case "5": {
+            console.log("点击申请友链")
+          }; break;
+          case "6": {
+            console.log("点击修改密码")
+          }; break;
+        }
+      },
+
       //弹出选择图片框
       checkPhoto() {
         this.imagecropperShow = true
+      },
+
+      /**
+       * dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
+       * @param dateTimeStamp
+       * @returns {string}
+       */
+      timeAgo(dateTimeStamp) {
+        return timeAgo(dateTimeStamp)
       },
 
       cropSuccess(resData) {
@@ -335,7 +489,6 @@
           case "editUser": {
             console.log('提交用户信息', this.userInfo);
             editUser(this.userInfo).then(response => {
-              console.log('返回的状态', response)
               if(response.code == "success") {
                 this.$message({
                   type: "success",
@@ -378,7 +531,6 @@
         if (token != undefined) {
           authVerify(token).then(response => {
             if (response.code == "success") {
-              console.log('得到的用户信息', response.data)
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
@@ -489,6 +641,7 @@
 
       },
 
+      // 点击头像触发的动作
       handleCommand(command) {
         switch (command) {
           case "logout" : {
@@ -498,7 +651,10 @@
             this.userLogin();
           };break;
           case "goUserInfo" : {
+            // 打开抽屉
             this.drawer = true;
+            // 获取评论列表
+            this.getCommentList();
           };break;
         }
       },
@@ -512,6 +668,11 @@
 
 <style scoped>
 
+  .el-tag {
+    height: 25px;
+    line-height: 25px;
+    margin-left: 6px;
+  }
   #starlist li .title {
     color: #00a7eb;
   }
@@ -591,6 +752,53 @@
   }
   .inputClass {
     position: absolute;
+  }
+
+
+  .commentList {
+    width: 100%;
+    margin: 0 auto;
+  }
+  .commentList .p1 {
+    float: left;
+  }
+  .commentList .left {
+    display: inline-block;
+    width: 10%;
+    height: 100%;
+  }
+  .commentList .left img {
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 50%;
+  }
+  .commentList .right {
+    display: inline-block;
+    width: 85%;
+    margin-left: 5px;
+  }
+  .commentList .rightTop {
+    height: 30px;
+  }
+  .commentList .rightTop .userName {
+    color: #303133;
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .commentList .rightTop .timeAgo {
+    color: #909399;
+    margin-left: 10px;
+    font-size: 15px;
+  }
+  .commentList .rightCenter {
+    margin-left: 20px;
+    line-height: 30px;
+    height: 60px;
+  }
+
+  .commentList .rightBottom el-link {
+
   }
 
 </style>

@@ -14,13 +14,12 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Comment;
-import com.moxi.mogublog.xo.entity.CommentReport;
-import com.moxi.mogublog.xo.entity.User;
-import com.moxi.mogublog.xo.entity.WebConfig;
+import com.moxi.mogublog.xo.entity.*;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.CommentVO;
+import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
@@ -63,6 +62,8 @@ public class CommentRestApi {
     private WebVisitService webVisitService;
     @Autowired
     private WebConfigService webConfigService;
+    @Autowired
+    private BlogService blogService;
     @Autowired
     private CommentService commentService;
     @Autowired
@@ -190,6 +191,117 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, getCommentReplys(firstComment, toCommentListMap));
     }
 
+    @ApiOperation(value = "获取用户的评论列表和回复", notes = "获取评论列表和回复")
+    @PostMapping("/getListByUser")
+    public String getListByUser(HttpServletRequest request, @Validated({GetList.class}) @RequestBody UserVO userVO) {
+
+        if (request.getAttribute(SysConf.USER_UID) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+
+        String requestUserUid = request.getAttribute(SysConf.USER_UID).toString();
+
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+
+        //分页
+        Page<Comment> page = new Page<>();
+        page.setCurrent(userVO.getCurrentPage());
+        page.setSize(userVO.getPageSize());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        // 查找出 我的评论 和 我的回复
+        queryWrapper.eq(SQLConf.USER_UID, requestUserUid).or().eq(SQLConf.TO_USER_UID, requestUserUid);
+        IPage<Comment> pageList = commentService.page(page, queryWrapper);
+        List<Comment> list = pageList.getRecords();
+
+        List<String> userUidList = new ArrayList<>();
+        list.forEach(item -> {
+            String userUid = item.getUserUid();
+            String toUserUid = item.getToUserUid();
+            if (StringUtils.isNotEmpty(userUid)) {
+                userUidList.add(item.getUserUid());
+            }
+            if (StringUtils.isNotEmpty(toUserUid)) {
+                userUidList.add(item.getToUserUid());
+            }
+        });
+
+        // 获取用户列表
+        Collection<User> userList = new ArrayList<>();
+
+        if (userUidList.size() > 0) {
+            userList = userService.listByIds(userUidList);
+        }
+
+        // 过滤掉用户的敏感信息
+        List<User> filterUserList = new ArrayList<>();
+        userList.forEach(item -> {
+            User user = new User();
+            user.setAvatar(item.getAvatar());
+            user.setUid(item.getUid());
+            user.setNickName(item.getNickName());
+            filterUserList.add(user);
+        });
+
+
+        // 获取用户头像
+        StringBuffer fileUids = new StringBuffer();
+        filterUserList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getAvatar())) {
+                fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+        String pictureList = null;
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        Map<String, String> pictureMap = new HashMap<>();
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+
+        Map<String, User> userMap = new HashMap<>();
+        filterUserList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getAvatar()) && pictureMap.get(item.getAvatar()) != null) {
+                item.setPhotoUrl(pictureMap.get(item.getAvatar()));
+            }
+            userMap.put(item.getUid(), item);
+        });
+
+        // 将评论列表划分为 我的评论 和 我的回复
+        List<Comment> commentList = new ArrayList<>();
+        List<Comment> replyList = new ArrayList<>();
+        list.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
+                item.setUser(userMap.get(item.getUserUid()));
+            }
+
+            if (StringUtils.isNotEmpty(item.getToUserUid())) {
+                item.setToUser(userMap.get(item.getToUserUid()));
+            }
+
+
+            // 设置sourceName
+            if(StringUtils.isNotEmpty(item.getSource())) {
+                item.setSourceName(ECommentSource.valueOf(item.getSource()).getName());
+            }
+
+            if(requestUserUid.equals(item.getUserUid())) {
+                commentList.add(item);
+            }
+            if(requestUserUid.equals(item.getToUserUid())) {
+                replyList.add(item);
+            }
+        });
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(SysConf.COMMENT_LIST, commentList);
+        resultMap.put(SysConf.REPLY_LIST, replyList);
+
+        return ResultUtil.result(SysConf.SUCCESS, resultMap);
+    }
+
     @BussinessLog(value = "发表评论", behavior = EBehavior.PUBLISH_COMMENT)
     @ApiOperation(value = "增加评论", notes = "增加评论")
     @PostMapping("/add")
@@ -257,6 +369,8 @@ public class CommentRestApi {
 
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
+
+
 
     @BussinessLog(value = "举报评论", behavior = EBehavior.REPORT_COMMENT)
     @ApiOperation(value = "举报评论", notes = "举报评论")
