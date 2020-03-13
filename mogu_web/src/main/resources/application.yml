@@ -119,6 +119,12 @@ spring:
     host: 127.0.0.1 #redis的主机ip
     port: 6379
 
+  rabbitmq:
+    host: 127.0.0.1 #rabbitmq的主机ip
+    port: 5672
+    username: guest
+    password: guest
+
   boot:
     admin:
       client:

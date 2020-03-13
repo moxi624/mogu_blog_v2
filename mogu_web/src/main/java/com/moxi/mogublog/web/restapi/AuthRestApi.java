@@ -2,10 +2,7 @@ package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.MD5Utils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -30,6 +27,7 @@ import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -52,6 +50,8 @@ import java.util.concurrent.TimeUnit;
 @Api(value = "认证RestApi", tags = {"AuthRestApi"})
 @Slf4j
 public class AuthRestApi {
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Autowired
     WebUtils webUtils;
     @Autowired
@@ -76,6 +76,8 @@ public class AuthRestApi {
     private String PROJECT_NAME_EN;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
+    @Value(value = "${data.web.url}")
+    private String dataWebUrl;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -286,23 +288,114 @@ public class AuthRestApi {
         User user = userService.getById(userUid);
         user.setNickName(userVO.getNickName());
         user.setAvatar(userVO.getAvatar());
-        user.setEmail(userVO.getEmail());
         user.setBirthday(userVO.getBirthday());
         user.setSummary(userVO.getSummary());
         user.setGender(userVO.getGender());
         user.setQqNumber(userVO.getQqNumber());
         user.setOccupation(userVO.getOccupation());
-        user.updateById();
 
+        // 如果开启邮件通知，必须保证邮箱已存在
+        if(userVO.getStartEmailNotification() == SysConf.ONE && !StringUtils.isNotEmpty(user.getEmail())) {
+            return ResultUtil.result(SysConf.ERROR, "必须填写并绑定邮箱后，才能开启评论邮件通知~");
+        }
+        user.setStartEmailNotification(userVO.getStartEmailNotification());
+
+        user.updateById();
         user.setPassWord("");
         user.setPhotoUrl(userVO.getPhotoUrl());
 
-        // 修改成功后，更新Redis中的用户信息
-        stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+        // 设置验证码
+        user.setValidCode(StringUtils.getUUID());
 
-        return ResultUtil.result(SysConf.SUCCESS, user);
+        // 判断用户是否更改了邮箱
+        if(userVO.getEmail() != null && !userVO .getEmail().equals(user.getEmail())){
+
+            user.setEmail(userVO.getEmail());
+
+            // 使用RabbitMQ发送邮件
+            sendEmail(user, token);
+
+            // 修改成功后，更新Redis中的用户信息
+            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            return ResultUtil.result(SysConf.SUCCESS, "您已修改邮箱，请先到邮箱进行确认绑定");
+        } else {
+            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            return ResultUtil.result(SysConf.SUCCESS, "修改成功");
+        }
     }
 
+    @ApiOperation(value = "绑定用户邮箱", notes = "绑定用户邮箱")
+    @GetMapping("/bindUserEmail/{token}/{code}")
+    public String bindUserEmail(@PathVariable("token")String token, @PathVariable("code")String code) {
+
+        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token);
+        if (StringUtils.isEmpty(userInfo)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        User user = JsonUtils.jsonToPojo(userInfo, User.class);
+        user.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, "绑定成功");
+    }
+
+    /**
+     * 发送邮件
+     */
+    private void sendEmail(User user, String token) {
+
+        String text =
+                "<html>\r\n" +
+                        " <head>\r\n" +
+                        "  <title> mogublog </title>\r\n" +
+                        " </head>\r\n" +
+                        " <body>\r\n" +
+                        "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
+                        "  <div id=\"qm_con_body\"><div id=\"mailContentContainer\" class=\"qmbox qm_con_body_content qqmail_webmail_only\" style=\"\">\r\n" +
+                        "<style>\r\n" +
+                        "  .qmbox .email-body{color:#40485B;font-size:14px;font-family:-apple-system, \"Helvetica Neue\", Helvetica, \"Nimbus Sans L\", \"Segoe UI\", Arial, \"Liberation Sans\", \"PingFang SC\", \"Microsoft YaHei\", \"Hiragino Sans GB\", \"Wenquanyi Micro Hei\", \"WenQuanYi Zen Hei\", \"ST Heiti\", SimHei, \"WenQuanYi Zen Hei Sharp\", sans-serif;background:#f8f8f8;}.qmbox .pull-right{float:right;}.qmbox a{color:#FE7300;text-decoration:underline;}.qmbox a:hover{color:#fe9d4c;}.qmbox a:active{color:#b15000;}.qmbox .logo{text-align:center;margin-bottom:20px;}.qmbox .panel{background:#fff;border:1px solid #E3E9ED;margin-bottom:10px;}.qmbox .panel-header{font-size:18px;line-height:30px;padding:10px 20px;background:#fcfcfc;border-bottom:1px solid #E3E9ED;}.qmbox .panel-body{padding:20px;}.qmbox .container{width:100%;max-width:600px;padding:20px;margin:0 auto;}.qmbox .text-center{text-align:center;}.qmbox .thumbnail{padding:4px;max-width:100%;border:1px solid #E3E9ED;}.qmbox .btn-primary{color:#fff;font-size:16px;padding:8px 14px;line-height:20px;border-radius:2px;display:inline-block;background:#FE7300;text-decoration:none;}.qmbox .btn-primary:hover,.qmbox .btn-primary:active{color:#fff;}.qmbox .footer{color:#9B9B9B;font-size:12px;margin-top:40px;}.qmbox .footer a{color:#9B9B9B;}.qmbox .footer a:hover{color:#fe9d4c;}.qmbox .footer a:active{color:#b15000;}.qmbox .email-body#mail_to_teacher{line-height:26px;color:#40485B;font-size:16px;padding:0px;}.qmbox .email-body#mail_to_teacher .container,.qmbox .email-body#mail_to_teacher .panel-body{padding:0px;}.qmbox .email-body#mail_to_teacher .container{padding-top:20px;}.qmbox .email-body#mail_to_teacher .textarea{padding:32px;}.qmbox .email-body#mail_to_teacher .say-hi{font-weight:500;}.qmbox .email-body#mail_to_teacher .paragraph{margin-top:24px;}.qmbox .email-body#mail_to_teacher .paragraph .pro-name{color:#000000;}.qmbox .email-body#mail_to_teacher .paragraph.link{margin-top:32px;text-align:center;}.qmbox .email-body#mail_to_teacher .paragraph.link .button{background:#4A90E2;border-radius:2px;color:#FFFFFF;text-decoration:none;padding:11px 17px;line-height:14px;display:inline-block;}.qmbox .email-body#mail_to_teacher ul.pro-desc{list-style-type:none;margin:0px;padding:0px;padding-left:16px;}.qmbox .email-body#mail_to_teacher ul.pro-desc li{position:relative;}.qmbox .email-body#mail_to_teacher ul.pro-desc li::before{content:'';width:3px;height:3px;border-radius:50%;background:red;position:absolute;left:-15px;top:11px;background:#40485B;}.qmbox .email-body#mail_to_teacher .blackboard-area{height:600px;padding:40px;background-image:url();color:#FFFFFF;}.qmbox .email-body#mail_to_teacher .blackboard-area .big-title{font-size:32px;line-height:45px;text-align:center;}.qmbox .email-body#mail_to_teacher .blackboard-area .desc{margin-top:8px;}.qmbox .email-body#mail_to_teacher .blackboard-area .desc p{margin:0px;text-align:center;line-height:28px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card:nth-child(odd){float:left;margin-top:45px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card:nth-child(even){float:right;margin-top:45px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card .title{font-size:18px;text-align:center;margin-bottom:10px;}\r\n" +
+                        "</style>\r\n" +
+                        "<meta>\r\n" +
+                        "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
+                        "<div class=\"container\">\r\n" +
+                        "<div class=\"logo\">\r\n" +
+                        "<img src=\"http://picture.moguit.cn/blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" +
+                        "</div>\r\n" +
+                        "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
+                        "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
+                        "邮箱绑定\r\n" +
+                        "\r\n" +
+                        "</div>\r\n" +
+                        "<div class=\"panel-body\">\r\n" +
+                        "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
+                        "<p>欢迎您绑定邮箱，请点击下方链接进行绑定。</p>\r\n" +
+                        "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/"+ token+"/"+ user.getValidCode() +"\">点击这里</a>" + "</p>\r\n" +
+                        "\r\n" +
+                        "</div>\r\n" +
+                        "</div>\r\n" +
+                        "<div class=\"footer\">\r\n" +
+                        "@muguit.cn\r\n" +
+                        "<div class=\"pull-right\"></div>\r\n" +
+                        "</div>\r\n" +
+                        "</div>\r\n" +
+                        "</div>\r\n" +
+                        "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
+                        " </body>\r\n" +
+                        "</html>";
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("receiver", user.getEmail());
+        map.put("text", text);
+
+        //发送到RabbitMq
+        rabbitTemplate.convertAndSend("exchange.direct", "mogu.email", map);
+    }
+
+    /**
+     * 鉴权
+     * @param source
+     * @return
+     */
     private AuthRequest getAuthRequest(String source) {
         AuthRequest authRequest = null;
         switch (source) {

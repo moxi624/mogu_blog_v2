@@ -83,3 +83,9 @@ ALTER TABLE  t_user ADD comment_status tinyint(1) NOT NULL DEFAULT 1 COMMENT '�
 ALTER TABLE  t_user ADD ip_source varchar(255) NULL COMMENT 'ip来源';
 ALTER TABLE  t_user ADD browser varchar(255) NULL COMMENT '浏览器';
 ALTER TABLE  t_user ADD os varchar(255) NULL COMMENT '操作系统';
+
+/*
+   修改t_user表，增加startEmailNotification字段
+   @date 2020年3月13日09:29:45
+*/
+ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭'

@@ -101,6 +101,11 @@ public class UserVO extends BaseVO<UserVO> {
     private Integer commentStatus;
 
     /**
+     * 开启邮件通知：  0：关闭， 1：开启
+     */
+    private Integer startEmailNotification;
+
+    /**
      * 用户头像
      */
     @TableField(exist = false)

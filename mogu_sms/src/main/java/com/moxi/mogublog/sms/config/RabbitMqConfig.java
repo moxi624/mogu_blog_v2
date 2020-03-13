@@ -89,7 +89,7 @@ public class RabbitMqConfig {
      */
     @Bean
     public Binding BINDING_QUEUE_INFORM_SMS(@Qualifier(MOGU_SMS) Queue queue, @Qualifier(EXCHANGE_DIRECT) Exchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY_BLOG).noargs();
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY_SMS).noargs();
     }
 
 

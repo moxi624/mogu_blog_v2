@@ -123,6 +123,11 @@ public class User extends SuperEntity<User> {
     private Integer commentStatus;
 
     /**
+     * 开启邮件通知：  0：关闭， 1：开启
+     */
+    private Integer startEmailNotification;
+
+    /**
      * 操作系统
      */
     private String os;

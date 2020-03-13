@@ -63,12 +63,14 @@
 - mogu_picture： 图片服务，用于图片上传和下载；
 - mogu_sms：消息服务，用于更新ElasticSearch、Solr索引、邮件和短信发送
 - mogu_monitor：监控服务，集成SpringBootAdmin用于管理和监控SpringBoot应用程序
+- mogu_spider：爬虫服务（目前还未完善）
+- mogu_spider：网关服务（目前还未完善）
+- mogu_zipkin：链路追踪服务，目前使用java -jar的方式启动
 - mogu_search：搜索服务，ElasticSearch和Solr作为检索工具，可插拔配置
 - mogu_utils: 是常用工具类；
 - mogu_xo: 是存放 Entity，Service，Dao层的
 - mogu_base: 是一些Base基类
 - mogu_config: 是存放一些配置
-- mogu_zipkin：链路追踪服务，目前使用java -jar的方式启动
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站

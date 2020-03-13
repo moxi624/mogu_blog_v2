@@ -146,7 +146,7 @@
           </el-form-item>
 
           <el-form-item label="评论邮件通知" :label-width="labelWidth">
-            <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification" :label="parseInt(item.dictValue)" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item label="邮箱" :label-width="labelWidth">
@@ -180,9 +180,9 @@
 
       <el-tab-pane label="我的评论" name="1">
         <span slot="label"><i class="el-icon-message-solid"></i> 我的评论</span>
-        <div style="width: 100%; height: 840px;overflow:auto;" v-infinite-scroll="getCommentList">
+        <div style="width: 100%; height: 840px;overflow:auto;">
           <el-timeline>
-            <el-timeline-item v-for="comment in commentList" :timestamp="timeAgo(comment.createTime)" placement="top">
+            <el-timeline-item v-for="comment in commentList" :key="comment.uid" :timestamp="timeAgo(comment.createTime)" placement="top">
               <el-card>
                 <div class="commentList">
                 <span class="left p1">
@@ -203,15 +203,21 @@
                 </div>
               </el-card>
             </el-timeline-item>
+
+            <el-timeline-item v-if="commentList.length == 0" placement="top">
+              <el-card>
+                <span style="font-size: 16px">空空如也~</span>
+              </el-card>
+            </el-timeline-item>
           </el-timeline>
         </div>
       </el-tab-pane>
 
       <el-tab-pane label="我的回复" name="2">
         <span slot="label"><i class="el-icon-s-promotion"></i> 我的回复</span>
-        <div style="width: 100%; height: 840px;overflow:auto" v-infinite-scroll="getCommentList">
+        <div style="width: 100%; height: 840px;overflow:auto">
           <el-timeline>
-            <el-timeline-item v-for="reply in replyList" :timestamp="timeAgo(reply.createTime)" placement="top">
+            <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)" placement="top">
               <el-card>
                 <div class="commentList">
                   <span class="left p1">
@@ -233,6 +239,13 @@
                 </div>
               </el-card>
             </el-timeline-item>
+
+            <el-timeline-item v-if="replyList.length == 0" placement="top">
+              <el-card>
+                <span style="font-size: 16px">空空如也~</span>
+              </el-card>
+            </el-timeline-item>
+
           </el-timeline>
         </div>
       </el-tab-pane>
@@ -297,7 +310,7 @@
   import {authVerify, editUser, deleteUserAccessToken} from "../api/user";
   import {getCommentListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
-  import {getListByDictType} from "@/api/sysDictData"
+  import {getListByDictTypeList} from "@/api/sysDictData"
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
   import {timeAgo} from "../utils/webUtils";
@@ -311,7 +324,8 @@
     data() {
       return {
         activeName: "0", // 激活的标签
-        genderDictList: [], //字典列表
+        yesNoDictList: [], // 是否 字典列表
+        genderDictList: [], //性别 字典列表
         imagecropperShow: false,
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
@@ -492,11 +506,11 @@
               if(response.code == "success") {
                 this.$message({
                   type: "success",
-                  message: "更新成功"
+                  message: response.data
                 })
               } else {
                 this.$message({
-                  type: "success",
+                  type: "error",
                   message: response.data
                 })
               }
@@ -509,14 +523,16 @@
        * 字典查询
        */
       getDictList: function () {
-        var params = {};
-        params.dictType = 'sys_user_sex';
-        getListByDictType(params).then(response => {
-          console.log('得到的字典', response)
+        var dictTypeList =  ['sys_yes_no', 'sys_user_sex']
+
+        getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == "success") {
-            this.genderDictList = response.data.list;
+            var dictMap = response.data;
+            this.genderDictList = dictMap.sys_user_sex.list
+            this.yesNoDictList = dictMap.sys_yes_no.list
           }
         });
+
       },
 
       getToken: function() {
@@ -531,6 +547,7 @@
         if (token != undefined) {
           authVerify(token).then(response => {
             if (response.code == "success") {
+              console.log('得到的用户信息', response.data)
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
