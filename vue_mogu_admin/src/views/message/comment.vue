@@ -49,6 +49,7 @@
       <el-table-column label="内容" width="250" align="center">
 	      <template slot-scope="scope">
           <el-popover
+            v-if="scope.row.content"
             placement="top-start"
             width="400"
             trigger="hover"
@@ -57,6 +58,15 @@
           </el-popover>
 	      </template>
 	    </el-table-column>
+
+        <el-table-column label="类型" width="150" align="center">
+          <template slot-scope="scope">
+            <template>
+              <el-tag type="danger" v-if="scope.row.type == 1">点赞</el-tag>
+              <el-tag type="success" v-if="scope.row.type == 0">评论</el-tag>
+            </template>
+          </template>
+        </el-table-column>
 
         <el-table-column label="来源" width="150" align="center">
           <template slot-scope="scope">
@@ -153,6 +163,9 @@ export default {
 			});
 		},
     subComment(str, index) {
+      if(str == null || str == undefined) {
+        return "";
+      }
 		  if(str.length < index){
 		    return str;
       } else {

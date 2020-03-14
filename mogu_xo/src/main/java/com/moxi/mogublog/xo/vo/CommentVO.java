@@ -38,6 +38,11 @@ public class CommentVO extends BaseVO<CommentVO> {
     private String userName;
 
     /**
+     * 评论类型： 0: 评论   1: 点赞
+     */
+    private Integer type;
+
+    /**
      * 评论内容
      */
     @NotBlank(groups = {Insert.class})

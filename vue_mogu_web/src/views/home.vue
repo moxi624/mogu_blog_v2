@@ -251,7 +251,21 @@
       </el-tab-pane>
       <el-tab-pane label="我的点赞" name="3">
         <span slot="label"><i class="el-icon-star-on"></i> 我的点赞</span>
-        我的点赞
+        <div style="width: 100%; height: 840px;overflow:auto">
+          <el-timeline>
+            <el-timeline-item v-for="praise in praiseList" :key="praise.uid" :timestamp="timeAgo(praise.createTime)" placement="top">
+              <el-card>
+                <span>点赞</span><el-tag type="warning" style="cursor: pointer" v-if="praise.blog" @click.native="goToInfo(praise.blog.uid)">{{praise.blog.title}}</el-tag>
+              </el-card>
+            </el-timeline-item>
+
+            <el-timeline-item v-if="replyList.length == 0" placement="top">
+              <el-card>
+                <span style="font-size: 16px">空空如也~</span>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="我的反馈" name="4">
         <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
@@ -308,7 +322,7 @@
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, editUser, deleteUserAccessToken} from "../api/user";
-  import {getCommentListByUser} from "../api/comment";
+  import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictTypeList} from "@/api/sysDictData"
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -346,6 +360,7 @@
         labelWidth: "100px",
         commentList: [], //我的评论
         replyList: [], // 我的回复
+        praiseList: [], // 我的点赞
       };
     },
     mounted() {
@@ -400,6 +415,16 @@
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
       },
 
+      //跳转到文章详情
+      goToInfo(uid) {
+
+        let routeData = this.$router.resolve({
+          path: "/info",
+          query: {blogUid: uid}
+        });
+        window.open(routeData.href, '_blank');
+      },
+
       // 跳转到资源详情
       goSource: function(comment) {
         console.log('点击跳转', comment)
@@ -440,7 +465,18 @@
           }
         })
       },
-
+      // 获取点赞列表
+      getPraiseList: function() {
+        let params = {}
+        params.pageSize = 10;
+        params.currentPage = 1;
+        getPraiseListByUser(params).then(response => {
+          console.log('得到的点赞', response)
+          if(response.code == "success") {
+            this.praiseList = response.data.records;
+          }
+        })
+      },
       // 标签选择
       handleClick(tab, event) {
         switch(tab.index) {
@@ -672,6 +708,9 @@
             this.drawer = true;
             // 获取评论列表
             this.getCommentList();
+
+            // 获取点赞列表
+            this.getPraiseList()
           };break;
         }
       },

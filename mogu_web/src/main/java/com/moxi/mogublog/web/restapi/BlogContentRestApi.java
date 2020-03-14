@@ -13,11 +13,10 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.util.WebUtils;
 import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.xo.entity.Comment;
 import com.moxi.mogublog.xo.entity.WebVisit;
 import com.moxi.mogublog.xo.service.*;
-import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.enums.EPublish;
-import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.global.ECode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
@@ -62,6 +61,8 @@ public class BlogContentRestApi {
 
     @Autowired
     LinkService linkService;
+    @Autowired
+    CommentService commentService;
     @Autowired
     private BlogService blogService;
     @Autowired
@@ -160,27 +161,41 @@ public class BlogContentRestApi {
     @GetMapping("/praiseBlogByUid")
     public String praiseBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
 
-        HttpServletRequest request = RequestHolder.getRequest();
-        String ip = IpUtils.getIpAddr(request);
-
-        //判断该IP是否点赞过
-        QueryWrapper<WebVisit> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.IP, ip);
-        queryWrapper.eq(SQLConf.MODULE_UID, uid);
-        queryWrapper.eq(SQLConf.BEHAVIOR, EBehavior.BLOG_PRAISE);
-        queryWrapper.last("LIMIT 1");
-        WebVisit webVisit = webVisitService.getOne(queryWrapper);
-        if (webVisit != null) {
-            return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！");
-        }
-
         if (StringUtils.isEmpty(uid)) {
             return ResultUtil.result(SysConf.ERROR, "UID不能为空");
         }
 
+        HttpServletRequest request = RequestHolder.getRequest();
+        String ip = IpUtils.getIpAddr(request);
+
+        //判断该IP是否点赞过
+        if(request.getAttribute(SysConf.USER_UID) != null) {
+            // 如果用户登录了
+            String userUid = request.getAttribute(SysConf.USER_UID).toString();
+            QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.USER_UID, userUid);
+            queryWrapper.eq(SQLConf.BLOG_UID, uid);
+            queryWrapper.eq(SQLConf.TYPE, ECommentType.PRAISE);
+            queryWrapper.last("LIMIT 1");
+            Comment praise = commentService.getOne(queryWrapper);
+            if(praise != null) {
+                return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！");
+            }
+        } else {
+            // 如果用户未登录
+            QueryWrapper<WebVisit> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.IP, ip);
+            queryWrapper.eq(SQLConf.MODULE_UID, uid);
+            queryWrapper.eq(SQLConf.BEHAVIOR, EBehavior.BLOG_PRAISE);
+            queryWrapper.last("LIMIT 1");
+            WebVisit webVisit = webVisitService.getOne(queryWrapper);
+            if (webVisit != null) {
+                return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！");
+            }
+        }
+
         Blog blog = blogService.getById(uid);
 
-        //从Redis取出数据，判断该用户是否点击过
         String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
 
         if (StringUtils.isEmpty(pariseJsonResult)) {
@@ -202,8 +217,16 @@ public class BlogContentRestApi {
             blog.updateById();
         }
 
-        //增加记录（可以考虑使用AOP）
-        //webVisitService.addWebVisit(null, request, EBehavior.BLOG_PRAISE.getBehavior(), blog.getUid(), null);
+        // 已登录用户，向评论表添加点赞数据
+        if(request.getAttribute(SysConf.USER_UID) != null) {
+            String userUid = request.getAttribute(SysConf.USER_UID).toString();
+            Comment comment = new Comment();
+            comment.setUserUid(userUid);
+            comment.setBlogUid(uid);
+            comment.setSource(ECommentSource.BLOG_INFO.getCode());
+            comment.setType(ECommentType.PRAISE);
+            comment.insert();
+        }
 
         return ResultUtil.result(SysConf.SUCCESS, blog.getCollectCount());
     }

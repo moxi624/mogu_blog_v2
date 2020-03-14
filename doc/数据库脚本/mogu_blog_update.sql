@@ -89,3 +89,10 @@ ALTER TABLE  t_user ADD os varchar(255) NULL COMMENT '操作系统';
    @date 2020年3月13日09:29:45
 */
 ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭'
+
+
+/*
+   修改t_comment表，增加type字段
+   @date 2020年3月13日09:29:45
+*/
+ALTER TABLE  t_comment ADD type tinyint(1) NOT NULL DEFAULT 0 COMMENT '评论类型 1:点赞 0:评论'

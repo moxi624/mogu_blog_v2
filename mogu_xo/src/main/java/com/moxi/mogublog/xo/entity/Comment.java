@@ -53,6 +53,11 @@ public class Comment extends SuperEntity<Comment> {
     private String source;
 
     /**
+     * 评论类型： 0: 评论   1: 点赞
+     */
+    private Integer type;
+
+    /**
      * 本条评论是哪个用户说的
      */
     @TableField(exist = false)

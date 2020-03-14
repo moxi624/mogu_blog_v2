@@ -50,4 +50,7 @@ public class BaseSQLConf {
 
     // web_visit表
     public final static String IP = "ip";
+
+    // t_comment表
+    public final static String TYPE = "type";
 }

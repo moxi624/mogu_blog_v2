@@ -20,24 +20,24 @@ import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.ECommentSource;
+import com.moxi.mougblog.base.enums.ECommentType;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -102,6 +102,7 @@ public class CommentRestApi {
         page.setSize(commentVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(SQLConf.TYPE, ECommentType.COMMENT);
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
         List<Comment> list = pageList.getRecords();
 
@@ -210,6 +211,7 @@ public class CommentRestApi {
         Page<Comment> page = new Page<>();
         page.setCurrent(userVO.getCurrentPage());
         page.setSize(userVO.getPageSize());
+        queryWrapper.eq(SQLConf.TYPE, ECommentType.COMMENT);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         // 查找出 我的评论 和 我的回复
@@ -305,11 +307,65 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, resultMap);
     }
 
+    /**
+     * 获取用户点赞信息
+     * @return
+     */
+    @ApiOperation(value = "获取用户点赞信息", notes = "增加评论")
+    @PostMapping("/getPraiseListByUser")
+    public String getPraiseListByUser(@ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                               @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+        HttpServletRequest request = RequestHolder.getRequest();
+        if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+
+        QueryWrapper<Comment> queryWrappe = new QueryWrapper<>();
+        queryWrappe.eq(SQLConf.USER_UID, userUid);
+        queryWrappe.eq(SQLConf.TYPE, ECommentType.PRAISE);
+        queryWrappe.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrappe.orderByDesc(SQLConf.CREATE_TIME);
+        Page<Comment> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+        IPage<Comment> pageList = commentService.page(page, queryWrappe);
+        List<Comment> praiseList = pageList.getRecords();
+
+        List<String> blogUids = new ArrayList<>();
+        praiseList.forEach(item -> {
+            blogUids.add(item.getBlogUid());
+        });
+        Map<String, Blog> blogMap = new HashMap<>();
+        if(blogUids.size() > 0) {
+            Collection<Blog> blogList = blogService.listByIds(blogUids);
+            blogList.forEach(blog -> {
+                // 并不需要content内容
+                blog.setContent("");
+                blogMap.put(blog.getUid(), blog);
+            });
+        }
+
+        praiseList.forEach(item -> {
+            if(blogMap.get(item.getBlogUid()) != null) {
+                item.setBlog(blogMap.get(item.getBlogUid()));
+            }
+        });
+
+        pageList.setRecords(praiseList);
+
+        return ResultUtil.result(SysConf.SUCCESS, pageList);
+    }
+
     @BussinessLog(value = "发表评论", behavior = EBehavior.PUBLISH_COMMENT)
     @ApiOperation(value = "增加评论", notes = "增加评论")
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
+        HttpServletRequest request = RequestHolder.getRequest();
+        if (request.getAttribute(SysConf.USER_UID) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
@@ -318,7 +374,8 @@ public class CommentRestApi {
         }
         ThrowableUtils.checkParamArgument(result);
 
-        String userUid = commentVO.getUserUid();
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+
         User user = userService.getById(userUid);
 
         // 判断字数是否超过限制
@@ -391,7 +448,6 @@ public class CommentRestApi {
 
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
-
 
 
     @BussinessLog(value = "举报评论", behavior = EBehavior.REPORT_COMMENT)
