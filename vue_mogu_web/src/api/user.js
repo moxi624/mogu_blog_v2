@@ -23,6 +23,14 @@ export function editUser(params) {
   })
 }
 
+export function replyBlogLink(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/replyBlogLink',
+    method: 'post',
+    data: params
+  })
+}
+
 export function deleteUserAccessToken(params) {
   return request({
     url: process.env.WEB_API + '/oauth/delete/' + params,

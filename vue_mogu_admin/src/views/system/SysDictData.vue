@@ -174,7 +174,7 @@
           <el-select v-model="form.listClass" clearable placeholder="推荐等级" style="width:140px">
             <el-option
               v-for="item in listClassType"
-              :key="item.value"
+              :key="item.key"
               :label="item.label"
               :value="item.value"
             ></el-option>
@@ -195,8 +195,8 @@
 
         <el-form-item label="系统默认" :label-width="formLabelWidth" required>
           <el-radio-group v-model="form.isDefault" size="small">
-            <el-radio label="1" border>是</el-radio>
-            <el-radio label="0" border>否</el-radio>
+            <el-radio :label="1" border>是</el-radio>
+            <el-radio :label="0" border>否</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -239,12 +239,12 @@
         isEditForm: false,
         form: {},
         listClassType: [
-          {label: "default", value: 'default'},
-          {label: "primary", value: 'primary'},
-          {label: "success", value: 'success'},
-          {label: "info", value: 'info'},
-          {label: "warning", value: 'warning'},
-          {label: "danger", value: 'danger'}
+          {key: 1, label: "default", value: 'default'},
+          {key: 2, label: "primary", value: 'primary'},
+          {key: 3, label: "success", value: 'success'},
+          {key: 4, label: "info", value: 'info'},
+          {key: 5, label: "warning", value: 'warning'},
+          {key: 6, label: "danger", value: 'danger'}
         ],
       };
     },
@@ -287,7 +287,7 @@
         var formObject = {
           isPublish: '1',
           sort: 0,
-          isDefault: '0',
+          isDefault: 0,
           listClass: ''
         };
         return formObject;

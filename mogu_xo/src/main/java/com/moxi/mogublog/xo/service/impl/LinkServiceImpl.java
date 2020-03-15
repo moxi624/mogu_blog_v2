@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.mapper.LinkMapper;
 import com.moxi.mogublog.xo.service.LinkService;
+import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -34,6 +35,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         Page<Link> page = new Page<>();
         page.setCurrent(1);
         page.setSize(pageSize);
+        queryWrapper.eq(BaseSQLConf.LINK_STATUS, ELinkStatus.PUBLISH);
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(BaseSQLConf.SORT);
         IPage<Link> pageList = linkMapper.selectPage(page, queryWrapper);

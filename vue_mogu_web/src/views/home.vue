@@ -273,7 +273,43 @@
       </el-tab-pane>
       <el-tab-pane label="申请友链" name="5">
         <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
-        申请友链
+
+        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+
+          <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse-item title="申请须知" name="1">
+              <div>请确定贵站可以稳定运营</div>
+              <div>原创博客优先，技术类博客优先</div>
+              <div>申请前请先添加下方蘑菇博客友链</div>
+              <div>欢迎各位小伙伴一起互换友链~</div>
+            </el-collapse-item>
+            <el-collapse-item title="蘑菇博客" name="2">
+              <div>网站名称：蘑菇博客</div>
+              <div>网站LOGO：http://image.moguit.cn/favicon.png</div>
+              <div>网站简介：蘑菇博客 - 专注于技术分享的博客平台</div>
+              <div>网站地址：http://www.moguit.cn</div>
+            </el-collapse-item>
+          </el-collapse>
+
+          <el-divider></el-divider>
+
+          <el-form-item label="网站名称" :label-width="labelWidth">
+            <el-input v-model="blogLink.title" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="网站简介" :label-width="labelWidth">
+            <el-input v-model="blogLink.summary" style="width: 100%"></el-input>
+          </el-form-item>
+
+
+          <el-form-item label="网站地址" :label-width="labelWidth">
+            <el-input v-model="blogLink.url" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('replyBlogLink')">申 请</el-button>
+          </el-form-item>
+        </el-form>
       </el-tab-pane>
       <el-tab-pane label="修改密码" name="6">
         <span slot="label"><i class="el-icon-s-tools"></i> 修改密码</span>
@@ -321,7 +357,7 @@
   import AvatarCropper from '@/components/AvatarCropper'
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
-  import {authVerify, editUser, deleteUserAccessToken} from "../api/user";
+  import {authVerify, editUser, replyBlogLink, deleteUserAccessToken} from "../api/user";
   import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictTypeList} from "@/api/sysDictData"
@@ -337,6 +373,7 @@
     },
     data() {
       return {
+        activeNames: ['1', '2'], //激活的折叠面板
         activeName: "0", // 激活的标签
         yesNoDictList: [], // 是否 字典列表
         genderDictList: [], //性别 字典列表
@@ -356,6 +393,7 @@
         showLogin: false, //显示登录框
         userInfo: { // 用户信息
         },
+        blogLink: {}, // 友链申请
         icon: false, //控制删除图标的显示
         labelWidth: "100px",
         commentList: [], //我的评论
@@ -539,6 +577,23 @@
           case "editUser": {
             console.log('提交用户信息', this.userInfo);
             editUser(this.userInfo).then(response => {
+              if(response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                })
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                })
+              }
+            });
+          }; break;
+
+          case "replyBlogLink": {
+            console.log('申请友链', this.blogLink);
+            replyBlogLink(this.blogLink).then(response => {
               if(response.code == "success") {
                 this.$message({
                   type: "success",

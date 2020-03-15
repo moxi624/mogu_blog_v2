@@ -1,6 +1,7 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
@@ -8,11 +9,16 @@ import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
+import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
+import com.moxi.mougblog.base.enums.ECommentSource;
+import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
@@ -56,6 +62,8 @@ public class AuthRestApi {
     WebUtils webUtils;
     @Autowired
     SystemConfigService systemConfigService;
+    @Autowired
+    LinkService linkService;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -322,6 +330,59 @@ public class AuthRestApi {
             stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
             return ResultUtil.result(SysConf.SUCCESS, "修改成功");
         }
+    }
+
+    @ApiOperation(value = "申请友链", notes = "申请友链")
+    @PostMapping("/replyBlogLink")
+    public String replyBlogLink(HttpServletRequest request, @RequestBody LinkVO linkVO) {
+        if (request.getAttribute(SysConf.USER_UID) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+
+        User user = userService.getById(userUid);
+
+        // 判断该用户是否被禁言，被禁言的用户，也无法进行友链申请操作
+        if (user != null && user.getCommentStatus() == SysConf.ZERO) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_REPLY);
+        }
+
+        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.USER_UID, userUid);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.TITLE, linkVO.getTitle());
+        queryWrapper.last("LIMIT 1");
+        Link existLink = linkService.getOne(queryWrapper);
+
+        if(existLink != null) {
+            Integer linkStatus = existLink.getLinkStatus();
+            String message = "";
+            switch (linkStatus) {
+                case 0: {
+                    message = MessageConf.BLOG_LINK_IS_EXIST;
+                } break;
+                case 1: {
+                    message = MessageConf.BLOG_LINK_IS_PUBLISH;
+                } break;
+                case 2: {
+                    message = MessageConf.BLOG_LINK_IS_NO_PUBLISH;
+                } break;
+            }
+            return ResultUtil.result(SysConf.ERROR, message);
+        }
+
+        Link link = new Link();
+        link.setLinkStatus(ELinkStatus.APPLY);
+        link.setTitle(linkVO.getTitle());
+        link.setSummary(linkVO.getSummary());
+        link.setUrl(linkVO.getUrl());
+        link.setClickCount(0);
+        link.setSort(0);
+        link.setStatus(EStatus.ENABLE);
+        link.setUserUid(userUid);
+        link.insert();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+
     }
 
     @ApiOperation(value = "绑定用户邮箱", notes = "绑定用户邮箱")

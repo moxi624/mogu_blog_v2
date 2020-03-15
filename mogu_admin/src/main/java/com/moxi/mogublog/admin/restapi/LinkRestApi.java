@@ -13,6 +13,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.vo.LinkVO;
+import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -61,6 +62,10 @@ public class LinkRestApi {
             queryWrapper.like(SQLConf.TITLE, linkVO.getKeyword().trim());
         }
 
+        if (linkVO.getLinkStatus() != null) {
+            queryWrapper.eq(SQLConf.LINK_STATUS, linkVO.getLinkStatus());
+        }
+
         Page<Link> page = new Page<>();
         page.setCurrent(linkVO.getCurrentPage());
         page.setSize(linkVO.getPageSize());
@@ -84,6 +89,7 @@ public class LinkRestApi {
         link.setSummary(linkVO.getSummary());
         link.setUrl(linkVO.getUrl());
         link.setClickCount(0);
+        link.setLinkStatus(linkVO.getLinkStatus());
         link.setSort(linkVO.getSort());
         link.setStatus(EStatus.ENABLE);
         link.insert();
@@ -101,6 +107,7 @@ public class LinkRestApi {
         Link link = linkService.getById(linkVO.getUid());
         link.setTitle(linkVO.getTitle());
         link.setSummary(linkVO.getSummary());
+        link.setLinkStatus(linkVO.getLinkStatus());
         link.setUrl(linkVO.getUrl());
         link.setSort(linkVO.getSort());
         link.updateById();

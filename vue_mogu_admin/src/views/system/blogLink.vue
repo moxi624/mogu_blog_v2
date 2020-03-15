@@ -10,6 +10,16 @@
         v-model="keyword"
         placeholder="请输入友链名"
       ></el-input>
+
+      <el-select v-model="linkStatusKeyword" clearable placeholder="友链状态" style="width:140px">
+        <el-option
+          v-for="item in linkStatusDictList"
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
+        ></el-option>
+      </el-select>
+
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加友链</el-button>
     </div>
@@ -38,6 +48,14 @@
       <el-table-column label="友链URL" width="200" align="center">
         <template slot-scope="scope">
           <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.url }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="发布状态" width="100" align="center">
+        <template slot-scope="scope">
+          <template>
+            <el-tag v-for="item in linkStatusDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.linkStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+          </template>
         </template>
       </el-table-column>
 
@@ -96,20 +114,8 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item v-if="isEditForm == true" label="友链UID" :label-width="formLabelWidth">
-          <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
-        </el-form-item>
 
-        <el-form-item
-          v-if="isEditForm == false"
-          label="友链UID"
-          :label-width="formLabelWidth"
-          style="display: none;"
-        >
-          <el-input v-model="form.uid" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="友链名" :label-width="formLabelWidth">
+        <el-form-item label="友链名" :label-width="formLabelWidth" required>
           <el-input v-model="form.title" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -117,8 +123,20 @@
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="友链URL" :label-width="formLabelWidth">
+        <el-form-item label="友链URL" :label-width="formLabelWidth" required>
           <el-input v-model="form.url" auto-complete="off"></el-input>
+        </el-form-item>
+
+
+        <el-form-item label="友链状态" :label-width="formLabelWidth" >
+          <el-select v-model="form.linkStatus" size="small" placeholder="请选择" style="width:100px">
+            <el-option
+              v-for="item in linkStatusDictList"
+              :key="item.uid"
+              :label="item.dictLabel"
+              :value="parseInt(item.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="排序" :label-width="formLabelWidth">
@@ -145,17 +163,21 @@ import {
   deleteLink,
   stickLink
 } from "@/api/link";
+import {getListByDictTypeList} from "@/api/sysDictData"
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
       tableData: [],
       keyword: "",
+      linkStatusKeyword: null, //友链状态查询
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
       title: "增加友链",
       dialogFormVisible: false, //控制弹出框
+      linkStatusDictList: [], // 友链状态字典
+      linkStatusDefault: null, // 友链状态默认值
       formLabelWidth: "120px",
       isEditForm: false,
       form: {
@@ -166,12 +188,16 @@ export default {
     };
   },
   created() {
+    // 字典查询
+    this.getDictList()
+
     this.linkList();
   },
   methods: {
     linkList: function() {
       var params = {};
       params.keyword = this.keyword;
+      params.linkStatus = this.linkStatusKeyword
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
 
@@ -189,9 +215,27 @@ export default {
         summary: null,
         url: null,
         clickCount: 0,
-        sort: 0
+        sort: 0,
+        linkStatus: this.linkStatusDefault
       };
       return formObject;
+    },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+
+      var dictTypeList = ['sys_link_status']
+
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == "success") {
+          var dictMap = response.data;
+          this.linkStatusDictList = dictMap.sys_link_status.list
+          if(dictMap.sys_link_status.defaultValue) {
+            this.linkStatusDefault = parseInt(dictMap.sys_link_status.defaultValue);
+          }
+        }
+      });
     },
     handleFind: function() {
       this.linkList();

@@ -397,7 +397,7 @@ export default {
 
       blogOriginalDictList: [], //存储区域字典
       blogPublishDictList: [], //是否字典
-      blogLevelDictList: [], //图片显示优先级字典
+      blogLevelDictList: [], //博客推荐等级字典
       blogOriginalDefault: null, //博客原创默认值
       blogLevelDefault: null, //博客等级默认值
       blogPublishDefault: null, //博客发布默认值

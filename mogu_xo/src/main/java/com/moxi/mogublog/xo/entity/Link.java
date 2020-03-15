@@ -35,6 +35,11 @@ public class Link extends SuperEntity<Link> {
     private String url;
 
     /**
+     * 友链状态： 0 申请中， 1：上线  2: 已下架
+     */
+    private Integer linkStatus;
+
+    /**
      * 点击数
      */
     private Integer clickCount;
@@ -43,4 +48,14 @@ public class Link extends SuperEntity<Link> {
      * 排序字段
      */
     private Integer sort;
+
+    /**
+     * 管理员UID
+     */
+    private String adminUid;
+
+    /**
+     * 申请用户Uid
+     */
+    private String userUid;
 }

@@ -20,6 +20,14 @@ public final class MessageConf extends BaseMessageConf {
 
     public static final String YOU_DONT_HAVE_PERMISSION_TO_SPEAK = "您没有发言权限！";
 
+    public static final String YOU_DONT_HAVE_PERMISSION_TO_REPLY = "您没有申请权限！";
+
     public static final String PLEASE_TRY_AGAIN_IN_AN_HOUR = "由于发送过多无意义评论，您已被禁言一小时，请稍后在试~";
+
+    public static final String BLOG_LINK_IS_EXIST = "您申请的友链，已经在申请列表中！";
+
+    public static final String BLOG_LINK_IS_PUBLISH = "您申请的友链，已经发布!";
+
+    public static final String BLOG_LINK_IS_NO_PUBLISH = "您申请的友链，已经下架！";
 
 }
