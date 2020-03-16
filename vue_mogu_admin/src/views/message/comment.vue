@@ -45,20 +45,6 @@
         </template>
       </el-table-column>
 
-
-      <el-table-column label="内容" width="250" align="center">
-	      <template slot-scope="scope">
-          <el-popover
-            v-if="scope.row.content"
-            placement="top-start"
-            width="400"
-            trigger="hover"
-            :content="scope.row.content">
-            <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>
-          </el-popover>
-	      </template>
-	    </el-table-column>
-
         <el-table-column label="类型" width="150" align="center">
           <template slot-scope="scope">
             <template>
@@ -81,6 +67,19 @@
             <template>
               <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>
             </template>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="内容" width="250" align="center">
+          <template slot-scope="scope">
+            <el-popover
+              v-if="scope.row.content"
+              placement="top-start"
+              width="400"
+              trigger="hover"
+              :content="scope.row.content">
+              <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>
+            </el-popover>
           </template>
         </el-table-column>
 

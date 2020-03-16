@@ -4,6 +4,7 @@ import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mougblog.base.service.SuperService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -45,4 +46,11 @@ public interface UserService extends SuperService<User> {
      * @return
      */
     public User serRequestInfo(User user);
+
+    /**
+     * 通过ids获取用户列表
+     * @param ids
+     * @return
+     */
+    public List<User> getUserListByIds(List<String> ids);
 }

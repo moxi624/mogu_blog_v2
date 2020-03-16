@@ -88,21 +88,30 @@ ALTER TABLE  t_user ADD os varchar(255) NULL COMMENT '操作系统';
    修改t_user表，增加startEmailNotification字段
    @date 2020年3月13日09:29:45
 */
-ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭'
+ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
 
 
 /*
    修改t_comment表，增加type字段
    @date 2020年3月13日09:29:45
 */
-ALTER TABLE  t_comment ADD type tinyint(1) NOT NULL DEFAULT 0 COMMENT '评论类型 1:点赞 0:评论'
+ALTER TABLE  t_comment ADD type tinyint(1) NOT NULL DEFAULT 0 COMMENT '评论类型 1:点赞 0:评论';
 
 /*
    修改t_link表，增加link_status字段
    @date 2020年3月15日11:53:54
 */
-ALTER TABLE  t_link ADD link_status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '友链状态： 0 申请， 1：上架，  2：下架'
-ALTER TABLE  t_link ADD user_uid VARCHAR(32) NULL COMMENT '申请用户UID'
-ALTER TABLE  t_link ADD admin_uid VARCHAR(32) NULL COMMENT '操作管理员UID'
+ALTER TABLE  t_link ADD link_status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '友链状态： 0 申请， 1：上架，  2：下架';
+ALTER TABLE  t_link ADD user_uid VARCHAR(32) NULL COMMENT '申请用户UID';
+ALTER TABLE  t_link ADD admin_uid VARCHAR(32) NULL COMMENT '操作管理员UID';
 
+
+/*
+   修改t_feedback表
+   @date 2020年3月16日08:31:49
+*/
+ALTER TABLE t_feedback ADD admin_uid varchar(32) NULL COMMENT '管理员uid';
+ALTER TABLE t_feedback ADD title varchar(255) NULL COMMENT '标题';
+ALTER TABLE t_feedback ADD reply VARCHAR(255) NULL COMMENT '回复';
+ALTER TABLE t_feedback ADD feedback_status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '反馈状态： 0：已开启  1：进行中  2：已完成  3：已拒绝';
 

@@ -269,14 +269,93 @@
       </el-tab-pane>
       <el-tab-pane label="我的反馈" name="4">
         <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
-        我的反馈
+
+        <el-collapse >
+          <el-collapse-item title="反馈须知">
+            <div>如果您对本站有什么想法，可以在这里进行反馈</div>
+            <div>或者加入我们的QQ群进行交流</div>
+          </el-collapse-item>
+        </el-collapse>
+
+        <el-divider></el-divider>
+
+        <div style="width: 100%; height: 450px;overflow:auto">
+          <el-timeline>
+            <el-timeline-item v-for="feedbackItem in feedbackList" :key="feedbackItem.uid" :timestamp="timeAgo(feedbackItem.createTime)" placement="top">
+              <el-card class="feedbackCard">
+                <div class="item">
+                  <span class="title">
+                    标题:
+                  </span>
+                  <span class="content">
+                    {{feedbackItem.title}}
+                  </span>
+                </div>
+
+                <div class="item">
+                  <span class="title">
+                    内容:
+                  </span>
+                  <span class="content">
+                    {{feedbackItem.content}}
+                  </span>
+                </div>
+
+                <div class="item">
+                  <span class="title">
+                    反馈状态:
+                  </span>
+                  <span class="content">
+                    <el-tag v-for="item in feedbackDictList" :key="item.uid" :type="item.listClass" v-if="feedbackItem.feedbackStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+                  </span>
+                </div>
+
+                <div class="item">
+                  <span class="title">
+                    回复:
+                  </span>
+                  <span class="content">
+                    {{feedbackItem.reply}}
+                  </span>
+                </div>
+              </el-card>
+            </el-timeline-item>
+
+            <el-timeline-item v-if="replyList.length == 0" placement="top">
+              <el-card>
+                <span style="font-size: 16px">空空如也~</span>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+
+        <el-divider></el-divider>
+
+        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+          <el-form-item label="标题" :label-width="labelWidth">
+            <el-input v-model="feedback.title" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="内容" :label-width="labelWidth">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入反馈内容"
+              v-model="feedback.content">
+            </el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('feedback')">提 交</el-button>
+          </el-form-item>
+        </el-form>
+
       </el-tab-pane>
       <el-tab-pane label="申请友链" name="5">
         <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
 
         <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
-
-          <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse v-model="activeNames">
             <el-collapse-item title="申请须知" name="1">
               <div>请确定贵站可以稳定运营</div>
               <div>原创博客优先，技术类博客优先</div>
@@ -357,7 +436,7 @@
   import AvatarCropper from '@/components/AvatarCropper'
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
-  import {authVerify, editUser, replyBlogLink, deleteUserAccessToken} from "../api/user";
+  import {authVerify, editUser, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
   import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictTypeList} from "@/api/sysDictData"
@@ -377,6 +456,7 @@
         activeName: "0", // 激活的标签
         yesNoDictList: [], // 是否 字典列表
         genderDictList: [], //性别 字典列表
+        feedbackDictList: [], // 反馈 字典列表
         imagecropperShow: false,
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
@@ -393,12 +473,14 @@
         showLogin: false, //显示登录框
         userInfo: { // 用户信息
         },
+        feedback: {}, // 反馈提交
         blogLink: {}, // 友链申请
         icon: false, //控制删除图标的显示
         labelWidth: "100px",
         commentList: [], //我的评论
         replyList: [], // 我的回复
         praiseList: [], // 我的点赞
+        feedbackList: [], // 我的反馈
       };
     },
     mounted() {
@@ -503,6 +585,18 @@
           }
         })
       },
+
+      // 获取评论列表
+      getFeedback: function() {
+        let params = {}
+        getFeedbackList(params).then(response => {
+          console.log('得到的反馈列表', response)
+          if(response.code == "success") {
+            this.feedbackList = response.data.records;
+          }
+        })
+      },
+
       // 获取点赞列表
       getPraiseList: function() {
         let params = {}
@@ -607,6 +701,34 @@
               }
             });
           }; break;
+
+          case "feedback": {
+            var feedback = this.feedback
+
+            if(feedback.title == undefined || feedback.title == "" || feedback.content == undefined || feedback.content == "") {
+              this.$message({
+                type: "error",
+                message: "必填项不能为空"
+              })
+              return;
+            }
+            console.log('提交反馈', this.feedback);
+            addFeedback(this.feedback).then(response => {
+              if(response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                })
+                this.feedback = {}
+                this.getFeedback()
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                })
+              }
+            });
+          }; break;
         }
       },
 
@@ -614,13 +736,14 @@
        * 字典查询
        */
       getDictList: function () {
-        var dictTypeList =  ['sys_yes_no', 'sys_user_sex']
+        var dictTypeList =  ['sys_yes_no', 'sys_user_sex', 'sys_feedback_status']
 
         getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == "success") {
             var dictMap = response.data;
             this.genderDictList = dictMap.sys_user_sex.list
             this.yesNoDictList = dictMap.sys_yes_no.list
+            this.feedbackDictList = dictMap.sys_feedback_status.list
           }
         });
 
@@ -766,6 +889,10 @@
 
             // 获取点赞列表
             this.getPraiseList()
+
+            // 获取反馈列表
+            this.getFeedback()
+
           };break;
         }
       },
@@ -910,6 +1037,19 @@
 
   .commentList .rightBottom el-link {
 
+  }
+
+  .feedbackCard .item .title {
+    display: inline-block;
+    width: 70px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .feedbackCard .item .content {
+    display: inline-block;
+    width: 240px;
+    margin-bottom: 5px;
   }
 
 </style>

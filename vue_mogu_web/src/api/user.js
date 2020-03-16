@@ -23,6 +23,30 @@ export function editUser(params) {
   })
 }
 
+/**
+ * 获取用户反馈
+ * @param params
+ */
+export function getFeedbackList(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/getFeedbackList',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 新增反馈
+ * @param params
+ */
+export function addFeedback(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/addFeedback',
+    method: 'post',
+    data: params
+  })
+}
+
 export function replyBlogLink(params) {
   return request({
     url: process.env.WEB_API + '/oauth/replyBlogLink',

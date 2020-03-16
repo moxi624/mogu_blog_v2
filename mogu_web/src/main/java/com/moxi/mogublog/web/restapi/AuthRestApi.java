@@ -3,23 +3,31 @@ package com.moxi.mogublog.web.restapi;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.util.WebUtils;
+import com.moxi.mogublog.xo.entity.Feedback;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.service.FeedbackService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,15 +45,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,6 +69,8 @@ public class AuthRestApi {
     WebUtils webUtils;
     @Autowired
     SystemConfigService systemConfigService;
+    @Autowired
+    FeedbackService feedbackService;
     @Autowired
     LinkService linkService;
     @Autowired
@@ -385,6 +394,53 @@ public class AuthRestApi {
 
     }
 
+    @ApiOperation(value = "获取用户反馈", notes = "获取用户反馈")
+    @GetMapping("/getFeedbackList")
+    public String getFeedbackList(HttpServletRequest request) {
+        if (request.getAttribute(SysConf.USER_UID) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+
+        QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.USER_UID, userUid);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        Page<Feedback> page = new Page<>();
+        page.setSize(20);
+        page.setCurrent(1);
+        IPage<Feedback> pageList = feedbackService.page(page, queryWrapper);
+        return ResultUtil.result(SysConf.SUCCESS, pageList);
+    }
+
+    @ApiOperation(value = "提交反馈", notes = "提交反馈", response = String.class)
+    @PostMapping("/addFeedback")
+    public String edit(HttpServletRequest request, @Validated({Insert.class}) @RequestBody FeedbackVO feedbackVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+
+        if (request.getAttribute(SysConf.USER_UID) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+        User user = userService.getById(userUid);
+        // 判断该用户是否被禁言，被禁言的用户，也无法进行反馈操作
+        if (user != null && user.getCommentStatus() == SysConf.ZERO) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_FEEDBACK);
+        }
+        Feedback feedback = new Feedback();
+        feedback.setUserUid(userUid);
+        feedback.setTitle(feedbackVO.getTitle());
+        feedback.setContent(feedbackVO.getContent());
+        // 设置反馈已开启
+        feedback.setFeedbackStatus(0);
+        feedback.setReply(feedbackVO.getReply());
+        feedback.setUpdateTime(new Date());
+        feedback.insert();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+    }
+
     @ApiOperation(value = "绑定用户邮箱", notes = "绑定用户邮箱")
     @GetMapping("/bindUserEmail/{token}/{code}")
     public String bindUserEmail(@PathVariable("token")String token, @PathVariable("code")String code) {
@@ -395,7 +451,7 @@ public class AuthRestApi {
         }
         User user = JsonUtils.jsonToPojo(userInfo, User.class);
         user.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, "绑定成功");
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     /**

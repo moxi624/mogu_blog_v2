@@ -16,6 +16,7 @@ public class BaseSQLConf {
     public final static String LEVEL = "level";
     public final static String SORT = "sort";
     public final static String LINK_STATUS = "link_status";
+    public final static String FEEDBACK_STATUS = "feedback_status";
 
     /**
      * 字典表相关

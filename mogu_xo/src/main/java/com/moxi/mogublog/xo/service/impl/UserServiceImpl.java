@@ -17,8 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -106,6 +105,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         String ip = IpUtils.getIpAddr(request);
         user.setLastLoginIp(ip);
         user.setOs(os);
+        user.setBrowser(browser);
         user.setLastLoginTime(new Date());
 
         //从Redis中获取IP来源
@@ -120,5 +120,19 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
             user.setIpSource(jsonResult);
         }
         return user;
+    }
+
+    @Override
+    public List<User> getUserListByIds(List<String> ids) {
+        List<User> userList = new ArrayList<>();
+        if(ids == null || ids.size() ==0) {
+            return userList;
+        }
+
+        Collection<User> userCollection = userService.listByIds(ids);
+        userCollection.forEach(item-> {
+            userList.add(item);
+        });
+        return userList;
     }
 }
