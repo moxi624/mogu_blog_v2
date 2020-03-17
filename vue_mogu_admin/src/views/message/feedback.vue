@@ -21,9 +21,10 @@
       </el-select>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60" align="center">
@@ -172,6 +173,7 @@
   export default {
     data() {
       return {
+        multipleSelection: [], //多选，用于批量删除
         tableData: [],
         keyword: "",
         feedbackStatusKeyword: null, //反馈状态查询
@@ -193,6 +195,36 @@
       this.feedbackList();
     },
     methods: {
+      handleDeleteBatch: function(row) {
+        var that = this;
+        if(that.multipleSelection.length <= 0 ) {
+          this.$message({
+            type: "error",
+            message: "请先选中需要删除的内容！"
+          });
+          return;
+        }
+        this.$confirm("此操作将把选中博客删除, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            deleteBatchFeedback(that.multipleSelection).then(response => {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              that.feedbackList();
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
+          });
+      },
       goUserInfo: function(user) {
         this.$router.push({
           path: "/user/user",
@@ -269,7 +301,7 @@
                 type: "success",
                 message: response.data
               });
-              that.linkList();
+              that.feedbackList();
             });
           })
           .catch(() => {
@@ -282,6 +314,10 @@
       handleCurrentChange: function(val) {
         this.currentPage = val;
         this.feedbackList();
+      },
+      // 改变多选
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
       },
       submitForm: function() {
         if (this.isEditForm) {

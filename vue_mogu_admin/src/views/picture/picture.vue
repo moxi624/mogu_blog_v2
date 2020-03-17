@@ -58,6 +58,7 @@
 		</el-dialog>
 
     <el-dialog :visible.sync="dialogPictureVisible" fullscreen style="text-align: center">
+      <div style="margin-bottom: 40px;"><span style="font-size:14px; font-weight: bold">图片地址:</span> {{dialogImageUrl}}</div>
       <img :src="dialogImageUrl" alt="">
     </el-dialog>
 
