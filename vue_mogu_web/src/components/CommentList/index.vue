@@ -10,6 +10,7 @@
         <span class="right p1">
           <div class="rightTop" v-if="item.user">
             <el-link class="userName" :underline="false">{{item.user.nickName}}</el-link>
+            <el-tag style="height: 30px; margin-left:5px;" v-for="userTag in userTagDictList" :key="userTag.uid" v-if="item.user.userTag == userTag.dictValue && item.user.userTag != 0" :type="userTag.listClass">{{userTag.dictLabel}}</el-tag>
             <span class="timeAgo">{{timeAgo(item.createTime)}}</span>
           </div>
 
@@ -42,7 +43,7 @@
   import CommentBox from "../CommentBox";
   import { timeAgo} from "../../utils/webUtils"
   import {addComment, deleteComment, getCommentList, reportComment} from "../../api/comment";
-
+  import {getListByDictTypeList} from "@/api/sysDictData"
   export default {
     name: "CommentList",
     props: ['comments', 'userInfos', 'commentInfo'],
@@ -56,11 +57,12 @@
           uid: "",
           commentUid: ""
         },
-        userInfo: {}
+        userInfo: {},
+        userTagDictList: [], // 用户标签字典
       };
     },
     created() {
-
+      this.getDictList()
     },
     components: {
       CommentBox
@@ -70,7 +72,24 @@
     },
     compute: {},
     methods: {
-      ...mapMutations(['setCommentList']),
+      ...mapMutations(['setCommentList', 'setUserTag']),
+      /**
+       * 字典查询
+       */
+      getDictList: function () {
+        if(this.$store.state.app.userTagDictList.length > 0) {
+          this.userTagDictList = this.$store.state.app.userTagDictList
+          return;
+        }
+        var dictTypeList =  ['sys_user_tag']
+        getListByDictTypeList(dictTypeList).then(response => {
+          if (response.code == "success") {
+            var dictMap = response.data;
+            this.userTagDictList = dictMap.sys_user_tag.list
+            this.setUserTag(dictMap.sys_user_tag.list)
+          }
+        });
+      },
       replyTo: function (item) {
         if(!this.validLogin()) {
           this.$notify.error({
@@ -334,6 +353,7 @@
   .commentList .rightCenter {
     margin-left: 20px;
     height: 50px;
+    margin-top: 15px;
   }
   .commentList .rightBottom {
     margin-left: 10px;

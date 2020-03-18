@@ -115,3 +115,10 @@ ALTER TABLE t_feedback ADD title varchar(255) NULL COMMENT '标题';
 ALTER TABLE t_feedback ADD reply VARCHAR(255) NULL COMMENT '回复';
 ALTER TABLE t_feedback ADD feedback_status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '反馈状态： 0：已开启  1：进行中  2：已完成  3：已拒绝';
 
+
+/*
+   修改t_user表，增加user_tag字段
+   @date 2020年3月18日08:55:44
+*/
+ALTER TABLE t_user ADD user_tag TINYINT(1) NOT NULL DEFAULT 0 COMMENT '用户标签：0：普通，1：管理员，2：博主 等';
+

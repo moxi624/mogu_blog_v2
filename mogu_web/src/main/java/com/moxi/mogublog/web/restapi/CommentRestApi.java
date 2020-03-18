@@ -130,6 +130,7 @@ public class CommentRestApi {
             user.setAvatar(item.getAvatar());
             user.setUid(item.getUid());
             user.setNickName(item.getNickName());
+            user.setUserTag(item.getUserTag());
             filterUserList.add(user);
         });
 

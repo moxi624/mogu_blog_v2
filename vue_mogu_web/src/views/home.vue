@@ -746,7 +746,6 @@
             this.feedbackDictList = dictMap.sys_feedback_status.list
           }
         });
-
       },
 
       getToken: function() {

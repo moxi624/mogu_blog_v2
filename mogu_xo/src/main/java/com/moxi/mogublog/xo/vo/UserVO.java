@@ -106,6 +106,11 @@ public class UserVO extends BaseVO<UserVO> {
     private Integer startEmailNotification;
 
     /**
+     * 用户标签  0：普通，1：管理员，2：博主
+     */
+    private Integer userTag;
+
+    /**
      * 用户头像
      */
     @TableField(exist = false)

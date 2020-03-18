@@ -81,6 +81,14 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="用户标签" width="100" align="center">
+        <template slot-scope="scope">
+          <template>
+            <el-tag v-for="item in userTagDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.userTag == item.dictValue">{{item.dictLabel}}</el-tag>
+          </template>
+        </template>
+      </el-table-column>
+
       <el-table-column label="邮箱" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
@@ -139,8 +147,7 @@
 
       <el-table-column label="操作" fixed="right" min-width="250">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.commentStatus == 0" @click="handleStick(scope.row)" type="success" size="small">解禁</el-button>
-          <el-button v-if="scope.row.commentStatus == 1" @click="handleStick(scope.row)" type="warning" size="small">禁言</el-button>
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
           <el-button @click="handleUpdatePassword(scope.row)" type="primary" size="small">重置密码</el-button>
           <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
         </template>
@@ -161,32 +168,107 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item v-if="isEditForm == true" label="标签UID" :label-width="formLabelWidth">
-          <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
+
+
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
+
+          <div class="imgBody" v-if="form.photoUrl">
+            <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoUrl" />
+          </div>
+
+          <div v-else class="uploadImgBody" @click="checkPhoto">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </div>
         </el-form-item>
 
-        <el-form-item
-          v-if="isEditForm == false"
-          label="标签UID"
-          :label-width="formLabelWidth"
-          style="display: none;"
-        >
-          <el-input v-model="form.uid" auto-complete="off"></el-input>
+        <el-row :gutter="24">
+          <el-col :span="9">
+            <el-form-item label="用户名" :label-width="formLabelWidth" required>
+              <el-input v-model="form.nickName" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item label="邮箱" :label-width="formLabelWidth">
+              <el-input v-model="form.email" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="24">
+          <el-col :span="9">
+            <el-form-item label="QQ号" :label-width="formLabelWidth">
+              <el-input v-model="form.qqNumber" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="9">
+            <el-form-item label="职业" :label-width="formLabelWidth">
+              <el-input v-model="form.occupation" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+        <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item label="评论状态" :label-width="formLabelWidth">
+              <el-select v-model="form.commentStatus" size="small" placeholder="请选择" style="width:100px">
+                <el-option
+                  v-for="item in commentStatusDictList"
+                  :key="item.uid"
+                  :label="item.dictLabel"
+                  :value="parseInt(item.dictValue)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item label="用户标签" :label-width="formLabelWidth">
+              <el-select v-model="form.userTag" size="small" placeholder="请选择" style="width:100px">
+                <el-option
+                  v-for="item in userTagDictList"
+                  :key="item.uid"
+                  :label="item.dictLabel"
+                  :value="parseInt(item.dictValue)"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="性别" :label-width="formLabelWidth">
+              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="简介" :label-width="formLabelWidth">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 3, maxRows: 10}"
+            placeholder="请输入内容"
+            v-model="form.summary">
+          </el-input>
         </el-form-item>
 
-        <el-form-item label="标签名" :label-width="formLabelWidth">
-          <el-input v-model="form.content" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <!-- <el-form-item label="标签点击数" :label-width="formLabelWidth">
-		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
+
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
   </div>
 </template>
 
@@ -195,14 +277,22 @@
     getUserList,
     deleteUser,
     freezeUser,
+    editUser,
     resetUserPassword
   } from "@/api/user";
-
+  import AvatarCropper from '@/components/AvatarCropper'
   import {getListByDictTypeList} from "@/api/sysDictData"
 
   export default {
     data() {
       return {
+        photoVisible: false, //控制图片选择器的显示
+        photoList: [],
+        fileIds: "",
+        icon: false, //控制删除图标的显示
+        imagecropperShow: false,
+        imagecropperKey: 0,
+        url: process.env.PICTURE_API + "/file/cropperPicture",
         BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
         tableData: [],
         keyword: "",
@@ -219,8 +309,13 @@
           uid: null,
         },
         accountSourceDictList: [], //账号来源字典
-        commentStatusDictList: [] //评论状态字典
+        commentStatusDictList: [], //评论状态字典
+        genderDictList: [], //评论状态字典
+        userTagDictList: [], // 用户标签列表
       };
+    },
+    components: {
+      AvatarCropper
     },
     created() {
 
@@ -256,18 +351,43 @@
           }
         });
       },
+
+      cropSuccess(resData) {
+        console.log("裁剪成功", resData)
+        this.imagecropperShow = false
+        this.imagecropperKey = this.imagecropperKey + 1
+        let photoList = []
+        photoList.push(resData[0].url);
+        this.form.photoList = photoList;
+        this.form.avatar = resData[0].uid
+      },
+      close() {
+        this.imagecropperShow = false
+      },
+      deletePhoto: function() {
+        this.form.photoList = null;
+        this.form.fileUid = "";
+        this.icon = false;
+      },
+      //弹出选择图片框
+      checkPhoto() {
+        this.imagecropperShow = true
+      },
+
       /**
        * 字典查询
        */
       getDictList: function () {
 
-        var dictTypeList =  ['sys_account_source', 'sys_comment_status']
+        var dictTypeList =  ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
 
         getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == "success") {
             var dictMap = response.data;
             this.accountSourceDictList = dictMap.sys_account_source.list
             this.commentStatusDictList = dictMap.sys_comment_status.list
+            this.genderDictList = dictMap.sys_user_sex.list
+            this.userTagDictList = dictMap.sys_user_tag.list
           }
         });
       },
@@ -377,8 +497,73 @@
         this.userList();
       },
       submitForm: function() {
+        editUser(this.form).then(response => {
+          if(response.code == "success") {
+            this.$notify({
+              title: "成功",
+              message: "保存成功！",
+              type: "success"
+            });
+            this.dialogFormVisible = false
+          } else {
+            this.$notify.error({
+              title: "失败",
+              message: response.data
+            });
+          }
 
+        });
       }
     }
   };
 </script>
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    margin: 0, 0, 0, 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+  }
+  .imgBody {
+    width: 100px;
+    height: 100px;
+    border: solid 2px #ffffff;
+    float: left;
+    position: relative;
+  }
+  .uploadImgBody {
+    margin-left: 5px;
+    width: 100px;
+    height: 100px;
+    border: dashed 1px #c0c0c0;
+    float: left;
+    position: relative;
+  }
+  .uploadImgBody :hover {
+    border: dashed 1px #00ccff;
+  }
+  .inputClass {
+    position: absolute;
+  }
+  .img {
+    width: 100%;
+    height: 100%;
+  }
+  img {
+    width: 100px;
+    height: 100px;
+  }
+</style>

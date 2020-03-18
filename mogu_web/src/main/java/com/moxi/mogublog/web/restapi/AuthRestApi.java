@@ -121,15 +121,24 @@ public class AuthRestApi {
         log.info("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
-        String result = JSONObject.toJSONString(response);
-        Map<String, Object> map = JsonUtils.jsonToMap(result);
         if (response.getCode() == 5000) {
             // 跳转到500错误页面
             httpServletResponse.sendRedirect(webSiteUrl + "500");
+            return;
         }
+        String result = JSONObject.toJSONString(response);
+        Map<String, Object> map = JsonUtils.jsonToMap(result);
         Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get(SysConf.DATA)));
-        Map<String, Object> token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
-        String accessToken = token.get(SysConf.ACCESS_TOKEN).toString();
+        Map<String, Object> token = new HashMap<>();
+        String accessToken = "";
+        if(data == null || data.get(SysConf.TOKEN) == null) {
+            // 跳转到500错误页面
+            httpServletResponse.sendRedirect(webSiteUrl + "500");
+            return;
+        } else {
+            token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
+            accessToken = token.get(SysConf.ACCESS_TOKEN).toString();
+        }
 
         Boolean exist = false;
         User user = null;

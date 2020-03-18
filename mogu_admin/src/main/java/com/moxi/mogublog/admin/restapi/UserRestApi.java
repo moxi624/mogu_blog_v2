@@ -20,6 +20,8 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -131,6 +133,30 @@ public class UserRestApi {
 
         log.info("获取用户列表");
         return ResultUtil.result(SysConf.SUCCESS, pageList);
+    }
+
+    @OperationLogger(value = "编辑用户")
+    @ApiOperation(value = "编辑用户", notes = "编辑用户", response = String.class)
+    @PostMapping("/edit")
+    public String edit(@Validated({Update.class}) @RequestBody UserVO userVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+        User user = userService.getById(userVO.getUid());
+
+        user.setEmail(userVO.getEmail());
+        user.setStartEmailNotification(userVO.getStartEmailNotification());
+        user.setOccupation(userVO.getOccupation());
+        user.setGender(userVO.getGender());
+        user.setQqNumber(userVO.getQqNumber());
+        user.setSummary(userVO.getSummary());
+        user.setBirthday(userVO.getBirthday());
+        user.setAvatar(userVO.getAvatar());
+        user.setNickName(userVO.getNickName());
+        user.setUserTag(userVO.getUserTag());
+        user.setCommentStatus(userVO.getCommentStatus());
+        user.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
 

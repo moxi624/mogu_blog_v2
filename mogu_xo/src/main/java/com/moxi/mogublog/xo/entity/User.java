@@ -142,6 +142,11 @@ public class User extends SuperEntity<User> {
      */
     private String ipSource;
 
+    /**
+     * 用户标签  0：普通，1：管理员，2：博主
+     */
+    private Integer userTag;
+
     // 以下字段不存入数据库
 
     /**
