@@ -4,6 +4,7 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -35,6 +36,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +77,14 @@ public class CommentRestApi {
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private CommentReportService commentReportService;
+    @Value(value = "${data.web.url}")
+    private String dataWebUrl;
+    @Value(value = "${PROJECT_NAME_EN}")
+    private String projectName;
+    @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
+    private Long userTokenSurvivalTime;
+    @Value(value = "${data.website.url}")
+    private String dataWebsiteUrl;
 
     /**
      * 获取评论列表
@@ -418,12 +428,26 @@ public class CommentRestApi {
             if(toUser.getStartEmailNotification() == SysConf.ONE) {
                 Comment toComment = commentService.getById(commentVO.getToUid());
                 if(toComment!= null && StringUtils.isNotEmpty(toComment.getContent())) {
-                    String email = toUser.getEmail();
-                    String text = commentVO.getContent();
-                    String toText = toComment.getContent();
-                    String nickName = user.getNickName();
-                    String toUserNickName = toUser.getNickName();
-                    sendEmail(email, text, toText, nickName, toUserNickName);
+                    Map<String, String> map = new HashMap<>();
+                    map.put(SysConf.EMAIL, toUser.getEmail());
+                    map.put(SysConf.TEXT, commentVO.getContent());
+                    map.put(SysConf.TO_TEXT, toComment.getContent());
+                    map.put(SysConf.NICKNAME, user.getNickName());
+                    map.put(SysConf.TO_NICKNAME, toUser.getNickName());
+                    map.put(SysConf.USER_UID, toUser.getUid());
+
+                    // 获取评论跳转的链接
+                    String commentSource  = toComment.getSource();
+                    String url = new String();
+                    switch (commentSource) {
+                        case "ABOUT": {url = dataWebsiteUrl + "about";} break;
+                        case "BLOG_INFO": {url = dataWebsiteUrl + "info?blogUid=" + toComment.getBlogUid();} break;
+                        case "MESSAGE_BOARD": {url = dataWebsiteUrl + "messageBoard";} break;
+                    }
+
+                    map.put(SysConf.URL, url);
+
+                    sendEmail(map);
                 }
             }
         }
@@ -522,6 +546,33 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    @ApiOperation(value = "关闭评论邮件通知", notes = "关闭评论邮件通知")
+    @GetMapping("/closeEmailNotification/{userUid}")
+    public String bindUserEmail(@PathVariable("userUid")String userUid) {
+
+        User user = userService.getById(userUid);
+        if(user == null) {
+            ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+        }
+        user.setStartEmailNotification(0);
+        user.updateById();
+
+        // 通过user中获取的token，去修改redis中的信息
+        if(StringUtils.isNotEmpty(user.getValidCode())) {
+            String accessToken = user.getValidCode();
+            String userInfo = redisUtil.get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
+            if(StringUtils.isNotEmpty(userInfo)) {
+                Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
+                // 关闭邮件通知
+                map.put(SysConf.START_EMAIL_NOTIFICATION, 0);
+                redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(map), userTokenSurvivalTime, TimeUnit.HOURS);
+            }
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+    }
+
+
     /**
      * 获取评论所有回复
      *
@@ -553,7 +604,15 @@ public class CommentRestApi {
     /**
      * 发送邮件
      */
-    private void sendEmail(String email, String text, String toText, String nickName, String toUserNickName) {
+    private void sendEmail(Map<String, String> map) {
+
+        String email = map.get(SysConf.EMAIL);
+        String text =  map.get(SysConf.TEXT);
+        String toText = map.get(SysConf.TO_TEXT);
+        String nickName = map.get(SysConf.NICKNAME);
+        String toUserNickName = map.get(SysConf.TO_NICKNAME);
+        String userUid = map.get(SysConf.USER_UID);
+        String url = map.get(SysConf.URL);
 
         String content =
                 "<html>\r\n" +
@@ -570,7 +629,7 @@ public class CommentRestApi {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://picture.moguit.cn/blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -579,13 +638,15 @@ public class CommentRestApi {
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + email + "\" rel=\"noopener\" target=\"_blank\">" + toUserNickName + "<wbr></a>！</p>\r\n" +
-                        "<p>"+ nickName+" 对您的评论: " + toText + "   进行了回复</p>\r\n" +
-                        "<p>"+ text+"</p>\r\n" +
+                        "<p>"+ nickName+" 对您的评论：" + "<a href=\"" + url + "\">" + toText + "</a>" + "   进行了回复</p>\r\n" +
                         "\r\n" +
+                        "<p>回复内容为："+ "<a href=\"" + url + "\">" + text + "</a>" +"</p>\r\n" +
+                        "\r\n" +
+                        "<p>如果邮件通知干扰了您，可以点击右侧链接关闭通知：" + "<a href=\"" + dataWebUrl + "/web/comment/closeEmailNotification/"+ userUid +"\">点击这里</a>" + "</p>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "@muguit.cn\r\n" +
+                        "<a href=\" "+ dataWebsiteUrl +"\">@" + projectName + "</a>\n"+
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -595,13 +656,13 @@ public class CommentRestApi {
                         "</html>";
 
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
-        map.put("receiver", email);
-        map.put("text", content);
+        result.put("receiver", email);
+        result.put("text", content);
 
         //发送到RabbitMq
-        rabbitTemplate.convertAndSend("exchange.direct", "mogu.email", map);
+        rabbitTemplate.convertAndSend("exchange.direct", "mogu.email", result);
     }
 
 

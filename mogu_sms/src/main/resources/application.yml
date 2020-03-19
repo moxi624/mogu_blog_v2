@@ -35,16 +35,19 @@ spring:
     username: mogublog@163.com
     password: a1313375 #授权码开启SMTP服务里设置
     host: smtp.163.com
-
+    default-encoding: UTF-8
     properties:
       mail:
         smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
           ssl:
             enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+          auth: true
+          starttls:
+            enable: false
+
   boot:
     admin:
       client:

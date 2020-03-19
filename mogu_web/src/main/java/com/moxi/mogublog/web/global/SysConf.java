@@ -17,6 +17,9 @@ public final class SysConf extends BaseSysConf {
     public static final String ADMIN = "admin";
     public static final String BLOG = "blog";
     public static final String EMAIL = "email";
+    public static final String TEXT = "text";
+    public static final String TO_TEXT = "to_text";
+    public static final String TO_NICKNAME = "to_nickname";
 
     /**
      * 用于第三方登录

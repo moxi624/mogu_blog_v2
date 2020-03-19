@@ -72,6 +72,8 @@ public class BaseSysConf {
     public final static String BLOG_UID = "blogUid";
     public final static String LEVEL = "level";
 
+    public final static String START_EMAIL_NOTIFICATION = "startEmailNotification";
+
 
     /**
      * RabbitMQ的命令操作

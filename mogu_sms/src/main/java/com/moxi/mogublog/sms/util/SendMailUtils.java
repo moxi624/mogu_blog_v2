@@ -21,6 +21,7 @@ public class SendMailUtils {
 
     @Value(value = "${spring.mail.username}")
     public String SENDER;
+
     @Autowired
     private JavaMailSenderImpl mailSender;
 
@@ -37,11 +38,12 @@ public class SendMailUtils {
         //multipart:true
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-        helper.setSubject("蘑菇博客网站验证邮件");
+        helper.setSubject("蘑菇博客");
 
         helper.setText(text, true);
         //邮件接收人
         helper.setTo(receiver);
+
         //邮件发送者
         helper.setFrom(SENDER);
 

@@ -95,6 +95,10 @@ public class AuthRestApi {
     private String DEFAULE_PWD;
     @Value(value = "${data.web.url}")
     private String dataWebUrl;
+    @Value(value = "${PROJECT_NAME_EN}")
+    private String projectName;
+    @Value(value = "${data.website.url}")
+    private String dataWebsiteUrl;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -223,6 +227,9 @@ public class AuthRestApi {
         // 获取浏览器，IP来源，以及操作系统
         user = userService.serRequestInfo(user);
 
+        // 暂时将token也存入到user表中，为了以后方便更新redis中的内容
+        user.setValidCode(accessToken);
+
         if (exist) {
             user.updateById();
         } else {
@@ -329,9 +336,6 @@ public class AuthRestApi {
         user.updateById();
         user.setPassWord("");
         user.setPhotoUrl(userVO.getPhotoUrl());
-
-        // 设置验证码
-        user.setValidCode(StringUtils.getUUID());
 
         // 判断用户是否更改了邮箱
         if(userVO.getEmail() != null && !userVO .getEmail().equals(user.getEmail())){
@@ -483,22 +487,22 @@ public class AuthRestApi {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://picture.moguit.cn/blog/admin/jpg/2018/10/21/logo.jpg\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "邮箱绑定\r\n" +
+                        "蘑菇博客邮箱绑定\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您绑定邮箱，请点击下方链接进行绑定。</p>\r\n" +
+                        "<p>欢迎您给蘑菇博客账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
                         "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/"+ token+"/"+ user.getValidCode() +"\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "@muguit.cn\r\n" +
+                        "<a href=\" "+ dataWebsiteUrl +"\">@" + projectName + "</a>\n"+
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
