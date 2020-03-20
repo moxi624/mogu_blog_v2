@@ -77,15 +77,7 @@
 
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-		  <el-form :model="form">
-
-		    <el-form-item v-if="isEditForm == true" label="图片分类UID" :label-width="formLabelWidth">
-		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
-		    </el-form-item>
-
-		   	<el-form-item v-if="isEditForm == false" label="图片分类UID" :label-width="formLabelWidth" style="display: none;">
-		      <el-input v-model="form.uid" auto-complete="off"></el-input>
-		    </el-form-item>
+		  <el-form :model="form" :rules="rules" ref="form">
 
 				<el-form-item label="封面" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
@@ -97,11 +89,11 @@
 		    	</div>
 		    </el-form-item>
 
-		    <el-form-item label="标题" :label-width="formLabelWidth" required>
+		    <el-form-item label="标题" :label-width="formLabelWidth" prop="name">
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth">
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -115,11 +107,7 @@
 		    <el-button type="primary" @click="submitForm">确 定</el-button>
 		  </div>
 		</el-dialog>
-    		<!--
-        	作者：xzx19950624@qq.com
-        	时间：2018年9月23日16:16:09
-         描述：图片选择器
-        -->
+
 		<CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
 
   </div>
@@ -179,7 +167,17 @@ export default {
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
       fileIds: "",
-      icon: false //控制删除图标的显示
+      icon: false, //控制删除图标的显示
+      rules: {
+        name: [
+          {required: true, message: '标题不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ]
+      }
     };
   },
   methods: {
@@ -331,37 +329,41 @@ export default {
         });
     },
     submitForm: function() {
-      console.log("提交表单", this.form);
-      var params = formatData(this.form);
-      if (this.isEditForm) {
-        editPictureSort(params).then(response => {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-          this.dialogFormVisible = false;
-          this.pictureSortList();
-        });
-      } else {
-        addPictureSort(params).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错")
+        } else {
+          var params = formatData(this.form);
+          if (this.isEditForm) {
+            editPictureSort(params).then(response => {
+              console.log(response);
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              this.dialogFormVisible = false;
+              this.pictureSortList();
             });
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
+            addPictureSort(params).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
+              this.dialogFormVisible = false;
+              this.pictureSortList();
             });
           }
-
-          this.dialogFormVisible = false;
-          this.pictureSortList();
-        });
-      }
+        }
+      })
     }
   }
 };

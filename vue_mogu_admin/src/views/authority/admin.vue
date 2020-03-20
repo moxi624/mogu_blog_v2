@@ -105,7 +105,7 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="头像" :label-width="formLabelWidth">
           <div class="imgBody" v-if="form.photoList">
             <i
@@ -121,49 +121,65 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="用户名" :label-width="formLabelWidth" required>
-          <el-input v-model="form.userName"></el-input>
-        </el-form-item>
+        <el-row :gutter="24">
+          <el-col span="10">
+            <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+              <el-input v-model="form.userName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col span="10">
+            <el-form-item label="昵称" :label-width="formLabelWidth">
+              <el-input v-model="form.nickName"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-        <el-form-item label="角色名" :label-width="formLabelWidth">
-          <el-select v-model="form.roleUid" placeholder="请选择" style="width:150px">
-            <el-option
-              v-for="item in roleOptions"
-              :key="item.uid"
-              :label="item.roleName"
-              :value="item.uid"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="24">
+          <el-col span="10">
+            <el-form-item label="角色名" :label-width="formLabelWidth">
+              <el-select v-model="form.roleUid" placeholder="请选择">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.uid"
+                  :label="item.roleName"
+                  :value="item.uid"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col span="10">
+            <el-form-item label="性别"  :label-width="formLabelWidth" prop="gender">
+              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-        <el-form-item label="昵称" :label-width="formLabelWidth">
-          <el-input v-model="form.nickName"></el-input>
-        </el-form-item>
+        <el-row :gutter="24">
+          <el-col span="10">
+            <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+              <el-input v-model="form.email" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col span="10">
+            <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
+              <el-input v-model="form.mobile" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
+        <el-row :gutter="24">
+          <el-col span="10">
+            <el-form-item label="QQ号码" :label-width="formLabelWidth" prop="qqNumber">
+              <el-input v-model="form.qqNumber" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col span="10">
+            <el-form-item label="职业" :label-width="formLabelWidth">
+              <el-input v-model="form.occupation" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-        <el-form-item label="性别"  :label-width="formLabelWidth" required>
-          <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" >{{gender.dictLabel}}</el-radio>
-        </el-form-item>
-
-        <el-form-item label="邮箱" :label-width="formLabelWidth">
-          <el-input v-model="form.email" ></el-input>
-        </el-form-item>
-
-        <el-form-item label="手机号" :label-width="formLabelWidth">
-          <el-input v-model="form.mobile" ></el-input>
-        </el-form-item>
-
-        <el-form-item label="微信号" :label-width="formLabelWidth">
-          <el-input v-model="form.weChat" ></el-input>
-        </el-form-item>
-
-        <el-form-item label="QQ号码" :label-width="formLabelWidth">
-          <el-input v-model="form.qqNumber" ></el-input>
-        </el-form-item>
-
-        <el-form-item label="职业" :label-width="formLabelWidth">
-          <el-input v-model="form.occupation" ></el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -179,6 +195,7 @@
       :files="fileIds"
       :limit="1"
     ></CheckPhoto>
+
   </div>
 </template>
 
@@ -222,6 +239,28 @@ export default {
       fileIds: "",
       icon: false, //控制删除图标的显示
       genderDictList: [], //字典列表
+      rules: {
+        userName: [
+          {required: true, message: '用户名不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        dictValue: [
+          {required: true, message: '字典键值不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        gender: [
+          {required: true, message: '性别不能为空', trigger: 'blur'},
+        ],
+        email: [
+          {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
+        ],
+        mobile: [
+          {pattern: /0?(13|14|15|18)[0-9]{9}/, message: '请输入正确的手机号码'}
+        ],
+        qqNumber: [
+          {pattern: /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'}
+        ]
+      }
     };
   },
   components: {
@@ -410,43 +449,48 @@ export default {
       this.adminList();
     },
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      this.form.avatar = this.fileIds;
-      if (this.isEditForm) {
-        editAdmin(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错")
+        } else {
+          this.form.avatar = this.fileIds;
+          if (this.isEditForm) {
+            editAdmin(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.adminList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.adminList();
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
+            addAdmin(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.adminList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addAdmin(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.adminList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
     }
   }
 };

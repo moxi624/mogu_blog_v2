@@ -113,22 +113,22 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" :rules="rules" ref="form">
 
-        <el-form-item label="友链名" :label-width="formLabelWidth" required>
+        <el-form-item label="友链名" :label-width="formLabelWidth" prop="title">
           <el-input v-model="form.title" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="友链简介" :label-width="formLabelWidth">
+        <el-form-item label="友链简介" :label-width="formLabelWidth" prop="summary">
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="友链URL" :label-width="formLabelWidth" required>
+        <el-form-item label="友链URL" :label-width="formLabelWidth" prop="url">
           <el-input v-model="form.url" auto-complete="off"></el-input>
         </el-form-item>
 
 
-        <el-form-item label="友链状态" :label-width="formLabelWidth" >
+        <el-form-item label="友链状态" :label-width="formLabelWidth" prop="linkStatus">
           <el-select v-model="form.linkStatus" size="small" placeholder="请选择" style="width:100px">
             <el-option
               v-for="item in linkStatusDictList"
@@ -139,13 +139,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth">
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
-        <!-- <el-form-item label="友链点击数" :label-width="formLabelWidth">
-		      <el-input v-model="form.clickCount" auto-complete="off"></el-input>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -184,6 +181,23 @@ export default {
         uid: null,
         content: "",
         clickCount: 0
+      },
+      rules: {
+        title: [
+          {required: true, message: '标题不能为空', trigger: 'blur'},
+          {min: 1, max: 10, message: '长度在1到10个字符'},
+        ],
+        url: [
+          {required: true, message: 'URL不能为空', trigger: 'blur'},
+          {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+        ],
+        linkStatus: [
+          {required: true, message: '友链状态不能为空', trigger: 'blur'}
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ]
       }
     };
   },
@@ -318,41 +332,49 @@ export default {
       this.linkList();
     },
     submitForm: function() {
-      if (this.isEditForm) {
-        editLink(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验失败")
+        } else {
+          if (this.isEditForm) {
+            editLink(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.linkList();
+              } else {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.linkList();
           } else {
-            this.$message({
-              type: "success",
-              message: response.data
+            addLink(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.linkList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addLink(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.linkList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
+
     }
   }
 };

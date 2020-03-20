@@ -101,29 +101,16 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item v-if="isEditForm == true" label="分类UID" :label-width="formLabelWidth">
-          <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item
-          v-if="isEditForm == false"
-          label="分类UID"
-          :label-width="formLabelWidth"
-          style="display: none;"
-        >
-          <el-input v-model="form.uid" auto-complete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="分类名" :label-width="formLabelWidth">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="分类名" :label-width="formLabelWidth" prop="sortName">
           <el-input v-model="form.sortName" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="分类介绍" :label-width="formLabelWidth">
+        <el-form-item label="分类介绍" :label-width="formLabelWidth" prop="content">
           <el-input v-model="form.content" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth">
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -164,6 +151,16 @@ export default {
         uid: null,
         content: "",
         sortName: ""
+      },
+      rules: {
+        sortName: [
+          {required: true, message: '分类名称不能为空', trigger: 'blur'},
+          {min: 1, max: 10, message: '长度在1到10个字符'},
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ]
       }
     };
   },
@@ -172,7 +169,6 @@ export default {
   },
   methods: {
     blogSortList: function() {
-
       var params = {};
       params.keyword = this.keyword;
       params.currentPage = this.currentPage;
@@ -359,41 +355,49 @@ export default {
       this.blogSortList();
     },
     submitForm: function() {
-      if (this.isEditForm) {
-        editBlogSort(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log('校验失败')
+          return;
+        } else {
+          if (this.isEditForm) {
+            editBlogSort(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.blogSortList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.blogSortList();
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
+            addBlogSort(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.blogSortList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addBlogSort(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.blogSortList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
     },
     // 改变多选
     handleSelectionChange(val) {

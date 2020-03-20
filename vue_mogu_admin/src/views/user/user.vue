@@ -167,11 +167,8 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-
-
+      <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="用户头像" :label-width="formLabelWidth">
-
           <div class="imgBody" v-if="form.photoUrl">
             <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
             <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoUrl" />
@@ -184,12 +181,12 @@
 
         <el-row :gutter="24">
           <el-col :span="9">
-            <el-form-item label="用户名" :label-width="formLabelWidth" required>
+            <el-form-item label="用户名" :label-width="formLabelWidth" prop="nickName">
               <el-input v-model="form.nickName" ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item label="邮箱" :label-width="formLabelWidth">
+            <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
               <el-input v-model="form.email" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
@@ -197,7 +194,7 @@
 
         <el-row :gutter="24">
           <el-col :span="9">
-            <el-form-item label="QQ号" :label-width="formLabelWidth">
+            <el-form-item label="QQ号" :label-width="formLabelWidth" prop="qqNumber">
               <el-input v-model="form.qqNumber" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
@@ -208,10 +205,9 @@
           </el-col>
         </el-row>
 
-
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item label="评论状态" :label-width="formLabelWidth">
+            <el-form-item label="评论状态" label-width="120px" prop="commentStatus">
               <el-select v-model="form.commentStatus" size="small" placeholder="请选择" style="width:100px">
                 <el-option
                   v-for="item in commentStatusDictList"
@@ -224,7 +220,7 @@
           </el-col>
 
           <el-col :span="6">
-            <el-form-item label="用户标签" :label-width="formLabelWidth">
+            <el-form-item label="用户标签" label-width="90px" prop="userTag">
               <el-select v-model="form.userTag" size="small" placeholder="请选择" style="width:100px">
                 <el-option
                   v-for="item in userTagDictList"
@@ -237,7 +233,7 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item label="性别" :label-width="formLabelWidth">
+            <el-form-item label="性别" label-width="50px" prop="gender">
               <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
             </el-form-item>
           </el-col>
@@ -245,6 +241,7 @@
 
         <el-form-item label="简介" :label-width="formLabelWidth">
           <el-input
+            style="width: 70%"
             type="textarea"
             :autosize="{ minRows: 3, maxRows: 10}"
             placeholder="请输入内容"
@@ -312,6 +309,27 @@
         commentStatusDictList: [], //评论状态字典
         genderDictList: [], //评论状态字典
         userTagDictList: [], // 用户标签列表
+        rules: {
+          nickName: [
+            {required: true, message: '用户名不能为空', trigger: 'blur'},
+            {min: 1, max: 20, message: '长度在1到20个字符'},
+          ],
+          commentStatus: [
+            {required: true, message: '评论状态不能为空', trigger: 'blur'}
+          ],
+          userTag: [
+            {required: true, message: '用户标签不能为空', trigger: 'blur'}
+          ],
+          gender: [
+            {required: true, message: '性别不能为空', trigger: 'blur'},
+          ],
+          email: [
+            {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
+          ],
+          qqNumber: [
+            {pattern: /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'}
+          ]
+        }
       };
     },
     components: {
@@ -497,22 +515,27 @@
         this.userList();
       },
       submitForm: function() {
-        editUser(this.form).then(response => {
-          if(response.code == "success") {
-            this.$notify({
-              title: "成功",
-              message: "保存成功！",
-              type: "success"
-            });
-            this.dialogFormVisible = false
+        this.$refs.form.validate((valid) => {
+          if(!valid) {
+            console.log("校验出错")
           } else {
-            this.$notify.error({
-              title: "失败",
-              message: response.data
+            editUser(this.form).then(response => {
+              if(response.code == "success") {
+                this.$notify({
+                  title: "成功",
+                  message: "保存成功！",
+                  type: "success"
+                });
+                this.dialogFormVisible = false
+              } else {
+                this.$notify.error({
+                  title: "失败",
+                  message: response.data
+                });
+              }
             });
           }
-
-        });
+        })
       }
     }
   };

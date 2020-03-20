@@ -124,13 +124,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="ICON" width="100" align="center">
+      <el-table-column label="图标" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.icon }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="URL" width="200" align="center">
+      <el-table-column label="路由" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
@@ -174,12 +174,12 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="菜单名称" :label-width="formLabelWidth" required>
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="菜单等级" :label-width="formLabelWidth" required>
+        <el-form-item label="菜单等级" :label-width="formLabelWidth" prop="menuLevel">
           <el-select v-model="form.menuLevel" size="small" placeholder="请选择">
             <el-option
               v-for="item in menuLevelDictList"
@@ -194,7 +194,7 @@
           v-if="form.menuLevel == 2"
           label="父菜单名"
           :label-width="formLabelWidth"
-          required
+          prop="parentUid"
         >
           <el-select
             v-model="form.parentUid"
@@ -215,24 +215,23 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="菜单介绍" :label-width="formLabelWidth" required>
+        <el-form-item label="菜单介绍" :label-width="formLabelWidth" prop="summary">
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="ICON" :label-width="formLabelWidth" required>
+        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
           <el-input v-model="form.icon" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="URL" :label-width="formLabelWidth" required>
+        <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
           <el-input v-model="form.url" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="是否显示" :label-width="formLabelWidth" required>
+        <el-form-item label="是否显示" :label-width="formLabelWidth" prop="isShow">
           <el-radio-group v-model="form.isShow" size="small">
             <el-radio v-for="item in yesNoDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -280,7 +279,31 @@ export default {
         sort: ""
       },
       loading: false,
-      menuOptions: [] //一级菜单候选项
+      menuOptions: [], //一级菜单候选项
+      rules: {
+        name: [
+          {required: true, message: '菜单名称不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        menuLevel: [
+          {required: true, message: '菜单等级不能为空', trigger: 'blur'}
+        ],
+        parentUid: [
+          {required: true, message: '父菜单名不能为空', trigger: 'blur'}
+        ],
+        summary: [
+          {required: true, message: '菜单简介不能为空', trigger: 'blur'}
+        ],
+        icon: [
+          {required: true, message: '图标不能为空', trigger: 'blur'}
+        ],
+        url: [
+          {required: true, message: '路由不能为空', trigger: 'blur'}
+        ],
+        isShow: [
+          {required: true, message: '显示字段不能为空', trigger: 'blur'}
+        ]
+      }
     };
   },
   created() {
@@ -430,42 +453,48 @@ export default {
     },
 
     submitForm: function() {
-      console.log("点击了提交表单", this.form);
-      if (this.isEditForm) {
-        editMenu(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验失败")
+        } else {
+          if (this.isEditForm) {
+            editMenu(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.menuList();
+              } else {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.menuList();
           } else {
-            this.$message({
-              type: "success",
-              message: response.data
+            addMenu(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.menuList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addMenu(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.menuList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
+
     }
   }
 };

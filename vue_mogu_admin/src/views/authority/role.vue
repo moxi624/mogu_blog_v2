@@ -74,8 +74,8 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="角色名称" :label-width="formLabelWidth">
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
           <el-input v-model="form.roleName" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -126,18 +126,21 @@ export default {
         summary: "",
         categoryMenuUids: [],
       },
-
       //分类菜单列表
       categoryMenuList: [],
-
       // tree配置项
       defaultProps: {
         children: "childCategoryMenu",
         label: "name"
       },
-
       //默认选中的key
       defaultCheckedKeys: [],
+      rules: {
+        roleName: [
+          {required: true, message: '角色名称不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ]
+      }
     };
   },
   created() {
@@ -205,7 +208,6 @@ export default {
     },
 
     handleAdd: function () {
-      console.log("点击添加", this.getFormObject());
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       setTimeout(() => {
@@ -264,46 +266,51 @@ export default {
     },
     submitForm: function () {
 
-      //得到选中树的UID
-      var categoryMenuUids = this.$refs.tree.getCheckedKeys();
-      this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
-
-      if (this.isEditForm) {
-        console.log("form", this.form);
-        editRole(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错")
+        } else {
+          //得到选中树的UID
+          var categoryMenuUids = this.$refs.tree.getCheckedKeys();
+          this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
+          if (this.isEditForm) {
+            console.log("form", this.form);
+            editRole(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.roleList();
+              } else {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.roleList();
           } else {
-            this.$message({
-              type: "success",
-              message: response.data
+            addRole(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.roleList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addRole(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.roleList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
     }
   }
 };

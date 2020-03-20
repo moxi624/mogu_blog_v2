@@ -83,7 +83,7 @@
 
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-		  <el-form :model="form">
+		  <el-form :model="form" :rules="rules" ref="form">
 
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
@@ -95,7 +95,7 @@
 		    	</div>
 		    </el-form-item>
 
-		    <el-form-item label="分类名" :label-width="formLabelWidth" required>
+		    <el-form-item label="分类名" :label-width="formLabelWidth" prop="sortName">
 		      <el-input v-model="form.sortName" auto-complete="off"></el-input>
 		    </el-form-item>
 
@@ -103,7 +103,7 @@
 		      <el-input type="textarea" v-model="form.content" auto-complete="off"></el-input>
 		    </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth">
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -166,7 +166,17 @@ export default {
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
       fileIds: "",
-      icon: false //控制删除图标的显示
+      icon: false, //控制删除图标的显示
+      rules: {
+        sortName: [
+          {required: true, message: '分类名不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ]
+      }
     };
   },
   methods: {
@@ -193,7 +203,8 @@ export default {
         uid: null,
         sortName: null,
         content: null,
-        fileUid: null
+        fileUid: null,
+        sort: 0
       };
       return formObject;
     },
@@ -345,34 +356,41 @@ export default {
         });
     },
     submitForm: function() {
-      if (this.isEditForm) {
-        editResourceSort(this.form).then(response => {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-          this.dialogFormVisible = false;
-          this.resourceSortList();
-        });
-      } else {
-        addResourceSort(this.form).then(response => {
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错")
+        } else {
+          if (this.isEditForm) {
+            editResourceSort(this.form).then(response => {
+              console.log(response);
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              this.dialogFormVisible = false;
+              this.resourceSortList();
             });
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
+            addResourceSort(this.form).then(response => {
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
+
+              this.dialogFormVisible = false;
+              this.resourceSortList();
             });
           }
+        }
+      })
 
-          this.dialogFormVisible = false;
-          this.resourceSortList();
-        });
-      }
     },
     // 改变多选
     handleSelectionChange(val) {

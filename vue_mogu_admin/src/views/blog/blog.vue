@@ -197,14 +197,7 @@
       :before-close="closeDialog"
       fullscreen
     >
-      <el-form :model="form">
-        <!-- <el-form-item v-if="isEditForm == true" label="博客UID" :label-width="formLabelWidth">
-		      <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
-		    </el-form-item>
-
-		   	<el-form-item v-if="isEditForm == false" label="博客UID" :label-width="formLabelWidth" style="display: none;">
-		      <el-input v-model="form.uid" auto-complete="off"></el-input>
-        </el-form-item>-->
+      <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="标题图" :label-width="formLabelWidth">
           <div class="imgBody" v-if="form.photoList">
             <i
@@ -225,7 +218,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="标题" :label-width="formLabelWidth" required>
+        <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
           <el-input v-model="form.title" auto-complete="off" @input="contentChange"></el-input>
         </el-form-item>
 
@@ -235,7 +228,7 @@
 
         <el-row>
           <el-col :span="4.5">
-            <el-form-item label="分类" :label-width="formLabelWidth" required>
+            <el-form-item label="分类" :label-width="formLabelWidth" prop="blogSortUid">
               <el-select
                 v-model="form.blogSortUid"
                 size="small"
@@ -253,7 +246,7 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="标签" label-width="80px" required>
+            <el-form-item label="标签" label-width="80px">
               <el-select
                 v-model="tagValue"
                 multiple
@@ -273,7 +266,7 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" required>
+            <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" prop="level">
               <el-select v-model="form.level" size="small" placeholder="请选择" style="width:100px">
                 <el-option
                   v-for="item in blogLevelDictList"
@@ -286,7 +279,7 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="是否发布" :label-width="lineLabelWidth" required>
+            <el-form-item label="是否发布" :label-width="lineLabelWidth" prop="isPublish">
               <el-radio-group v-model="form.isPublish" size="small">
                 <el-radio v-for="item in blogPublishDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
@@ -294,7 +287,7 @@
           </el-col>
 
           <el-col :span="5">
-            <el-form-item label="是否原创" :label-width="formLabelWidth" required>
+            <el-form-item label="是否原创" :label-width="formLabelWidth" prop="isOriginal">
               <el-radio-group v-model="form.isOriginal" size="small">
                 <el-radio v-for="item in blogOriginalDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
@@ -302,7 +295,7 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="作者" :label-width="formLabelWidth" required v-if="form.isOriginal==0">
+        <el-form-item label="作者" :label-width="formLabelWidth" v-if="form.isOriginal==0" prop="author">
           <el-input v-model="form.author" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -310,7 +303,7 @@
           <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="内容" :label-width="formLabelWidth" required>
+        <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
           <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
         </el-form-item>
       </el-form>
@@ -321,11 +314,6 @@
       </div>
     </el-dialog>
 
-    <!--
-        	作者：xzx19950624@qq.com
-        	时间：2018年9月23日16:16:09
-         描述：图片选择器
-    -->
     <CheckPhoto
       @choose_data="getChooseData"
       @cancelModel="cancelModel"
@@ -413,6 +401,29 @@ export default {
         author: null, //作者
         clickCount: 0,
         articlesPart: null //文章出处
+      },
+      rules: {
+        title: [
+          {required: true, message: '标题不能为空', trigger: 'blur'}
+        ],
+        blogSortUid: [
+          {required: true, message: '分类不能为空', trigger: 'blur'}
+        ],
+        level: [
+          {required: true, message: '推荐等级不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '推荐等级只能为自然数'},
+        ],
+        isPublish: [
+          {required: true, message: '发布字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '发布字段只能为自然数'},
+        ],
+        isOriginal: [
+          {required: true, message: '原创字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '原创字段只能为自然数'},
+        ],
+        content: [
+          {required: true, message: '内容不能为空', trigger: 'blur'}
+        ]
       }
     };
   },
@@ -679,6 +690,7 @@ export default {
         this.formBak();
       }
     },
+    // 内容改变，触发监听
     contentChange: function() {
       var that = this;
       //存放到cookie中，时间10天
@@ -728,7 +740,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-
           var params = {};
           params.uid = row.uid;
           deleteBlog(params).then(response => {
@@ -761,7 +772,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-
           deleteBatchBlog(that.multipleSelection).then(response => {
             this.$message({
               type: "success",
@@ -782,73 +792,60 @@ export default {
       this.blogList();
     },
     submitForm: function() {
-      this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
-      this.form.tagUid = this.tagValue.join(",");
 
-      if (
-        this.form.title == null ||
-        this.form.tagUid == "" ||
-        this.form.blogSortUid == null ||
-        this.form.content == ""
-      ) {
-        this.$message({
-          type: "error",
-          message: "必填项不能为空"
-        });
-        return;
-      }
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
 
-      var params = formatData(this.form);
-      if (this.isEditForm) {
-
-        editBlog(this.form).then(response => {
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+        } else {
+          this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          this.form.tagUid = this.tagValue.join(",");
+          var params = formatData(this.form);
+          if (this.isEditForm) {
+            editBlog(this.form).then(response => {
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                // 清空cookie中的内容
+                delCookie("form");
+                this.dialogFormVisible = false;
+                this.blogList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
 
-            // 清空cookie中的内容
-            delCookie("form");
-
-            this.dialogFormVisible = false;
-            this.blogList();
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
+            addBlog(this.form).then(response => {
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+
+                // 清空cookie中的内容
+                // Cookie("form", JSON.stringify(this.getFormObject()), 1);
+                delCookie("form");
+
+                // 清空触发器
+                clearInterval(this.interval);
+
+                this.dialogFormVisible = false;
+                this.blogList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-
-      } else {
-
-        addBlog(this.form).then(response => {
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-
-            // 清空cookie中的内容
-            // Cookie("form", JSON.stringify(this.getFormObject()), 1);
-            delCookie("form");
-
-            // 清空触发器
-            clearInterval(this.interval);
-
-            this.dialogFormVisible = false;
-            this.blogList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-
-
-      }
+        }
+      })
     },
     // 改变多选
     handleSelectionChange(val) {

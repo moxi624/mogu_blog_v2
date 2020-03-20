@@ -108,33 +108,29 @@
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" :rules="rules" ref="form">
 
-        <el-form-item v-if="isEditForm" label="UID" :label-width="formLabelWidth">
-          <el-input v-model="form.uid" auto-complete="off" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="字典类型" :label-width="formLabelWidth" required>
+        <el-form-item label="字典类型" :label-width="formLabelWidth" prop="dictType">
           <el-input v-model="form.dictType" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="字典名称" :label-width="formLabelWidth" required>
+        <el-form-item label="字典名称" :label-width="formLabelWidth" prop="dictName">
           <el-input v-model="form.dictName" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="排序" :label-width="formLabelWidth">
-          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        <el-form-item label="发布状态" :label-width="formLabelWidth" prop="isPublish">
+          <el-radio-group v-model="form.isPublish" size="small">
+            <el-radio label="1" border>上架</el-radio>
+            <el-radio label="0" border>下架</el-radio>
+          </el-radio-group>
         </el-form-item>
 
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="form.remark" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="发布状态" :label-width="formLabelWidth" required>
-          <el-radio-group v-model="form.isPublish" size="small">
-            <el-radio label="1" border>上架</el-radio>
-            <el-radio label="0" border>下架</el-radio>
-          </el-radio-group>
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
       </el-form>
@@ -163,7 +159,24 @@ export default {
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
-      form: {}
+      form: {},
+      rules: {
+        dictType: [
+          {required: true, message: '字典类型不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        dictName: [
+          {required: true, message: '字典名称不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
+        ],
+        isPublish: [
+          {required: true, message: '发布状态不能为空', trigger: 'blur'}
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ]
+      }
     };
   },
   created() {
@@ -295,40 +308,47 @@ export default {
       this.multipleSelection = val;
     },
     submitForm: function() {
-      if (this.isEditForm) {
-        editSysDictType(this.form).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
+
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错")
+        } else {
+          if (this.isEditForm) {
+            editSysDictType(this.form).then(response => {
+              console.log(response);
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.sysDictTypeList();
+              } else {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+              }
             });
-            this.dialogFormVisible = false;
-            this.sysDictTypeList();
           } else {
-            this.$message({
-              type: "success",
-              message: response.data
+            addSysDictType(this.form).then(response => {
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                });
+                this.dialogFormVisible = false;
+                this.sysDictTypeList();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                });
+              }
             });
           }
-        });
-      } else {
-        addSysDictType(this.form).then(response => {
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            this.dialogFormVisible = false;
-            this.sysDictTypeList();
-          } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            });
-          }
-        });
-      }
+        }
+      })
     }
   }
 };
