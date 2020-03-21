@@ -116,7 +116,7 @@
       <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
       <el-tab-pane label="个人中心" name="0">
         <span slot="label"><i class="el-icon-user-solid"></i> 个人中心</span>
-        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+        <el-form label-position="left" :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
           <el-form-item label="用户头像" :label-width="labelWidth">
 
             <div class="imgBody" v-if="userInfo.photoUrl">
@@ -149,11 +149,11 @@
             <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification" :label="parseInt(item.dictValue)" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
-          <el-form-item label="邮箱" :label-width="labelWidth">
+          <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
             <el-input v-model="userInfo.email" style="width: 100%"></el-input>
           </el-form-item>
 
-          <el-form-item label="QQ号" :label-width="labelWidth">
+          <el-form-item label="QQ号" :label-width="labelWidth" prop="qqNumber">
             <el-input v-model="userInfo.qqNumber" style="width: 100%"></el-input>
           </el-form-item>
 
@@ -331,7 +331,7 @@
 
         <el-divider></el-divider>
 
-        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+        <el-form label-position="left" :model="userInfo" label-width="100px">
           <el-form-item label="标题" :label-width="labelWidth">
             <el-input v-model="feedback.title" style="width: 100%"></el-input>
           </el-form-item>
@@ -354,7 +354,7 @@
       <el-tab-pane label="申请友链" name="5">
         <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
 
-        <el-form label-position="left" :model="userInfo" label-width="100px" ref="changeAdminForm">
+        <el-form label-position="left" :model="blogLink" label-width="100px" ref="blogLink" :rules="linkRules">
           <el-collapse v-model="activeNames">
             <el-collapse-item title="申请须知" name="1">
               <div>请确定贵站可以稳定运营</div>
@@ -372,16 +372,16 @@
 
           <el-divider></el-divider>
 
-          <el-form-item label="网站名称" :label-width="labelWidth">
+          <el-form-item label="网站名称" :label-width="labelWidth" prop="title">
             <el-input v-model="blogLink.title" style="width: 100%"></el-input>
           </el-form-item>
 
-          <el-form-item label="网站简介" :label-width="labelWidth">
+          <el-form-item label="网站简介" :label-width="labelWidth" prop="summary">
             <el-input v-model="blogLink.summary" style="width: 100%"></el-input>
           </el-form-item>
 
 
-          <el-form-item label="网站地址" :label-width="labelWidth">
+          <el-form-item label="网站地址" :label-width="labelWidth" prop="url">
             <el-input v-model="blogLink.url" style="width: 100%"></el-input>
           </el-form-item>
 
@@ -481,6 +481,28 @@
         replyList: [], // 我的回复
         praiseList: [], // 我的点赞
         feedbackList: [], // 我的反馈
+        rules: {
+          qqNumber: [
+            {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
+          ],
+          email: [
+            {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
+          ]
+        },
+        linkRules: {
+          title: [
+            {required: true, message: '网站名称不能为空', trigger: 'blur'},
+            {min: 1, max: 10, message: '长度在1到10个字符'},
+          ],
+          summary: [
+            {required: true, message: '简介不能为空', trigger: 'blur'},
+            {min: 1, max: 50, message: '长度在1到50个字符'},
+          ],
+          url: [
+            {required: true, message: '网站地址不能为空', trigger: 'blur'},
+            {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+          ]
+        }
       };
     },
     mounted() {
@@ -669,37 +691,48 @@
       submitForm: function(type) {
         switch (type) {
           case "editUser": {
-            console.log('提交用户信息', this.userInfo);
-            editUser(this.userInfo).then(response => {
-              if(response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                })
+            this.$refs.userInfo.validate((valid) => {
+              if(!valid) {
+                console.log("校验失败")
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                })
+                editUser(this.userInfo).then(response => {
+                  if(response.code == "success") {
+                    this.$message({
+                      type: "success",
+                      message: response.data
+                    })
+                  } else {
+                    this.$message({
+                      type: "error",
+                      message: response.data
+                    })
+                  }
+                });
               }
-            });
+            })
           }; break;
 
           case "replyBlogLink": {
-            console.log('申请友链', this.blogLink);
-            replyBlogLink(this.blogLink).then(response => {
-              if(response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                })
+            this.$refs.blogLink.validate((valid) => {
+              if(!valid) {
+                console.log("校验失败")
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                })
+                replyBlogLink(this.blogLink).then(response => {
+                  if(response.code == "success") {
+                    this.$message({
+                      type: "success",
+                      message: response.data
+                    })
+                  } else {
+                    this.$message({
+                      type: "error",
+                      message: response.data
+                    })
+                  }
+                });
               }
-            });
+            })
+
           }; break;
 
           case "feedback": {

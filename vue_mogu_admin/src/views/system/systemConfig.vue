@@ -11,13 +11,14 @@
           label-position="left"
           :model="form"
           label-width="120px"
-          ref="from"
+          :rules="rules"
+          ref="form"
         >
-          <el-form-item label="本地图片域名">
+          <el-form-item label="本地图片域名" prop="localPictureBaseUrl">
             <el-input v-model="form.localPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="七牛云图片域名">
+          <el-form-item label="七牛云图片域名" prop="qiNiuPictureBaseUrl">
             <el-input v-model="form.qiNiuPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
@@ -65,7 +66,7 @@
       <el-tab-pane name="two">
         <span slot="label"><i class="el-icon-edit"></i> 邮箱配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="80px" >
-          <el-form-item label="邮箱" prop="oldPwd">
+          <el-form-item label="邮箱" prop="email">
             <el-input  v-model="form.email" style="width: 400px"></el-input>
           </el-form-item>
 
@@ -111,6 +112,17 @@ export default {
       yesNoDictList: [], //是否字典
       picturePriorityDictList: [], //图片显示优先级字典
       loadingInstance: null, // loading对象
+      rules: {
+        localPictureBaseUrl: [
+          {pattern: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入正确的域名'},
+        ],
+        qiNiuPictureBaseUrl: [
+          {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的域名'},
+        ],
+        email: [
+          {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
+        ],
+      }
     };
   },
   watch: {
@@ -162,20 +174,26 @@ export default {
     },
 
     submitForm: function() {
-      editSystemConfig(this.form).then(res => {
-        console.log(res);
-        if (res.code = "success") {
-          this.$message({
-            type: "success",
-            message: res.data
-          });
+      this.$refs.form.validate((valid) => {
+        if(!valid) {
+          console.log("校验出错");
         } else {
-          this.$message({
-            type: "warning",
-            message: res.data
+          editSystemConfig(this.form).then(res => {
+            console.log(res);
+            if (res.code = "success") {
+              this.$message({
+                type: "success",
+                message: res.data
+              });
+            } else {
+              this.$message({
+                type: "warning",
+                message: res.data
+              });
+            }
           });
         }
-      });
+      })
     },
 
   }
