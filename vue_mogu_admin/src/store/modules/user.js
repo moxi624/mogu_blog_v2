@@ -54,6 +54,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getMenu().then(response => {
           const data = response.data
+          console.log("获取的菜单", data)
           commit('SET_MENU', data)
           resolve(response)
         }).catch(error => {

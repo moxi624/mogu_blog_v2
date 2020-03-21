@@ -104,6 +104,12 @@ export const constantRouterMap = [
         name: '菜单管理',
         component: () => import('@/views/authority/categoryMenu'),
         meta: { title: '菜单管理', icon: 'authority' }
+      },
+      {
+        path: 'button',
+        name: '按钮管理',
+        component: () => import('@/views/authority/button'),
+        meta: { title: '按钮管理', icon: 'authority' }
       }
     ]
   },

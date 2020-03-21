@@ -55,6 +55,7 @@ public final class SQLConf extends BaseSQLConf {
      * t_category_meun表
      */
     public final static String MENU_LEVEL = "menu_level";
+    public final static String MENU_TYPE = "menu_type";
     public final static String PARENT_UID = "parent_uid";
 
     /**

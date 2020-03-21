@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加菜单</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加按钮</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -10,8 +10,8 @@
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
-
             <el-table :data="scope.row.childCategoryMenu" :show-header="showHeader" style="width: 100%">
+
               <el-table-column label width="60" align="center">
                 <template slot-scope="scope_child">
                   <span>{{scope_child.$index + 1}}</span>
@@ -29,6 +29,14 @@
                   <el-tag v-for="item in menuLevelDictList" :key="item.uid" v-if="scope_child.row.menuLevel == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
                 </template>
               </el-table-column>
+
+              <el-table-column label width="100" align="center">
+                <template slot-scope="scope">
+                  <el-tag v-for="item in menuTypeDictList" :key="item.uid" v-if="scope.row.menuType == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
+                </template>
+              </el-table-column>
+
+
 
               <el-table-column label width="200" align="center">
                 <template slot-scope="scope_child">
@@ -104,6 +112,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="菜单类型" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag v-for="item in menuTypeDictList" :key="item.uid" v-if="scope.row.menuType == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column label="菜单简介" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
@@ -116,7 +130,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="路由" width="200" align="center">
+      <el-table-column label="URL" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
@@ -150,9 +164,7 @@
 
       <el-table-column label="操作" fixed="right" min-width="230">
         <template slot-scope="scope">
-          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
-          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -165,8 +177,14 @@
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
 
+        <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
+          <el-radio-group v-model="form.menuType" size="small" disabled>
+            <el-radio v-for="item in menuTypeDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
         <el-form-item label="菜单等级" :label-width="formLabelWidth" prop="menuLevel">
-          <el-select v-model="form.menuLevel" placeholder="请选择">
+          <el-select v-model="form.menuLevel" placeholder="请选择" disabled>
             <el-option
               v-for="item in menuLevelDictList"
               :key="item.uid"
@@ -176,40 +194,29 @@
           </el-select>
         </el-form-item>
 
+        <!-- 用于按钮 -->
         <el-form-item
-          v-if="form.menuLevel == 2"
+          v-if="form.menuType == 1"
           label="父菜单名"
           :label-width="formLabelWidth"
-          prop="parentUid"
         >
-          <el-select
-            v-model="form.parentUid"
-            filterable
-            clearable
-            remote
-            reserve-keyword
-            placeholder="请输入父菜单名"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in menuOptions"
-              :key="item.uid"
-              :label="item.name"
-              :value="item.uid"
-            ></el-option>
-          </el-select>
+          <el-cascader
+            :options="options"
+            placeholder="请选择父菜单"
+            v-model="buttonParentUid"
+            :props="{ checkStrictly: true }"
+            clearable></el-cascader>
         </el-form-item>
 
         <el-form-item label="菜单介绍" :label-width="formLabelWidth" prop="summary">
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
+        <el-form-item label="图标" :label-width="formLabelWidth" prop="icon" v-if="form.menuType == 0">
           <el-input v-model="form.icon" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
+        <el-form-item label="URL" :label-width="formLabelWidth" prop="url">
           <el-input v-model="form.url" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -230,8 +237,8 @@
 
 <script>
 import {
-  getMenuList,
   getAllMenu,
+  getButtonAll,
   addMenu,
   editMenu,
   deleteMenu,
@@ -255,7 +262,10 @@ export default {
       isEditForm: false,
       menuLevelDictList: [], //菜单等级字典
       yesNoDictList: [], // 是否字典
-      yesNoDefault: null,
+      menuTypeDictList: [], //菜单类型字典
+      yesNoDefault: null, // 是否 默认值
+      menuTypeDefault: null, // 菜单类型默认值
+      buttonParentUid: [], // 选中的button父UID
       form: {
         uid: null,
         name: "",
@@ -265,7 +275,6 @@ export default {
         sort: ""
       },
       loading: false,
-      menuOptions: [], //一级菜单候选项
       rules: {
         name: [
           {required: true, message: '菜单名称不能为空', trigger: 'blur'},
@@ -284,25 +293,53 @@ export default {
           {required: true, message: '图标不能为空', trigger: 'blur'}
         ],
         url: [
-          {required: true, message: '路由不能为空', trigger: 'blur'}
+          {required: true, message: 'URL不能为空', trigger: 'blur'}
         ],
         isShow: [
           {required: true, message: '显示字段不能为空', trigger: 'blur'}
         ]
-      }
+      },
+      options: []
     };
   },
   created() {
-    this.getDictList();
+    // 得到菜单列表
     this.menuList();
+    this.getDictList();
+    this.buttonList();
   },
   methods: {
     menuList: function() {
       getAllMenu().then(response => {
+        console.log("tableData", response)
+        if (response.code == "success") {
+          let tableData = response.data;
+          let options = []
+          for(let a=0; a<tableData.length; a++) {
+            let parent = {}
+            parent.label = tableData[a].name;
+            parent.value = tableData[a].uid;
+            let childData = tableData[a].childCategoryMenu
+            let childList = []
+            for(let b=0; b<childData.length; b++) {
+              let child = {}
+              child.label = childData[b].name;
+              child.value = childData[b].uid;
+              childList.push(child)
+            }
+            parent.children = childList
+            options.push(parent)
+          }
+          this.options = options
+          console.log("处理后的Options", options)
+        }
+      });
+    },
+    buttonList: function() {
+      getButtonAll().then(response => {
         console.log("getAllMenu", response);
         if (response.code == "success") {
           this.tableData = response.data;
-          this.menuOptions = response.data;
         }
       });
     },
@@ -312,7 +349,7 @@ export default {
     getDictList: function () {
 
 
-      var dictTypeList =  ['sys_menu_level', 'sys_yes_no']
+      var dictTypeList =  ['sys_menu_level', 'sys_yes_no', 'sys_menu_type']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
@@ -323,8 +360,14 @@ export default {
 
           this.yesNoDictList = dictMap.sys_yes_no.list
 
+          this.menuTypeDictList = dictMap.sys_menu_type.list
+
           if(dictMap.sys_yes_no.defaultValue) {
             this.yesNoDefault = parseInt(dictMap.sys_yes_no.defaultValue);
+          }
+
+          if(dictMap.sys_menu_type.defaultValue) {
+            this.menuTypeDefault = parseInt(dictMap.sys_menu_type.defaultValue);
           }
 
         }
@@ -338,13 +381,14 @@ export default {
         icon: "",
         url: "",
         sort: "",
-        menuType: 0, //菜单类型  菜单
-        isShow: this.yesNoDefault
+        menuLevel: 3,
+        isShow: this.yesNoDefault,
+        menuType: 1
       };
       return formObject;
     },
     handleFind: function() {
-      this.menuList();
+      this.buttonList();
     },
     handleAdd: function() {
       this.dialogFormVisible = true;
@@ -368,7 +412,7 @@ export default {
           params.uid = row.uid
           stickMenu(params).then(response => {
             if (response.code == "success") {
-              this.menuList();
+              this.buttonList();
               this.$message({
                 type: "success",
                 message: response.data
@@ -410,7 +454,7 @@ export default {
                 message: response.data
               });
             }
-            that.menuList();
+            that.buttonList();
           });
         })
         .catch(() => {
@@ -420,30 +464,30 @@ export default {
           });
         });
     },
-    //分类远程搜索函数
-    remoteMethod: function(query) {
-      if (query !== "") {
-        //这里只搜索一级菜单出来
-        var params = new URLSearchParams();
-        params.append("keyword", query);
-        params.append("menuLevel", 1);
-        params.append("pageSize", 100);
-        getMenuList(params).then(response => {
-          console.log(response);
-          if (response.code == "success") {
-            this.menuOptions = response.data.data.records;
-          }
-        });
-      } else {
-        this.menuOptions = [];
-      }
-    },
 
     submitForm: function() {
       this.$refs.form.validate((valid) => {
         if(!valid) {
           console.log("校验失败")
         } else {
+
+          // 如果菜单类型是 按钮，那么设置菜单等级为 3
+          let menuType = this.form.menuType
+          if(menuType == 1) {
+            this.form.menuLevel = 3
+          }
+
+          let buttonParentUid = this.buttonParentUid
+          if(buttonParentUid.length > 0) {
+            // 选取最后一个元素
+            this.form.parentUid = buttonParentUid[buttonParentUid.length - 1]
+          } else {
+            this.$message({
+              type: "error",
+              message: "请选中父菜单"
+            })
+          }
+
           if (this.isEditForm) {
             editMenu(this.form).then(response => {
               console.log(response);
@@ -453,7 +497,7 @@ export default {
                   message: response.data
                 });
                 this.dialogFormVisible = false;
-                this.menuList();
+                this.buttonList();
               } else {
                 this.$message({
                   type: "success",
@@ -463,14 +507,13 @@ export default {
             });
           } else {
             addMenu(this.form).then(response => {
-              console.log(response);
               if (response.code == "success") {
                 this.$message({
                   type: "success",
                   message: response.data
                 });
                 this.dialogFormVisible = false;
-                this.menuList();
+                this.buttonList();
               } else {
                 this.$message({
                   type: "error",
@@ -486,3 +529,17 @@ export default {
   }
 };
 </script>
+<style>
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
+</style>

@@ -16,6 +16,14 @@ export function getAllMenu(params) {
   })
 }
 
+export function getButtonAll(params) {
+  return request({
+    url: process.env.ADMIN_API + '/categoryMenu/getButtonAll',
+    method: 'get',
+    params
+  })
+}
+
 export function addMenu(params) {
   return request({
     url: process.env.ADMIN_API + '/categoryMenu/add',

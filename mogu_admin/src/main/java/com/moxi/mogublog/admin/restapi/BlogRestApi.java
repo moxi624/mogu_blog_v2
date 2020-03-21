@@ -10,6 +10,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -220,6 +221,7 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加博客")
     @ApiOperation(value = "增加博客", notes = "增加博客", response = String.class)
     @PostMapping("/add")
@@ -273,6 +275,7 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑博客")
     @ApiOperation(value = "编辑博客", notes = "编辑博客", response = String.class)
     @PostMapping("/edit")
@@ -328,6 +331,7 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "推荐博客排序调整")
     @ApiOperation(value = "推荐博客排序调整", notes = "推荐博客排序调整", response = String.class)
     @PostMapping("/editBatch")
@@ -378,6 +382,7 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除博客")
     @ApiOperation(value = "删除博客", notes = "删除博客", response = String.class)
     @PostMapping("/delete")
@@ -405,6 +410,7 @@ public class BlogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除选中博客")
     @ApiOperation(value = "删除选中博客", notes = "删除选中博客", response = String.class)
     @PostMapping("/deleteBatch")

@@ -34,6 +34,12 @@ public class CategoryMenuVO extends BaseVO<CategoryMenuVO> {
     private Integer menuLevel;
 
     /**
+     * 菜单类型 （菜单，按钮）
+     */
+    @IntegerNotNull(groups = {Insert.class, Update.class})
+    private Integer menuType;
+
+    /**
      * 介绍
      */
     private String summary;

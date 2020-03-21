@@ -120,5 +120,13 @@ ALTER TABLE t_feedback ADD feedback_status TINYINT(1) NOT NULL DEFAULT 1 COMMENT
    修改t_user表，增加user_tag字段
    @date 2020年3月18日08:55:44
 */
-ALTER TABLE t_user ADD user_tag TINYINT(1) NOT NULL DEFAULT 0 COMMENT '用户标签：0：普通，1：管理员，2：博主 等';
+ALTER TABLE t_user ADD user_tag TINYINT(1) NOT NULL DEFAULT 0 COMMENT '用户标签：0：普通用户，1：管理员，2：博主 等';
+
+
+/*
+   修改t_category_menu表，增加menu_type 菜单类型字段
+   @date 2020年3月21日08:33:28
+*/
+ALTER TABLE t_category_menu ADD menu_type TINYINT(1) NOT NULL DEFAULT 0 COMMENT '菜单类型 0: 菜单   1: 按钮';
+
 

@@ -18,6 +18,8 @@ import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mougblog.base.enums.EMenuType;
+import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -198,7 +200,14 @@ public class LoginRestApi {
 
         });
 
-        Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
+        // 这里只需要查询菜单，而不查询出按钮
+        QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(SQLConf.UID, categoryMenuUids);
+        queryWrapper.eq(SQLConf.MENU_TYPE, EMenuType.MENU);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        List<CategoryMenu> categoryMenuList = categoryMenuService.list(queryWrapper);
+
+        // Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
 
         List<CategoryMenu> childCategoryMenuList = new ArrayList<>();
         List<String> parentCategoryMenuUids = new ArrayList<>();

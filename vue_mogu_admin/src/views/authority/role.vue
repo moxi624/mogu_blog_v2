@@ -157,13 +157,13 @@ export default {
     }
   },
   methods: {
-
     allMenuList: function () {
       getAllMenu().then(response => {
         console.log(response);
         if (response.code == "success") {
           let data = response.data;
           this.categoryMenuList = data;
+          console.log("得到的全部菜单", this.categoryMenuList)
         }
       });
     },

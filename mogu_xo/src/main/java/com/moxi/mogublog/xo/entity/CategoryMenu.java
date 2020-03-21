@@ -32,6 +32,11 @@ public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparabl
     private Integer menuLevel;
 
     /**
+     * 菜单类型 （菜单，按钮）
+     */
+    private Integer menuType;
+
+    /**
      * 介绍
      */
     private String summary;

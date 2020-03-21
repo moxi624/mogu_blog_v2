@@ -96,7 +96,7 @@ public class RoleRestApi {
 
     @OperationLogger(value = "更新角色信息")
     @ApiOperation(value = "更新角色信息", notes = "更新角色信息")
-    @PostMapping("/update")
+    @PostMapping("/edit")
     public String update(@Validated({Update.class}) @RequestBody RoleVO roleVO, BindingResult result) {
 
         // 参数校验

@@ -18,7 +18,7 @@ export function addRole(params) {
 
 export function editRole(params) {
   return request({
-    url: process.env.ADMIN_API + '/role/update',
+    url: process.env.ADMIN_API + '/role/edit',
     method: 'post',
     data: params
   })

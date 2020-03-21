@@ -51,6 +51,14 @@ service.interceptors.response.use(
         })
       })
       return Promise.reject('error')
+    }else if(res.code === 402){
+      // 接口没有权限访问时
+      Message({
+        message: res.data,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject('error')
     } else {
 
       console.log("错误信息", res)

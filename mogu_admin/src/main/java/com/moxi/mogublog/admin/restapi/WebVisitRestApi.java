@@ -40,7 +40,7 @@ import java.util.*;
  */
 @Api(value = "用户访问RestApi", tags = {"用户访问RestApi"})
 @RestController
-@RequestMapping("/webConfig")
+@RequestMapping("/webVisit")
 @Slf4j
 public class WebVisitRestApi {
 

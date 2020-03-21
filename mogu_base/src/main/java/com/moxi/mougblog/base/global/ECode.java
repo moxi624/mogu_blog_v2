@@ -24,6 +24,11 @@ public class ECode {
     public static final Integer UNAUTHORIZED = 401;
 
     /**
+     * 无操作权限
+     */
+    public static final Integer NO_OPERATION_AUTHORITY = 402;
+
+    /**
      * 服务器出现异常
      */
     public static final Integer SERVER_ERROR = 500;

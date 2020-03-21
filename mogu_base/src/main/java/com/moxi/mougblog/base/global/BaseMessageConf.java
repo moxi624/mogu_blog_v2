@@ -42,6 +42,9 @@ public class BaseMessageConf {
     public final static String INVALID_TOKEN = "token令牌未被识别";
 
     public static final String DATA_NO_PRIVILEGE = "该数据无权限访问";
+
+    public static final String RESTAPI_NO_PRIVILEGE = "您无权进行该操作";
+
     public static final String ACCESS_NO_PRIVILEGE = "该资源无权限访问";
     public static final String LOGIN_TIMEOUT = "您已退出，请重新登录";
 }
