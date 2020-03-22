@@ -8,12 +8,12 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.vo.LinkVO;
-import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -50,6 +50,7 @@ public class LinkRestApi {
     @Autowired
     LinkService linkService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取友链列表", notes = "获取友链列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody LinkVO linkVO, BindingResult result) {
@@ -76,6 +77,7 @@ public class LinkRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加友链")
     @ApiOperation(value = "增加友链", notes = "增加友链", response = String.class)
     @PostMapping("/add")
@@ -96,6 +98,7 @@ public class LinkRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑友链")
     @ApiOperation(value = "编辑友链", notes = "编辑友链", response = String.class)
     @PostMapping("/edit")
@@ -114,6 +117,7 @@ public class LinkRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除友链")
     @ApiOperation(value = "删除友链", notes = "删除友链", response = String.class)
     @PostMapping("/delete")
@@ -128,6 +132,7 @@ public class LinkRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "置顶友链", notes = "置顶友链", response = String.class)
     @PostMapping("/stick")
     public String stick(@Validated({Delete.class}) @RequestBody LinkVO linkVO, BindingResult result) {

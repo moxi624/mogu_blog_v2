@@ -133,8 +133,6 @@ export default {
         children: "childCategoryMenu",
         label: "name"
       },
-      //默认选中的key
-      defaultCheckedKeys: [],
       rules: {
         roleName: [
           {required: true, message: '角色名称不能为空', trigger: 'blur'},
@@ -212,7 +210,7 @@ export default {
       this.form = this.getFormObject();
       setTimeout(() => {
         this.$refs.tree.setCheckedKeys(this.form.categoryMenuUids);
-      }, 0);
+      }, 100);
       this.isEditForm = false;
     },
 
@@ -223,7 +221,7 @@ export default {
       this.form = row;
       setTimeout(() => {
         this.$refs.tree.setCheckedKeys(this.form.categoryMenuUids);
-      }, 0);
+      }, 100);
     },
 
     handleDelete: function (row) {
@@ -272,6 +270,16 @@ export default {
         } else {
           //得到选中树的UID
           var categoryMenuUids = this.$refs.tree.getCheckedKeys();
+          console.log("全选UID", categoryMenuUids)
+
+          // // 得到的半选UID(也就是父级菜单)
+          // var halfCategoryMenuUids = this.$refs.tree.getHalfCheckedKeys();
+          // console.log("半选UID", halfCategoryMenuUids)
+          //
+          // // 合并
+          // categoryMenuUids = categoryMenuUids.concat(halfCategoryMenuUids);
+          // console.log("合并后的", categoryMenuUids)
+
           this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
           if (this.isEditForm) {
             console.log("form", this.form);

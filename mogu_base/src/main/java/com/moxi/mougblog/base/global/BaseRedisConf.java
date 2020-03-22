@@ -68,4 +68,9 @@ public class BaseRedisConf {
      */
     public final static String USER_PUBLISH_SPAM_COMMENT_COUNT = "USER_PUBLISH_SPAM_COMMENT_COUNT";
 
+    /**
+     * 管理员访问菜单
+     */
+    public final static String ADMIN_VISIT_MENU = "ADMIN_VISIT_MENU";
+
 }

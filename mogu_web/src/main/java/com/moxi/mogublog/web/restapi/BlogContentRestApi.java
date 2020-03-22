@@ -169,7 +169,7 @@ public class BlogContentRestApi {
         String ip = IpUtils.getIpAddr(request);
 
         //判断该IP是否点赞过
-        if(request.getAttribute(SysConf.USER_UID) != null) {
+        if (request.getAttribute(SysConf.USER_UID) != null) {
             // 如果用户登录了
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
             QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
@@ -178,7 +178,7 @@ public class BlogContentRestApi {
             queryWrapper.eq(SQLConf.TYPE, ECommentType.PRAISE);
             queryWrapper.last("LIMIT 1");
             Comment praise = commentService.getOne(queryWrapper);
-            if(praise != null) {
+            if (praise != null) {
                 return ResultUtil.result(SysConf.ERROR, "您已经点过赞了！");
             }
         } else {
@@ -218,7 +218,7 @@ public class BlogContentRestApi {
         }
 
         // 已登录用户，向评论表添加点赞数据
-        if(request.getAttribute(SysConf.USER_UID) != null) {
+        if (request.getAttribute(SysConf.USER_UID) != null) {
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
             Comment comment = new Comment();
             comment.setUserUid(userUid);

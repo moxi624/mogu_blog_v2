@@ -9,6 +9,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -56,6 +57,7 @@ public class PictureSortRestApi {
     @Autowired
     PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取图片分类列表", notes = "获取图片分类列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
     public String getList(HttpServletRequest request,
@@ -111,6 +113,7 @@ public class PictureSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加图片分类")
     @ApiOperation(value = "增加图片分类", notes = "增加图片分类", response = String.class)
     @PostMapping("/add")
@@ -131,6 +134,7 @@ public class PictureSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑图片分类")
     @ApiOperation(value = "编辑图片分类", notes = "编辑图片分类", response = String.class)
     @PostMapping("/edit")
@@ -152,6 +156,7 @@ public class PictureSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除图片分类")
     @ApiOperation(value = "删除图片分类", notes = "删除图片分类", response = String.class)
     @PostMapping("/delete")
@@ -177,6 +182,7 @@ public class PictureSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "置顶分类")
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)
     @PostMapping("/stick")

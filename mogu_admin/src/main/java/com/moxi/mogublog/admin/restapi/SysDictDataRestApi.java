@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -59,6 +60,7 @@ public class SysDictDataRestApi {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取字典数据列表", notes = "获取字典数据列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody SysDictDataVO sysDictDataVO, BindingResult result) {
@@ -110,6 +112,7 @@ public class SysDictDataRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加字典数据")
     @ApiOperation(value = "增加字典数据", notes = "增加字典数据", response = String.class)
     @PostMapping("/add")
@@ -148,6 +151,7 @@ public class SysDictDataRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑字典数据")
     @ApiOperation(value = "编辑字典数据", notes = "编辑字典数据", response = String.class)
     @PostMapping("/edit")
@@ -193,6 +197,7 @@ public class SysDictDataRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量删除字典数据")
     @ApiOperation(value = "批量删除字典数据", notes = "批量删除字典数据", response = String.class)
     @PostMapping("/deleteBatch")

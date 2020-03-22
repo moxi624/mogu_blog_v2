@@ -9,6 +9,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -62,6 +63,7 @@ public class ResourceSortRestApi {
     @Autowired
     PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取资源分类列表", notes = "获取资源分类列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
@@ -112,6 +114,7 @@ public class ResourceSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加资源分类")
     @ApiOperation(value = "增加资源分类", notes = "增加资源分类", response = String.class)
     @PostMapping("/add")
@@ -141,6 +144,7 @@ public class ResourceSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑资源分类")
     @ApiOperation(value = "编辑资源分类", notes = "编辑资源分类", response = String.class)
     @PostMapping("/edit")
@@ -172,6 +176,7 @@ public class ResourceSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量删除资源分类")
     @ApiOperation(value = "批量删除资源分类", notes = "批量删除资源分类", response = String.class)
     @PostMapping("/deleteBatch")
@@ -212,6 +217,7 @@ public class ResourceSortRestApi {
         }
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "置顶资源分类")
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)
     @PostMapping("/stick")

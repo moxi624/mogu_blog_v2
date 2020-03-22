@@ -1,11 +1,13 @@
 package com.moxi.mogublog.web.restapi;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.MD5Utils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -22,12 +24,10 @@ import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
-import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,8 +64,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AuthRestApi {
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
     WebUtils webUtils;
     @Autowired
     SystemConfigService systemConfigService;
@@ -73,6 +71,8 @@ public class AuthRestApi {
     FeedbackService feedbackService;
     @Autowired
     LinkService linkService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -135,7 +135,7 @@ public class AuthRestApi {
         Map<String, Object> data = JsonUtils.jsonToMap(JsonUtils.objectToJson(map.get(SysConf.DATA)));
         Map<String, Object> token = new HashMap<>();
         String accessToken = "";
-        if(data == null || data.get(SysConf.TOKEN) == null) {
+        if (data == null || data.get(SysConf.TOKEN) == null) {
             // 跳转到500错误页面
             httpServletResponse.sendRedirect(webSiteUrl + "500");
             return;
@@ -328,7 +328,7 @@ public class AuthRestApi {
         user.setOccupation(userVO.getOccupation());
 
         // 如果开启邮件通知，必须保证邮箱已存在
-        if(userVO.getStartEmailNotification() == SysConf.ONE && !StringUtils.isNotEmpty(user.getEmail())) {
+        if (userVO.getStartEmailNotification() == SysConf.ONE && !StringUtils.isNotEmpty(user.getEmail())) {
             return ResultUtil.result(SysConf.ERROR, "必须填写并绑定邮箱后，才能开启评论邮件通知~");
         }
         user.setStartEmailNotification(userVO.getStartEmailNotification());
@@ -338,7 +338,7 @@ public class AuthRestApi {
         user.setPhotoUrl(userVO.getPhotoUrl());
 
         // 判断用户是否更改了邮箱
-        if(userVO.getEmail() != null && !userVO .getEmail().equals(user.getEmail())){
+        if (userVO.getEmail() != null && !userVO.getEmail().equals(user.getEmail())) {
 
             user.setEmail(userVO.getEmail());
 
@@ -376,19 +376,22 @@ public class AuthRestApi {
         queryWrapper.last("LIMIT 1");
         Link existLink = linkService.getOne(queryWrapper);
 
-        if(existLink != null) {
+        if (existLink != null) {
             Integer linkStatus = existLink.getLinkStatus();
             String message = "";
             switch (linkStatus) {
                 case 0: {
                     message = MessageConf.BLOG_LINK_IS_EXIST;
-                } break;
+                }
+                break;
                 case 1: {
                     message = MessageConf.BLOG_LINK_IS_PUBLISH;
-                } break;
+                }
+                break;
                 case 2: {
                     message = MessageConf.BLOG_LINK_IS_NO_PUBLISH;
-                } break;
+                }
+                break;
             }
             return ResultUtil.result(SysConf.ERROR, message);
         }
@@ -456,7 +459,7 @@ public class AuthRestApi {
 
     @ApiOperation(value = "绑定用户邮箱", notes = "绑定用户邮箱")
     @GetMapping("/bindUserEmail/{token}/{code}")
-    public String bindUserEmail(@PathVariable("token")String token, @PathVariable("code")String code) {
+    public String bindUserEmail(@PathVariable("token") String token, @PathVariable("code") String code) {
 
         String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token);
         if (StringUtils.isEmpty(userInfo)) {
@@ -497,12 +500,12 @@ public class AuthRestApi {
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
                         "<p>欢迎您给蘑菇博客账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
-                        "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/"+ token+"/"+ user.getValidCode() +"\">点击这里</a>" + "</p>\r\n" +
+                        "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/" + token + "/" + user.getValidCode() + "\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" "+ dataWebsiteUrl +"\">@" + projectName + "</a>\n"+
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -523,6 +526,7 @@ public class AuthRestApi {
 
     /**
      * 鉴权
+     *
      * @param source
      * @return
      */

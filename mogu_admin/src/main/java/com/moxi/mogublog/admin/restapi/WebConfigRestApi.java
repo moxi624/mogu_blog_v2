@@ -7,6 +7,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -45,6 +46,7 @@ public class WebConfigRestApi {
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取网站配置", notes = "获取网站配置")
     @GetMapping("/getWebConfig")
     public String getWebConfig() {
@@ -79,6 +81,7 @@ public class WebConfigRestApi {
         return ResultUtil.result(SysConf.SUCCESS, webConfig);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "修改网站配置")
     @ApiOperation(value = "修改网站配置", notes = "修改网站配置")
     @PostMapping("/editWebConfig")

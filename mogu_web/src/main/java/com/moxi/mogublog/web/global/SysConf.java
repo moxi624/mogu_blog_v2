@@ -33,8 +33,8 @@ public final class SysConf extends BaseSysConf {
     public static final String SOURCE = "source";
 
     /**
-     *  评论相关
-      */
+     * 评论相关
+     */
     public static final String COMMENT_LIST = "commentList";
     public static final String REPLY_LIST = "replyList";
 }

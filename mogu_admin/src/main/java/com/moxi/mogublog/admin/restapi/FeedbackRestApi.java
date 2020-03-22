@@ -8,20 +8,18 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.*;
+import com.moxi.mogublog.xo.entity.Feedback;
+import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.FeedbackService;
-import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
-import com.moxi.mogublog.xo.vo.LinkVO;
-import com.moxi.mogublog.xo.vo.TagVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,6 +55,7 @@ public class FeedbackRestApi {
     @Autowired
     UserService userService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取反馈列表", notes = "获取反馈列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody FeedbackVO feedbackVO, BindingResult result) {
@@ -83,7 +82,7 @@ public class FeedbackRestApi {
         List<Feedback> feedbackList = pageList.getRecords();
         List<String> userUids = new ArrayList<>();
         feedbackList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getUserUid())) {
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
                 userUids.add(item.getUserUid());
             }
         });
@@ -95,7 +94,7 @@ public class FeedbackRestApi {
         });
 
         feedbackList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getUserUid())) {
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
                 item.setUser(map.get(item.getUserUid()));
             }
         });
@@ -105,6 +104,7 @@ public class FeedbackRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑反馈")
     @ApiOperation(value = "编辑反馈", notes = "编辑反馈", response = String.class)
     @PostMapping("/edit")
@@ -113,7 +113,7 @@ public class FeedbackRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        if(request.getAttribute(SysConf.ADMIN_UID) != null) {
+        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
             ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
 
@@ -123,13 +123,14 @@ public class FeedbackRestApi {
         feedback.setFeedbackStatus(feedbackVO.getFeedbackStatus());
         feedback.setReply(feedbackVO.getReply());
         feedback.setUpdateTime(new Date());
-        if(request.getAttribute(SysConf.ADMIN_UID) != null) {
+        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
             feedback.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         }
         feedback.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量删除反馈")
     @ApiOperation(value = "批量删除反馈", notes = "批量删除反馈", response = String.class)
     @PostMapping("/deleteBatch")
@@ -137,7 +138,7 @@ public class FeedbackRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        if(request.getAttribute(SysConf.ADMIN_UID) != null) {
+        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
             ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
         final String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();

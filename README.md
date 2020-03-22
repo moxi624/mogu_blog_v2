@@ -40,7 +40,9 @@
 
 > 阿里云小站 限量爆款 低至69元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) `(仅限新用户)`
 >
-> 阿里云【采购季】2核4G5M/3年仅需935.55元  [点我进入](https://www.aliyun.com/sale-season/2020/procurement-new-members?userCode=w7aungxw) `(仅限新用户)`
+> 阿里云【采购季】2核4G 5M / 3年仅需935.55元  [点我进入](https://www.aliyun.com/sale-season/2020/procurement-new-members?userCode=w7aungxw) `(仅限新用户)`
+>
+> 阿里云翼计划 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
 ## 项目特点
 
@@ -53,7 +55,7 @@
 - 引入ElasticSearch和Solr作为全文检索服务，并支持可插拔配置
 - 引入Github Actions 完成蘑菇博客的持续集成、持续部署。
 - 引入七牛云对象存储，同时支持本地文件存储
-- 引入RBAC权限管理设计，灵活的权限控制，满足绝大部分的权限需求。(后期考虑到按钮级别)
+- 引入RBAC权限管理设计，灵活的权限控制，按钮级别的细粒度权限控制，满足绝大部分的权限需求
 - 引入Zipkin链路追踪，聚合各业务系统调用延迟数据，可以一眼看出延迟高的服务
 - 自定义参数校验注解，轻松实现后端参数校验
 
@@ -239,6 +241,7 @@
 - [x] 集成ElasticSearch和Solr
 - [x] 将图片存储在七牛云中
 - [x] 写一个评论模块，用于替换搜狐畅言
+- [x] 按钮级别的细粒度权限控制
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块

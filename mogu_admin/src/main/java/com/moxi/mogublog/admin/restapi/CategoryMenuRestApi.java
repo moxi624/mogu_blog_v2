@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.MessageConf;
+import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.CategoryMenu;
@@ -44,8 +47,12 @@ import java.util.*;
 public class CategoryMenuRestApi {
 
     @Autowired
+    RedisUtil redisUtil;
+
+    @Autowired
     CategoryMenuService categoryMenuService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取菜单列表", notes = "获取菜单列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
     public String getList(@Validated({GetList.class}) @RequestBody CategoryMenuVO categoryMenuVO, BindingResult result) {
@@ -126,7 +133,6 @@ public class CategoryMenuRestApi {
         Collection<CategoryMenu> childList = categoryMenuService.list(childWrapper);
 
 
-
         //获取所有的二级菜单，去寻找他的子按钮
         List<String> secondMenuUids = new ArrayList<>();
         childList.forEach(item -> {
@@ -142,8 +148,8 @@ public class CategoryMenuRestApi {
 
         Map<String, List<CategoryMenu>> map = new HashMap<>();
         buttonList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getParentUid())) {
-                if(map.get(item.getParentUid()) == null) {
+            if (StringUtils.isNotEmpty(item.getParentUid())) {
+                if (map.get(item.getParentUid()) == null) {
                     List<CategoryMenu> tempList = new ArrayList<>();
                     tempList.add(item);
                     map.put(item.getParentUid(), tempList);
@@ -157,7 +163,7 @@ public class CategoryMenuRestApi {
 
         // 给二级菜单设置三级按钮
         childList.forEach(item -> {
-            if(map.get(item.getUid()) != null) {
+            if (map.get(item.getUid()) != null) {
                 List<CategoryMenu> tempList = map.get(item.getUid());
                 Collections.sort(tempList, new Comparator<CategoryMenu>() {
 
@@ -186,7 +192,6 @@ public class CategoryMenuRestApi {
         });
 
 
-
         // 给一级菜单设置二级菜单
         for (CategoryMenu parentItem : list) {
 
@@ -198,28 +203,7 @@ public class CategoryMenuRestApi {
                     tempList.add(item);
                 }
             }
-            Collections.sort(tempList, new Comparator<CategoryMenu>() {
-
-                /*
-                 * int compare(CategoryMenu p1, CategoryMenu p2) 返回一个基本类型的整型，
-                 * 返回负数表示：p1 小于p2，
-                 * 返回0 表示：p1和p2相等，
-                 * 返回正数表示：p1大于p2
-                 */
-                @Override
-                public int compare(CategoryMenu o1, CategoryMenu o2) {
-
-                    //按照CategoryMenu的Sort进行降序排列
-                    if (o1.getSort() > o2.getSort()) {
-                        return -1;
-                    }
-                    if (o1.getSort().equals(o2.getSort())) {
-                        return 0;
-                    }
-                    return 1;
-                }
-
-            });
+            Collections.sort(tempList);
             parentItem.setChildCategoryMenu(tempList);
         }
 
@@ -249,11 +233,14 @@ public class CategoryMenuRestApi {
         childWrapper.in(SQLConf.PARENT_UID, ids);
         childWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Collection<CategoryMenu> childList = categoryMenuService.list(childWrapper);
-
+        Set<String> secondUidSet = new HashSet<>();
         Map<String, List<CategoryMenu>> map = new HashMap<>();
         childList.forEach(item -> {
-            if(StringUtils.isNotEmpty(item.getParentUid())) {
-                if(map.get(item.getParentUid()) == null) {
+            if (StringUtils.isNotEmpty(item.getParentUid())) {
+
+                secondUidSet.add(item.getParentUid());
+
+                if (map.get(item.getParentUid()) == null) {
                     List<CategoryMenu> tempList = new ArrayList<>();
                     tempList.add(item);
                     map.put(item.getParentUid(), tempList);
@@ -265,39 +252,30 @@ public class CategoryMenuRestApi {
             }
         });
 
+        // 过滤不在Button列表中的二级菜单
+        List<CategoryMenu> secondCategoryMenuList = new ArrayList<>();
+        for (CategoryMenu secondCategoryMenu : list) {
+            for (String uid : secondUidSet) {
+                if (secondCategoryMenu.getUid().equals(uid)) {
+                    secondCategoryMenuList.add(secondCategoryMenu);
+                    break;
+                }
+            }
+        }
+
         // 给二级菜单设置三级按钮
-        list.forEach(item -> {
-            if(map.get(item.getUid()) != null) {
+        secondCategoryMenuList.forEach(item -> {
+            if (map.get(item.getUid()) != null) {
                 List<CategoryMenu> tempList = map.get(item.getUid());
-                Collections.sort(tempList, new Comparator<CategoryMenu>() {
-
-                    /*
-                     * int compare(CategoryMenu p1, CategoryMenu p2) 返回一个基本类型的整型，
-                     * 返回负数表示：p1 小于p2，
-                     * 返回0 表示：p1和p2相等，
-                     * 返回正数表示：p1大于p2
-                     */
-                    @Override
-                    public int compare(CategoryMenu o1, CategoryMenu o2) {
-
-                        //按照CategoryMenu的Sort进行降序排列
-                        if (o1.getSort() > o2.getSort()) {
-                            return -1;
-                        }
-                        if (o1.getSort().equals(o2.getSort())) {
-                            return 0;
-                        }
-                        return 1;
-                    }
-
-                });
+                Collections.sort(tempList);
                 item.setChildCategoryMenu(tempList);
             }
         });
 
-        return ResultUtil.result(SysConf.SUCCESS, list);
+        return ResultUtil.result(SysConf.SUCCESS, secondCategoryMenuList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加菜单")
     @ApiOperation(value = "增加菜单", notes = "增加菜单", response = String.class)
     @PostMapping("/add")
@@ -324,6 +302,7 @@ public class CategoryMenuRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "编辑菜单", notes = "编辑菜单", response = String.class)
     @PostMapping("/edit")
     public String edit(@Validated({Update.class}) @RequestBody CategoryMenuVO categoryMenuVO, BindingResult result) {
@@ -342,9 +321,14 @@ public class CategoryMenuRestApi {
         categoryMenu.setUrl(categoryMenuVO.getUrl());
         categoryMenu.setIsShow(categoryMenuVO.getIsShow());
         categoryMenu.updateById();
+
+        // 修改成功后，需要删除redis中所有的admin访问路径
+        deleteAdminVisitUrl();
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除菜单")
     @ApiOperation(value = "删除菜单", notes = "删除菜单", response = String.class)
     @PostMapping("/delete")
@@ -364,6 +348,10 @@ public class CategoryMenuRestApi {
         CategoryMenu categoryMenu = categoryMenuService.getById(categoryMenuVO.getUid());
         categoryMenu.setStatus(EStatus.DISABLED);
         categoryMenu.updateById();
+
+        // 修改成功后，需要删除redis中所有的admin访问路径
+        deleteAdminVisitUrl();
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
@@ -373,6 +361,7 @@ public class CategoryMenuRestApi {
      * @author xzx19950624@qq.com
      * @date 2018年11月29日上午9:22:59
      */
+    @AuthorityVerify
     @OperationLogger(value = "置顶菜单")
     @ApiOperation(value = "置顶菜单", notes = "置顶菜单", response = String.class)
     @PostMapping("/stick")
@@ -410,6 +399,14 @@ public class CategoryMenuRestApi {
         categoryMenu.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+    }
+
+    /**
+     * 删除Redis中管理员的访问路径
+     */
+    private void deleteAdminVisitUrl() {
+        Set<String> keys = redisUtil.keys(RedisConf.ADMIN_VISIT_MENU + "*");
+        redisUtil.delete(keys);
     }
 
 }

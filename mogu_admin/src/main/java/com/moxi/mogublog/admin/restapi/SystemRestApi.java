@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -49,6 +50,7 @@ public class SystemRestApi {
      * @date 2018年11月6日下午8:57:48
      */
 
+    @AuthorityVerify
     @ApiOperation(value = "获取我的信息", notes = "获取我的信息")
     @GetMapping("/getMe")
     public String getMe(HttpServletRequest request) {
@@ -70,6 +72,7 @@ public class SystemRestApi {
         return ResultUtil.result(SysConf.SUCCESS, admin);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑我的信息")
     @ApiOperation(value = "编辑我的信息", notes = "获取我的信息")
     @PostMapping("/editMe")
@@ -80,6 +83,7 @@ public class SystemRestApi {
         return ResultUtil.result(SysConf.SUCCESS, save);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "修改密码", notes = "修改密码")
     @PostMapping("/changePwd")
     public String changePwd(HttpServletRequest request,

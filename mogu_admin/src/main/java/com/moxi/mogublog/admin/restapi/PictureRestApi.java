@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -66,6 +67,7 @@ public class PictureRestApi {
     @Value(value = "${data.image.url}")
     private String IMG_HOST;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取图片列表", notes = "获取图片列表", response = String.class)
     @RequestMapping(value = "/getList", method = RequestMethod.GET)
     public String getList(HttpServletRequest request,
@@ -120,6 +122,7 @@ public class PictureRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加图片")
     @ApiOperation(value = "增加图片", notes = "增加图片", response = String.class)
     @PostMapping("/add")
@@ -145,6 +148,7 @@ public class PictureRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑图片")
     @ApiOperation(value = "编辑图片", notes = "编辑图片", response = String.class)
     @PostMapping("/edit")
@@ -184,6 +188,7 @@ public class PictureRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除图片")
     @ApiOperation(value = "删除图片", notes = "删除图片", response = String.class)
     @PostMapping("/delete")
@@ -202,6 +207,7 @@ public class PictureRestApi {
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "通过图片Uid将图片设为封面")
     @ApiOperation(value = "通过图片Uid将图片设为封面", notes = "通过图片Uid将图片设为封面", response = String.class)
     @PostMapping("/setCover")

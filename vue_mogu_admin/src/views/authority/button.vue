@@ -85,7 +85,7 @@
               <el-table-column fixed="right" min-width="230">
                 <template slot-scope="scope_child">
                   <el-button @click="handleStick(scope_child.row)" type="warning" size="small">置顶</el-button>
-                  <el-button @click="handleEdit(scope_child.row)" type="primary" size="small">编辑</el-button>
+                  <el-button @click="handleEdit(scope.row, scope_child.row)" type="primary" size="small">编辑</el-button>
                   <el-button @click="handleDelete(scope_child.row)" type="danger" size="small">删除</el-button>
                 </template>
               </el-table-column>
@@ -395,10 +395,15 @@ export default {
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
-    handleEdit: function(row) {
+    handleEdit: function(parentRow, row) {
+
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      var parentUid = row.parentUid;
+      // 设置级联的父菜单名
+      var parentUid = []
+      parentUid.push(parentRow.parentUid)
+      parentUid.push(parentRow.uid)
+      this.buttonParentUid = parentUid
       this.form = row;
     },
     handleStick: function(row) {
@@ -486,6 +491,7 @@ export default {
               type: "error",
               message: "请选中父菜单"
             })
+            return;
           }
 
           if (this.isEditForm) {

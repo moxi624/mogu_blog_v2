@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -45,6 +46,7 @@ public class LogRestApi {
     @Autowired
     ExceptionLogService exceptionLogService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取操作日志列表", notes = "获取操作日志列表", response = String.class)
     @RequestMapping(value = "/getLogList", method = RequestMethod.GET)
     public String getLogList(HttpServletRequest request,
@@ -81,6 +83,7 @@ public class LogRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "获取系统异常列表", notes = "获取系统异常列表", response = String.class)
     @RequestMapping(value = "/getExceptionList", method = RequestMethod.GET)
     public String getExceptionList(HttpServletRequest request,

@@ -294,7 +294,9 @@
         })
           .then(() => {
             let params = [];
-            params.push(row.uid);
+            var feedback = {}
+            feedback.uid = row.uid
+            params.push(feedback);
             deleteBatchFeedback(params).then(response => {
               console.log(response);
               this.$message({

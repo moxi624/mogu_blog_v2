@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.restapi;
 import com.moxi.mogublog.admin.feign.SearchFeignClient;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import io.swagger.annotations.Api;
@@ -31,6 +32,7 @@ public class SearchIndexRestApi {
     @Autowired
     private SearchFeignClient searchFeignClient;
 
+    @AuthorityVerify
     @OperationLogger(value = "初始化ElasticSearch索引")
     @ApiOperation(value = "初始化ElasticSearch索引", notes = "初始化solr索引")
     @PostMapping("/initElasticIndex")
@@ -45,6 +47,7 @@ public class SearchIndexRestApi {
         }
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "初始化Solr索引")
     @ApiOperation(value = "初始化Solr索引", notes = "初始化solr索引")
     @PostMapping("/initSolrIndex")

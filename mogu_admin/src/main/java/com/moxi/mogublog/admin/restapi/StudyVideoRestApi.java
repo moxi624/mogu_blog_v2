@@ -9,6 +9,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -60,6 +61,7 @@ public class StudyVideoRestApi {
     @Autowired
     PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取学习视频列表", notes = "获取学习视频列表", response = String.class)
     @PostMapping(value = "/getList")
     public String getList(@Validated({GetList.class}) @RequestBody StudyVideoVO studyVideoVO, BindingResult result) {
@@ -117,6 +119,7 @@ public class StudyVideoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加学习视频")
     @ApiOperation(value = "增加学习视频", notes = "增加学习视频", response = String.class)
     @PostMapping("/add")
@@ -136,6 +139,7 @@ public class StudyVideoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑学习视频")
     @ApiOperation(value = "编辑学习视频", notes = "编辑学习视频", response = String.class)
     @PostMapping("/edit")
@@ -155,6 +159,7 @@ public class StudyVideoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除学习视频")
     @ApiOperation(value = "删除学习视频", notes = "删除学习视频", response = String.class)
     @PostMapping("/deleteBatch")

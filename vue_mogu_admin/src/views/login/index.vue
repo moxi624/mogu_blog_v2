@@ -120,11 +120,11 @@ export default {
   mounted() {
     // mounted钩子函数，dom已经渲染完毕，可以直接获取到dom对象进行聚焦
 
-    // this.$refs.userNameInput.focus()
+    this.$refs.userNameInput.focus()
   },
   created() {
     // created，dom还未开始渲染，因此需要使用this.$nextTick 将其放置在下一个dom渲染操作时执行
-    this.$refs.userNameInput.focus()
+    // this.$refs.userNameInput.focus()
   },
   methods: {
     inputFocus: function() {

@@ -19,7 +19,6 @@ import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mougblog.base.enums.EMenuType;
-import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -200,36 +199,47 @@ public class LoginRestApi {
 
         });
 
-        // 这里只需要查询菜单，而不查询出按钮
-        QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in(SQLConf.UID, categoryMenuUids);
-        queryWrapper.eq(SQLConf.MENU_TYPE, EMenuType.MENU);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        List<CategoryMenu> categoryMenuList = categoryMenuService.list(queryWrapper);
+        Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
+        // 从三级级分类中查询出 二级分类
+        List<CategoryMenu> buttonList = new ArrayList<>();
+        Set<String> secondMenuUidList = new HashSet<>();
+        categoryMenuList.forEach(item -> {
+            // 查询二级分类
+            if (item.getMenuType() == EMenuType.MENU && item.getMenuLevel() == SysConf.TWO) {
+                secondMenuUidList.add(item.getUid());
+            }
+            // 从三级分类中，得到二级分类
+            if (item.getMenuType() == EMenuType.BUTTON && StringUtils.isNotEmpty(item.getParentUid())) {
+                secondMenuUidList.add(item.getParentUid());
+            }
+        });
 
-        // Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
-
-        List<CategoryMenu> childCategoryMenuList = new ArrayList<>();
+        Collection<CategoryMenu> childCategoryMenuList = new ArrayList<>();
+        Collection<CategoryMenu> parentCategoryMenuList = new ArrayList<>();
         List<String> parentCategoryMenuUids = new ArrayList<>();
 
-        categoryMenuList.forEach(item -> {
+        if (secondMenuUidList.size() > 0) {
+            childCategoryMenuList = categoryMenuService.listByIds(secondMenuUidList);
+        }
 
+        childCategoryMenuList.forEach(item -> {
             //选出所有的二级分类
-            if (item.getMenuLevel() == 2) {
+            if (item.getMenuLevel() == SysConf.TWO) {
 
                 if (StringUtils.isNotEmpty(item.getParentUid())) {
                     parentCategoryMenuUids.add(item.getParentUid());
                 }
-                childCategoryMenuList.add(item);
             }
-
         });
 
-        Collection<CategoryMenu> parentCategoryMenuList = categoryMenuService.listByIds(parentCategoryMenuUids);
+        if (parentCategoryMenuUids.size() > 0) {
+            parentCategoryMenuList = categoryMenuService.listByIds(parentCategoryMenuUids);
+        }
+
         List<CategoryMenu> list = new ArrayList<>(parentCategoryMenuList);
+
         //对parent进行排序
         Collections.sort(list);
-
         map.put(SysConf.PARENT_LIST, list);
         map.put(SysConf.SON_LIST, childCategoryMenuList);
         return ResultUtil.result(SysConf.SUCCESS, map);

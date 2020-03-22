@@ -58,11 +58,11 @@ import java.util.concurrent.TimeUnit;
 public class CommentRestApi {
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
     RedisUtil redisUtil;
     @Autowired
     WebUtils webUtils;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Autowired
     private WebVisitService webVisitService;
     @Autowired
@@ -226,7 +226,7 @@ public class CommentRestApi {
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         // 查找出 我的评论 和 我的回复
-        queryWrapper.and(wrapper ->wrapper.eq(SQLConf.USER_UID, requestUserUid).or().eq(SQLConf.TO_USER_UID, requestUserUid));
+        queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_UID, requestUserUid).or().eq(SQLConf.TO_USER_UID, requestUserUid));
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
         List<Comment> list = pageList.getRecords();
 
@@ -299,14 +299,14 @@ public class CommentRestApi {
 
 
             // 设置sourceName
-            if(StringUtils.isNotEmpty(item.getSource())) {
+            if (StringUtils.isNotEmpty(item.getSource())) {
                 item.setSourceName(ECommentSource.valueOf(item.getSource()).getName());
             }
 
-            if(requestUserUid.equals(item.getUserUid())) {
+            if (requestUserUid.equals(item.getUserUid())) {
                 commentList.add(item);
             }
-            if(requestUserUid.equals(item.getToUserUid())) {
+            if (requestUserUid.equals(item.getToUserUid())) {
                 replyList.add(item);
             }
         });
@@ -320,12 +320,13 @@ public class CommentRestApi {
 
     /**
      * 获取用户点赞信息
+     *
      * @return
      */
     @ApiOperation(value = "获取用户点赞信息", notes = "增加评论")
     @PostMapping("/getPraiseListByUser")
     public String getPraiseListByUser(@ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                               @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+                                      @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
         HttpServletRequest request = RequestHolder.getRequest();
         if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
@@ -348,7 +349,7 @@ public class CommentRestApi {
             blogUids.add(item.getBlogUid());
         });
         Map<String, Blog> blogMap = new HashMap<>();
-        if(blogUids.size() > 0) {
+        if (blogUids.size() > 0) {
             Collection<Blog> blogList = blogService.listByIds(blogUids);
             blogList.forEach(blog -> {
                 // 并不需要content内容
@@ -358,7 +359,7 @@ public class CommentRestApi {
         }
 
         praiseList.forEach(item -> {
-            if(blogMap.get(item.getBlogUid()) != null) {
+            if (blogMap.get(item.getBlogUid()) != null) {
                 item.setBlog(blogMap.get(item.getBlogUid()));
             }
         });
@@ -423,11 +424,11 @@ public class CommentRestApi {
         }
 
         // 判断被评论的用户，是否开启了评论邮件提醒
-        if(StringUtils.isNotEmpty(commentVO.getToUserUid())) {
+        if (StringUtils.isNotEmpty(commentVO.getToUserUid())) {
             User toUser = userService.getById(commentVO.getToUserUid());
-            if(toUser.getStartEmailNotification() == SysConf.ONE) {
+            if (toUser.getStartEmailNotification() == SysConf.ONE) {
                 Comment toComment = commentService.getById(commentVO.getToUid());
-                if(toComment!= null && StringUtils.isNotEmpty(toComment.getContent())) {
+                if (toComment != null && StringUtils.isNotEmpty(toComment.getContent())) {
                     Map<String, String> map = new HashMap<>();
                     map.put(SysConf.EMAIL, toUser.getEmail());
                     map.put(SysConf.TEXT, commentVO.getContent());
@@ -437,12 +438,21 @@ public class CommentRestApi {
                     map.put(SysConf.USER_UID, toUser.getUid());
 
                     // 获取评论跳转的链接
-                    String commentSource  = toComment.getSource();
+                    String commentSource = toComment.getSource();
                     String url = new String();
                     switch (commentSource) {
-                        case "ABOUT": {url = dataWebsiteUrl + "about";} break;
-                        case "BLOG_INFO": {url = dataWebsiteUrl + "info?blogUid=" + toComment.getBlogUid();} break;
-                        case "MESSAGE_BOARD": {url = dataWebsiteUrl + "messageBoard";} break;
+                        case "ABOUT": {
+                            url = dataWebsiteUrl + "about";
+                        }
+                        break;
+                        case "BLOG_INFO": {
+                            url = dataWebsiteUrl + "info?blogUid=" + toComment.getBlogUid();
+                        }
+                        break;
+                        case "MESSAGE_BOARD": {
+                            url = dataWebsiteUrl + "messageBoard";
+                        }
+                        break;
                     }
 
                     map.put(SysConf.URL, url);
@@ -548,20 +558,20 @@ public class CommentRestApi {
 
     @ApiOperation(value = "关闭评论邮件通知", notes = "关闭评论邮件通知")
     @GetMapping("/closeEmailNotification/{userUid}")
-    public String bindUserEmail(@PathVariable("userUid")String userUid) {
+    public String bindUserEmail(@PathVariable("userUid") String userUid) {
 
         User user = userService.getById(userUid);
-        if(user == null) {
+        if (user == null) {
             ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
         user.setStartEmailNotification(0);
         user.updateById();
 
         // 通过user中获取的token，去修改redis中的信息
-        if(StringUtils.isNotEmpty(user.getValidCode())) {
+        if (StringUtils.isNotEmpty(user.getValidCode())) {
             String accessToken = user.getValidCode();
             String userInfo = redisUtil.get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
-            if(StringUtils.isNotEmpty(userInfo)) {
+            if (StringUtils.isNotEmpty(userInfo)) {
                 Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
                 // 关闭邮件通知
                 map.put(SysConf.START_EMAIL_NOTIFICATION, 0);
@@ -607,7 +617,7 @@ public class CommentRestApi {
     private void sendEmail(Map<String, String> map) {
 
         String email = map.get(SysConf.EMAIL);
-        String text =  map.get(SysConf.TEXT);
+        String text = map.get(SysConf.TEXT);
         String toText = map.get(SysConf.TO_TEXT);
         String nickName = map.get(SysConf.NICKNAME);
         String toUserNickName = map.get(SysConf.TO_NICKNAME);
@@ -638,15 +648,15 @@ public class CommentRestApi {
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + email + "\" rel=\"noopener\" target=\"_blank\">" + toUserNickName + "<wbr></a>！</p>\r\n" +
-                        "<p>"+ nickName+" 对您的评论：" + "<a href=\"" + url + "\">" + toText + "</a>" + "   进行了回复</p>\r\n" +
+                        "<p>" + nickName + " 对您的评论：" + "<a href=\"" + url + "\">" + toText + "</a>" + "   进行了回复</p>\r\n" +
                         "\r\n" +
-                        "<p>回复内容为："+ "<a href=\"" + url + "\">" + text + "</a>" +"</p>\r\n" +
+                        "<p>回复内容为：" + "<a href=\"" + url + "\">" + text + "</a>" + "</p>\r\n" +
                         "\r\n" +
-                        "<p>如果邮件通知干扰了您，可以点击右侧链接关闭通知：" + "<a href=\"" + dataWebUrl + "/web/comment/closeEmailNotification/"+ userUid +"\">点击这里</a>" + "</p>\r\n" +
+                        "<p>如果邮件通知干扰了您，可以点击右侧链接关闭通知：" + "<a href=\"" + dataWebUrl + "/web/comment/closeEmailNotification/" + userUid + "\">点击这里</a>" + "</p>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" "+ dataWebsiteUrl +"\">@" + projectName + "</a>\n"+
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +

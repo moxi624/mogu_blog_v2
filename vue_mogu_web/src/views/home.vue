@@ -321,7 +321,7 @@
               </el-card>
             </el-timeline-item>
 
-            <el-timeline-item v-if="replyList.length == 0" placement="top">
+            <el-timeline-item v-if="feedbackList.length == 0" placement="top">
               <el-card>
                 <span style="font-size: 16px">空空如也~</span>
               </el-card>

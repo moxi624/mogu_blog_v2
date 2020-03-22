@@ -6,6 +6,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.SystemConfig;
@@ -35,7 +36,7 @@ public class SystemConfigRestApi {
     @Autowired
     SystemConfigService systemConfigService;
 
-
+    @AuthorityVerify
     @ApiOperation(value = "获取系统配置", notes = "获取系统配置")
     @GetMapping("/getSystemConfig")
     public String getSystemConfig() {
@@ -49,6 +50,7 @@ public class SystemConfigRestApi {
         return ResultUtil.result(SysConf.SUCCESS, SystemConfig);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "修改系统配置")
     @ApiOperation(value = "修改系统配置", notes = "修改系统配置")
     @PostMapping("/editSystemConfig")

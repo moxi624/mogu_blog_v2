@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.SysDictData;
@@ -59,6 +60,7 @@ public class SysDictTypeRestApi {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取字典类型列表", notes = "获取字典类型列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody SysDictTypeVO sysDictTypeVO, BindingResult result) {
@@ -88,6 +90,7 @@ public class SysDictTypeRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加字典类型")
     @ApiOperation(value = "增加字典类型", notes = "增加字典类型", response = String.class)
     @PostMapping("/add")
@@ -119,6 +122,7 @@ public class SysDictTypeRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑字典类型")
     @ApiOperation(value = "编辑字典类型", notes = "编辑字典类型", response = String.class)
     @PostMapping("/edit")
@@ -157,6 +161,7 @@ public class SysDictTypeRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量删除字典类型")
     @ApiOperation(value = "批量删除字典类型", notes = "批量删除字典类型", response = String.class)
     @PostMapping("/deleteBatch")

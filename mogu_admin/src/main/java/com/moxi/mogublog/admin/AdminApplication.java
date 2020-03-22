@@ -27,6 +27,7 @@ import java.util.TimeZone;
 @EnableFeignClients("com.moxi.mogublog.admin.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
+        "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.log",
         "com.moxi.mogublog.admin.util",
         "com.moxi.mogublog.admin.security",

@@ -94,6 +94,7 @@ public class BlogRestApi {
     @Value(value = "${BLOG.FOURTH_COUNT}")
     private Integer BLOG_FOURTH_COUNT;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取博客列表", notes = "获取博客列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody BlogVO blogVO, BindingResult result) {

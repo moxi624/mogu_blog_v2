@@ -9,6 +9,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -66,6 +67,7 @@ public class CommentRestApi {
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表", response = String.class)
     @PostMapping(value = "/getList")
     public String getList(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -160,6 +162,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "增加评论", notes = "增加评论", response = String.class)
     @PostMapping("/add")
     public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -180,6 +183,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "编辑评论", notes = "编辑评论", response = String.class)
     @PostMapping("/edit")
     public String edit(HttpServletRequest request, @Validated({Update.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -199,6 +203,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "删除评论", notes = "删除评论", response = String.class)
     @PostMapping("/delete")
     public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
@@ -212,6 +217,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除选中评论")
     @ApiOperation(value = "删除选中评论", notes = "删除选中评论", response = String.class)
     @PostMapping("/deleteBatch")

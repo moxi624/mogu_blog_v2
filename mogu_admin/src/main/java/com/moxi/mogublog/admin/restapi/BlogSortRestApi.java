@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Blog;
@@ -53,6 +54,7 @@ public class BlogSortRestApi {
     @Autowired
     BlogService blogService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取博客分类列表", notes = "获取博客分类列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
@@ -74,6 +76,7 @@ public class BlogSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加博客分类")
     @ApiOperation(value = "增加博客分类", notes = "增加博客分类", response = String.class)
     @PostMapping("/add")
@@ -100,6 +103,7 @@ public class BlogSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑博客分类")
     @ApiOperation(value = "编辑博客分类", notes = "编辑博客分类", response = String.class)
     @PostMapping("/edit")
@@ -131,6 +135,7 @@ public class BlogSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量删除博客分类")
     @ApiOperation(value = "批量删除博客分类", notes = "批量删除博客分类", response = String.class)
     @PostMapping("/deleteBatch")
@@ -172,6 +177,7 @@ public class BlogSortRestApi {
         }
     }
 
+    @AuthorityVerify
     @ApiOperation(value = "置顶分类", notes = "置顶分类", response = String.class)
     @PostMapping("/stick")
     public String stick(@Validated({Delete.class}) @RequestBody BlogSortVO blogSortVO, BindingResult result) {
@@ -207,6 +213,7 @@ public class BlogSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "通过点击量排序博客分类")
     @ApiOperation(value = "通过点击量排序博客分类", notes = "通过点击量排序博客分类", response = String.class)
     @PostMapping("/blogSortByClickCount")
@@ -236,6 +243,7 @@ public class BlogSortRestApi {
      *
      * @return
      */
+    @AuthorityVerify
     @OperationLogger(value = "通过引用量排序博客分类")
     @ApiOperation(value = "通过引用量排序博客分类", notes = "通过引用量排序博客分类", response = String.class)
     @PostMapping("/blogSortByCite")

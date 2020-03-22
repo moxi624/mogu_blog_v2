@@ -9,6 +9,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.MD5Utils;
 import com.moxi.mogublog.utils.ResultUtil;
@@ -20,7 +21,6 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,6 +65,7 @@ public class UserRestApi {
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody UserVO userVO, BindingResult result) {
@@ -135,6 +136,7 @@ public class UserRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑用户")
     @ApiOperation(value = "编辑用户", notes = "编辑用户", response = String.class)
     @PostMapping("/edit")
@@ -159,7 +161,7 @@ public class UserRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
-
+    @AuthorityVerify
     @OperationLogger(value = "删除用户")
     @ApiOperation(value = "删除用户", notes = "删除用户", response = String.class)
     @PostMapping("/delete")
@@ -194,6 +196,7 @@ public class UserRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "重置用户密码")
     @ApiOperation(value = "重置用户密码", notes = "重置用户密码", response = String.class)
     @PostMapping("/resetUserPassword")

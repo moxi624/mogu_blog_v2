@@ -75,11 +75,11 @@ public class AuthRestApi {
             return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
         }
 
-        //手机号为空时为邮箱注册
+        //手机号为空时为邮箱注册 从redis中获取验证码
         if (StringUtils.isEmpty(mobile) && CheckUtils.checkEmail(email)) {
-            validCode = stringRedisTemplate.opsForValue().get(email);//从redis中获取验证码
+            validCode = stringRedisTemplate.opsForValue().get(email);
         } else if (StringUtils.isEmpty(email) && CheckUtils.checkMobileNumber(mobile)) {
-            validCode = stringRedisTemplate.opsForValue().get(mobile);//从redis中获取验证码
+            validCode = stringRedisTemplate.opsForValue().get(mobile);
         } else {
             return ResultUtil.result(SysConf.ERROR, "邮箱或手机号格式有误");
         }
