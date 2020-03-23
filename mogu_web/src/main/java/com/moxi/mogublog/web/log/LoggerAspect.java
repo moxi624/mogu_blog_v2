@@ -83,8 +83,6 @@ public class LoggerAspect {
 
         Map<String, String> result = EBehavior.getModuleAndOtherData(behavior, nameAndArgsMap, bussinessName);
 
-        AopUtils.getFieldsName(point);
-
         if (result != null) {
             String userUid = "";
             if (request.getAttribute(SysConf.USER_UID) != null) {

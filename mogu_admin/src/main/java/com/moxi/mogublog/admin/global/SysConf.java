@@ -39,5 +39,8 @@ public final class SysConf extends BaseSysConf {
 
     public final static String URL = "url";
 
+    public final static String LOG = "log";
+    public final static String EXCEPTION = "exception";
+
 
 }

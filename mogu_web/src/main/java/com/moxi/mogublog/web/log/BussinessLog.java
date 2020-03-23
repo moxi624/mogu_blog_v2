@@ -21,7 +21,6 @@ public @interface BussinessLog {
     /**
      * 业务名称
      *
-     * @return
      */
     String value() default "";
 

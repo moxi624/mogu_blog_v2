@@ -4,28 +4,34 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.security.SecurityUser;
-import com.moxi.mogublog.utils.AopUtils;
-import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.entity.ExceptionLog;
 import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mogublog.xo.service.ExceptionLogService;
 import com.moxi.mogublog.xo.service.SysLogService;
+import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.RequestHolder;
+import com.moxi.mougblog.base.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,28 +42,16 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LoggerAspect {
 
-    private SysLog sysLog;
-
-    private ExceptionLog exceptionLog;
+    @Autowired
+    RedisUtil redisUtil;
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    SysLogHandle sysLogHandle;
 
     /**
-     * 接口请求开始时间
+     * 开始时间
      */
-    private Date startTime;
-
-
-    @Autowired
-    private SysLogService sysLogService;
-
-    @Autowired
-    private ExceptionLogService exceptionLogService;
-
-    @Autowired
-    private HttpServletRequest request;
-
+    Date startTime;
 
     @Pointcut(value = "@annotation(operationLogger)")
     public void pointcut(OperationLogger operationLogger) {
@@ -67,97 +61,96 @@ public class LoggerAspect {
     @Around(value = "pointcut(operationLogger)")
     public Object doAround(ProceedingJoinPoint joinPoint, OperationLogger operationLogger) throws Throwable {
 
-        sysLog = new SysLog();
-
-        // 设置接口开始请求时间
         startTime = new Date();
-
-        try {
-            String classType = joinPoint.getTarget().getClass().getName();
-            Class<?> clazz = Class.forName(classType);
-            String clazzName = clazz.getName();
-
-            //获取方法名称
-            String methodName = joinPoint.getSignature().getName();
-
-            Object[] args = joinPoint.getArgs();
-
-            // 获取参数名称和值
-            StringBuffer sb = AopUtils.getNameAndArgs(this.getClass(), clazzName, methodName, args);
-            sysLog.setParams(sb.toString());
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-
-
-        //获取ip地址
-        String ip = IpUtils.getIpAddr(request);
-
-        //从Redis中获取IP来源
-        String jsonResult = stringRedisTemplate.opsForValue().get("IP_SOURCE:" + ip);
-        if (StringUtils.isEmpty(jsonResult)) {
-            String addresses = IpUtils.getAddresses("ip=" + ip, "utf-8");
-            if (StringUtils.isNotEmpty(addresses)) {
-                sysLog.setIpSource(addresses);
-                stringRedisTemplate.opsForValue().set("IP_SOURCE" + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
-            }
-        } else {
-            sysLog.setIpSource(jsonResult);
-        }
-
-        //设置请求信息
-        sysLog.setIp(ip);
-
-        //设置调用的类
-        sysLog.setClassPath(joinPoint.getTarget().getClass().getName());
-        //设置调用的方法
-        sysLog.setMethod(joinPoint.getSignature().getName());
-        //设置Request的请求方式 GET POST
-        sysLog.setType(request.getMethod());
-
-        sysLog.setUrl(request.getRequestURI().toString());
-
-        sysLog.setOperation(operationLogger.value());
-        sysLog.setCreateTime(new Date());
-        sysLog.setUpdateTime(new Date());
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        sysLog.setUserName(securityUser.getUsername());
-        sysLog.setAdminUid(securityUser.getUid());
 
         //先执行业务
         Object result = joinPoint.proceed();
 
-        Date endTime = new Date();
-        Long spendTime = DateUtil.between(startTime, endTime, DateUnit.MS);
-        // 计算请求接口花费的时间，单位毫秒
-        sysLog.setSpendTime(spendTime);
-        sysLogService.save(sysLog);
+        try {
+            // 日志收集
+            handle(joinPoint);
+
+        } catch (Exception e) {
+            log.error("日志记录出错!", e);
+        }
 
         return result;
     }
 
 
     @AfterThrowing(value = "pointcut(operationLogger)", throwing = "e")
-    public void doAfterThrowing(OperationLogger operationLogger, Throwable e) {
-        exceptionLog = new ExceptionLog();
-        //设置异常信息
-        exceptionLog.setCreateTime(new Date());
-        exceptionLog.setExceptionJson(JSON.toJSONString(e,
-                SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteMapNullValue));
-        exceptionLog.setExceptionMessage(e.getMessage());
+    public void doAfterThrowing(JoinPoint joinPoint, OperationLogger operationLogger, Throwable e) throws Exception {
 
-        if (sysLog != null) {
-            exceptionLog.setIp(sysLog.getIp());
-            exceptionLog.setIpSource(sysLog.getIpSource());
-            exceptionLog.setMethod(sysLog.getMethod());
-            exceptionLog.setParams(sysLog.getParams());
-            exceptionLog.setOperation(sysLog.getOperation());
+        ExceptionLog exception = new ExceptionLog();
+        HttpServletRequest request = RequestHolder.getRequest();
+        String ip = IpUtils.getIpAddr(request);
+        exception.setIp(ip);
+        String operationName = AspectUtil.INSTANCE.parseParams(joinPoint.getArgs(), operationLogger.value());
+
+        //从Redis中获取IP来源
+        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+        if (StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
+            if (StringUtils.isNotEmpty(addresses)) {
+                exception.setIpSource(addresses);
+                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            }
+        } else {
+            exception.setIpSource(jsonResult);
         }
 
-        //保存异常日志信息
-        exceptionLogService.save(exceptionLog);
+        //设置请求信息
+        exception.setIp(ip);
+
+        //设置调用的方法
+        exception.setMethod(joinPoint.getSignature().getName());
+
+        exception.setExceptionJson(JSON.toJSONString(e,
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteMapNullValue));
+        exception.setExceptionMessage(e.getMessage());
+
+        exception.setOperation(operationName);
+        exception.setCreateTime(new Date());
+        exception.setUpdateTime(new Date());
+
+        exception.insert();
     }
 
+
+    /**
+     * 管理员日志收集
+     * @param point
+     * @throws Exception
+     */
+    private void handle(ProceedingJoinPoint point) throws Exception {
+
+        HttpServletRequest request = RequestHolder.getRequest();
+
+        Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
+
+        //获取操作名称
+        OperationLogger annotation = currentMethod.getAnnotation(OperationLogger.class);
+
+        boolean save = annotation.save();
+
+        String bussinessName = AspectUtil.INSTANCE.parseParams(point.getArgs(), annotation.value());
+
+        String ua = RequestUtil.getUa();
+
+        log.info("{} | {} - {} {} - {}", bussinessName, IpUtils.getIpAddr(request), RequestUtil.getMethod(), RequestUtil.getRequestUrl(), ua);
+        if (!save) {
+            return;
+        }
+
+        // 获取参数名称和值
+        Map<String, Object> nameAndArgsMap = AopUtils.getFieldsName(point);
+
+        String paramsJson = JSONObject.toJSONString(nameAndArgsMap);
+
+        // 异步存储日志
+        sysLogHandle.setSysLogHandle(paramsJson, point.getTarget().getClass().getName(), point.getSignature().getName(), bussinessName, startTime);
+
+        sysLogHandle.onRun();
+    }
 }
