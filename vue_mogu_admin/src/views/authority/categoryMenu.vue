@@ -171,6 +171,7 @@
               v-for="item in menuLevelDictList"
               :key="item.uid"
               :label="item.dictLabel"
+              v-if="item.dictValue != 3"
               :value="parseInt(item.dictValue)"
             ></el-option>
           </el-select>

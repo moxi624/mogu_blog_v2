@@ -5,7 +5,7 @@
       <el-input
         clearable
         class="filter-item"
-        style="width: 200px;"
+        style="width: 150px;"
         v-model="keyword"
         placeholder="请输入博客名"
         @keyup.enter.native="handleFind"
@@ -13,6 +13,7 @@
 
       <el-select
         v-model="sortKeyword"
+        style="width: 140px"
         filterable
         clearable
         remote
@@ -40,7 +41,7 @@
         :remote-method="tagRemoteMethod"
         :loading="loading"
         @keyup.enter.native="handleFind"
-        style="width:180px"
+        style="width:140px"
       >
         <el-option
           v-for="item in tagOptions"
@@ -50,7 +51,7 @@
         ></el-option>
       </el-select>
 
-      <el-select v-model="levelKeyword" clearable placeholder="推荐等级" style="width:140px">
+      <el-select v-model="levelKeyword" clearable placeholder="推荐等级" style="width:110px">
         <el-option
           v-for="item in blogLevelDictList"
           :key="item.uid"
@@ -59,7 +60,7 @@
         ></el-option>
       </el-select>
 
-      <el-select v-model="publishKeyword" clearable placeholder="是否发布" style="width:140px">
+      <el-select v-model="publishKeyword" clearable placeholder="是否发布" style="width:110px">
         <el-option
           v-for="item in blogPublishDictList"
           :key="item.uid"
@@ -68,7 +69,7 @@
         ></el-option>
       </el-select>
 
-      <el-select v-model="originalKeyword" clearable placeholder="是否原创" style="width:140px">
+      <el-select v-model="originalKeyword" clearable placeholder="是否原创" style="width:110px">
         <el-option
           v-for="item in blogOriginalDictList"
           :key="item.uid"
@@ -382,7 +383,7 @@ export default {
       fileIds: "",
       icon: false, //控制删除图标的显示
       interval: null, //定义触发器
-
+      isChange: false, // 表单内容是否改变
       blogOriginalDictList: [], //存储区域字典
       blogPublishDictList: [], //是否字典
       blogLevelDictList: [], //博客推荐等级字典
@@ -462,6 +463,7 @@ export default {
       tagParams.currentPage = 1;
       getTagList(tagParams).then(response => {
         this.tagData = response.data.records;
+        this.tagOptions = response.data.records;
       });
     },
     blogSortList: function() {
@@ -469,7 +471,10 @@ export default {
       blogSortParams.pageSize = 100;
       blogSortParams.currentPage = 1;
       getBlogSortList(blogSortParams).then(response => {
-        this.blogSortData = response.data.records;
+        if(response.code == "success") {
+          this.blogSortData = response.data.records;
+          this.sortOptions = response.data.records;
+        }
       });
     },
     blogList: function() {
@@ -606,23 +611,31 @@ export default {
       }
       return str;
     },
+    // 关闭窗口
     closeDialog(done) {
-      this.$confirm("是否关闭博客编辑窗口", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          // 清空触发器
-          clearInterval(this.interval);
-          done();
+      if(this.isChange) {
+        this.$confirm("是否关闭博客编辑窗口", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消关闭"
+          .then(() => {
+            // 清空触发器
+            clearInterval(this.interval);
+            this.isChange = false;
+            done();
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消关闭"
+            });
           });
-        });
+      } else {
+        // 清空触发器
+        clearInterval(this.interval);
+        done();
+      }
     },
     handleFind: function() {
       this.blogList();
@@ -697,6 +710,7 @@ export default {
       that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
       that.form.tagUid = that.tagValue.join(",");
       setCookie("form", JSON.stringify(that.form), 10);
+      this.isChange = true;
     },
     //备份form表单
     formBak: function() {

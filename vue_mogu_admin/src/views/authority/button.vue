@@ -2,6 +2,15 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
+
+      <el-cascader
+        :options="options"
+        placeholder="请选择菜单名"
+        v-model="keyword"
+        :props="{ checkStrictly: true }"
+        clearable></el-cascader>
+
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加按钮</el-button>
     </div>
 
@@ -35,8 +44,6 @@
                   <el-tag v-for="item in menuTypeDictList" :key="item.uid" v-if="scope.row.menuType == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
                 </template>
               </el-table-column>
-
-
 
               <el-table-column label width="200" align="center">
                 <template slot-scope="scope_child">
@@ -251,7 +258,7 @@ export default {
     return {
       showHeader: false, //是否显示表头
       tableData: [],
-      keyword: "",
+      keyword: [],
       menuLevel: "",
       currentPage: 1,
       pageSize: 10,
@@ -304,14 +311,13 @@ export default {
   },
   created() {
     // 得到菜单列表
-    this.menuList();
+    this.menuList()
     this.getDictList();
     this.buttonList();
   },
   methods: {
     menuList: function() {
       getAllMenu().then(response => {
-        console.log("tableData", response)
         if (response.code == "success") {
           let tableData = response.data;
           let options = []
@@ -331,12 +337,17 @@ export default {
             options.push(parent)
           }
           this.options = options
-          console.log("处理后的Options", options)
         }
       });
     },
     buttonList: function() {
-      getButtonAll().then(response => {
+      var params = {};
+      var keyword = this.keyword
+      if(keyword.length > 0) {
+        // 选取最后一个元素
+        params.keyword = keyword[keyword.length - 1]
+      }
+      getButtonAll(params).then(response => {
         console.log("getAllMenu", response);
         if (response.code == "success") {
           this.tableData = response.data;

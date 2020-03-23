@@ -110,10 +110,13 @@ public class CategoryMenuRestApi {
 
     @ApiOperation(value = "获取所有菜单列表", notes = "获取所有列表", response = String.class)
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
-    public String getAll() {
+    public String getAll(@RequestParam(value = "keyword", required = false) String keyword) {
 
         QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.MENU_LEVEL, "1");
+        if(StringUtils.isNotEmpty(keyword)) {
+            queryWrapper.eq(SQLConf.UID, keyword);
+        }
         queryWrapper.orderByDesc(SQLConf.SORT);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.MENU_TYPE, EMenuType.MENU);
@@ -212,11 +215,14 @@ public class CategoryMenuRestApi {
 
     @ApiOperation(value = "获取所有二级菜单-按钮列表", notes = "获取所有二级菜单-按钮列表", response = String.class)
     @RequestMapping(value = "/getButtonAll", method = RequestMethod.GET)
-    public String getButtonAll() {
+    public String getButtonAll(@RequestParam(value = "keyword", required = false) String keyword) {
 
         QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.MENU_LEVEL, "2");
         queryWrapper.orderByDesc(SQLConf.SORT);
+        if(StringUtils.isNotEmpty(keyword)) {
+            queryWrapper.eq(SQLConf.UID, keyword);
+        }
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.MENU_TYPE, EMenuType.MENU);
         List<CategoryMenu> list = categoryMenuService.list(queryWrapper);

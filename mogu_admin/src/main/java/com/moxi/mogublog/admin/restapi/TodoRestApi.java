@@ -8,6 +8,7 @@ import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
+import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.Todo;
@@ -46,6 +47,7 @@ public class TodoRestApi {
     @Autowired
     TodoService todoService;
 
+    @AuthorityVerify
     @ApiOperation(value = "获取代办事项列表", notes = "获取代办事项列表", response = String.class)
     @PostMapping("/getList")
     public String getList(HttpServletRequest request, @Validated({GetList.class}) @RequestBody TodoVO todoVO, BindingResult result) {
@@ -75,6 +77,7 @@ public class TodoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "增加代办事项")
     @ApiOperation(value = "增加代办事项", notes = "增加代办事项", response = String.class)
     @PostMapping("/add")
@@ -93,6 +96,7 @@ public class TodoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "编辑代办事项")
     @ApiOperation(value = "编辑代办事项", notes = "编辑代办事项", response = String.class)
     @PostMapping("/edit")
@@ -115,6 +119,7 @@ public class TodoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "删除代办事项")
     @ApiOperation(value = "删除代办事项", notes = "删除代办事项", response = String.class)
     @PostMapping("/delete")
@@ -136,6 +141,7 @@ public class TodoRestApi {
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "批量编辑代办事项")
     @ApiOperation(value = "批量编辑代办事项", notes = "批量编辑代办事项", response = String.class)
     @PostMapping("/toggleAll")
