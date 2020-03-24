@@ -63,7 +63,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="pictureCropperVisible" fullscreen>
-      <PictureCropper :modelSrc="checkedPicture.pictureUrl" @cropperSuccess="cropperSuccess"></PictureCropper>
+      <PictureCropper v-if="reFresh" :modelSrc="checkedPicture.pictureUrl" @cropperSuccess="cropperSuccess"></PictureCropper>
     </el-dialog>
 
 
@@ -118,8 +118,14 @@ export default {
       pageSize: 14,
       title: "增加图片",
       dialogFormVisible: false,
-      keyword: ""
+      keyword: "",
+      reFresh: true, //是否刷新组件
     };
+  },
+  watch: {
+    checkedPicture(val) {
+      this.reFresh= false
+    }
   },
   created() {
     //传递过来的pictureSordUid
@@ -186,14 +192,12 @@ export default {
       return formObject;
     },
     showPicture: function(url) {
-      console.log("点击图片");
       this.dialogPictureVisible = true
       this.dialogImageUrl = url
     },
     //点击单选
     checked: function(data) {
       this.checkedPicture = data;
-      console.log("裁剪的图片", data)
       let idIndex = this.pictureUids.indexOf(data.uid);
       if (idIndex >= 0) {
         //选过了
@@ -298,6 +302,7 @@ export default {
         return;
       }
       this.pictureCropperVisible = true;
+      this.reFresh = true;
     },
     // 裁剪成功后的回调
     cropperSuccess: function(picture) {
@@ -324,6 +329,10 @@ export default {
           });
         }
       });
+
+      // 清空选中的列表
+      this.pictureUids = []
+      this.checkedPicture = []
 
     },
     handleReturn: function() {

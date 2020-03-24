@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -37,6 +38,9 @@ public class RequestLimitAspect {
     @Autowired
     private RequestLimitConfig requestLimitConfig;
 
+    @Value(value = "${request-limit.start}")
+    private Boolean start;
+
     @Pointcut(POINT)
     public void pointcut() {
 
@@ -47,37 +51,42 @@ public class RequestLimitAspect {
      */
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attribute.getRequest();
 
-        //获取IP
-        String ip = IpUtils.getIpAddr(request);
+        // 判断是否开启了接口请求限制
+        if(start) {
+            ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        //获取请求路径
-        String url = request.getRequestURL().toString();
+            HttpServletRequest request = attribute.getRequest();
 
-        //获取方法名称
-        String methodName = point.getSignature().getName();
+            //获取IP
+            String ip = IpUtils.getIpAddr(request);
 
-        String key = RedisConf.REQUEST_LIMIT + RedisConf.SEGMENTATION + ip + RedisConf.SEGMENTATION + methodName;
+            //获取请求路径
+            String url = request.getRequestURL().toString();
 
-        Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
+            //获取方法名称
+            String methodName = point.getSignature().getName();
 
-        //查看接口是否有RequestLimit注解，如果没有则按yml的值全局验证
-        if (currentMethod.isAnnotationPresent(RequestLimit.class)) {
-            //获取注解
-            RequestLimit requestLimit = currentMethod.getAnnotation(RequestLimit.class);
-            boolean checkResult = checkWithRedis(requestLimit.amount(), requestLimit.time(), key);
+            String key = RedisConf.REQUEST_LIMIT + RedisConf.SEGMENTATION + ip + RedisConf.SEGMENTATION + methodName;
+
+            Method currentMethod = AspectUtil.INSTANCE.getMethod(point);
+
+            //查看接口是否有RequestLimit注解，如果没有则按yml的值全局验证
+            if (currentMethod.isAnnotationPresent(RequestLimit.class)) {
+                //获取注解
+                RequestLimit requestLimit = currentMethod.getAnnotation(RequestLimit.class);
+                boolean checkResult = checkWithRedis(requestLimit.amount(), requestLimit.time(), key);
+                if (checkResult) {
+                    log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimit.amount());
+                    return ResultUtil.result(ECode.REQUEST_OVER_LIMIT, "接口请求过于频繁");
+                }
+                return point.proceed();
+            }
+            boolean checkResult = checkWithRedis(requestLimitConfig.getAmount(), requestLimitConfig.getTime(), key);
             if (checkResult) {
-                log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimit.amount());
+                log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimitConfig.getAmount());
                 return ResultUtil.result(ECode.REQUEST_OVER_LIMIT, "接口请求过于频繁");
             }
-            return point.proceed();
-        }
-        boolean checkResult = checkWithRedis(requestLimitConfig.getAmount(), requestLimitConfig.getTime(), key);
-        if (checkResult) {
-            log.info("requestLimited," + "[用户ip:{}],[访问地址:{}]超过了限定的次数[{}]次", ip, url, requestLimitConfig.getAmount());
-            return ResultUtil.result(ECode.REQUEST_OVER_LIMIT, "接口请求过于频繁");
         }
         return point.proceed();
     }

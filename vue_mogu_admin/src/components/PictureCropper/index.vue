@@ -78,11 +78,12 @@
           infoTrue: true,
           fixedNumber: [13, 7]
         },
-        downImg: '#'
+        downImg: '#',
       }
     },
     created() {
       this.bakPicUrl = this.modelSrc;
+      this.example2.img = this.modelSrc
     },
     methods: {
       //点击裁剪，这一步是可以拿到处理后的地址
@@ -104,7 +105,6 @@
       // base64转blob
       toBlob(ndata) {
         //ndata为base64格式地址
-        console.log(ndata)
         let arr = ndata.split(','),
           mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]),
@@ -131,7 +131,6 @@
         })
       },
       submit: function() {
-        console.log("开始提交");
         if(this.picUrl == "") {
           this.$message({
             type: "warning",

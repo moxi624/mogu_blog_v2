@@ -27,6 +27,7 @@ DEFAULE_PWD: mogu2018
 
 #请求限制参数
 request-limit:
+  start: true # 是否开启请求限制
   amount: 100 # 100次
   time: 60000 # 1分钟
 

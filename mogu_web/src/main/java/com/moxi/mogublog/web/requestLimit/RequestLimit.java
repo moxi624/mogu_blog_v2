@@ -19,9 +19,9 @@ import java.lang.annotation.*;
 public @interface RequestLimit {
 
     /**
-     * 允许访问的次数，默认值200
+     * 允许访问的次数，默认值100
      */
-    int amount() default 200;
+    int amount() default 100;
 
     /**
      * 时间段，单位为毫秒，默认值一分钟
