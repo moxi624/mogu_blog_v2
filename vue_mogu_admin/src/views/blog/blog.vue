@@ -133,10 +133,11 @@
 	      </template>
       </el-table-column>-->
 
-      <el-table-column label="标签" width="100" align="center">
+      <el-table-column label="标签" width="200" align="center">
         <template slot-scope="scope">
           <template>
             <el-tag
+              style="margin-left: 3px"
               type="warning"
               v-if="item"
               :key="index"
@@ -384,6 +385,7 @@ export default {
       icon: false, //控制删除图标的显示
       interval: null, //定义触发器
       isChange: false, // 表单内容是否改变
+      changeCount: 0, // 改变计数器
       blogOriginalDictList: [], //存储区域字典
       blogPublishDictList: [], //是否字典
       blogLevelDictList: [], //博客推荐等级字典
@@ -623,6 +625,7 @@ export default {
             // 清空触发器
             clearInterval(this.interval);
             this.isChange = false;
+            this.changeCount = 0
             done();
           })
           .catch(() => {
@@ -634,6 +637,8 @@ export default {
       } else {
         // 清空触发器
         clearInterval(this.interval);
+        this.isChange = false;
+        this.changeCount = 0
         done();
       }
     },
@@ -643,6 +648,7 @@ export default {
     handleAdd: function() {
       var that = this;
       var tempForm = JSON.parse(getCookie("form"));
+      console.log('cookie中的', tempForm)
       if (tempForm != null && tempForm.title != null && tempForm.title != "") {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
@@ -706,14 +712,20 @@ export default {
     // 内容改变，触发监听
     contentChange: function() {
       var that = this;
-      //存放到cookie中，时间10天
-      that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
-      that.form.tagUid = that.tagValue.join(",");
-      setCookie("form", JSON.stringify(that.form), 10);
-      this.isChange = true;
+      if(this.changeCount > 0) {
+        console.log("内容改变", this.isChange)
+        that.isChange = true;
+        //存放到cookie中，时间10天
+        that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+        that.form.tagUid = that.tagValue.join(",");
+        setCookie("form", JSON.stringify(that.form), 10);
+
+      }
+      this.changeCount = this.changeCount + 1;
     },
     //备份form表单
     formBak: function() {
+      console.log("启动表单备份")
       var that = this;
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {

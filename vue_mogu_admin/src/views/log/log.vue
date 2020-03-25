@@ -23,14 +23,16 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
 
-              <el-form-item label="请求接口">
-                <span>{{ props.row.classPath + props.row.url }}</span>
-              </el-form-item>
-
-              <el-form-item label="请求参数">
-                <span>{{ props.row.params }}</span>
-              </el-form-item>
-
+              <el-row>
+                <el-form-item label="请求接口">
+                  <span>{{ props.row.classPath + props.row.url }}</span>
+                </el-form-item>
+              </el-row>
+              <el-row>
+                <el-form-item label="请求参数">
+                  <span>{{ props.row.params }}</span>
+                </el-form-item>
+              </el-row>
             </el-form>
           </template>
         </el-table-column>

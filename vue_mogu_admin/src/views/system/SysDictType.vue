@@ -8,7 +8,7 @@
         @keyup.enter.native="handleFind"
         class="filter-item"
         style="width: 200px;"
-        v-model="query.sysDictType"
+        v-model="query.dictType"
         placeholder="请输入字典类型"
       ></el-input>
 
@@ -17,7 +17,7 @@
         @keyup.enter.native="handleFind"
         class="filter-item"
         style="width: 200px;"
-        v-model="query.sysDictName"
+        v-model="query.dictName"
         placeholder="请输入字典名称"
       ></el-input>
 
@@ -185,9 +185,11 @@ export default {
   methods: {
     sysDictTypeList: function() {
       var params = {};
-      params.keyword = this.keyword;
+      params.dictName = this.query.dictName;
+      params.dictType = this.query.dictType;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
+      console.log('开始查找', params)
       getSysDictTypeList(params).then(response => {
         console.log("得到的类型", response)
         if(response.code == "success") {

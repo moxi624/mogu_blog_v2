@@ -83,7 +83,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="150" >
+      <el-table-column label="操作" fixed="right" min-width="250" >
         <template slot-scope="scope">
           <el-button @click="handRest(scope.row)" type="warning" size="small">重置密码</el-button>
           <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>

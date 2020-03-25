@@ -77,7 +77,7 @@ public class SysDictTypeRestApi {
 
         // 字典类型
         if (StringUtils.isNotEmpty(sysDictTypeVO.getDictType()) && !StringUtils.isEmpty(sysDictTypeVO.getDictType().trim())) {
-            queryWrapper.like(SQLConf.DICT_TYPE, sysDictTypeVO.getDictName().trim());
+            queryWrapper.like(SQLConf.DICT_TYPE, sysDictTypeVO.getDictType().trim());
         }
 
         Page<SysDictType> page = new Page<>();
