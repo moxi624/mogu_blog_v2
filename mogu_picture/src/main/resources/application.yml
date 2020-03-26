@@ -39,6 +39,10 @@ spring:
         instance:
           service-base-url: http://localhost:8602
 
+  #redis
+  redis:
+    host: 127.0.0.1 #redis的主机ip
+    port: 6379
 
   # sleuth 配置
   sleuth:

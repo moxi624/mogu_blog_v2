@@ -126,7 +126,7 @@ public class AuthorityVerifyAspect {
             return ResultUtil.result(ECode.NO_OPERATION_AUTHORITY, MessageConf.RESTAPI_NO_PRIVILEGE);
         }
 
-        //先执行业务
+        //执行业务
         Object result = joinPoint.proceed();
         return result;
     }

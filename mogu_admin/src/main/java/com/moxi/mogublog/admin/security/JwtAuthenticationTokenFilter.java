@@ -14,13 +14,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 @Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
@@ -28,7 +28,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private Audience audience;
 
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -139,9 +139,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 //刷新token过期时间
                 jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
                 log.info("token未过期，刷新token");
-
             } else {
-
                 chain.doFilter(request, response);
                 return;
             }
