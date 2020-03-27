@@ -184,64 +184,66 @@ public class IpUtils {
             return "XX|XX|内网IP|内网IP";
         }
 
-        try {
-            // 这里调用pconline的接口
-            String urlStr = "http://ip.taobao.com/service/getIpInfo.php";
+        // TODO 淘宝接口目前已经宕机，因此暂时注释下面代码
 
-            // 从http://whois.pconline.com.cn取得IP所在的省市区信息
-            String returnStr = getResult(urlStr, content, encodingString);
-
-            if (returnStr != null) {
-                // 处理返回的省市区信息
-                log.info("调用IP解析接口返回的内容:" + returnStr);
-                String[] temp = returnStr.split(",");
-                //无效IP，局域网测试
-                if (temp.length < 3) {
-                    return "0";
-                }
-
-                // 国家
-                String country = "";
-                // 区域
-                String area = "";
-                // 省
-                String region = "";
-                // 市
-                String city = "";
-                // 县
-                String county = "";
-                // 运营商
-                String isp = "";
-
-                Map<String, Object> map = JsonUtils.jsonToMap(returnStr);
-
-                if (map.get("code") != null) {
-                    Map<String, String> data = (Map<String, String>) map.get("data");
-                    country = data.get("country");
-                    area = data.get("area");
-                    region = data.get("region");
-                    city = data.get("city");
-                    county = data.get("area");
-                    isp = data.get("isp");
-                }
-
-
-                log.info("获取IP地址对应的地址" + country + "=" + area + "=" + region + "=" + city + "=" + county + "=" + isp);
-                StringBuffer result = new StringBuffer();
-                result.append(country);
-                result.append("|");
-                result.append(region);
-                result.append("|");
-                result.append(city);
-                result.append("|");
-                result.append(isp);
-
-                return result.toString();
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
-        }
+//        try {
+//            // 这里调用pconline的接口
+//            String urlStr = "http://ip.taobao.com/service/getIpInfo.php";
+//
+//            // 从http://whois.pconline.com.cn取得IP所在的省市区信息
+//            String returnStr = getResult(urlStr, content, encodingString);
+//
+//            if (returnStr != null) {
+//                // 处理返回的省市区信息
+//                log.info("调用IP解析接口返回的内容:" + returnStr);
+//                String[] temp = returnStr.split(",");
+//                //无效IP，局域网测试
+//                if (temp.length < 3) {
+//                    return "0";
+//                }
+//
+//                // 国家
+//                String country = "";
+//                // 区域
+//                String area = "";
+//                // 省
+//                String region = "";
+//                // 市
+//                String city = "";
+//                // 县
+//                String county = "";
+//                // 运营商
+//                String isp = "";
+//
+//                Map<String, Object> map = JsonUtils.jsonToMap(returnStr);
+//
+//                if (map.get("code") != null) {
+//                    Map<String, String> data = (Map<String, String>) map.get("data");
+//                    country = data.get("country");
+//                    area = data.get("area");
+//                    region = data.get("region");
+//                    city = data.get("city");
+//                    county = data.get("area");
+//                    isp = data.get("isp");
+//                }
+//
+//
+//                log.info("获取IP地址对应的地址" + country + "=" + area + "=" + region + "=" + city + "=" + county + "=" + isp);
+//                StringBuffer result = new StringBuffer();
+//                result.append(country);
+//                result.append("|");
+//                result.append(region);
+//                result.append("|");
+//                result.append(city);
+//                result.append("|");
+//                result.append(isp);
+//
+//                return result.toString();
+//            }
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            return null;
+//        }
         return null;
     }
 
