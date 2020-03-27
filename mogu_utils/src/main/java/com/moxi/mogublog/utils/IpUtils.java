@@ -193,7 +193,6 @@ public class IpUtils {
 
             if (returnStr != null) {
                 // 处理返回的省市区信息
-
                 log.info("调用IP解析接口返回的内容:" + returnStr);
                 String[] temp = returnStr.split(",");
                 //无效IP，局域网测试
@@ -261,10 +260,10 @@ public class IpUtils {
             connection = (HttpURLConnection) url.openConnection();
 
             // 设置连接超时时间，单位毫秒
-            connection.setConnectTimeout(20000);
+            connection.setConnectTimeout(10000);
 
             // 设置读取数据超时时间，单位毫秒
-            connection.setReadTimeout(20000);
+            connection.setReadTimeout(10000);
 
             // 是否打开输出流 true|false
             connection.setDoOutput(true);
@@ -307,15 +306,14 @@ public class IpUtils {
             reader.close();
             return buffer.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
         } finally {
             if (connection != null) {
-
                 // 关闭连接
                 connection.disconnect();
             }
         }
-        return null;
     }
 
     /**
