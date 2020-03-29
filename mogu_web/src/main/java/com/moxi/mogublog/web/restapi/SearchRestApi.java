@@ -93,8 +93,9 @@ public class SearchRestApi {
         final String keyword = keywords.trim();
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(SQLConf.TITLE, keyword).or().like(SQLConf.SUMMARY, keyword);
+        queryWrapper.and(wrapper -> wrapper.like(SQLConf.TITLE, keyword).or().like(SQLConf.SUMMARY, keyword));
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
         Page<Blog> page = new Page<>();
