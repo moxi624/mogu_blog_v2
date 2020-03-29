@@ -71,33 +71,32 @@
 //
 //    public Map<String, Object> search(String keywords, Integer currentPage, Integer pageSize) {
 //        currentPage = Math.max(currentPage - 1, 0);
+//
+//        List<HighlightBuilder.Field> highlightFields = new ArrayList<>();
+//
+//        HighlightBuilder.Field titleField = new HighlightBuilder.Field("title").preTags("<span style='color:red'>").postTags("</span>");
+//        HighlightBuilder.Field summaryField = new HighlightBuilder.Field("summary").preTags("<span style='color:red'>").postTags("</span>");
+//        highlightFields.add(titleField);
+//        highlightFields.add(summaryField);
+//
+//        HighlightBuilder.Field[] highlightFieldsAry=highlightFields.toArray(new HighlightBuilder.Field[highlightFields.size()]);
 //        //创建查询构造器
 //        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
-//        //结果过滤
-////        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"uid","title","summary","blogSortName","createTime","author","photoList","blogSortUid","highlight"},null));
 //
 //        queryBuilder.withPageable(PageRequest.of(currentPage, pageSize));
 //
 //        //过滤
-//        queryBuilder.withQuery(QueryBuilders.matchQuery("title", keywords));
+//        QueryStringQueryBuilder queryStrBuilder = new QueryStringQueryBuilder(keywords);
+//        queryStrBuilder.field("title").field("summary");
 //
-////        HighlightBuilder highlightBuilder = new HighlightBuilder ();
-////        highlightBuilder.field("title");
-////        String preTag = "<span style = 'color:red'>";
-////        String postTag = "</span>";
-////        HighlightBuilder.Field allHighLight = new HighlightBuilder.Field("title").preTags(preTag).postTags(postTag);
-////        queryBuilder.withHighlightFields(allHighLight);
+//        queryBuilder.withQuery(queryStrBuilder);
 //
-//        queryBuilder.withHighlightFields(new HighlightBuilder
-//                .Field("title")
-//                .preTags("<span style = 'color:red'>")
-//                .postTags("</span>"));
+//        queryBuilder.withHighlightFields(highlightFieldsAry);
 //
 //        System.out.println("查询的语句:" + queryBuilder.build().getQuery().toString());
 //
 //        //查询
-//        Page<ESBlogIndex> result = blogRepository.search(queryBuilder.build());
-//
+//        AggregatedPage<ESBlogIndex> result = elasticsearchTemplate.queryForPage(queryBuilder.build(), ESBlogIndex.class, highlightResultHelper);
 //
 //        //解析结果
 //        long total = result.getTotalElements();

@@ -225,6 +225,7 @@ public class FileRestApi {
                         //名称
                         remap.put("name", file.getPicName());
                         remap.put("uid", file.getUid());
+                        remap.put("file_old_name", file.getFileOldName());
                         list.add(remap);
                     }
                 }
