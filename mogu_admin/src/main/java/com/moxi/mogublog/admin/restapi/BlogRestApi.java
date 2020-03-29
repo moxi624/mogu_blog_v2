@@ -268,6 +268,7 @@ public class BlogRestApi {
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setStatus(EStatus.ENABLE);
+        blog.setStartComment(blogVO.getStartComment());
         Boolean isSave = blogService.save(blog);
 
         //保存成功后，需要发送消息到solr 和 redis
@@ -322,6 +323,7 @@ public class BlogRestApi {
         blog.setLevel(blogVO.getLevel());
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
+        blog.setStartComment(blogVO.getStartComment());
         blog.setStatus(EStatus.ENABLE);
 
         Boolean isSave = blog.updateById();

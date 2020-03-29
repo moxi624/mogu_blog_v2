@@ -205,9 +205,9 @@ mybatis-plus:
 # 第三方登录
 justAuth:
   clientId:
-    gitee: bd8238be8154932860aab5b1d2594f00d5472970b6d72f83f338eecb474d6898
+    gitee: ec2dba332701caa209935512c69fc7962530b8619acd9b6cb03106a7c13c1c5e
     github: 4fbf8a5fe687887c2549
   clientSecret:
-    gitee: 39f64142da6819e394b6d093984cec39d41e47eb5fd824f49fc0c24bbcbd8ec7
+    gitee: 993930de16b61b8146f7d30c693afd328b4d42116cf2da748f275077e4ef5e47
     github: 7318a7bea7a5b006a97ac8e7758d130ce04e622e
 

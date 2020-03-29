@@ -105,6 +105,11 @@ public class Blog extends SuperEntity<Blog> {
      */
     private Integer sort;
 
+    /**
+     * 是否开启评论(0:否， 1:是)
+     */
+    private String startComment;
+
 
     // 以下字段不存入数据库，封装为了方便使用
 

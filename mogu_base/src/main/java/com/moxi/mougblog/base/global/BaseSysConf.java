@@ -8,6 +8,8 @@ package com.moxi.mougblog.base.global;
  */
 public class BaseSysConf {
 
+    public final static String DEFAULT_UID = "uid00000000000000000000000000000000";
+
     // picture相关
     public final static String USER_UID = "userUid";
     public final static String USER_NAME = "userName";
@@ -21,6 +23,9 @@ public class BaseSysConf {
     public final static String PIC_URL = "picUrl";
     public final static String URL = "url";
     public final static String MESSAGE = "message";
+    public final static String EXPANDED_NAME = "expandedName";
+    public final static String FILE_OLD_NAME = "fileOldName";
+    public final static String NAME = "name";
 
     /**
      * IP相关

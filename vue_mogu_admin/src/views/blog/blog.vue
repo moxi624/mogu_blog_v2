@@ -159,9 +159,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="开启评论" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <template>
+            <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.startComment == item.dictValue">{{item.dictLabel}}</el-tag>
+          </template>
         </template>
       </el-table-column>
 
@@ -170,6 +172,12 @@
           <template>
             <el-tag v-for="item in blogPublishDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.isPublish == item.dictValue">{{item.dictLabel}}</el-tag>
           </template>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
@@ -288,13 +296,20 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="是否原创" :label-width="formLabelWidth" prop="isOriginal">
               <el-radio-group v-model="form.isOriginal" size="small">
                 <el-radio v-for="item in blogOriginalDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
+
+          <el-col :span="4.5">
+            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="startComment">
+              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
+            </el-form-item>
+          </el-col>
+
         </el-row>
 
         <el-form-item label="作者" :label-width="formLabelWidth" v-if="form.isOriginal==0" prop="author">
@@ -389,9 +404,11 @@ export default {
       blogOriginalDictList: [], //存储区域字典
       blogPublishDictList: [], //是否字典
       blogLevelDictList: [], //博客推荐等级字典
+      openDictList: [], // 是否启动字典
       blogOriginalDefault: null, //博客原创默认值
       blogLevelDefault: null, //博客等级默认值
       blogPublishDefault: null, //博客发布默认值
+      openDefault: null, // 是否开启评论默认值
       form: {
         uid: null,
         title: null,
@@ -423,6 +440,10 @@ export default {
         isOriginal: [
           {required: true, message: '原创字段不能为空', trigger: 'blur'},
           {pattern: /^[0-9]\d*$/, message: '原创字段只能为自然数'},
+        ],
+        startComment: [
+          {required: true, message: '网站评论不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '网站评论只能为自然数'},
         ],
         content: [
           {required: true, message: '内容不能为空', trigger: 'blur'}
@@ -503,7 +524,7 @@ export default {
      */
     getDictList: function () {
 
-      var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status']
+      var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status', 'sys_normal_disable']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
@@ -516,6 +537,8 @@ export default {
 
           this.blogLevelDictList = dictMap.sys_recommend_level.list
 
+          this.openDictList = dictMap.sys_normal_disable.list
+
           if(dictMap.sys_original_status.defaultValue) {
             this.blogOriginalDefault = dictMap.sys_original_status.defaultValue;
           }
@@ -526,6 +549,10 @@ export default {
 
           if(dictMap.sys_recommend_level.defaultValue) {
             this.blogLevelDefault = dictMap.sys_recommend_level.defaultValue;
+          }
+
+          if(dictMap.sys_normal_disable.defaultValue) {
+            this.openDefault = dictMap.sys_normal_disable.defaultValue;
           }
 
         }
@@ -543,6 +570,7 @@ export default {
         isPublish: this.blogOriginalDefault, //是否发布
         author: null, //作者
         level: parseInt(this.blogLevelDefault), //推荐等级，默认是正常
+        startComment: this.openDefault, // 是否启动
         articlesPart: null //文章出处，默认蘑菇博客
       };
       return formObject;
