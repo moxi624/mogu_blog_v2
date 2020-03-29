@@ -165,56 +165,61 @@ public class AuthRestApi {
         // 通过头像uid获取图片
         String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
         List<String> photoList = webUtils.getPicture(pictureList);
+        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
+        if ("success".equals(picMap.get("code"))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
+            String fileOldName = picData.get(0).get("file_old_name").toString();
+            if (fileOldName.equals(data.get("avatar"))) {
+                //一样，直接获取本地图片
+                user.setPhotoUrl(photoList.get(0));
+            } else {
+                QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+                queryWrapper.last("LIMIT 1");
+                Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
+                // 获取到头像，然后上传到自己服务器
+                FileVO fileVO = new FileVO();
+                fileVO.setAdminUid("uid00000000000000000000000000000000");
+                fileVO.setUserUid("uid00000000000000000000000000000000");
+                fileVO.setProjectName(SysConf.BLOG);
+                fileVO.setSortName(SysConf.ADMIN);
+                fileVO.setSystemConfig(systemConfigMap);
+                List<String> urlList = new ArrayList<>();
+                urlList.add(data.get(SysConf.AVATAR).toString());
+                fileVO.setUrlList(urlList);
+                String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
+                Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
+                if (resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
+                    if (resultMap.get(SysConf.DATA) != null) {
+                        List<Map<String, Object>> listMap = (List<Map<String, Object>>) resultMap.get(SysConf.DATA);
+                        if (listMap != null && listMap.size() > 0) {
+                            Map<String, Object> pictureMap = listMap.get(0);
 
-        if (photoList.size() == 0) {
+                            String localPictureBaseUrl = systemConfigMap.get(SQLConf.LOCAL_PICTURE_BASE_URL).toString();
+                            String qiNiuPictureBaseUrl = systemConfigMap.get(SQLConf.QI_NIU_PICTURE_BASE_URL).toString();
+                            String picturePriority = systemConfigMap.get(SQLConf.PICTURE_PRIORITY).toString();
 
-            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            queryWrapper.last("LIMIT 1");
-            Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
-            // 获取到头像，然后上传到自己服务器
-            FileVO fileVO = new FileVO();
-            fileVO.setAdminUid("uid00000000000000000000000000000000");
-            fileVO.setUserUid("uid00000000000000000000000000000000");
-            fileVO.setProjectName(SysConf.BLOG);
-            fileVO.setSortName(SysConf.ADMIN);
-            fileVO.setSystemConfig(systemConfigMap);
-            List<String> urlList = new ArrayList<>();
-            urlList.add(data.get(SysConf.AVATAR).toString());
-            fileVO.setUrlList(urlList);
-            String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
-            Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
-            if (resultMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE).toString())) {
-                if (resultMap.get(SysConf.DATA) != null) {
-                    List<Map<String, Object>> listMap = (List<Map<String, Object>>) resultMap.get(SysConf.DATA);
-                    if (listMap != null && listMap.size() > 0) {
-                        Map<String, Object> pictureMap = listMap.get(0);
+                            user.setAvatar(pictureMap.get(SysConf.UID).toString());
 
-                        String localPictureBaseUrl = systemConfigMap.get(SQLConf.LOCAL_PICTURE_BASE_URL).toString();
-                        String qiNiuPictureBaseUrl = systemConfigMap.get(SQLConf.QI_NIU_PICTURE_BASE_URL).toString();
-                        String picturePriority = systemConfigMap.get(SQLConf.PICTURE_PRIORITY).toString();
-
-                        user.setAvatar(pictureMap.get(SysConf.UID).toString());
-
-                        // 判断图片优先展示
-                        if ("1".equals(picturePriority)) {
-                            // 使用七牛云
-                            if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
-                                user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());
+                            // 判断图片优先展示
+                            if ("1".equals(picturePriority)) {
+                                // 使用七牛云
+                                if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                    user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());
+                                }
+                            } else {
+                                // 使用自建图片服务器
+                                if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                                    user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
+                                }
                             }
-                        } else {
-                            // 使用自建图片服务器
-                            if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
-                                user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
-                            }
+
                         }
-
                     }
                 }
             }
-        } else {
-            user.setPhotoUrl(photoList.get(0));
         }
+
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());
         }
