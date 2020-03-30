@@ -55,6 +55,65 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     }
 
     @Override
+    public List<Blog> setTagAndSortByBlogList(List<Blog> list) {
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
+        list.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+                sortUids.add(item.getBlogSortUid());
+            }
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), BaseSysConf.FILE_SEGMENTATION);
+                for (String itemTagUid : tagUidsTemp) {
+                    tagUids.add(itemTagUid);
+                }
+            }
+        });
+
+        Collection<BlogSort> sortList = new ArrayList<>();
+        Collection<Tag> tagList = new ArrayList<>();
+
+        if(sortUids.size() > 0) {
+            sortList = blogSortMapper.selectBatchIds(sortUids);
+        }
+        if(tagList.size() > 0) {
+            tagList = tagMapper.selectBatchIds(tagUids);
+        }
+
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+
+        sortList.forEach(item -> {
+            sortMap.put(item.getUid(), item);
+        });
+
+        tagList.forEach(item -> {
+            tagMap.put(item.getUid(), item);
+        });
+
+        for (Blog item : list) {
+
+            //设置分类
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+                item.setBlogSort(sortMap.get(item.getBlogSortUid()));
+            }
+
+            //获取标签
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), BaseSysConf.FILE_SEGMENTATION);
+                List<Tag> tagListTemp = new ArrayList<Tag>();
+
+                tagUidsTemp.forEach(tag -> {
+                    tagListTemp.add(tagMap.get(tag));
+                });
+                item.setTagList(tagListTemp);
+            }
+        }
+
+        return list;
+    }
+
+    @Override
     public Blog setTagByBlog(Blog blog) {
         String tagUid = blog.getTagUid();
         if (!StringUtils.isEmpty(tagUid)) {

@@ -168,8 +168,16 @@ public class BlogRestApi {
         }
 
         List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
-        Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
-        Collection<Tag> tagList = tagService.listByIds(tagUids);
+        Collection<BlogSort> sortList = new ArrayList<>();
+        Collection<Tag> tagList = new ArrayList<>();
+
+        if(sortUids.size() > 0) {
+            sortList = blogSortService.listByIds(sortUids);
+        }
+        if(tagList.size() > 0) {
+            tagList = tagService.listByIds(tagUids);
+        }
+
 
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
@@ -268,6 +276,7 @@ public class BlogRestApi {
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setStatus(EStatus.ENABLE);
+        blog.setStartComment(blogVO.getStartComment());
         Boolean isSave = blogService.save(blog);
 
         //保存成功后，需要发送消息到solr 和 redis
@@ -322,6 +331,7 @@ public class BlogRestApi {
         blog.setLevel(blogVO.getLevel());
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
+        blog.setStartComment(blogVO.getStartComment());
         blog.setStatus(EStatus.ENABLE);
 
         Boolean isSave = blog.updateById();

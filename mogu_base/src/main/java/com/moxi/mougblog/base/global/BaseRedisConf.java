@@ -73,4 +73,9 @@ public class BaseRedisConf {
      */
     public final static String ADMIN_VISIT_MENU = "ADMIN_VISIT_MENU";
 
+    /**
+     * 博客点赞
+     */
+    public final static String BLOG_PRAISE = "BLOG_PRAISE";
+
 }

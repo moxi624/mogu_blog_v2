@@ -38,6 +38,7 @@ public class BaseSQLConf {
     public final static String COMMENT_UID = "comment_uid";
     public final static String REPORT_COMMENT_UID = "report_comment_uid";
     public static final String TAG_UID = "tag_uid";
+    public static final String AVATAR = "avatar";
 
     // SystemConfig相关
     public final static String UPLOAD_QI_NIU = "upload_qi_niu";
@@ -55,4 +56,9 @@ public class BaseSQLConf {
 
     // t_comment表
     public final static String TYPE = "type";
+
+    // t_picture
+    public final static String FILE_OLD_NAME = "file_old_name";
+    public final static String DATA = "data";
+
 }

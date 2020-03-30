@@ -432,9 +432,6 @@ public class IndexRestApi {
         if (StringUtils.isEmpty(pageName)) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.PARAM_INCORRECT);
         }
-
-        // webVisitService.addWebVisit(null, request, EBehavior.VISIT_PAGE.getBehavior(), null, pageName);
-
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 

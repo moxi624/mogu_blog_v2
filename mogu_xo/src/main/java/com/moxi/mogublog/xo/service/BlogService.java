@@ -26,6 +26,13 @@ public interface BlogService extends SuperService<Blog> {
     public List<Blog> setTagByBlogList(List<Blog> list);
 
     /**
+     * 给博客列表设置分类和标签
+     * @param list
+     * @return
+     */
+    public List<Blog> setTagAndSortByBlogList(List<Blog> list);
+
+    /**
      * 给博客设置标签
      *
      * @param blog

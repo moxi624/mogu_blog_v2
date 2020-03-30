@@ -167,12 +167,12 @@ public class FileRestApi {
                 for (int i = 0; i < picData.size(); i++) {
                     Map<String, Object> item = new HashMap<>();
 
-                    item.put("uid",  picData.get(i).get("uid"));
+                    item.put(SysConf.UID,  picData.get(i).get(SysConf.UID));
 
                     if ("1".equals(picturePriority)) {
-                        item.put("url",  qiNiuPictureBaseUrl + picData.get(i).get("qiNiuUrl"));
+                        item.put(SysConf.URL,  qiNiuPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     } else {
-                        item.put("url",  localPictureBaseUrl + picData.get(i).get("picUrl"));
+                        item.put(SysConf.URL,  localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     }
                     listMap.add(item);
                 }
@@ -212,19 +212,20 @@ public class FileRestApi {
                     if (file != null) {
                         Map<String, Object> remap = new HashMap<>();
 
-
                         // 获取七牛云地址
-                        remap.put("qiNiuUrl", file.getQiNiuUrl());
+                        remap.put(SysConf.QI_NIU_URL, file.getQiNiuUrl());
 
                         // 获取本地地址
-                        remap.put("url", file.getPicUrl());
+                        remap.put(SysConf.URL, file.getPicUrl());
 
                         // 后缀名，也就是类型
-                        remap.put("expandedName", file.getPicExpandedName());
+                        remap.put(SysConf.EXPANDED_NAME, file.getPicExpandedName());
+
+                        remap.put(SysConf.FILE_OLD_NAME, file.getFileOldName());
 
                         //名称
-                        remap.put("name", file.getPicName());
-                        remap.put("uid", file.getUid());
+                        remap.put(SysConf.NAME, file.getPicName());
+                        remap.put(SysConf.UID, file.getUid());
                         remap.put("file_old_name", file.getFileOldName());
                         list.add(remap);
                     }

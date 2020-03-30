@@ -163,14 +163,16 @@ public class AuthRestApi {
         }
 
         // 通过头像uid获取图片
-        String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), ",");
+        String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
         List<String> photoList = webUtils.getPicture(pictureList);
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
-        if ("success".equals(picMap.get("code"))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
-            String fileOldName = picData.get(0).get("file_old_name").toString();
-            if (fileOldName.equals(data.get("avatar"))) {
-                //一样，直接获取本地图片
+        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
+            String fileOldName = picData.get(0).get(SysConf.FILE_OLD_NAME).toString();
+
+            // 判断本地的图片是否和第三方登录的一样，如果不一样，那么更新
+            // 如果旧名称为blob表示是用户自定义的，代表用户在本网站使用了自定义头像，那么就再也不同步更新网站上的了
+            if (fileOldName.equals(data.get(SysConf.AVATAR)) || SysConf.BLOB.equals(fileOldName)) {
                 user.setPhotoUrl(photoList.get(0));
             } else {
                 QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
@@ -179,8 +181,8 @@ public class AuthRestApi {
                 Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
                 // 获取到头像，然后上传到自己服务器
                 FileVO fileVO = new FileVO();
-                fileVO.setAdminUid("uid00000000000000000000000000000000");
-                fileVO.setUserUid("uid00000000000000000000000000000000");
+                fileVO.setAdminUid(SysConf.DEFAULT_UID);
+                fileVO.setUserUid(SysConf.DEFAULT_UID);
                 fileVO.setProjectName(SysConf.BLOG);
                 fileVO.setSortName(SysConf.ADMIN);
                 fileVO.setSystemConfig(systemConfigMap);
@@ -213,7 +215,6 @@ public class AuthRestApi {
                                     user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
                                 }
                             }
-
                         }
                     }
                 }

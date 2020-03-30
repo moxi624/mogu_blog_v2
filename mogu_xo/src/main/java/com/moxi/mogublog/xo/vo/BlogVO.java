@@ -120,6 +120,10 @@ public class BlogVO extends BaseVO<BlogVO> {
      */
     private Integer sort;
 
+    /**
+     * 是否开启评论(0:否， 1:是)
+     */
+    private String startComment;
 
     /**
      * 无参构造方法，初始化默认值

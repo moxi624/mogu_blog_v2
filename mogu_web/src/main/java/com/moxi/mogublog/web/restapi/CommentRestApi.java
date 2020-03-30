@@ -374,6 +374,8 @@ public class CommentRestApi {
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
+        ThrowableUtils.checkParamArgument(result);
+
         HttpServletRequest request = RequestHolder.getRequest();
         if (request.getAttribute(SysConf.USER_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
@@ -381,10 +383,19 @@ public class CommentRestApi {
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
+
+        // 判断是否开启全局评论功能
         if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getStartComment())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
         }
-        ThrowableUtils.checkParamArgument(result);
+
+        // 判断博客是否开启评论功能
+        if(StringUtils.isNotEmpty(commentVO.getBlogUid())) {
+            Blog blog = blogService.getById(commentVO.getBlogUid());
+            if (SysConf.CAN_NOT_COMMENT.equals(blog.getStartComment())) {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_NO_OPEN_COMMENTS);
+            }
+        }
 
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
 
