@@ -20,15 +20,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableDiscoveryClient
 @EnableFeignClients
-@ComponentScan(basePackages = {
-        "com.moxi.mogublog.search.client",
-        "com.moxi.mogublog.search.config",
-        "com.moxi.mogublog.search.restapi",
-        "com.moxi.mogublog.search.service",
-        "com.moxi.mogublog.search.pojo",
-        "com.moxi.mogublog.search.reposlitory",
-        "com.moxi.mogublog.utils"
-})
 public class SearchApplication {
     public static void main(String[] args) {
         /**

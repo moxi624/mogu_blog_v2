@@ -8,6 +8,8 @@ import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.web.global.MessageConf;
+import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
@@ -125,11 +127,6 @@ public class BlogContentRestApi {
                 stringRedisTemplate.opsForValue().set("BLOG_CLICK:" + ip + "#" + uid, blog.getClickCount().toString(),
                         24, TimeUnit.HOURS);
             }
-
-
-            //增加记录（可以考虑使用AOP）
-            //webVisitService.addWebVisit(null, request, EBehavior.BLOG_CONTNET.getBehavior(), blog.getUid(), null);
-
         }
 
         log.info("返回结果");
@@ -144,11 +141,11 @@ public class BlogContentRestApi {
         String ip = IpUtils.getIpAddr(request);
 
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         //从Redis取出用户点赞数据
-        String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
+        String pariseJsonResult = stringRedisTemplate.opsForValue().get(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid);
         Integer pariseCount = 0;
         if (!StringUtils.isEmpty(pariseJsonResult)) {
             pariseCount = Integer.parseInt(pariseJsonResult);
@@ -162,7 +159,7 @@ public class BlogContentRestApi {
     public String praiseBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
 
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, "UID不能为空");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
 
         HttpServletRequest request = RequestHolder.getRequest();
@@ -196,12 +193,12 @@ public class BlogContentRestApi {
 
         Blog blog = blogService.getById(uid);
 
-        String pariseJsonResult = stringRedisTemplate.opsForValue().get("BLOG_PRAISE:" + uid);
+        String pariseJsonResult = stringRedisTemplate.opsForValue().get(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid);
 
         if (StringUtils.isEmpty(pariseJsonResult)) {
 
             //给该博客点赞数
-            stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, "1");
+            stringRedisTemplate.opsForValue().set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, "1");
 
             blog.setCollectCount(1);
             blog.updateById();
@@ -211,7 +208,7 @@ public class BlogContentRestApi {
             Integer count = blog.getCollectCount() + 1;
 
             //给该博客点赞 +1
-            stringRedisTemplate.opsForValue().set("BLOG_PRAISE:" + uid, count.toString());
+            stringRedisTemplate.opsForValue().set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, count.toString());
 
             blog.setCollectCount(count);
             blog.updateById();
@@ -245,19 +242,14 @@ public class BlogContentRestApi {
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-        queryWrapper.eq(SQLConf.TagUid, tagUid);
+        queryWrapper.like(SQLConf.TagUid, tagUid);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
-        for (Blog item : list) {
-            //获取标签
-            blogService.setTagByBlog(item);
-            //获取分类
-            blogService.setSortByBlog(item);
-            //设置博客标题图
-            setPhotoListByBlog(item);
-        }
+
+        list = blogService.setTagAndSortByBlogList(list);
         log.info("返回结果");
         pageList.setRecords(list);
         return ResultUtil.result(SysConf.SUCCESS, pageList);
@@ -284,29 +276,15 @@ public class BlogContentRestApi {
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-
-        // 因为tagUid可能存在多个，需要切割进行拼接操作
-        List<String> tagList = StringUtils.changeStringToString(blog.getTagUid(), ",");
-        for (int a = 0; a < tagList.size(); a++) {
-            if (a < tagList.size() - 1) {
-                queryWrapper.eq(SQLConf.TagUid, tagList.get(a)).or();
-            } else {
-                queryWrapper.eq(SQLConf.TagUid, tagList.get(a));
-            }
-        }
-
+        // 通过分类来获取相关博客
+        String blogSortUid = blog.getBlogSortUid();
+        queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
-        for (Blog item : list) {
-            //获取标签
-            blogService.setTagByBlog(item);
-            //获取分类
-            blogService.setSortByBlog(item);
-            //设置博客标题图
-            setPhotoListByBlog(item);
-        }
+
+        list = blogService.setTagAndSortByBlogList(list);
 
         //过滤掉当前的博客
         List<Blog> newList = new ArrayList<>();

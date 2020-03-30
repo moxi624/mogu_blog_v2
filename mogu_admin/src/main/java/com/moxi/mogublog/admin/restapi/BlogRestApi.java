@@ -168,8 +168,16 @@ public class BlogRestApi {
         }
 
         List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
-        Collection<BlogSort> sortList = blogSortService.listByIds(sortUids);
-        Collection<Tag> tagList = tagService.listByIds(tagUids);
+        Collection<BlogSort> sortList = new ArrayList<>();
+        Collection<Tag> tagList = new ArrayList<>();
+
+        if(sortUids.size() > 0) {
+            sortList = blogSortService.listByIds(sortUids);
+        }
+        if(tagList.size() > 0) {
+            tagList = tagService.listByIds(tagUids);
+        }
+
 
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
