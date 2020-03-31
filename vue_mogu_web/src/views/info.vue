@@ -1,7 +1,7 @@
 <template>
   <article>
-    <el-dialog :visible.sync="dialogPictureVisible" fullscreen >
-      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;">
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen>
+      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;" />
     </el-dialog>
     <h1 class="t_nav">
       <a href="/" class="n1">网站首页</a>
@@ -28,9 +28,18 @@
                 @click="goToSortList(blogData.blogSort.uid)"
               >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
             </li>
-            <li class="createTime"><span class="iconfont">&#xe606;</span>{{blogData.createTime}}</li>
-            <li class="view"><span class="iconfont">&#xe8c7;</span>{{blogData.clickCount}}</li>
-            <li class="like"><span class="iconfont">&#xe663;</span>{{blogData.collectCount}}</li>
+            <li class="createTime">
+              <span class="iconfont">&#xe606;</span>
+              {{blogData.createTime}}
+            </li>
+            <li class="view">
+              <span class="iconfont">&#xe8c7;</span>
+              {{blogData.clickCount}}
+            </li>
+            <li class="like">
+              <span class="iconfont">&#xe663;</span>
+              {{blogData.collectCount}}
+            </li>
           </ul>
         </div>
         <div class="tags">
@@ -52,8 +61,7 @@
           v-html="blogData.content"
           v-highlight
           @click="imageChange"
-        >{{blogData.content}}
-        </div>
+        >{{blogData.content}}</div>
       </div>
 
       <!--付款码和点赞-->
@@ -75,21 +83,31 @@
         <h2>文章评论</h2>
         <ul>
           <sticky :sticky-top="60">
-            <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
-                        :showCancel="showCancel" ></CommentBox>
+            <CommentBox
+              :userInfo="userInfo"
+              :commentInfo="commentInfo"
+              @submit-box="submitBox"
+              :showCancel="showCancel"
+            ></CommentBox>
           </sticky>
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
-            <div class="noComment" v-if="comments.length ==0">
-              还没有评论，快来抢沙发吧！
-            </div>
+            <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
           </div>
-
         </ul>
+      </div>
+      <!--分页-->
+      <div class="block" v-if="comments.length !=0" style="text-align:center;">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </div>
     </div>
     <div class="sidebar">
-
       <!--标签云-->
       <TagCloud></TagCloud>
 
@@ -107,195 +125,205 @@
 
       <!-- 友情链接-->
       <Link></Link>
-
     </div>
   </article>
 </template>
 
 <script>
-  import {getLink} from "../api/index";
-  import {getBlogByUid, getSameBlogByBlogUid} from "../api/blogContent";
+    import { getLink } from "../api/index";
+    import { getBlogByUid, getSameBlogByBlogUid } from "../api/blogContent";
 
-  import CommentList from "../components/CommentList";
-  import CommentBox from "../components/CommentBox";
-  // vuex中有mapState方法，相当于我们能够使用它的getset方法
-  import {mapMutations} from 'vuex';
-  import ThirdRecommend from "../components/ThirdRecommend";
-  import FourthRecommend from "../components/FourthRecommend";
-  import TagCloud from "../components/TagCloud";
-  import HotBlog from "../components/HotBlog";
-  import FollowUs from "../components/FollowUs";
-  import PayCode from "../components/PayCode";
-  import Sticky from '@/components/Sticky'
-  import Link from "../components/Link";
-  import {addComment, getCommentList} from "../api/comment";
-  import { Loading } from 'element-ui';
+    import CommentList from "../components/CommentList";
+    import CommentBox from "../components/CommentBox";
+    // vuex中有mapState方法，相当于我们能够使用它的getset方法
+    import { mapMutations } from "vuex";
+    import ThirdRecommend from "../components/ThirdRecommend";
+    import FourthRecommend from "../components/FourthRecommend";
+    import TagCloud from "../components/TagCloud";
+    import HotBlog from "../components/HotBlog";
+    import FollowUs from "../components/FollowUs";
+    import PayCode from "../components/PayCode";
+    import Sticky from "@/components/Sticky";
+    import Link from "../components/Link";
+    import { addComment, getCommentList } from "../api/comment";
+    import { Loading } from "element-ui";
 
-  export default {
-    name: "info",
-    data() {
-      return {
-        loadingInstance: null, // loading对象
-        showCancel: false,
-        submitting: false,
-        comments: [],
-        commentInfo: {
-          // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
-          source: "BLOG_INFO",
-          blogUid: this.$route.query.blogUid
+    export default {
+        name: "info",
+        data() {
+            return {
+                loadingInstance: null, // loading对象
+                showCancel: false,
+                submitting: false,
+                comments: [],
+                commentInfo: {
+                    // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
+                    source: "BLOG_INFO",
+                    blogUid: this.$route.query.blogUid
+                },
+                currentPage: 1,
+                pageSize: 10,
+                total: 0, //总数量
+
+                toInfo: {},
+                userInfo: {},
+                blogUid: null, //传递过来的博客uid
+                blogData: null,
+                sameBlogData: [], //相关文章
+                linkData: [], //友情链接
+                dialogPictureVisible: false,
+                dialogImageUrl: ""
+            };
         },
-        toInfo: {},
-        userInfo: {},
-        blogUid: null, //传递过来的博客uid
-        blogData: null,
-        sameBlogData: [], //相关文章
-        linkData: [], //友情链接
-        dialogPictureVisible: false,
-        dialogImageUrl: ""
-      };
-    },
-    components: {
-      //注册组件
-      FourthRecommend,
-      ThirdRecommend,
-      TagCloud,
-      HotBlog,
-      FollowUs,
-      PayCode,
-      CommentList,
-      CommentBox,
-      Sticky,
-      Link
-    },
-    created() {
+        components: {
+            //注册组件
+            FourthRecommend,
+            ThirdRecommend,
+            TagCloud,
+            HotBlog,
+            FollowUs,
+            PayCode,
+            CommentList,
+            CommentBox,
+            Sticky,
+            Link
+        },
+        created() {
+            this.loadingInstance = Loading.service({
+                fullscreen: true,
+                text: "正在努力加载中~"
+            });
 
-      this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+            getLink().then(response => {
+                this.linkData = response.data.records;
+            });
 
-      getLink().then(response => {
-        this.linkData = response.data.records;
-      });
+            var params = new URLSearchParams();
 
-      var params = new URLSearchParams();
+            this.blogUid = this.$route.query.blogUid;
 
-      this.blogUid = this.$route.query.blogUid;
+            this.commentInfo.blogUid = this.$route.query.blogUid;
 
-      this.commentInfo.blogUid = this.$route.query.blogUid;
+            params.append("uid", this.blogUid);
+            getBlogByUid(params).then(response => {
+                if (response.code == "success") {
+                    this.blogData = response.data;
+                }
+                this.loadingInstance.close();
+            });
 
-      params.append("uid", this.blogUid);
-      getBlogByUid(params).then(response => {
-        if (response.code == "success") {
-          this.blogData = response.data;
-        }
-        this.loadingInstance.close();
-      });
-
-      var blogParams = new URLSearchParams();
-      blogParams.append("blogUid", this.blogUid);
-      getSameBlogByBlogUid(blogParams).then(response => {
-        if (response.code == "success") {
-          this.sameBlogData = response.data.records;
-        }
-      });
-
-      this.getCommentList();
-    },
-    methods: {
-      //拿到vuex中的写的两个方法
-      ...mapMutations(['setCommentList']),
-      submitBox(e) {
-        let params = {};
-        params.blogUid = e.blogUid;
-        params.source = e.source;
-        params.userUid = e.userUid;
-        params.content = e.content;
-        params.blogUid = e.blogUid;
-        addComment(params).then(response => {
-            if (response.code == "success") {
-              this.$notify({
-                title: '成功',
-                message: "发表成功~",
-                type: 'success',
-                offset: 100
-              });
-            } else {
-              this.$notify.error({
-                title: '错误',
-                message: response.data,
-                offset: 100
-              });
-            }
+            var blogParams = new URLSearchParams();
+            blogParams.append("blogUid", this.blogUid);
+            getSameBlogByBlogUid(blogParams).then(response => {
+                if (response.code == "success") {
+                    this.sameBlogData = response.data.records;
+                }
+            });
             this.getCommentList();
-          }
-        );
-      },
-      getCommentList: function () {
-        let params = {};
-        params.source = this.commentInfo.source;
-        params.blogUid = this.commentInfo.blogUid;
-        params.currentPage = 0;
-        params.pageSize = 10;
-        getCommentList(params).then(response => {
-          if (response.code == "success") {
-            this.comments = response.data;
-            this.setCommentList(this.comments);
-          }
-        });
-      },
-      //跳转到文章详情
-      goToInfo(uid) {
-        let routeData = this.$router.resolve({
-          path: "/info",
-          query: {blogUid: uid}
-        });
-        window.open(routeData.href, "_blank");
-      },
-      //跳转到搜索详情页
-      goToList(uid) {
-        let routeData = this.$router.resolve({
-          path: "/list",
-          query: {tagUid: uid}
-        });
-        window.open(routeData.href, "_blank");
-      },
-      //跳转到搜索详情页
-      goToSortList(uid) {
-        let routeData = this.$router.resolve({
-          path: "/list",
-          query: {sortUid: uid}
-        });
-        window.open(routeData.href, "_blank");
-      },
-      //跳转到搜索详情页
-      goToAuthor(author) {
-        let routeData = this.$router.resolve({
-          path: "/list",
-          query: {author: author}
-        });
-        window.open(routeData.href, "_blank");
-      },
+        },
+        methods: {
+            //拿到vuex中的写的两个方法
+            ...mapMutations(["setCommentList"]),
 
-      imageChange: function (e) {
-        //首先需要判断点击的是否是图片
-        var type = e.target.localName;
-        if (type == "img") {
-          // window.open(e.target.currentSrc);
-          this.dialogPictureVisible = true
-          this.dialogImageUrl = e.target.currentSrc
+            handleCurrentChange: function(val) {
+                this.currentPage = val;
+                this.getCommentList();
+            },
+            submitBox(e) {
+                let params = {};
+                params.blogUid = e.blogUid;
+                params.source = e.source;
+                params.userUid = e.userUid;
+                params.content = e.content;
+                params.blogUid = e.blogUid;
+                addComment(params).then(response => {
+                    if (response.code == "success") {
+                        this.$notify({
+                            title: "成功",
+                            message: "发表成功~",
+                            type: "success",
+                            offset: 100
+                        });
+                    } else {
+                        this.$notify.error({
+                            title: "错误",
+                            message: response.data,
+                            offset: 100
+                        });
+                    }
+                    this.getCommentList();
+                });
+            },
+            getCommentList: function() {
+                let params = {};
+                params.source = this.commentInfo.source;
+                params.blogUid = this.commentInfo.blogUid;
+                params.currentPage = this.currentPage;
+                params.pageSize = this.pageSize;
+                getCommentList(params).then(response => {
+                    if (response.code == "success") {
+                        this.comments = response.data.records;
+                        this.setCommentList(this.comments);
+                        this.currentPage = response.data.current;
+                        this.pageSize = response.data.size;
+                        this.total = response.data.total
+                    }
+                });
+            },
+            //跳转到文章详情
+            goToInfo(uid) {
+                let routeData = this.$router.resolve({
+                    path: "/info",
+                    query: { blogUid: uid }
+                });
+                window.open(routeData.href, "_blank");
+            },
+            //跳转到搜索详情页
+            goToList(uid) {
+                let routeData = this.$router.resolve({
+                    path: "/list",
+                    query: { tagUid: uid }
+                });
+                window.open(routeData.href, "_blank");
+            },
+            //跳转到搜索详情页
+            goToSortList(uid) {
+                let routeData = this.$router.resolve({
+                    path: "/list",
+                    query: { sortUid: uid }
+                });
+                window.open(routeData.href, "_blank");
+            },
+            //跳转到搜索详情页
+            goToAuthor(author) {
+                let routeData = this.$router.resolve({
+                    path: "/list",
+                    query: { author: author }
+                });
+                window.open(routeData.href, "_blank");
+            },
+
+            imageChange: function(e) {
+                //首先需要判断点击的是否是图片
+                var type = e.target.localName;
+                if (type == "img") {
+                    // window.open(e.target.currentSrc);
+                    this.dialogPictureVisible = true;
+                    this.dialogImageUrl = e.target.currentSrc;
+                }
+            },
+            //切割字符串
+            subText: function(str, index) {
+                if (str.length < index) {
+                    return str;
+                }
+                return str.substring(0, index) + "...";
+            }
         }
-      },
-      //切割字符串
-      subText: function (str, index) {
-        if (str.length < index) {
-          return str;
-        }
-        return str.substring(0, index) + "...";
-      }
-    }
-  };
+    };
 </script>
 
 <style>
-
   .iconfont {
     font-size: 14px;
     margin-right: 3px;
