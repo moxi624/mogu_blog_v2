@@ -172,6 +172,7 @@ public class ResourceSortRestApi {
         resourceSort.setContent(resourceSortVO.getContent());
         resourceSort.setFileUid(resourceSortVO.getFileUid());
         resourceSort.setSort(resourceSortVO.getSort());
+        resourceSort.setUpdateTime(new Date());
         resourceSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -205,6 +206,7 @@ public class ResourceSortRestApi {
         Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(uids);
 
         resourceSortList.forEach(item -> {
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 
@@ -248,7 +250,7 @@ public class ResourceSortRestApi {
         Integer sortCount = maxSort.getSort() + 1;
 
         resourceSort.setSort(sortCount);
-
+        resourceSort.setUpdateTime(new Date());
         resourceSort.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 /**
  * 系统设置RestApi
@@ -105,6 +106,7 @@ public class SystemRestApi {
 
         if (isPassword) {
             admin.setPassWord(encoder.encode(newPwd));
+            admin.setUpdateTime(new Date());
             admin.updateById();
             return ResultUtil.result(SysConf.SUCCESS, "修改成功");
         } else {

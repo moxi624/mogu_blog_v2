@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * <p>
  * 系统配置表 RestApi
@@ -90,7 +92,6 @@ public class SystemConfigRestApi {
             systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
-
             systemConfig.insert();
         } else {
 
@@ -112,6 +113,8 @@ public class SystemConfigRestApi {
             systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
+
+            systemConfig.setUpdateTime(new Date());
             systemConfig.updateById();
 
         }

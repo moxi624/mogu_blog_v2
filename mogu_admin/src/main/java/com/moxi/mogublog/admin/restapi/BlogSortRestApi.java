@@ -131,6 +131,7 @@ public class BlogSortRestApi {
         blogSort.setSortName(blogSortVO.getSortName());
         blogSort.setSort(blogSortVO.getSort());
         blogSort.setStatus(EStatus.ENABLE);
+        blogSort.setUpdateTime(new Date());
         blogSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -165,6 +166,7 @@ public class BlogSortRestApi {
         Collection<BlogSort> blogSortList = blogSortService.listByIds(uids);
 
         blogSortList.forEach(item -> {
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 
@@ -208,6 +210,8 @@ public class BlogSortRestApi {
 
         blogSort.setSort(sortCount);
 
+        blogSort.setUpdateTime(new Date());
+
         blogSort.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
@@ -232,8 +236,9 @@ public class BlogSortRestApi {
         Integer maxSort = blogSortList.size();
         for (BlogSort item : blogSortList) {
             item.setSort(item.getClickCount());
-            item.updateById();
+            item.setUpdateTime(new Date());
         }
+        blogSortService.updateBatchById(blogSortList);
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
@@ -279,8 +284,9 @@ public class BlogSortRestApi {
 
         blogSortList.forEach(item -> {
             item.setSort(map.get(item.getUid()));
-            item.updateById();
+            item.setUpdateTime(new Date());
         });
+        blogSortService.updateBatchById(blogSortList);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }

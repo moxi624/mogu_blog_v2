@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -130,6 +127,7 @@ public class PictureSortRestApi {
         pictureSort.setParentUid(parentUid);
         pictureSort.setFileUid(fileUid);
         pictureSort.setStatus(EStatus.ENABLE);
+        pictureSort.setUpdateTime(new Date());
         pictureSort.insert();
         return ResultUtil.result(SysConf.SUCCESS, "添加成功");
     }
@@ -152,6 +150,7 @@ public class PictureSortRestApi {
         pictureSort.setName(name);
         pictureSort.setParentUid(parentUid);
         pictureSort.setFileUid(fileUid);
+        pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
     }
@@ -178,6 +177,7 @@ public class PictureSortRestApi {
 
         PictureSort pictureSort = pictureSortService.getById(uid);
         pictureSort.setStatus(EStatus.DISABLED);
+        pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
     }
@@ -215,6 +215,8 @@ public class PictureSortRestApi {
         Integer sortCount = maxSort.getSort() + 1;
 
         pictureSort.setSort(sortCount);
+
+        pictureSort.setUpdateTime(new Date());
 
         pictureSort.updateById();
 

@@ -28,10 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -184,6 +181,7 @@ public class PictureRestApi {
         picture.setFileUid(fileUid);
         picture.setPicName(picName);
         picture.setPictureSortUid(pictureSortUid);
+        picture.setUpdateTime(new Date());
         picture.updateById();
         return ResultUtil.result(SysConf.SUCCESS, "编辑成功");
     }
@@ -202,6 +200,7 @@ public class PictureRestApi {
         for (String item : uids) {
             Picture picture = pictureService.getById(item);
             picture.setStatus(EStatus.DISABLED);
+            picture.setUpdateTime(new Date());
             picture.updateById();
         }
         return ResultUtil.result(SysConf.SUCCESS, "删除成功");
@@ -227,6 +226,7 @@ public class PictureRestApi {
 
             if (picture != null) {
                 pictureSort.setFileUid(picture.getFileUid());
+                picture.setUpdateTime(new Date());
                 pictureSort.updateById();
             } else {
                 return ResultUtil.result(SysConf.ERROR, "找不到该图片");

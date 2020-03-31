@@ -135,6 +135,7 @@ public class StudyVideoRestApi {
         studyVideo.setBaiduPath(studyVideoVO.getBaiduPath());
         studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
         studyVideo.setClickCount(SysConf.ZERO);
+        studyVideo.setUpdateTime(new Date());
         studyVideo.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
@@ -155,6 +156,7 @@ public class StudyVideoRestApi {
         studyVideo.setFileUid(studyVideoVO.getFileUid());
         studyVideo.setBaiduPath(studyVideoVO.getBaiduPath());
         studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
+        studyVideo.setUpdateTime(new Date());
         studyVideo.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -180,6 +182,7 @@ public class StudyVideoRestApi {
         Collection<StudyVideo> blogSortList = studyVideoService.listByIds(uids);
 
         blogSortList.forEach(item -> {
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 

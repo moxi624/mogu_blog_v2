@@ -23,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * <p>
  * 网站配置表 RestApi
@@ -109,8 +111,7 @@ public class WebConfigRestApi {
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
             webConfig.setShowList(webConfigVO.getShowList());
-
-
+            webConfig.setUpdateTime(new Date());
             webConfigService.save(webConfig);
         } else {
             WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
@@ -133,7 +134,7 @@ public class WebConfigRestApi {
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
             webConfig.setShowList(webConfigVO.getShowList());
-
+            webConfig.setUpdateTime(new Date());
             webConfigService.updateById(webConfig);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);

@@ -178,6 +178,7 @@ public class CommentRestApi {
         comment.setToUid(commentVO.getToUid());
         comment.setToUserUid(commentVO.getToUserUid());
         comment.setStatus(EStatus.ENABLE);
+        comment.setUpdateTime(new Date());
         comment.insert();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -199,6 +200,7 @@ public class CommentRestApi {
         comment.setToUid(commentVO.getToUid());
         comment.setToUserUid(commentVO.getToUserUid());
         comment.setStatus(EStatus.ENABLE);
+        comment.setUpdateTime(new Date());
         comment.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -213,6 +215,7 @@ public class CommentRestApi {
 
         Comment comment = commentService.getById(commentVO.getUid());
         comment.setStatus(EStatus.DISABLED);
+        comment.setUpdateTime(new Date());
         comment.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -236,6 +239,7 @@ public class CommentRestApi {
         Collection<Comment> commentList = commentService.listByIds(uids);
 
         commentList.forEach(item -> {
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 

@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -121,6 +122,7 @@ public class RoleRestApi {
         getRole.setRoleName(roleVO.getRoleName());
         getRole.setCategoryMenuUids(roleVO.getCategoryMenuUids());
         getRole.setSummary(roleVO.getSummary());
+        getRole.setUpdateTime(new Date());
         getRole.updateById();
 
         // 修改成功后，需要删除redis中所有的admin访问路径
@@ -150,6 +152,7 @@ public class RoleRestApi {
 
         Role role = roleService.getById(roleVO.getUid());
         role.setStatus(EStatus.DISABLED);
+        role.setUpdateTime(new Date());
         role.updateById();
 
         deleteAdminVisitUrl();

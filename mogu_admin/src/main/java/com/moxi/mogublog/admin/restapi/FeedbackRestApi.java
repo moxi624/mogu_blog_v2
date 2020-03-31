@@ -126,6 +126,7 @@ public class FeedbackRestApi {
         if (request.getAttribute(SysConf.ADMIN_UID) != null) {
             feedback.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         }
+        feedback.setUpdateTime(new Date());
         feedback.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -154,6 +155,7 @@ public class FeedbackRestApi {
 
         feedbackList.forEach(item -> {
             item.setAdminUid(adminUid);
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 

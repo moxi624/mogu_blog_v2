@@ -174,7 +174,7 @@ public class BlogRestApi {
         if(sortUids.size() > 0) {
             sortList = blogSortService.listByIds(sortUids);
         }
-        if(tagList.size() > 0) {
+        if(tagUids.size() > 0) {
             tagList = tagService.listByIds(tagUids);
         }
 
@@ -332,6 +332,7 @@ public class BlogRestApi {
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setStartComment(blogVO.getStartComment());
+        blog.setUpdateTime(new Date());
         blog.setStatus(EStatus.ENABLE);
 
         Boolean isSave = blog.updateById();

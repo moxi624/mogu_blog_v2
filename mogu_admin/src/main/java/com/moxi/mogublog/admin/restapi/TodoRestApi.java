@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * <p>
@@ -115,6 +116,7 @@ public class TodoRestApi {
 
         todo.setText(todoVO.getText());
         todo.setDone(todoVO.getDone());
+        todo.setUpdateTime(new Date());
         todo.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -137,6 +139,7 @@ public class TodoRestApi {
         }
 
         todo.setStatus(EStatus.DISABLED);
+        todo.setUpdateTime(new Date());
         todo.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }

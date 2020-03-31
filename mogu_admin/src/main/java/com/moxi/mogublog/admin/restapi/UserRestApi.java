@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -157,6 +154,7 @@ public class UserRestApi {
         user.setNickName(userVO.getNickName());
         user.setUserTag(userVO.getUserTag());
         user.setCommentStatus(userVO.getCommentStatus());
+        user.setUpdateTime(new Date());
         user.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -172,6 +170,7 @@ public class UserRestApi {
 
         User user = userService.getById(userVO.getUid());
         user.setStatus(EStatus.DISABLED);
+        user.setUpdateTime(new Date());
         user.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -191,6 +190,7 @@ public class UserRestApi {
         } else if (user.getStatus() == SysConf.ONE) {
             user.setCommentStatus(SysConf.ZERO);
         }
+        user.setUpdateTime(new Date());
         user.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
@@ -207,6 +207,7 @@ public class UserRestApi {
 
         User user = userService.getById(userVO.getUid());
         user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+        user.setUpdateTime(new Date());
         user.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

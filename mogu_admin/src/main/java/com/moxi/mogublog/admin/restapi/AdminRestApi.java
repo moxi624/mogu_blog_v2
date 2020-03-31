@@ -139,6 +139,7 @@ public class AdminRestApi {
         Admin admin = adminService.getById(uid);
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         admin.setPassWord(encoder.encode(DEFAULE_PWD));
+        admin.setUpdateTime(new Date());
         admin.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
@@ -228,6 +229,7 @@ public class AdminRestApi {
             }
         }
         updateBody.setPassWord(null);
+        updateBody.setUpdateTime(new Date());
         updateBody.updateById();
 
         // 修改成功后，判断是否更改了RoleUid，更新redis中admin的URL访问路径
@@ -294,6 +296,7 @@ public class AdminRestApi {
             if (SysConf.ADMIN.equals(admin.getUserName())) {
                 return ResultUtil.result(SysConf.ERROR, "无法删除Admin账号");
             }
+            admin.setUpdateTime(new Date());
             admin.setStatus(EStatus.DISABLED);
         }
         adminService.updateBatchById(adminList);

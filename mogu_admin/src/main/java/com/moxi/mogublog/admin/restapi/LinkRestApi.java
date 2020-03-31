@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -94,6 +95,7 @@ public class LinkRestApi {
         link.setLinkStatus(linkVO.getLinkStatus());
         link.setSort(linkVO.getSort());
         link.setStatus(EStatus.ENABLE);
+        link.setUpdateTime(new Date());
         link.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
@@ -113,6 +115,7 @@ public class LinkRestApi {
         link.setLinkStatus(linkVO.getLinkStatus());
         link.setUrl(linkVO.getUrl());
         link.setSort(linkVO.getSort());
+        link.setUpdateTime(new Date());
         link.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -126,9 +129,10 @@ public class LinkRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        Link tag = linkService.getById(linkVO.getUid());
-        tag.setStatus(EStatus.DISABLED);
-        tag.updateById();
+        Link link = linkService.getById(linkVO.getUid());
+        link.setStatus(EStatus.DISABLED);
+        link.setUpdateTime(new Date());
+        link.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
@@ -161,7 +165,7 @@ public class LinkRestApi {
         Integer sortCount = maxSort.getSort() + 1;
 
         link.setSort(sortCount);
-
+        link.setUpdateTime(new Date());
         link.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

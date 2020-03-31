@@ -188,6 +188,7 @@ public class SysDictDataRestApi {
         sysDictData.setIsPublish(sysDictDataVO.getIsPublish());
         sysDictData.setCreateByUid(adminUid);
         sysDictData.setUpdateByUid(adminUid);
+        sysDictData.setUpdateTime(new Date());
         sysDictData.updateById();
 
         // 获取Redis中特定前缀
@@ -222,6 +223,7 @@ public class SysDictDataRestApi {
 
         sysDictDataList.forEach(item -> {
             item.setStatus(EStatus.DISABLED);
+            item.setUpdateTime(new Date());
             item.setUpdateByUid(adminUid);
         });
 

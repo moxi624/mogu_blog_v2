@@ -126,6 +126,7 @@ public class TagRestApi {
         tag.setContent(tagVO.getContent());
         tag.setStatus(EStatus.ENABLE);
         tag.setSort(tagVO.getSort());
+        tag.setUpdateTime(new Date());
         tag.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
@@ -160,6 +161,7 @@ public class TagRestApi {
         Collection<Tag> tagList = tagService.listByIds(uids);
 
         tagList.forEach(item -> {
+            item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
 
@@ -203,7 +205,7 @@ public class TagRestApi {
         Integer sortCount = maxTag.getSort() + 1;
 
         tag.setSort(sortCount);
-
+        tag.setUpdateTime(new Date());
         tag.updateById();
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_FAIL);
@@ -224,8 +226,9 @@ public class TagRestApi {
         Integer maxSort = tagList.size();
         for (Tag item : tagList) {
             item.setSort(item.getClickCount());
-            item.updateById();
+            item.setCreateTime(new Date());
         }
+        tagService.updateBatchById(tagList);
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
@@ -274,9 +277,9 @@ public class TagRestApi {
 
         tagList.forEach(item -> {
             item.setSort(map.get(item.getUid()));
-            item.updateById();
+            item.setUpdateTime(new Date());
         });
-
+        tagService.updateBatchById(tagList);
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 }

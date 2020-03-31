@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.moxi.mougblog.base.enums.EStatus;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -44,7 +45,7 @@ public class SuperEntity<T extends Model> extends Model {
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /**
@@ -56,8 +57,6 @@ public class SuperEntity<T extends Model> extends Model {
     private Date updateTime;
 
     public SuperEntity() {
-        this.status = 1;
-        this.createTime = new Date();
-        this.updateTime = new Date();
+        this.status = EStatus.ENABLE;
     }
 }
