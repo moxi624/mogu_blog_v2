@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 图片全屏显示 -->
-    <el-dialog :visible.sync="dialogPictureVisible" fullscreen >
-      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;">
+    <el-dialog :visible.sync="dialogPictureVisible" fullscreen>
+      <img :src="dialogImageUrl" alt="dialogImageUrl" style="margin: 0 auto;" />
     </el-dialog>
 
     <div class="pagebg ab"></div>
@@ -13,41 +13,47 @@
         <a href="/" class="n2">关于我</a>
       </h1>
       <div class="news_infos">
-
         <div
           class="news_con fixck newsview ck-content"
           v-html="info.personResume"
           @click="imageChange"
           v-highlight
-        >{{info.personResume}}
-        </div>
+        >{{info.personResume}}</div>
 
         <el-divider></el-divider>
 
         <sticky :sticky-top="60">
-          <CommentBox :userInfo="userInfo" :commentInfo="commentInfo" @submit-box="submitBox"
-                      :showCancel="showCancel" ></CommentBox>
+          <CommentBox
+            :userInfo="userInfo"
+            :commentInfo="commentInfo"
+            @submit-box="submitBox"
+            :showCancel="showCancel"
+          ></CommentBox>
         </sticky>
         <div class="message_infos">
           <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
-          <div class="noComment" v-if="comments.length ==0">
-            还没有评论，快来抢沙发吧！
-          </div>
+          <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
         </div>
-
+        <!--分页-->
+        <div class v-if="comments.length !=0" style="text-align:center;">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
+        </div>
       </div>
       <div class="sidebar">
         <div class="about">
           <p class="avatar" v-if="info.photoList">
-            <img :src="PICTURE_HOST + info.photoList[0]" alt>
+            <img :src="PICTURE_HOST + info.photoList[0]" alt />
           </p>
           <p class="abname">{{info.nickName}}</p>
           <p class="abposition">{{info.occupation}}</p>
           <p class="abtext">{{info.summary}}</p>
         </div>
-        <!--
-    关注我们
-        -->
         <follow-us></follow-us>
       </div>
     </div>
@@ -55,106 +61,115 @@
 </template>
 
 <script>
-import FollowUs from "../components/FollowUs";
-import { getMe } from "../api/about";
-import CommentList from "../components/CommentList";
-import CommentBox from "../components/CommentBox";
-import {mapMutations} from 'vuex';
-import {addComment, getCommentList} from "../api/comment";
-import Sticky from '@/components/Sticky'
+    import FollowUs from "../components/FollowUs";
+    import { getMe } from "../api/about";
+    import CommentList from "../components/CommentList";
+    import CommentBox from "../components/CommentBox";
+    import { mapMutations } from "vuex";
+    import { addComment, getCommentList } from "../api/comment";
+    import Sticky from "@/components/Sticky";
 
-export default {
-  name: "about",
-  data() {
-    return {
-      source: "MESSAGE_BOARD",
-      dialogPictureVisible: false,
-      dialogImageUrl: "",
-      showCancel: false,
-      submitting: false,
-      comments: [],
-      commentInfo: {
-        // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
-        source: "ABOUT"
-      },
-      toInfo: {},
-      userInfo: {},
-      PICTURE_HOST: process.env.PICTURE_HOST,
-      info: {},
-      sid: "test",
-      isRouterAlive: false
+    export default {
+        name: "about",
+        data() {
+            return {
+                source: "MESSAGE_BOARD",
+                dialogPictureVisible: false,
+                dialogImageUrl: "",
+                showCancel: false,
+                submitting: false,
+                comments: [],
+                commentInfo: {
+                    // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
+                    source: "ABOUT"
+                },
+                currentPage: 1,
+                pageSize: 10,
+                total: 0, //总数量
+                toInfo: {},
+                userInfo: {},
+                PICTURE_HOST: process.env.PICTURE_HOST,
+                info: {},
+                sid: "test",
+                isRouterAlive: false
+            };
+        },
+        components: {
+            //注册组件
+            FollowUs,
+            CommentList,
+            CommentBox,
+            Sticky
+        },
+
+        created() {
+            var that = this;
+            getMe().then(response => {
+                if (response.code == "success") {
+                    this.info = response.data;
+                }
+            });
+
+            this.getCommentList();
+        },
+        methods: {
+            //拿到vuex中的写的两个方法
+            ...mapMutations(["setCommentList"]),
+            handleCurrentChange: function(val) {
+                this.currentPage = val;
+                this.getCommentList();
+            },
+            imageChange: function(e) {
+                //首先需要判断点击的是否是图片
+                var type = e.target.localName;
+                if (type == "img") {
+                    // window.open(e.target.currentSrc);
+                    this.dialogPictureVisible = true;
+                    this.dialogImageUrl = e.target.currentSrc;
+                }
+            },
+            submitBox(e) {
+                let params = {};
+                params.blogUid = e.blogUid;
+                params.source = e.source;
+                params.userUid = e.userUid;
+                params.content = e.content;
+                params.blogUid = e.blogUid;
+                addComment(params).then(response => {
+                    if (response.code == "success") {
+                        this.$notify({
+                            title: "成功",
+                            message: "发表成功~",
+                            type: "success",
+                            offset: 100
+                        });
+                    } else {
+                        this.$notify.error({
+                            title: "错误",
+                            message: response.data,
+                            offset: 100
+                        });
+                    }
+                    this.getCommentList();
+                });
+            },
+            getCommentList: function() {
+                let params = {};
+                params.source = this.commentInfo.source;
+                params.currentPage = this.currentPage;
+                params.pageSize = this.pageSize;
+                getCommentList(params).then(response => {
+                    if (response.code == "success") {
+                        this.comments = response.data.records;
+                        this.setCommentList(this.comments);
+                        this.currentPage = response.data.current;
+                        this.pageSize = response.data.size;
+                        this.total = response.data.total;
+                    }
+                });
+            }
+        }
     };
-  },
-  components: {
-    //注册组件
-    FollowUs,
-    CommentList,
-    CommentBox,
-    Sticky
-  },
-
-  created() {
-    var that = this;
-    getMe().then(response => {
-      if (response.code == "success") {
-        this.info = response.data;
-      }
-    });
-
-    this.getCommentList();
-  },
-  methods: {
-    //拿到vuex中的写的两个方法
-    ...mapMutations(['setCommentList']),
-    imageChange: function (e) {
-      //首先需要判断点击的是否是图片
-      var type = e.target.localName;
-      if (type == "img") {
-        // window.open(e.target.currentSrc);
-        this.dialogPictureVisible = true
-        this.dialogImageUrl = e.target.currentSrc
-      }
-    },
-    submitBox(e) {
-      let params = {};
-      params.blogUid = e.blogUid;
-      params.source = e.source;
-      params.userUid = e.userUid;
-      params.content = e.content;
-      params.blogUid = e.blogUid;
-      addComment(params).then(response => {
-          if (response.code == "success") {
-            this.$notify({
-              title: '成功',
-              message: "发表成功~",
-              type: 'success',
-              offset: 100
-            });
-          } else {
-            this.$notify.error({
-              title: '错误',
-              message: response.data,
-              offset: 100
-            });
-          }
-          this.getCommentList();
-        }
-      );
-    },
-    getCommentList: function () {
-      let params = {};
-      params.source = this.commentInfo.source;
-      params.currentPage = 0;
-      params.pageSize = 10;
-      getCommentList(params).then(response => {
-        if (response.code == "success") {
-          this.comments = response.data;
-          this.setCommentList(this.comments);
-        }
-      });
-    }
-  }
-};
 </script>
 
 <style>
@@ -164,9 +179,9 @@ export default {
   }
   .fixck {
     /* font-family: Arial, Verdana, sans-serif !important;
-    font-size: 12px !important;
-    color: #222 !important;
-    line-height: normal !important; */
+      font-size: 12px !important;
+      color: #222 !important;
+      line-height: normal !important; */
   }
 
   .fixck p {
@@ -237,7 +252,9 @@ export default {
     font-size: 16px;
     text-align: justify;
   }
-
+  .el-pagination {
+    white-space: "";
+  }
   .message_infos {
     width: 100%;
     min-height: 500px;
