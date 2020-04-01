@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="page">
     <div class="pagebg ab"></div>
     <div class="container">
       <h1 class="t_nav">
@@ -8,29 +8,29 @@
         <a href="/" class="n1">网站首页</a>
         <a href="/" class="n2">留言</a>
       </h1>
-      <sticky :sticky-top="60">
+
         <CommentBox
           :userInfo="userInfo"
           :commentInfo="commentInfo"
           @submit-box="submitBox"
           :showCancel="showCancel"
         ></CommentBox>
-      </sticky>
 
       <div class="message_infos">
         <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
         <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
       </div>
+
       <!--分页-->
-      <div class="block" v-if="comments.length !=0" style="text-align:center;">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-        ></el-pagination>
-      </div>
+<!--      <div class="block" v-if="comments.length !=0" >-->
+<!--        <el-pagination-->
+<!--          @current-change="handleCurrentChange"-->
+<!--          :current-page.sync="currentPage"-->
+<!--          :page-size="pageSize"-->
+<!--          layout="total, prev, pager, next, jumper"-->
+<!--          :total="total"-->
+<!--        ></el-pagination>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -43,10 +43,10 @@
 
     // vuex中有mapState方法，相当于我们能够使用它的getset方法
     import { mapMutations } from "vuex";
-
     export default {
         data() {
             return {
+                pageMinHeight: 0,
                 source: "MESSAGE_BOARD",
                 showCancel: false,
                 submitting: false,
@@ -71,15 +71,45 @@
             Sticky
         },
         created() {
-            this.getCommentList();
+            this.getCommentDataList();
         },
-        mounted() {},
+        mounted () {
+          var that = this;
+          // 屏幕的高度
+          this.pageMinHeight = window.innerHeight - 62
+          console.log('得到的屏幕高度', this.pageMinHeight)
+          $(window).scroll(function () {
+            var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
+            var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
+            var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
+            //还有30像素的时候,就查询
+            if(docHeight == winHeight + winScrollHeight){
+              if(that.comments.length >= that.total) {
+                console.log('已经到底了')
+                return;
+              }
+              let params = {};
+              params.source = "MESSAGE_BOARD";
+              params.currentPage = that.currentPage + 1
+              params.pageSize = that.pageSize;
+              getCommentList(params).then(response => {
+                if (response.code == "success") {
+                  that.comments = that.comments.concat(response.data.records);
+                  that.setCommentList(this.comments);
+                  that.currentPage = response.data.current;
+                  that.pageSize = response.data.size;
+                  that.total = response.data.total;
+                }
+              });
+            }
+          })
+        },
         methods: {
             //拿到vuex中的写的两个方法
             ...mapMutations(["setCommentList"]),
             handleCurrentChange: function(val) {
                 this.currentPage = val;
-                this.getCommentList();
+                this.getCommentDataList();
             },
             submitBox(e) {
                 let params = {};
@@ -102,10 +132,10 @@
                             offset: 100
                         });
                     }
-                    this.getCommentList();
+                    this.getCommentDataList();
                 });
             },
-            getCommentList: function() {
+            getCommentDataList: function() {
                 let params = {};
                 params.source = "MESSAGE_BOARD";
                 params.currentPage = this.currentPage;
@@ -119,11 +149,11 @@
                         this.total = response.data.total;
                     }
                 });
-            }
+            },
         }
     };
 </script>
-<style scoped>
+<style>
   .message_infos {
     width: 100%;
     min-height: 500px;
@@ -132,5 +162,10 @@
   .noComment {
     width: 100%;
     text-align: center;
+  }
+
+  .block {
+    position: relative;
+    bottom: 0px;
   }
 </style>

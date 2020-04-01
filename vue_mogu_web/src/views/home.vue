@@ -793,7 +793,6 @@
         if (token != undefined) {
           authVerify(token).then(response => {
             if (response.code == "success") {
-              console.log('得到的用户信息', response.data)
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)

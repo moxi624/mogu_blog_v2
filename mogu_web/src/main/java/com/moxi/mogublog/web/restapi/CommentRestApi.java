@@ -106,15 +106,34 @@ public class CommentRestApi {
         }
 
         queryWrapper.eq(SQLConf.SOURCE, commentVO.getSource());
+
         //分页
         Page<Comment> page = new Page<>();
         page.setCurrent(commentVO.getCurrentPage());
         page.setSize(commentVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.isNull(SQLConf.TO_UID);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.TYPE, ECommentType.COMMENT);
+        // 查询出所有的一级评论，进行分页显示
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
         List<Comment> list = pageList.getRecords();
+        List<String> firstUidList = new ArrayList<>();
+        list.forEach(item -> {
+            firstUidList.add(item.getUid());
+        });
+
+        if(firstUidList.size() > 0) {
+            // 查询一级评论下的子评论
+            QueryWrapper<Comment> notFirstQueryWrapper = new QueryWrapper<>();
+            notFirstQueryWrapper.in(SQLConf.FIRST_COMMENT_UID, firstUidList);
+            notFirstQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            List<Comment> notFirstList = commentService.list(notFirstQueryWrapper);
+            // 将子评论加入总的评论中
+            if(notFirstList.size() > 0) {
+                list.addAll(notFirstList);
+            }
+        }
 
         List<String> userUidList = new ArrayList<>();
         list.forEach(item -> {
@@ -470,9 +489,22 @@ public class CommentRestApi {
         comment.setSource(commentVO.getSource());
         comment.setBlogUid(commentVO.getBlogUid());
         comment.setContent(commentVO.getContent());
+        comment.setToUserUid(commentVO.getToUserUid());
+
+        // 当该评论不是一级评论时，需要设置一级评论UID字段
+        if(StringUtils.isNotEmpty(commentVO.getToUid())) {
+            Comment toComment = commentService.getById(commentVO.getToUid());
+            // 表示这个评论是非一级评论
+            if(toComment != null && StringUtils.isNotEmpty(toComment.getFirstCommentUid())) {
+                comment.setFirstCommentUid(toComment.getFirstCommentUid());
+            } else {
+                // 表示这个评论是一级评论，直接获取UID
+                comment.setFirstCommentUid(toComment.getUid());
+            }
+        }
+
         comment.setUserUid(commentVO.getUserUid());
         comment.setToUid(commentVO.getToUid());
-        comment.setToUserUid(commentVO.getToUserUid());
         comment.setStatus(EStatus.ENABLE);
         comment.insert();
 

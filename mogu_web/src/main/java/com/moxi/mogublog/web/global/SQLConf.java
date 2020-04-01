@@ -51,4 +51,6 @@ public final class SQLConf extends BaseSQLConf {
      */
     public static final String MONTH = "month";
 
+    public static final String FIRST_COMMENT_UID = "first_comment_uid";
+
 }

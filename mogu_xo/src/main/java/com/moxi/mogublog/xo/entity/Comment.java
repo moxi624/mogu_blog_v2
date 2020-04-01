@@ -31,6 +31,10 @@ public class Comment extends SuperEntity<Comment> {
      */
     private String toUid;
 
+    /**
+     * 该条评论下的，一级评论UID
+     */
+    private String firstCommentUid;
 
     /**
      * 回复某个人的uid

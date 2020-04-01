@@ -82,29 +82,19 @@
       <div class="news_pl">
         <h2>文章评论</h2>
         <ul>
-          <sticky :sticky-top="60">
+<!--          <sticky :sticky-top="60">-->
             <CommentBox
               :userInfo="userInfo"
               :commentInfo="commentInfo"
               @submit-box="submitBox"
               :showCancel="showCancel"
             ></CommentBox>
-          </sticky>
+<!--          </sticky>-->
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
             <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
           </div>
         </ul>
-      </div>
-      <!--分页-->
-      <div class="block" v-if="comments.length !=0" style="text-align:center;">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-        ></el-pagination>
       </div>
     </div>
     <div class="sidebar">
@@ -188,6 +178,34 @@
             Sticky,
             Link
         },
+      mounted () {
+        var that = this;
+        $(window).scroll(function () {
+          var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
+          var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
+          var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
+          //还有30像素的时候,就查询
+          if(docHeight == winHeight + winScrollHeight){
+            if(that.comments.length >= that.total) {
+              console.log('已经到底了')
+              return;
+            }
+            let params = {};
+            params.source = that.commentInfo.source;
+            params.currentPage = that.currentPage + 1
+            params.pageSize = that.pageSize;
+            getCommentList(params).then(response => {
+              if (response.code == "success") {
+                that.comments = that.comments.concat(response.data.records);
+                that.setCommentList(this.comments);
+                that.currentPage = response.data.current;
+                that.pageSize = response.data.size;
+                that.total = response.data.total;
+              }
+            });
+          }
+        })
+      },
         created() {
             this.loadingInstance = Loading.service({
                 fullscreen: true,
@@ -219,7 +237,7 @@
                     this.sameBlogData = response.data.records;
                 }
             });
-            this.getCommentList();
+            this.getCommentDataList();
         },
         methods: {
             //拿到vuex中的写的两个方法
@@ -227,7 +245,7 @@
 
             handleCurrentChange: function(val) {
                 this.currentPage = val;
-                this.getCommentList();
+                this.getCommentDataList();
             },
             submitBox(e) {
                 let params = {};
@@ -251,10 +269,10 @@
                             offset: 100
                         });
                     }
-                    this.getCommentList();
+                    this.getCommentDataList();
                 });
             },
-            getCommentList: function() {
+            getCommentDataList: function() {
                 let params = {};
                 params.source = this.commentInfo.source;
                 params.blogUid = this.commentInfo.blogUid;

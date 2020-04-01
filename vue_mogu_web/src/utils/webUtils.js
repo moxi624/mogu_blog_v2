@@ -11,6 +11,33 @@ export function formatData(arr) {
 }
 
 /**
+ * 将日期时间转换为指定格式，如：YYYY-mm-dd HH:MM表示2019-06-06 19:45
+ * 例如：dateFormat("YYYY-mm-dd HH:MM", date)
+ * @param fmt
+ * @param date
+ * @returns {*}
+ */
+export function dateFormat(fmt, date) {
+  let ret;
+  const opt = {
+    "Y+": date.getFullYear().toString(),        // 年
+    "m+": (date.getMonth() + 1).toString(),     // 月
+    "d+": date.getDate().toString(),            // 日
+    "H+": date.getHours().toString(),           // 时
+    "M+": date.getMinutes().toString(),         // 分
+    "S+": date.getSeconds().toString()          // 秒
+    // 有其他格式化字符需求可以继续添加，必须转化成字符串
+  };
+  for (let k in opt) {
+    ret = new RegExp("(" + k + ")").exec(fmt);
+    if (ret) {
+      fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+    };
+  };
+  return fmt;
+}
+
+/**
  * dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
  * @param dateTimeStamp
  * @returns {string}

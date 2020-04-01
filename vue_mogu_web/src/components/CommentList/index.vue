@@ -11,7 +11,8 @@
           <div class="rightTop" v-if="item.user">
             <el-link class="userName" :underline="false">{{item.user.nickName}}</el-link>
             <el-tag style="height: 30px; margin-left:5px;" v-for="userTag in userTagDictList" :key="userTag.uid" v-if="item.user.userTag == userTag.dictValue && item.user.userTag != 0" :type="userTag.listClass">{{userTag.dictLabel}}</el-tag>
-            <span class="timeAgo">{{timeAgo(item.createTime)}}</span>
+            <span class="timeAgo" v-if="item.createTime">{{timeAgo(item.createTime)}}</span>
+            <span class="timeAgo" v-else>刚刚</span>
           </div>
 
           <div class="rightCenter">
@@ -41,7 +42,7 @@
 
   import {mapMutations} from 'vuex';
   import CommentBox from "../CommentBox";
-  import { timeAgo} from "../../utils/webUtils"
+  import {dateFormat, timeAgo, formatData} from "../../utils/webUtils"
   import {addComment, deleteComment, getCommentList, reportComment} from "../../api/comment";
   import {getListByDictTypeList} from "@/api/sysDictData"
   export default {
@@ -126,10 +127,9 @@
               commentData.user = this.userInfo;
               // 设置回复为空
               commentData.replyList = [];
-
               commentData.user = this.$store.state.user.userInfo
               this.updateCommentList(comments, commentData.toUid, commentData)
-
+              console.log('得到的评论', comments)
               this.$store.commit("setCommentList", comments);
 
               this.$notify({

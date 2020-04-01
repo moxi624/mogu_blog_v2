@@ -135,4 +135,10 @@ ALTER TABLE t_category_menu ADD menu_type TINYINT(1) NOT NULL DEFAULT 0 COMMENT 
 */
 ALTER TABLE t_blog ADD start_comment TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否开启评论(0:否 1:是)';
 
+/*
+   修改t_comment表，增加 firstCommentUid，一级评论UID
+   @date 2020年3月31日23:33:17
+*/
+ALTER TABLE t_comment ADD first_comment_uid VARCHAR(32) NULL COMMENT '一级评论UID';
+
 

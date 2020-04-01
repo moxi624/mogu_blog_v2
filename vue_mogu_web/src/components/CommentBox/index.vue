@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import {dateFormat} from '../../utils/webUtils'
   import {mapGetters} from 'vuex';
   export default {
     name: 'CommentBox',
@@ -108,11 +109,12 @@
           content: content,
           blogUid: blogUid,
           source: source,
-          reply: []
+          reply: [],
         }
-
         this.value = '';
         this.count = 255;
+        this.comments.createTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
+        console.log('返回的内容', this.comments)
         this.$emit("submit-box", this.comments)
       },
       handleCancle() {
