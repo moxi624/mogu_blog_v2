@@ -49,7 +49,6 @@ public class BlogListener {
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
             stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
             stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
-
             switch (comment) {
                 case SysConf.DELETE_BATCH: {
 

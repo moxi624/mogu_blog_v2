@@ -78,4 +78,9 @@ public class BaseRedisConf {
      */
     public final static String BLOG_PRAISE = "BLOG_PRAISE";
 
+    /**
+     * ALL
+     */
+    public final static String ALL = "ALL";
+
 }

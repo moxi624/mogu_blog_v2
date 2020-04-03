@@ -45,7 +45,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="200" align="center">
+              <el-table-column label width="250" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.summary }}</span>
                 </template>
@@ -125,7 +125,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单简介" width="200" align="center">
+      <el-table-column label="菜单简介" width="250" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
         </template>

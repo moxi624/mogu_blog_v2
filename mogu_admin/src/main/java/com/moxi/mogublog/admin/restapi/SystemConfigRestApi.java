@@ -3,10 +3,12 @@ package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.global.MessageConf;
+import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.entity.SystemConfig;
@@ -18,8 +20,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.plugin2.message.Message;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -38,6 +43,9 @@ public class SystemConfigRestApi {
     @Autowired
     SystemConfigService systemConfigService;
 
+    @Autowired
+    RedisUtil redisUtil;
+
     @AuthorityVerify
     @ApiOperation(value = "获取系统配置", notes = "获取系统配置")
     @GetMapping("/getSystemConfig")
@@ -50,6 +58,30 @@ public class SystemConfigRestApi {
         SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
 
         return ResultUtil.result(SysConf.SUCCESS, SystemConfig);
+    }
+
+    @AuthorityVerify
+    @ApiOperation(value = "通过Key前缀清空Redis缓存", notes = "通过Key前缀清空Redis缓存")
+    @PostMapping("/cleanRedisByKey")
+    public String cleanRedisByKey(@RequestBody List<String> key) {
+
+        if(key == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+        }
+
+        key.forEach(item -> {
+            // 表示清空所有key
+            if(RedisConf.ALL.equals(item)) {
+                Set<String> keys = redisUtil.keys("*");
+                redisUtil.delete(keys);
+            } else {
+                // 获取Redis中特定前缀
+                Set<String> keys = redisUtil.keys(key + "*");
+                redisUtil.delete(keys);
+            }
+        });
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     @AuthorityVerify

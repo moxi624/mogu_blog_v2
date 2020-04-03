@@ -8,6 +8,14 @@ export function getSystemConfig(params) {
   })
 }
 
+export function cleanRedisByKey(params) {
+  return request({
+    url: process.env.ADMIN_API + '/systemConfig/cleanRedisByKey',
+    method: 'post',
+    data: params
+  })
+}
+
 export function editSystemConfig(params) {
   return request({
     url: process.env.ADMIN_API + '/systemConfig/editSystemConfig',

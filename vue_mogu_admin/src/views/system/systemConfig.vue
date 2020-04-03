@@ -89,6 +89,91 @@
           <el-form-item>
             <el-button type="primary" @click="submitForm()">保 存</el-button>
           </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane name="three">
+        <span slot="label"><i class="el-icon-edit"></i> Redis管理</span>
+        <el-form style="margin-left: 20px;" label-position="left"   label-width="120px" >
+
+          <aside>
+            Redis管理主要用于清空一些缓存数据<br/>
+            用户首次部署时，可以使用清空全部，把Redis中的缓存一键清空<br/>
+          </aside>
+
+          <el-form-item label="全部">
+            <el-row>
+              <el-col :span="6">
+                <el-button type="danger" @click="cleanRedis('ALL')">清空全部</el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item label="博客相关">
+            <el-row>
+              <el-col :span="3">
+                <el-button type="primary" @click="cleanRedis('BLOG_CLICK')">清空点击量</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="success" @click="cleanRedis('BLOG_PRAISE')">清空点赞量</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="info" @click="cleanRedis('BLOG_LEVEL')">清空推荐博客</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="warning" @click="cleanRedis('HOT_BLOG')">清空热门博客</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="danger" @click="cleanRedis('NEW_BLOG')">清空最新博客</el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item label="分类和归档相关">
+            <el-row>
+              <el-col :span="3">
+                <el-button type="primary" @click="cleanRedis('MONTH_SET')">清空分类日期</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="success" @click="cleanRedis('BLOG_SORT_BY_MONTH')">清空分类数据</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="info" @click="cleanRedis('BLOG_SORT_CLICK')">清空分类点击量</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="warning" @click="cleanRedis('TAG_CLICK')">清空标签点击量</el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
+
+          <el-form-item label="系统相关">
+            <el-row>
+              <el-col :span="3">
+                <el-button type="primary" @click="cleanRedis('REDIS_DICT_TYPE')">清空字典</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="success" @click="cleanRedis('ADMIN_VISIT_MENU')">清空角色访问菜单</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="info" @click="cleanRedis('userToken')">清空用户Token</el-button>
+              </el-col>
+
+              <el-col :span="3">
+                <el-button type="warning" @click="cleanRedis('REQUEST_LIMIT')">清空接口请求限制</el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+
 
         </el-form>
       </el-tab-pane>
@@ -99,7 +184,7 @@
 </template>
 
 <script>
-import { getSystemConfig, editSystemConfig } from "@/api/systemConfig";
+import { getSystemConfig, editSystemConfig, cleanRedisByKey } from "@/api/systemConfig";
 import {getListByDictTypeList} from "@/api/sysDictData"
 import { Loading } from 'element-ui';
 export default {
@@ -172,7 +257,24 @@ export default {
         }
       });
     },
-
+    cleanRedis: function(key) {
+      console.log(key)
+      let params = []
+      params.push(key)
+      cleanRedisByKey(params).then(response => {
+        if(response.code == "success") {
+          this.$message({
+            type: "success",
+            message: response.data
+          })
+        } else {
+          this.$message({
+            type: "error",
+            message: response.data
+          })
+        }
+      })
+    },
     submitForm: function() {
       this.$refs.form.validate((valid) => {
         if(!valid) {
@@ -200,7 +302,28 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+  aside {
+    background: #eef1f6;
+    padding: 8px 24px;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    display: block;
+    line-height: 32px;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    color: #2c3e50;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
+  a {
+    color: #337ab7;
+    cursor: pointer;
+
+  &:hover {
+     color: rgb(32, 160, 255);
+   }
+  }
+  }
 </style>
 
