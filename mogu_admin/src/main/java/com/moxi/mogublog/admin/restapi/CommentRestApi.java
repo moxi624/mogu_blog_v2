@@ -80,6 +80,29 @@ public class CommentRestApi {
             queryWrapper.like(SQLConf.CONTENT, commentVO.getKeyword().trim());
         }
 
+        if(commentVO.getType() != null) {
+            queryWrapper.eq(SQLConf.TYPE, commentVO.getType());
+        }
+
+        if(StringUtils.isNotEmpty(commentVO.getSource()) && !SysConf.ALL.equals(commentVO.getSource())) {
+            queryWrapper.eq(SQLConf.SOURCE, commentVO.getSource());
+        }
+
+        if(StringUtils.isNotEmpty(commentVO.getUserName())) {
+            String userName = commentVO.getUserName();
+            QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.like(SQLConf.NICK_NAME, userName);
+            userQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            List<User> list = userService.list(userQueryWrapper);
+            if(list.size() > 0) {
+                List<String> userUid = new ArrayList<>();
+                list.forEach(item -> {
+                    userUid.add(item.getUid());
+                });
+                queryWrapper.in(SQLConf.USER_UID, userUid);
+            }
+        }
+
         Page<Comment> page = new Page<>();
         page.setCurrent(commentVO.getCurrentPage());
         page.setSize(commentVO.getPageSize());

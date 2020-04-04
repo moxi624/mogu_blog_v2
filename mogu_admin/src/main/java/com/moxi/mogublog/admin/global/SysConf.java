@@ -10,6 +10,7 @@ import com.moxi.mougblog.base.global.BaseSysConf;
  */
 public final class SysConf extends BaseSysConf {
 
+    public final static String ALL = "all";
     public final static String TITLE = "title";
     public final static String NAME = "name";
     public final static String CONTENT = "content";

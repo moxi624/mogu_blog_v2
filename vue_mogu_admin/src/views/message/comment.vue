@@ -2,8 +2,28 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入评论名"></el-input>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.content" placeholder="请输入评论名"></el-input>
+        <el-input clearable class="filter-item" style="width: 100px;" v-model="queryParams.userName" placeholder="请输入用户名"></el-input>
+
+        <el-select v-model="queryParams.type" clearable placeholder="评论类型" style="width:110px">
+          <el-option
+            v-for="item in commentTypeDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
+
+        <el-select v-model="queryParams.source" clearable placeholder="评论来源" style="width:110px">
+          <el-option
+            v-for="item in commentSourceDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
+
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
         <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
 	    </div>
 
@@ -112,9 +132,16 @@
 
 <script>
 import { getCommentList, addComment, editComment, deleteComment,  deleteBatchComment} from "@/api/comment";
+import {getListByDictTypeList} from "@/api/sysDictData"
 export default {
   data() {
     return {
+      queryParams: {
+        content: null, //评论名
+        userName: null, //用户名
+        type: null, //类型
+        source: null, //来源
+      }, //查询参数
       multipleSelection: [], //多选，用于批量删除
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
@@ -126,10 +153,15 @@ export default {
       title: "增加友链",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: '120px',
-      isEditForm: false
+      isEditForm: false,
+      commentTypeDictList: [], //评论类型字典
+      commentSourceDictList: [], //评论来源字典
     };
   },
   created() {
+    // 获取字典
+    this.getDictList()
+    // 获取评论
     this.commentList();
   },
   methods: {
@@ -146,12 +178,34 @@ export default {
         case 'BLOG_INFO': {window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + blog.uid);};break;
       }
     },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+
+      var dictTypeList =  ['sys_comment_type', 'sys_comment_source']
+
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == "success") {
+          var dictMap = response.data;
+          this.commentTypeDictList = dictMap.sys_comment_type.list
+          this.commentSourceDictList = dictMap.sys_comment_source.list
+        }
+      });
+    },
 		commentList: function() {
 			let params = {}
-			params.keyword = this.keyword
+			params.keyword = this.queryParams.content
+      if(this.queryParams.source == null || this.queryParams.source == undefined || this.queryParams.source == '') {
+        params.source = "all"
+      } else {
+        params.source = this.queryParams.source
+      }
+      params.userName = this.queryParams.userName
+      params.type = this.queryParams.type
 			params.currentPage =  this.currentPage
 			params.pageSize = this.pageSize
-      params.source = "all"
+
 			getCommentList(params).then(response => {
 			  if(response.code == "success") {
           this.tableData = response.data.records;

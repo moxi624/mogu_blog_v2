@@ -89,12 +89,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="邮箱" width="200" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column label="登录次数" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
@@ -104,12 +98,6 @@
       <el-table-column label="登录IP" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginIp }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="IP来源" width="160" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.ipSource }}</span>
         </template>
       </el-table-column>
 
@@ -128,6 +116,18 @@
       <el-table-column label="最后登录时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="邮箱" width="200" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.email }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="IP来源" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ipSource }}</span>
         </template>
       </el-table-column>
 
