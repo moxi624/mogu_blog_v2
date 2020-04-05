@@ -159,28 +159,32 @@
   display: block;
   min-width: 15em;
 }
+
 /* ckeditor5-table/theme/table.css */
-.ck-content .table {
-  margin: 1em auto;
-  display: table;
-}
-/* ckeditor5-table/theme/table.css */
-.ck-content .table table {
+.ck-content table {
+  font-family: verdana,arial,sans-serif;
+  font-size:11px;
+  color:#333333;
+  border-width: 1px;
+  border-color: #666666;
   border-collapse: collapse;
-  border-spacing: 0;
-  border: 1px double hsl(0, 0%, 70%);
 }
-/* ckeditor5-table/theme/table.css */
-.ck-content .table table td,
-.ck-content .table table th {
-  min-width: 2em;
-  padding: .4em;
-  border-color: hsl(0, 0%, 85%);
+.ck-content table tbody {
+  width: 500px;
 }
-/* ckeditor5-table/theme/table.css */
-.ck-content .table table th {
-  font-weight: bold;
-  background: hsl(0, 0%, 98%);
+.ck-content table th {
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: #666666;
+  background-color: #dedede;
+}
+.ck-content table td {
+  border-width: 1px;
+  padding: 8px;
+  border-style: solid;
+  border-color: #666666;
+  background-color: #FFFFFF;
 }
 /* ckeditor5-highlight/theme/highlight.css */
 .ck-content .marker-yellow {
