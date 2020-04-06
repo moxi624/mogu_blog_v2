@@ -259,7 +259,7 @@
               </el-card>
             </el-timeline-item>
 
-            <el-timeline-item v-if="replyList.length == 0" placement="top">
+            <el-timeline-item v-if="praiseList.length == 0" placement="top">
               <el-card>
                 <span style="font-size: 16px">空空如也~</span>
               </el-card>
@@ -569,11 +569,9 @@
 
       // 跳转到资源详情
       goSource: function(comment) {
-        console.log('点击跳转', comment)
         let source = comment.source
         switch(source) {
           case "MESSAGE_BOARD": {
-            console.log('我来了1')
             let routeData = this.$router.resolve({
               path: "/messageBoard"
             });
@@ -600,7 +598,6 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getCommentListByUser(params).then(response => {
-          console.log('得到的评论', response)
           if(response.code == "success") {
             this.commentList = response.data.commentList
             this.replyList = response.data.replyList
@@ -612,7 +609,6 @@
       getFeedback: function() {
         let params = {}
         getFeedbackList(params).then(response => {
-          console.log('得到的反馈列表', response)
           if(response.code == "success") {
             this.feedbackList = response.data.records;
           }
@@ -625,7 +621,6 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getPraiseListByUser(params).then(response => {
-          console.log('得到的点赞', response)
           if(response.code == "success") {
             this.praiseList = response.data.records;
           }
@@ -673,7 +668,6 @@
       },
 
       cropSuccess(resData) {
-        console.log("裁剪成功", resData)
         this.imagecropperShow = false
         this.imagecropperKey = this.imagecropperKey + 1
         this.userInfo.photoUrl = resData[0].url

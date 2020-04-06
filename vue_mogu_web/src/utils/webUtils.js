@@ -74,10 +74,16 @@ export function timeAgo(dateTimeStamp) {
   weekC = parseInt(weekC)
   monthC = parseInt(monthC)
 
+  console.log(minC);
+  console.log(hourC);
+  console.log(dayC);
+  console.log(weekC);
+  console.log(monthC);
+
 
   if (monthC >= 1 && monthC <= 3) {
     result = " " + parseInt(monthC) + "月前"
-  } else if (weekC >= 1 && weekC <= 3) {
+  } else if (weekC >= 1 && weekC <= 4) {
     result = " " + parseInt(weekC) + "周前"
   } else if (dayC >= 1 && dayC <= 6) {
     result = " " + parseInt(dayC) + "天前"
