@@ -24,14 +24,6 @@ export function deleteUser(params) {
   })
 }
 
-export function freezeUser(params) {
-  return request({
-    url: process.env.ADMIN_API + '/user/freeze',
-    method: 'post',
-    data: params
-  })
-}
-
 export function resetUserPassword(params) {
   return request({
     url: process.env.ADMIN_API + '/user/resetUserPassword',

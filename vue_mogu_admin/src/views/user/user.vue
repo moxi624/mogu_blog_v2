@@ -273,7 +273,6 @@
   import {
     getUserList,
     deleteUser,
-    freezeUser,
     editUser,
     resetUserPassword
   } from "@/api/user";
@@ -428,37 +427,6 @@
         this.dialogFormVisible = true;
         this.isEditForm = true;
         this.form = row;
-      },
-      handleStick: function(row) {
-        this.$confirm("此操作将该用户禁言/解禁, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(() => {
-            var params = {};
-            params.uid = row.uid;
-            freezeUser(params).then(response => {
-              if (response.code == "success") {
-                this.userList();
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
-              } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
-              }
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消冻结/解冻"
-            });
-          });
       },
       handleDelete: function(row) {
         var that = this;

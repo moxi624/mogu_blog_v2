@@ -9,9 +9,9 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
+import com.moxi.mogublog.commons.entity.Todo;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Todo;
 import com.moxi.mogublog.xo.service.TodoService;
 import com.moxi.mogublog.xo.vo.TodoVO;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -55,27 +55,8 @@ public class TodoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        QueryWrapper<Todo> queryWrapper = new QueryWrapper<>();
-
-        if (StringUtils.isNotEmpty(todoVO.getKeyword()) && !StringUtils.isEmpty(todoVO.getKeyword().trim())) {
-            queryWrapper.like(SQLConf.TEXT, todoVO.getKeyword().trim());
-        }
-
-        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-
-        queryWrapper.eq(SQLConf.ADMINUID, adminUid);
-
-        //按时间顺序倒排
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-
-        Page<Todo> page = new Page<>();
-        page.setCurrent(todoVO.getCurrentPage());
-        page.setSize(todoVO.getPageSize());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        IPage<Todo> pageList = todoService.page(page, queryWrapper);
         log.info("执行获取代办事项列表");
-        return ResultUtil.result(SysConf.SUCCESS, pageList);
+        return ResultUtil.result(SysConf.SUCCESS, todoService.getPageList(todoVO));
     }
 
     @AuthorityVerify
@@ -86,15 +67,7 @@ public class TodoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-        Todo todo = new Todo();
-        todo.setText(todoVO.getText());
-        //默认未完成
-        todo.setDone(false);
-        todo.setAdminUid(adminUid);
-        todo.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return todoService.addTodo(todoVO);
     }
 
     @AuthorityVerify
@@ -105,20 +78,7 @@ public class TodoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-
-        Todo todo = todoService.getById(todoVO.getUid());
-
-        if (!todo.getAdminUid().equals(adminUid)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ACCESS_NO_PRIVILEGE);
-        }
-
-        todo.setText(todoVO.getText());
-        todo.setDone(todoVO.getDone());
-        todo.setUpdateTime(new Date());
-        todo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return todoService.editTodo(todoVO);
     }
 
     @AuthorityVerify
@@ -129,19 +89,7 @@ public class TodoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-
-        Todo todo = todoService.getById(todoVO.getUid());
-
-        if (!todo.getAdminUid().equals(adminUid)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DATA_NO_PRIVILEGE);
-        }
-
-        todo.setStatus(EStatus.DISABLED);
-        todo.setUpdateTime(new Date());
-        todo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return todoService.deleteTodo(todoVO);
     }
 
     @AuthorityVerify
@@ -152,15 +100,7 @@ public class TodoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-
-        if (todoVO.getDone()) {
-            todoService.toggleAll(SysConf.ONE, adminUid);
-        } else {
-            todoService.toggleAll(SysConf.ZERO, adminUid);
-        }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return todoService.editBatchTodo(todoVO);
     }
 
 

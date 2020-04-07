@@ -1,7 +1,5 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Insert;

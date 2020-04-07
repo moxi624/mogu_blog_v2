@@ -18,12 +18,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @EnableDiscoveryClient
+@EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
+        "com.moxi.mogublog.config.feign",
         "com.moxi.mogublog.picture.config",
         "com.moxi.mogublog.picture.util",
         "com.moxi.mogublog.picture.restapi",
         "com.moxi.mogublog.picture.service"})
-@EnableFeignClients("com.moxi.mogublog.picture.feign")
 public class PictureApplication {
 
     public static void main(String[] args) {

@@ -2,8 +2,8 @@ package com.moxi.mogublog.admin.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.global.SQLConf;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Role;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

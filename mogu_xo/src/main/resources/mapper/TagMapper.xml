@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.TagMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Tag">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Tag">
         <id column="uid" property="uid"/>
         <result column="content" property="content"/>
         <result column="status" property="status"/>

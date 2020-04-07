@@ -131,19 +131,7 @@ export default {
     CheckPhoto
   },
   created() {
-    var that = this;
-    var params = new URLSearchParams();
-    getPictureSortList(params).then(response => {
-      console.log("初始化数据", response);
-      this.tableData = response.data.records;
-      this.currentPage = response.data.current;
-      this.pageSize = response.data.size;
-      this.total = response.data.total;
-    });
-    // var loadingInstance = Loading.service({
-    //   target: "#table",
-    //   text: "增加中"
-    // });
+    this.pictureSortList()
   },
   data() {
     return {
@@ -182,10 +170,10 @@ export default {
   },
   methods: {
     pictureSortList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {};
+      params.keyword = this.keyword
+      params.pageSize =  this.pageSize
+      params.currentPage = this.currentPage
       getPictureSortList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;
@@ -194,11 +182,9 @@ export default {
       });
     },
     handleFind: function() {
-      console.log(this.keyword);
       this.pictureSortList();
     },
     handleManager: function(row) {
-      console.log("点击了图片管理");
       var uid = row.uid;
       this.$router.push({
         path: "picture",
@@ -236,8 +222,6 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      console.log("点击了删除图片");
-
       this.form.photoList = null;
       this.form.fileUid = "";
     },
@@ -248,12 +232,12 @@ export default {
     handleCurrentChange(val) {
       var that = this;
       console.log(`当前页: ${val}`);
-      this.currentPage = val; //改变当前所指向的页数
+      //改变当前所指向的页数
+      this.currentPage = val;
       this.pictureSortList();
     },
     //点击新增
     handleAdd: function() {
-      console.log("点击了添加");
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -262,9 +246,7 @@ export default {
     handleEdit: function(row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
-      console.log("点击编辑", this.form);
     },
     handleStick: function(row) {
       this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
@@ -273,8 +255,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {};
+          params.uid = row.uid
           stickPictureSort(params).then(response => {
             if (response.code == "success") {
               this.pictureSortList();
@@ -304,8 +286,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {};
+          params.uid = row.uid
           deletePictureSort(params).then(response => {
             if(response.code == "success") {
               this.$message({
@@ -333,9 +315,8 @@ export default {
         if(!valid) {
           console.log("校验出错")
         } else {
-          var params = formatData(this.form);
           if (this.isEditForm) {
-            editPictureSort(params).then(response => {
+            editPictureSort(this.form).then(response => {
               console.log(response);
               this.$message({
                 type: "success",
@@ -345,8 +326,7 @@ export default {
               this.pictureSortList();
             });
           } else {
-            addPictureSort(params).then(response => {
-              console.log(response);
+            addPictureSort(this.form).then(response => {
               if (response.code == "success") {
                 this.$message({
                   type: "success",

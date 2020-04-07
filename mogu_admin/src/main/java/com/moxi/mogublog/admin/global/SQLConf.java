@@ -61,7 +61,7 @@ public final class SQLConf extends BaseSQLConf {
     /**
      * t_exception_log
      */
-    public final static String EXCEPTION_JSON = "exceptionJson";
+    public final static String EXCEPTION_JSON = "exception_json";
 
     /**
      * t_todo

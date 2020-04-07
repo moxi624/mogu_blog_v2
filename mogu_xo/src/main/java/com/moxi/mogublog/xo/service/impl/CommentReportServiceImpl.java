@@ -1,6 +1,6 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import com.moxi.mogublog.xo.entity.CommentReport;
+import com.moxi.mogublog.commons.entity.CommentReport;
 import com.moxi.mogublog.xo.mapper.CommentReportMapper;
 import com.moxi.mogublog.xo.service.CommentReportService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;

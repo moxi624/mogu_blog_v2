@@ -1,8 +1,8 @@
 package com.moxi.mogublog.admin.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.xo.entity.SystemConfig;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

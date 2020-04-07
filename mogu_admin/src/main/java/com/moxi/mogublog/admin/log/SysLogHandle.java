@@ -4,12 +4,11 @@ package com.moxi.mogublog.admin.log;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.commons.entity.SysLog;
 import com.moxi.mogublog.config.security.SecurityUser;
-import com.moxi.mogublog.utils.AopUtils;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.SysLog;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,6 +58,7 @@ public class SysLogHandle extends RequestAwareRunnable {
 
     /**
      * set方法
+     *
      * @param paramsJson
      * @param classPath
      * @param methodName

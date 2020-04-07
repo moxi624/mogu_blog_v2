@@ -1,10 +1,10 @@
 //package com.moxi.mogublog.search.service;
 //
+//import com.moxi.mogublog.commons.entity.Blog;
+//import com.moxi.mogublog.commons.entity.Tag;
 //import com.moxi.mogublog.search.global.SysConf;
 //import com.moxi.mogublog.search.pojo.SolrIndex;
 //import com.moxi.mogublog.utils.StringUtils;
-//import com.moxi.mogublog.xo.entity.Blog;
-//import com.moxi.mogublog.xo.entity.Tag;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.data.solr.core.SolrTemplate;
 //import org.springframework.data.solr.core.query.*;

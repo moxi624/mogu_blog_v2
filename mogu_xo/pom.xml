@@ -22,10 +22,17 @@
 
     <dependencies>
         <dependency>
-            <artifactId>mogu_base</artifactId>
+            <artifactId>mogu_commons</artifactId>
             <groupId>com.moxi</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- RabbitMq  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
     </dependencies>
 
     <!-- Package as an executable jar -->

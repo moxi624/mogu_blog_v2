@@ -1,17 +1,15 @@
 package com.moxi.mogublog.search.service;
 
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.search.global.SysConf;
 import com.moxi.mogublog.search.mapper.HighlightResultHelper;
 import com.moxi.mogublog.search.pojo.ESBlogIndex;
-import com.moxi.mogublog.search.reposlitory.BlogRepository;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.search.repository.BlogRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
@@ -55,12 +53,12 @@ public class ElasticSearchService {
             blog.setBlogSortUid(eblog.getBlogSortUid());
         }
 
-        if(eblog.getTagList() != null) {
+        if (eblog.getTagList() != null) {
             List<Tag> tagList = eblog.getTagList();
             List<String> tagUidList = new ArrayList<>();
             List<String> tagNameList = new ArrayList<>();
             tagList.forEach(item -> {
-                if(item != null) {
+                if (item != null) {
                     tagUidList.add(item.getUid());
                     tagNameList.add(item.getContent());
                 }
@@ -72,7 +70,7 @@ public class ElasticSearchService {
         blog.setIsPublish(eblog.getIsPublish());
         blog.setAuthor(eblog.getAuthor());
         blog.setCreateTime(eblog.getCreateTime());
-        if(eblog.getPhotoList() != null && eblog.getPhotoList().size() > 0) {
+        if (eblog.getPhotoList() != null && eblog.getPhotoList().size() > 0) {
             blog.setPhotoUrl(eblog.getPhotoList().get(0));
         } else {
             blog.setPhotoUrl("");
@@ -91,7 +89,7 @@ public class ElasticSearchService {
         highlightFields.add(titleField);
         highlightFields.add(summaryField);
 
-        HighlightBuilder.Field[] highlightFieldsAry=highlightFields.toArray(new HighlightBuilder.Field[highlightFields.size()]);
+        HighlightBuilder.Field[] highlightFieldsAry = highlightFields.toArray(new HighlightBuilder.Field[highlightFields.size()]);
         //创建查询构造器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
 

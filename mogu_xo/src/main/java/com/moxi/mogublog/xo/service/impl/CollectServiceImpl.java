@@ -1,6 +1,6 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import com.moxi.mogublog.xo.entity.Collect;
+import com.moxi.mogublog.commons.entity.Collect;
 import com.moxi.mogublog.xo.mapper.CollectMapper;
 import com.moxi.mogublog.xo.service.CollectService;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;

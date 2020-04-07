@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.SysLogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.SysLog">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.SysLog">
         <id column="uid" property="uid"/>
         <result column="userName" property="userName"/>
         <result column="ip" property="ip"/>

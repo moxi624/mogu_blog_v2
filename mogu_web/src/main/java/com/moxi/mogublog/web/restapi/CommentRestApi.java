@@ -8,15 +8,15 @@ import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.*;
+import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EBehavior;
@@ -60,7 +60,7 @@ public class CommentRestApi {
     @Autowired
     RedisUtil redisUtil;
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
@@ -175,7 +175,7 @@ public class CommentRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
         Map<String, String> pictureMap = new HashMap<>();
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -288,7 +288,7 @@ public class CommentRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
         Map<String, String> pictureMap = new HashMap<>();
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -511,8 +511,8 @@ public class CommentRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(user.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
-            if (webUtils.getPicture(pictureList).size() > 0) {
-                user.setPhotoUrl(webUtils.getPicture(pictureList).get(0));
+            if (webUtil.getPicture(pictureList).size() > 0) {
+                user.setPhotoUrl(webUtil.getPicture(pictureList).get(0));
             }
         }
         comment.setUser(user);

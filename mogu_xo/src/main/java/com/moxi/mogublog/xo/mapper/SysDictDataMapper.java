@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.xo.entity.SysDictData;
+
+import com.moxi.mogublog.commons.entity.SysDictData;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 
 

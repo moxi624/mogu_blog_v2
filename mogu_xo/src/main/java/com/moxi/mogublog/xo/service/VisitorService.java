@@ -1,6 +1,6 @@
 package com.moxi.mogublog.xo.service;
 
-import com.moxi.mogublog.xo.entity.Visitor;
+import com.moxi.mogublog.commons.entity.Visitor;
 import com.moxi.mougblog.base.service.SuperService;
 
 /**

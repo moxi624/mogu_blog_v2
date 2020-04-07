@@ -19,15 +19,15 @@ import java.util.TimeZone;
 
 @EnableScheduling
 @EnableTransactionManagement
-@SpringBootApplication//redis和velocity的包会起冲突
+@SpringBootApplication
 @EnableSwagger2
 @EnableEurekaServer
-@EnableFeignClients("com.moxi.mogublog.web.feign")
+@EnableFeignClients("com.moxi.mogublog.commons.feign")
 @EnableAsync // 开启异步
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.utils",
-        "com.moxi.mogublog.web.util",
+        "com.moxi.mogublog.xo.utils",
         "com.moxi.mogublog.web.log",
         "com.moxi.mogublog.web.requestLimit",
         "com.moxi.mogublog.web.config",

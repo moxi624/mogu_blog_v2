@@ -4,7 +4,6 @@ package com.moxi.mogublog.admin.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
@@ -12,12 +11,13 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.admin.util.WebUtils;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.Role;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -74,7 +74,7 @@ public class AdminRestApi {
 
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         String pictureResult = null;
-        if(StringUtils.isNotEmpty(keyword)) {
+        if (StringUtils.isNotEmpty(keyword)) {
             queryWrapper.like(SQLConf.USER_NAME, keyword).or().like(SQLConf.NICK_NAME, keyword.trim());
         }
         Page<Admin> page = new Page<>();

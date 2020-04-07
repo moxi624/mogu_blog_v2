@@ -5,15 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.WebConfig;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.WebConfig;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.WebConfigService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EAccountType;
 import com.moxi.mougblog.base.enums.EBehavior;
 import io.swagger.annotations.Api;
@@ -39,7 +39,7 @@ import java.util.List;
 @Slf4j
 public class AboutMeRestApi {
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -67,7 +67,7 @@ public class AboutMeRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
-            admin.setPhotoList(webUtils.getPicture(pictureList));
+            admin.setPhotoList(webUtil.getPicture(pictureList));
         }
         log.info("获取用户信息");
         Admin result = new Admin();

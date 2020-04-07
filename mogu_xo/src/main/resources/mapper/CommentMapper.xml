@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.CommentMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Comment">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Comment">
         <id column="uid" property="uid"/>
         <result column="useruid" property="useruid"/>
         <result column="touid" property="touid"/>

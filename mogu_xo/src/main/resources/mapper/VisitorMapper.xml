@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.VisitorMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Visitor">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Visitor">
         <id column="uid" property="uid"/>
         <result column="username" property="username"/>
         <result column="email" property="email"/>

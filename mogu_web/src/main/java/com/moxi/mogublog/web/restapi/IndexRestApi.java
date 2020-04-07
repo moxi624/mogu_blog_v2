@@ -8,15 +8,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.*;
+import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import io.swagger.annotations.Api;
@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class IndexRestApi {
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     TagService tagService;
 
@@ -308,7 +308,7 @@ public class IndexRestApi {
 
     @ApiOperation(value = "获取最热标签", notes = "获取最热标签")
     @GetMapping("/getHotTag")
-    public String getHotTag(HttpServletRequest request) {
+    public String getHotTag() {
 
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
         Page<Tag> page = new Page<>();
@@ -363,21 +363,21 @@ public class IndexRestApi {
 
         if (ObjectUtil.isNotNull(webConfig) && StringUtils.isNotEmpty(webConfig.getLogo())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getLogo(), SysConf.FILE_SEGMENTATION);
-            webConfig.setPhotoList(webUtils.getPicture(pictureList));
+            webConfig.setPhotoList(webUtil.getPicture(pictureList));
         }
 
         //获取支付宝收款二维码
         if (StringUtils.isNotEmpty(webConfig.getAliPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getAliPay(), SysConf.FILE_SEGMENTATION);
-            if (webUtils.getPicture(pictureList).size() > 0) {
-                webConfig.setAliPayPhoto(webUtils.getPicture(pictureList).get(0));
+            if (webUtil.getPicture(pictureList).size() > 0) {
+                webConfig.setAliPayPhoto(webUtil.getPicture(pictureList).get(0));
             }
         }
         //获取微信收款二维码
         if (StringUtils.isNotEmpty(webConfig.getWeixinPay())) {
             String pictureList = this.pictureFeignClient.getPicture(webConfig.getWeixinPay(), SysConf.FILE_SEGMENTATION);
-            if (webUtils.getPicture(pictureList).size() > 0) {
-                webConfig.setWeixinPayPhoto(webUtils.getPicture(pictureList).get(0));
+            if (webUtil.getPicture(pictureList).size() > 0) {
+                webConfig.setWeixinPayPhoto(webUtil.getPicture(pictureList).get(0));
             }
         }
 
@@ -463,7 +463,7 @@ public class IndexRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         if (sortUids.size() > 0) {

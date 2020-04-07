@@ -1,6 +1,6 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.xo.entity.Feedback;
+import com.moxi.mogublog.commons.entity.Feedback;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 
 /**

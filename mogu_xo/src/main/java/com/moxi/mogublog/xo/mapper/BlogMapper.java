@@ -1,6 +1,6 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.commons.entity.Blog;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

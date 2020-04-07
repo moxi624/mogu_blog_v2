@@ -8,15 +8,15 @@ import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.MD5Utils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Feedback;
-import com.moxi.mogublog.xo.entity.Link;
-import com.moxi.mogublog.xo.entity.SystemConfig;
-import com.moxi.mogublog.xo.entity.User;
+import com.moxi.mogublog.xo.utils.WebUtil;
+import com.moxi.mogublog.commons.entity.Feedback;
+import com.moxi.mogublog.commons.entity.Link;
+import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.xo.service.FeedbackService;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.service.SystemConfigService;
@@ -64,7 +64,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AuthRestApi {
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     SystemConfigService systemConfigService;
     @Autowired
@@ -164,7 +164,7 @@ public class AuthRestApi {
 
         // 通过头像uid获取图片
         String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
-        List<String> photoList = webUtils.getPicture(pictureList);
+        List<String> photoList = webUtil.getPicture(pictureList);
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
 
         // 判断该用户是否含有头像信息

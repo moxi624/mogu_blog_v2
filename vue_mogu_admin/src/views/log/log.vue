@@ -169,7 +169,7 @@ export default {
           }
         ]
       },
-      value5: ""
+      value5: []
     };
   },
   created() {
@@ -177,12 +177,14 @@ export default {
   },
   methods: {
     logList: function() {
-      var params = new URLSearchParams();
-      params.append("userName", this.userName);
-      params.append("operation", this.operation);
-      params.append("startTime", this.value5);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {};
+      params.userName = this.userName;
+      params.operation = this.operation;
+      if(this.value5.length >= 2) {
+        params.startTime = this.value5[0] + "," + this.value5[1];
+      }
+      params.currentPage = this.currentPage;
+      params.pageSize = this.pageSize;
       getLogList(params).then(response => {
         if(response.code == "success") {
           this.currentPage = response.data.current;

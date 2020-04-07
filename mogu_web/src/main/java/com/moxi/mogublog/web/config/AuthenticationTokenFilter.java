@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * 拦截器
+ */
 @Component
 @Slf4j
 public class AuthenticationTokenFilter extends OncePerRequestFilter {

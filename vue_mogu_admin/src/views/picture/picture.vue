@@ -114,8 +114,8 @@ export default {
       count: 0, //计数器，用于记录上传次数
       loading: true,
       currentPage: 1,
-      total: null,
       pageSize: 14,
+      total: null,
       title: "增加图片",
       dialogFormVisible: false,
       keyword: "",
@@ -131,28 +131,14 @@ export default {
     //传递过来的pictureSordUid
     this.pictureSortUid = this.$route.query.pictureSortUid;
 
-    var that = this;
-    var params = new URLSearchParams();
-    params.append("pictureSortUid", this.pictureSortUid);
-    getPictureList(params).then(response => {
-      if (response.code == "success") {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
-      } else {
-        this.$message({
-          type: "error",
-          message: "系统错误"
-        });
-      }
-    });
+    // 获取图片列表
+    this.pictureList()
 
     //图片上传地址
     this.uploadPictureHost = process.env.PICTURE_API + "/file/pictures";
 
     //其它数据
-    that.otherData = {
+    this.otherData = {
       source: "picture",
       userUid: "uid00000000000000000000000000000000",
       adminUid: "uid00000000000000000000000000000000",
@@ -163,11 +149,11 @@ export default {
   },
   methods: {
     pictureList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
-      params.append("pictureSortUid", this.pictureSortUid);
+      var params = {};
+      params.keyword = this.keyword
+      params.pictureSortUid = this.pictureSortUid
+      params.pageSize = this.pageSize
+      params.currentPage = this.currentPage
       getPictureList(params).then(response => {
         if (response.code == "success") {
           this.tableData = response.data.records;
@@ -236,8 +222,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", this.pictureUids.join(",")); //将数组变成,组成
+          let params = {};
+          params.uid = this.pictureUids.join(","); //将数组变成,组成
           deletePicture(params).then(response => {
             if (response.code == "success") {
               this.$message({
@@ -271,13 +257,10 @@ export default {
         type: "warning"
       })
         .then(() => {
-
-          let params = new URLSearchParams();
-          params.append("pictureUid", this.pictureUids[0]);
-          params.append("pictureSortUid", this.pictureSortUid);
-
+          let params = {};
+          params.uid = this.pictureUids[0]
+          params.pictureSortUid = this.pictureSortUid
           setCover(params).then(response => {
-
             this.$message({
               type: "success",
               message: response.data
@@ -309,12 +292,11 @@ export default {
       this.pictureCropperVisible = false;
       var checkedPicture = this.checkedPicture
       checkedPicture.fileUid =  picture.uid
-      let params = new URLSearchParams();
-      params.append("uid", checkedPicture.uid);
-      params.append("fileUid", checkedPicture.fileUid);
-      params.append("picName", checkedPicture.picName);
-      params.append("pictureSortUid", checkedPicture.pictureSortUid);
-
+      let params = {};
+      params.uid = checkedPicture.uid
+      params.fileUid = checkedPicture.fileUid
+      params.picName = checkedPicture.picName
+      params.pictureSortUid = checkedPicture.pictureSortUid
       editPicture(params).then(response => {
         if (response.code == "success") {
           this.$message({
@@ -371,9 +353,9 @@ export default {
 
         this.count = this.count + 1;
         if(this.count % fileList.length == 0) {
-          var params = new URLSearchParams();
-          params.append("fileUids", this.fileUids);
-          params.append("pictureSortUid", this.pictureSortUid);
+          var params = {};
+          params.fileUids = this.fileUids
+          params.pictureSortUid = this.pictureSortUid
           addPicture(params).then(res => {
             if (res.code == "success") {
               this.$message({
@@ -387,7 +369,6 @@ export default {
                 message: res.data
               });
             }
-
             this.$refs.upload.clearFiles();
             this.fileUids = "";
 

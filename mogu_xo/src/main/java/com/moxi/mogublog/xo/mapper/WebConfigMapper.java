@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.xo.entity.WebConfig;
+
+import com.moxi.mogublog.commons.entity.WebConfig;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 
 /**

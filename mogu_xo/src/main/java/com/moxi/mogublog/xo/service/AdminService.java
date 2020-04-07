@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
-import com.moxi.mogublog.xo.entity.Admin;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.xo.vo.AdminVO;
 import com.moxi.mougblog.base.service.SuperService;
 
 /**
@@ -13,5 +14,28 @@ import com.moxi.mougblog.base.service.SuperService;
  */
 public interface AdminService extends SuperService<Admin> {
 
+    /**
+     * 通过UID获取Admin
+     * @param uid
+     * @return
+     */
     public Admin getAdminByUid(String uid);
+
+    /**
+     * 获取当前管理员
+     * @return
+     */
+    public Admin getMe();
+
+    /**
+     * 编辑当前管理员信息
+     * @return
+     */
+    public String editMe(AdminVO adminVO);
+
+    /**
+     * 修改密码
+     * @return
+     */
+    public String changePwd(String oldPwd, String newPwd);
 }

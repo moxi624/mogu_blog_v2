@@ -6,14 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.ResourceSort;
-import com.moxi.mogublog.xo.entity.StudyVideo;
+import com.moxi.mogublog.commons.entity.ResourceSort;
+import com.moxi.mogublog.commons.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +40,7 @@ import java.util.*;
 @Slf4j
 public class ResourceRestApi {
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     private ResourceSortService resourceSortService;
     @Autowired
@@ -56,7 +56,7 @@ public class ResourceRestApi {
                                @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "8") Long pageSize) {
 
         QueryWrapper<StudyVideo> queryWrapper = new QueryWrapper<>();
-        Page<StudyVideo> page = new Page<StudyVideo>();
+        Page<StudyVideo> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
@@ -80,12 +80,12 @@ public class ResourceRestApi {
         }
         //PictureList
         String result = this.pictureFeignClient.getPicture(fileIds, ",");
-        List<Map<String, Object>> picList = webUtils.getPictureMap(result);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(result);
 
         //ResourceSort
         Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(resourceSortUids);
         for (StudyVideo item : list) {
-            List<String> photoList = new ArrayList<String>();
+            List<String> photoList = new ArrayList<>();
             for (ResourceSort item2 : resourceSortList) {
                 if (item.getResourceSortUid().equals(item2.getUid())) {
                     item.setResourceSort(item2);

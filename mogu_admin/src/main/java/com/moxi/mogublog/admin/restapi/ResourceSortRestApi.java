@@ -1,24 +1,12 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.admin.feign.PictureFeignClient;
-import com.moxi.mogublog.admin.global.MessageConf;
-import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
-import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.ResourceSort;
-import com.moxi.mogublog.xo.entity.StudyVideo;
 import com.moxi.mogublog.xo.service.ResourceSortService;
-import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
-import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -35,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * <p>
@@ -52,66 +40,15 @@ import java.util.*;
 public class ResourceSortRestApi {
 
     @Autowired
-    WebUtils webUtils;
-
-    @Autowired
     ResourceSortService resourceSortService;
-
-    @Autowired
-    StudyVideoService studyVideoService;
-
-    @Autowired
-    PictureFeignClient pictureFeignClient;
 
     @AuthorityVerify
     @ApiOperation(value = "获取资源分类列表", notes = "获取资源分类列表", response = String.class)
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
-        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(resourceSortVO.getKeyword()) && !StringUtils.isEmpty(resourceSortVO.getKeyword().trim())) {
-            queryWrapper.like(SQLConf.SORT_NAME, resourceSortVO.getKeyword().trim());
-        }
-
-        Page<ResourceSort> page = new Page<>();
-        page.setCurrent(resourceSortVO.getCurrentPage());
-        page.setSize(resourceSortVO.getPageSize());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
-        IPage<ResourceSort> pageList = resourceSortService.page(page, queryWrapper);
-        List<ResourceSort> list = pageList.getRecords();
-
-        final StringBuffer fileUids = new StringBuffer();
-        list.forEach(item -> {
-            if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
-            }
-        });
-        String pictureResult = null;
-        Map<String, String> pictureMap = new HashMap<>();
-
-        if (fileUids != null) {
-            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
-        }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
-
-        picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
-        });
-
-        for (ResourceSort item : list) {
-            //获取图片
-            if (StringUtils.isNotEmpty(item.getFileUid())) {
-                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
-                List<String> pictureListTemp = new ArrayList<>();
-                pictureUidsTemp.forEach(picture -> {
-                    pictureListTemp.add(pictureMap.get(picture));
-                });
-                item.setPhotoList(pictureListTemp);
-            }
-        }
-        log.info("返回结果");
-        return ResultUtil.result(SysConf.SUCCESS, pageList);
+        ThrowableUtils.checkParamArgument(result);
+        return ResultUtil.result(SysConf.SUCCESS, resourceSortService.getPageList(resourceSortVO));
     }
 
     @AuthorityVerify
@@ -122,26 +59,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        /**
-         * 判断需要增加的分类是否存在
-         */
-        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.SORT_NAME, resourceSortVO.getSortName());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
-        if (tempSort != null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
-        }
-
-        ResourceSort resourceSort = new ResourceSort();
-        resourceSort.setSortName(resourceSortVO.getSortName());
-        resourceSort.setContent(resourceSortVO.getContent());
-        resourceSort.setFileUid(resourceSortVO.getFileUid());
-        resourceSort.setSort(resourceSortVO.getSort());
-        resourceSort.setStatus(EStatus.ENABLE);
-        resourceSort.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return resourceSortService.addResourceSort(resourceSortVO);
     }
 
     @AuthorityVerify
@@ -152,29 +70,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        ResourceSort resourceSort = resourceSortService.getById(resourceSortVO.getUid());
-
-        /**
-         * 判断需要编辑的分类是否存在
-         */
-        if (!resourceSort.getSortName().equals(resourceSortVO.getSortName())) {
-            QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.SORT_NAME, resourceSortVO.getSortName());
-            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
-            if (tempSort != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
-            }
-        }
-
-        resourceSort.setSortName(resourceSortVO.getSortName());
-        resourceSort.setContent(resourceSortVO.getContent());
-        resourceSort.setFileUid(resourceSortVO.getFileUid());
-        resourceSort.setSort(resourceSortVO.getSort());
-        resourceSort.setUpdateTime(new Date());
-        resourceSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return resourceSortService.editResourceSort(resourceSortVO);
     }
 
     @AuthorityVerify
@@ -186,37 +82,7 @@ public class ResourceSortRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
 
-        if (resourceSortVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
-        }
-        List<String> uids = new ArrayList<>();
-        resourceSortVOList.forEach(item -> {
-            uids.add(item.getUid());
-        });
-
-        // 判断要删除的分类，是否有资源
-        QueryWrapper<StudyVideo> studyVideoQueryWrapper = new QueryWrapper<>();
-        studyVideoQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        studyVideoQueryWrapper.in(SQLConf.RESOURCE_SORT_UID, uids);
-        Integer count = studyVideoService.count(studyVideoQueryWrapper);
-        if (count > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.RESOURCE_UNDER_THIS_SORT);
-        }
-
-        Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(uids);
-
-        resourceSortList.forEach(item -> {
-            item.setUpdateTime(new Date());
-            item.setStatus(EStatus.DISABLED);
-        });
-
-        Boolean save = resourceSortService.updateBatchById(resourceSortList);
-
-        if (save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
-        } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
-        }
+        return resourceSortService.deleteBatchResourceSort(resourceSortVOList);
     }
 
     @AuthorityVerify
@@ -227,33 +93,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        ResourceSort resourceSort = resourceSortService.getById(resourceSortVO.getUid());
-
-        //查找出最大的那一个
-        QueryWrapper<ResourceSort> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc(SQLConf.SORT);
-        Page<ResourceSort> page = new Page<>();
-        page.setCurrent(0);
-        page.setSize(1);
-        IPage<ResourceSort> pageList = resourceSortService.page(page, queryWrapper);
-        List<ResourceSort> list = pageList.getRecords();
-        ResourceSort maxSort = list.get(0);
-
-        if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
-        }
-        if (maxSort.getUid().equals(resourceSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
-        }
-
-        Integer sortCount = maxSort.getSort() + 1;
-
-        resourceSort.setSort(sortCount);
-        resourceSort.setUpdateTime(new Date());
-        resourceSort.updateById();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return resourceSortService.stickResourceSort(resourceSortVO);
     }
 }
 

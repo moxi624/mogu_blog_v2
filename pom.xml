@@ -60,6 +60,7 @@
         <module>mogu_gateway</module>
         <module>mogu_zipkin</module>
         <module>mogu_spider</module>
+        <module>mogu_commons</module>
     </modules>
 
     <dependencyManagement>

@@ -1,6 +1,10 @@
 package com.moxi.mogublog.xo.service;
 
-import com.moxi.mogublog.xo.entity.WebVisit;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.WebVisit;
+import com.moxi.mogublog.xo.vo.BlogSortVO;
+import com.moxi.mogublog.xo.vo.WebVisitVO;
 import com.moxi.mougblog.base.service.SuperService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +22,7 @@ public interface WebVisitService extends SuperService<WebVisit> {
 
     /**
      * 增加访问记录（异步接口）
+     *
      * @param userUid
      * @param request
      * @param behavior
@@ -45,4 +50,10 @@ public interface WebVisitService extends SuperService<WebVisit> {
      */
     public Map<String, Object> getVisitByWeek();
 
+    /**
+     * 获取访问列表
+     * @param webVisitVO
+     * @return
+     */
+    public IPage<WebVisit> getPageList(WebVisitVO webVisitVO);
 }

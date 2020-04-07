@@ -4,7 +4,7 @@ import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.xo.entity.WebVisit;
+import com.moxi.mogublog.commons.entity.WebVisit;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;

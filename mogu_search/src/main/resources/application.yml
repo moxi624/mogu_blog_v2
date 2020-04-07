@@ -13,11 +13,11 @@ spring:
     elasticsearch:
       cluster-name: elasticsearch
       cluster-nodes: localhost:9300
-#    solr:
-#      host: http://localhost:8080/solr
-#      core: collection1
-#      repositories:
-#        enabled: true
+  #    solr:
+  #      host: http://localhost:8080/solr
+  #      core: collection1
+  #      repositories:
+  #        enabled: true
 
   boot:
     admin:

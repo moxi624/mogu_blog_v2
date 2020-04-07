@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.BlogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Blog">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Blog">
         <id column="oid" property="oid"/>
         <result column="uid" property="uid"/>
         <result column="title" property="title"/>

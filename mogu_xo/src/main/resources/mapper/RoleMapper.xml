@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.RoleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Role">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Role">
         <id column="uid" property="uid"/>
         <result column="roleName" property="roleName"/>
         <result column="status" property="status"/>

@@ -1,10 +1,30 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import com.moxi.mogublog.xo.entity.Picture;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.Picture;
+import com.moxi.mogublog.commons.entity.PictureSort;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.SQLConf;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.PictureMapper;
+import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.PictureService;
+import com.moxi.mogublog.xo.service.PictureSortService;
+import com.moxi.mogublog.xo.utils.WebUtil;
+import com.moxi.mogublog.xo.vo.PictureVO;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * <p>
@@ -17,4 +37,140 @@ import org.springframework.stereotype.Service;
 @Service
 public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture> implements PictureService {
 
+    @Autowired
+    WebUtil webUtil;
+
+    @Autowired
+    PictureService pictureService;
+
+    @Autowired
+    BlogService blogService;
+
+    @Autowired
+    PictureSortService pictureSortService;
+
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Override
+    public IPage<Picture> getPageList(PictureVO pictureVO) {
+        QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(pictureVO.getKeyword()) && !StringUtils.isEmpty(pictureVO.getKeyword().trim())) {
+            queryWrapper.like(SQLConf.PIC_NAME, pictureVO.getKeyword().trim());
+        }
+
+        Page<Picture> page = new Page<>();
+        page.setCurrent(pictureVO.getCurrentPage());
+        page.setSize(pictureVO.getPageSize());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.PICTURE_SORT_UID, pictureVO.getPictureSortUid());
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        IPage<Picture> pageList = pictureService.page(page, queryWrapper);
+        List<Picture> pictureList = pageList.getRecords();
+
+        final StringBuffer fileUids = new StringBuffer();
+        pictureList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+
+        String pictureResult = null;
+        Map<String, String> pictureMap = new HashMap<>();
+
+        if (fileUids != null) {
+            pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
+
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
+        });
+
+        for (Picture item : pictureList) {
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                item.setPictureUrl(pictureMap.get(item.getFileUid()));
+            }
+        }
+        pageList.setRecords(pictureList);
+        return pageList;
+    }
+
+    @Override
+    public String addPicture(PictureVO pictureVO) {
+        List<String> list = StringUtils.changeStringToString(pictureVO.getFileUids(), SysConf.FILE_SEGMENTATION);
+        List<Picture> pictureList = new ArrayList<>();
+        if (list.size() > 0) {
+            for (String fileUid : list) {
+                Picture picture = new Picture();
+                picture.setFileUid(fileUid);
+                picture.setPictureSortUid(pictureVO.getPictureSortUid());
+                picture.setStatus(EStatus.ENABLE);
+                pictureList.add(picture);
+            }
+            pictureService.saveBatch(pictureList);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+    }
+
+    @Override
+    public String editPicture(PictureVO pictureVO) {
+        Picture picture = pictureService.getById(pictureVO.getUid());
+        // 这里需要更新所有的博客，将图片替换成 裁剪的图片
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.FILE_UID, picture.getFileUid());
+        List<Blog> blogList = blogService.list(queryWrapper);
+        if (blogList.size() > 0) {
+            blogList.forEach(item -> {
+                item.setFileUid(pictureVO.getFileUid());
+            });
+            blogService.updateBatchById(blogList);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put(SysConf.COMMAND, SysConf.EDIT_BATCH);
+
+            //发送到RabbitMq
+            rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+        }
+        picture.setFileUid(pictureVO.getFileUid());
+        picture.setPicName(pictureVO.getPicName());
+        picture.setPictureSortUid(pictureVO.getPictureSortUid());
+        picture.setUpdateTime(new Date());
+        picture.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
+
+    @Override
+    public String deleteBatchPicture(PictureVO pictureVO) {
+        List<String> uids = StringUtils.changeStringToString(pictureVO.getUid(), SysConf.FILE_SEGMENTATION);
+        for (String item : uids) {
+            Picture picture = pictureService.getById(item);
+            picture.setStatus(EStatus.DISABLED);
+            picture.setUpdateTime(new Date());
+            picture.updateById();
+        }
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+    }
+
+    @Override
+    public String setPictureCover(PictureVO pictureVO) {
+        PictureSort pictureSort = pictureSortService.getById(pictureVO.getPictureSortUid());
+        if (pictureSort != null) {
+            Picture picture = pictureService.getById(pictureVO.getUid());
+            if (picture != null) {
+                pictureSort.setFileUid(picture.getFileUid());
+                picture.setUpdateTime(new Date());
+                pictureSort.updateById();
+            } else {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.The_PICTURE_DOES_NOT_EXIST);
+            }
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.The_PICTURE_SORT_DOES_NOT_EXIST);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
 }

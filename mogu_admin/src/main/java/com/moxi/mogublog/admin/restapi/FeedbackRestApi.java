@@ -9,10 +9,10 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
+import com.moxi.mogublog.commons.entity.Feedback;
+import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Feedback;
-import com.moxi.mogublog.xo.entity.User;
 import com.moxi.mogublog.xo.service.FeedbackService;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
@@ -52,9 +52,6 @@ public class FeedbackRestApi {
     @Autowired
     FeedbackService feedbackService;
 
-    @Autowired
-    UserService userService;
-
     @AuthorityVerify
     @ApiOperation(value = "获取反馈列表", notes = "获取反馈列表", response = String.class)
     @PostMapping("/getList")
@@ -62,110 +59,29 @@ public class FeedbackRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(feedbackVO.getTitle())) {
-            queryWrapper.like(SQLConf.TITLE, feedbackVO.getTitle());
-        }
-
-        if (feedbackVO.getFeedbackStatus() != null) {
-            queryWrapper.eq(SQLConf.FEEDBACK_STATUS, feedbackVO.getFeedbackStatus());
-        }
-
-        Page<Feedback> page = new Page<>();
-        page.setCurrent(feedbackVO.getCurrentPage());
-        page.setSize(feedbackVO.getPageSize());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        IPage<Feedback> pageList = feedbackService.page(page, queryWrapper);
-
-        List<Feedback> feedbackList = pageList.getRecords();
-        List<String> userUids = new ArrayList<>();
-        feedbackList.forEach(item -> {
-            if (StringUtils.isNotEmpty(item.getUserUid())) {
-                userUids.add(item.getUserUid());
-            }
-        });
-        List<User> userList = userService.getUserListByIds(userUids);
-        Map<String, User> map = new HashMap<>();
-        userList.forEach(item -> {
-            item.setPassWord("");
-            map.put(item.getUid(), item);
-        });
-
-        feedbackList.forEach(item -> {
-            if (StringUtils.isNotEmpty(item.getUserUid())) {
-                item.setUser(map.get(item.getUserUid()));
-            }
-        });
-
-        pageList.setRecords(feedbackList);
-
-        return ResultUtil.result(SysConf.SUCCESS, pageList);
+        return ResultUtil.result(SysConf.SUCCESS, feedbackService.getPageList(feedbackVO));
     }
 
     @AuthorityVerify
     @OperationLogger(value = "编辑反馈")
     @ApiOperation(value = "编辑反馈", notes = "编辑反馈", response = String.class)
     @PostMapping("/edit")
-    public String edit(HttpServletRequest request, @Validated({Update.class}) @RequestBody FeedbackVO feedbackVO, BindingResult result) {
+    public String edit(@Validated({Update.class}) @RequestBody FeedbackVO feedbackVO, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
-            ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
-
-        Feedback feedback = feedbackService.getById(feedbackVO.getUid());
-        feedback.setTitle(feedbackVO.getTitle());
-        feedback.setContent(feedbackVO.getContent());
-        feedback.setFeedbackStatus(feedbackVO.getFeedbackStatus());
-        feedback.setReply(feedbackVO.getReply());
-        feedback.setUpdateTime(new Date());
-        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
-            feedback.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
-        }
-        feedback.setUpdateTime(new Date());
-        feedback.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return feedbackService.addFeedback(feedbackVO);
     }
 
     @AuthorityVerify
     @OperationLogger(value = "批量删除反馈")
     @ApiOperation(value = "批量删除反馈", notes = "批量删除反馈", response = String.class)
     @PostMapping("/deleteBatch")
-    public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody List<FeedbackVO> feedbackVOList, BindingResult result) {
+    public String delete(@Validated({Delete.class}) @RequestBody List<FeedbackVO> feedbackVOList, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
-            ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
-        final String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
-        if (feedbackVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
-        }
-        List<String> uids = new ArrayList<>();
-        feedbackVOList.forEach(item -> {
-            uids.add(item.getUid());
-        });
-
-        Collection<Feedback> feedbackList = feedbackService.listByIds(uids);
-
-        feedbackList.forEach(item -> {
-            item.setAdminUid(adminUid);
-            item.setUpdateTime(new Date());
-            item.setStatus(EStatus.DISABLED);
-        });
-
-        Boolean save = feedbackService.updateBatchById(feedbackList);
-
-        if (save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
-        } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
-        }
+        return feedbackService.deleteBatchFeedback(feedbackVOList);
     }
 
 }

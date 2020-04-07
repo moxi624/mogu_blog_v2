@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.xo.entity.Todo;
+
+import com.moxi.mogublog.commons.entity.Todo;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 import org.apache.ibatis.annotations.Param;

@@ -62,4 +62,9 @@ public class BaseSQLConf {
     public final static String FILE_OLD_NAME = "file_old_name";
     public final static String DATA = "data";
 
+    public final static String SORT_NAME = "sort_name";
+    public final static String RESOURCE_SORT_UID = "resource_sort_uid";
+
+
+
 }

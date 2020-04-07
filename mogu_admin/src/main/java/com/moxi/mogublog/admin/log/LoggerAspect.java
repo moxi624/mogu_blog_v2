@@ -1,17 +1,10 @@
 package com.moxi.mogublog.admin.log;
 
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.config.security.SecurityUser;
+import com.moxi.mogublog.commons.entity.ExceptionLog;
 import com.moxi.mogublog.utils.*;
-import com.moxi.mogublog.xo.entity.ExceptionLog;
-import com.moxi.mogublog.xo.entity.SysLog;
-import com.moxi.mogublog.xo.service.ExceptionLogService;
-import com.moxi.mogublog.xo.service.SysLogService;
-import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.util.RequestUtil;
@@ -24,8 +17,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -120,6 +111,7 @@ public class LoggerAspect {
 
     /**
      * 管理员日志收集
+     *
      * @param point
      * @throws Exception
      */

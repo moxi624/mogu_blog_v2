@@ -24,7 +24,7 @@ import java.util.TimeZone;
 @EnableEurekaClient
 @EnableCaching
 @EnableRabbit
-@EnableFeignClients("com.moxi.mogublog.admin.feign")
+@EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.utils",
@@ -33,6 +33,7 @@ import java.util.TimeZone;
         "com.moxi.mogublog.admin.security",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",
+        "com.moxi.mogublog.xo.utils",
         "com.moxi.mogublog.xo.service"
 })
 public class AdminApplication {

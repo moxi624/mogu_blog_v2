@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
 import com.moxi.mougblog.base.validator.group.Insert;

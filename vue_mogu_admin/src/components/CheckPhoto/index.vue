@@ -91,9 +91,10 @@ export default {
     let index = 0;
     //先加载分类
     if (!that.havePictureSorts) {
-      var params = new URLSearchParams();
+      var params = {};
       // TODO 全部把分类加载出来，如果图片很多的话，不能这么做
-      params.append("pageSize", "500");
+      params.pageSize = 500
+      params.currentPage = 1;
       getPictureSortList(params).then(function(response) {
         if (response.code == "success") {
           var pictureSorts = response.data.records;
@@ -104,11 +105,11 @@ export default {
             var pictureSortUid = pictureSorts[0].uid;
             that.currentPictureSortUid = pictureSorts[0].uid;
             var name = pictureSorts[0].name;
-            var params = new URLSearchParams();
-            params.append("pictureSortUid", pictureSortUid);
-            params.append("pageSize", 20); //每一页显示40个
+            var params = {};
+            params.pictureSortUid = pictureSortUid;
+            params.pageSize = 20;
+            params.currentPage = 1;
             getPictureList(params).then(function(response) {
-              console.log("得到的分类中的图片", response);
               if (response.code == "success") {
                 var newObject = {
                   pictureSortUid: pictureSortUid,
@@ -168,20 +169,17 @@ export default {
   },
   methods: {
     handleCurrentChange: function(val) {
-      console.log("当前页", val);
-      console.log("uid", this.currentPictureSortUid);
       var that = this;
       var pictureSortUid = this.currentPictureSortUid;
-      var pictureSortParams = new URLSearchParams();
-      pictureSortParams.append("uid", pictureSortUid);
+      var pictureSortParams = {};
+      pictureSortParams.uid = pictureSortUid
       getPictureSortByUid(pictureSortParams).then(function(sortResponse) {
-        console.log("返回的分类", sortResponse);
         if (sortResponse.code == "success") {
           var pictureSort = sortResponse.data;
-          var params = new URLSearchParams();
-          params.append("pictureSortUid", pictureSortUid);
-          params.append("currentPage", val); //每一页显示40个
-          params.append("pageSize", 20); //每一页显示40个
+          var params = {}
+          params.pictureSortUid = pictureSortUid
+          params.currentPage = val
+          params.pageSize = 20
           getPictureList(params).then(function(response) {
             if (response.code == "success") {
               var newObject = {
@@ -207,23 +205,25 @@ export default {
       });
       this.activeName = "0";
       var that = this;
-      var params = new URLSearchParams();
-      params.append("pageSize", "500");
+      var params = {};
+      params.currentPage = 1;
+      params.pageSize = 500;
       getPictureSortList(params).then(function(response) {
-        console.log("加载数据图片：", response);
         if (response.code == "success") {
           //成功
           var pictureSorts = response.data.records;
           that.pictureSorts = pictureSorts;
           loadingInstance.close();
+
           //默认初始化第一个
           if (pictureSorts.length > 0) {
             var pictureSortUid = pictureSorts[0].uid;
             that.currentPictureSortUid = pictureSortUid; //当前pictureSortUid
             var name = pictureSorts[0].name;
-            var params = new URLSearchParams();
-            params.append("pictureSortUid", pictureSortUid);
-            params.append("pageSize", 20); //每一页显示40个
+            var params = {};
+            params.pictureSortUid = pictureSortUid
+            params.pageSize = 20
+            params.currentPage = 1;
             getPictureList(params).then(function(response) {
               if (response.code == "success") {
                 var newObject = {
@@ -254,14 +254,14 @@ export default {
         });
         return;
       }
-      var params = new URLSearchParams();
-      params.append("pageSize", "500");
-      params.append("keyword", this.keyword);
+      var params = {};
+      params.pageSize = 500
+      params.currentPage = 1;
+      params.keyword = this.keyword
       getPictureSortList(params).then(function(response) {
         if (response.code == "success") {
           //成功
-          var pictureSorts = response.data.records; //这里不应该加进去
-          console.log("查询到的列表", response);
+          var pictureSorts = response.data.records;
           that.pictureSorts = pictureSorts;
           if (pictureSorts.length <= 0) {
             that.$message({
@@ -272,13 +272,12 @@ export default {
 
           var pictureSortUid = pictureSorts[0].uid;
           var name = pictureSorts[0].name;
-          var params = new URLSearchParams();
-          console.log(pictureSortUid);
-          params.append("pictureSortUid", pictureSortUid);
-          params.append("pageSize", 20); //每一页显示40个
-          getPictureList(params).then(function(response) {
+          var pictureParams = {};
+          pictureParams.pictureSortUid = pictureSortUid
+          pictureParams.pageSize = 20
+          pictureParams.currentPage = 1;
+          getPictureList(pictureParams).then(function(response) {
             if (response.code == "success") {
-              console.log("获取列表的图片:", response);
               var newObject = {
                 pictureSortUid: pictureSortUid,
                 name: name,
@@ -296,18 +295,17 @@ export default {
           this.$message({ type: "error", message: response.data });
         }
       });
-      console.log("点击了查找：", this.keyword);
     },
     clickTab(e) {
       var that = this;
       var index = this.activeName;
       var pictureSortUid = this.pictureSorts[index].uid == undefined ? this.pictureSorts[index].pictureSortUid : this.pictureSorts[index].uid;
-      console.log("选中的分类UID", pictureSortUid);
       this.currentPictureSortUid = pictureSortUid; //当前pictureSortUid
       var name = this.pictureSorts[index].name;
-      var params = new URLSearchParams();
-      params.append("pictureSortUid", pictureSortUid);
-      params.append("pageSize", 20);
+      var params = {};
+      params.currentPage = 1;
+      params.pictureSortUid = pictureSortUid;
+      params.pageSize = 20;
       getPictureList(params).then(function(response) {
         if (response.code == "success") {
           if (response.data.records.length > 0) {
@@ -319,7 +317,6 @@ export default {
               currentPage: response.data.current,
               total: response.data.total
             };
-            console.log(that.pictureSorts);
             Vue.set(that.pictureSorts, index, newObject);
           }
         } else {
@@ -337,11 +334,9 @@ export default {
       return result;
     },
     before_close(done) {
-      console.log("关闭前的回调");
-      //取消时，欢迎成开始状态
+      //取消时，开始状态
       this.form.photoList = this.photos;
       this.form.fileIds = this.files;
-
       this.$emit("cancelModel", "");
       done();
     },
@@ -349,7 +344,6 @@ export default {
       //取消时，还原成开始状态
       this.form.photoList = this.photos;
       this.form.fileIds = this.files;
-
       this.$emit("cancelModel", "");
     },
     handleClick(tab, event) {
@@ -364,7 +358,6 @@ export default {
     },
     //点击选中图片
     checkLogoConfirm: function(fileId, fileUrl) {
-      console.log(this.limitCount, "图片限制数");
       if (this.limitCount != undefined) {
         if (this.form.photoList.length >= this.limitCount) {
           this.$message({
@@ -388,7 +381,6 @@ export default {
       this.form.photoList.push(fileUrl);
       this.$forceUpdate();
       this.form.fileIds = this.form.fileIds + "," + fileId;
-      console.log("点击了添加图片", this.form.photoList);
       this.$message({
         message: "添加成功",
         type: "success"
@@ -402,8 +394,6 @@ export default {
         .trim();
       var array = ids.split(" ");
       this.form.photoList.splice(index, 1);
-      console.log(this.form.photoList, "图片list");
-      console.log(array);
       var newStr = "";
       var tag = -1;
       this.$message({

@@ -2,7 +2,10 @@ package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.xo.entity.Blog;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.xo.vo.BlogSortVO;
+import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.service.SuperService;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 给博客列表设置分类和标签
+     *
      * @param list
      * @return
      */
@@ -105,6 +109,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过uid获取博客内容
+     *
      * @param uid
      * @return
      */
@@ -112,9 +117,48 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 根据BlogUid获取相关的博客
+     *
      * @param blogUid
      * @return
      */
     public List<Blog> getSameBlogByBlogUid(String blogUid);
 
+    /**
+     * 获取博客列表
+     * @param blogVO
+     * @return
+     */
+    public IPage<Blog> getPageList(BlogVO blogVO);
+
+    /**
+     * 新增博客
+     * @param blogVO
+     */
+    public String addBlog(BlogVO blogVO);
+
+    /**
+     * 编辑博客
+     * @param blogVO
+     */
+    public String editBlog(BlogVO blogVO);
+
+    /**
+     * 推荐博客排序调整
+     * @param blogVOList
+     * @return
+     */
+    public String editBatch(List<BlogVO> blogVOList);
+
+    /**
+     * 批量删除博客
+     * @param blogVO
+     */
+    public String deleteBlog(BlogVO blogVO);
+
+    /**
+     * 批量删除博客
+     * @param blogVoList
+     * @return
+     */
+    public String deleteBatchBlog(List<BlogVO> blogVoList);
 }

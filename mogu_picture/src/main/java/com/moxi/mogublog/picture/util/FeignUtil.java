@@ -1,7 +1,7 @@
 package com.moxi.mogublog.picture.util;
 
-import com.moxi.mogublog.picture.feign.AdminFeignClient;
-import com.moxi.mogublog.picture.feign.WebFeignClient;
+import com.moxi.mogublog.commons.feign.AdminFeignClient;
+import com.moxi.mogublog.commons.feign.WebFeignClient;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.StringUtils;

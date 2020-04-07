@@ -1,7 +1,7 @@
 package com.moxi.mogublog.picture.restapi;
 
 import com.google.gson.Gson;
-import com.moxi.mogublog.picture.feign.AdminFeignClient;
+import com.moxi.mogublog.commons.feign.AdminFeignClient;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.QiniuService;

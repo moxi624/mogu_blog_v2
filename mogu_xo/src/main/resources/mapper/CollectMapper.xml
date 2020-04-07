@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.CollectMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Collect">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Collect">
         <id column="oid" property="oid"/>
         <result column="uid" property="uid"/>
         <result column="useruid" property="useruid"/>

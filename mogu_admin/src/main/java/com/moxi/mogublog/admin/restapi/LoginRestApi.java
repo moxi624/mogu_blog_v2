@@ -1,20 +1,20 @@
 package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.admin.feign.PictureFeignClient;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.util.WebUtils;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.CategoryMenu;
+import com.moxi.mogublog.commons.entity.Role;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.CheckUtils;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Admin;
-import com.moxi.mogublog.xo.entity.CategoryMenu;
-import com.moxi.mogublog.xo.entity.Role;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;

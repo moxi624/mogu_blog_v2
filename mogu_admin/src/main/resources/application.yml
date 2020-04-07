@@ -138,7 +138,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5
 
 # 或者：
-feign.hystrix.enabled: false ## 索性禁用feign的hystrix支持
+feign.hystrix.enabled: false #索性禁用feign的hystrix支持
 
 management:
   endpoints:
@@ -153,7 +153,7 @@ management:
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.moxi.mogublog.xo.entity
+  typeAliasesPackage: com.moxi.mogublog.commons.entity
   global-config:
     # 数据库相关配置
     db-config:

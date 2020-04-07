@@ -1,7 +1,7 @@
 package com.moxi.mogublog.xo.mapper;
 
 
-import com.moxi.mogublog.xo.entity.SystemConfig;
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 
 /**

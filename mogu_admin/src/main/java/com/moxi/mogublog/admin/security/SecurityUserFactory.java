@@ -1,7 +1,7 @@
 package com.moxi.mogublog.admin.security;
 
+import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.config.security.SecurityUser;
-import com.moxi.mogublog.xo.entity.Admin;
 import com.moxi.mougblog.base.enums.EStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,10 +1,24 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import com.moxi.mogublog.xo.entity.SysLog;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.commons.entity.SysLog;
+import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.SQLConf;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.SysLogMapper;
 import com.moxi.mogublog.xo.service.SysLogService;
+import com.moxi.mogublog.xo.vo.SysLogVO;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -18,4 +32,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysLogServiceImpl extends SuperServiceImpl<SysLogMapper, SysLog> implements SysLogService {
 
+    @Autowired
+    SysLogService sysLogService;
+
+    @Override
+    public IPage<SysLog> getPageList(SysLogVO sysLogVO) {
+
+        QueryWrapper<SysLog> queryWrapper = new QueryWrapper<>();
+
+        if (StringUtils.isNotEmpty(sysLogVO.getUserName()) && !StringUtils.isEmpty(sysLogVO.getUserName().trim())) {
+            queryWrapper.like(SQLConf.USER_NAME, sysLogVO.getUserName().trim());
+        }
+
+        if (!StringUtils.isEmpty(sysLogVO.getOperation())) {
+            queryWrapper.like(SQLConf.OPERATION, sysLogVO.getOperation());
+        }
+
+        if (!StringUtils.isEmpty(sysLogVO.getStartTime())) {
+            String[] time = sysLogVO.getStartTime().split(SysConf.FILE_SEGMENTATION);
+            if (time.length == 2) {
+                queryWrapper.between(SQLConf.CREATE_TIME, DateUtils.str2Date(time[0]), DateUtils.str2Date(time[1]));
+            }
+        }
+
+        Page<SysLog> page = new Page<>();
+        page.setCurrent(sysLogVO.getCurrentPage());
+        page.setSize(sysLogVO.getPageSize());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        IPage<SysLog> pageList = sysLogService.page(page, queryWrapper);
+        return pageList;
+    }
 }

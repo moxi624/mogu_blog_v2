@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.AdminMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.Admin">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.Admin">
         <id column="uid" property="uid"/>
         <result column="userName" property="userName"/>
         <result column="password" property="password"/>
@@ -28,7 +28,7 @@
         lastLoginIp, status, createTime, updateTime
     </sql>
 
-    <select id="getAdminByUid" resultType="com.moxi.mogublog.xo.entity.Admin">
+    <select id="getAdminByUid" resultType="com.moxi.mogublog.commons.entity.Admin">
         select * from t_admin where uid = #{uid}
     </select>
 

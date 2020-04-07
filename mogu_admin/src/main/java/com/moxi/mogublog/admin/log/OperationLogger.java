@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * 标注该该注解的方法需要记录操作日志
+ *
  * @author 陌溪
  * @date 2020年3月23日09:35:57
  */
@@ -18,7 +19,6 @@ public @interface OperationLogger {
 
     /**
      * 业务名称
-     *
      */
     String value() default "";
 

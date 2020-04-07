@@ -6,19 +6,19 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.BlogSort;
-import com.moxi.mogublog.xo.entity.Tag;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mogublog.xo.service.WebVisitService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class SearchRestApi {
 
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
 
     @Autowired
     TagService tagService;
@@ -129,7 +129,7 @@ public class SearchRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
@@ -369,7 +369,7 @@ public class SearchRestApi {
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureList);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         if (sortUids.size() > 0) {

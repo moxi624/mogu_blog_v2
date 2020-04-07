@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.ExceptionLogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.ExceptionLog">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.ExceptionLog">
         <id column="uid" property="uid"/>
         <result column="exceptionJson" property="exceptionJson"/>
         <result column="exceptionMessage" property="exceptionMessage"/>

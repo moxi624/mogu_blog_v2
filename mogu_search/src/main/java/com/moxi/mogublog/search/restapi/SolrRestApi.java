@@ -1,13 +1,14 @@
 //package com.moxi.mogublog.search.restapi;
 //
-//import com.moxi.mogublog.search.client.BlogClient;
+//import com.moxi.mogublog.commons.entity.Blog;
+//import com.moxi.mogublog.commons.feign.BlogFeignClient;
+//import com.moxi.mogublog.commons.feign.WebFeignClient;
 //import com.moxi.mogublog.search.global.MessageConf;
 //import com.moxi.mogublog.search.global.SysConf;
 //import com.moxi.mogublog.search.service.SolrSearchService;
 //import com.moxi.mogublog.utils.ResultUtil;
 //import com.moxi.mogublog.utils.StringUtils;
 //import com.moxi.mogublog.utils.WebUtils;
-//import com.moxi.mogublog.xo.entity.Blog;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
 //import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.web.bind.annotation.*;
 //
-//import javax.annotation.Resource;
 //import javax.servlet.http.HttpServletRequest;
 //import java.text.ParseException;
 //import java.util.List;
@@ -31,7 +31,7 @@
 //    private SolrSearchService solrSearchService;
 //
 //    @Autowired
-//    private BlogClient blogClient;
+//    private WebFeignClient webFeignClient;
 //
 //    @Value(value = "${spring.data.solr.core}")
 //    private String collection;
@@ -57,7 +57,7 @@
 //    @PostMapping("/addSolrIndexByUid")
 //    public String addSolrIndexByUid(@RequestParam(required = true) String uid) {
 //
-//        String result = blogClient.getBlogByUid(uid);
+//        String result = webFeignClient.getBlogByUid(uid);
 //
 //        Blog blog = WebUtils.getData(result, Blog.class);
 //        if (blog == null) {
@@ -70,7 +70,7 @@
 //    @ApiOperation(value = "通过博客Uid更新Solr索引", notes = "通过博客Uid更新Solr索引", response = String.class)
 //    @PostMapping("/updateSolrIndexByUid")
 //    public String updateSolrIndexByUid(@RequestParam(required = true) String uid) {
-//        String result = blogClient.getBlogByUid(uid);
+//        String result = webFeignClient.getBlogByUid(uid);
 //        Blog blog = WebUtils.getData(result, Blog.class);
 //        if (blog == null) {
 //            return ResultUtil.result(SysConf.ERROR, MessageConf.UPDATE_FAIL);
@@ -111,7 +111,7 @@
 //        Integer size = 0;
 //        do {
 //            // 查询blog信息
-//            String result = blogClient.getNewBlog(page, row);
+//            String result = webFeignClient.getNewBlog(page, row);
 //
 //            //构建blog
 //            List<Blog> blogList = WebUtils.getList(result, Blog.class);

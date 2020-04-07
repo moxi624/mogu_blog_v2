@@ -1,21 +1,22 @@
 package com.moxi.mogublog.search.restapi;
 
-import com.moxi.mogublog.search.client.BlogClient;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.feign.WebFeignClient;
 import com.moxi.mogublog.search.global.MessageConf;
 import com.moxi.mogublog.search.global.SysConf;
 import com.moxi.mogublog.search.pojo.ESBlogIndex;
-import com.moxi.mogublog.search.reposlitory.BlogRepository;
+import com.moxi.mogublog.search.repository.BlogRepository;
 import com.moxi.mogublog.search.service.ElasticSearchService;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
-import com.moxi.mogublog.xo.entity.Blog;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
@@ -33,16 +34,13 @@ import java.util.stream.Collectors;
 public class ElasticSearchRestApi {
 
     @Autowired
+    ElasticsearchTemplate elasticsearchTemplate;
+    @Autowired
     private ElasticSearchService searchService;
-
     @Autowired
     private BlogRepository blogRepository;
-
-    @Autowired
-    ElasticsearchTemplate elasticsearchTemplate;
-
-    @Autowired
-    private BlogClient blogClient;
+    @Resource
+    private WebFeignClient webFeignClient;
 
 
     @ApiOperation(value = "通过ElasticSearch搜索博客", notes = "通过ElasticSearch搜索博客", response = String.class)
@@ -64,7 +62,7 @@ public class ElasticSearchRestApi {
 
         List<String> uidList = StringUtils.changeStringToString(uids, SysConf.FILE_SEGMENTATION);
 
-        for(String uid : uidList) {
+        for (String uid : uidList) {
             blogRepository.deleteById(uid);
         }
 
@@ -82,10 +80,10 @@ public class ElasticSearchRestApi {
     @PostMapping("/addElasticSearchIndexByUid")
     public String addElasticSearchIndexByUid(@RequestParam(required = true) String uid) {
 
-        String result = blogClient.getBlogByUid(uid);
+        String result = webFeignClient.getBlogByUid(uid);
 
         Blog eblog = WebUtils.getData(result, Blog.class);
-        if(eblog == null) {
+        if (eblog == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INSERT_FAIL);
         }
         ESBlogIndex blog = searchService.buidBlog(eblog);
@@ -151,14 +149,14 @@ public class ElasticSearchRestApi {
 //            }
 
             // 查询blog信息
-            String result = blogClient.getNewBlog(page, row);
+            String result = webFeignClient.getNewBlog(page, row);
 
             //构建blog
             List<Blog> blogList = WebUtils.getList(result, Blog.class);
             size = blogList.size();
 
             List<ESBlogIndex> eSBlogIndexList = blogList.stream()
-                        .map(searchService::buidBlog).collect(Collectors.toList());
+                    .map(searchService::buidBlog).collect(Collectors.toList());
             //存入索引库
             blogRepository.saveAll(eSBlogIndexList);
             // 翻页

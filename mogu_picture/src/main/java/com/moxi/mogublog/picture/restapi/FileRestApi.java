@@ -4,7 +4,7 @@ package com.moxi.mogublog.picture.restapi;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.picture.entity.FileSort;
-import com.moxi.mogublog.picture.feign.AdminFeignClient;
+import com.moxi.mogublog.commons.feign.AdminFeignClient;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;

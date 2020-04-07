@@ -23,7 +23,7 @@
     <dependencies>
 
         <dependency>
-            <artifactId>mogu_base</artifactId>
+            <artifactId>mogu_commons</artifactId>
             <groupId>com.moxi</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

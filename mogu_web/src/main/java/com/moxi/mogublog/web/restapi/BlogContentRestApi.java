@@ -7,17 +7,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.web.util.WebUtils;
-import com.moxi.mogublog.xo.entity.Blog;
-import com.moxi.mogublog.xo.entity.Comment;
-import com.moxi.mogublog.xo.entity.WebVisit;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.Comment;
+import com.moxi.mogublog.commons.entity.WebVisit;
 import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.global.ECode;
 import com.moxi.mougblog.base.holder.RequestHolder;
@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 public class BlogContentRestApi {
 
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
 
     @Autowired
     TagService tagService;
@@ -309,7 +309,7 @@ public class BlogContentRestApi {
         //获取标题图片
         if (blog != null && !StringUtils.isEmpty(blog.getFileUid())) {
             String result = this.pictureFeignClient.getPicture(blog.getFileUid(), ",");
-            List<String> picList = webUtils.getPicture(result);
+            List<String> picList = webUtil.getPicture(result);
             log.info("##### picList: #######" + picList);
             if (picList != null && picList.size() > 0) {
                 blog.setPhotoList(picList);

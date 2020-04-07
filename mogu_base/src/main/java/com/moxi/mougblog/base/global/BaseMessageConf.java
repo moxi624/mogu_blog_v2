@@ -42,6 +42,14 @@ public class BaseMessageConf {
     public static final String THIS_SORT_IS_TOP = "该分类已经在顶端！";
     public static final String THIS_TAG_IS_TOP = "该标签已经在顶端！";
     public final static String INVALID_TOKEN = "token令牌未被识别";
+    public final static String ERROR_PASSWORD = "密码错误";
+
+    public final static String The_PICTURE_SORT_DOES_NOT_EXIST = "该图片分类不存在";
+    public final static String The_PICTURE_DOES_NOT_EXIST = "该图片不存在";
+
+    public final static String PICTURE_MUST_BE_SELECT_AREA = "图片必须选择上传到一个区域";
+    public final static String MUST_BE_OPEN_LOCAL_UPLOAD = "图片显示优先级为本地优先，必须开启图片上传本地";
+    public final static String MUST_BE_OPEN_QI_NIU_UPLOAD = "图片显示优先级为七牛云优先，必须开启图片上传七牛云";
 
     public static final String DATA_NO_PRIVILEGE = "该数据无权限访问";
 

@@ -9,9 +9,9 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
+import com.moxi.mogublog.commons.entity.Link;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.entity.Link;
 import com.moxi.mogublog.xo.service.LinkService;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -58,24 +58,8 @@ public class LinkRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(linkVO.getKeyword()) && !StringUtils.isEmpty(linkVO.getKeyword().trim())) {
-            queryWrapper.like(SQLConf.TITLE, linkVO.getKeyword().trim());
-        }
-
-        if (linkVO.getLinkStatus() != null) {
-            queryWrapper.eq(SQLConf.LINK_STATUS, linkVO.getLinkStatus());
-        }
-
-        Page<Link> page = new Page<>();
-        page.setCurrent(linkVO.getCurrentPage());
-        page.setSize(linkVO.getPageSize());
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
-        IPage<Link> pageList = linkService.page(page, queryWrapper);
         log.info("获取友链列表");
-        return ResultUtil.result(SysConf.SUCCESS, pageList);
+        return ResultUtil.result(SysConf.SUCCESS, linkService.getPageList(linkVO));
     }
 
     @AuthorityVerify
@@ -86,18 +70,7 @@ public class LinkRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        Link link = new Link();
-        link.setTitle(linkVO.getTitle());
-        link.setSummary(linkVO.getSummary());
-        link.setUrl(linkVO.getUrl());
-        link.setClickCount(0);
-        link.setLinkStatus(linkVO.getLinkStatus());
-        link.setSort(linkVO.getSort());
-        link.setStatus(EStatus.ENABLE);
-        link.setUpdateTime(new Date());
-        link.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return linkService.addLink(linkVO);
     }
 
     @AuthorityVerify
@@ -108,16 +81,7 @@ public class LinkRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        Link link = linkService.getById(linkVO.getUid());
-        link.setTitle(linkVO.getTitle());
-        link.setSummary(linkVO.getSummary());
-        link.setLinkStatus(linkVO.getLinkStatus());
-        link.setUrl(linkVO.getUrl());
-        link.setSort(linkVO.getSort());
-        link.setUpdateTime(new Date());
-        link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return linkService.editLink(linkVO);
     }
 
     @AuthorityVerify
@@ -128,12 +92,7 @@ public class LinkRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        Link link = linkService.getById(linkVO.getUid());
-        link.setStatus(EStatus.DISABLED);
-        link.setUpdateTime(new Date());
-        link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return linkService.deleteLink(linkVO);
     }
 
     @AuthorityVerify
@@ -143,31 +102,6 @@ public class LinkRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
-        Link link = linkService.getById(linkVO.getUid());
-
-        //查找出最大的那一个
-        QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc(SQLConf.SORT);
-        Page<Link> page = new Page<>();
-        page.setCurrent(0);
-        page.setSize(1);
-        IPage<Link> pageList = linkService.page(page, queryWrapper);
-        List<Link> list = pageList.getRecords();
-        Link maxSort = list.get(0);
-        if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
-        }
-        if (maxSort.getUid().equals(link.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
-
-        Integer sortCount = maxSort.getSort() + 1;
-
-        link.setSort(sortCount);
-        link.setUpdateTime(new Date());
-        link.updateById();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return linkService.stickLink(linkVO);
     }
 }

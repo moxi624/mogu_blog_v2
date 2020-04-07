@@ -1,5 +1,6 @@
 package com.moxi.mougblog.base.holder;
 
+import com.moxi.mougblog.base.global.BaseSysConf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -117,5 +118,14 @@ public class RequestHolder {
             return null;
         }
         return servletRequestAttributes.getAttributeNames(RequestAttributes.SCOPE_SESSION);
+    }
+
+    public static String getAdminUid() {
+        HttpServletRequest request = RequestHolder.getRequest();
+        if(request.getAttribute(BaseSysConf.ADMIN_UID) != null) {
+            return request.getAttribute(BaseSysConf.ADMIN_UID).toString();
+        } else {
+            return null;
+        }
     }
 }

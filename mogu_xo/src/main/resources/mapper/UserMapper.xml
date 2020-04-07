@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.xo.mapper.UserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.xo.entity.User">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.User">
         <id column="uid" property="uid"/>
         <result column="userName" property="userName"/>
         <result column="password" property="password"/>
