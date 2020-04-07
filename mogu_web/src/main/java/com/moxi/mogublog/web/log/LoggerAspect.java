@@ -24,7 +24,7 @@ import java.util.Map;
  * 日志切面
  */
 @Aspect
-@Component
+@Component("WebLoggerAspect")
 @Slf4j
 public class LoggerAspect {
 

@@ -19,6 +19,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -44,9 +45,6 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    WebVisitService webVisitService;
 
     @Autowired
     TagService tagService;
@@ -145,7 +143,7 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
             }
         }
 
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
 
         // 不含年份的数组格式
         List<String> resultSevenDaysList = DateUtils.getDaysByN(7, "MM-dd");
@@ -191,7 +189,7 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         page.setSize(webVisitVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        IPage<WebVisit> pageList = webVisitService.page(page, queryWrapper);
+        IPage<WebVisit> pageList = webVisitMapper.selectPage(page, queryWrapper);
 
         List<WebVisit> list = pageList.getRecords();
         List<String> blogUids = new ArrayList<>();

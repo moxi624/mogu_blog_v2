@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @author: 陌溪
  * @create: 2020-03-05-8:59
  */
-@Component
+@Component("WebSysLogHandle")
 public class SysLogHandle extends RequestAwareRunnable {
 
     @Autowired
@@ -54,31 +54,31 @@ public class SysLogHandle extends RequestAwareRunnable {
 
     @Override
     protected void onRun() {
-        HttpServletRequest request = RequestHolder.getRequest();
-        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
-        String os = map.get(SysConf.OS);
-        String browser = map.get(SysConf.BROWSER);
-        WebVisit webVisit = new WebVisit();
-        String ip = IpUtils.getIpAddr(request);
-        webVisit.setIp(ip);
-
-        //从Redis中获取IP来源
-        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
-        if (StringUtils.isEmpty(jsonResult)) {
-            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
-            if (StringUtils.isNotEmpty(addresses)) {
-                webVisit.setIpSource(addresses);
-                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
-            }
-        } else {
-            webVisit.setIpSource(jsonResult);
-        }
-        webVisit.setOs(os);
-        webVisit.setBrowser(browser);
-        webVisit.setUserUid(userUid);
-        webVisit.setBehavior(behavior);
-        webVisit.setModuleUid(moduleUid);
-        webVisit.setOtherData(otherData);
-        webVisit.insert();
+//        HttpServletRequest request = RequestHolder.getRequest();
+//        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+//        String os = map.get(SysConf.OS);
+//        String browser = map.get(SysConf.BROWSER);
+//        WebVisit webVisit = new WebVisit();
+//        String ip = IpUtils.getIpAddr(request);
+//        webVisit.setIp(ip);
+//
+//        //从Redis中获取IP来源
+//        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+//        if (StringUtils.isEmpty(jsonResult)) {
+//            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
+//            if (StringUtils.isNotEmpty(addresses)) {
+//                webVisit.setIpSource(addresses);
+//                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+//            }
+//        } else {
+//            webVisit.setIpSource(jsonResult);
+//        }
+//        webVisit.setOs(os);
+//        webVisit.setBrowser(browser);
+//        webVisit.setUserUid(userUid);
+//        webVisit.setBehavior(behavior);
+//        webVisit.setModuleUid(moduleUid);
+//        webVisit.setOtherData(otherData);
+//        webVisit.insert();
     }
 }

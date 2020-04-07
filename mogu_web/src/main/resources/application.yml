@@ -6,7 +6,10 @@ server:
 templateCode: SMS_XXXXXX #短信模板编号
 
 signName: 蘑菇博客
+# 项目英文名
 PROJECT_NAME_EN: moguBlog
+#项目名称
+PROJECT_NAME: 蘑菇博客
 
 data:
   # 门户页面
