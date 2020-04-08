@@ -3,7 +3,6 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.SysDictData;
 import com.moxi.mogublog.commons.entity.SysDictType;
 import com.moxi.mogublog.utils.RedisUtil;
@@ -20,7 +19,6 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;

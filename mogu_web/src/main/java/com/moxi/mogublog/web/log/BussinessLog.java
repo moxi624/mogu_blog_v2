@@ -20,7 +20,6 @@ public @interface BussinessLog {
 
     /**
      * 业务名称
-     *
      */
     String value() default "";
 

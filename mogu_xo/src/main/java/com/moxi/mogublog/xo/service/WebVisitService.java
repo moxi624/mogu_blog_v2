@@ -1,9 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.WebVisit;
-import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mogublog.xo.vo.WebVisitVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -52,6 +50,7 @@ public interface WebVisitService extends SuperService<WebVisit> {
 
     /**
      * 获取访问列表
+     *
      * @param webVisitVO
      * @return
      */

@@ -10,7 +10,6 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
-import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.Role;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
@@ -20,6 +19,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,7 +50,7 @@ import java.util.*;
 public class AdminRestApi {
 
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
     @Autowired
     RedisUtil redisUtil;
     @Autowired
@@ -97,7 +97,7 @@ public class AdminRestApi {
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
-        List<Map<String, Object>> picList = webUtils.getPictureMap(pictureResult);
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());

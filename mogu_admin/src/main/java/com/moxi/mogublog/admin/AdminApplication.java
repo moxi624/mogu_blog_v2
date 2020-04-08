@@ -29,7 +29,6 @@ import java.util.TimeZone;
         "com.moxi.mogublog.config",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.log",
-        "com.moxi.mogublog.admin.util",
         "com.moxi.mogublog.admin.security",
         "com.moxi.mogublog.admin.config",
         "com.moxi.mogublog.admin.restapi",

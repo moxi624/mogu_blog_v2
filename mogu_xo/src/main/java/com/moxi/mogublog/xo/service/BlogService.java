@@ -3,8 +3,6 @@ package com.moxi.mogublog.xo.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
-import com.moxi.mogublog.commons.entity.BlogSort;
-import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -59,14 +57,6 @@ public interface BlogService extends SuperService<Blog> {
      * @return
      */
     public List<Blog> getBlogListByLevel(Integer level);
-
-    /**
-     * 通过推荐等级获取博客Page
-     *
-     * @param level
-     * @return
-     */
-    public IPage<Blog> getBlogPageByLevel(Page<Blog> page, Integer level);
 
     /**
      * 通过推荐等级获取博客Page，是否排序
@@ -125,6 +115,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 获取博客列表
+     *
      * @param blogVO
      * @return
      */
@@ -132,18 +123,21 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 新增博客
+     *
      * @param blogVO
      */
     public String addBlog(BlogVO blogVO);
 
     /**
      * 编辑博客
+     *
      * @param blogVO
      */
     public String editBlog(BlogVO blogVO);
 
     /**
      * 推荐博客排序调整
+     *
      * @param blogVOList
      * @return
      */
@@ -151,14 +145,73 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 批量删除博客
+     *
      * @param blogVO
      */
     public String deleteBlog(BlogVO blogVO);
 
     /**
      * 批量删除博客
+     *
      * @param blogVoList
      * @return
      */
     public String deleteBatchBlog(List<BlogVO> blogVoList);
+
+    /**
+     *  mogu-web端使用的接口
+     */
+
+    /**
+     * 通过推荐等级获取博客Page
+     * @param level 推荐级别
+     * @param currentPage 当前页
+     * @param useSort 是否使用排序字段
+     * @return
+     */
+    public IPage<Blog> getBlogPageByLevel(Integer level, Long currentPage, Integer useSort);
+
+    /**
+     * 获取首页排行博客
+     * @return
+     */
+    public IPage<Blog> getHotBlog();
+
+
+    /**
+     * 获取最新的博客
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> getNewBlog(Long currentPage, Long pageSize);
+
+    /**
+     * 按时间戳获取博客
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> getBlogByTime(Long currentPage, Long pageSize);
+
+    /**
+     * 通过博客Uid获取点赞数
+     * @param uid
+     * @return
+     */
+    public Integer getBlogPraiseCountByUid(String uid);
+
+    /**
+     * 通过UID给博客点赞
+     * @param uid
+     * @return
+     */
+    public String praiseBlogByUid(String uid);
+
+    /**
+     * 根据标签Uid获取相关的博客
+     * @param tagUid
+     * @return
+     */
+    public IPage<Blog> getSameBlogByTagUid(String tagUid);
 }

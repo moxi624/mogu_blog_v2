@@ -4,7 +4,6 @@ import com.moxi.mogublog.utils.AopUtils;
 import com.moxi.mogublog.utils.AspectUtil;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.util.RequestUtil;
@@ -30,10 +29,6 @@ public class LoggerAspect {
 
     @Autowired
     SysLogHandle sysLogHandle;
-
-    @Autowired
-    private WebVisitService webVisitService;
-
 
     @Pointcut(value = "@annotation(bussinessLog)")
     public void pointcut(BussinessLog bussinessLog) {

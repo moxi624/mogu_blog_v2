@@ -2,7 +2,6 @@ package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moxi.mogublog.commons.entity.User;
-import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -61,26 +60,30 @@ public interface UserService extends SuperService<User> {
 
     /**
      * 获取用户列表
+     *
      * @param userVO
      * @return
      */
     public IPage<User> getPageList(UserVO userVO);
-    
+
 
     /**
      * 编辑用户
+     *
      * @param userVO
      */
     public String editUser(UserVO userVO);
 
     /**
      * 删除用户
+     *
      * @param userVO
      */
     public String deleteUser(UserVO userVO);
 
     /**
      * 重置用户密码
+     *
      * @param userVO
      * @return
      */

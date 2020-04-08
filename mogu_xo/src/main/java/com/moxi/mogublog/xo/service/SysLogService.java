@@ -5,8 +5,6 @@ import com.moxi.mogublog.commons.entity.SysLog;
 import com.moxi.mogublog.xo.vo.SysLogVO;
 import com.moxi.mougblog.base.service.SuperService;
 
-import java.util.List;
-
 /**
  * <p>
  * 操作日志 服务类
@@ -19,6 +17,7 @@ public interface SysLogService extends SuperService<SysLog> {
 
     /**
      * 获取操作日志列表
+     *
      * @param sysLogVO
      * @return
      */

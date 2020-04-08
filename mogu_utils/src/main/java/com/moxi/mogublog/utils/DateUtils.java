@@ -469,7 +469,7 @@ public class DateUtils {
     @SuppressWarnings("unused")
     public static String getTime(double hour) {
         Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
-        long time = (long) (System.currentTimeMillis() + hour * 60 * 60 * 1000l);
+        long time = (long) (System.currentTimeMillis() + hour * 60 * 60 * 1000L);
         Date date = new Date(time);
         SimpleDateFormat formate = new SimpleDateFormat("yyyyMMddHHmmss");
         String format = formate.format(date);

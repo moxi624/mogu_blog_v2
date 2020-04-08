@@ -183,7 +183,8 @@
 
       <el-table-column label="操作" fixed="right" min-width="150">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button @click="
+          (scope.row)" type="primary" size="small">编辑</el-button>
           <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -949,11 +950,6 @@ export default {
 .inputClass {
   position: absolute;
 }
-.img {
-  width: 100%;
-  height: 100%;
-}
-
 .el-dialog__body {
   padding-top: 10px;
   padding-bottom: 0px;

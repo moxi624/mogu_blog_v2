@@ -3,7 +3,9 @@ package com.moxi.mogublog.xo.utils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.service.SystemConfigService;
+import com.moxi.mougblog.base.enums.EOpenStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,14 +45,14 @@ public class WebUtil {
 
         List<String> picUrls = new ArrayList<>();
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(picMap.get("code"))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
+        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
             if (picData.size() > 0) {
                 for (int i = 0; i < picData.size(); i++) {
                     if ("1".equals(picturePriority)) {
-                        picUrls.add(qiNiuPictureBaseUrl + (String) picData.get(i).get("qiNiuUrl"));
+                        picUrls.add(qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
                     } else {
-                        picUrls.add(localPictureBaseUrl + (String) picData.get(i).get("url"));
+                        picUrls.add(localPictureBaseUrl + picData.get(i).get(SysConf.URL));
                     }
                 }
             }
@@ -75,22 +77,21 @@ public class WebUtil {
 
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(picMap.get("code"))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
+        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
             if (picData.size() > 0) {
                 for (int i = 0; i < picData.size(); i++) {
                     Map<String, Object> map = new HashMap<>();
-                    if (StringUtils.isEmpty(picData.get(i).get("url")) || StringUtils.isEmpty(picData.get(i).get("uid"))) {
+                    if (StringUtils.isEmpty(picData.get(i).get(SysConf.URL)) || StringUtils.isEmpty(picData.get(i).get(SysConf.UID))) {
                         continue;
                     }
                     // 图片优先显示 七牛云 or 本地
-                    if ("1".equals(picturePriority)) {
-                        map.put("url", qiNiuPictureBaseUrl + (String) picData.get(i).get("qiNiuUrl"));
+                    if (EOpenStatus.OPEN.equals(picturePriority)) {
+                        map.put(SysConf.URL, qiNiuPictureBaseUrl + (String) picData.get(i).get(SysConf.QI_NIU_URL));
                     } else {
-                        map.put("url", localPictureBaseUrl + (String) picData.get(i).get("url"));
+                        map.put(SysConf.URL, localPictureBaseUrl + (String) picData.get(i).get(SysConf.URL));
                     }
-
-                    map.put("uid", (String) picData.get(i).get("uid"));
+                    map.put(SysConf.UID, (String) picData.get(i).get(SysConf.UID));
                     resultList.add(map);
                 }
             }
@@ -109,9 +110,9 @@ public class WebUtil {
             return null;
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(dataMap.get("code"))) {
+        if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
 
-            Map<String, Object> data = (Map<String, Object>) dataMap.get("data");
+            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.CODE);
             T t = JsonUtils.mapToPojo(data, beanType);
             return t;
         }
@@ -129,11 +130,11 @@ public class WebUtil {
             return null;
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(dataMap.get("code"))) {
+        if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
 
-            Map<String, Object> data = (Map<String, Object>) dataMap.get("data");
+            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.DATA);
 
-            List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("records");
+            List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(SysConf.RECORDS);
             List<T> resultList = new ArrayList<>();
             list.forEach(item -> {
                 resultList.add(JsonUtils.mapToPojo(item, beanType));

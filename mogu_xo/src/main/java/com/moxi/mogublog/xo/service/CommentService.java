@@ -1,9 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.Comment;
-import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -29,6 +27,7 @@ public interface CommentService extends SuperService<Comment> {
 
     /**
      * 获取评论列表
+     *
      * @param commentVO
      * @return
      */
@@ -36,27 +35,31 @@ public interface CommentService extends SuperService<Comment> {
 
     /**
      * 新增评论
+     *
      * @param commentVO
      */
     public String addComment(CommentVO commentVO);
 
     /**
      * 编辑评论
+     *
      * @param commentVO
      */
     public String editComment(CommentVO commentVO);
 
     /**
      * 删除评论
+     *
      * @param commentVO
      */
     public String deleteComment(CommentVO commentVO);
 
     /**
      * 批量删除评论
+     *
      * @param commentVOList
      */
-    public String deleteBatchComment(List<CommentVO>commentVOList);
+    public String deleteBatchComment(List<CommentVO> commentVOList);
 
 
 }

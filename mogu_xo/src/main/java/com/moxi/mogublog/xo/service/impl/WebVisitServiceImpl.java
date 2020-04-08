@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.WebVisitMapper;
@@ -42,21 +40,16 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 
     @Resource
     WebVisitMapper webVisitMapper;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     TagService tagService;
-
     @Autowired
     BlogSortService blogSortService;
-
     @Autowired
     BlogService blogService;
-
     @Autowired
     LinkService linkService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Async
     @Override

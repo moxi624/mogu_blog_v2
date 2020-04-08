@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.util.WebUtils;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.CategoryMenu;
 import com.moxi.mogublog.commons.entity.Role;
@@ -18,6 +17,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +47,7 @@ import java.util.*;
 public class LoginRestApi {
 
     @Autowired
-    WebUtils webUtils;
+    WebUtil webUtil;
 
     @Autowired
     private AdminService adminService;
@@ -153,9 +153,9 @@ public class LoginRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), SysConf.FILE_SEGMENTATION);
-            admin.setPhotoList(webUtils.getPicture(pictureList));
+            admin.setPhotoList(webUtil.getPicture(pictureList));
 
-            List<String> list = webUtils.getPicture(pictureList);
+            List<String> list = webUtil.getPicture(pictureList);
 
             if (list.size() > 0) {
                 map.put(SysConf.AVATAR, list.get(0));

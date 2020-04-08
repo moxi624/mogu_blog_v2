@@ -1,9 +1,6 @@
 package com.moxi.mogublog.xo.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.CategoryMenu;
-import com.moxi.mogublog.xo.vo.BlogSortVO;
 import com.moxi.mogublog.xo.vo.CategoryMenuVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -22,6 +19,7 @@ public interface CategoryMenuService extends SuperService<CategoryMenu> {
 
     /**
      * 获取菜单列表
+     *
      * @param categoryMenuVO
      * @return
      */
@@ -29,6 +27,7 @@ public interface CategoryMenuService extends SuperService<CategoryMenu> {
 
     /**
      * 获取全部菜单列表
+     *
      * @param keyword
      * @return
      */
@@ -36,6 +35,7 @@ public interface CategoryMenuService extends SuperService<CategoryMenu> {
 
     /**
      * 获取所有二级菜单-按钮列表
+     *
      * @param keyword
      * @return
      */
@@ -43,24 +43,28 @@ public interface CategoryMenuService extends SuperService<CategoryMenu> {
 
     /**
      * 新增菜单
+     *
      * @param categoryMenuVO
      */
     public String addCategoryMenu(CategoryMenuVO categoryMenuVO);
 
     /**
      * 编辑菜单
+     *
      * @param categoryMenuVO
      */
     public String editCategoryMenu(CategoryMenuVO categoryMenuVO);
 
     /**
      * 批量删除菜单
+     *
      * @param categoryMenuVO
      */
     public String deleteCategoryMenu(CategoryMenuVO categoryMenuVO);
 
     /**
      * 置顶菜单
+     *
      * @param categoryMenuVO
      */
     public String stickCategoryMenu(CategoryMenuVO categoryMenuVO);

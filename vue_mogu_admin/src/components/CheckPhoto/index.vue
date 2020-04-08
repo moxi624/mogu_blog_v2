@@ -107,7 +107,7 @@ export default {
             var name = pictureSorts[0].name;
             var params = {};
             params.pictureSortUid = pictureSortUid;
-            params.pageSize = 20;
+            params.pageSize = 24;
             params.currentPage = 1;
             getPictureList(params).then(function(response) {
               if (response.code == "success") {
@@ -179,7 +179,7 @@ export default {
           var params = {}
           params.pictureSortUid = pictureSortUid
           params.currentPage = val
-          params.pageSize = 20
+          params.pageSize = 24
           getPictureList(params).then(function(response) {
             if (response.code == "success") {
               var newObject = {
@@ -222,7 +222,7 @@ export default {
             var name = pictureSorts[0].name;
             var params = {};
             params.pictureSortUid = pictureSortUid
-            params.pageSize = 20
+            params.pageSize = 24
             params.currentPage = 1;
             getPictureList(params).then(function(response) {
               if (response.code == "success") {
@@ -274,7 +274,7 @@ export default {
           var name = pictureSorts[0].name;
           var pictureParams = {};
           pictureParams.pictureSortUid = pictureSortUid
-          pictureParams.pageSize = 20
+          pictureParams.pageSize = 24
           pictureParams.currentPage = 1;
           getPictureList(pictureParams).then(function(response) {
             if (response.code == "success") {
@@ -305,7 +305,7 @@ export default {
       var params = {};
       params.currentPage = 1;
       params.pictureSortUid = pictureSortUid;
-      params.pageSize = 20;
+      params.pageSize = 24;
       getPictureList(params).then(function(response) {
         if (response.code == "success") {
           if (response.data.records.length > 0) {
@@ -448,31 +448,32 @@ export default {
   font-size: 16px;
 }
 .showPicture {
-  width: 150px;
-  height: 150px;
+  width: 195px;
+  height: 105px;
   float: left;
   margin-left: 10px;
-  margin-top: 10px;
+  margin-top: 30px;
   border: solid 1px #c7aeae;
 }
 .ChooseBody {
-  width: 150px;
-  height: 150px;
+  width: 195px;
+  height: 105px;
   float: left;
   margin-left: 10px;
+  margin-top: 20px;
   border: solid 1px #c7aeae;
 }
 .inputClass {
   position: absolute;
 }
 .addPicture {
-  width: 150px;
-  height: 150px;
+  width: 195px;
+  height: 105px;
   float: left;
   margin-left: 10px;
-  margin-top: 10px;
+  margin-top: 30px;
   border: solid 1px #c7aeae;
-  line-height: 150px;
+  line-height: 105px;
   text-align: center;
   cursor: pointer;
 }

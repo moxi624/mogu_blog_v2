@@ -2,10 +2,10 @@ package com.moxi.mogublog.web.restapi;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
@@ -65,7 +65,6 @@ public class UserRestApi {
         user.setUserName(userVO.getUserName());
         user.setPassWord(userVO.getPassWord());
         user.setEmail(userVO.getEmail());
-
 
         return ResultUtil.result(SysConf.SUCCESS, "我注册啦" + userVO.getEmail());
     }

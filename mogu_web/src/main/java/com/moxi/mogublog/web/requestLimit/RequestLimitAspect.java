@@ -53,7 +53,7 @@ public class RequestLimitAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
         // 判断是否开启了接口请求限制
-        if(start) {
+        if (start) {
             ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
             HttpServletRequest request = attribute.getRequest();

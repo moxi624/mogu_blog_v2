@@ -1,18 +1,8 @@
 package com.moxi.mogublog.web.log;
 
-import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
-import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.commons.entity.WebVisit;
-import com.moxi.mougblog.base.global.BaseSysConf;
-import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 异步记录日志

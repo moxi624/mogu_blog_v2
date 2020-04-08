@@ -1,22 +1,12 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.admin.global.MessageConf;
-import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
-import com.moxi.mogublog.commons.entity.Feedback;
-import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.service.FeedbackService;
-import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
-import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -32,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
 
 /**
  * <p>

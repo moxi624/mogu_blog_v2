@@ -43,7 +43,8 @@ public class BaseMessageConf {
     public static final String THIS_TAG_IS_TOP = "该标签已经在顶端！";
     public final static String INVALID_TOKEN = "token令牌未被识别";
     public final static String ERROR_PASSWORD = "密码错误";
-
+    public final static String YOU_HAVE_BEEN_PRISE = "您已经点赞过了!";
+    public final static String PLEASE_LOGIN_TO_PRISE = "请先登录后才能点赞!";
     public final static String The_PICTURE_SORT_DOES_NOT_EXIST = "该图片分类不存在";
     public final static String The_PICTURE_DOES_NOT_EXIST = "该图片不存在";
 

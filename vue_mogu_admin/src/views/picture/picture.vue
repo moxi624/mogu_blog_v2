@@ -13,7 +13,7 @@
       <div class= "imgAll">
         <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" >
               <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
-              <img class= "img" :src="BASE_IMAGE_URL + picture.pictureUrl" @click="showPicture(BASE_IMAGE_URL + picture.pictureUrl)"/>
+              <img class= "imgStyle" :src="BASE_IMAGE_URL + picture.pictureUrl" @click="showPicture(BASE_IMAGE_URL + picture.pictureUrl)"/>
         </div>
         <div class= "removeFloat"></div>
       </div>
@@ -386,7 +386,7 @@ export default {
 </script>
 
 <style scoped>
-.img {
+.imgStyle {
   max-height: 100%;
   max-width: 100%;
   vertical-align: middle;

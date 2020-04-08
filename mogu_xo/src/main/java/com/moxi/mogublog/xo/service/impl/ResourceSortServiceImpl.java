@@ -9,7 +9,6 @@ import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.mapper.ResourceSortMapper;
-import com.moxi.mogublog.xo.mapper.StudyVideoMapper;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mogublog.xo.utils.WebUtil;

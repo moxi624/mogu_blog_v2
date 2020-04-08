@@ -72,5 +72,6 @@ public final class SQLConf extends BaseSQLConf {
      * blog表
      */
     public final static String FILE_UID = "file_uid";
-
+    public final static String BLOG_UID = "blog_uid";
+    public final static String MODULE_UID = "module_uid";
 }

@@ -39,14 +39,11 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
+    WebUtil webUtil;
+    @Autowired
     private UserService userService;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    WebUtil webUtil;
-
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
 

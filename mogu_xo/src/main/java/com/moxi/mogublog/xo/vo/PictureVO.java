@@ -1,12 +1,6 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.moxi.mougblog.base.entity.SuperEntity;
-import com.moxi.mougblog.base.validator.Messages;
-import com.moxi.mougblog.base.validator.annotion.LongNotNull;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;

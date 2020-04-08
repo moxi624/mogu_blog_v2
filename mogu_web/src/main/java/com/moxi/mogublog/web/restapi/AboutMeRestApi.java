@@ -2,15 +2,15 @@ package com.moxi.mogublog.web.restapi;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.WebConfig;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.commons.entity.Admin;
-import com.moxi.mogublog.commons.entity.WebConfig;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
@@ -38,14 +38,12 @@ import java.util.List;
 @Api(value = "关于我 RestApi", tags = {"AboutMeRestApi"})
 @Slf4j
 public class AboutMeRestApi {
-    @Autowired
-    WebUtil webUtil;
+
     @Autowired
     AdminService adminService;
+
     @Autowired
     WebConfigService webConfigService;
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
 
     /**
      * 获取关于我的信息
@@ -56,80 +54,17 @@ public class AboutMeRestApi {
     @BussinessLog(value = "关于我", behavior = EBehavior.VISIT_PAGE)
     @ApiOperation(value = "关于我", notes = "关于我")
     @GetMapping("/getMe")
-    public String getMe(HttpServletRequest request) {
+    public String getMe() {
 
-        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.USER_NAME, SysConf.ADMIN);
-        queryWrapper.last("LIMIT 1");
-        //清空密码，防止泄露
-        Admin admin = adminService.getOne(queryWrapper);
-        admin.setPassWord(null);
-        //获取图片
-        if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
-            admin.setPhotoList(webUtil.getPicture(pictureList));
-        }
-        log.info("获取用户信息");
-        Admin result = new Admin();
-        result.setNickName(admin.getNickName());
-        result.setOccupation(admin.getOccupation());
-        result.setSummary(admin.getSummary());
-        result.setWeChat(admin.getWeChat());
-        result.setQqNumber(admin.getQqNumber());
-        result.setEmail(admin.getEmail());
-        result.setMobile(admin.getMobile());
-        result.setAvatar(admin.getAvatar());
-        result.setPhotoList(admin.getPhotoList());
-        result.setGithub(admin.getGithub());
-        result.setGitee(admin.getGitee());
-        result.setPersonResume(admin.getPersonResume());
-        return ResultUtil.result(SysConf.SUCCESS, result);
+        log.info("获取关于我的信息");
+        return ResultUtil.result(SysConf.SUCCESS, adminService.getAdminByUser(SysConf.ADMIN));
     }
 
     @ApiOperation(value = "获取联系方式", notes = "获取联系方式")
     @GetMapping("/getContact")
     public String getContact() {
-
-        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
-
-        // getOne结果集为多个的时候，会抛异常，随机取一条加上限制条件 queryWrapper.last("LIMIT 1")
-        queryWrapper.last("LIMIT 1");
-        WebConfig webConfig = webConfigService.getOne(queryWrapper);
-
-        if (webConfig != null) {
-
-            // 过滤一些不需要显示的用户账号信息
-            String showListJson = webConfig.getShowList();
-
-            WebConfig result = new WebConfig();
-
-            List<String> showList = JsonUtils.jsonToList(showListJson, String.class);
-
-            for (String item : showList) {
-                if (EAccountType.EMail.getCode().equals(item)) {
-                    result.setEmail(webConfig.getEmail());
-                }
-                if (EAccountType.QQNumber.getCode().equals(item)) {
-                    result.setQqNumber(webConfig.getQqNumber());
-                }
-                if (EAccountType.QQGroup.getCode().equals(item)) {
-                    result.setQqGroup(webConfig.getQqGroup());
-                }
-                if (EAccountType.Github.getCode().equals(item)) {
-                    result.setGithub(webConfig.getGithub());
-                }
-                if (EAccountType.Gitee.getCode().equals(item)) {
-                    result.setGitee(webConfig.getGitee());
-                }
-                if (EAccountType.WeChat.getCode().equals(item)) {
-                    result.setWeChat(webConfig.getWeChat());
-                }
-            }
-            return ResultUtil.result(SysConf.SUCCESS, result);
-        } else {
-            return ResultUtil.result(SysConf.ERROR, "获取失败");
-        }
-
+        log.info("获取联系方式");
+        return ResultUtil.result(SysConf.SUCCESS, webConfigService.getWebConfigByShowList());
     }
 
 }

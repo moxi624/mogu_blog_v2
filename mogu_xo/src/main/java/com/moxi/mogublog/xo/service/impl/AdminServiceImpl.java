@@ -1,10 +1,12 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.AdminMapper;
 import com.moxi.mogublog.xo.service.AdminService;
@@ -47,6 +49,29 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public Admin getAdminByUid(String uid) {
         return adminMapper.getAdminByUid(uid);
+    }
+
+    @Override
+    public Admin getAdminByUser(String userName) {
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.USER_NAME, userName);
+        queryWrapper.last("LIMIT 1");
+        //清空密码，防止泄露
+        Admin admin = adminService.getOne(queryWrapper);
+        admin.setPassWord(null);
+        //获取图片
+        if (StringUtils.isNotEmpty(admin.getAvatar())) {
+            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
+            admin.setPhotoList(webUtil.getPicture(pictureList));
+        }
+        Admin result = new Admin();
+        result.setNickName(admin.getNickName());
+        result.setOccupation(admin.getOccupation());
+        result.setSummary(admin.getSummary());
+        result.setAvatar(admin.getAvatar());
+        result.setPhotoList(admin.getPhotoList());
+        result.setPersonResume(admin.getPersonResume());
+        return result;
     }
 
     @Override

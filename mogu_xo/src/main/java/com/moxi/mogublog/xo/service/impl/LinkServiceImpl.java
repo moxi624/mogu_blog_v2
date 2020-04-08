@@ -135,4 +135,21 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
+
+    @Override
+    public String addLinkCount(String uid) {
+        if (StringUtils.isEmpty(uid)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        Link link = linkService.getById(uid);
+        if (link != null) {
+            int count = link.getClickCount() + 1;
+            link.setClickCount(count);
+            link.updateById();
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
 }

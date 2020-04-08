@@ -4,17 +4,17 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.commons.entity.*;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.CommentVO;
@@ -123,14 +123,14 @@ public class CommentRestApi {
             firstUidList.add(item.getUid());
         });
 
-        if(firstUidList.size() > 0) {
+        if (firstUidList.size() > 0) {
             // 查询一级评论下的子评论
             QueryWrapper<Comment> notFirstQueryWrapper = new QueryWrapper<>();
             notFirstQueryWrapper.in(SQLConf.FIRST_COMMENT_UID, firstUidList);
             notFirstQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             List<Comment> notFirstList = commentService.list(notFirstQueryWrapper);
             // 将子评论加入总的评论中
-            if(notFirstList.size() > 0) {
+            if (notFirstList.size() > 0) {
                 list.addAll(notFirstList);
             }
         }
@@ -492,10 +492,10 @@ public class CommentRestApi {
         comment.setToUserUid(commentVO.getToUserUid());
 
         // 当该评论不是一级评论时，需要设置一级评论UID字段
-        if(StringUtils.isNotEmpty(commentVO.getToUid())) {
+        if (StringUtils.isNotEmpty(commentVO.getToUid())) {
             Comment toComment = commentService.getById(commentVO.getToUid());
             // 表示这个评论是非一级评论
-            if(toComment != null && StringUtils.isNotEmpty(toComment.getFirstCommentUid())) {
+            if (toComment != null && StringUtils.isNotEmpty(toComment.getFirstCommentUid())) {
                 comment.setFirstCommentUid(toComment.getFirstCommentUid());
             } else {
                 // 表示这个评论是一级评论，直接获取UID

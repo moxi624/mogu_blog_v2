@@ -1,17 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.admin.global.MessageConf;
-import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
-import com.moxi.mogublog.admin.util.WebUtils;
-import com.moxi.mogublog.commons.entity.WebConfig;
-import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.vo.WebConfigVO;
 import com.moxi.mougblog.base.validator.group.Update;
@@ -22,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 /**
  * <p>

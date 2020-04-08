@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
-import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -19,6 +18,7 @@ import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -217,5 +217,18 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         });
         tagService.updateBatchById(tagList);
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+    }
+
+    @Override
+    public IPage<Tag> getHotTag(Integer hotTagCount) {
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+        Page<Tag> page = new Page<>();
+        page.setCurrent(1);
+        page.setSize(hotTagCount);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.SORT);
+        queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+        IPage<Tag> pageList = tagService.page(page, queryWrapper);
+        return pageList;
     }
 }

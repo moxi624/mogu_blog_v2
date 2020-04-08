@@ -1,24 +1,14 @@
 package com.moxi.mogublog.admin.restapi;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.admin.global.MessageConf;
-import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.admin.log.OperationLogger;
 import com.moxi.mogublog.admin.security.AuthorityVerify;
-import com.moxi.mogublog.commons.entity.SysDictData;
-import com.moxi.mogublog.commons.entity.SysDictType;
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.service.SysDictDataService;
-import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.vo.SysDictDataVO;
-import com.moxi.mougblog.base.enums.EPublish;
-import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -28,14 +18,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 /**
  * <p>
@@ -101,7 +89,7 @@ public class SysDictDataRestApi {
     @ApiOperation(value = "根据字典类型获取字典数据", notes = "根据字典类型获取字典数据", response = String.class)
     @PostMapping("/getListByDictType")
     public String getListByDictType(@RequestParam("dictType") String dictType) {
-        if(StringUtils.isEmpty(dictType)) {
+        if (StringUtils.isEmpty(dictType)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
         return ResultUtil.result(SysConf.SUCCESS, sysDictDataService.getListByDictType(dictType));

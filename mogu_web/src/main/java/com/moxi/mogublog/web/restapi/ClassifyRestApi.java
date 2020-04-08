@@ -4,14 +4,14 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.commons.entity.Blog;
-import com.moxi.mogublog.commons.entity.BlogSort;
-import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
@@ -92,8 +92,6 @@ public class ClassifyRestApi {
         if (blogSort == null) {
             return ResultUtil.result(SysConf.ERROR, "BlogSort不存在");
         }
-
-        //webVisitService.addWebVisit(null, request, EBehavior.VISIT_CLASSIFY.getBehavior(), blogSort.getUid(), blogSort.getSortName());
 
         //分页
         Page<Blog> page = new Page<>();
