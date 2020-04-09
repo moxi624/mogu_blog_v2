@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -164,10 +165,105 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     }
 
     @Override
+    public List<Blog> setTagAndSortAndPictureByBlogList(List<Blog> list) {
+        final StringBuffer fileUids = new StringBuffer();
+        List<String> sortUids = new ArrayList<>();
+        List<String> tagUids = new ArrayList<>();
+
+        list.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + ",");
+            }
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+                sortUids.add(item.getBlogSortUid());
+            }
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                tagUids.add(item.getTagUid());
+            }
+        });
+        String pictureList = null;
+
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+        }
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
+        Collection<BlogSort> sortList = new ArrayList<>();
+        Collection<Tag> tagList = new ArrayList<>();
+        if (sortUids.size() > 0) {
+            sortList = blogSortService.listByIds(sortUids);
+        }
+        if (tagUids.size() > 0) {
+            tagList = tagService.listByIds(tagUids);
+        }
+
+
+        Map<String, BlogSort> sortMap = new HashMap<>();
+        Map<String, Tag> tagMap = new HashMap<>();
+        Map<String, String> pictureMap = new HashMap<>();
+
+        sortList.forEach(item -> {
+            sortMap.put(item.getUid(), item);
+        });
+
+        tagList.forEach(item -> {
+            tagMap.put(item.getUid(), item);
+        });
+
+        picList.forEach(item -> {
+            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+        });
+
+
+        for (Blog item : list) {
+
+            //设置分类
+            if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
+
+                item.setBlogSort(sortMap.get(item.getBlogSortUid()));
+                if (sortMap.get(item.getBlogSortUid()) != null) {
+                    item.setBlogSortName(sortMap.get(item.getBlogSortUid()).getSortName());
+                }
+            }
+
+            //获取标签
+            if (StringUtils.isNotEmpty(item.getTagUid())) {
+                List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), ",");
+                List<Tag> tagListTemp = new ArrayList<Tag>();
+
+                tagUidsTemp.forEach(tag -> {
+                    tagListTemp.add(tagMap.get(tag));
+                });
+                item.setTagList(tagListTemp);
+            }
+
+            //获取图片
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), ",");
+                List<String> pictureListTemp = new ArrayList<String>();
+
+                pictureUidsTemp.forEach(picture -> {
+                    pictureListTemp.add(pictureMap.get(picture));
+                });
+
+                item.setPhotoList(pictureListTemp);
+
+                // 只设置一张标题图
+                if (pictureListTemp.size() > 0) {
+                    item.setPhotoUrl(pictureListTemp.get(0));
+                } else {
+                    item.setPhotoUrl("");
+                }
+
+            }
+        }
+        return list;
+    }
+
+    @Override
     public Blog setTagByBlog(Blog blog) {
         String tagUid = blog.getTagUid();
         if (!StringUtils.isEmpty(tagUid)) {
-            String uids[] = tagUid.split(",");
+            String uids[] = tagUid.split(SysConf.FILE_SEGMENTATION);
             List<Tag> tagList = new ArrayList<Tag>();
             for (String uid : uids) {
                 Tag tag = tagMapper.selectById(uid);
@@ -1053,6 +1149,345 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         return pageList;
     }
 
+    @Override
+    public IPage<Blog> getListByBlogSortUid(String blogSortUid, Long currentPage, Long pageSize) {
+        //分页
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
+
+        //因为首页并不需要显示内容，所以需要排除掉内容字段
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+
+        //给博客增加标签和分类
+        List<Blog> list = blogService.setTagAndSortByBlogList(pageList.getRecords());
+        pageList.setRecords(list);
+        return pageList;
+    }
+
+    @Override
+    public Map<String, Object> getBlogByKeyword(String keywords, Long currentPage, Long pageSize) {
+        final String keyword = keywords.trim();
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.and(wrapper -> wrapper.like(SQLConf.TITLE, keyword).or().like(SQLConf.SUMMARY, keyword));
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+        queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        IPage<Blog> iPage = blogService.page(page, queryWrapper);
+
+        List<Blog> blogList = iPage.getRecords();
+
+        List<String> blogSortUidList = new ArrayList<>();
+        Map<String, String> pictureMap = new HashMap<>();
+        final StringBuffer fileUids = new StringBuffer();
+
+        blogList.forEach(item -> {
+
+            // 获取图片uid
+            blogSortUidList.add(item.getBlogSortUid());
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
+            }
+
+            // 给标题和简介设置高亮
+            item.setTitle(getHitCode(item.getTitle(), keyword));
+            item.setSummary(getHitCode(item.getTitle(), keyword));
+
+        });
+
+        // 调用图片接口，获取图片
+        String pictureList = null;
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
+
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+
+        Collection<BlogSort> blogSortList = new ArrayList<>();
+        if (blogSortUidList.size() > 0) {
+            blogSortList = blogSortService.listByIds(blogSortUidList);
+        }
+
+        Map<String, String> blogSortMap = new HashMap<>();
+        blogSortList.forEach(item -> {
+            blogSortMap.put(item.getUid(), item.getSortName());
+        });
+
+        // 设置分类名 和 图片
+        blogList.forEach(item -> {
+            if (blogSortMap.get(item.getBlogSortUid()) != null) {
+                item.setBlogSortName(blogSortMap.get(item.getBlogSortUid()));
+            }
+
+            //获取图片
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), SysConf.FILE_SEGMENTATION);
+                List<String> pictureListTemp = new ArrayList<>();
+
+                pictureUidsTemp.forEach(picture -> {
+                    pictureListTemp.add(pictureMap.get(picture));
+                });
+                // 只设置一张标题图
+                if (pictureListTemp.size() > 0) {
+                    item.setPhotoUrl(pictureListTemp.get(0));
+                } else {
+                    item.setPhotoUrl("");
+                }
+            }
+        });
+
+
+        Map<String, Object> map = new HashMap<>();
+
+        // 返回总记录数
+        map.put(SysConf.TOTAL, iPage.getTotal());
+
+        // 返回总页数
+        map.put(SysConf.TOTAL_PAGE, iPage.getPages());
+
+        // 返回当前页大小
+        map.put(SysConf.PAGE_SIZE, pageSize);
+
+        // 返回当前页
+        map.put(SysConf.CURRENT_PAGE, iPage.getCurrent());
+
+        // 返回数据
+        map.put(SysConf.BLOG_LIST, blogList);
+
+        return map;
+    }
+
+    @Override
+    public IPage<Blog> searchBlogByTag(String tagUid, Long currentPage, Long pageSize) {
+        Tag tag = tagService.getById(tagUid);
+        if (tag != null) {
+            HttpServletRequest request = RequestHolder.getRequest();
+            String ip = IpUtils.getIpAddr(request);
+            //从Redis取出数据，判断该用户24小时内，是否点击过该标签
+            String jsonResult = redisUtil.get(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + "#" + tagUid);
+
+            if (StringUtils.isEmpty(jsonResult)) {
+
+                //给标签点击数增加
+                int clickCount = tag.getClickCount() + 1;
+                tag.setClickCount(clickCount);
+                tag.updateById();
+                //将该用户点击记录存储到redis中, 24小时后过期
+                redisUtil.setEx(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + tagUid, clickCount + "",
+                        24, TimeUnit.HOURS);
+            }
+
+        }
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        queryWrapper.like(SQLConf.TagUid, tagUid);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SysConf.CONTENT));
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
+        pageList.setRecords(list);
+        return pageList;
+    }
+
+    @Override
+    public IPage<Blog> searchBlogByBlogSort(String blogSortUid, Long currentPage, Long pageSize) {
+        BlogSort blogSort = blogSortService.getById(blogSortUid);
+        if (blogSort != null) {
+            HttpServletRequest request = RequestHolder.getRequest();
+            String ip = IpUtils.getIpAddr(request);
+
+            //从Redis取出数据，判断该用户24小时内，是否点击过该分类
+            String jsonResult = redisUtil.get(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + blogSortUid);
+
+            if (StringUtils.isEmpty(jsonResult)) {
+
+                //给标签点击数增加
+                int clickCount = blogSort.getClickCount() + 1;
+                blogSort.setClickCount(clickCount);
+                blogSort.updateById();
+
+                //将该用户点击记录存储到redis中, 24小时后过期
+                redisUtil.setEx(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + blogSortUid, clickCount + "",
+                        24, TimeUnit.HOURS);
+            }
+
+        }
+
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SysConf.CONTENT));
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
+        pageList.setRecords(list);
+        return pageList;
+    }
+
+    @Override
+    public IPage<Blog> searchBlogByAuthor(String author, Long currentPage, Long pageSize) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+
+        queryWrapper.eq(SQLConf.AUTHOR, author);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SysConf.CONTENT));
+
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
+        pageList.setRecords(list);
+        return pageList;
+    }
+
+    @Override
+    public String getBlogTimeSortList() {
+        //从Redis中获取内容
+        String monthResult = redisUtil.get(SysConf.MONTH_SET);
+
+        //判断redis中时候包含归档的内容
+        if (StringUtils.isNotEmpty(monthResult)) {
+            List list = JsonUtils.jsonArrayToArrayList(monthResult);
+            return ResultUtil.result(SysConf.SUCCESS, list);
+        }
+
+        // 第一次启动的时候归档
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+
+        //因为首页并不需要显示内容，所以需要排除掉内容字段
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+        List<Blog> list = blogService.list(queryWrapper);
+
+        //给博客增加标签和分类
+        list = blogService.setTagAndSortByBlogList(list);
+
+        Map<String, List<Blog>> map = new HashMap<>();
+        Iterator iterable = list.iterator();
+        Set<String> monthSet = new TreeSet<>();
+        while (iterable.hasNext()) {
+            Blog blog = (Blog) iterable.next();
+            Date createTime = blog.getCreateTime();
+
+            String month = new SimpleDateFormat("yyyy年MM月").format(createTime).toString();
+
+            monthSet.add(month);
+
+            if (map.get(month) == null) {
+                List<Blog> blogList = new ArrayList<>();
+                blogList.add(blog);
+                map.put(month, blogList);
+            } else {
+                List<Blog> blogList = map.get(month);
+                blogList.add(blog);
+                map.put(month, blogList);
+            }
+        }
+
+        // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
+        map.forEach((key, value) -> {
+            redisUtil.set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
+        });
+
+        //将从数据库查询的数据缓存到redis中
+        redisUtil.set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
+        return ResultUtil.result(SysConf.SUCCESS, monthSet);
+    }
+
+    @Override
+    public String getArticleByMonth(String monthDate) {
+        if (StringUtils.isEmpty(monthDate)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        //从Redis中获取内容
+        String contentResult = redisUtil.get(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + monthDate);
+
+        //判断redis中时候包含该日期下的文章
+        if (StringUtils.isNotEmpty(contentResult)) {
+            List list = JsonUtils.jsonArrayToArrayList(contentResult);
+            return ResultUtil.result(SysConf.SUCCESS, list);
+        }
+
+        // 第一次启动的时候归档
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        //因为首页并不需要显示内容，所以需要排除掉内容字段
+        queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
+        List<Blog> list = blogService.list(queryWrapper);
+
+        //给博客增加标签和分类
+        list = blogService.setTagAndSortByBlogList(list);
+
+        Map<String, List<Blog>> map = new HashMap<>();
+        Iterator iterable = list.iterator();
+        Set<String> monthSet = new TreeSet<>();
+        while (iterable.hasNext()) {
+            Blog blog = (Blog) iterable.next();
+            Date createTime = blog.getCreateTime();
+
+            String month = new SimpleDateFormat("yyyy年MM月").format(createTime).toString();
+
+            monthSet.add(month);
+
+            if (map.get(month) == null) {
+                List<Blog> blogList = new ArrayList<>();
+                blogList.add(blog);
+                map.put(month, blogList);
+            } else {
+                List<Blog> blogList = map.get(month);
+                blogList.add(blog);
+                map.put(month, blogList);
+            }
+        }
+
+        // 缓存该月份下的所有文章  key: 月份   value：月份下的所有文章
+        map.forEach((key, value) -> {
+            redisUtil.set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
+        });
+        //将从数据库查询的数据缓存到redis中
+        redisUtil.set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
+        return ResultUtil.result(SysConf.SUCCESS, map.get(monthDate));
+    }
+
     /**
      * 添加时校验
      *
@@ -1214,5 +1649,90 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         }
         return list;
+    }
+
+    /**
+     * 添加高亮
+     *
+     * @param str
+     * @param keyword
+     * @return
+     */
+    private String getHitCode(String str, String keyword) {
+
+        if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(str)) {
+            return str;
+        }
+
+        String startStr = "<span style = 'color:red'>";
+        String endStr = "</span>";
+
+        // 判断关键字是否直接是搜索的内容，否者直接返回
+        if (str.equals(keyword)) {
+            return startStr + str + endStr;
+        }
+
+        String lowerCaseStr = str.toLowerCase();
+        String lowerKeyword = keyword.toLowerCase();
+        String[] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
+
+        Boolean isEndWith = lowerCaseStr.endsWith(lowerKeyword);
+
+        // 计算分割后的字符串位置
+        Integer count = 0;
+        List<Map<String, Integer>> list = new ArrayList<>();
+        List<Map<String, Integer>> keyList = new ArrayList<>();
+        for (int a = 0; a < lowerCaseArray.length; a++) {
+
+            // 将切割出来的存储map
+            Map<String, Integer> map = new HashMap<>();
+            Map<String, Integer> keyMap = new HashMap<>();
+            map.put("startIndex", count);
+            Integer len = lowerCaseArray[a].length();
+            count += len;
+            map.put("endIndex", count);
+            list.add(map);
+
+            if (a < lowerCaseArray.length - 1 || isEndWith) {
+                // 将keyword存储map
+                keyMap.put("startIndex", count);
+                count += keyword.length();
+                keyMap.put("endIndex", count);
+                keyList.add(keyMap);
+            }
+
+        }
+
+        // 截取切割对象
+        List<String> arrayList = new ArrayList<>();
+        for (Map<String, Integer> item : list) {
+            Integer start = item.get("startIndex");
+            Integer end = item.get("endIndex");
+            String itemStr = str.substring(start, end);
+            arrayList.add(itemStr);
+        }
+
+        // 截取关键字
+        List<String> keyArrayList = new ArrayList<>();
+        for (Map<String, Integer> item : keyList) {
+            Integer start = item.get("startIndex");
+            Integer end = item.get("endIndex");
+            String itemStr = str.substring(start, end);
+            keyArrayList.add(itemStr);
+        }
+
+        StringBuffer sb = new StringBuffer();
+
+        for (int a = 0; a < arrayList.size(); a++) {
+
+            sb.append(arrayList.get(a));
+
+            if (a < arrayList.size() - 1 || isEndWith) {
+                sb.append(startStr);
+                sb.append(keyArrayList.get(a));
+                sb.append(endStr);
+            }
+        }
+        return sb.toString();
     }
 }

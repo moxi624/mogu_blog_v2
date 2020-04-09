@@ -64,8 +64,6 @@ public class CommentRestApi {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private WebVisitService webVisitService;
-    @Autowired
     private WebConfigService webConfigService;
     @Autowired
     private BlogService blogService;

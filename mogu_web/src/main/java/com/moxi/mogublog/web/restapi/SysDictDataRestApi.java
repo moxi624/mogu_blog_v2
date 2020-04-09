@@ -44,124 +44,19 @@ public class SysDictDataRestApi {
     @Autowired
     SysDictDataService sysDictDataService;
 
-    @Autowired
-    SysDictTypeService sysDictTypeService;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
     @ApiOperation(value = "根据字典类型获取字典数据", notes = "根据字典类型获取字典数据", response = String.class)
     @PostMapping("/getListByDictType")
     public String getListByDictType(@RequestParam("dictType") String dictType) {
 
-        //从Redis中获取内容
-        String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType);
-
-        //判断redis中是否有字典
-        if (StringUtils.isNotEmpty(jsonResult)) {
-            Map<String, Object> map = JsonUtils.jsonToMap(jsonResult);
-            return ResultUtil.result(SysConf.SUCCESS, map);
-        }
-
-        QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.DICT_TYPE, dictType);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-        queryWrapper.last("LIMIT 1");
-        SysDictType sysDictType = sysDictTypeService.getOne(queryWrapper);
-        if (sysDictType == null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_NOT_EXIST);
-        }
-        QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
-        sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-        sysDictDataQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictType.getUid());
-        sysDictDataQueryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
-        List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
-
-        String defaultValue = null;
-        for (SysDictData sysDictData : list) {
-            // 获取默认值
-            if (sysDictData.getIsDefault() == SysConf.ONE) {
-                defaultValue = sysDictData.getDictValue();
-                break;
-            }
-        }
-
-        Map<String, Object> result = new HashMap<>();
-        result.put(SysConf.DEFAULT_VALUE, defaultValue);
-        result.put(SysConf.LIST, list);
-
-        stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + dictType, JsonUtils.objectToJson(result).toString(), 1, TimeUnit.DAYS);
-
-        return ResultUtil.result(SysConf.SUCCESS, result);
+        log.info("根据字典类型获取字典数据");
+        return ResultUtil.result(SysConf.SUCCESS, sysDictDataService.getListByDictType(dictType));
     }
 
     @ApiOperation(value = "根据字典类型数组获取字典数据", notes = "根据字典类型数组获取字典数据", response = String.class)
     @PostMapping("/getListByDictTypeList")
     public String getListByDictTypeList(@RequestBody List<String> dictTypeList) {
-
-        if (dictTypeList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
-
-        Map<String, Map<String, Object>> map = new HashMap<>();
-        List<String> tempTypeList = new ArrayList<>();
-        dictTypeList.forEach(item -> {
-            //从Redis中获取内容
-            String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item);
-
-            //判断redis中是否有字典
-            if (StringUtils.isNotEmpty(jsonResult)) {
-
-                Map<String, Object> tempMap = JsonUtils.jsonToMap(jsonResult);
-                map.put(item, tempMap);
-
-            } else {
-                // 如果redis中没有该字典，那么从数据库中查询
-                tempTypeList.add(item);
-            }
-
-        });
-
-        // 表示数据全部从redis中获取到了，直接返回即可
-        if (tempTypeList.size() <= 0) {
-            return ResultUtil.result(SysConf.SUCCESS, map);
-        }
-
-        // 查询 dict_type 在 tempTypeList中的
-        QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in(SQLConf.DICT_TYPE, tempTypeList);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-        List<SysDictType> sysDictTypeList = sysDictTypeService.list(queryWrapper);
-
-        sysDictTypeList.forEach(item -> {
-            QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
-            sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-            sysDictDataQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, item.getUid());
-            sysDictDataQueryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
-            List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
-
-            String defaultValue = null;
-            for (SysDictData sysDictData : list) {
-                // 获取默认值
-                if (sysDictData.getIsDefault() == SysConf.ONE) {
-                    defaultValue = sysDictData.getDictValue();
-                    break;
-                }
-            }
-
-            Map<String, Object> result = new HashMap<>();
-            result.put(SysConf.DEFAULT_VALUE, defaultValue);
-            result.put(SysConf.LIST, list);
-
-            map.put(item.getDictType(), result);
-
-            stringRedisTemplate.opsForValue().set(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item.getDictType(), JsonUtils.objectToJson(result).toString(), 1, TimeUnit.DAYS);
-        });
-        return ResultUtil.result(SysConf.SUCCESS, map);
+        log.info("根据字典类型数组获取字典数据");
+        return ResultUtil.result(SysConf.SUCCESS, sysDictDataService.getListByDictTypeList(dictTypeList));
     }
 
 }

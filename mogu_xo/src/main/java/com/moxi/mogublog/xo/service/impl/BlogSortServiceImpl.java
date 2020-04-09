@@ -55,6 +55,15 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
     }
 
     @Override
+    public List<BlogSort> getList() {
+        QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.SORT);
+        List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
+        return blogSortList;
+    }
+
+    @Override
     public String addBlogSort(BlogSortVO blogSortVO) {
         // 判断添加的分类是否存在
         QueryWrapper<BlogSort> queryWrapper = new QueryWrapper<>();

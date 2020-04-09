@@ -29,6 +29,11 @@ public class BaseRedisConf {
     public final static String EQUAL_TO = "=";
 
     /**
+     * 井号
+     */
+    public final static String WELL_NUMBER = "#";
+
+    /**
      * 月份集合
      */
     public final static String MONTH_SET = "MONTH_SET";
@@ -82,5 +87,11 @@ public class BaseRedisConf {
      * ALL
      */
     public final static String ALL = "ALL";
+
+    /**
+     * 标签点击
+     */
+    public final static String TAG_CLICK = "TAG_CLICK";
+
 
 }

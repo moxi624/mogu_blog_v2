@@ -43,7 +43,6 @@ public class UserRestApi {
     public String login(@Validated({GetOne.class}) @RequestBody UserVO userVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-
         return ResultUtil.result(SysConf.SUCCESS, "我登录啦" + userVO.getEmail());
     }
 
@@ -52,7 +51,6 @@ public class UserRestApi {
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userVO.getUserName());
         User user = userService.getOne(queryWrapper);
@@ -60,13 +58,11 @@ public class UserRestApi {
         if (user != null) {
             return ResultUtil.result(SysConf.ERROR, "用户已存在");
         }
-
         user = new User();
         user.setUserName(userVO.getUserName());
         user.setPassWord(userVO.getPassWord());
         user.setEmail(userVO.getEmail());
-
-        return ResultUtil.result(SysConf.SUCCESS, "我注册啦" + userVO.getEmail());
+        return ResultUtil.result(SysConf.SUCCESS, "注册成功");
     }
 
 

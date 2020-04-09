@@ -74,4 +74,22 @@ public final class SQLConf extends BaseSQLConf {
     public final static String FILE_UID = "file_uid";
     public final static String BLOG_UID = "blog_uid";
     public final static String MODULE_UID = "module_uid";
+
+    /**
+     * Blog表
+     */
+    public static final String LEVEL = "level";
+    public final static String SUMMARY = "summary";
+    public static final String TagUid = "tag_uid";
+
+    public static final String AUTHOR = "author";
+
+
+
+    /**
+     * sortRestAPi
+     */
+    public static final String MONTH = "month";
+
+    public static final String FIRST_COMMENT_UID = "first_comment_uid";
 }

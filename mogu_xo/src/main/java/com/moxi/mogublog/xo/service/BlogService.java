@@ -35,6 +35,13 @@ public interface BlogService extends SuperService<Blog> {
     public List<Blog> setTagAndSortByBlogList(List<Blog> list);
 
     /**
+     * 给博客列表设置分类，标签，图片
+     * @param list
+     * @return
+     */
+    public List<Blog> setTagAndSortAndPictureByBlogList(List<Blog> list);
+
+    /**
      * 给博客设置标签
      *
      * @param blog
@@ -214,4 +221,63 @@ public interface BlogService extends SuperService<Blog> {
      * @return
      */
     public IPage<Blog> getSameBlogByTagUid(String tagUid);
+
+    /**
+     * 通过博客分类UID获取博客列表
+     * @param blogSortUid
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> getListByBlogSortUid(String blogSortUid, Long currentPage, Long pageSize);
+
+    /**
+     * 通过关键字搜索博客列表
+     * @param keywords
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public Map<String, Object> getBlogByKeyword(String keywords, Long currentPage, Long pageSize);
+
+    /**
+     * 通过标签搜索博客
+     * @param tagUid
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> searchBlogByTag(String tagUid, Long currentPage, Long pageSize);
+
+    /**
+     * 通过博客分类搜索博客
+     * @param blogSortUid
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> searchBlogByBlogSort(String blogSortUid, Long currentPage, Long pageSize);
+
+    /**
+     * 通过作者搜索博客
+     * @param author
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> searchBlogByAuthor(String author, Long currentPage, Long pageSize);
+
+
+    /**
+     * 获取博客的归档日期
+     * @return
+     */
+    public String getBlogTimeSortList();
+
+    /**
+     * 通过月份获取日期
+     * @param monthDate
+     * @return
+     */
+    public String getArticleByMonth(String monthDate);
 }
