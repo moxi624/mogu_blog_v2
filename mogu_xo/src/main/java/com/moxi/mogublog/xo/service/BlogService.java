@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
 import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.service.SuperService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -164,6 +166,13 @@ public interface BlogService extends SuperService<Blog> {
      * @return
      */
     public String deleteBatchBlog(List<BlogVO> blogVoList);
+
+    /**
+     * 本地博客上传
+     * @param filedatas
+     * @return
+     */
+    public String uploadLocalBlog(List<MultipartFile> filedatas) throws IOException;
 
     /**
      *  mogu-web端使用的接口

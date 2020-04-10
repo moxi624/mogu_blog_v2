@@ -3,9 +3,15 @@ package com.moxi.mogublog.commons.feign;
 import com.moxi.mogublog.config.feign.FeignConfiguration;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * mogu_picture相关接口
@@ -35,4 +41,5 @@ public interface PictureFeignClient {
      */
     @RequestMapping(value = "/file/uploadPicsByUrl2", method = RequestMethod.POST)
     public String uploadPicsByUrl(FileVO fileVO);
+
 }

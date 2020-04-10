@@ -80,6 +80,7 @@
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加博客</el-button>
+      <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on">本地上传</el-button>
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
     </div>
 
@@ -332,6 +333,59 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="本地博客上传"
+      :visible.sync="localUploadVisible"
+    >
+
+      <el-upload
+        class="upload-demo2"
+        ref="uploadPicture"
+        name="filedatas"
+        :data="otherData"
+        :action="uploadPictureHost"
+        :auto-upload="false"
+        multiple
+      >
+        <el-button slot="trigger" size="small" type="primary">选取本地图片</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitPictureUpload">提交到图片服务器</el-button>
+        <div slot="tip" class="el-upload__tip">如果你的文档里面的图片是本地，那么需要在这里进行上传</div>
+        <div slot="tip" class="el-upload__tip">上传成功后，在开始添加下面的博客文档</div>
+        <div slot="tip" class="el-upload__tip">如果你的图片不是本地的，那么忽略这一步</div>
+      </el-upload>
+
+
+      <el-upload
+        class="upload-demo"
+        ref="uploadFile"
+        name="filedatas"
+        :headers="importHeaders"
+        :action="uploadAdminHost"
+        :auto-upload="false"
+        multiple
+      >
+        <el-button slot="trigger" size="small" type="primary">选取博客文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">上传时需要选择本地 Markdown博客文档</div>
+        <div slot="tip" class="el-upload__tip">必须在图片和文档都选中后，在提交到服务器，否者可能无法替换本地图片</div>
+      </el-upload>
+
+<!--      <el-upload-->
+<!--        class="upload-demo2"-->
+<!--        drag-->
+<!--        ref="upload2"-->
+<!--        name="filedatas"-->
+<!--        :action="uploadPictureHost"-->
+<!--        :data="otherData"-->
+<!--        :on-success = "fileSuccess"-->
+<!--        multiple>-->
+<!--        <i class="el-icon-upload"></i>-->
+<!--        <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>-->
+<!--        <div slot="tip" class="el-upload__tip">将博客内的本地图片选中</div>-->
+<!--      </el-upload>-->
+
+    </el-dialog>
+
     <CheckPhoto
       @choose_data="getChooseData"
       @cancelModel="cancelModel"
@@ -344,7 +398,7 @@
 </template>
 
 <script>
-import { getBlogList, addBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
+import { getBlogList, addBlog, uploadLocalBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
 import {
@@ -352,13 +406,14 @@ import {
   formatDataToJson,
   formatDataToForm
 } from "@/utils/webUtils";
-
+import { getToken } from '@/utils/auth'
 import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
 import {getListByDictTypeList} from "@/api/sysDictData"
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
 var querystring = require("querystring");
 import { mapGetters } from "vuex";
+import data2blob from "../../components/AvatarCropper/utils/data2blob";
 export default {
   computed: {
     ...mapGetters(["name", "roles"])
@@ -369,6 +424,20 @@ export default {
   },
   data() {
     return {
+      uploadPictureHost: process.env.PICTURE_API + "/file/pictures",
+      uploadAdminHost: process.env.ADMIN_API + "/blog/uploadLocalBlog",
+      importHeaders: {
+        Authorization: getToken()
+      },
+      otherData: {
+        source: "picture",
+        userUid: "uid00000000000000000000000000000000",
+        adminUid: "uid00000000000000000000000000000000",
+        projectName: "blog",
+        sortName: "admin",
+        token: getToken()
+      },
+      pictureList: [], // 上传的图片列表
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除
@@ -410,6 +479,8 @@ export default {
       blogLevelDefault: null, //博客等级默认值
       blogPublishDefault: null, //博客发布默认值
       openDefault: null, // 是否开启评论默认值
+      fileList: [],
+      localUploadVisible: false,
       form: {
         uid: null,
         title: null,
@@ -738,6 +809,93 @@ export default {
         this.formBak();
       }
     },
+    handleUpload: function() {
+      this.localUploadVisible = true
+    },
+    // 文件上传
+    submitUpload() {
+      let {uploadFiles, action} = this.$refs.uploadFile
+      let data = {}
+      data.pictureList = JSON.stringify(this.pictureList)
+      this.uploadFiles({
+        uploadFiles,
+        data,
+        action,
+        success: (response) => {
+          let res = JSON.parse(response)
+          if(res.code == "success") {
+            this.$message({
+              type: "success",
+              message: "博客上传成功"
+            })
+          }
+        },
+        error: (error) => console.log('失败了', error)
+      })
+    },
+    // 图片上传
+    submitPictureUpload() {
+      let {uploadFiles, action, data} = this.$refs.uploadPicture
+      this.uploadFiles({
+        uploadFiles,
+        data,
+        action,
+        success: (response) => {
+          let res = JSON.parse(response)
+          if(res.code == "success") {
+            this.$message({
+              type: "success",
+              message: "图片上传成功"
+            })
+            let pictureList = res.data
+            let list = []
+            for(let a=0; a<pictureList.length; a++) {
+              let picture = {}
+              picture.uid = pictureList[a].uid
+              picture.fileOldName = pictureList[a].fileOldName
+              picture.picUrl = pictureList[a].picUrl
+              picture.qiNiuUrl = pictureList[a].qiNiuUrl
+              list.push(picture)
+            }
+            this.pictureList = list
+          }
+        },
+        error: (error) => console.log('失败了', error)
+      })
+
+    },
+    /**
+     * 自定义上传文件
+     * @param fileList 文件列表
+     * @param data 上传时附带的额外参数
+     * @param url 上传的URL地址
+     * @param success 成功回调
+     * @param error 失败回调
+     */
+    uploadFiles({uploadFiles, headers, data, action, success, error}) {
+      let form = new FormData()
+      // 文件对象
+      uploadFiles.map(file => form.append("filedatas", file.raw))
+      // 附件参数
+      for (let key in data) {
+        form.append(key, data[key])
+      }
+      let xhr = new XMLHttpRequest()
+      // 异步请求
+      xhr.open("post", action, true)
+      // 设置请求头
+      xhr.setRequestHeader("Authorization", getToken());
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4){
+          if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+            success && success(xhr.responseText)
+          } else {
+            error && error(xhr.status)
+          }
+        }
+      }
+      xhr.send(form)
+    },
     // 内容改变，触发监听
     contentChange: function() {
       var that = this;
@@ -748,7 +906,6 @@ export default {
         that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
         that.form.tagUid = that.tagValue.join(",");
         setCookie("form", JSON.stringify(that.form), 10);
-
       }
       this.changeCount = this.changeCount + 1;
     },
@@ -953,5 +1110,17 @@ export default {
 .el-dialog__body {
   padding-top: 10px;
   padding-bottom: 0px;
+}
+.el-dialog {
+  min-height: 300px;
+}
+.el-upload__tip {
+  margin-top: 10px;
+  margin-left: 10px;
+  color: #3e999f;
+}
+
+.upload-demo {
+  margin-top: 50px;
 }
 </style>

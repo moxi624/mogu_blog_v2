@@ -99,5 +99,12 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
 
+        <!--Markdown 转 Html-->
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.61.0</version>
+        </dependency>
+
     </dependencies>
 </project>

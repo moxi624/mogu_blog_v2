@@ -229,7 +229,7 @@
 
 ## 关注&交流
 
-刚刚创建了一个QQ群<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=88bc57d77601a3c5ae97fe6d9c0bfa25c2ae166d8f0b9f6da6f7294097be6d08"><img border="0" src="./doc/images/qq/group.png" alt="蘑菇博客交流群" title="蘑菇博客交流群"></a>，目前项目还存在很多不足之处，欢迎各位老哥进群交流~
+刚刚创建了一个QQ群 **(备注：蘑菇博客)** <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=88bc57d77601a3c5ae97fe6d9c0bfa25c2ae166d8f0b9f6da6f7294097be6d08"><img border="0" src="./doc/images/qq/group.png" alt="蘑菇博客交流群" title="蘑菇博客交流群"></a>，目前项目还存在很多不足之处，欢迎各位老哥进群进行技术交流，为了防止广告进入，希望加群的时候能添加备注，谢谢~
 
 |                QQ群（备注：蘑菇博客）                 |               QQ（备注：蘑菇博客）               |
 | :---------------------------------------------------: | :----------------------------------------------: |
@@ -262,7 +262,7 @@
 3. 修改代码
 4. commit后push到自己的库
 5. 发起PR（pull request） 请求，提交到`dev`分支
-6. 等待作者合并
+6. ## 等待作者合并
 
 ## 赞赏
 

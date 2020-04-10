@@ -16,6 +16,15 @@ export function addBlog(params) {
   })
 }
 
+export function uploadLocalBlog(params) {
+  return request({
+    url: process.env.ADMIN_API + '/blog/uploadLocalBlog',
+    method: 'post',
+    data: params
+  })
+}
+
+
 export function editBlog(params) {
   return request({
     url: process.env.ADMIN_API + '/blog/edit',

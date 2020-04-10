@@ -29,7 +29,7 @@ public class CKImageUploadUtil {
 
 
     // 图片类型
-    private static List<String> fileTypes = new ArrayList<String>();
+    private static List<String> fileTypes = new ArrayList<>();
 
     static {
         fileTypes.add(".jpg");

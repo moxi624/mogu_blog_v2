@@ -12,6 +12,7 @@ import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
+import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
@@ -320,7 +321,7 @@ public class FileRestApi {
      * 多文件上传
      * 上传图片接口   传入 userId sysUserId ,有那个传哪个，记录是谁传的,
      * projectName 传入的项目名称如 base 默认是base
-     * sortName 传入的模块名， 如 shop ，user ,等，不在数据库中记录的是不会上传的
+     * sortName 传入的模块名， 如 admin，user ,等，不在数据库中记录的是不会上传的
      *
      * @return
      */
@@ -333,7 +334,7 @@ public class FileRestApi {
             @ApiImplicitParam(name = "sortName", value = "模块名", required = false, dataType = "String")
     })
     @PostMapping("/pictures")
-    public synchronized Object uploadPics(HttpServletResponse response, HttpServletRequest request, List<MultipartFile> filedatas) {
+    public synchronized Object uploadPics(HttpServletRequest request, List<MultipartFile> filedatas) {
 
         String token = request.getParameter(SysConf.TOKEN);
 
@@ -660,12 +661,12 @@ public class FileRestApi {
         String qiNiuBucket = resultMap.get(SQLConf.QI_NIU_BUCKET).toString();
         String qiNiuArea = resultMap.get(SQLConf.QI_NIU_AREA).toString();
 
-        if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+        if(EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                 || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
 
-        if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+        if(EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
             return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
         }
 

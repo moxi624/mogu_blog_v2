@@ -75,6 +75,7 @@
             <version>${springBootAdmin.version}</version>
         </dependency>
 
+
     </dependencies>
 
 

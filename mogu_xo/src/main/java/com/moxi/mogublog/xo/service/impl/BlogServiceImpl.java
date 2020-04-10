@@ -3,6 +3,7 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.internal.LinkedTreeMap;
 import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
@@ -25,10 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +81,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     AdminService adminService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    SystemConfigService systemConfigService;
 
     @Value(value = "${PROJECT_NAME}")
     private String PROJECT_NAME;
@@ -868,6 +878,99 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
+
+    @Override
+    public String uploadLocalBlog(List<MultipartFile> filedatas) throws IOException {
+
+        SystemConfig systemConfig = systemConfigService.getConfig();
+        if(systemConfig == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
+        } else {
+            if(EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu()) && (StringUtils.isEmpty(systemConfig.getQiNiuPictureBaseUrl()) || StringUtils.isEmpty(systemConfig.getQiNiuAccessKey())
+                    || StringUtils.isEmpty(systemConfig.getQiNiuSecretKey()) || StringUtils.isEmpty(systemConfig.getQiNiuBucket()) || StringUtils.isEmpty(systemConfig.getQiNiuArea()))) {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_QI_NIU);
+            }
+
+            if(EOpenStatus.OPEN.equals(systemConfig.getUploadLocal()) && StringUtils.isEmpty(systemConfig.getLocalPictureBaseUrl())) {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_LOCAL);
+            }
+        }
+
+
+        List<MultipartFile> fileList = new ArrayList<>();
+        for(MultipartFile file : filedatas) {
+            String fileName = file.getOriginalFilename();
+            if(FileUtils.isMarkdown(fileName)) {
+                fileList.add(file);
+            }
+        }
+
+        if(fileList.size() == 0) {
+            return ResultUtil.result(SysConf.ERROR, "请选中需要上传的文件");
+        }
+
+        // 文档解析
+        List<String> fileContentList = new ArrayList<>();
+        for (MultipartFile multipartFile : fileList) {
+            try {
+                Reader reader = new InputStreamReader(multipartFile.getInputStream(), "utf-8");
+                BufferedReader br = new BufferedReader( reader);
+                String line;
+                String content = "";
+                while ((line = br.readLine()) != null) {
+                    content += line + "\n";
+                }
+
+                // 将Markdown转换成html
+                String blogContent = FileUtils.markdownToHtml(content);
+                fileContentList.add(blogContent);
+            } catch (Exception e) {
+                log.error("文件解析出错");
+                log.error(e.getMessage());
+            }
+        }
+
+        HttpServletRequest request = RequestHolder.getRequest();
+        String pictureList = request.getParameter(SysConf.PICTURE_LIST);
+        List<LinkedTreeMap<String, String>> list = (List<LinkedTreeMap<String, String>>) JsonUtils.jsonArrayToArrayList(pictureList);
+        Map<String, String> pictureMap = new HashMap<>();
+        for (LinkedTreeMap<String, String> item : list) {
+
+            if(EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                // 获取七牛云上的图片
+                pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.QI_NIU_URL));
+            } else {
+                // 获取本地的图片
+                pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.PIC_URL));
+            }
+        }
+
+        for (String blogContent : fileContentList) {
+            List<String> matchList = RegexUtils.match(blogContent, "<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)>");
+            for (String matchStr : matchList) {
+                String [] splitList = matchStr.split("\"");
+                // 取出中间的图片
+                if(splitList.length >= 3) {
+                    String pictureUrl = splitList[1];
+                    // 判断是网络图片还是本地图片
+                    if(!pictureUrl.startsWith("http")) {
+                        pictureMap.put(pictureUrl, "");
+                    }
+                }
+            }
+
+            for(Map.Entry<String, String> map : pictureMap.entrySet()){
+                System.out.println(map.getKey() + "-" + map.getValue());
+
+                blogContent = blogContent.replace(map.getKey(), map.getValue());
+            }
+            System.out.println(blogContent);
+
+        }
+
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+    }
+
 
     @Override
     public IPage<Blog> getBlogPageByLevel(Integer level, Long currentPage, Integer useSort) {

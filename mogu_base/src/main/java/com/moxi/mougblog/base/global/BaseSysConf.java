@@ -25,7 +25,9 @@ public class BaseSysConf {
     public final static String MESSAGE = "message";
     public final static String EXPANDED_NAME = "expandedName";
     public final static String FILE_OLD_NAME = "fileOldName";
+    public final static String PICTURE_LIST = "pictureList";
     public final static String NAME = "name";
+    public final static String SOURCE = "source";
 
     /**
      * IP相关
@@ -148,6 +150,7 @@ public class BaseSysConf {
     public final static String QI_NIU_BUCKET = "qiNiuBucket";
     public final static String QI_NIU_AREA = "qiNiuArea";
     public final static String PICTURE_PRIORITY = "picturePriority";
+    public final static String PICTURE = "picture";
     public final static String LIST = "list";
     public final static String JPG = "jpg";
 

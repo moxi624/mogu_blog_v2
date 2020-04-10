@@ -47,8 +47,12 @@
       <el-upload
         class="upload-demo"
         drag
-        ref="upload" name="filedatas" :action="uploadPictureHost"
-        :on-preview="handlePreview" :on-remove="handleRemove" :data="otherData"
+        ref="upload"
+        name="filedatas"
+        :action="uploadPictureHost"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :data="otherData"
         :on-success = "fileSuccess"
         multiple>
         <i class="el-icon-upload"></i>
@@ -339,7 +343,7 @@ export default {
 
     },
     submitNormalUpload: function() {
-      var that = this;
+      console.log();
       this.$refs.upload.submit();
     },
     fileSuccess: function(response, file, fileList) {

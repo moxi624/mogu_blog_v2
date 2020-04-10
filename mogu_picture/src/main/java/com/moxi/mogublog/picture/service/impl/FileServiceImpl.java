@@ -45,11 +45,11 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     @Override
     public String uploadImgs(String path, HttpServletRequest request, List<MultipartFile> filedatas, Map<String, String> qiNiuConfig) {
 
-        String uploadQiNiu = qiNiuConfig.get("uploadQiNiu");
-        String uploadLocal = qiNiuConfig.get("uploadLocal");
+        String uploadQiNiu = qiNiuConfig.get(SysConf.UPLOAD_QI_NIU);
+        String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
 
         // 判断来源
-        String source = request.getParameter("source");
+        String source = request.getParameter(SysConf.SOURCE);
         //如果是用户上传，则包含用户uid
         String userUid = "";
         //如果是管理员上传，则包含管理员uid
@@ -59,16 +59,25 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         //模块名
         String sortName = "";
 
-        if("picture".equals(source)) {
-            userUid = request.getParameter("userUid");
-            adminUid = request.getParameter("adminUid");
-            projectName = request.getParameter("projectName");
-            sortName = request.getParameter("sortName");
-        } else {
-            userUid = request.getAttribute("userUid").toString();
-            adminUid = request.getAttribute("adminUid").toString();
-            projectName = request.getAttribute("projectName").toString();
-            sortName = request.getAttribute("sortName").toString();
+        // 判断图片来源
+        if(SysConf.PICTURE.equals(source)) {
+            // 当从vue-mogu-web网站过来的，直接从参数中获取
+            userUid = request.getParameter(SysConf.USER_UID);
+            adminUid = request.getParameter(SysConf.ADMIN_UID);
+            projectName = request.getParameter(SysConf.PROJECT_NAME);
+            sortName = request.getParameter(SysConf.SORT_NAME);
+        } else if(SysConf.ADMIN.equals(source)) {
+            // 当图片从mogu-admin传递过来的时候
+            userUid = request.getAttribute(SysConf.USER_UID).toString();
+            adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
+            projectName = request.getAttribute(SysConf.PROJECT_NAME).toString();
+            sortName = request.getAttribute(SysConf.SORT_NAME).toString();
+        }
+        else {
+            userUid = request.getAttribute(SysConf.USER_UID).toString();
+            adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
+            projectName = request.getAttribute(SysConf.PROJECT_NAME).toString();
+            sortName = request.getAttribute(SysConf.SORT_NAME).toString();
         }
 
         //projectName现在默认base
@@ -76,7 +85,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
             projectName = "base";
         }
 
-        //这里可以检测用户上传，如果不是网站的用户或会员就不能调用
+        //这里可以检测用户上传，如果不是网站的用户就不能调用
         if (StringUtils.isEmpty(userUid) && StringUtils.isEmpty(adminUid)) {
             return ResultUtil.result(SysConf.ERROR, "请先注册");
         } else {
@@ -156,7 +165,6 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         }
                         saveFile = new java.io.File(saveUrl);
                     }
-
 
                     MultipartFile tempData = filedata;
 
