@@ -916,13 +916,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         for (MultipartFile multipartFile : fileList) {
             try {
                 Reader reader = new InputStreamReader(multipartFile.getInputStream(), "utf-8");
-                BufferedReader br = new BufferedReader( reader);
+                BufferedReader br = new BufferedReader(reader);
                 String line;
                 String content = "";
                 while ((line = br.readLine()) != null) {
                     content += line + "\n";
                 }
-
                 // 将Markdown转换成html
                 String blogContent = FileUtils.markdownToHtml(content);
                 fileContentList.add(blogContent);
@@ -949,37 +948,37 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         // 需要替换的图片Map
         Map<String, String> matchUrlMap = new HashMap<>();
         for (String blogContent : fileContentList) {
-            List<String> matchList = RegexUtils.match(blogContent, "<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)>");
-            for (String matchStr : matchList) {
-                String [] splitList = matchStr.split("\"");
-                // 取出中间的图片
-                if(splitList.length >= 5) {
-                    // alt 和 src的先后顺序
-                    // 得到具体的图片路径
-                    String pictureUrl = "";
-                    if(matchStr.indexOf("alt") > matchStr.indexOf("src")) {
-                        pictureUrl = splitList[1];
-                    } else {
-                        pictureUrl = splitList[3];
-                    }
+        List<String> matchList = RegexUtils.match(blogContent, "<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)>");
+        for (String matchStr : matchList) {
+            String [] splitList = matchStr.split("\"");
+            // 取出中间的图片
+            if(splitList.length >= 5) {
+                // alt 和 src的先后顺序
+                // 得到具体的图片路径
+                String pictureUrl = "";
+                if(matchStr.indexOf("alt") > matchStr.indexOf("src")) {
+                    pictureUrl = splitList[1];
+                } else {
+                    pictureUrl = splitList[3];
+                }
 
-                    // 判断是网络图片还是本地图片
-                    if(!pictureUrl.startsWith(SysConf.HTTP)) {
-                        // 那么就需要遍历全部的map和他匹配
-                        for(Map.Entry<String, String> map : pictureMap.entrySet()){
-                            // 查看Map中的图片是否在需要替换的key中
-                            if(pictureUrl.indexOf(map.getKey()) > -1) {
-                                if(EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
-                                    matchUrlMap.put(pictureUrl, systemConfig.getQiNiuPictureBaseUrl() + map.getValue());
-                                } else {
-                                    matchUrlMap.put(pictureUrl, systemConfig.getLocalPictureBaseUrl() + map.getValue());
-                                }
-                                break;
+                // 判断是网络图片还是本地图片
+                if(!pictureUrl.startsWith(SysConf.HTTP)) {
+                    // 那么就需要遍历全部的map和他匹配
+                    for(Map.Entry<String, String> map : pictureMap.entrySet()){
+                        // 查看Map中的图片是否在需要替换的key中
+                        if(pictureUrl.indexOf(map.getKey()) > -1) {
+                            if(EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                                matchUrlMap.put(pictureUrl, systemConfig.getQiNiuPictureBaseUrl() + map.getValue());
+                            } else {
+                                matchUrlMap.put(pictureUrl, systemConfig.getLocalPictureBaseUrl() + map.getValue());
                             }
+                            break;
                         }
                     }
                 }
             }
+        }
 
             // 获取一个排序最高的博客分类和标签
             BlogSort blogSort = blogSortService.getTopOne();

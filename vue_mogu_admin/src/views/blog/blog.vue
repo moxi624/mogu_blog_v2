@@ -360,17 +360,17 @@
 
 
       <el-upload
-        class="upload-demo"
-        ref="uploadFile"
-        name="filedatas"
-        :headers="importHeaders"
-        :action="uploadAdminHost"
-        :auto-upload="false"
-        multiple
-      >
-        <el-button slot="trigger" size="small" type="primary">选取博客文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
-      </el-upload>
+      class="upload-demo"
+      ref="uploadFile"
+      name="filedatas"
+      :headers="importHeaders"
+      :action="uploadAdminHost"
+      :auto-upload="false"
+      multiple
+    >
+      <el-button slot="trigger" size="small" type="primary">选取博客文件</el-button>
+      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
+    </el-upload>
 
 <!--      <el-upload-->
 <!--        class="upload-demo2"-->
