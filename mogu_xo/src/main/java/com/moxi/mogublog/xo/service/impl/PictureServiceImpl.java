@@ -173,4 +173,14 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
+
+    @Override
+    public Picture getTopOne() {
+        QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByAsc(SQLConf.CREATE_TIME);
+        queryWrapper.last(SysConf.LIMIT_ONE);
+        Picture picture = pictureService.getOne(queryWrapper);
+        return picture;
+    }
 }

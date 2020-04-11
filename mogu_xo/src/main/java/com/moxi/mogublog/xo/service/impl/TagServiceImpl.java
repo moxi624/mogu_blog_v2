@@ -231,4 +231,14 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         IPage<Tag> pageList = tagService.page(page, queryWrapper);
         return pageList;
     }
+
+    @Override
+    public Tag getTopTag() {
+        QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
+        tagQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        tagQueryWrapper.last("LIMIT 1");
+        tagQueryWrapper.orderByDesc(SQLConf.SORT);
+        Tag tag = tagService.getOne(tagQueryWrapper);
+        return tag;
+    }
 }

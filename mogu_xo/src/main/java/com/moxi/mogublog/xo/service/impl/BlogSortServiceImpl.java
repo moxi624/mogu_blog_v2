@@ -236,4 +236,14 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
+
+    @Override
+    public BlogSort getTopOne() {
+        QueryWrapper<BlogSort> blogSortQueryWrapper = new QueryWrapper<>();
+        blogSortQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        blogSortQueryWrapper.last("LIMIT 1");
+        blogSortQueryWrapper.orderByDesc(SQLConf.SORT);
+        BlogSort blogSort = blogSortService.getOne(blogSortQueryWrapper);
+        return blogSort;
+    }
 }

@@ -120,9 +120,4 @@ public class BlogRestApi {
         return blogService.deleteBatchBlog(blogVoList);
     }
 
-    public static void main(String[] args) {
-//        String str = "<p><img src=\"images/image-20200410095255234.png\" alt=\"\" /></p>";
-//        str = str.replaceAll("<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)\\s+alt", "baidu");
-//        System.out.println(str);
-    }
 }

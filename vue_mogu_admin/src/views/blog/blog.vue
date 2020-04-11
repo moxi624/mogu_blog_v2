@@ -184,8 +184,7 @@
 
       <el-table-column label="操作" fixed="right" min-width="150">
         <template slot-scope="scope">
-          <el-button @click="
-          (scope.row)" type="primary" size="small">编辑</el-button>
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
           <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -337,6 +336,14 @@
       title="本地博客上传"
       :visible.sync="localUploadVisible"
     >
+      <div class="tipBox">
+        <div class="tip">导入须知</div>
+        <div class="tipItem">1）如果你的Markdown文档里面的图片是本地，需要选择本地图片，然后提交到图片服务器</div>
+        <div class="tipItem">2）含有本地图片一定需要提前上传图片，否者会出现图片无法替换的问题</div>
+        <div class="tipItem">3）如果你的Markdown文档里面的图片不是本地，直接选择博客文件上传即可</div>
+        <div class="tipItem">4）目前支持Markdown文件批量上传，步骤是先提交所有图片，在提交全部的博客文件</div>
+        <div class="tipItem">5）因为网络或者服务器性能等不可抗拒的原因，因此不推荐一次上传太多</div>
+      </div>
 
       <el-upload
         class="upload-demo2"
@@ -349,9 +356,6 @@
       >
         <el-button slot="trigger" size="small" type="primary">选取本地图片</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitPictureUpload">提交到图片服务器</el-button>
-        <div slot="tip" class="el-upload__tip">如果你的文档里面的图片是本地，那么需要在这里进行上传</div>
-        <div slot="tip" class="el-upload__tip">上传成功后，在开始添加下面的博客文档</div>
-        <div slot="tip" class="el-upload__tip">如果你的图片不是本地的，那么忽略这一步</div>
       </el-upload>
 
 
@@ -366,8 +370,6 @@
       >
         <el-button slot="trigger" size="small" type="primary">选取博客文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
-        <div slot="tip" class="el-upload__tip">上传时需要选择本地 Markdown博客文档</div>
-        <div slot="tip" class="el-upload__tip">必须在图片和文档都选中后，在提交到服务器，否者可能无法替换本地图片</div>
       </el-upload>
 
 <!--      <el-upload-->
@@ -414,6 +416,7 @@ import CKEditor from "../../components/CKEditor";
 var querystring = require("querystring");
 import { mapGetters } from "vuex";
 import data2blob from "../../components/AvatarCropper/utils/data2blob";
+import { Loading } from 'element-ui';
 export default {
   computed: {
     ...mapGetters(["name", "roles"])
@@ -444,6 +447,7 @@ export default {
       tagOptions: [], //标签候选框
       sortOptions: [], //分类候选框
       loading: false, //搜索框加载状态
+      uploadLoading: null, //文件上传loading
       CKEditorData: null,
       tableData: [], //博客数据
       tagData: [], //标签数据
@@ -552,6 +556,15 @@ export default {
 
   },
   methods: {
+    openLoading() {
+      this.uploadLoading = Loading.service({
+        lock: true,
+        text: '正在努力上传中……'
+      })
+    },
+    closeLoading() {
+        this.uploadLoading.close()
+    },
     tagList: function() {
       var tagParams = {};
       tagParams.pageSize = 100;
@@ -817,6 +830,7 @@ export default {
       let {uploadFiles, action} = this.$refs.uploadFile
       let data = {}
       data.pictureList = JSON.stringify(this.pictureList)
+      this.openLoading()
       this.uploadFiles({
         uploadFiles,
         data,
@@ -828,14 +842,30 @@ export default {
               type: "success",
               message: "博客上传成功"
             })
+            //获取博客列表
+            this.blogList()
+          } else {
+            this.$message({
+              type: "error",
+              message: res.data
+            })
           }
+          this.localUploadVisible = false
+          this.closeLoading()
+
+          // 上传成功后，将里面的内容删除
+          this.$refs.uploadFile.clearFiles();
+          this.$refs.uploadPicture.clearFiles();
         },
-        error: (error) => console.log('失败了', error)
+        error: (error) => {
+          console.log('失败了', error)
+        }
       })
     },
     // 图片上传
     submitPictureUpload() {
       let {uploadFiles, action, data} = this.$refs.uploadPicture
+      this.openLoading()
       this.uploadFiles({
         uploadFiles,
         data,
@@ -859,6 +889,7 @@ export default {
             }
             this.pictureList = list
           }
+          this.closeLoading()
         },
         error: (error) => console.log('失败了', error)
       })
@@ -900,7 +931,6 @@ export default {
     contentChange: function() {
       var that = this;
       if(this.changeCount > 0) {
-        console.log("内容改变", this.isChange)
         that.isChange = true;
         //存放到cookie中，时间10天
         that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
@@ -911,7 +941,6 @@ export default {
     },
     //备份form表单
     formBak: function() {
-      console.log("启动表单备份")
       var that = this;
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {
@@ -1112,7 +1141,7 @@ export default {
   padding-bottom: 0px;
 }
 .el-dialog {
-  min-height: 300px;
+  min-height: 400px;
 }
 .el-upload__tip {
   margin-top: 10px;
@@ -1122,5 +1151,17 @@ export default {
 
 .upload-demo {
   margin-top: 50px;
+}
+.tipBox {
+  margin-bottom: 30px;
+}
+.tip {
+  font-size: 14px;
+  font-weight: bold;
+  color: 	#808080;
+}
+.tipItem {
+  line-height: 22px;
+  color: 	#A9A9A9;
 }
 </style>

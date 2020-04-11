@@ -71,4 +71,10 @@ public interface BlogSortService extends SuperService<BlogSort> {
      * @return
      */
     public String blogSortByCite();
+
+    /**
+     * 获取排序最高的一个博客分类
+     * @return
+     */
+    public BlogSort getTopOne();
 }
