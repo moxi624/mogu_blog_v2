@@ -64,7 +64,7 @@ public class TagRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return tagService.editTag(tagVO);
+        return tagService.addTag(tagVO);
     }
 
     @AuthorityVerify

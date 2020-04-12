@@ -234,6 +234,11 @@ export default {
                 type: "success",
                 message: response.data
               });
+
+              // 清空选中的列表
+              this.pictureUids = []
+              this.checkedPicture = []
+
               this.pictureList();
             }
           });

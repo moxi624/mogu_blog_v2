@@ -73,9 +73,7 @@ public class PictureRestApi {
     @OperationLogger(value = "删除图片")
     @ApiOperation(value = "删除图片", notes = "删除图片", response = String.class)
     @PostMapping("/delete")
-    public String delete(@Validated({Delete.class}) @RequestBody PictureVO pictureVO, BindingResult result) {
-        // 参数校验
-        ThrowableUtils.checkParamArgument(result);
+    public String delete(@RequestBody PictureVO pictureVO, BindingResult result) {
         return pictureService.deleteBatchPicture(pictureVO);
     }
 

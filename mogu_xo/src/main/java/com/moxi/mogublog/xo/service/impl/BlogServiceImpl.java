@@ -904,6 +904,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             String fileName = file.getOriginalFilename();
             if(FileUtils.isMarkdown(fileName)) {
                 fileList.add(file);
+            } else {
+                return ResultUtil.result(SysConf.ERROR, "目前仅支持Mrkdown文件");
             }
         }
 
