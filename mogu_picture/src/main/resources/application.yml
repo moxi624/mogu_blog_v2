@@ -16,7 +16,7 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 5MB # 修改单次文件上传文件大小不能超过5MB
+      max-file-size: 10MB # 修改单次文件上传文件大小不能超过10MB
       max-request-size: 50MB # 设置单次文件请求总大小不能超过50MB
 
   jmx:

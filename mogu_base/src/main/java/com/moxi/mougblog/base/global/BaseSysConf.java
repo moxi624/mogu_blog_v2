@@ -13,6 +13,7 @@ public class BaseSysConf {
 
     // picture相关
     public final static String USER_UID = "userUid";
+    public final static String BLOG = "blog";
     public final static String USER_NAME = "userName";
     public final static String ADMIN_UID = "adminUid";
     public final static String PROJECT_NAME = "projectName";

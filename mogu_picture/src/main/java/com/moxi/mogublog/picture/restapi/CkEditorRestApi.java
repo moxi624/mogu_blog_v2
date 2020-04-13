@@ -155,18 +155,18 @@ public class CkEditorRestApi {
                 }
 
                 //对图片大小进行限制
-                if (file.getSize() > (5 * 1024 * 1024)) {
+                if (file.getSize() > (10 * 1024 * 1024)) {
                     map.put(SysConf.UPLOADED, 0);
-                    errorMap.put(SysConf.MESSAGE, "图片大小不能超过5M");
+                    errorMap.put(SysConf.MESSAGE, "图片大小不能超过10M");
                     map.put(SysConf.ERROR, errorMap);
                     return map;
                 }
 
                 // 设置图片上传服务必要的信息
-                request.setAttribute(SysConf.USER_UID, "uid00000000000000000000000000000000");
-                request.setAttribute(SysConf.ADMIN_UID, "uid00000000000000000000000000000000");
-                request.setAttribute(SysConf.PROJECT_NAME, "blog");
-                request.setAttribute(SysConf.SORT_NAME, "admin");
+                request.setAttribute(SysConf.USER_UID, SysConf.DEFAULT_UID);
+                request.setAttribute(SysConf.ADMIN_UID, SysConf.DEFAULT_UID);
+                request.setAttribute(SysConf.PROJECT_NAME, SysConf.BLOG);
+                request.setAttribute(SysConf.SORT_NAME, SysConf.ADMIN);
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
@@ -367,9 +367,9 @@ public class CkEditorRestApi {
                 // 设置用户代理
                 con.setRequestProperty("User-agent", "	Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0");
 
-                // 设置2秒超时
-                con.setConnectTimeout(2000);
-                con.setReadTimeout(2000);
+                // 设置5秒超时
+                con.setConnectTimeout(5000);
+                con.setReadTimeout(5000);
 
                 // 当获取的相片无法正常显示的时候，需要给一个默认图片
                 inputStream = con.getInputStream();

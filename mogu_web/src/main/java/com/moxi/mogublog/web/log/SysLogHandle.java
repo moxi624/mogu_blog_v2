@@ -1,8 +1,18 @@
 package com.moxi.mogublog.web.log;
 
+import com.moxi.mogublog.commons.entity.WebVisit;
+import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 异步记录日志
@@ -44,31 +54,31 @@ public class SysLogHandle extends RequestAwareRunnable {
 
     @Override
     protected void onRun() {
-//        HttpServletRequest request = RequestHolder.getRequest();
-//        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
-//        String os = map.get(SysConf.OS);
-//        String browser = map.get(SysConf.BROWSER);
-//        WebVisit webVisit = new WebVisit();
-//        String ip = IpUtils.getIpAddr(request);
-//        webVisit.setIp(ip);
-//
-//        //从Redis中获取IP来源
-//        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
-//        if (StringUtils.isEmpty(jsonResult)) {
-//            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
-//            if (StringUtils.isNotEmpty(addresses)) {
-//                webVisit.setIpSource(addresses);
-//                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
-//            }
-//        } else {
-//            webVisit.setIpSource(jsonResult);
-//        }
-//        webVisit.setOs(os);
-//        webVisit.setBrowser(browser);
-//        webVisit.setUserUid(userUid);
-//        webVisit.setBehavior(behavior);
-//        webVisit.setModuleUid(moduleUid);
-//        webVisit.setOtherData(otherData);
-//        webVisit.insert();
+        HttpServletRequest request = RequestHolder.getRequest();
+        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+        String os = map.get(SysConf.OS);
+        String browser = map.get(SysConf.BROWSER);
+        WebVisit webVisit = new WebVisit();
+        String ip = IpUtils.getIpAddr(request);
+        webVisit.setIp(ip);
+
+        //从Redis中获取IP来源
+        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+        if (StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
+            if (StringUtils.isNotEmpty(addresses)) {
+                webVisit.setIpSource(addresses);
+                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            }
+        } else {
+            webVisit.setIpSource(jsonResult);
+        }
+        webVisit.setOs(os);
+        webVisit.setBrowser(browser);
+        webVisit.setUserUid(userUid);
+        webVisit.setBehavior(behavior);
+        webVisit.setModuleUid(moduleUid);
+        webVisit.setOtherData(otherData);
+        webVisit.insert();
     }
 }
