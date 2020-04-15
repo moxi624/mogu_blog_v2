@@ -26,6 +26,16 @@
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 - 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因部署时遇到问题，无法完成正常部署，故搁置...欢迎有了解nuxt或者SEO优化的老哥一起探讨~）
 
+## 站点演示
+
+首先特别感谢阿里云提供的 [学生“在家实践” 计划](https://developer.aliyun.com/adc/student/?spm=a2c6h.14062461.J_7747362070.1.5b6933e1X3rvHS)，免费提供的6个月的2核4G 1M的服务器，所以就刚好以此用来做蘑菇博客的演示站点，同时我也在搭建的时候，顺便录制了一套视频：[利用阿里云免费服务器搭建个人博客](https://www.bilibili.com/video/BV1c5411b7EZ?t=17) ，感兴趣的小伙伴可以参考视频一起完成部署~
+
+> 【演示前端】：http://demoweb.moguit.cn/
+>
+> 【演示后端】：http://demoadmin.moguit.cn/
+>
+> 【演示账号】：mogu2018   mogu2018
+
 ## 运行配置
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
@@ -38,11 +48,13 @@
 
 推荐配置：2核4G
 
-> 阿里云小站 限量爆款 低至69元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) `(仅限新用户)`
+> 【阿里云】 限量爆款 低至69元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) `(仅限新用户)`
 >
-> 阿里云【采购季】2核4G 5M / 3年仅需935.55元  [点我进入](https://www.aliyun.com/sale-season/2020/procurement-new-members?userCode=w7aungxw) `(仅限新用户)`
+> 【华为云】 1核2G 低至88元/年，2核4G 5M 仅需332元/年  [点我进入](https://activity.huaweicloud.com/discount_area_v5/index.html?fromacct=0410a9ff-25e4-49c6-858b-56cf2f86f07e&utm_source=aHc0OTI0NzI2MA==&utm_medium=cps&utm_campaign=201905) `(仅限新用户)`
 >
-> 阿里云翼计划 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
+> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元 [点我进入](https://cloud.tencent.com/act/cps/redirect?redirect=1054&cps_key=4e9b8ce643afe47621493331d101dd6e&from=console) `(仅限新用户)`
+>
+> 【阿里云翼计划】 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
 ## 项目特点
 
@@ -94,7 +106,7 @@
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
-- nuxt_mogu_web：Nuxt的门户网站
+- nuxt_mogu_web：Nuxt的门户网站（目前还未完善）
 
 ## 技术选型
 
@@ -158,7 +170,7 @@
 
 ### 蘑菇博客部署到云服务器
 
-参考[蘑菇博客如何部署到阿里云服务器](http://www.moguit.cn/#/info?blogUid=89defe3f4a3f317cba9aa0cdb9ff879e)，在你修改蘑菇博客源码后，将项目打包部署到云服务器
+参考[蘑菇博客如何部署到阿里云服务器](http://www.moguit.cn/#/info?blogUid=89defe3f4a3f317cba9aa0cdb9ff879e)，在你修改蘑菇博客源码后将项目打包部署到云服务器
 
 ### 使用Github Actions完成蘑菇博客持续集成
 

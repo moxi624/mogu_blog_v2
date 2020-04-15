@@ -74,6 +74,7 @@ public class BlogRestApi {
         return blogService.addBlog(blogVO);
     }
 
+    @AuthorityVerify
     @OperationLogger(value = "本地博客上传")
     @ApiOperation(value = "本地博客上传", notes = "本地博客上传", response = String.class)
     @PostMapping("/uploadLocalBlog")
@@ -83,7 +84,7 @@ public class BlogRestApi {
     }
 
 
-        @AuthorityVerify
+    @AuthorityVerify
     @OperationLogger(value = "编辑博客")
     @ApiOperation(value = "编辑博客", notes = "编辑博客", response = String.class)
     @PostMapping("/edit")
