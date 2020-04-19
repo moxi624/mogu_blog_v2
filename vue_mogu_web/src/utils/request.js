@@ -1,6 +1,5 @@
 import axios from 'axios'
 import router from '@/router/index'
-import {Message} from 'element-ui'
 import {getCookie} from "@/utils/cookieUtils";
 // 创建axios实例
 const service = axios.create({
