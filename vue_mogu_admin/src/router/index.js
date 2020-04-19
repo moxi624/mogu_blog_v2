@@ -382,6 +382,12 @@ export const constantRouterMap = [
         name: 'Markdown',
         component: () => import('@/views/test/Markdown'),
         meta: { title: 'Markdown', icon: 'exception' }
+      },
+      {
+        path: 'PictureList',
+        name: 'PictureList',
+        component: () => import('@/views/test/PictureList'),
+        meta: { title: '图片列表', icon: 'exception' }
       }
     ]
   },

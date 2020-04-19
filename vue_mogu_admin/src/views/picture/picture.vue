@@ -1,22 +1,86 @@
 <template>
 <div id="table" class="app-container calendar-list-container">
-	    <!-- 查询和其他操作 -->
-	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
-        <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
-        <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
-        <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
-        <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
-        <el-button class="filter-item" type="warning" @click="handleCropper" icon="el-icon-s-open">裁剪图片</el-button>
-	    </div>
+    <!-- 查询和其他操作 -->
+    <div class="filter-container" style="margin: 10px 0 10px 0;">
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
+      <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
+      <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
+      <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
+    </div>
 
-      <div class= "imgAll">
-        <div v-for="picture in tableData"  v-bind:key="picture.uid" class = "imgBody" >
-              <input class="inputClass" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
-              <img class= "imgStyle" :src="BASE_IMAGE_URL + picture.pictureUrl" @click="showPicture(BASE_IMAGE_URL + picture.pictureUrl)"/>
-        </div>
-        <div class= "removeFloat"></div>
-      </div>
+
+    <el-row>
+      <el-col
+        v-for="(picture, index) in tableData"
+        :key="picture.uid"
+        style="padding: 6px"
+        :xs="24"
+        :sm="12"
+        :md="12"
+        :lg="6"
+        :xl="4"
+      >
+
+        <el-card
+          :body-style="{ padding: '0px', textAlign: 'center' }"
+          shadow="always"
+        >
+          <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
+<!--          <el-checkbox :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @change="checked(picture)" style="position: absolute;"></el-checkbox>-->
+          <el-image
+            :src="BASE_IMAGE_URL + picture.pictureUrl"
+            style="cursor:pointer"
+            fit="scale-down"
+            @click="showPicture(picture.pictureUrl)"
+          />
+          <div @click="showPicture(picture.pictureUrl)">
+            <span class="media-title">图片 {{index+1}}</span>
+          </div>
+          <div style="margin-bottom: 14px;">
+            <el-button-group>
+              <el-tooltip class="item" effect="dark" content="复制图片地址" placement="bottom-start">
+                <el-button
+                  size="mini"
+                  icon="el-icon-copy-document"
+                  @click="copyUrl(BASE_IMAGE_URL + picture.pictureUrl)"
+                />
+              </el-tooltip>
+
+              <el-tooltip class="item" effect="dark" content="复制Markdown格式图片地址" placement="bottom-start">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  @click="copyMarkdownUrl(BASE_IMAGE_URL + picture.pictureUrl, BASE_IMAGE_URL + picture.pictureUrl)"
+                >
+                </el-button>
+              </el-tooltip>
+
+              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start">
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-s-open"
+                  @click="handleCropper(picture)"
+                />
+              </el-tooltip>
+
+              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start">
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  @click="handleDelete(picture.uid)"
+                />
+              </el-tooltip>
+
+            </el-button-group>
+          </div>
+        </el-card>
+
+      </el-col>
+    </el-row>
 
 		<!--分页-->
     <div class="block">
@@ -31,18 +95,6 @@
 
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
-
-
-      <!-- 相册分类 -->
-<!--    <el-upload class="upload-demo"  ref="upload" name="filedatas" :action="uploadPictureHost"-->
-<!--    :on-preview="handlePreview" :on-remove="handleRemove" :data="otherData"-->
-<!--          :multiple="true"-->
-<!--          :file-list="fileList"-->
-<!--          :on-success = "fileSuccess"-->
-<!--          :auto-upload="false">-->
-<!--        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
-<!--        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitNormalUpload">上传到服务器</el-button>-->
-<!--      </el-upload>-->
 
       <el-upload
         class="upload-demo"
@@ -62,7 +114,6 @@
 		</el-dialog>
 
     <el-dialog :visible.sync="dialogPictureVisible" fullscreen style="text-align: center">
-      <div style="margin-bottom: 40px;"><span style="font-size:14px; font-weight: bold">图片地址:</span> {{dialogImageUrl}}</div>
       <img :src="dialogImageUrl" alt="">
     </el-dialog>
 
@@ -118,7 +169,7 @@ export default {
       count: 0, //计数器，用于记录上传次数
       loading: true,
       currentPage: 1,
-      pageSize: 14,
+      pageSize: 18,
       total: null,
       title: "增加图片",
       dialogFormVisible: false,
@@ -185,9 +236,17 @@ export default {
       this.dialogPictureVisible = true
       this.dialogImageUrl = url
     },
+    copyUrl(url) {
+      this.$commonUtil.copyText(url)
+      this.$commonUtil.message.success('复制链接到剪切板成功')
+    },
+    copyMarkdownUrl(name, url) {
+      const text = '![' + name + '](' + url + ')'
+      this.$commonUtil.copyText(text)
+      this.$commonUtil.message.success('复制Markdown格式链接到剪切板成功')
+    },
     //点击单选
     checked: function(data) {
-      this.checkedPicture = data;
       let idIndex = this.pictureUids.indexOf(data.uid);
       if (idIndex >= 0) {
         //选过了
@@ -251,7 +310,6 @@ export default {
         });
     },
     setCover: function() {
-
       if (this.pictureUids.length != 1) {
         this.$message({
           type: "error",
@@ -285,16 +343,14 @@ export default {
         });
 
     },
-    handleCropper: function() {
-      if (this.pictureUids.length != 1) {
-        this.$message({
-          type: "error",
-          message: "选择一张图片进行裁剪！"
-        });
-        return;
-      }
-      this.pictureCropperVisible = true;
-      this.reFresh = true;
+    handleCropper: function(picture) {
+      this.checkedPicture = picture;
+      setTimeout(() => {
+
+        this.pictureCropperVisible = true;
+        this.reFresh = true;
+
+      }, 10)
     },
     // 裁剪成功后的回调
     cropperSuccess: function(picture) {
@@ -394,35 +450,20 @@ export default {
 };
 </script>
 
-<style scoped>
-.imgStyle {
-  max-height: 100%;
-  max-width: 100%;
-  vertical-align: middle;
-}
-.imgBody {
-  width: 150px;
-  height: 150px;
-  /* border: solid 1px #8080ff; */
-  float: left;
-  margin: 30px;
-  position: relative;
-}
-.removeFloat {
-  clear: both;
-}
-.imgAll {
-  width: 98%;
-  line-height: 150px;
-  text-align: center;
-  overflow-y: auto;
-}
-.imgLimit {
-  height: 50px;
-  margin-left: 30%;
-  margin-top: 50px;
-}
-.inputClass {
-  position: absolute;
-}
+<style>
+  .media-title {
+    color: #8492a6;
+    font-size: 14px;
+    padding: 14px;
+    display: inline-block;
+    white-space: nowrap;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .el-image {
+    width: 100%;
+    height: 160px;
+  }
 </style>
