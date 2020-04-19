@@ -83,7 +83,7 @@ public final class SQLConf extends BaseSQLConf {
     public static final String TagUid = "tag_uid";
 
     public static final String AUTHOR = "author";
-
+    public static final String IS_SHOW = "is_show";
 
 
     /**

@@ -63,7 +63,7 @@ public class CategoryMenuVO extends BaseVO<CategoryMenuVO> {
     private Integer sort;
 
     /**
-     * 是否隐藏  1: 是  0: 否
+     * 是否显示  1: 是  0: 否
      */
     @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer isShow;

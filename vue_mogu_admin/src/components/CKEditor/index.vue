@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { getToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import CKEDITOR from 'CKEDITOR';
 export default {
   props: ["content", "height"],

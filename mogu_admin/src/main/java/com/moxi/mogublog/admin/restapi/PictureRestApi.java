@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * <p>
  * 图片表 RestApi
@@ -52,10 +54,10 @@ public class PictureRestApi {
     @OperationLogger(value = "增加图片")
     @ApiOperation(value = "增加图片", notes = "增加图片", response = String.class)
     @PostMapping("/add")
-    public String add(@Validated({Insert.class}) @RequestBody PictureVO pictureVO, BindingResult result) {
+    public String add(@Validated({Insert.class}) @RequestBody List<PictureVO> pictureVOList, BindingResult result) {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return pictureService.addPicture(pictureVO);
+        return pictureService.addPicture(pictureVOList);
     }
 
     @AuthorityVerify

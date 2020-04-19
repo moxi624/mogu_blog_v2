@@ -5,6 +5,8 @@ import com.moxi.mogublog.commons.entity.Picture;
 import com.moxi.mogublog.xo.vo.PictureVO;
 import com.moxi.mougblog.base.service.SuperService;
 
+import java.util.List;
+
 /**
  * <p>
  * 图片表 服务类
@@ -26,9 +28,9 @@ public interface PictureService extends SuperService<Picture> {
     /**
      * 新增图片
      *
-     * @param pictureVO
+     * @param pictureVOList
      */
-    public String addPicture(PictureVO pictureVO);
+    public String addPicture(List<PictureVO> pictureVOList);
 
     /**
      * 编辑图片

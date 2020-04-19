@@ -34,11 +34,23 @@
         </template>
       </el-table-column>
 
-	    <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="图片选择器显示" width="150" align="center">
+        <template slot-scope="scope">
+          <el-tag v-for="item in yesNoDictList" :key="item.uid" v-if="scope.row.isShow == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center">
 	      <template slot-scope="scope">
 	        <span >{{ scope.row.createTime }}</span>
 	      </template>
 	    </el-table-column>
+
+      <el-table-column label="更新时间" width="160" align="center">
+        <template slot-scope="scope">
+          <span >{{ scope.row.updateTime }}</span>
+        </template>
+      </el-table-column>
 
 	   	<el-table-column label="状态" width="100" align="center">
 	   	  <template slot-scope="scope">
@@ -54,9 +66,9 @@
 	   	  </template>
 	    </el-table-column>
 
-	    <el-table-column label="操作" fixed="right" min-width="150">
+	    <el-table-column label="操作" fixed="right" min-width="310">
 	      <template slot-scope="scope" >
-          <el-button @click="handleManager(scope.row)" type="success" size="small">管理图片</el-button>
+          <el-button @click="handleManager(scope.row)" type="success" size="small">图片列表</el-button>
           <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
 	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
 	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
@@ -93,6 +105,12 @@
 		      <el-input v-model="form.name" auto-complete="off"></el-input>
 		    </el-form-item>
 
+        <el-form-item label="图片选择器显示" :label-width="formLabelWidth" prop="isShow">
+          <el-radio-group v-model="form.isShow" size="small">
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
         <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
           <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
@@ -121,7 +139,7 @@ import {
   deletePictureSort,
   stickPictureSort
 } from "@/api/pictureSort";
-
+import {getListByDictTypeList} from "@/api/sysDictData"
 import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
 import { Loading } from "element-ui";
@@ -131,6 +149,7 @@ export default {
     CheckPhoto
   },
   created() {
+    this.getDictList();
     this.pictureSortList()
   },
   data() {
@@ -154,6 +173,7 @@ export default {
       isEditForm: false,
       photoVisible: false, //控制图片选择器的显示
       photoList: [],
+      yesNoDictList: [], // 是否字典
       fileIds: "",
       icon: false, //控制删除图标的显示
       rules: {
@@ -181,6 +201,24 @@ export default {
         this.total = response.data.total;
       });
     },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+
+
+      var dictTypeList =  ['sys_yes_no']
+
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == "success") {
+          var dictMap = response.data;
+          this.yesNoDictList = dictMap.sys_yes_no.list
+          if(dictMap.sys_yes_no.defaultValue) {
+            this.yesNoDefault = parseInt(dictMap.sys_yes_no.defaultValue);
+          }
+        }
+      });
+    },
     handleFind: function() {
       this.pictureSortList();
     },
@@ -196,7 +234,8 @@ export default {
         uid: null,
         name: null,
         fileUid: null,
-        sort: 0
+        sort: 0,
+        isShow: this.yesNoDefault,
       };
       return formObject;
     },

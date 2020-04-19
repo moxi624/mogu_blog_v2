@@ -42,6 +42,11 @@ public class PictureSort extends SuperEntity<PictureSort> {
      */
     private int sort;
 
+    /**
+     * 是否显示  1: 是  0: 否
+     */
+    private Integer isShow;
+
     //以下字段不存入数据库
 
     /**

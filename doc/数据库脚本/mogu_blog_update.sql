@@ -142,3 +142,8 @@ ALTER TABLE t_blog ADD start_comment TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是�
 ALTER TABLE t_comment ADD first_comment_uid VARCHAR(32) NULL COMMENT '一级评论UID';
 
 
+/*
+   修改t_picture_sort表，增加 isShow，是否显示
+   @date 2020年4月19日16:01:34
+*/
+ALTER TABLE t_picture_sort ADD is_show TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否显示，1：是，0，否';

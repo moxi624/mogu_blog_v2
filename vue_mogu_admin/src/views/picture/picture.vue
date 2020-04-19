@@ -5,7 +5,7 @@
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
       <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
       <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
-      <el-button class="filter-item" type="danger" @click="handleDelete" icon="el-icon-delete">删除选中</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
       <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
     </div>
 
@@ -27,7 +27,6 @@
           shadow="always"
         >
           <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
-<!--          <el-checkbox :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @change="checked(picture)" style="position: absolute;"></el-checkbox>-->
           <el-image
             :src="BASE_IMAGE_URL + picture.pictureUrl"
             style="cursor:pointer"
@@ -35,11 +34,12 @@
             @click="showPicture(picture.pictureUrl)"
           />
           <div @click="showPicture(picture.pictureUrl)">
-            <span class="media-title">图片 {{index+1}}</span>
+            <span class="media-title" v-if="picture.picName">{{picture.picName}}</span>
+            <span class="media-title" v-else>图片 {{index + 1}}</span>
           </div>
           <div style="margin-bottom: 14px;">
             <el-button-group>
-              <el-tooltip class="item" effect="dark" content="复制图片地址" placement="bottom-start">
+              <el-tooltip class="item" effect="dark" content="复制图片地址" placement="bottom-start" style="margin-right: 2px">
                 <el-button
                   size="mini"
                   icon="el-icon-copy-document"
@@ -47,7 +47,7 @@
                 />
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="复制Markdown格式图片地址" placement="bottom-start">
+              <el-tooltip class="item" effect="dark" content="复制Markdown格式图片地址" placement="bottom-start" style="margin-right: 2px">
                 <el-button
                   type="primary"
                   size="mini"
@@ -57,7 +57,7 @@
                 </el-button>
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start">
+              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start" style="margin-right: 2px">
                 <el-button
                   type="warning"
                   size="mini"
@@ -66,12 +66,12 @@
                 />
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start">
+              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start" style="margin-right: 2px">
                 <el-button
                   type="danger"
                   size="mini"
                   icon="el-icon-delete"
-                  @click="handleDelete(picture.uid)"
+                  @click="handleDelete(picture)"
                 />
               </el-tooltip>
 
@@ -157,6 +157,7 @@ export default {
       fileList: [],
       pictureSortUid: "",
       pictureUids: [], //图片uid集合
+      pictureUploadList: [], //图片上传列表
       chooseTitle: "全选",
       isCheckedAll: false, //是否全选
       fileUids: "", //上传时候的文件uid
@@ -270,7 +271,11 @@ export default {
         this.chooseTitle = "取消全选";
       }
     },
-    handleDelete: function() {
+    handleDelete: function(picture) {
+      this.pictureUids = [picture.uid]
+      this.handleDeleteBatch()
+    },
+    handleDeleteBatch: function() {
       if (this.pictureUids.length <= 0) {
         this.$message({
           type: "error",
@@ -408,20 +413,21 @@ export default {
       this.$refs.upload.submit();
     },
     fileSuccess: function(response, file, fileList) {
-
       var that = this;
       if (response.code == "success") {
         let file = response.data;
+
         for (let index = 0; index < file.length; index++) {
-          this.fileUids = this.fileUids + file[index].uid + ",";
+          let picture = {};
+          picture.fileUid = file[index].uid;
+          picture.pictureSortUid = this.pictureSortUid
+          picture.picName = file[index].picName
+          this.pictureUploadList.push(picture)
         }
 
         this.count = this.count + 1;
         if(this.count % fileList.length == 0) {
-          var params = {};
-          params.fileUids = this.fileUids
-          params.pictureSortUid = this.pictureSortUid
-          addPicture(params).then(res => {
+          addPicture(this.pictureUploadList).then(res => {
             if (res.code == "success") {
               this.$message({
                 type: "success",
@@ -436,7 +442,7 @@ export default {
             }
             this.$refs.upload.clearFiles();
             this.fileUids = "";
-
+            this.pictureUploadList = []
           });
         }
       } else {

@@ -1,5 +1,8 @@
 package com.moxi.mogublog.xo.vo;
 
+import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 
@@ -31,4 +34,10 @@ public class PictureSortVO extends BaseVO<PictureSortVO> {
      * 排序字段，数值越大，越靠前
      */
     private int sort;
+
+    /**
+     * 是否显示  1: 是  0: 否
+     */
+    @IntegerNotNull(groups = {Insert.class, Update.class})
+    private Integer isShow;
 }

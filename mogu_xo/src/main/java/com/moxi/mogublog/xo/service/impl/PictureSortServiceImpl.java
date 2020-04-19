@@ -16,6 +16,7 @@ import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.PictureSortVO;
+import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,10 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         QueryWrapper<PictureSort> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(pictureSortVO.getKeyword()) && !StringUtils.isEmpty(pictureSortVO.getKeyword().trim())) {
             queryWrapper.like(SQLConf.NAME, pictureSortVO.getKeyword().trim());
+        }
+
+        if (pictureSortVO.getIsShow() != null) {
+            queryWrapper.eq(SQLConf.IS_SHOW, SysConf.ONE);
         }
         Page<PictureSort> page = new Page<>();
         page.setCurrent(pictureSortVO.getCurrentPage());
@@ -99,6 +104,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         pictureSort.setParentUid(pictureSortVO.getParentUid());
         pictureSort.setFileUid(pictureSortVO.getFileUid());
         pictureSort.setStatus(EStatus.ENABLE);
+        pictureSort.setIsShow(pictureSortVO.getIsShow());
         pictureSort.setUpdateTime(new Date());
         pictureSort.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -110,6 +116,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         pictureSort.setName(pictureSortVO.getName());
         pictureSort.setParentUid(pictureSortVO.getParentUid());
         pictureSort.setFileUid(pictureSortVO.getFileUid());
+        pictureSort.setIsShow(pictureSortVO.getIsShow());
         pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);

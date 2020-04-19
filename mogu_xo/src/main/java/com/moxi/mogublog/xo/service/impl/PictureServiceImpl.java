@@ -100,18 +100,20 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
     }
 
     @Override
-    public String addPicture(PictureVO pictureVO) {
-        List<String> list = StringUtils.changeStringToString(pictureVO.getFileUids(), SysConf.FILE_SEGMENTATION);
+    public String addPicture(List<PictureVO> pictureVOList) {
         List<Picture> pictureList = new ArrayList<>();
-        if (list.size() > 0) {
-            for (String fileUid : list) {
+        if (pictureVOList.size() > 0) {
+            for (PictureVO pictureVO : pictureVOList) {
                 Picture picture = new Picture();
-                picture.setFileUid(fileUid);
+                picture.setFileUid(pictureVO.getFileUid());
                 picture.setPictureSortUid(pictureVO.getPictureSortUid());
+                picture.setPicName(pictureVO.getPicName());
                 picture.setStatus(EStatus.ENABLE);
                 pictureList.add(picture);
             }
             pictureService.saveBatch(pictureList);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INSERT_FAIL);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }

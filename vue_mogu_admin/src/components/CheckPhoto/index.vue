@@ -95,6 +95,7 @@ export default {
       // TODO 全部把分类加载出来，如果图片很多的话，不能这么做
       params.pageSize = 500
       params.currentPage = 1;
+      params.isShow = 1;
       getPictureSortList(params).then(function(response) {
         if (response.code == "success") {
           var pictureSorts = response.data.records;
@@ -208,6 +209,7 @@ export default {
       var params = {};
       params.currentPage = 1;
       params.pageSize = 500;
+      params.isShow = 1;
       getPictureSortList(params).then(function(response) {
         if (response.code == "success") {
           //成功
@@ -257,6 +259,7 @@ export default {
       var params = {};
       params.pageSize = 500
       params.currentPage = 1;
+      params.isShow = 1;
       params.keyword = this.keyword
       getPictureSortList(params).then(function(response) {
         if (response.code == "success") {
@@ -335,15 +338,15 @@ export default {
     },
     before_close(done) {
       //取消时，开始状态
-      this.form.photoList = this.photos;
-      this.form.fileIds = this.files;
+      this.form.photoList = []
+      this.form.fileIds = ""
       this.$emit("cancelModel", "");
       done();
     },
     cancel() {
       //取消时，还原成开始状态
-      this.form.photoList = this.photos;
-      this.form.fileIds = this.files;
+      this.form.photoList = []
+      this.form.fileIds = ""
       this.$emit("cancelModel", "");
     },
     handleClick(tab, event) {
