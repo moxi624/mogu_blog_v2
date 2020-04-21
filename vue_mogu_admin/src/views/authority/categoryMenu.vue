@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加菜单</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/categoryMenu/add'">添加菜单</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -76,9 +76,9 @@
 
               <el-table-column fixed="right" min-width="230">
                 <template slot-scope="scope_child">
-                  <el-button @click="handleStick(scope_child.row)" type="warning" size="small">置顶</el-button>
-                  <el-button @click="handleEdit(scope_child.row)" type="primary" size="small">编辑</el-button>
-                  <el-button @click="handleDelete(scope_child.row)" type="danger" size="small">删除</el-button>
+                  <el-button @click="handleStick(scope_child.row)" type="warning" size="small" v-permission="'/categoryMenu/stick'">置顶</el-button>
+                  <el-button @click="handleEdit(scope_child.row)" type="primary" size="small" v-permission="'/categoryMenu/edit'">编辑</el-button>
+                  <el-button @click="handleDelete(scope_child.row)" type="danger" size="small" v-permission="'/categoryMenu/delete'">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>

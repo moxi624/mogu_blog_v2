@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
-      <el-button class= "button" type="success"  @click="handInit" icon="el-icon-refresh">初始化ES索引</el-button>
+      <el-button class= "button" type="success"  @click="handInit" icon="el-icon-refresh" v-permission="'/search/initElasticIndex'">初始化ES索引</el-button>
     </div>
     <iframe :src="elasticSearchServiceUrl" width="100%" height="750px;"></iframe>
   </div>

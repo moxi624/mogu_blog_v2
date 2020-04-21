@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-tabs type="border-card">
-      <el-tab-pane>
+      <el-tab-pane v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label">
           <i class="el-icon-date"></i> 七牛云配置
         </span>
@@ -57,13 +57,13 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">保 存</el-button>
+            <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
 
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="two">
+      <el-tab-pane name="two" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 邮箱配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="80px" >
           <el-form-item label="邮箱" prop="email">
@@ -87,12 +87,12 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">保 存</el-button>
+            <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="three">
+      <el-tab-pane name="three" v-permission="'/systemConfig/cleanRedisByKey'">
         <span slot="label"><i class="el-icon-edit"></i> Redis管理</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="120px" >
 

@@ -2,11 +2,11 @@
 <div id="table" class="app-container calendar-list-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
-      <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-refresh">返回</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/picture/add'">添加</el-button>
+      <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-s-promotion">返回分类</el-button>
       <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
-      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
-      <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-s-open">设为封面</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/picture/delete'">删除选中</el-button>
+      <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-video-camera-solid" v-permission="'/picture/setCover'">设为封面</el-button>
     </div>
 
 
@@ -57,7 +57,7 @@
                 </el-button>
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start" style="margin-right: 2px">
+              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/add'">
                 <el-button
                   type="warning"
                   size="mini"
@@ -66,7 +66,7 @@
                 />
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start" style="margin-right: 2px">
+              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/delete'">
                 <el-button
                   type="danger"
                   size="mini"

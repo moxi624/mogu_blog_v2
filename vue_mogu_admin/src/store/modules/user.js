@@ -7,7 +7,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    menu: {}
+    menu: {},
+    buttonMap: {}
   },
 
   mutations: {
@@ -25,6 +26,9 @@ const user = {
     },
     SET_MENU: (state, menu) => {
       state.menu = menu
+    },
+    SET_BUTTON_MAP: (state, buttonMap) => {
+      state.buttonMap = buttonMap
     }
   },
 
@@ -37,7 +41,6 @@ const user = {
         var params = new URLSearchParams()
         params.append('username', username)
         params.append('password', password)
-
         login(params).then(response => {
           const data = response.data
           setToken(data.token)
@@ -55,6 +58,13 @@ const user = {
         getMenu().then(response => {
           const data = response.data
           console.log("获取的菜单", data)
+          // 这里对按钮进行一些处理
+          let buttonList = data.buttonList
+          let map = new Map();
+          for(let a=0; a<buttonList.length; a++) {
+            map.set(buttonList[a].url, buttonList[a])
+          }
+          commit('SET_BUTTON_MAP', map)
           commit('SET_MENU', data)
           resolve(response)
         }).catch(error => {

@@ -37,6 +37,7 @@ public final class SysConf extends BaseSysConf {
 
     public final static String PARENT_LIST = "parentList";
     public final static String SON_LIST = "sonList";
+    public final static String BUTTON_LIST = "buttonList";
 
     public final static String URL = "url";
 

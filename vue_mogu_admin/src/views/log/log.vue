@@ -14,7 +14,7 @@
           end-placeholder="结束日期"
           align="right">
         </el-date-picker>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/log/getLogList'">查找</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%">

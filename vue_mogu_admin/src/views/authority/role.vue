@@ -9,8 +9,8 @@
         v-model="keyword"
         placeholder="请输入角色名称"
       ></el-input>
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加角色</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/role/getList'">查找</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/role/add'">添加角色</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -55,8 +55,8 @@
 
       <el-table-column label="操作" fixed="right" min-width="150">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small" v-permission="'/role/edit'">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/role/delete'">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

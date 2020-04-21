@@ -23,8 +23,8 @@
           ></el-option>
         </el-select>
 
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/comment/getList'">查找</el-button>
+        <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/comment/deleteBatch'">删除选中</el-button>
 	    </div>
 
       <el-table :data="tableData"  style="width: 100%" @selection-change="handleSelectionChange">
@@ -112,7 +112,7 @@
 	    <el-table-column label="操作" fixed="right" min-width="150">
 	      <template slot-scope="scope" >
 <!--          <el-button @click="handleReply(scope.row)" type="success" size="small">回复</el-button>-->
-	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+	        <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/comment/delete'">删除</el-button>
 	      </template>
 	    </el-table-column>
 	  </el-table>

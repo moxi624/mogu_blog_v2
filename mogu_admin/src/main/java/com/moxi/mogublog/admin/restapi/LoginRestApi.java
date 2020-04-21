@@ -170,7 +170,6 @@ public class LoginRestApi {
         List<String> roleUid = new ArrayList<>();
         roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
-
         map.put(SysConf.ROLES, roleList);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
@@ -210,7 +209,10 @@ public class LoginRestApi {
             }
             // 从三级分类中，得到二级分类
             if (item.getMenuType() == EMenuType.BUTTON && StringUtils.isNotEmpty(item.getParentUid())) {
+                // 找出二级菜单
                 secondMenuUidList.add(item.getParentUid());
+                // 找出全部按钮
+                buttonList.add(item);
             }
         });
 
@@ -242,6 +244,7 @@ public class LoginRestApi {
         Collections.sort(list);
         map.put(SysConf.PARENT_LIST, list);
         map.put(SysConf.SON_LIST, childCategoryMenuList);
+        map.put(SysConf.BUTTON_LIST, buttonList);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
 

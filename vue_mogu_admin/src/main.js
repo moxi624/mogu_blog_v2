@@ -16,6 +16,9 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 引入自定义指令
+import './directive'
+
 // 添加粒子特效
 import VueParticles from 'vue-particles'
 

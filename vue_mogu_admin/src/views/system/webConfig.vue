@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <el-tabs type="border-card">
-      <el-tab-pane>
+      <el-tab-pane v-permission="'/webConfig/getWebConfig'">
         <span slot="label">
           <i class="el-icon-date"></i> 网站信息
         </span>
@@ -90,12 +90,12 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">保 存</el-button>
+            <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane>
+      <el-tab-pane v-permission="'/webConfig/getWebConfig'">
         <span slot="label">
           <i class="el-icon-date"></i> 关注我们
         </span>
@@ -143,8 +143,9 @@
           </el-checkbox-group>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm()">保 存</el-button>
+            <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
           </el-form-item>
+
         </el-form>
       </el-tab-pane>
 

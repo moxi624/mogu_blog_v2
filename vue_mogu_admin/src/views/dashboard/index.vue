@@ -91,7 +91,7 @@
         :xl="{span: 6}"
         style="margin-bottom:30px;"
       >
-        <div class="chart-wrapper">
+        <div class="chart-wrapper" v-permission="'/todo/getList'">
           <todo-list></todo-list>
         </div>
       </el-col>

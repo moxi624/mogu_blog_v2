@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 查询和其他操作 -->
-    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+    <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" v-permission="'/system/getMe'">
       <el-tab-pane label="关于我" name="one">
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
@@ -64,7 +64,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm('changeAdminForm')">保 存</el-button>
+            <el-button type="primary" @click="submitForm('changeAdminForm')" v-permission="'/system/edit'">保 存</el-button>
             <!-- <el-button @click="cancel('changeAdminForm')">重 置</el-button>             -->
           </el-form-item>
 
@@ -130,8 +130,8 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm('changePwdForm')">保 存</el-button>
-            <el-button @click="cancel('changePwdForm')">重 置</el-button>
+            <el-button type="primary" @click="submitForm('changePwdForm')" v-permission="'/system/changePwd'">保 存</el-button>
+            <el-button @click="cancel('changePwdForm')" v-permission="'/system/changePwd'">重 置</el-button>
           </el-form-item>
 
         </el-form>

@@ -3,8 +3,8 @@
 	    <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 	      <el-input clearable class="filter-item" style="width: 200px;" v-model="keyword" placeholder="请输入分类名称"></el-input>
-	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
+	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/pictureSort/getList'">查找</el-button>
+	      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/pictureSort/add'">添加</el-button>
 	    </div>
 
     <el-table :data="tableData"  style="width: 100%">
@@ -69,9 +69,9 @@
 	    <el-table-column label="操作" fixed="right" min-width="310">
 	      <template slot-scope="scope" >
           <el-button @click="handleManager(scope.row)" type="success" size="small">图片列表</el-button>
-          <el-button @click="handleStick(scope.row)" type="warning" size="small">置顶</el-button>
-	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-	        <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+          <el-button @click="handleStick(scope.row)" type="warning" size="small" v-permission="'/pictureSort/stick'">置顶</el-button>
+	      	<el-button @click="handleEdit(scope.row)" type="primary" size="small" v-permission="'/pictureSort/edit'">编辑</el-button>
+	        <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/pictureSort/delete'">删除</el-button>
 	      </template>
 	    </el-table-column>
 	  </el-table>

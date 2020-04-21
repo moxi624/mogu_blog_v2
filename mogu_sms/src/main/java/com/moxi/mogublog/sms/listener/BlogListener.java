@@ -40,7 +40,7 @@ public class BlogListener {
 
             String comment = map.get(SysConf.COMMAND);
 
-            String uid = map.get("blogUid");
+            String uid = map.get(SysConf.BLOG_UID);
 
             //从Redis清空对应的数据
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, "");
@@ -49,6 +49,7 @@ public class BlogListener {
             stringRedisTemplate.opsForValue().set(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.FOUR, "");
             stringRedisTemplate.opsForValue().set(SysConf.HOT_BLOG, "");
             stringRedisTemplate.opsForValue().set(SysConf.NEW_BLOG, "");
+
             switch (comment) {
                 case SysConf.DELETE_BATCH: {
 

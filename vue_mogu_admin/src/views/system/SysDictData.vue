@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 查询和其他操作 -->
-    <div class="filter-container" style="margin: 10px 0 10px 0;">
+    <div class="filter-container" style="margin: 10px 0 10px 0;" v-permission="'/sysDictData/getList'">
 
 
       <el-select
@@ -26,9 +26,9 @@
         placeholder="请输入字典标签"
       ></el-input>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加</el-button>
-      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete">删除选中</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/sysDictData/getList'" >查找</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/sysDictData/add'">添加</el-button>
+      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/sysDictData/deleteBatch'">删除选中</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
@@ -121,8 +121,8 @@
 
       <el-table-column label="操作" fixed="right" min-width="240">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="primary" size="small">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+          <el-button @click="handleEdit(scope.row)" type="primary" size="small" v-permission="'/sysDictData/edit'">编辑</el-button>
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/sysDictData/deleteBatch'">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
