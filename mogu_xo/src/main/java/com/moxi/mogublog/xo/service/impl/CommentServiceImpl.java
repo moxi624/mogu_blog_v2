@@ -91,6 +91,9 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
                     userUid.add(item.getUid());
                 });
                 queryWrapper.in(SQLConf.USER_UID, userUid);
+            } else {
+                // 当没有查询到用户时，默认UID
+                queryWrapper.in(SQLConf.USER_UID, SysConf.DEFAULT_UID);
             }
         }
 

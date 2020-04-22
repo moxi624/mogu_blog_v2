@@ -3,7 +3,7 @@
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
 				<el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.content" placeholder="请输入评论名"></el-input>
-        <el-input clearable class="filter-item" style="width: 100px;" v-model="queryParams.userName" placeholder="请输入用户名"></el-input>
+        <el-input clearable class="filter-item" style="width: 150px;" v-model="queryParams.userName" placeholder="请输入用户名"></el-input>
 
         <el-select v-model="queryParams.type" clearable placeholder="评论类型" style="width:110px">
           <el-option
