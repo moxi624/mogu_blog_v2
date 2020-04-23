@@ -2,6 +2,7 @@ package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.global.MessageConf;
+import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.entity.Admin;
@@ -10,10 +11,7 @@ import com.moxi.mogublog.commons.entity.Role;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
-import com.moxi.mogublog.utils.CheckUtils;
-import com.moxi.mogublog.utils.IpUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -71,6 +70,9 @@ public class LoginRestApi {
     private int longExpiresSecond;
 
     @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
@@ -82,6 +84,15 @@ public class LoginRestApi {
 
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
+        }
+
+        String ip = IpUtils.getIpAddr(request);
+        String limitCount = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
+        if(StringUtils.isNotEmpty(limitCount)) {
+            Integer tempLimitCount = Integer.valueOf(limitCount);
+            if(tempLimitCount >= 5) {
+                return ResultUtil.result(SysConf.ERROR, "密码输错次数过多,已被锁定30分钟");
+            }
         }
         Boolean isEmail = CheckUtils.checkEmail(username);
         Boolean isMobile = CheckUtils.checkMobileNumber(username);
@@ -95,14 +106,15 @@ public class LoginRestApi {
         }
         Admin admin = adminService.getOne(queryWrapper);
         if (admin == null) {
-            return ResultUtil.result(SysConf.ERROR, "用户名或密码错误");
+            // 设置错误登录次数
+            return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
         //验证密码
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         boolean isPassword = encoder.matches(password, admin.getPassWord());
         if (!isPassword) {
             //密码错误，返回提示
-            return ResultUtil.result(SysConf.ERROR, MessageConf.LOGIN_ERROR);
+            return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
 
         List<String> roleUids = new ArrayList<>();
@@ -253,6 +265,27 @@ public class LoginRestApi {
     public String logout(@ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
         String destroyToken = null;
         return ResultUtil.result(SysConf.SUCCESS, destroyToken);
+    }
+
+    /**
+     * 设置登录限制，返回剩余次数
+     * 密码错误五次，将会锁定10分钟
+     * @param request
+     */
+    private Integer setLoginCommit(HttpServletRequest request) {
+        String ip = IpUtils.getIpAddr(request);
+        String count = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
+        Integer surplusCount = 5;
+        if(StringUtils.isNotEmpty(count)) {
+            Integer countTemp = Integer.valueOf(count) + 1;
+            surplusCount = surplusCount - countTemp;
+            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, String.valueOf(countTemp), 10, TimeUnit.MINUTES);
+        } else {
+            surplusCount = surplusCount - 1;
+            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, "1", 30, TimeUnit.MINUTES);
+        }
+
+        return surplusCount;
     }
 
 }

@@ -64,6 +64,11 @@ public class BaseRedisConf {
     public final static String AVOID_REPEATABLE_COMMIT = "AVOID_REPEATABLE_COMMIT";
 
     /**
+     * 登录限制
+     */
+    public final static String LOGIN_LIMIT = "LOGIN_LIMIT";
+
+    /**
      * 字典类型
      */
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";

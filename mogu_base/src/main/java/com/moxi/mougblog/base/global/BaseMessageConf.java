@@ -32,7 +32,7 @@ public class BaseMessageConf {
     public static final String BLOG_NO_OPEN_COMMENTS = "本博客未开启评论功能";
 
     public static final String LOGIN_DISABLE = "该账号已被封禁";
-    public static final String LOGIN_ERROR = "登录失败，用户名或密码错误";
+    public static final String LOGIN_ERROR = "用户名或密码错误，错误%d次后，账户将被锁定30分钟";
     public static final String NO_ROLE = "没有分配角色权限";
     public static final String INTERFACE_FREQUENTLY = "接口过于频繁调用";
     public static final String PARAM_INCORRECT = "传入参数有误！";
