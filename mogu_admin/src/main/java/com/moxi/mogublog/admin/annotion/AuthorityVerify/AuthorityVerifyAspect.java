@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.security;
+package com.moxi.mogublog.admin.annotion.AuthorityVerify;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.admin.global.MessageConf;

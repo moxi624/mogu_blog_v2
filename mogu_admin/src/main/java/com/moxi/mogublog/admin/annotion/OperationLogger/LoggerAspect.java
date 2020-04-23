@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.log;
+package com.moxi.mogublog.admin.annotion.OperationLogger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

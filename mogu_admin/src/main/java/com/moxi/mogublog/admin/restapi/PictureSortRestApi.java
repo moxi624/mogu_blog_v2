@@ -1,9 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.commons.entity.PictureSort;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.PictureSortService;
@@ -50,6 +51,7 @@ public class PictureSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pictureSortService.getPageList(pictureSortVO));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @OperationLogger(value = "增加图片分类")
     @ApiOperation(value = "增加图片分类", notes = "增加图片分类", response = String.class)

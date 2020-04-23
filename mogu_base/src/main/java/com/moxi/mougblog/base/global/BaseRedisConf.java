@@ -59,6 +59,11 @@ public class BaseRedisConf {
     public final static String ADMIN_TOKEN = "ADMIN_TOKEN";
 
     /**
+     * 表单重复提交
+     */
+    public final static String AVOID_REPEATABLE_COMMIT = "AVOID_REPEATABLE_COMMIT";
+
+    /**
      * 字典类型
      */
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";

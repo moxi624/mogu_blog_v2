@@ -1,9 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.SysDictTypeService;
 import com.moxi.mogublog.xo.vo.SysDictTypeVO;
@@ -54,6 +55,7 @@ public class SysDictTypeRestApi {
         return ResultUtil.result(SysConf.SUCCESS, sysDictTypeService.getPageList(sysDictTypeVO));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @OperationLogger(value = "增加字典类型")
     @ApiOperation(value = "增加字典类型", notes = "增加字典类型", response = String.class)

@@ -1,9 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.vo.CategoryMenuVO;
@@ -61,6 +62,7 @@ public class CategoryMenuRestApi {
         return ResultUtil.result(SysConf.SUCCESS, categoryMenuService.getButtonAllList(keyword));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @OperationLogger(value = "增加菜单")
     @ApiOperation(value = "增加菜单", notes = "增加菜单", response = String.class)

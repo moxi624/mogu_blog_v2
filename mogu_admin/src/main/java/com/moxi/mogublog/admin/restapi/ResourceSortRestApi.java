@@ -1,9 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
@@ -51,6 +52,7 @@ public class ResourceSortRestApi {
         return ResultUtil.result(SysConf.SUCCESS, resourceSortService.getPageList(resourceSortVO));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @OperationLogger(value = "增加资源分类")
     @ApiOperation(value = "增加资源分类", notes = "增加资源分类", response = String.class)

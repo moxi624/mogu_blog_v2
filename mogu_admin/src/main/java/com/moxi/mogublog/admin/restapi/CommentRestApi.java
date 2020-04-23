@@ -1,9 +1,10 @@
 package com.moxi.mogublog.admin.restapi;
 
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.CommentService;
 import com.moxi.mogublog.xo.vo.CommentVO;
@@ -53,6 +54,7 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, commentService.getPageList(commentVO));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @ApiOperation(value = "增加评论", notes = "增加评论", response = String.class)
     @PostMapping("/add")

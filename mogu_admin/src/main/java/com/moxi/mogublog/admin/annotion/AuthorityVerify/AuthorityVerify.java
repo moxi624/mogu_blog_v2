@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.security;
+package com.moxi.mogublog.admin.annotion.AuthorityVerify;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

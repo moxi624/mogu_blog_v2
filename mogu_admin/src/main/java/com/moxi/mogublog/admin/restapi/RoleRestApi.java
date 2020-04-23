@@ -1,8 +1,9 @@
 package com.moxi.mogublog.admin.restapi;
 
+import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
+import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
+import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.admin.log.OperationLogger;
-import com.moxi.mogublog.admin.security.AuthorityVerify;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.vo.RoleVO;
@@ -50,6 +51,7 @@ public class RoleRestApi {
         return ResultUtil.result(SysConf.SUCCESS, roleService.getPageList(roleVO));
     }
 
+    @AvoidRepeatableCommit
     @AuthorityVerify
     @OperationLogger(value = "新增角色信息")
     @ApiOperation(value = "新增角色信息", notes = "新增角色信息")
