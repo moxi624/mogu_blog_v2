@@ -859,6 +859,7 @@ export default {
           this.$refs.uploadPicture.clearFiles();
         },
         error: (error) => {
+          this.closeLoading()
           console.log('失败了', error)
         }
       })

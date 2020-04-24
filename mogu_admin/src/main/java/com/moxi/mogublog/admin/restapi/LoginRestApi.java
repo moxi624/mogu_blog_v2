@@ -176,7 +176,6 @@ public class LoginRestApi {
             }
         }
 
-
         //加载这些角色所能访问的菜单页面列表
         //1)获取该管理员所有角色
         List<String> roleUid = new ArrayList<>();

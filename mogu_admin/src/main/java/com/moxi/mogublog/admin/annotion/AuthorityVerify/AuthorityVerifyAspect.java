@@ -69,7 +69,7 @@ public class AuthorityVerifyAspect {
         HttpServletRequest request = attribute.getRequest();
 
         //获取请求路径
-        String url = request.getRequestURL().toString();
+        String url = request.getRequestURI();
 
         String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
 
@@ -94,6 +94,7 @@ public class AuthorityVerifyAspect {
             List<String> categoryMenuUids = new ArrayList<>();
 
             String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
+
             for (int a = 0; a < uids.length; a++) {
                 categoryMenuUids.add(uids[a]);
             }
@@ -117,12 +118,14 @@ public class AuthorityVerifyAspect {
         // 判断该角色是否能够访问该接口
         Boolean flag = false;
         for (String item : urlList) {
-            if (url.indexOf(item) != -1) {
+            if (url.equals(item)) {
                 flag = true;
+                log.info("用户拥有操作权限，访问的路径: {}，拥有的权限接口：{}", url, item);
                 break;
             }
         }
         if (!flag) {
+            log.info("用户不具有操作权限，访问的路径: {}", url);
             return ResultUtil.result(ECode.NO_OPERATION_AUTHORITY, MessageConf.RESTAPI_NO_PRIVILEGE);
         }
 

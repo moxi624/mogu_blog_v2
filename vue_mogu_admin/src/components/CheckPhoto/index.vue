@@ -100,7 +100,6 @@ export default {
         if (response.code == "success") {
           var pictureSorts = response.data.records;
           that.pictureSorts = pictureSorts;
-          loadingInstance.close();
           //默认初始化第一个
           if (pictureSorts.length > 0) {
             var pictureSortUid = pictureSorts[0].uid;
@@ -129,6 +128,9 @@ export default {
         } else {
           this.$message({ type: "error", message: response.data });
         }
+        loadingInstance.close();
+      }).catch(function () {
+        loadingInstance.close();
       });
     }
   },

@@ -3,7 +3,6 @@ import store from '@/store'
 export default {
   inserted(el, binding, vnode) {
     const { value } = binding
-
     if(store.getters.buttonMap.size == undefined) {
       // 初始加载的时候，还没有写入到vuex中，因此使用setInterval在下次dom更新时生效
       let intervalID = setInterval(() => {
@@ -25,11 +24,9 @@ export default {
         } catch (e) {
             console.log("vuex中的PathMap暂未初始化")
         }
-
-      },100);
+      },500);
     } else {
       // 得到按钮上的路径
-
       const buttonMap = store.getters.buttonMap
       if (value && value.length > 0) {
         const path = value
