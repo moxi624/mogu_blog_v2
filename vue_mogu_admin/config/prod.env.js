@@ -9,6 +9,7 @@ module.exports = {
   Search_API: '"http://47.115.54.30:8605"',
   SPRING_BOOT_ADMIN: '"http://47.115.54.30:8606/wallboard"',
   SOLR_API: '"http://47.115.54.30:8080/solr"',
+  Zipkin_Admin: '"http://47.115.54.30:9411/zipkin/"',
   ELASTIC_SEARCH: '"http://47.115.54.30:5601"',
   EUREKA_API: '"http://47.115.54.30:8761"',
   RABBIT_MQ_ADMIN: '"http://47.115.54.30:15672"',

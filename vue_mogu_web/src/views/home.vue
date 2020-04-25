@@ -890,7 +890,7 @@
           this.isLogin = false;
           window.location.href = list[0]
           let userInfo = {};
-          this.setCommentList(userInfo)
+          this.setUserInfo(userInfo)
         } else {
           window.location.reload()
         }

@@ -154,11 +154,12 @@
                 currentPage: 1,
                 pageSize: 10,
                 total: 0, //总数量
-
                 toInfo: {},
                 userInfo: {},
                 blogUid: null, //传递过来的博客uid
-                blogData: null,
+                blogData: {
+                  blogSort: {}
+                },
                 sameBlogData: [], //相关文章
                 linkData: [], //友情链接
                 dialogPictureVisible: false,
@@ -242,7 +243,6 @@
         methods: {
             //拿到vuex中的写的两个方法
             ...mapMutations(["setCommentList"]),
-
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();

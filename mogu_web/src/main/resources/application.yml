@@ -137,8 +137,8 @@ spring:
         url: http://localhost:8606
         username: user
         password: password123
-      instance:
-        service-base-url: http://localhost:8603
+        instance:
+          service-base-url: http://localhost:8603
 
   # sleuth 配置
   sleuth:

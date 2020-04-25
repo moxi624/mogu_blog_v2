@@ -77,7 +77,6 @@
           var that = this;
           // 屏幕的高度
           this.pageMinHeight = window.innerHeight - 62
-          console.log('得到的屏幕高度', this.pageMinHeight)
           $(window).scroll(function () {
             var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
             var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
@@ -85,7 +84,6 @@
             //还有30像素的时候,就查询
             if(docHeight == winHeight + winScrollHeight){
               if(that.comments.length >= that.total) {
-                console.log('已经到底了')
                 return;
               }
               let params = {};

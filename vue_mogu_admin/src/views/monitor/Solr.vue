@@ -4,20 +4,34 @@
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-button class= "button" type="success"  @click="handInit" icon="el-icon-refresh" v-permission="'/search/initSolrIndex'">初始化索引</el-button>
     </div>
-    <iframe :src="solrServiceUrl" width="100%" height="750px;"></iframe>
+    <iframe id="myIframe" :src="solrServiceUrl" width="100%" height="750px;"></iframe>
   </div>
 </template>
 
 <script>
   import { initSolrIndex } from "@/api/searchIndex";
+  import {Loading} from "element-ui";
   export default {
     data() {
       return {
         solrServiceUrl:  process.env.SOLR_API
       };
     },
-    beforeCreate() {
-
+    mounted() {
+      let iframe = document.getElementById("myIframe")
+      let uploadLoading = Loading.service({
+        lock: true,
+        text: '正在努力加载中……'
+      })
+      if (iframe.attachEvent) {
+        iframe.attachEvent("onload", function () {
+          uploadLoading.close();
+        });
+      } else {
+        iframe.onload = function () {
+          uploadLoading.close();
+        };
+      }
     },
     created() {
 

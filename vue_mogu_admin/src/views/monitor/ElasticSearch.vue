@@ -4,20 +4,34 @@
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-button class= "button" type="success"  @click="handInit" icon="el-icon-refresh" v-permission="'/search/initElasticIndex'">初始化ES索引</el-button>
     </div>
-    <iframe :src="elasticSearchServiceUrl" width="100%" height="750px;"></iframe>
+    <iframe id="myIframe" :src="elasticSearchServiceUrl" width="100%" height="750px;"></iframe>
   </div>
 </template>
 
 <script>
   import { initElasticIndex } from "@/api/searchIndex";
+  import {Loading} from "element-ui";
   export default {
     data() {
       return {
         elasticSearchServiceUrl:  process.env.ELASTIC_SEARCH
       };
     },
-    beforeCreate() {
-
+    mounted() {
+      let iframe = document.getElementById("myIframe")
+      let uploadLoading = Loading.service({
+        lock: true,
+        text: '正在努力加载中……'
+      })
+      if (iframe.attachEvent) {
+        iframe.attachEvent("onload", function () {
+          uploadLoading.close();
+        });
+      } else {
+        iframe.onload = function () {
+          uploadLoading.close();
+        };
+      }
     },
     created() {
 
