@@ -64,7 +64,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="submitForm('changeAdminForm')" v-permission="'/system/edit'">保 存</el-button>
+            <el-button type="primary" @click="submitForm('changeAdminForm')" v-permission="'/system/editMe'">保 存</el-button>
             <!-- <el-button @click="cancel('changeAdminForm')">重 置</el-button>             -->
           </el-form-item>
 
@@ -109,7 +109,7 @@
         </div>
 
         <div style="margin-top: 5px; margin-left: 10px;" >
-          <el-button type="primary" @click="submitForm('personResume')">保 存</el-button>
+          <el-button type="primary" @click="submitForm('personResume')" v-permission="'/system/editMe'">保 存</el-button>
         </div>
 
       </el-tab-pane>
