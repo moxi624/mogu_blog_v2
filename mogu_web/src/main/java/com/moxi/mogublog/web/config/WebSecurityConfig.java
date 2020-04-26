@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/content/**",
                         "/sort/**",
                         "/classify/**",
+                        "/tag/**",
                         "/user/**",
                         "/oauth/**",
                         "/web/comment/**",

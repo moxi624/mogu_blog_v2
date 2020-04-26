@@ -49,17 +49,23 @@
           </router-link>
         </li>
 
-        <!-- <li>
-          <router-link to="/share">
-            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>
-          </router-link>
-        </li> -->
-
         <li>
-          <router-link to="/time">
-            <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>
+          <router-link to="/tag">
+            <a href="javascript:void(0);" :class="[saveTitle == '/tag' ? 'title' : '']">标签</a>
           </router-link>
         </li>
+
+<!--        <li>-->
+<!--          <router-link to="/share">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
+
+<!--        <li>-->
+<!--          <router-link to="/time">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
         <li>
           <router-link to="/messageBoard">

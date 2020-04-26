@@ -1438,7 +1438,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             String ip = IpUtils.getIpAddr(request);
             //从Redis取出数据，判断该用户24小时内，是否点击过该标签
             String jsonResult = redisUtil.get(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + "#" + tagUid);
-
             if (StringUtils.isEmpty(jsonResult)) {
 
                 //给标签点击数增加
@@ -1449,7 +1448,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 redisUtil.setEx(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + tagUid, clickCount + "",
                         24, TimeUnit.HOURS);
             }
-
         }
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();

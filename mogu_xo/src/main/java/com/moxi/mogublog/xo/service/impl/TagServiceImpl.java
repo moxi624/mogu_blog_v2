@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -54,6 +55,15 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Tag> pageList = tagService.page(page, queryWrapper);
         return pageList;
+    }
+
+    @Override
+    public List<Tag> getList() {
+        QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.SORT);
+        List<Tag> tagList = tagService.list(queryWrapper);
+        return tagList;
     }
 
     @Override

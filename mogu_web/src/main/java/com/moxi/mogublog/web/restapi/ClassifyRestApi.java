@@ -76,7 +76,8 @@ public class ClassifyRestApi {
                                           @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         if (StringUtils.isEmpty(blogSortUid)) {
-            return ResultUtil.result(SysConf.ERROR, "传入BlogUid不能为空");
+            log.info("点击分类,传入BlogSortUid不能为空");
+            return ResultUtil.result(SysConf.ERROR, "传入BlogSortUid不能为空");
         }
         log.info("通过blogSortUid获取文章列表");
         return ResultUtil.result(SysConf.SUCCESS, blogService.getListByBlogSortUid(blogSortUid, currentPage, pageSize));

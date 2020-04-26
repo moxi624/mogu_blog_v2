@@ -25,7 +25,7 @@ public interface BlogSortService extends SuperService<BlogSort> {
     public IPage<BlogSort> getPageList(BlogSortVO blogSortVO);
 
     /**
-     * 获取博客列表
+     * 获取博客分类列表
      * @return
      */
     public List<BlogSort> getList();

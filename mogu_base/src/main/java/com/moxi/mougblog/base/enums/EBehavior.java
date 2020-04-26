@@ -21,7 +21,8 @@ public enum EBehavior {
     PUBLISH_COMMENT("发表评论", "publish_comment"),
     DELETE_COMMENT("删除评论", "delete_comment"),
     REPORT_COMMENT("举报评论", "report_comment"),
-    VISIT_CLASSIFY("点击分类", "visit_classify");
+    VISIT_CLASSIFY("点击博客分类页面", "visit_classify"),
+    VISIT_TAG("点击博客标签页面", "visit_tag");
 
 
     private String content;

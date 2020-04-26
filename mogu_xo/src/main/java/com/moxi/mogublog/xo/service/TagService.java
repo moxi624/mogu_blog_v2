@@ -1,6 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.moxi.mogublog.commons.entity.BlogSort;
 import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.xo.vo.TagVO;
 import com.moxi.mougblog.base.service.SuperService;
@@ -23,6 +24,12 @@ public interface TagService extends SuperService<Tag> {
      * @return
      */
     public IPage<Tag> getPageList(TagVO tagVO);
+
+    /**
+     * 获取全部博客标签列表
+     * @return
+     */
+    public List<Tag> getList();
 
     /**
      * 新增博客标签
