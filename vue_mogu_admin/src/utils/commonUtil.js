@@ -1,4 +1,6 @@
 import { Message } from 'element-ui'
+// import {showdown} from 'showdown'
+// import {TurndownService} from 'turndown'
 
 /** **********************************************************/
 /**
@@ -54,6 +56,47 @@ const FUNCTIONS = {
     document.execCommand('Copy') // 执行浏览器复制命令
     oInput.className = 'oInput'
     oInput.style.display = 'none'
+  },
+  /**
+   * 将Markdown转成Html
+   * @param text
+   */
+  markdownToHtml: text => {
+    let converter = new showdown.Converter();
+    return converter.makeHtml(text);
+  },
+  /**
+   * 将Html转成Markdown
+   * @param text
+   */
+  htmlToMarkdown: text => {
+    var turndownService = new TurndownService()
+    return turndownService.turndown(text)
+  },
+  /**
+   * 将Html转成Markdown文件
+   * @param title：标题
+   * @param text：正文
+   */
+  htmlToMarkdownFile: (title, text) => {
+
+    title = title || "默认标题"
+
+    let turndownService = new TurndownService()
+
+    let markdown = turndownService.turndown(text)
+
+    //创建一个blob对象,file的一种
+    let blob = new Blob([markdown])
+
+    let link = document.createElement('a')
+
+    link.href = window.URL.createObjectURL(blob)
+
+    //配置下载的文件名
+    link.download = title + '.md'
+
+    link.click()
   },
   /**
    * 通用提示信息
