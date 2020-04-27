@@ -28,7 +28,9 @@ module.exports = {
   externals: {
     "CKEDITOR": "window.CKEDITOR",
     'vue': 'Vue',
-    'element-ui': 'ELEMENT'
+    'element-ui': 'ELEMENT',
+    'turndown': 'turndown',
+    'showdown': 'showdown',
   },
   output: {
     path: config.build.assetsRoot,

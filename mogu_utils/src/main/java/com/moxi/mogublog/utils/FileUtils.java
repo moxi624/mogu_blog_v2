@@ -1,5 +1,6 @@
 package com.moxi.mogublog.utils;
 import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
@@ -64,6 +65,18 @@ public class FileUtils {
         Node document = parser.parse(markdown);
         String html = renderer.render(document);
         return html;
+    }
+
+    /**
+     * Html 转 Markdown
+     * @param html
+     * @return
+     */
+    public static String htmlToMarkdown(String html) {
+        MutableDataSet options = new MutableDataSet();
+        String markdown = FlexmarkHtmlConverter.builder(options).build().convert(html);
+        System.out.println(markdown);
+        return markdown;
     }
 
     /**

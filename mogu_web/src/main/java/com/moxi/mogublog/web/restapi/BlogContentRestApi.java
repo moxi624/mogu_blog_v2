@@ -8,6 +8,7 @@ import com.moxi.mogublog.commons.entity.Blog;
 import com.moxi.mogublog.commons.entity.Comment;
 import com.moxi.mogublog.commons.entity.WebVisit;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
+import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -128,6 +129,8 @@ public class BlogContentRestApi {
                         24, TimeUnit.HOURS);
             }
         }
+
+        FileUtils.htmlToMarkdown(blog.getContent());
 
         log.info("返回结果");
         return ResultUtil.result(SysConf.SUCCESS, blog);

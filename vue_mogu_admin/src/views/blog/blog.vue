@@ -81,6 +81,7 @@
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/blog/getList'">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/blog/add'">添加博客</el-button>
       <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on" v-permission="'/blog/uploadLocalBlog'">本地上传</el-button>
+      <el-button class="filter-item" type="warning" @click="handleDownload" icon="el-icon-s-flag"  v-permission="'/blog/downloadBatch'">导出选中</el-button>
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
     </div>
 
@@ -929,6 +930,20 @@ export default {
       }
       xhr.send(form)
     },
+    handleDownload: function() {
+      if(this.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要导出的博客！"
+        });
+        return;
+      }
+
+      let blogList = this.multipleSelection
+      for(let a=0; a<blogList.length; a++) {
+        this.$commonUtil.htmlToMarkdownFile(blogList[a].title, blogList[a].content)
+      }
+    },
     // 内容改变，触发监听
     contentChange: function() {
       var that = this;
@@ -1005,7 +1020,7 @@ export default {
       if(that.multipleSelection.length <= 0 ) {
         this.$message({
           type: "error",
-          message: "请先选中需要删除的内容！"
+          message: "请先选中需要删除的博客！"
         });
         return;
       }
