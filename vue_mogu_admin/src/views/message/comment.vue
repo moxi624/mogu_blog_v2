@@ -42,6 +42,7 @@
           <img
             v-if="scope.row.user"
             :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
             style="width: 100px;height: 100px;"
           >
           <img
@@ -82,13 +83,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="来源博客" width="160" align="center">
-          <template slot-scope="scope">
-            <template>
-              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>
-            </template>
-          </template>
-        </el-table-column>
+<!--        <el-table-column label="来源博客" width="160" align="center">-->
+<!--          <template slot-scope="scope">-->
+<!--            <template>-->
+<!--              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>-->
+<!--            </template>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
 
         <el-table-column label="内容" width="250" align="center">
           <template slot-scope="scope">

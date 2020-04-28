@@ -950,78 +950,81 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         // 需要替换的图片Map
         Map<String, String> matchUrlMap = new HashMap<>();
         for (String blogContent : fileContentList) {
-        List<String> matchList = RegexUtils.match(blogContent, "<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)>");
-        for (String matchStr : matchList) {
-            String [] splitList = matchStr.split("\"");
-            // 取出中间的图片
-            if(splitList.length >= 5) {
-                // alt 和 src的先后顺序
-                // 得到具体的图片路径
-                String pictureUrl = "";
-                if(matchStr.indexOf("alt") > matchStr.indexOf("src")) {
-                    pictureUrl = splitList[1];
-                } else {
-                    pictureUrl = splitList[3];
-                }
+            List<String> matchList = RegexUtils.match(blogContent, "<img\\s+(?:[^>]*)src\\s*=\\s*([^>]+)>");
+            for (String matchStr : matchList) {
+                String[] splitList = matchStr.split("\"");
+                // 取出中间的图片
+                if (splitList.length >= 5) {
+                    // alt 和 src的先后顺序
+                    // 得到具体的图片路径
+                    String pictureUrl = "";
+                    if (matchStr.indexOf("alt") > matchStr.indexOf("src")) {
+                        pictureUrl = splitList[1];
+                    } else {
+                        pictureUrl = splitList[3];
+                    }
 
-                // 判断是网络图片还是本地图片
-                if(!pictureUrl.startsWith(SysConf.HTTP)) {
-                    // 那么就需要遍历全部的map和他匹配
-                    for(Map.Entry<String, String> map : pictureMap.entrySet()){
-                        // 查看Map中的图片是否在需要替换的key中
-                        if(pictureUrl.indexOf(map.getKey()) > -1) {
-                            if(EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
-                                matchUrlMap.put(pictureUrl, systemConfig.getQiNiuPictureBaseUrl() + map.getValue());
-                            } else {
-                                matchUrlMap.put(pictureUrl, systemConfig.getLocalPictureBaseUrl() + map.getValue());
+                    // 判断是网络图片还是本地图片
+                    if (!pictureUrl.startsWith(SysConf.HTTP)) {
+                        // 那么就需要遍历全部的map和他匹配
+                        for (Map.Entry<String, String> map : pictureMap.entrySet()) {
+                            // 查看Map中的图片是否在需要替换的key中
+                            if (pictureUrl.indexOf(map.getKey()) > -1) {
+                                if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                                    matchUrlMap.put(pictureUrl, systemConfig.getQiNiuPictureBaseUrl() + map.getValue());
+                                } else {
+                                    matchUrlMap.put(pictureUrl, systemConfig.getLocalPictureBaseUrl() + map.getValue());
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
             }
         }
 
-            // 获取一个排序最高的博客分类和标签
-            BlogSort blogSort = blogSortService.getTopOne();
-            Tag tag = tagService.getTopTag();
-            // 获取任意博客封面
-            Picture picture = pictureService.getTopOne();
-            if(blogSort == null || tag == null || picture == null) {
-                return ResultUtil.result(SysConf.ERROR, "使用本地上传，请先确保博客分类，博客标签，博客图片中含有数据");
-            }
+        // 获取一个排序最高的博客分类和标签
+        BlogSort blogSort = blogSortService.getTopOne();
+        Tag tag = tagService.getTopTag();
 
-            // 获取当前管理员
-            Admin admin = adminService.getMe();
-
-            // 存储需要上传的博客
-            List<Blog> blogList = new ArrayList<>();
-
-            // 开始进行图片替换操作
-            for (String content : fileContentList) {
-                // 循环替换里面的图片
-                for(Map.Entry<String, String> map : matchUrlMap.entrySet()){
-                    content = content.replace(map.getKey(), map.getValue());
-                }
-                Blog blog = new Blog();
-                blog.setBlogSortUid(blogSort.getUid());
-                blog.setTagUid(tag.getUid());
-                blog.setAdminUid(admin.getUid());
-                blog.setAuthor(admin.getNickName());
-                blog.setArticlesPart(PROJECT_NAME);
-                blog.setLevel(ELevel.NORMAL);
-                blog.setTitle("默认标题");
-                blog.setSummary("默认简介");
-                blog.setContent(content);
-                blog.setFileUid(picture.getFileUid());
-                blog.setIsOriginal(EOriginal.ORIGINAL);
-                blog.setIsPublish(EPublish.NO_PUBLISH);
-                blog.setStartComment(EOpenStatus.OPEN);
-                blogList.add(blog);
-            }
-            // 批量添加博客
-            blogService.saveBatch(blogList);
+        // 获取任意博客封面
+        Picture picture = pictureService.getTopOne();
+        if(blogSort == null || tag == null || picture == null) {
+            return ResultUtil.result(SysConf.ERROR, "使用本地上传，请先确保博客分类，博客标签，博客图片中含有数据");
         }
+
+        // 获取当前管理员
+        Admin admin = adminService.getMe();
+
+        // 存储需要上传的博客
+        List<Blog> blogList = new ArrayList<>();
+
+        // 开始进行图片替换操作
+        Integer count = 1;
+        for (String content : fileContentList) {
+            // 循环替换里面的图片
+            for(Map.Entry<String, String> map : matchUrlMap.entrySet()){
+                content = content.replace(map.getKey(), map.getValue());
+            }
+            Blog blog = new Blog();
+            blog.setBlogSortUid(blogSort.getUid());
+            blog.setTagUid(tag.getUid());
+            blog.setAdminUid(admin.getUid());
+            blog.setAuthor(admin.getNickName());
+            blog.setArticlesPart(PROJECT_NAME);
+            blog.setLevel(ELevel.NORMAL);
+            blog.setTitle("默认标题" + count);
+            blog.setSummary("默认简介"+ count);
+            blog.setContent(content);
+            blog.setFileUid(picture.getFileUid());
+            blog.setIsOriginal(EOriginal.ORIGINAL);
+            blog.setIsPublish(EPublish.NO_PUBLISH);
+            blog.setStartComment(EOpenStatus.OPEN);
+            blogList.add(blog);
+            count ++;
+        }
+        // 批量添加博客
+        blogService.saveBatch(blogList);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }

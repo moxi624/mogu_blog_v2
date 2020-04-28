@@ -186,6 +186,7 @@ public class AuthRestApi {
         if (data.get(SysConf.NICKNAME) != null) {
             user.setNickName(data.get(SysConf.NICKNAME).toString());
         }
+
         if (user.getLoginCount() == null) {
             user.setLoginCount(0);
         } else {
@@ -201,9 +202,18 @@ public class AuthRestApi {
         if (exist) {
             user.updateById();
         } else {
+
             user.setUuid(data.get(SysConf.UUID).toString());
             user.setSource(data.get(SysConf.SOURCE).toString());
-            user.setUserName(PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid()));
+
+            String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
+            user.setUserName(userName);
+
+            // 如果昵称为空，那么直接设置用户名
+            if(StringUtils.isEmpty(user.getNickName())) {
+                user.setNickName(userName);
+            }
+
             // 默认密码
             user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
             user.insert();

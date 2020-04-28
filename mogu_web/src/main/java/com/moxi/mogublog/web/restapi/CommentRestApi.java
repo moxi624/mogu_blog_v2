@@ -390,9 +390,11 @@ public class CommentRestApi {
     public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
         HttpServletRequest request = RequestHolder.getRequest();
+
         if (request.getAttribute(SysConf.USER_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
+
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
@@ -407,6 +409,7 @@ public class CommentRestApi {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_NO_OPEN_COMMENTS);
             }
         }
+
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
 
         User user = userService.getById(userUid);
@@ -513,6 +516,7 @@ public class CommentRestApi {
                 user.setPhotoUrl(webUtil.getPicture(pictureList).get(0));
             }
         }
+
         comment.setUser(user);
 
         return ResultUtil.result(SysConf.SUCCESS, comment);

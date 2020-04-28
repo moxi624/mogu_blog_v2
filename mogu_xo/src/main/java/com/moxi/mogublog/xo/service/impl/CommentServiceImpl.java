@@ -151,28 +151,42 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
-        Map<String, User> userap = new HashMap<>();
+        Map<String, User> userMap = new HashMap<>();
         userCollection.forEach(item -> {
+            // 判断头像是否为空
             if (pictureMap.get(item.getAvatar()) != null) {
                 item.setPhotoUrl(pictureMap.get(item.getAvatar()));
-                userap.put(item.getUid(), item);
             }
+            userMap.put(item.getUid(), item);
         });
 
-        commentList.forEach(item -> {
+//        commentList.forEach(item -> {
+//            ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
+//            item.setSourceName(commentSource.getName());
+//            if (StringUtils.isNotEmpty(item.getUserUid())) {
+//                item.setUser(userMap.get(item.getUserUid()));
+//            }
+//            if (StringUtils.isNotEmpty(item.getToUserUid())) {
+//                item.setToUser(userMap.get(item.getToUserUid()));
+//            }
+//            if (StringUtils.isNotEmpty(item.getBlogUid())) {
+//                item.setBlog(blogMap.get(item.getBlogUid()));
+//            }
+//        });
+
+        for(Comment item: commentList) {
             ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
             item.setSourceName(commentSource.getName());
-
             if (StringUtils.isNotEmpty(item.getUserUid())) {
-                item.setUser(userap.get(item.getUserUid()));
+                item.setUser(userMap.get(item.getUserUid()));
             }
             if (StringUtils.isNotEmpty(item.getToUserUid())) {
-                item.setToUser(userap.get(item.getToUserUid()));
+                item.setToUser(userMap.get(item.getToUserUid()));
             }
             if (StringUtils.isNotEmpty(item.getBlogUid())) {
                 item.setBlog(blogMap.get(item.getBlogUid()));
             }
-        });
+        }
 
         pageList.setRecords(commentList);
         return pageList;
