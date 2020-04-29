@@ -66,7 +66,7 @@
 	   	  </template>
 	    </el-table-column>
 
-	    <el-table-column label="操作" fixed="right" min-width="310">
+	    <el-table-column label="操作" fixed="right" min-width="315">
 	      <template slot-scope="scope" >
           <el-button @click="handleManager(scope.row)" type="success" size="small">图片列表</el-button>
           <el-button @click="handleStick(scope.row)" type="warning" size="small" v-permission="'/pictureSort/stick'">置顶</el-button>
