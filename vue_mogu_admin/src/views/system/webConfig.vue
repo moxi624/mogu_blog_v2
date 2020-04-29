@@ -29,65 +29,90 @@
             </div>
           </el-form-item>
 
-          <el-form-item label="网站名称" prop="oldPwd">
-            <el-input v-model="form.name" style="width: 400px"></el-input>
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="8">
+              <el-form-item label="网站名称" prop="oldPwd">
+                <el-input v-model="form.name" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="标题" prop="newPwd1">
+                <el-input v-model="form.title" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-          <el-form-item label="标题" prop="newPwd1">
-            <el-input v-model="form.title" style="width: 400px"></el-input>
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="8">
+              <el-form-item label="关键字" prop="newPwd2">
+                <el-input v-model="form.keyword" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="描述" prop="newPwd1">
+                <el-input v-model="form.summary" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-          <el-form-item label="关键字" prop="newPwd2">
-            <el-input v-model="form.keyword" style="width: 400px"></el-input>
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="8">
+              <el-form-item label="作者" prop="newPwd2">
+                <el-input v-model="form.author" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="备案号" prop="newPwd2">
+                <el-input v-model="form.recordNum" style="width: 400px"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-          <el-form-item label="描述" prop="newPwd1">
-            <el-input v-model="form.summary" style="width: 400px"></el-input>
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="3">
+              <el-form-item label="阿里支付">
+                <el-upload
+                  class="avatar-uploader"
+                  name="file"
+                  :action="uploadPictureHost"
+                  :file-list="fileList"
+                  :show-file-list="false"
+                  :before-upload="beforeUpload"
+                  :on-success="fileSuccess_ali"
+                  :data="otherData"
+                >
+                  <img v-if="form.aliPayPhoto" :src="BASE_IMAGE_URL + form.aliPayPhoto" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-form-item label="微信支付">
+                <el-upload
+                  class="avatar-uploader"
+                  name="file"
+                  :action="uploadPictureHost"
+                  :file-list="fileList"
+                  :show-file-list="false"
+                  :before-upload="beforeUpload"
+                  :on-success="fileSuccess_weixin"
+                  :data="otherData"
+                >
+                  <img v-if="form.weixinPayPhoto" :src="BASE_IMAGE_URL + form.weixinPayPhoto" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
-          <el-form-item label="作者" prop="newPwd2">
-            <el-input v-model="form.author" style="width: 400px"></el-input>
-          </el-form-item>
 
-          <el-form-item label="备案号" prop="newPwd2">
-            <el-input v-model="form.recordNum" style="width: 400px"></el-input>
-          </el-form-item>
-
-          <el-form-item label="阿里支付">
-            <el-upload
-              class="avatar-uploader"
-              name="file"
-              :action="uploadPictureHost"
-              :file-list="fileList"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-success="fileSuccess_ali"
-              :data="otherData"
-            >
-              <img v-if="form.aliPayPhoto" :src="BASE_IMAGE_URL + form.aliPayPhoto" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-
-          <el-form-item label="微信支付">
-            <el-upload
-              class="avatar-uploader"
-              name="file"
-              :action="uploadPictureHost"
-              :file-list="fileList"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-success="fileSuccess_weixin"
-              :data="otherData"
-            >
-              <img v-if="form.weixinPayPhoto" :src="BASE_IMAGE_URL + form.weixinPayPhoto" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-
-          <el-form-item label="网站评论">
-            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="网站评论">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>

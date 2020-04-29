@@ -67,7 +67,6 @@ public class WebConfigVO extends BaseVO<WebConfigVO> {
      */
     private String startComment;
 
-
     /**
      * github地址
      */

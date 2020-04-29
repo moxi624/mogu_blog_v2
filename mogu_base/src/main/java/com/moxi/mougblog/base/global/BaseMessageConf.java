@@ -56,6 +56,8 @@ public class BaseMessageConf {
     public final static String MUST_BE_OPEN_LOCAL_UPLOAD = "图片显示优先级为本地优先，必须开启图片上传本地";
     public final static String MUST_BE_OPEN_QI_NIU_UPLOAD = "图片显示优先级为七牛云优先，必须开启图片上传七牛云";
 
+    public final static String MUST_BE_SET_EMAIL = "开启邮件通知，必须设置邮箱地址";
+
     public static final String DATA_NO_PRIVILEGE = "该数据无权限访问";
 
     public static final String RESTAPI_NO_PRIVILEGE = "您无权进行该操作";

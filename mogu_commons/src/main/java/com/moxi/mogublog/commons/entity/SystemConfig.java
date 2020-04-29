@@ -101,4 +101,10 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String smtpPort;
 
+    /**
+     * 是否开启邮件通知(0:否， 1:是)
+     * 当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱
+     */
+    private String startEmailNotification;
+
 }

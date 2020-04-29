@@ -54,8 +54,6 @@ public class FileRestApi {
     private FileService fileService;
     @Autowired
     private FileSortService fileSortService;
-    @Value(value = "${data.image.url}")
-    private String imgHost;
 
     //获取上传路径
     @Value(value = "${file.upload.path}")
@@ -66,13 +64,6 @@ public class FileRestApi {
 
     @Autowired
     FeignUtil feignUtil;
-
-    /**
-     * 图片路径前缀
-     */
-    @Value(value = "${data.image.url}")
-    private String imgURL;
-
 
     @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
     @RequestMapping(value = "/hello", method = RequestMethod.GET)

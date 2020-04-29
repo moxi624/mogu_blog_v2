@@ -17,7 +17,6 @@ public class RabbitMqConfig {
     public static final  String MOGU_EMAIL = "mogu.email";
     public static final  String MOGU_SMS = "mogu.sms";
     public static final  String EXCHANGE_DIRECT = "exchange.direct";
-
     public static final  String ROUTING_KEY_BLOG = "mogu.blog";
     public static final  String ROUTING_KEY_EMAIL = "mogu.email";
     public static final  String ROUTING_KEY_SMS = "mogu.sms";

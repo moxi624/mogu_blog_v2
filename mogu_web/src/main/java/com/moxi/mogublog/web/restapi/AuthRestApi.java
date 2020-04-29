@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.commons.entity.Feedback;
-import com.moxi.mogublog.commons.entity.Link;
-import com.moxi.mogublog.commons.entity.SystemConfig;
-import com.moxi.mogublog.commons.entity.User;
+import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.MD5Utils;
@@ -16,15 +13,14 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.xo.service.FeedbackService;
-import com.moxi.mogublog.xo.service.LinkService;
-import com.moxi.mogublog.xo.service.SystemConfigService;
-import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.web.utils.RabbitMqUtil;
+import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.ELinkStatus;
+import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Insert;
@@ -93,16 +89,12 @@ public class AuthRestApi {
     private String PROJECT_NAME_EN;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
-    @Value(value = "${data.web.url}")
-    private String dataWebUrl;
-    @Value(value = "${PROJECT_NAME_EN}")
-    private String projectName;
-    @Value(value = "${data.website.url}")
-    private String dataWebsiteUrl;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private PictureFeignClient pictureFeignClient;
+    @Autowired
+    RabbitMqUtil rabbitMqUtil;
 
     @ApiOperation(value = "获取认证", notes = "获取认证")
     @RequestMapping("/render")
@@ -367,7 +359,7 @@ public class AuthRestApi {
             user.setEmail(userVO.getEmail());
 
             // 使用RabbitMQ发送邮件
-            sendEmail(user, token);
+            rabbitMqUtil.sendRegisterEmail(user, token);
 
             // 修改成功后，更新Redis中的用户信息
             stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
@@ -391,6 +383,21 @@ public class AuthRestApi {
         // 判断该用户是否被禁言，被禁言的用户，也无法进行友链申请操作
         if (user != null && user.getCommentStatus() == SysConf.ZERO) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_REPLY);
+        }
+
+        // 判断是否开启邮件通知
+        SystemConfig systemConfig = systemConfigService.getConfig();
+        if(systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
+            if(StringUtils.isNotEmpty(systemConfig.getEmail())) {
+                log.info("发送友链申请邮件通知");
+                String feedback = "收到新的友链申请: " + "<br />"
+                        + "名称：" + linkVO.getTitle() + "<br />"
+                        + "简介：" + linkVO.getSummary() + "<br />"
+                        + "地址：" + linkVO.getUrl();
+                rabbitMqUtil.sendSimpleEmail( systemConfig.getEmail(), feedback);
+            } else {
+                log.error("网站没有配置通知接收的邮箱地址！");
+            }
         }
 
         QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
@@ -463,16 +470,34 @@ public class AuthRestApi {
         if (request.getAttribute(SysConf.USER_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
+
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
         User user = userService.getById(userUid);
+
         // 判断该用户是否被禁言，被禁言的用户，也无法进行反馈操作
         if (user != null && user.getCommentStatus() == SysConf.ZERO) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_FEEDBACK);
         }
+
+        // 判断是否开启邮件通知
+        SystemConfig systemConfig = systemConfigService.getConfig();
+        if(systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
+            if(StringUtils.isNotEmpty(systemConfig.getEmail())) {
+                log.info("发送反馈邮件通知");
+                String feedback = "网站收到新的反馈: " + "<br />"
+                        + "标题：" + feedbackVO.getTitle() + "<br />" + "<br />"
+                        + "内容" + feedbackVO.getContent();
+                rabbitMqUtil.sendSimpleEmail( systemConfig.getEmail(), feedback);
+            } else {
+                log.error("网站没有配置通知接收的邮箱地址！");
+            }
+        }
+
         Feedback feedback = new Feedback();
         feedback.setUserUid(userUid);
         feedback.setTitle(feedbackVO.getTitle());
         feedback.setContent(feedbackVO.getContent());
+
         // 设置反馈已开启
         feedback.setFeedbackStatus(0);
         feedback.setReply(feedbackVO.getReply());
@@ -492,60 +517,6 @@ public class AuthRestApi {
         User user = JsonUtils.jsonToPojo(userInfo, User.class);
         user.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
-    }
-
-    /**
-     * 发送邮件
-     */
-    private void sendEmail(User user, String token) {
-
-        String text =
-                "<html>\r\n" +
-                        " <head>\r\n" +
-                        "  <title> mogublog </title>\r\n" +
-                        " </head>\r\n" +
-                        " <body>\r\n" +
-                        "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
-                        "  <div id=\"qm_con_body\"><div id=\"mailContentContainer\" class=\"qmbox qm_con_body_content qqmail_webmail_only\" style=\"\">\r\n" +
-                        "<style>\r\n" +
-                        "  .qmbox .email-body{color:#40485B;font-size:14px;font-family:-apple-system, \"Helvetica Neue\", Helvetica, \"Nimbus Sans L\", \"Segoe UI\", Arial, \"Liberation Sans\", \"PingFang SC\", \"Microsoft YaHei\", \"Hiragino Sans GB\", \"Wenquanyi Micro Hei\", \"WenQuanYi Zen Hei\", \"ST Heiti\", SimHei, \"WenQuanYi Zen Hei Sharp\", sans-serif;background:#f8f8f8;}.qmbox .pull-right{float:right;}.qmbox a{color:#FE7300;text-decoration:underline;}.qmbox a:hover{color:#fe9d4c;}.qmbox a:active{color:#b15000;}.qmbox .logo{text-align:center;margin-bottom:20px;}.qmbox .panel{background:#fff;border:1px solid #E3E9ED;margin-bottom:10px;}.qmbox .panel-header{font-size:18px;line-height:30px;padding:10px 20px;background:#fcfcfc;border-bottom:1px solid #E3E9ED;}.qmbox .panel-body{padding:20px;}.qmbox .container{width:100%;max-width:600px;padding:20px;margin:0 auto;}.qmbox .text-center{text-align:center;}.qmbox .thumbnail{padding:4px;max-width:100%;border:1px solid #E3E9ED;}.qmbox .btn-primary{color:#fff;font-size:16px;padding:8px 14px;line-height:20px;border-radius:2px;display:inline-block;background:#FE7300;text-decoration:none;}.qmbox .btn-primary:hover,.qmbox .btn-primary:active{color:#fff;}.qmbox .footer{color:#9B9B9B;font-size:12px;margin-top:40px;}.qmbox .footer a{color:#9B9B9B;}.qmbox .footer a:hover{color:#fe9d4c;}.qmbox .footer a:active{color:#b15000;}.qmbox .email-body#mail_to_teacher{line-height:26px;color:#40485B;font-size:16px;padding:0px;}.qmbox .email-body#mail_to_teacher .container,.qmbox .email-body#mail_to_teacher .panel-body{padding:0px;}.qmbox .email-body#mail_to_teacher .container{padding-top:20px;}.qmbox .email-body#mail_to_teacher .textarea{padding:32px;}.qmbox .email-body#mail_to_teacher .say-hi{font-weight:500;}.qmbox .email-body#mail_to_teacher .paragraph{margin-top:24px;}.qmbox .email-body#mail_to_teacher .paragraph .pro-name{color:#000000;}.qmbox .email-body#mail_to_teacher .paragraph.link{margin-top:32px;text-align:center;}.qmbox .email-body#mail_to_teacher .paragraph.link .button{background:#4A90E2;border-radius:2px;color:#FFFFFF;text-decoration:none;padding:11px 17px;line-height:14px;display:inline-block;}.qmbox .email-body#mail_to_teacher ul.pro-desc{list-style-type:none;margin:0px;padding:0px;padding-left:16px;}.qmbox .email-body#mail_to_teacher ul.pro-desc li{position:relative;}.qmbox .email-body#mail_to_teacher ul.pro-desc li::before{content:'';width:3px;height:3px;border-radius:50%;background:red;position:absolute;left:-15px;top:11px;background:#40485B;}.qmbox .email-body#mail_to_teacher .blackboard-area{height:600px;padding:40px;background-image:url();color:#FFFFFF;}.qmbox .email-body#mail_to_teacher .blackboard-area .big-title{font-size:32px;line-height:45px;text-align:center;}.qmbox .email-body#mail_to_teacher .blackboard-area .desc{margin-top:8px;}.qmbox .email-body#mail_to_teacher .blackboard-area .desc p{margin:0px;text-align:center;line-height:28px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card:nth-child(odd){float:left;margin-top:45px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card:nth-child(even){float:right;margin-top:45px;}.qmbox .email-body#mail_to_teacher .blackboard-area .card .title{font-size:18px;text-align:center;margin-bottom:10px;}\r\n" +
-                        "</style>\r\n" +
-                        "<meta>\r\n" +
-                        "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "<div class=\"container\">\r\n" +
-                        "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
-                        "</div>\r\n" +
-                        "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "蘑菇博客邮箱绑定\r\n" +
-                        "\r\n" +
-                        "</div>\r\n" +
-                        "<div class=\"panel-body\">\r\n" +
-                        "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您给蘑菇博客账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
-                        "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/" + token + "/" + user.getValidCode() + "\">点击这里</a>" + "</p>\r\n" +
-                        "\r\n" +
-                        "</div>\r\n" +
-                        "</div>\r\n" +
-                        "<div class=\"footer\">\r\n" +
-                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
-                        "<div class=\"pull-right\"></div>\r\n" +
-                        "</div>\r\n" +
-                        "</div>\r\n" +
-                        "</div>\r\n" +
-                        "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
-                        " </body>\r\n" +
-                        "</html>";
-
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("receiver", user.getEmail());
-        map.put("text", text);
-
-        //发送到RabbitMq
-        rabbitTemplate.convertAndSend("exchange.direct", "mogu.email", map);
     }
 
     /**

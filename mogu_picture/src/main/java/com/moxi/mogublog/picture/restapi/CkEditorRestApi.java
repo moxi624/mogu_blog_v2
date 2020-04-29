@@ -44,12 +44,6 @@ public class CkEditorRestApi {
     private String basePath;
 
     /**
-     * 图片路径前缀
-     */
-    @Value(value = "${data.image.url}")
-    private String imgURL;
-
-    /**
      * 图像存放路径
      * 图像存放路径
      */

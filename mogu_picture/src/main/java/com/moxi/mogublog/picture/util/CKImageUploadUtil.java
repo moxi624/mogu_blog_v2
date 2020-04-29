@@ -21,12 +21,9 @@ import java.util.UUID;
  */
 public class CKImageUploadUtil {
 
-    @Value(value = "${file.upload.path}") //获取基本路径
+    //获取基本路径
+    @Value(value = "${file.upload.path}")
     private static String basePath;
-
-    @Value(value = "${data.image.url}")
-    private static String imgURL;
-
 
     // 图片类型
     private static List<String> fileTypes = new ArrayList<>();
@@ -117,6 +114,7 @@ public class CKImageUploadUtil {
         String fileName = upload(request, DirectoryName);
         // 结合ckeditor功能
         // imageContextPath为图片在服务器地址，如upload/123.jpg,非绝对路径
+        String imgURL = "http://localhost:8600/";
         String imageContextPath = imgURL + "/" + DirectoryName + "/" + fileName;
         response.setContentType("text/html;charset=UTF-8");
         String callback = request.getParameter("CKEditorFuncNum");

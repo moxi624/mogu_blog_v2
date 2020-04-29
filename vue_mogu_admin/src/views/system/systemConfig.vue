@@ -86,6 +86,11 @@
             <el-input  v-model="form.smtpPort" style="width: 400px"></el-input>
           </el-form-item>
 
+          <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
+          <el-form-item label="邮件通知">
+            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
@@ -195,6 +200,7 @@ export default {
       },
       areaDictList: [], //存储区域字典
       yesNoDictList: [], //是否字典
+      openDictList: [], // 开启关闭字典
       picturePriorityDictList: [], //图片显示优先级字典
       loadingInstance: null, // loading对象
       rules: {
@@ -230,18 +236,15 @@ export default {
      */
     getDictList: function () {
 
-      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region']
+      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
           var dictMap = response.data;
-
           this.areaDictList = dictMap.sys_storage_region.list
-
           this.yesNoDictList = dictMap.sys_yes_no.list
-
+          this.openDictList = dictMap.sys_normal_disable.list
           this.picturePriorityDictList = dictMap.sys_picture_priority.list
-
           this.loadingInstance.close();
         } else {
           this.loadingInstance.close();

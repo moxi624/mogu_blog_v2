@@ -2,14 +2,9 @@
 server:
   port: 8602
 
-#Data image url
-data:
-  image:
-    url: http://localhost:8600/
 file:
   upload:
     path: D:/mogu_blog/data/
-
 
 #spring
 spring:

@@ -7,7 +7,6 @@ import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.UserService;
-import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
@@ -38,9 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 @Slf4j
 public class UserRestApi {
-
-    @Autowired
-    WebUtil webUtil;
 
     @Autowired
     UserService userService;

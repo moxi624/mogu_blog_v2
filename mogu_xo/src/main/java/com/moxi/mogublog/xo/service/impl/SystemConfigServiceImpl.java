@@ -84,6 +84,11 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             return ResultUtil.result(SysConf.ERROR, MessageConf.MUST_BE_OPEN_QI_NIU_UPLOAD);
         }
 
+        // 开启Email邮件通知时，必须保证Email字段不为空
+        if (EOpenStatus.OPEN.equals(systemConfigVO.getStartEmailNotification()) && StringUtils.isEmpty(systemConfigVO.getEmail())) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.MUST_BE_SET_EMAIL);
+        }
+
         if (StringUtils.isEmpty(systemConfigVO.getUid())) {
 
             SystemConfig systemConfig = new SystemConfig();
@@ -105,6 +110,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
+            systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
             systemConfig.insert();
         } else {
 
@@ -126,7 +132,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
-
+            systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
             systemConfig.setUpdateTime(new Date());
             systemConfig.updateById();
 

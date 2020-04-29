@@ -18,9 +18,7 @@ data:
   # mogu_web网址，用于第三方登录回调
   web:
     url: http://127.0.0.1:8603
-  # 静态资源映射，通过nginx
-  image:
-    url: http://localhost:8600/
+
 file:
   upload:
     path: D:/mogu_blog/data/
