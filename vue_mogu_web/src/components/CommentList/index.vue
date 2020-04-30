@@ -15,9 +15,8 @@
             <span class="timeAgo" v-else>刚刚</span>
           </div>
 
-          <div class="rightCenter">
-            {{item.content}}
-          </div>
+          <div class="rightCenter" v-html="$xss(item.content, options)"></div>
+<!--          <div class="rightCenter" v-html="item.content"></div>-->
 
           <div class="rightBottom">
             <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
@@ -50,6 +49,13 @@
     props: ['comments', 'userInfos', 'commentInfo'],
     data() {
       return {
+        // xss白名单配置
+        options : {
+          whiteList: {
+            a: ['href', 'title', 'target'],
+            span: ['class']
+          }
+        },
         PICTURE_HOST: process.env.PICTURE_HOST,
         taggleStatue: true,
         submitting: false,
@@ -303,7 +309,6 @@
   };
 </script>
 
-
 <style scoped>
   .commentStyle {
     display: block;
@@ -338,6 +343,7 @@
   }
   .commentList .rightTop {
     height: 30px;
+    margin-top: 2px;
   }
   .commentList .rightTop .userName {
     color: #303133;
@@ -365,5 +371,4 @@
   .commentList .rightBottom .b1 {
     margin-left: 10px;
   }
-
 </style>

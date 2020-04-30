@@ -418,8 +418,8 @@ public class CommentRestApi {
         User user = userService.getById(userUid);
 
         // 判断字数是否超过限制
-        if (commentVO.getContent().length() > SysConf.TWO_TWO_FIVE) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_225);
+        if (commentVO.getContent().length() > SysConf.ONE_ZERO_TWO_FOUR) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_1024);
         }
 
         // 判断该用户是否被禁言

@@ -58,7 +58,7 @@
 
       <el-table-column label="内容" width="200" align="center">
 	      <template slot-scope="scope">
-	        <span>{{ scope.row.content }}</span>
+          <span v-html="$xss(scope.row.content, options)"></span>
 	      </template>
 	    </el-table-column>
 
@@ -102,6 +102,13 @@ import { getWebVisitList } from "@/api/webVisit";
 export default {
   data() {
     return {
+      // xss白名单配置
+      options : {
+        whiteList: {
+          a: ['href', 'title', 'target', 'style'],
+          span: ['class', 'style']
+        }
+      },
       tableData: [],
       keyword: "",
       currentPage: 1,
@@ -176,3 +183,17 @@ export default {
   }
 };
 </script>
+<style>
+  @import "../../assets/css/emoji.css";
+  .emoji-item-common {
+    background: url("../../assets/img/emoji_sprite.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+    cursor: pointer;
+  }
+  .emoji-size-small {
+    zoom: 0.3;
+    margin: 5px;
+  }
+</style>

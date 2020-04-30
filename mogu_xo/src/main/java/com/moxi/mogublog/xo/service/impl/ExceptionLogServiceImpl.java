@@ -54,7 +54,7 @@ public class ExceptionLogServiceImpl extends SuperServiceImpl<ExceptionLogMapper
         page.setSize(exceptionLogVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        queryWrapper.select(ExceptionLog.class, i -> !i.getProperty().equals(SQLConf.EXCEPTION_JSON));
+//        queryWrapper.select(ExceptionLog.class, i -> !i.getProperty().equals(SQLConf.EXCEPTION_JSON));
         IPage<ExceptionLog> pageList = exceptionLogService.page(page, queryWrapper);
         return pageList;
     }

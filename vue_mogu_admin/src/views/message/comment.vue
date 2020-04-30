@@ -93,14 +93,15 @@
 
         <el-table-column label="内容" width="250" align="center">
           <template slot-scope="scope">
-            <el-popover
-              v-if="scope.row.content"
-              placement="top-start"
-              width="400"
-              trigger="hover"
-              :content="scope.row.content">
-              <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>
-            </el-popover>
+<!--            <el-popover-->
+<!--              v-if="scope.row.content"-->
+<!--              placement="top-start"-->
+<!--              width="400"-->
+<!--              trigger="hover"-->
+<!--              :content="scope.row.content">-->
+<!--              <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>-->
+<!--            </el-popover>-->
+            <span v-html="$xss(scope.row.content, options)"></span>
           </template>
         </el-table-column>
 
@@ -137,6 +138,13 @@ import {getListByDictTypeList} from "@/api/sysDictData"
 export default {
   data() {
     return {
+      // xss白名单配置
+      options : {
+        whiteList: {
+          a: ['href', 'title', 'target', 'style'],
+          span: ['class', 'style']
+        }
+      },
       queryParams: {
         content: null, //评论名
         userName: null, //用户名
@@ -290,3 +298,18 @@ export default {
   }
 };
 </script>
+<style>
+  @import "../../assets/css/emoji.css";
+  .emoji-item-common {
+    background: url("../../assets/img/emoji_sprite.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+    cursor: pointer;
+  }
+  .emoji-size-small {
+    zoom: 0.3;
+    margin: 5px;
+  }
+</style>
+

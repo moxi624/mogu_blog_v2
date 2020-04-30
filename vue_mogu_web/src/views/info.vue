@@ -342,6 +342,26 @@
 </script>
 
 <style>
+  .emoji-panel-wrap {
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    width: 465px;
+    height: 180px;
+    position: absolute;
+    z-index: 999;
+    left: 35px;
+    top: 10px;
+  }
+  .emoji-size-small {
+    zoom: 0.3;
+    margin: 5px;
+  }
+  .emoji-size-large {
+    zoom: 0.5; // emojipanel表情大小
+    margin: 5px;
+  }
   .iconfont {
     font-size: 14px;
     margin-right: 3px;

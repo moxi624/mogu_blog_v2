@@ -6,13 +6,19 @@
     </span>
 
       <span class="right">
-      <textarea class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @input="vaildCount"></textarea>
+      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @input="vaildCount"></textarea>
     </span>
     </div>
     <div class="bottom">
       <el-button class="submit p2" type="primary"  @click="handleSubmit">发送评论</el-button>
       <el-button class="cancel p2" type="info" @click="handleCancle">取消评论</el-button>
+      <div class="emoji-panel-btn p2" @click="showEmojiPanel">
+        <img src="../../assets/img/face_logo.png" />
+      </div>
       <span class="allow p2">还能输入{{count}}个字符</span>
+
+      <emoji-panel @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
+
     </div>
   </div>
 
@@ -21,6 +27,7 @@
 <script>
   import {dateFormat} from '../../utils/webUtils'
   import {mapGetters} from 'vuex';
+  import EmojiPanel from "@/components/EmojiPanel/EmojiPanel.vue";
   export default {
     name: 'CommentBox',
     props: {
@@ -40,6 +47,9 @@
         default: true
       }
     },
+    components: {
+      EmojiPanel
+    },
     data() {
       return {
         PICTURE_HOST: process.env.PICTURE_HOST,
@@ -47,7 +57,8 @@
         submitting: false,
         value: '',
         user: {},
-        count: 255,
+        count: 1024,
+        isShowEmojiPanel: false, // 是否显示表情面板
       }
     },
     computed: {
@@ -55,7 +66,7 @@
     },
     methods: {
       vaildCount: function() {
-        var count = 255 - this.value.length;
+        var count = 1024 - this.value.length;
         if(count <= 0) {
           this.count = 0
         } else {
@@ -92,7 +103,9 @@
 
         // 评论来源： MESSAGE_BOARD，ABOUT，BLOG_INFO 等 代表来自某些页面的评论
         let source = "";
-        let content = this.value;
+        // 替换表情
+        console.log("替换后", this.value.replace(/:.*?:/g, this.emoji))
+        let content = this.value.replace(/:.*?:/g, this.emoji);
         if(this.toInfo) {
           toUserUid = this.toInfo.uid;
           toCommentUid = this.toInfo.commentUid;
@@ -112,22 +125,39 @@
           reply: [],
         }
         this.value = '';
-        this.count = 255;
+        this.count = 1024;
         this.comments.createTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
-        console.log('返回的内容', this.comments)
+        this.isShowEmojiPanel = false
         this.$emit("submit-box", this.comments)
+      },
+      emoji(word) {
+        // 生成html
+        const type = word.substring(1, word.length - 1);
+        return `<span class="emoji-item-common emoji-${type} emoji-size-small"></span>`;
       },
       handleCancle() {
         this.value = '';
-        this.count = 255;
-        this.$emit("cancel-box", this.toInfo.commentUid)
+        this.count = 1024;
+        this.isShowEmojiPanel = false
+        if(this.toInfo) {
+          this.$emit("cancel-box", this.toInfo.commentUid)
+        }
+      },
+      showEmojiPanel() {
+        this.isShowEmojiPanel = !this.isShowEmojiPanel;
+      },
+      appendEmoji(text) {
+        const el = document.getElementById("textpanel");
+        console.log()
+        this.value = el.value + ":" + text + ":";
       }
     },
   };
 </script>
 
 
-<style scoped>
+<style >
+  @import "../../assets/css/emoji.css";
   .commentBox {
     width: 100%;
     height: 100px;
@@ -162,6 +192,7 @@
     height: 100%;
   }
   .bottom {
+    position: relative;
     width: 98%;
     height: 60px;
     line-height: 40px;
@@ -172,5 +203,27 @@
     margin-top: 5px;
     margin-right: 10px;
   }
-
+  .emoji-panel-btn img{
+    height: 35px;
+    width: 35px;
+  }
+  .emoji-panel-btn:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .emoji-item-common {
+    background: url("../../assets/img/emoji_sprite.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+     cursor: pointer;
+   }
+  .emoji-size-small {
+    // 表情大小
+    zoom: 0.3;
+  }
+  .emoji-size-large {
+    zoom: 0.5; // emojipanel表情大小
+    margin: 4px;
+  }
 </style>

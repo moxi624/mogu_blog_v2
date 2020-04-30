@@ -35,7 +35,7 @@
 
       <el-table-column label="反馈人" width="150" align="center">
         <template slot-scope="scope">
-          <el-tag style="cursor: pointer" @click.native="goUserInfo(scope.row.user)" type="primary">{{ scope.row.user.nickName }}</el-tag>
+          <el-tag style="cursor: pointer" v-if="scope.row.user" @click.native="goUserInfo(scope.row.user)" type="primary">{{ scope.row.user.nickName }}</el-tag>
         </template>
       </el-table-column>
 

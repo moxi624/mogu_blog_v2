@@ -142,6 +142,8 @@ public class BaseSysConf {
 
     public static final int TWO_TWO_FIVE = 225;
 
+    public static final int ONE_ZERO_TWO_FOUR = 1024;
+
     // SystemConfig相关
     public final static String UPLOAD_QI_NIU = "uploadQiNiu";
     public final static String UPLOAD_LOCAL = "uploadLocal";

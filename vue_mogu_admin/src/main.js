@@ -24,6 +24,12 @@ import VueParticles from 'vue-particles'
 
 // Vue.use(ElementUI, { locale })
 
+import xss from 'xss'
+// 定义全局XSS解决方法
+Object.defineProperty(Vue.prototype, '$xss', {
+  value: xss
+})
+
 Vue.use(VueParticles)
 Vue.use(prototype)
 Vue.config.productionTip = false

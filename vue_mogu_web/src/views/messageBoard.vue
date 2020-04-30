@@ -20,17 +20,6 @@
         <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
         <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
       </div>
-
-      <!--分页-->
-<!--      <div class="block" v-if="comments.length !=0" >-->
-<!--        <el-pagination-->
-<!--          @current-change="handleCurrentChange"-->
-<!--          :current-page.sync="currentPage"-->
-<!--          :page-size="pageSize"-->
-<!--          layout="total, prev, pager, next, jumper"-->
-<!--          :total="total"-->
-<!--        ></el-pagination>-->
-<!--      </div>-->
     </div>
   </div>
 </template>
@@ -152,6 +141,26 @@
     };
 </script>
 <style>
+  .emoji-panel-wrap {
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    width: 650px;
+    height: 135px;
+    position: absolute;
+    z-index: 999;
+    left: 50px;
+    top: 10px;
+  }
+  .emoji-size-small {
+    zoom: 0.3;
+    margin: 5px;
+  }
+  .emoji-size-large {
+    zoom: 0.5; // emojipanel表情大小
+    margin: 5px;
+  }
   .message_infos {
     width: 100%;
     min-height: 500px;

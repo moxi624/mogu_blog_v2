@@ -158,6 +158,7 @@
 |      Tui-editor       |      Markdown编辑器       |              https://github.com/nhn/tui.editor               |
 |      vue-cropper      |       图片裁剪组件        |           https://github.com/xyxiao001/vue-cropper           |
 | vue-image-crop-upload |    vue图片剪裁上传组件    |      https://github.com/dai-siki/vue-image-crop-upload       |
+|   vue-emoji-comment   |   Vue Emoji表情评论组件   |       https://github.com/pppercyWang/vue-emoji-comment       |
 
 ## 项目搭建
 
@@ -239,6 +240,7 @@
 - 感谢**JetBrains**提供的免费开源License： https://www.jetbrains.com/?from=mogu_blog_v2 
 - 感谢**yadong.zhang**提供的第三方登录开源库：https://gitee.com/yadong.zhang/JustAuth.git
 - 感谢 **bihell** 的 Dice 项目：https://github.com/bihell/Dice
+- 感谢 **pppercyWang** 的提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
 - ......
 
 ## 关注&交流
@@ -258,6 +260,7 @@
 - [x] 将图片存储在七牛云中
 - [x] 写一个评论模块，用于替换搜狐畅言
 - [x] 按钮级别的细粒度权限控制
+- [ ] 增加评论表情
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块
