@@ -102,6 +102,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         PictureSort pictureSort = new PictureSort();
         pictureSort.setName(pictureSortVO.getName());
         pictureSort.setParentUid(pictureSortVO.getParentUid());
+        pictureSort.setSort(pictureSortVO.getSort());
         pictureSort.setFileUid(pictureSortVO.getFileUid());
         pictureSort.setStatus(EStatus.ENABLE);
         pictureSort.setIsShow(pictureSortVO.getIsShow());
@@ -115,6 +116,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         PictureSort pictureSort = pictureSortService.getById(pictureSortVO.getUid());
         pictureSort.setName(pictureSortVO.getName());
         pictureSort.setParentUid(pictureSortVO.getParentUid());
+        pictureSort.setSort(pictureSortVO.getSort());
         pictureSort.setFileUid(pictureSortVO.getFileUid());
         pictureSort.setIsShow(pictureSortVO.getIsShow());
         pictureSort.setUpdateTime(new Date());
