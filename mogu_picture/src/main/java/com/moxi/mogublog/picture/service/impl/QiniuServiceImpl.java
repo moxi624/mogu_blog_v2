@@ -139,12 +139,12 @@ public class QiniuServiceImpl implements QiniuService {
         String qiNiuBucket = resultMap.get(SysConf.QI_NIU_BUCKET);
         String qiNiuArea = resultMap.get(SysConf.QI_NIU_AREA);
 
-        if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+        if(EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                 || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
 
-        if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+        if(EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
             return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
         }
 
@@ -157,7 +157,6 @@ public class QiniuServiceImpl implements QiniuService {
         qiNiuConfig.put(SysConf.PICTURE_PRIORITY, resultMap.get(SysConf.PICTURE_PRIORITY));
         qiNiuConfig.put(SysConf.LOCAL_PICTURE_BASE_URL, resultMap.get(SysConf.LOCAL_PICTURE_BASE_URL));
         qiNiuConfig.put(SysConf.QI_NIU_PICTURE_BASE_URL, resultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL));
-
         String userUid = "uid00000000000000000000000000000000";
         String adminUid = "uid00000000000000000000000000000000";
         String projectName = "blog";
@@ -165,6 +164,28 @@ public class QiniuServiceImpl implements QiniuService {
 
         // 需要上传的URL
         String itemUrl = params[1];
+
+        // 判断需要上传的域名和本机图片域名是否一致
+        if(EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+            // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
+            if(StringUtils.isNotEmpty(qiNiuPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(qiNiuPictureBaseUrl) > -1) {
+                Map<String, Object> result = new HashMap<>();
+                result.put(SysConf.UPLOADED, 1);
+                result.put(SysConf.FILE_NAME, itemUrl);
+                result.put(SysConf.URL, itemUrl);
+                return result;
+            }
+        } else {
+            // 表示优先显示本地服务器
+            // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
+            if(StringUtils.isNotEmpty(localPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(localPictureBaseUrl) > -1) {
+                Map<String, Object> result = new HashMap<>();
+                result.put(SysConf.UPLOADED, 1);
+                result.put(SysConf.FILE_NAME, itemUrl);
+                result.put(SysConf.URL, itemUrl);
+                return result;
+            }
+        }
 
         //projectName现在默认base
         if (StringUtils.isEmpty(projectName)) {
@@ -454,7 +475,6 @@ public class QiniuServiceImpl implements QiniuService {
                             String localPictureBaseUrl = qiNiuConfig.get(SysConf.LOCAL_PICTURE_BASE_URL);
 
                             // 设置图片服务根域名
-
                             String url = localPictureBaseUrl + picture.get(SysConf.PIC_URL).toString();
 
                             map.put(SysConf.URL, url);
@@ -467,7 +487,6 @@ public class QiniuServiceImpl implements QiniuService {
                     map.put(SysConf.ERROR, errorMap);
                     return map;
                 }
-
             }
         }
         return null;

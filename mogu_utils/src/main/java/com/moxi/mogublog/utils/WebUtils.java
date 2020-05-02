@@ -1,11 +1,14 @@
 package com.moxi.mogublog.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * web有关的工具类
@@ -13,7 +16,17 @@ import java.util.Map;
  * @author xzx19950624@qq.com
  * @date 2017年9月24日23:27:03
  */
+@Slf4j
 public class WebUtils {
+
+    // 一级域名
+    private static final String RE_TOP = "(\\w*\\.?){1}\\.(com.cn|net.cn|gov.cn|org\\.nz|org.cn|com|net|org|gov|cc|biz|info|cn|co)$";
+
+    // 二级域名提取
+    private static final String RE_TOP_2 = "(\\w*\\.?){2}\\.(com.cn|net.cn|gov.cn|org\\.nz|org.cn|com|net|org|gov|cc|biz|info|cn|co)$";
+
+    // 三级域名提取
+    private static final String RE_TOP_3 = "(\\w*\\.?){3}\\.(com.cn|net.cn|gov.cn|org\\.nz|org.cn|com|net|org|gov|cc|biz|info|cn|co)$";
 
     /**
      * HTML字符转义
@@ -38,10 +51,46 @@ public class WebUtils {
         input = input.replaceAll("<", "&lt;");
         input = input.replaceAll(">", "&gt;");
         input = input.replaceAll(" ", "&nbsp;");
-        input = input.replaceAll("'", "&#39;");   //IE暂不支持单引号的实体名称,而支持单引号的实体编号,故单引号转义成实体编号,其它字符转义成实体名称
-        input = input.replaceAll("\"", "&quot;"); //双引号也需要转义，所以加一个斜线对其进行转义
-        input = input.replaceAll("\n", "<br/>");  //不能把\n的过滤放在前面，因为还要对<和>过滤，这样就会导致<br/>失效了
+
+        //IE暂不支持单引号的实体名称,而支持单引号的实体编号,故单引号转义成实体编号,其它字符转义成实体名称
+        input = input.replaceAll("'", "&#39;");
+
+        //双引号也需要转义，所以加一个斜线对其进行转义
+        input = input.replaceAll("\"", "&quot;");
+
+        //不能把\n的过滤放在前面，因为还要对<和>过滤，这样就会导致<br/>失效了
+        input = input.replaceAll("\n", "<br/>");
+
         return input;
+    }
+
+    /**
+     * 获取URL的 一级，二级，三级域名
+     * @param url
+     * @param level：域名等级
+     * @return
+     */
+    public static String getDomainName(String url, Integer level) {
+        Pattern pattern;
+        switch (level) {
+            case 1: {pattern = Pattern.compile(RE_TOP , Pattern.CASE_INSENSITIVE);};break;
+            case 2: {pattern = Pattern.compile(RE_TOP_2 , Pattern.CASE_INSENSITIVE);};break;
+            case 3: {pattern = Pattern.compile(RE_TOP_3 , Pattern.CASE_INSENSITIVE);};break;
+            default:{
+                log.error("传入level有误");
+                return null;
+            }
+        }
+        String result = "";
+        try {
+            Matcher matcher = pattern.matcher(url);
+            matcher.find();
+            result = matcher.group();
+        } catch (Exception e) {
+            log.info("获取域名出错");
+            e.printStackTrace();
+        }
+        return result;
     }
 
     /**
