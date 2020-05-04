@@ -540,7 +540,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
-
         list = blogService.setTagAndSortByBlogList(list);
 
         //过滤掉当前的博客
@@ -552,6 +551,21 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             newList.add(item);
         }
         return newList;
+    }
+
+    @Override
+    public List<Blog> getBlogListByTop(Integer top) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        Page<Blog> page = new Page<>();
+        page.setCurrent(1);
+        page.setSize(top);
+        queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.orderByDesc(SQLConf.SORT);
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
+        return list;
     }
 
     @Override

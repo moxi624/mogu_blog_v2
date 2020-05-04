@@ -123,6 +123,13 @@ public interface BlogService extends SuperService<Blog> {
     public List<Blog> getSameBlogByBlogUid(String blogUid);
 
     /**
+     * 获取点击量前top的博客列表
+     * @param top
+     * @return
+     */
+    public List<Blog> getBlogListByTop(Integer top);
+
+    /**
      * 获取博客列表
      *
      * @param blogVO

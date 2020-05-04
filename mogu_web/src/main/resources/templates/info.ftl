@@ -134,57 +134,60 @@
         <div class="zhuanti">
             <h2 class="hometitle">特别推荐</h2>
             <ul>
-                <li><i><img src="${staticBasePath}/static/images/banner03.jpg"></i>
-                    <p>帝国cms调用方法 <span><a href="/">阅读</a></span></p>
-                </li>
-                <li><i><img src="${staticBasePath}/static/images/b04.jpg"></i>
-                    <p>5.20 我想对你说 <span><a href="/">阅读</a></span></p>
-                </li>
-                <li><i><img src="${staticBasePath}/static/images/b05.jpg"></i>
-                    <p>个人博客，属于我的小世界！ <span><a href="/">阅读</a></span></p>
-                </li>
+                <#if thirdBlogList??>
+                    <#list thirdBlogList as blog>
+                        <li>
+                            <#if blog.photoList[0]??>
+                                <i><img src="${blog.photoList[0]}"></i>
+                            </#if>
+                            <p>${blog.title} <span><a href="${webBasePath}/freemarker/info/${blog.uid}">阅读</a></span></p>
+                        </li>
+                    </#list>
+                </#if>
             </ul>
         </div>
         <div class="tuijian">
             <h2 class="hometitle">推荐文章</h2>
             <ul class="tjpic">
-                <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
-                <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
+                <#if fourthBlogList[0]??>
+                    <li>
+                        <i><img src="${fourthBlogList[0].photoList[0]}"></i>
+                        <p><a href="${webBasePath}/freemarker/info/${fourthBlogList[0].uid}">${fourthBlogList[0].title}</a></p>
+                    </li>
+                </#if>
             </ul>
             <ul class="sidenews">
-                <li><i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
-                    <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
-                    <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/v1.jpg"></i>
-                    <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/v2.jpg"></i>
-                    <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span></li>
+                <#if fourthBlogList??>
+                    <#list fourthBlogList as blog>
+                        <#if blog_index != 0 >
+                            <li><i><img src="${blog.photoList[0]}"></i>
+                                <p><a href="${webBasePath}/freemarker/info/${blog.uid}">${blog.title}</a></p>
+                                <span>${(blog.createTime)?string("yyyy-MM-dd hh:mm:ss")}</span></li>
+                        </#if>
+                    </#list>
+                </#if>
             </ul>
         </div>
         <div class="tuijian">
             <h2 class="hometitle">点击排行</h2>
             <ul class="tjpic">
-                <i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
-                <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
+                <#if hotBlogList[0]??>
+                    <li>
+                        <i><img src="${hotBlogList[0].photoList[0]}"></i>
+                        <p><a href="${webBasePath}/freemarker/info/${hotBlogList[0].uid}">${hotBlogList[0].title}</a></p>
+                    </li>
+                </#if>
             </ul>
             <ul class="sidenews">
-                <li><i><img src="${staticBasePath}/static/images/toppic01.jpg"></i>
-                    <p><a href="/">别让这些闹心的套路</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/toppic02.jpg"></i>
-                    <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/v1.jpg"></i>
-                    <p><a href="/">别让这些闹心的套路，毁了你的网页设计</a></p>
-                    <span>2018-05-13</span></li>
-                <li><i><img src="${staticBasePath}/static/images/v2.jpg"></i>
-                    <p><a href="/">给我模板PSD源文件，我给你设计HTML！</a></p>
-                    <span>2018-05-13</span></li>
+                <#if hotBlogList??>
+                    <#list hotBlogList as blog>
+                        <#if blog_index != 0 >
+                            <li><i><img src="${blog.photoList[0]}"></i>
+                                <p><a href="${webBasePath}/freemarker/info/${blog.uid}">${blog.title}</a></p>
+                                <span>${(blog.createTime)?string("yyyy-MM-dd hh:mm:ss")}</span></li>
+                        </#if>
+                    </#list>
+                </#if>
             </ul>
         </div>
         <div class="cloud">

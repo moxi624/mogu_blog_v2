@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,7 +84,10 @@ public class FreemarkerController {
         map.put("webConfig", webConfigService.getWebConfig());
         map.put("blog", blogService.getBlogByUid(uid));
         map.put("sameBlog", sameBlog);
-
+        map.put("thirdBlogList", thirdBlog);
+        map.put("fourthBlogList", fourthBlog);
+        map.put("fourthBlogList", fourthBlog);
+        map.put("hotBlogList", blogService.getBlogListByTop(SysConf.FIVE));
         return "info";
     }
 
@@ -122,6 +126,7 @@ public class FreemarkerController {
             map.put("webConfig", webConfigService.getWebConfig());
             map.put("blog", blogService.getBlogByUid(uid));
             map.put("sameBlog", sameBlog);
+            map.put("hotBlogList", blogService.getBlogListByTop(SysConf.FIVE));
 
             //静态化
             String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
@@ -140,8 +145,8 @@ public class FreemarkerController {
     /**
      * 生成所有博客的静态文件
      */
-//    @RequestMapping("/getAllHtml")
-//    @ResponseBody
+    @RequestMapping("/getAllHtml")
+    @ResponseBody
     public String getAllHtml() throws IOException {
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
@@ -164,6 +169,7 @@ public class FreemarkerController {
             Map<String, List<Blog>> blogMap = new HashMap<>();
             List<Blog> thirdBlog = new ArrayList<>();
             List<Blog> fourthBlog = new ArrayList<>();
+            List<Blog> hotBlogList = blogService.getBlogListByTop(SysConf.FIVE);
             blogList.forEach(item -> {
 
                 if (item.getLevel() == ELevel.THIRD) {
@@ -193,6 +199,9 @@ public class FreemarkerController {
                 map.put("webConfig", webConfigService.getWebConfig());
                 map.put("blog", blogList.get(a));
                 map.put("sameBlog", sameBlog);
+                map.put("thirdBlogList", thirdBlog);
+                map.put("fourthBlogList", fourthBlog);
+                map.put("hotBlogList", hotBlogList);
                 //静态化
                 String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
 
