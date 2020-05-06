@@ -36,6 +36,16 @@
 >
 > 【演示账号】：mogu2018   mogu2018
 
+## 项目中初始用户和密码
+
+- **后台登录**：用户：admin，密码：mogu2018
+- **Mysql**：用户：root，密码：mogu2018
+- **Redis**：密码：mogu2018
+- **远程SSH初始密码**：用户：root，密码：mogu2018
+- **RabbitMQ管理页面：** 用户：guest，密码：guest
+- **Eureka管理页面：** 用户：user，密码：password123
+- **蘑菇博客监控页面**：用户：user，密码：password123
+
 ## 运行配置
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
@@ -218,16 +228,6 @@
 |   RabbitMQ    | 3.7.4  |            http://www.rabbitmq.com/download.html             |
 |     Nginx     |  1.10  |              http://nginx.org/en/download.html               |
 |     Redis     | 3.3.0  |                  https://redis.io/download                   |
-
-## 项目中初始用户和密码
-
-- **后台登录**：用户：admin，密码：mogu2018
-- **Mysql**：用户：root，密码：mogu2018
-- **Redis**：密码：mogu2018
-- **远程SSH初始密码**：用户：root，密码：mogu2018
-- **RabbitMQ管理页面：** 用户：guest，密码：guest
-- **Eureka管理页面：** 用户：user，密码：password123
-- **蘑菇博客监控页面**：用户：user，密码：password123
 
 ## 致谢
 
