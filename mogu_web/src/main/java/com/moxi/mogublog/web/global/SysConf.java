@@ -21,6 +21,7 @@ public final class SysConf extends BaseSysConf {
     public static final String TEXT = "text";
     public static final String TO_TEXT = "to_text";
     public static final String TO_NICKNAME = "to_nickname";
+    public static final String USER = "user";
 
     /**
      * 用于第三方登录

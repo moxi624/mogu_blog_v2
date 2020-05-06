@@ -12,14 +12,14 @@
       <el-divider></el-divider>
       <el-form :label-position="labelPosition" :model="loginForm">
         <el-form-item label="用户名">
-          <el-input v-model="loginForm.userName" disabled></el-input>
+          <el-input v-model="loginForm.userName"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input type="password" v-model="loginForm.password" disabled></el-input>
+          <el-input type="password" v-model="loginForm.password"></el-input>
         </el-form-item>
         <el-row class="btn">
-          <el-button class="loginBtn" type="primary" @click="startLogin" disabled>登录</el-button>
-          <el-button class="registerBtn" type="info" @click="goRegister" disabled>注册</el-button>
+          <el-button class="loginBtn" type="primary" @click="startLogin">登录</el-button>
+          <el-button class="registerBtn" type="info" @click="goRegister">注册</el-button>
         </el-row>
 
         <el-row class="elRow">
@@ -55,27 +55,31 @@
     <div class="box registerBox" v-if="showLogin == false">
       <div class="title">
         <span class="t1">
-          登录
+          注册
         </span>
         <div class="t2" @click="closeLogin()">
           X
         </div>
       </div>
       <el-divider></el-divider>
-      <el-form :label-position="labelPosition" :model="registerForm">
-        <el-form-item label="用户名">
+      <el-form :rules="rules" :label-position="labelPosition" :model="registerForm">
+        <el-form-item label="用户名" prop="userName">
           <el-input v-model="registerForm.userName"></el-input>
         </el-form-item>
 
-        <el-form-item label="密码">
+        <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="registerForm.nickName"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="registerForm.password"></el-input>
         </el-form-item>
 
-        <el-form-item label="重复密码">
+        <el-form-item label="重复密码" prop="password2">
           <el-input type="password" v-model="registerForm.password2"></el-input>
         </el-form-item>
 
-        <el-form-item label="邮箱">
+        <el-form-item label="邮箱" prop="email">
           <el-input v-model="registerForm.email"></el-input>
         </el-form-item>
 
@@ -94,7 +98,7 @@
 </template>
 
 <script>
-  import {login, register} from "@/api/user";
+  import {login, localLogin, localRegister} from "@/api/user";
   import { Loading } from 'element-ui';
   export default {
     name: "share",
@@ -104,7 +108,8 @@
         option: {
           fullscreen: true,
           lock: true
-        }, //loading
+        },
+        vueMoguWebUrl: process.env.VUE_MOGU_WEB,
         // 显示登录页面
         showLogin: true,
         isLogin: false,
@@ -121,6 +126,28 @@
           password: "",
           password2: "",
           email: ""
+        },
+        rules: {
+          userName: [
+            {required: true, message: '请输入用户名', trigger: 'blur'}
+          ],
+          nickName: [
+            {required: true, message: '请输入昵称', trigger: 'blur'}
+          ],
+          password: [
+            { required: true, message: "请输入密码", trigger: "blur" },
+            { min: 5, message: "密码长度需要大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "密码长度不能大于 20 个字符", trigger: "blur" }
+          ],
+          password2: [
+            { required: true, message: "请再次输入密码", trigger: "blur" },
+            { min: 5, message: "密码长度需要大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "密码长度不能大于 20 个字符", trigger: "blur" }
+          ],
+          email: [
+            { required: true, message: "邮箱不能为空", trigger: "blur" },
+            {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
+          ]
         }
       };
     },
@@ -130,28 +157,55 @@
     },
     methods: {
       startLogin: function () {
-        // var params = {};
-        // params.userName = this.loginForm.userName;
-        // params.passWord = this.loginForm.password;
-        // params.isRememberMe = 0;
-        // login(params).then(response => {
-        //   if (response.code == "success") {
-        //     console.log(response.data);
-        //   }
-        // });
+        var params = {};
+        params.userName = this.loginForm.userName;
+        params.passWord = this.loginForm.password;
+        params.isRememberMe = 1;
+        localLogin(params).then(response => {
+          if (response.code == "success") {
+            // 跳转到首页
+            location.replace(this.vueMoguWebUrl + "/#/?token=" + response.data)
+            window.location.reload()
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            })
+          }
+        });
       },
       startRegister: function () {
+        let passWord = this.registerForm.password;
+        let passWord2 = this.registerForm.password2;
+        if(passWord != passWord2) {
+          this.$message({
+            type: "success",
+            message: "两次密码不一致"
+          })
+          return;
+        }
 
-        // var params = {};
-        // params.userName = this.registerForm.userName;
-        // params.passWord = this.registerForm.password;
-        // params.email = this.registerForm.email;
-        // console.log("登录表单", params);
-        // register(params).then(response => {
-        //   if (response.code == "success") {
-        //     console.log(response.data);
-        //   }
-        // });
+        var params = {};
+        params.userName = this.registerForm.userName;
+        params.passWord = this.registerForm.password;
+        params.email = this.registerForm.email;
+        params.nickName = this.registerForm.nickName
+        localRegister(params).then(response => {
+          if (response.code == "success") {
+            console.log(response.data);
+            this.$message({
+              type: "success",
+              message: "注册成功"
+            })
+            // 打开登录页面
+            this.goLogin();
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data
+            })
+          }
+        });
       },
       goLogin: function () {
         this.showLogin = true;
@@ -198,7 +252,7 @@
   }
 
   .registerBox {
-    height: 570px;
+    height: 660px;
   }
 
   .box .title {

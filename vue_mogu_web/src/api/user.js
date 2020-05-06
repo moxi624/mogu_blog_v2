@@ -1,5 +1,9 @@
 import request from '@/utils/request'
 
+/**
+ * 第三方登录
+ * @param params
+ */
 export function login(params) {
   return request({
     url: process.env.WEB_API + '/oauth/render',
@@ -62,9 +66,25 @@ export function deleteUserAccessToken(params) {
   })
 }
 
-export function register(params) {
+/**
+ * 本地登录
+ * @param params
+ */
+export function localLogin(params) {
   return request({
-    url: process.env.WEB_API + '/user/register',
+    url: process.env.WEB_API + '/login/login',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 本地注册
+ * @param params
+ */
+export function localRegister(params) {
+  return request({
+    url: process.env.WEB_API + '/login/register',
     method: 'post',
     data: params
   })
