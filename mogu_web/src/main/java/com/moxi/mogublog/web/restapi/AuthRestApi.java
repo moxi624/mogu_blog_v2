@@ -394,7 +394,7 @@ public class AuthRestApi {
                         + "名称：" + linkVO.getTitle() + "<br />"
                         + "简介：" + linkVO.getSummary() + "<br />"
                         + "地址：" + linkVO.getUrl();
-                rabbitMqUtil.sendSimpleEmail( systemConfig.getEmail(), feedback);
+                rabbitMqUtil.sendSimpleEmail(systemConfig.getEmail(), feedback);
             } else {
                 log.error("网站没有配置通知接收的邮箱地址！");
             }

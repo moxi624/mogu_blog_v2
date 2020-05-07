@@ -192,10 +192,9 @@
         params.nickName = this.registerForm.nickName
         localRegister(params).then(response => {
           if (response.code == "success") {
-            console.log(response.data);
             this.$message({
               type: "success",
-              message: "注册成功"
+              message: response.data
             })
             // 打开登录页面
             this.goLogin();

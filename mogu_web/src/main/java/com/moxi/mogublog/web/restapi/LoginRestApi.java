@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.global.MessageConf;
+import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
+import com.moxi.mogublog.web.utils.RabbitMqUtil;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EAccountType;
@@ -54,6 +56,9 @@ public class LoginRestApi {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    RabbitMqUtil rabbitMqUtil;
+
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
 
@@ -63,12 +68,15 @@ public class LoginRestApi {
         ThrowableUtils.checkParamArgument(result);
         String userName = userVO.getUserName();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userName).or().eq(SQLConf.EMAIL, userName));
         queryWrapper.last("limit 1");
         User user = userService.getOne(queryWrapper);
-        if(user == null) {
+        if(user == null || EStatus.DISABLED == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户不存在");
+        }
+
+        if(EStatus.FREEZE == user.getStatus()) {
+            return ResultUtil.result(SysConf.ERROR, "用户账号未激活");
         }
 
         if(StringUtils.isNotEmpty(user.getPassWord()) && user.getPassWord().equals(MD5Utils.string2MD5(userVO.getPassWord()))) {
@@ -88,6 +96,7 @@ public class LoginRestApi {
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中
             redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+
             return ResultUtil.result(SysConf.SUCCESS, token);
         } else {
             return ResultUtil.result(SysConf.ERROR, "账号或密码错误");
@@ -117,10 +126,40 @@ public class LoginRestApi {
         user.setLastLoginIp(ip);
         user.setBrowser(map.get(SysConf.BROWSER));
         user.setOs(map.get(SysConf.OS));
+        user.setStatus(EStatus.FREEZE);
         user.insert();
-        return ResultUtil.result(SysConf.SUCCESS, "注册成功");
+
+        // 生成随机激活的token
+        String token = StringUtils.getUUID();
+
+        // 过滤密码
+        user.setPassWord("");
+
+        //将从数据库查询的数据缓存到redis中，用于用户邮箱激活，1小时后过期
+        redisUtil.setEx(RedisConf.ACTIVATE_USER + RedisConf.SEGMENTATION + token, JsonUtils.objectToJson(user), 1, TimeUnit.HOURS);
+
+        // 发送邮件，进行账号激活
+        rabbitMqUtil.sendActivateEmail(user, token);
+
+        return ResultUtil.result(SysConf.SUCCESS, "注册成功，请登录邮箱进行账号激活");
     }
 
+    @ApiOperation(value = "激活用户账号", notes = "激活用户账号")
+    @GetMapping("/activeUser/{token}")
+    public String bindUserEmail(@PathVariable("token") String token) {
+        // 从redis中获取用户信息
+        String userInfo = redisUtil.get(RedisConf.ACTIVATE_USER + RedisConf.SEGMENTATION + token);
+        if (StringUtils.isEmpty(userInfo)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        User user = JsonUtils.jsonToPojo(userInfo, User.class);
+        if(EStatus.FREEZE != user.getStatus()) {
+            return ResultUtil.result(SysConf.ERROR, "用户账号已经被激活");
+        }
+        user.setStatus(EStatus.ENABLE);
+        user.updateById();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+    }
 
     @ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
     @PostMapping(value = "/logout")
