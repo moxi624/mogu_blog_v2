@@ -123,6 +123,11 @@ public class WebConfig extends SuperEntity<WebConfig> {
      */
     private String showList;
 
+    /**
+     * 登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）
+     */
+    private String loginTypeList;
+
 
     // 以下字段不存入数据库，封装为了方便使用
 

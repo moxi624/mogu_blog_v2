@@ -164,6 +164,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
             webConfig.setShowList(webConfigVO.getShowList());
+            webConfig.setLoginTypeList(webConfigVO.getLoginTypeList());
             webConfig.setUpdateTime(new Date());
             webConfigService.save(webConfig);
         } else {
@@ -187,6 +188,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
             webConfig.setGitee(webConfigVO.getGitee());
             webConfig.setWeChat(webConfigVO.getWeChat());
             webConfig.setShowList(webConfigVO.getShowList());
+            webConfig.setLoginTypeList(webConfigVO.getLoginTypeList());
             webConfig.setUpdateTime(new Date());
             webConfigService.updateById(webConfig);
         }

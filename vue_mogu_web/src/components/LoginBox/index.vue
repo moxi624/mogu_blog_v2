@@ -12,43 +12,49 @@
       <el-divider></el-divider>
       <el-form :label-position="labelPosition" :model="loginForm">
         <el-form-item label="用户名">
-          <el-input v-model="loginForm.userName"></el-input>
+          <el-input v-model="loginForm.userName" placeholder="请输入用户名或邮箱" :disabled="loginType.password"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input type="password" v-model="loginForm.password"></el-input>
+          <el-input type="password" v-model="loginForm.password" placeholder="请输入密码" :disabled="loginType.password"></el-input>
         </el-form-item>
         <el-row class="btn">
-          <el-button class="loginBtn" type="primary" @click="startLogin">登录</el-button>
-          <el-button class="registerBtn" type="info" @click="goRegister">注册</el-button>
+          <el-button class="loginBtn" type="primary" @click="startLogin" :disabled="loginType.password">登录</el-button>
+          <el-button class="registerBtn" type="info" @click="goRegister" :disabled="loginType.password">注册</el-button>
         </el-row>
 
         <el-row class="elRow">
           <el-tooltip content="码云" placement="bottom">
-            <el-button type="danger" circle @click="goAuth('gitee')">
+            <el-button type="danger" circle @click="goAuth('gitee')" :disabled="loginType.gitee">
               <span class="iconfont">&#xe602;</span>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="Github" placement="bottom">
-            <el-button type="info" circle @click="goAuth('github')">
+            <el-button type="info" circle @click="goAuth('github')" :disabled="loginType.github">
               <span class="iconfont">&#xe64a;</span>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="QQ" placement="bottom">
-            <el-button type="primary" circle disabled>
+            <el-button type="primary" circle disabled :disabled="loginType.qq">
               <span class="iconfont">&#xe601;</span>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="微信" placement="bottom">
-            <el-button type="success" circle disabled>
+            <el-button type="success" circle disabled :disabled="loginType.wechat">
               <span class="iconfont">&#xe66f;</span>
             </el-button>
           </el-tooltip>
 
         </el-row>
-        <div class="loginTip">目前仅支持码云和Github登录</div>
+        <div class="loginTip">目前登录方式支持
+          <span v-if="!loginType.password"> 账号密码 </span>
+          <span v-if="!loginType.gitee"> 码云 </span>
+          <span v-if="!loginType.github"> Github </span>
+          <span v-if="!loginType.qq"> QQ </span>
+          <span v-if="!loginType.wechat"> 微信 </span>
+        </div>
       </el-form>
     </div>
 
@@ -64,28 +70,28 @@
       <el-divider></el-divider>
       <el-form :rules="rules" :label-position="labelPosition" :model="registerForm">
         <el-form-item label="用户名" prop="userName">
-          <el-input v-model="registerForm.userName"></el-input>
+          <el-input v-model="registerForm.userName" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="registerForm.nickName"></el-input>
+          <el-input v-model="registerForm.nickName" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="registerForm.password"></el-input>
+          <el-input type="password" v-model="registerForm.password" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="重复密码" prop="password2">
-          <el-input type="password" v-model="registerForm.password2"></el-input>
+          <el-input type="password" v-model="registerForm.password2" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="registerForm.email"></el-input>
+          <el-input v-model="registerForm.email" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-row class="btn">
-          <el-button class="loginBtn" type="primary" @click="startRegister">注册</el-button>
-          <el-button class="registerBtn" type="info" @click="goLogin">返回登录</el-button>
+          <el-button class="loginBtn" type="primary" @click="startRegister" :disabled="loginType.password">注册</el-button>
+          <el-button class="registerBtn" type="info" @click="goLogin" :disabled="loginType.password">返回登录</el-button>
         </el-row>
 
         <div class="loginTip">注册后，需要到邮箱进行邮件认证~</div>
@@ -127,6 +133,14 @@
           password2: "",
           email: ""
         },
+        // 登录类别
+        loginType: {
+          password: true,
+          gitee: true,
+          github: true,
+          qq: true,
+          wechat: true
+        },
         rules: {
           userName: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -153,9 +167,39 @@
     },
     components: {},
     created() {
-
+      this.setLoginTypeList()
     },
     methods: {
+      setLoginTypeList: function() {
+        // 获取登录方式列表
+        let webConfigData = this.$store.state.app.webConfigData
+        if(webConfigData.loginTypeList != undefined) {
+          let loginTypeList = JSON.parse(webConfigData.loginTypeList)
+          console.log(loginTypeList.indexOf("2"))
+          for(let a=0; a<loginTypeList.length; a++) {
+            switch (loginTypeList[a]) {
+              case "1": {
+                this.loginType.password = false
+              };break;
+              case "2": {
+                this.loginType.gitee = false
+              };break;
+              case "3": {
+                this.loginType.github = false
+              };break;
+              case "4": {
+                this.loginType.qq = false
+              };break;
+              case "5": {
+                this.loginType.wechat = false
+              };break;
+              default: {
+                console.log("登录方式设置有误！！")
+              }
+            }
+          }
+        }
+      },
       startLogin: function () {
         var params = {};
         params.userName = this.loginForm.userName;

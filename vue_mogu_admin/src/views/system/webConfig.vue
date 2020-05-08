@@ -105,6 +105,19 @@
             </el-col>
           </el-row>
 
+          <el-row :gutter="24">
+            <el-col :span="10">
+              <el-form-item label="登录方式">
+                <el-checkbox-group v-model="form.loginTypeList">
+                  <el-checkbox label="1" style="margin-left: 10px">账号密码</el-checkbox>
+                  <el-checkbox label="2" style="margin-left: 10px">码云</el-checkbox>
+                  <el-checkbox label="3" style="margin-left: 10px">Github</el-checkbox>
+                  <el-checkbox label="4" style="margin-left: 10px">QQ</el-checkbox>
+                  <el-checkbox label="5" style="margin-left: 10px">微信</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <el-row :gutter="24">
             <el-col :span="6">
@@ -212,6 +225,7 @@ export default {
         aliPayPhoto: "",
         weixinPayPhoto: "",
         showList: [],
+        loginTypeList: []
       },
       loadingInstance: null, // loading对象
       fileList: [],
@@ -302,8 +316,9 @@ export default {
 
           if (data.showList) {
             let showList = JSON.parse(data.showList)
-            console.log("showList", showList)
+            let loginTypeList = JSON.parse(data.loginTypeList)
             data.showList = showList;
+            data.loginTypeList = loginTypeList;
             this.form = data;
           } else {
             data.showList = []
@@ -350,7 +365,7 @@ export default {
       let form = this.form;
       form.logo = this.fileIds;
       form.showList = JSON.stringify(this.form.showList)
-
+      form.loginTypeList = JSON.stringify(this.form.loginTypeList)
       editWebConfig(form).then(response => {
         if ((response.code = "success")) {
           this.$notify({
