@@ -147,9 +147,8 @@
         this.isShowEmojiPanel = !this.isShowEmojiPanel;
       },
       appendEmoji(text) {
-        const el = document.getElementById("textpanel");
-        console.log()
-        this.value = el.value + ":" + text + ":";
+        // const el = document.getElementById("textpanel");
+        this.value = this.value + ":" + text + ":";
       }
     },
   };
@@ -159,6 +158,7 @@
 <style >
   @import "../../assets/css/emoji.css";
   .commentBox {
+    min-width: 700px;
     width: 100%;
     height: 100px;
     margin: 0 auto;
@@ -193,6 +193,7 @@
   }
   .bottom {
     position: relative;
+    min-width: 690px;
     width: 98%;
     height: 60px;
     line-height: 40px;

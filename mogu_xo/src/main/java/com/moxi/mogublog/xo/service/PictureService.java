@@ -55,6 +55,7 @@ public interface PictureService extends SuperService<Picture> {
 
     /**
      * 获取最新图片,按时间排序
+     *
      * @return
      */
     public Picture getTopOne();

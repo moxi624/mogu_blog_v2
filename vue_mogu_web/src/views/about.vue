@@ -194,8 +194,8 @@
     border: 1px solid #cccccc;
     border-radius: 5px;
     background-color: #ffffff;
-    width: 430px;
-    height: 180px;
+    width: 380px;
+    height: 230px;
     position: absolute;
     z-index: 999;
     left: 35px;

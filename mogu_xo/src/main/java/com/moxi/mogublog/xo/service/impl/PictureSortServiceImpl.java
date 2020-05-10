@@ -16,7 +16,6 @@ import com.moxi.mogublog.xo.service.PictureService;
 import com.moxi.mogublog.xo.service.PictureSortService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.PictureSortVO;
-import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

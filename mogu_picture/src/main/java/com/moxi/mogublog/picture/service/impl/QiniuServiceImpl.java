@@ -47,19 +47,16 @@ public class QiniuServiceImpl implements QiniuService {
 
     @Autowired
     FileService fileService;
-
+    @Autowired
+    FeignUtil feignUtil;
     //获取上传路径
     @Value(value = "${file.upload.path}")
     private String path;
-
     /**
      * 获取基本路径
      */
     @Value(value = "${file.upload.path}")
     private String basePath;
-
-    @Autowired
-    FeignUtil feignUtil;
 
     @Override
     public Map<String, List<String>> uploadImgs(MultipartFile[] file, Map<String, String> qiNiuConfig) {
@@ -71,7 +68,7 @@ public class QiniuServiceImpl implements QiniuService {
             String fileName = file[i].getOriginalFilename();
 
             // 创建一个临时目录文件
-            String tempFiles = "temp/"+fileName;
+            String tempFiles = "temp/" + fileName;
             File dest = new File(tempFiles);
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
@@ -87,7 +84,7 @@ public class QiniuServiceImpl implements QiniuService {
 
             } catch (Exception e) {
                 log.error(e.getMessage());
-            } finally{
+            } finally {
                 try {
                     if (null != out) {
                         out.flush();
@@ -106,7 +103,7 @@ public class QiniuServiceImpl implements QiniuService {
         if (list.isEmpty()) {
             list.add("error");
         }
-        resultMap.put("result",list);
+        resultMap.put("result", list);
         return resultMap;
     }
 
@@ -118,11 +115,11 @@ public class QiniuServiceImpl implements QiniuService {
         // 获取token
         String token = request.getParameter(SysConf.TOKEN);
 
-        if(StringUtils.isEmpty(token)) {
+        if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, "未读取到token");
         }
 
-        String [] params = token.split("\\?url=");
+        String[] params = token.split("\\?url=");
 
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
@@ -139,12 +136,12 @@ public class QiniuServiceImpl implements QiniuService {
         String qiNiuBucket = resultMap.get(SysConf.QI_NIU_BUCKET);
         String qiNiuArea = resultMap.get(SysConf.QI_NIU_AREA);
 
-        if(EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+        if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                 || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
 
-        if(EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+        if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
             return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
         }
 
@@ -166,9 +163,9 @@ public class QiniuServiceImpl implements QiniuService {
         String itemUrl = params[1];
 
         // 判断需要上传的域名和本机图片域名是否一致
-        if(EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+        if (EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
             // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
-            if(StringUtils.isNotEmpty(qiNiuPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(qiNiuPictureBaseUrl) > -1) {
+            if (StringUtils.isNotEmpty(qiNiuPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(qiNiuPictureBaseUrl) > -1) {
                 Map<String, Object> result = new HashMap<>();
                 result.put(SysConf.UPLOADED, 1);
                 result.put(SysConf.FILE_NAME, itemUrl);
@@ -178,7 +175,7 @@ public class QiniuServiceImpl implements QiniuService {
         } else {
             // 表示优先显示本地服务器
             // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
-            if(StringUtils.isNotEmpty(localPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(localPictureBaseUrl) > -1) {
+            if (StringUtils.isNotEmpty(localPictureBaseUrl) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(localPictureBaseUrl) > -1) {
                 Map<String, Object> result = new HashMap<>();
                 result.put(SysConf.UPLOADED, 1);
                 result.put(SysConf.FILE_NAME, itemUrl);
@@ -358,7 +355,7 @@ public class QiniuServiceImpl implements QiniuService {
         result.put(SysConf.UPLOADED, 1);
         result.put(SysConf.FILE_NAME, newFileName);
         // 设置显示方式
-        if("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
             result.put(SysConf.URL, qiNiuPictureBaseUrl + qiNiuUrl);
         } else {
             // 设置图片服务根域名
@@ -379,7 +376,7 @@ public class QiniuServiceImpl implements QiniuService {
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
 
-        if(qiNiuConfig == null) {
+        if (qiNiuConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         } else {
             String uploadQiNiu = qiNiuResultMap.get(SysConf.UPLOAD_QI_NIU);
@@ -391,12 +388,12 @@ public class QiniuServiceImpl implements QiniuService {
             String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
 
-            if(EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if(EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -455,16 +452,16 @@ public class QiniuServiceImpl implements QiniuService {
                 String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
-                if(SysConf.SUCCESS.equals(code)) {
+                if (SysConf.SUCCESS.equals(code)) {
                     List<HashMap<String, Object>> resultList = (List<HashMap<String, Object>>) resultMap.get(SysConf.DATA);
-                    if(resultList.size() > 0) {
+                    if (resultList.size() > 0) {
                         Map<String, Object> picture = resultList.get(0);
                         String fileName = picture.get(SysConf.PIC_NAME).toString();
                         map.put(SysConf.UPLOADED, 1);
                         map.put(SysConf.FILE_NAME, fileName);
 
                         // 设置显示方式
-                        if("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+                        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
 
                             String qiNiuPictureBaseUrl = qiNiuConfig.get(SysConf.QI_NIU_PICTURE_BASE_URL);
                             String qiNiuUrl = qiNiuPictureBaseUrl + picture.get(SysConf.QI_NIU_URL).toString();
@@ -503,7 +500,7 @@ public class QiniuServiceImpl implements QiniuService {
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
 
-        if(qiNiuConfig == null) {
+        if (qiNiuConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         } else {
             String uploadQiNiu = qiNiuResultMap.get(SysConf.UPLOAD_QI_NIU);
@@ -515,12 +512,12 @@ public class QiniuServiceImpl implements QiniuService {
             String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
 
-            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -582,16 +579,16 @@ public class QiniuServiceImpl implements QiniuService {
                 String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
-                if(SysConf.SUCCESS.equals(code)) {
+                if (SysConf.SUCCESS.equals(code)) {
                     List<HashMap<String, Object>> resultList = (List<HashMap<String, Object>>) resultMap.get(SysConf.DATA);
-                    if(resultList.size() > 0) {
+                    if (resultList.size() > 0) {
                         Map<String, Object> picture = resultList.get(0);
                         String fileName = picture.get(SysConf.PIC_NAME).toString();
                         map.put(SysConf.UPLOADED, 1);
                         map.put(SysConf.FILE_NAME, fileName);
 
                         // 设置显示方式
-                        if("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+                        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
 
                             String qiNiuPictureBaseUrl = qiNiuConfig.get(SysConf.QI_NIU_PICTURE_BASE_URL);
                             String qiNiuUrl = picture.get(SysConf.QI_NIU_URL).toString();

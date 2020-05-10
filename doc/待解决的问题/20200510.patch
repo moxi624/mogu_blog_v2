@@ -1,0 +1,327 @@
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ pom.xml	(date 1588988355172)
+@@ -76,4 +76,23 @@
+         </dependencies>
+     </dependencyManagement>
+ 
++    <repositories>
++        <repository>
++            <id>aliyun-repos</id>
++            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++            <snapshots>
++                <enabled>false</enabled>
++            </snapshots>
++        </repository>
++    </repositories>
++
++    <pluginRepositories>
++        <pluginRepository>
++            <id>aliyun-plugin</id>
++            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
++            <snapshots>
++                <enabled>false</enabled>
++            </snapshots>
++        </pluginRepository>
++    </pluginRepositories>
+ </project>
+\ No newline at end of file
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/security/WebSecurityConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/security/WebSecurityConfig.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/security/WebSecurityConfig.java	(date 1588991584497)
+@@ -16,6 +16,8 @@
+ import org.springframework.security.crypto.password.PasswordEncoder;
+ import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+ 
++import javax.annotation.Resource;
++
+ @Configuration
+ @EnableWebSecurity
+ @EnableGlobalMethodSecurity(prePostEnabled = true)
+@@ -24,7 +26,7 @@
+     @Autowired
+     private JwtAuthenticationEntryPoint unauthorizedHandler;
+ 
+-    @Autowired
++    @Resource(name = "securityUserDetailsService")
+     private UserDetailsService userDetailsService;
+ 
+     @Autowired
+@@ -34,8 +36,6 @@
+                 .userDetailsService(this.userDetailsService)
+                 // 使用BCrypt进行密码的hash
+                 .passwordEncoder(passwordEncoder());
+-        //remember me
+-        authenticationManagerBuilder.eraseCredentials(false);
+     }
+ 
+     // 装载BCrypt密码编码器
+Index: mogu_base/src/main/java/com/moxi/mougblog/base/exception/BusinessException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_base/src/main/java/com/moxi/mougblog/base/exception/BusinessException.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_base/src/main/java/com/moxi/mougblog/base/exception/BusinessException.java	(date 1588996507075)
+@@ -18,7 +18,6 @@
+ 
+     public BusinessException(String message, Throwable cause) {
+         super(message, cause);
+-        this.code = code;
+     }
+ 
+     public BusinessException(String message, String code) {
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/security/SecurityUserDetailsService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/security/SecurityUserDetailsService.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/security/SecurityUserDetailsService.java	(date 1588990680434)
+@@ -12,16 +12,17 @@
+ import org.springframework.security.core.userdetails.UsernameNotFoundException;
+ import org.springframework.stereotype.Service;
+ 
++import javax.annotation.Resource;
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+ @Service
+ public class SecurityUserDetailsService implements UserDetailsService {
+ 
+-    @Autowired
++    @Resource
+     private AdminService adminService;
+ 
+-    @Autowired
++    @Resource
+     private RoleService roleService;
+ 
+     @Override
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/config/Swagger2.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/config/Swagger2.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/config/Swagger2.java	(date 1588997491353)
+@@ -30,8 +30,7 @@
+                 .paths(PathSelectors.regex("^(?!auth).*$"))
+                 .build()
+                 .securitySchemes(securitySchemes())
+-                .securityContexts(securityContexts())
+-                ;
++                .securityContexts(securityContexts());
+     }
+ 
+     private List<ApiKey> securitySchemes() {
+@@ -50,8 +49,7 @@
+ 
+     List<SecurityReference> defaultAuth() {
+         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+-        authorizationScopes[0] = authorizationScope;
++        AuthorizationScope[] authorizationScopes = new AuthorizationScope[]{authorizationScope};
+         return newArrayList(
+                 new SecurityReference("Authorization", authorizationScopes));
+     }
+Index: mogu_admin/src/main/resources/application.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/resources/application.yml	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/resources/application.yml	(date 1588998840531)
+@@ -8,10 +8,6 @@
+ #项目名称
+ PROJECT_NAME: 蘑菇博客
+ 
+-file:
+-  upload:
+-    path: D:/mogu_blog/data/
+-
+ # 邮箱验证
+ moguBlog:
+   email: mogublog@163.com
+@@ -155,7 +151,8 @@
+       #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+       id-type: UUID
+       #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+-      field-strategy: NOT_EMPTY
++      insertStrategy: NOT_EMPTY
++      updateStrategy: NOT_EMPTY
+       #驼峰下划线转换
+       column-underline: true
+       #数据库大写下划线转换
+@@ -163,7 +160,6 @@
+       #逻辑删除配置
+       logic-delete-value: 0
+       logic-not-delete-value: 1
+-      db-type: mysql
+     #刷新mapper 调试神器
+     refresh: true
+   # 原生配置
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/UserRestApi.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/UserRestApi.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/UserRestApi.java	(date 1588999968243)
+@@ -19,10 +19,9 @@
+ import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.validation.BindingResult;
+ import org.springframework.validation.annotation.Validated;
+-import org.springframework.web.bind.annotation.PostMapping;
+-import org.springframework.web.bind.annotation.RequestBody;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RestController;
++import org.springframework.web.bind.annotation.*;
++
++import javax.annotation.Resource;
+ 
+ /**
+  * <p>
+@@ -38,15 +37,9 @@
+ @Slf4j
+ public class UserRestApi {
+ 
+-    @Autowired
++    @Resource
+     UserService userService;
+ 
+-    @Value(value = "${DEFAULE_PWD}")
+-    private String DEFAULE_PWD;
+-
+-    @Autowired
+-    private PictureFeignClient pictureFeignClient;
+-
+     @AuthorityVerify
+     @ApiOperation(value = "获取用户列表", notes = "获取用户列表", response = String.class)
+     @PostMapping("/getList")
+@@ -69,6 +62,7 @@
+         return userService.editUser(userVO);
+     }
+ 
++    // @DeleteMapping() 了解一下
+     @AuthorityVerify
+     @OperationLogger(value = "删除用户")
+     @ApiOperation(value = "删除用户", notes = "删除用户", response = String.class)
+@@ -80,6 +74,8 @@
+         return userService.deleteUser(userVO);
+     }
+ 
++    // uri password/reset
++    // 类里的方法都包含了@AuthorityVerify 那么这个注解也应该可以加到类上 覆盖所有的方法
+     @AuthorityVerify
+     @OperationLogger(value = "重置用户密码")
+     @ApiOperation(value = "重置用户密码", notes = "重置用户密码", response = String.class)
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/annotion/AuthorityVerify/AuthorityVerifyAspect.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/annotion/AuthorityVerify/AuthorityVerifyAspect.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/annotion/AuthorityVerify/AuthorityVerifyAspect.java	(date 1588992363862)
+@@ -30,6 +30,7 @@
+ 
+ import javax.servlet.http.HttpServletRequest;
+ import java.util.ArrayList;
++import java.util.Arrays;
+ import java.util.List;
+ import java.util.concurrent.TimeUnit;
+ 
+@@ -112,11 +113,11 @@
+                 }
+             }
+             // 将访问URL存储到Redis中
+-            redisUtil.setEx(RedisConf.ADMIN_VISIT_MENU + SysConf.REDIS_SEGMENTATION + adminUid, JsonUtils.objectToJson(urlList).toString(), 1, TimeUnit.HOURS);
++            redisUtil.setEx(RedisConf.ADMIN_VISIT_MENU + SysConf.REDIS_SEGMENTATION + adminUid, JsonUtils.objectToJson(urlList), 1, TimeUnit.HOURS);
+         }
+ 
+         // 判断该角色是否能够访问该接口
+-        Boolean flag = false;
++        boolean flag = false;
+         for (String item : urlList) {
+             if (url.equals(item)) {
+                 flag = true;
+@@ -130,8 +131,7 @@
+         }
+ 
+         //执行业务
+-        Object result = joinPoint.proceed();
+-        return result;
++        return joinPoint.proceed();
+     }
+ 
+ }
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebConfigRestApi.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebConfigRestApi.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebConfigRestApi.java	(date 1588999588320)
+@@ -30,6 +30,7 @@
+ @Slf4j
+ public class WebConfigRestApi {
+ 
++    // TODO service都全部改回到项目里 抽象出通用的common
+     @Autowired
+     WebConfigService webConfigService;
+ 
+@@ -40,6 +41,7 @@
+         return ResultUtil.result(SysConf.SUCCESS, webConfigService.getWebConfig());
+     }
+ 
++    // todo uri 改成 update
+     @AuthorityVerify
+     @OperationLogger(value = "修改网站配置")
+     @ApiOperation(value = "修改网站配置", notes = "修改网站配置")
+Index: mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebVisitRestApi.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebVisitRestApi.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_admin/src/main/java/com/moxi/mogublog/admin/restapi/WebVisitRestApi.java	(date 1588999365554)
+@@ -48,6 +48,7 @@
+     @Autowired
+     LinkService linkService;
+ 
++    // TODO 按restful风格 所有的getXXXXX需要改成XXXX 比如getList改成list
+     @AuthorityVerify
+     @ApiOperation(value = "获取用户访问列表", notes = "获取用户访问列表")
+     @PostMapping("/getList")
+Index: mogu_base/src/main/java/com/moxi/mougblog/base/handler/HandlerExceptionResolver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- mogu_base/src/main/java/com/moxi/mougblog/base/handler/HandlerExceptionResolver.java	(revision 61b72b869db45a9b39c8be23efa7ef590213f035)
++++ mogu_base/src/main/java/com/moxi/mougblog/base/handler/HandlerExceptionResolver.java	(date 1588997028623)
+@@ -6,6 +6,7 @@
+ import com.moxi.mougblog.base.exception.ErrorMessageUtil;
+ import com.moxi.mougblog.base.global.ErrorConstants;
+ import com.moxi.mougblog.base.vo.Result;
++import lombok.AllArgsConstructor;
+ import lombok.extern.slf4j.Slf4j;
+ import org.springframework.http.MediaType;
+ import org.springframework.web.servlet.ModelAndView;
+@@ -39,7 +40,7 @@
+             message = exception.getMessage();
+         }
+         // 响应类型设置
+-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
++        //response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+ 
+         // 响应结果输出
+         try (PrintWriter writer = response.getWriter()) {

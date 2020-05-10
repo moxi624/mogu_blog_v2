@@ -21,24 +21,20 @@ import java.util.Map;
 @Component
 public class RabbitMqUtil {
 
+    public static final String EXCHANGE_DIRECT = "exchange.direct";
+    public static final String ROUTING_KEY_EMAIL = "mogu.email";
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
     @Value(value = "${data.web.url}")
     private String dataWebUrl;
-
     @Value(value = "${PROJECT_NAME_EN}")
     private String projectName;
-
     @Value(value = "${data.website.url}")
     private String dataWebsiteUrl;
 
-
-    public static final  String EXCHANGE_DIRECT = "exchange.direct";
-    public static final  String ROUTING_KEY_EMAIL = "mogu.email";
-
     /**
      * 发送邮件
+     *
      * @param email
      * @param text
      */
@@ -107,6 +103,7 @@ public class RabbitMqUtil {
 
     /**
      * 发送简单邮件
+     *
      * @param email
      * @param text
      */
@@ -152,6 +149,7 @@ public class RabbitMqUtil {
 
     /**
      * 发送激活邮件
+     *
      * @param user
      * @param token
      */
@@ -200,6 +198,7 @@ public class RabbitMqUtil {
 
     /**
      * 发送注册邮件
+     *
      * @param user
      * @param token
      */
@@ -245,8 +244,6 @@ public class RabbitMqUtil {
 
         sendEmail(user.getEmail(), text);
     }
-
-
 
 
 }

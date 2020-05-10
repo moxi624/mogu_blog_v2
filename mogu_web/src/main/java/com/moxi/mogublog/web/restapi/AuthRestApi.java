@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.commons.entity.*;
+import com.moxi.mogublog.commons.entity.Feedback;
+import com.moxi.mogublog.commons.entity.Link;
+import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.MD5Utils;
@@ -14,7 +17,10 @@ import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
-import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.service.FeedbackService;
+import com.moxi.mogublog.xo.service.LinkService;
+import com.moxi.mogublog.xo.service.SystemConfigService;
+import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
@@ -68,6 +74,8 @@ public class AuthRestApi {
     @Autowired
     LinkService linkService;
     @Autowired
+    RabbitMqUtil rabbitMqUtil;
+    @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private UserService userService;
@@ -93,8 +101,6 @@ public class AuthRestApi {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private PictureFeignClient pictureFeignClient;
-    @Autowired
-    RabbitMqUtil rabbitMqUtil;
 
     @ApiOperation(value = "获取认证", notes = "获取认证")
     @RequestMapping("/render")
@@ -202,7 +208,7 @@ public class AuthRestApi {
             user.setUserName(userName);
 
             // 如果昵称为空，那么直接设置用户名
-            if(StringUtils.isEmpty(user.getNickName())) {
+            if (StringUtils.isEmpty(user.getNickName())) {
                 user.setNickName(userName);
             }
 
@@ -387,8 +393,8 @@ public class AuthRestApi {
 
         // 判断是否开启邮件通知
         SystemConfig systemConfig = systemConfigService.getConfig();
-        if(systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
-            if(StringUtils.isNotEmpty(systemConfig.getEmail())) {
+        if (systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
+            if (StringUtils.isNotEmpty(systemConfig.getEmail())) {
                 log.info("发送友链申请邮件通知");
                 String feedback = "收到新的友链申请: " + "<br />"
                         + "名称：" + linkVO.getTitle() + "<br />"
@@ -481,13 +487,13 @@ public class AuthRestApi {
 
         // 判断是否开启邮件通知
         SystemConfig systemConfig = systemConfigService.getConfig();
-        if(systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
-            if(StringUtils.isNotEmpty(systemConfig.getEmail())) {
+        if (systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
+            if (StringUtils.isNotEmpty(systemConfig.getEmail())) {
                 log.info("发送反馈邮件通知");
                 String feedback = "网站收到新的反馈: " + "<br />"
                         + "标题：" + feedbackVO.getTitle() + "<br />" + "<br />"
                         + "内容" + feedbackVO.getContent();
-                rabbitMqUtil.sendSimpleEmail( systemConfig.getEmail(), feedback);
+                rabbitMqUtil.sendSimpleEmail(systemConfig.getEmail(), feedback);
             } else {
                 log.error("网站没有配置通知接收的邮箱地址！");
             }

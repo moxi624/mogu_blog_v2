@@ -6,7 +6,6 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.service.BlogService;
-import com.moxi.mogublog.xo.service.BlogSortService;
 import com.moxi.mogublog.xo.service.TagService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import io.swagger.annotations.Api;
@@ -41,6 +40,7 @@ public class TagRestApi {
 
     /**
      * 获取标签的信息
+     *
      * @return
      */
     @ApiOperation(value = "获取标签的信息", notes = "获取标签的信息")
@@ -52,6 +52,7 @@ public class TagRestApi {
 
     /**
      * 通过TagUid获取文章
+     *
      * @param request
      * @param blogSortUid
      * @param currentPage
@@ -62,9 +63,9 @@ public class TagRestApi {
     @ApiOperation(value = "通过TagUid获取文章", notes = "通过TagUid获取文章")
     @GetMapping("/getArticleByTagUid")
     public String getArticleByTagUid(HttpServletRequest request,
-                                          @ApiParam(name = "tagUid", value = "标签UID", required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
-                                          @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                                          @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+                                     @ApiParam(name = "tagUid", value = "标签UID", required = false) @RequestParam(name = "tagUid", required = false) String tagUid,
+                                     @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                                     @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         if (StringUtils.isEmpty(tagUid)) {
             return ResultUtil.result(SysConf.ERROR, "传入TagUid不能为空");

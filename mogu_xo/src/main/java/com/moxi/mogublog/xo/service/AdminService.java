@@ -24,6 +24,7 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * Web端通过用户名获取一个Admin
+     *
      * @param userName
      * @return
      */

@@ -508,11 +508,11 @@ public class CommentRestApi {
             // 当该评论是一级评论的时候，说明是对博客详情、留言板、关于我
             // 判断是否开启邮件通知
             SystemConfig systemConfig = systemConfigService.getConfig();
-            if(systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
-                if(StringUtils.isNotEmpty(systemConfig.getEmail())) {
+            if (systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
+                if (StringUtils.isNotEmpty(systemConfig.getEmail())) {
                     log.info("发送评论邮件通知");
                     String commentContent = "网站收到新的评论: " + commentVO.getContent();
-                    rabbitMqUtil.sendSimpleEmail( systemConfig.getEmail(), commentContent);
+                    rabbitMqUtil.sendSimpleEmail(systemConfig.getEmail(), commentContent);
                 } else {
                     log.error("网站没有配置通知接收的邮箱地址！");
                 }

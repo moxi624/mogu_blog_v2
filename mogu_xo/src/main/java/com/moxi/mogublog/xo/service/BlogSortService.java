@@ -26,6 +26,7 @@ public interface BlogSortService extends SuperService<BlogSort> {
 
     /**
      * 获取博客分类列表
+     *
      * @return
      */
     public List<BlogSort> getList();
@@ -74,6 +75,7 @@ public interface BlogSortService extends SuperService<BlogSort> {
 
     /**
      * 获取排序最高的一个博客分类
+     *
      * @return
      */
     public BlogSort getTopOne();

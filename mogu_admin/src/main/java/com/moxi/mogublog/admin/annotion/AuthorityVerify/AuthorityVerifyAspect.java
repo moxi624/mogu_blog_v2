@@ -30,6 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -91,13 +92,9 @@ public class AuthorityVerifyAspect {
 
             String caetgoryMenuUids = role.getCategoryMenuUids();
 
-            List<String> categoryMenuUids = new ArrayList<>();
-
             String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
 
-            for (int a = 0; a < uids.length; a++) {
-                categoryMenuUids.add(uids[a]);
-            }
+            List<String> categoryMenuUids = new ArrayList<>(Arrays.asList(uids));
 
             // 这里只需要查询访问的按钮
             QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
@@ -116,7 +113,7 @@ public class AuthorityVerifyAspect {
         }
 
         // 判断该角色是否能够访问该接口
-        Boolean flag = false;
+        boolean flag = false;
         for (String item : urlList) {
             if (url.equals(item)) {
                 flag = true;
@@ -130,8 +127,7 @@ public class AuthorityVerifyAspect {
         }
 
         //执行业务
-        Object result = joinPoint.proceed();
-        return result;
+        return joinPoint.proceed();
     }
 
 }

@@ -26,17 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -68,10 +66,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     LinkService linkService;
     @Autowired
-    private BlogService blogService;
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
-    @Autowired
     RedisUtil redisUtil;
     @Resource
     TagMapper tagMapper;
@@ -82,10 +76,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     AdminService adminService;
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
     SystemConfigService systemConfigService;
-
+    @Autowired
+    private BlogService blogService;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Value(value = "${PROJECT_NAME}")
     private String PROJECT_NAME;
 
@@ -899,31 +896,31 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     public String uploadLocalBlog(List<MultipartFile> filedatas) throws IOException {
 
         SystemConfig systemConfig = systemConfigService.getConfig();
-        if(systemConfig == null) {
+        if (systemConfig == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
         } else {
-            if(EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu()) && (StringUtils.isEmpty(systemConfig.getQiNiuPictureBaseUrl()) || StringUtils.isEmpty(systemConfig.getQiNiuAccessKey())
+            if (EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu()) && (StringUtils.isEmpty(systemConfig.getQiNiuPictureBaseUrl()) || StringUtils.isEmpty(systemConfig.getQiNiuAccessKey())
                     || StringUtils.isEmpty(systemConfig.getQiNiuSecretKey()) || StringUtils.isEmpty(systemConfig.getQiNiuBucket()) || StringUtils.isEmpty(systemConfig.getQiNiuArea()))) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_QI_NIU);
             }
 
-            if(EOpenStatus.OPEN.equals(systemConfig.getUploadLocal()) && StringUtils.isEmpty(systemConfig.getLocalPictureBaseUrl())) {
+            if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal()) && StringUtils.isEmpty(systemConfig.getLocalPictureBaseUrl())) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_LOCAL);
             }
         }
 
 
         List<MultipartFile> fileList = new ArrayList<>();
-        for(MultipartFile file : filedatas) {
+        for (MultipartFile file : filedatas) {
             String fileName = file.getOriginalFilename();
-            if(FileUtils.isMarkdown(fileName)) {
+            if (FileUtils.isMarkdown(fileName)) {
                 fileList.add(file);
             } else {
                 return ResultUtil.result(SysConf.ERROR, "目前仅支持Mrkdown文件");
             }
         }
 
-        if(fileList.size() == 0) {
+        if (fileList.size() == 0) {
             return ResultUtil.result(SysConf.ERROR, "请选中需要上传的文件");
         }
 
@@ -953,7 +950,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Map<String, String> pictureMap = new HashMap<>();
         for (LinkedTreeMap<String, String> item : list) {
 
-            if(EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+            if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
                 // 获取七牛云上的图片
                 pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.QI_NIU_URL));
             } else {
@@ -1003,7 +1000,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         // 获取任意博客封面
         Picture picture = pictureService.getTopOne();
-        if(blogSort == null || tag == null || picture == null) {
+        if (blogSort == null || tag == null || picture == null) {
             return ResultUtil.result(SysConf.ERROR, "使用本地上传，请先确保博客分类，博客标签，博客图片中含有数据");
         }
 
@@ -1017,7 +1014,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Integer count = 1;
         for (String content : fileContentList) {
             // 循环替换里面的图片
-            for(Map.Entry<String, String> map : matchUrlMap.entrySet()){
+            for (Map.Entry<String, String> map : matchUrlMap.entrySet()) {
                 content = content.replace(map.getKey(), map.getValue());
             }
             Blog blog = new Blog();
@@ -1028,14 +1025,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.setArticlesPart(PROJECT_NAME);
             blog.setLevel(ELevel.NORMAL);
             blog.setTitle("默认标题" + count);
-            blog.setSummary("默认简介"+ count);
+            blog.setSummary("默认简介" + count);
             blog.setContent(content);
             blog.setFileUid(picture.getFileUid());
             blog.setIsOriginal(EOriginal.ORIGINAL);
             blog.setIsPublish(EPublish.NO_PUBLISH);
             blog.setStartComment(EOpenStatus.OPEN);
             blogList.add(blog);
-            count ++;
+            count++;
         }
         // 批量添加博客
         blogService.saveBatch(blogList);

@@ -1,29 +1,29 @@
 package com.moxi.mogublog.picture.restapi;
 
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.picture.entity.FileSort;
 import com.moxi.mogublog.commons.feign.AdminFeignClient;
+import com.moxi.mogublog.picture.entity.FileSort;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.DateUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -51,19 +51,16 @@ import java.util.*;
 public class FileRestApi {
 
     @Autowired
+    AdminFeignClient adminFeignClient;
+    @Autowired
+    FeignUtil feignUtil;
+    @Autowired
     private FileService fileService;
     @Autowired
     private FileSortService fileSortService;
-
     //获取上传路径
     @Value(value = "${file.upload.path}")
     private String path;
-
-    @Autowired
-    AdminFeignClient adminFeignClient;
-
-    @Autowired
-    FeignUtil feignUtil;
 
     @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
@@ -82,7 +79,7 @@ public class FileRestApi {
 
     @ApiOperation(value = "截图上传", notes = "截图上传")
     @RequestMapping(value = "/cropperPicture", method = RequestMethod.POST)
-    public String cropperPicture( @RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String cropperPicture(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         List<MultipartFile> filedatas = new ArrayList<>();
 
@@ -95,7 +92,7 @@ public class FileRestApi {
         Map<String, String> qiNiuResultMap = new HashMap<>();
 
         // 判断是否是web端发送过来的请求
-        if(SysConf.WEB.equals(platform)) {
+        if (SysConf.WEB.equals(platform)) {
             // 如果是调用web端获取配置的接口
             qiNiuResultMap = feignUtil.getQiNiuConfigByWebToken(token);
         } else {
@@ -117,7 +114,7 @@ public class FileRestApi {
         String qiNiuArea = "";
         String picturePriority = "";
 
-        if(qiNiuConfig == null) {
+        if (qiNiuConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         } else {
 
@@ -132,12 +129,12 @@ public class FileRestApi {
             qiNiuArea = qiNiuResultMap.get("qiNiuArea");
             picturePriority = qiNiuResultMap.get("picturePriority");
 
-            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -159,12 +156,12 @@ public class FileRestApi {
                 for (int i = 0; i < picData.size(); i++) {
                     Map<String, Object> item = new HashMap<>();
 
-                    item.put(SysConf.UID,  picData.get(i).get(SysConf.UID));
+                    item.put(SysConf.UID, picData.get(i).get(SysConf.UID));
 
                     if ("1".equals(picturePriority)) {
-                        item.put(SysConf.URL,  qiNiuPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
+                        item.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     } else {
-                        item.put(SysConf.URL,  localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
+                        item.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     }
                     listMap.add(item);
                 }
@@ -179,6 +176,7 @@ public class FileRestApi {
      * 获取文件的信息接口
      * fileIds 获取文件信息的ids
      * code ids用什么分割的，默认“,”
+     *
      * @return
      */
 
@@ -346,7 +344,7 @@ public class FileRestApi {
         String qiNiuArea = "";
         String picturePriority = "";
 
-        if(qiNiuConfig == null) {
+        if (qiNiuConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         } else {
 
@@ -361,12 +359,12 @@ public class FileRestApi {
             qiNiuArea = qiNiuResultMap.get("qiNiuArea");
             picturePriority = qiNiuResultMap.get("picturePriority");
 
-            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -378,11 +376,12 @@ public class FileRestApi {
             qiNiuConfig.put("uploadLocal", uploadLocal);
         }
 
-       return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
+        return fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
     }
 
     /**
      * 通过URL将图片上传到自己服务器中
+     *
      * @param fileVO
      * @param result
      * @return
@@ -410,7 +409,7 @@ public class FileRestApi {
         String qiNiuArea = "";
         String picturePriority = "";
 
-        if(qiNiuConfig == null) {
+        if (qiNiuConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         } else {
 
@@ -425,12 +424,12 @@ public class FileRestApi {
             qiNiuArea = qiNiuResultMap.get("qiNiuArea");
             picturePriority = qiNiuResultMap.get("picturePriority");
 
-            if("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -511,7 +510,7 @@ public class FileRestApi {
                 QiniuUtil qn = new QiniuUtil();
                 String qiNiuUrl = "";
                 List<String> list = new ArrayList<>();
-                java.io.File dest= null;
+                java.io.File dest = null;
 
                 FileOutputStream os = null;
 
@@ -519,7 +518,7 @@ public class FileRestApi {
                 InputStream inputStream = null;
 
                 // 判断是否能够上传至本地
-                if("1".equals(uploadLocal)) {
+                if ("1".equals(uploadLocal)) {
                     // 判断文件是否存在
                     File file1 = new File(newPath);
                     if (!file1.exists()) {
@@ -561,14 +560,14 @@ public class FileRestApi {
                             // 完毕，关闭所有链接
                             os.close();
                             inputStream.close();
-                        }catch (Exception e) {
+                        } catch (Exception e) {
                             log.error(e.getMessage());
                         }
                     }
                 }
 
                 // 上传七牛云，判断是否能够上传七牛云
-                if("1".equals(uploadQiNiu)) {
+                if ("1".equals(uploadQiNiu)) {
                     try {
                         File pdfFile = new File(saveUrl);
                         FileInputStream fileInputStream = new FileInputStream(pdfFile);
@@ -634,6 +633,7 @@ public class FileRestApi {
 
     /**
      * 通过URL将图片上传到自己服务器中（用于Github和Gitee的头像上传）
+     *
      * @param fileVO
      * @param result
      * @return
@@ -652,12 +652,12 @@ public class FileRestApi {
         String qiNiuBucket = resultMap.get(SQLConf.QI_NIU_BUCKET).toString();
         String qiNiuArea = resultMap.get(SQLConf.QI_NIU_AREA).toString();
 
-        if(EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+        if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                 || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
             return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
         }
 
-        if(EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+        if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
             return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
         }
 
@@ -739,7 +739,7 @@ public class FileRestApi {
                 QiniuUtil qn = new QiniuUtil();
                 String qiNiuUrl = "";
                 List<String> list = new ArrayList<>();
-                java.io.File dest= null;
+                java.io.File dest = null;
 
                 FileOutputStream os = null;
 
@@ -747,7 +747,7 @@ public class FileRestApi {
                 InputStream inputStream = null;
 
                 // 判断是否能够上传至本地
-                if("1".equals(uploadLocal)) {
+                if ("1".equals(uploadLocal)) {
                     // 判断文件是否存在
                     File file1 = new File(newPath);
                     if (!file1.exists()) {
@@ -792,14 +792,14 @@ public class FileRestApi {
                             // 完毕，关闭所有链接
                             os.close();
                             inputStream.close();
-                        }catch (Exception e) {
+                        } catch (Exception e) {
                             log.error(e.getMessage());
                         }
                     }
                 }
 
                 // 上传七牛云，判断是否能够上传七牛云
-                if("1".equals(uploadQiNiu)) {
+                if ("1".equals(uploadQiNiu)) {
                     try {
                         File pdfFile = new File(saveUrl);
                         FileInputStream fileInputStream = new FileInputStream(pdfFile);

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author 陌溪
  * @date 2020年3月21日18:57:15
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthorityVerify {
     String value() default "";

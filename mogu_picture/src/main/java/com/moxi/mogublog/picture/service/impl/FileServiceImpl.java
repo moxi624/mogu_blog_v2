@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,20 +59,19 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         String sortName = "";
 
         // 判断图片来源
-        if(SysConf.PICTURE.equals(source)) {
+        if (SysConf.PICTURE.equals(source)) {
             // 当从vue-mogu-web网站过来的，直接从参数中获取
             userUid = request.getParameter(SysConf.USER_UID);
             adminUid = request.getParameter(SysConf.ADMIN_UID);
             projectName = request.getParameter(SysConf.PROJECT_NAME);
             sortName = request.getParameter(SysConf.SORT_NAME);
-        } else if(SysConf.ADMIN.equals(source)) {
+        } else if (SysConf.ADMIN.equals(source)) {
             // 当图片从mogu-admin传递过来的时候
             userUid = request.getAttribute(SysConf.USER_UID).toString();
             adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
             projectName = request.getAttribute(SysConf.PROJECT_NAME).toString();
             sortName = request.getAttribute(SysConf.SORT_NAME).toString();
-        }
-        else {
+        } else {
             userUid = request.getAttribute(SysConf.USER_UID).toString();
             adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
             projectName = request.getAttribute(SysConf.PROJECT_NAME).toString();
@@ -152,12 +150,12 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 QiniuUtil qn = new QiniuUtil();
                 String qiNiuUrl = "";
                 List<String> list = new ArrayList<>();
-                java.io.File dest= null;
+                java.io.File dest = null;
                 java.io.File saveFile = null;
                 try {
 
                     // 判断是否能够上传至本地
-                    if("1".equals(uploadLocal)) {
+                    if ("1".equals(uploadLocal)) {
                         // 保存本地，创建目录
                         java.io.File file1 = new java.io.File(newPath);
                         if (!file1.exists()) {
@@ -169,7 +167,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     MultipartFile tempData = filedata;
 
                     // 上传七牛云，判断是否能够上传七牛云
-                    if("1".equals(uploadQiNiu)) {
+                    if ("1".equals(uploadQiNiu)) {
                         // 创建一个临时目录文件
                         String tempFiles = "temp/" + newFileName;
                         dest = new java.io.File(tempFiles);
@@ -184,14 +182,14 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
 
                     // 判断是否能够上传至本地
-                    if("1".equals(uploadLocal)) {
+                    if ("1".equals(uploadLocal)) {
                         // 序列化文件到本地
                         saveFile.createNewFile();
                         tempData.transferTo(saveFile);
                     }
 
 
-                }catch (QiniuException e) {
+                } catch (QiniuException e) {
                     log.info("==上传七牛云异常===url:" + saveUrl + "-----");
                     log.error(e.getMessage());
                     return ResultUtil.result(SysConf.ERROR, "七牛云配置有误");
@@ -199,7 +197,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     log.info("==上传文件异常===url:" + saveUrl + "-----");
                     log.error(e.getMessage());
                     return ResultUtil.result(SysConf.ERROR, "文件上传失败");
-                } finally{
+                } finally {
                     if (dest != null && dest.getParentFile().exists()) {
                         dest.delete();
                     }

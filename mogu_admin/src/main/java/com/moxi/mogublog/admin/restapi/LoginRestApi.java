@@ -88,9 +88,9 @@ public class LoginRestApi {
 
         String ip = IpUtils.getIpAddr(request);
         String limitCount = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
-        if(StringUtils.isNotEmpty(limitCount)) {
+        if (StringUtils.isNotEmpty(limitCount)) {
             Integer tempLimitCount = Integer.valueOf(limitCount);
-            if(tempLimitCount >= 5) {
+            if (tempLimitCount >= 5) {
                 return ResultUtil.result(SysConf.ERROR, "密码输错次数过多,已被锁定30分钟");
             }
         }
@@ -269,13 +269,14 @@ public class LoginRestApi {
     /**
      * 设置登录限制，返回剩余次数
      * 密码错误五次，将会锁定10分钟
+     *
      * @param request
      */
     private Integer setLoginCommit(HttpServletRequest request) {
         String ip = IpUtils.getIpAddr(request);
         String count = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
         Integer surplusCount = 5;
-        if(StringUtils.isNotEmpty(count)) {
+        if (StringUtils.isNotEmpty(count)) {
             Integer countTemp = Integer.valueOf(count) + 1;
             surplusCount = surplusCount - countTemp;
             redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, String.valueOf(countTemp), 10, TimeUnit.MINUTES);

@@ -150,8 +150,8 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
     public String deleteBatchPicture(PictureVO pictureVO) {
         // 参数校验
         // 图片删除的时候，是携带多个id拼接而成的
-        String uidStr =  pictureVO.getUid();
-        if(StringUtils.isEmpty(uidStr)) {
+        String uidStr = pictureVO.getUid();
+        if (StringUtils.isEmpty(uidStr)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = StringUtils.changeStringToString(pictureVO.getUid(), SysConf.FILE_SEGMENTATION);

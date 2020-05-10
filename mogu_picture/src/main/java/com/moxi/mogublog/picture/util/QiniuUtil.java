@@ -27,10 +27,11 @@ public class QiniuUtil {
 
     /**
      * 七牛云上传图片
+     *
      * @param localFilePath
      * @return
      */
-    public String uploadQiniu (File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
+    public String uploadQiniu(File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
 
         //生成上传凭证，然后准备上传
         String accessKey = qiNiuConfig.get("qiNiuAccessKey");
@@ -47,20 +48,30 @@ public class QiniuUtil {
         switch (EQiNiuArea.valueOf(area).getCode()) {
             case "z0": {
                 cfg = new Configuration(Zone.zone0());
-            }; break;
+            }
+            ;
+            break;
             case "z1": {
                 cfg = new Configuration(Zone.zone1());
-            }; break;
+            }
+            ;
+            break;
             case "z2": {
                 cfg = new Configuration(Zone.zone2());
-            }; break;
+            }
+            ;
+            break;
             case "na0": {
                 cfg = new Configuration(Zone.zoneNa0());
-            }; break;
+            }
+            ;
+            break;
             case "as0": {
                 cfg = new Configuration(Zone.zoneAs0());
-            }; break;
-            default:{
+            }
+            ;
+            break;
+            default: {
                 return null;
             }
         }
@@ -78,7 +89,7 @@ public class QiniuUtil {
         //解析上传成功的结果
         DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
 
-        log.info("{七牛图片上传key: "+ putRet.key+",七牛图片上传hash: "+ putRet.hash+"}");
+        log.info("{七牛图片上传key: " + putRet.key + ",七牛图片上传hash: " + putRet.hash + "}");
 
         result = putRet.key;
 

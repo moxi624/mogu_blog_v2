@@ -140,7 +140,8 @@
                             <#if blog.photoList[0]??>
                                 <i><img src="${blog.photoList[0]}"></i>
                             </#if>
-                            <p>${blog.title} <span><a href="${webBasePath}/freemarker/info/${blog.uid}">阅读</a></span></p>
+                            <p>${blog.title} <span><a href="${webBasePath}/freemarker/info/${blog.uid}">阅读</a></span>
+                            </p>
                         </li>
                     </#list>
                 </#if>
@@ -152,7 +153,9 @@
                 <#if fourthBlogList[0]??>
                     <li>
                         <i><img src="${fourthBlogList[0].photoList[0]}"></i>
-                        <p><a href="${webBasePath}/freemarker/info/${fourthBlogList[0].uid}">${fourthBlogList[0].title}</a></p>
+                        <p>
+                            <a href="${webBasePath}/freemarker/info/${fourthBlogList[0].uid}">${fourthBlogList[0].title}</a>
+                        </p>
                     </li>
                 </#if>
             </ul>
@@ -174,7 +177,8 @@
                 <#if hotBlogList[0]??>
                     <li>
                         <i><img src="${hotBlogList[0].photoList[0]}"></i>
-                        <p><a href="${webBasePath}/freemarker/info/${hotBlogList[0].uid}">${hotBlogList[0].title}</a></p>
+                        <p><a href="${webBasePath}/freemarker/info/${hotBlogList[0].uid}">${hotBlogList[0].title}</a>
+                        </p>
                     </li>
                 </#if>
             </ul>

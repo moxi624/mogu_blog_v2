@@ -36,6 +36,7 @@ public class FeignUtil {
 
     /**
      * 通过Token获取七牛云配置
+     *
      * @param token
      * @return
      */
@@ -48,7 +49,7 @@ public class FeignUtil {
         String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token);
 
         // 判断Redis中是否有数据
-        if(StringUtils.isNotEmpty(jsonResult)) {
+        if (StringUtils.isNotEmpty(jsonResult)) {
 
             resultMap = (Map<String, String>) JsonUtils.jsonToMap(jsonResult, String.class);
 
@@ -59,7 +60,7 @@ public class FeignUtil {
 
             Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
 
-            if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            if (resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
                 resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
                 //将从token存储到redis中，设置30分钟后过期
                 stringRedisTemplate.opsForValue().set(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(resultMap), 30, TimeUnit.MINUTES);
@@ -70,6 +71,7 @@ public class FeignUtil {
 
     /**
      * 通过Web端的token获取七牛云配置文件
+     *
      * @param token
      * @return
      */
@@ -82,7 +84,7 @@ public class FeignUtil {
         String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.WEB_TOKEN + SysConf.REDIS_SEGMENTATION + token);
 
         // 判断Redis中是否有数据
-        if(StringUtils.isNotEmpty(jsonResult)) {
+        if (StringUtils.isNotEmpty(jsonResult)) {
 
             resultMap = (Map<String, String>) JsonUtils.jsonToMap(jsonResult, String.class);
 
@@ -93,7 +95,7 @@ public class FeignUtil {
 
             Map<String, Object> resultTempMap = JsonUtils.jsonToMap(resultStr);
 
-            if(resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+            if (resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
                 resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
                 //将从token存储到redis中，设置30分钟后过期
                 stringRedisTemplate.opsForValue().set(SysConf.WEB_TOKEN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(resultMap), 30, TimeUnit.MINUTES);

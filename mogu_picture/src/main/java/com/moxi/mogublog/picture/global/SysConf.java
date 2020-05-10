@@ -14,5 +14,4 @@ public final class SysConf extends BaseSysConf {
     public final static String UPDATE_TIME = "updateTime";
 
 
-
 }

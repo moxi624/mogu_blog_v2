@@ -328,7 +328,7 @@
   }
   .commentList .left {
     display: inline-block;
-    width: 4%;
+    width: 5%;
     height: 100%;
   }
   .commentList .left img {
@@ -338,7 +338,7 @@
   }
   .commentList .right {
     display: inline-block;
-    width: 95%;
+    width: 93%;
     margin-left: 5px;
   }
   .commentList .rightTop {

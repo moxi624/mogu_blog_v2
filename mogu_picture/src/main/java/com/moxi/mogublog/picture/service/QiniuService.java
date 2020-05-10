@@ -1,7 +1,5 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.picture.entity.File;
-import com.moxi.mougblog.base.service.SuperService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +18,7 @@ public interface QiniuService {
 
     /**
      * 多文件上传
+     *
      * @param file
      * @return
      */
@@ -27,18 +26,21 @@ public interface QiniuService {
 
     /**
      * 通过URL上传图片
+     *
      * @return
      */
     Object uploadImgByUrl();
 
     /**
      * 工具栏“插入\编辑超链接”的文件上传
+     *
      * @return
      */
     Object fileUpload(HttpServletRequest request);
 
     /**
      * 图像中的图片上传
+     *
      * @return
      */
     Object imgUpload(HttpServletRequest request);

@@ -63,6 +63,7 @@ public interface LinkService extends SuperService<Link> {
 
     /**
      * 点击友链
+     *
      * @return
      */
     public String addLinkCount(String uid);

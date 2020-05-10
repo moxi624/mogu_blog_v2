@@ -38,6 +38,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 给博客列表设置分类，标签，图片
+     *
      * @param list
      * @return
      */
@@ -124,6 +125,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 获取点击量前top的博客列表
+     *
      * @param top
      * @return
      */
@@ -176,6 +178,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 本地博客上传
+     *
      * @param filedatas
      * @return
      */
@@ -187,15 +190,17 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过推荐等级获取博客Page
-     * @param level 推荐级别
+     *
+     * @param level       推荐级别
      * @param currentPage 当前页
-     * @param useSort 是否使用排序字段
+     * @param useSort     是否使用排序字段
      * @return
      */
     public IPage<Blog> getBlogPageByLevel(Integer level, Long currentPage, Integer useSort);
 
     /**
      * 获取首页排行博客
+     *
      * @return
      */
     public IPage<Blog> getHotBlog();
@@ -203,6 +208,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 获取最新的博客
+     *
      * @param currentPage
      * @param pageSize
      * @return
@@ -211,6 +217,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 按时间戳获取博客
+     *
      * @param currentPage
      * @param pageSize
      * @return
@@ -219,6 +226,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过博客Uid获取点赞数
+     *
      * @param uid
      * @return
      */
@@ -226,6 +234,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过UID给博客点赞
+     *
      * @param uid
      * @return
      */
@@ -233,6 +242,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 根据标签Uid获取相关的博客
+     *
      * @param tagUid
      * @return
      */
@@ -240,6 +250,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过博客分类UID获取博客列表
+     *
      * @param blogSortUid
      * @param currentPage
      * @param pageSize
@@ -249,6 +260,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过关键字搜索博客列表
+     *
      * @param keywords
      * @param currentPage
      * @param pageSize
@@ -258,6 +270,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过标签搜索博客
+     *
      * @param tagUid
      * @param currentPage
      * @param pageSize
@@ -267,6 +280,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过博客分类搜索博客
+     *
      * @param blogSortUid
      * @param currentPage
      * @param pageSize
@@ -276,6 +290,7 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过作者搜索博客
+     *
      * @param author
      * @param currentPage
      * @param pageSize
@@ -286,12 +301,14 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 获取博客的归档日期
+     *
      * @return
      */
     public String getBlogTimeSortList();
 
     /**
      * 通过月份获取日期
+     *
      * @param monthDate
      * @return
      */

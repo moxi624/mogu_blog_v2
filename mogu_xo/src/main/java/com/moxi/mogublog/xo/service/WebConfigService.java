@@ -23,6 +23,7 @@ public interface WebConfigService extends SuperService<WebConfig> {
 
     /**
      * 通过显示列表获取配置
+     *
      * @return
      */
     public WebConfig getWebConfigByShowList();

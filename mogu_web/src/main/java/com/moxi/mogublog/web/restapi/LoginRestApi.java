@@ -1,7 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
 
-import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.utils.*;
@@ -12,7 +11,6 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.vo.UserVO;
-import com.moxi.mougblog.base.enums.EAccountType;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.holder.RequestHolder;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -51,14 +48,11 @@ public class LoginRestApi {
 
 
     @Autowired
+    RabbitMqUtil rabbitMqUtil;
+    @Autowired
     private UserService userService;
-
     @Autowired
     private RedisUtil redisUtil;
-
-    @Autowired
-    RabbitMqUtil rabbitMqUtil;
-
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
 
@@ -71,15 +65,15 @@ public class LoginRestApi {
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userName).or().eq(SQLConf.EMAIL, userName));
         queryWrapper.last("limit 1");
         User user = userService.getOne(queryWrapper);
-        if(user == null || EStatus.DISABLED == user.getStatus()) {
+        if (user == null || EStatus.DISABLED == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户不存在");
         }
 
-        if(EStatus.FREEZE == user.getStatus()) {
+        if (EStatus.FREEZE == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户账号未激活");
         }
 
-        if(StringUtils.isNotEmpty(user.getPassWord()) && user.getPassWord().equals(MD5Utils.string2MD5(userVO.getPassWord()))) {
+        if (StringUtils.isNotEmpty(user.getPassWord()) && user.getPassWord().equals(MD5Utils.string2MD5(userVO.getPassWord()))) {
             // 更新登录信息
             HttpServletRequest request = RequestHolder.getRequest();
             String ip = IpUtils.getIpAddr(request);
@@ -153,7 +147,7 @@ public class LoginRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
         User user = JsonUtils.jsonToPojo(userInfo, User.class);
-        if(EStatus.FREEZE != user.getStatus()) {
+        if (EStatus.FREEZE != user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户账号已经被激活");
         }
         user.setStatus(EStatus.ENABLE);
@@ -164,7 +158,7 @@ public class LoginRestApi {
     @ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
     @PostMapping(value = "/logout")
     public String logout(@ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
-        if(StringUtils.isEmpty(token)) {
+        if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
         redisUtil.set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, "");
