@@ -108,15 +108,16 @@
 - mogu_spider：爬虫服务`（目前还未完善）`
 - mogu_spider：网关服务`（目前还未完善）`
 - mogu_zipkin：链路追踪服务，`目前使用java -jar的方式启动`
-- mogu_search：搜索服务，ElasticSearch和Solr作为检索工具，可插拔配置
+- mogu_search：搜索服务，ElasticSearch和Solr作为检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
+- mogu_commons: 是公共模块，主要用于存放Entity实体类和Feign远程调用接口
 - mogu_utils: 是常用工具类；
-- mogu_xo: 是存放 Entity，Service，Dao层的
+- mogu_xo: 是存放 VO、Service，Dao层的
 - mogu_base: 是一些Base基类
 - mogu_config: 是存放一些配置
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
-- nuxt_mogu_web：Nuxt的门户网站`（目前还未完善）`
+- nuxt_mogu_web：Nuxt的门户网站，主要用于支持SEO搜索引擎优化`（目前还未完善）`
 
 ## 技术选型
 
@@ -261,15 +262,17 @@
 - [x] 写一个评论模块，用于替换搜狐畅言
 - [x] 按钮级别的细粒度权限控制
 - [x] 增加评论表情
+- [x] 增加数据字典管理
+- [x] 前端增加用户个人中心
+- [ ] 增加一个FAQ常见问题文档
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块
-- [x] 增加数据字典管理
 - [ ] 使用Freemark页面静态化技术对博客详情页静态化
 - [ ] 解决Nuxt_mogu_web中存在的问题，使博客能被搜索引擎收录
-- [x] 前端增加用户个人中心
 - [ ] 让原创文章能够同步到多平台，如：CSDN，掘金，博客园等
 - [ ] 增加博客迁移功能，让其它平台的博客，如：CSDN、博客园，WordPress能够同步到蘑菇博客中
+- [ ] 适配门户页面的移动端布局
 
 ## 贡献代码
 
