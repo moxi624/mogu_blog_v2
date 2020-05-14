@@ -66,3 +66,23 @@ nginx没有问题后，我们就需要自己进入后台管理页面，手动上
 上传成功后，再到博客管理页面，修改博客标题图，然后保存即可
 
 ![image-20200513195018737](images/image-20200513195018737.png)
+
+## 5、使用npm install命令安装依赖失败，出现node-sass错误
+
+首先我们需要使用淘宝的npm镜像源镜像安装
+
+```
+# 安装依赖
+npm install --registry=https://registry.npm.taobao.org
+```
+
+如果window用户出现`node-sass`安装失败，的问题，[解决方案](https://github.com/PanJiaChen/vue-element-admin/issues/24)。我们首先需要配置node-sass国内镜像源
+
+```
+# 指定node-sass的国内镜像源
+npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass
+
+# 重新安装
+npm install --registry=https://registry.npm.taobao.org
+```
+

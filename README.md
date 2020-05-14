@@ -17,7 +17,10 @@
 <img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img>
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
-## 项目介绍
+
+
+##项目介绍
+
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云。
 
 - 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合目前流行的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
@@ -95,6 +98,12 @@
 
 - Gitee地址：https://gitee.com/moxi159753/mogu_blog_v2
 - Github地址：https://github.com/moxi624/mogu_blog_v2
+
+## FAQ文档
+
+[FAQ文档](./doc/FAQ)汇集了一些小伙伴在使用过程中遇到的问题，在进行蘑菇博客的搭建和部署的时，遇到问题后可以优先查看本[FAQ文档](./doc/FAQ)看看是否出现，这里将收集各个小伙伴遇到的问题，希望各位小伙伴能自己提前翻阅一下，高效提问，避免重复提问。
+
+如果你遇到了[FAQ文档](./doc/FAQ)中没有出现的问题，并且已经解决了，欢迎能够提交Pull Request更新文档，或者直接在群里给我反馈，感谢各位小伙伴~，希望大家在部署和使用的时候能够少走弯路。
 
 ## 目录介绍
 
