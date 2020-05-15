@@ -28,6 +28,18 @@ export function editUser(params) {
 }
 
 /**
+ * 更新用户密码
+ * @param params
+ */
+export function updateUserPwd(params) {
+  return request({
+    url: process.env.WEB_API + '/oauth/updateUserPwd',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
  * 获取用户反馈
  * @param params
  */

@@ -94,55 +94,6 @@ public class WebUtils {
     }
 
     /**
-     * 格式化数据获取图片列表
-     *
-     * @param result
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public static List<String> getPicture(String result) {
-
-        List<String> picUrls = new ArrayList<>();
-        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(picMap.get("code"))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
-            if (picData.size() > 0) {
-                for (int i = 0; i < picData.size(); i++) {
-                    picUrls.add((String) picData.get(i).get("url"));
-                }
-            }
-        }
-        return picUrls;
-    }
-
-    /**
-     * 获取图片，返回Map
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年10月21日下午12:55:18
-     */
-    @SuppressWarnings("unchecked")
-    public static List<Map<String, Object>> getPictureMap(String result) {
-        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(picMap.get("code"))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
-            if (picData.size() > 0) {
-                for (int i = 0; i < picData.size(); i++) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    if (StringUtils.isEmpty(picData.get(i).get("url")) || StringUtils.isEmpty(picData.get(i).get("uid"))) {
-                        continue;
-                    }
-                    map.put("url", (String) picData.get(i).get("url"));
-                    map.put("uid", (String) picData.get(i).get("uid"));
-                    resultList.add(map);
-                }
-            }
-        }
-        return resultList;
-    }
-
-    /**
      * 获取结果集的内容
      *
      * @param result

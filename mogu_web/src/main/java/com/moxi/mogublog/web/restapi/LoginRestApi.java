@@ -3,6 +3,7 @@ package com.moxi.mogublog.web.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.User;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
@@ -10,6 +11,7 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -53,10 +56,14 @@ public class LoginRestApi {
     private UserService userService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    PictureFeignClient pictureFeignClient;
+    @Autowired
+    WebUtil webUtil;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
-
     @ApiOperation(value = "用户登录", notes = "用户登录")
+
     @PostMapping("/login")
     public String login(@Validated({GetOne.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
@@ -83,9 +90,17 @@ public class LoginRestApi {
             user.setLastLoginIp(ip);
             user.setLastLoginTime(new Date());
             user.updateById();
-
+            // 获取用户头像
+            if (!StringUtils.isEmpty(user.getAvatar())) {
+                String avatarResult = pictureFeignClient.getPicture(user.getAvatar(), ",");
+                List<String> picList = webUtil.getPicture(avatarResult);
+                if (picList != null && picList.size() > 0) {
+                    user.setPhotoUrl(webUtil.getPicture(avatarResult).get(0));
+                }
+            }
             // 生成token
             String token = StringUtils.getUUID();
+
             // 过滤密码
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中

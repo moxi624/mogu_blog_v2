@@ -33,6 +33,7 @@ public final class SysConf extends BaseSysConf {
     public static final String NICKNAME = "nickname";
     public static final String UUID = "uuid";
     public static final String SOURCE = "source";
+    public final static String MOGU = "MOGU";
 
     /**
      * 评论相关

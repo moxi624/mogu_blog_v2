@@ -376,6 +376,30 @@ public class AuthRestApi {
         }
     }
 
+    @ApiOperation(value = "更新用户密码", notes = "更新用户密码")
+    @PostMapping("/updateUserPwd")
+    public String updateUserPwd(HttpServletRequest request,@RequestParam(value = "oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
+        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
+        if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
+        }
+        String userUid = request.getAttribute(SysConf.USER_UID).toString();
+        User user = userService.getById(userUid);
+        // 判断是否是第三方登录的账号
+        if(!user.getSource().equals(SysConf.MOGU)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.CANNOT_CHANGE_THE_PASSWORD_BY_USER);
+        }
+        // 判断旧密码是否一致
+        if(user.getPassWord().equals(MD5Utils.string2MD5(oldPwd))) {
+            user.setPassWord(MD5Utils.string2MD5(newPwd));
+            user.updateById();
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        }
+        return ResultUtil.result(SysConf.ERROR, MessageConf.PASSWORD_IS_ERROR);
+    }
+
     @ApiOperation(value = "申请友链", notes = "申请友链")
     @PostMapping("/replyBlogLink")
     public String replyBlogLink(HttpServletRequest request, @RequestBody LinkVO linkVO) {

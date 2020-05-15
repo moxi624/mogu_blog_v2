@@ -202,9 +202,7 @@
                     <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
                   </div>
 
-                  <div class="rightCenter">
-                    {{comment.content}}
-                  </div>
+                  <div class="rightCenter" v-html="$xss(comment.content, options)"></div>
                 </span>
                 </div>
               </el-card>
@@ -238,8 +236,7 @@
                         <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
                       </div>
 
-                      <div class="rightCenter">
-                        {{reply.content}}
+                      <div class="rightCenter" v-html="$xss(reply.content, options)">
                       </div>
                   </span>
                 </div>
@@ -276,8 +273,8 @@
       <el-tab-pane label="我的反馈" name="4">
         <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
 
-        <el-collapse >
-          <el-collapse-item title="反馈须知">
+        <el-collapse v-model="activeNames">
+          <el-collapse-item title="反馈须知" name="1">
             <div>如果您对本站有什么想法，可以在这里进行反馈</div>
             <div>或者加入我们的QQ群进行交流</div>
           </el-collapse-item>
@@ -398,7 +395,30 @@
       </el-tab-pane>
       <el-tab-pane label="修改密码" name="6">
         <span slot="label"><i class="el-icon-s-tools"></i> 修改密码</span>
-        修改密码
+        <el-collapse v-model="activeNames">
+          <el-collapse-item title="修改密码须知" name="1">
+            <div>此修改密码功能仅适用于账号和密码登录</div>
+            <div>对于第三方登录的账号，无法进行密码修改</div>
+          </el-collapse-item>
+        </el-collapse>
+        <el-form ref="userInfoForm" label-position="left" :model="userInfo" label-width="100px" :rules="userInfoRules">
+          <el-form-item label="旧密码" :label-width="labelWidth" prop="oldPwd">
+            <el-input type="password" v-model="userInfo.oldPwd" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="新密码" :label-width="labelWidth" prop="newPwd">
+            <el-input type="password" v-model="userInfo.newPwd" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="重复密码" :label-width="labelWidth" prop="newPwd2">
+            <el-input type="password" v-model="userInfo.newPwd2" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('changePwd')">提 交</el-button>
+          </el-form-item>
+        </el-form>
+
       </el-tab-pane>
     </el-tabs>
   </el-drawer>
@@ -442,7 +462,7 @@
   import AvatarCropper from '@/components/AvatarCropper'
   import {getWebConfig} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
-  import {authVerify, editUser, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
+  import {authVerify, editUser, updateUserPwd, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
   import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictTypeList} from "@/api/sysDictData"
@@ -458,6 +478,13 @@
     },
     data() {
       return {
+        // xss白名单配置
+        options : {
+          whiteList: {
+            a: ['href', 'title', 'target'],
+            span: ['class']
+          }
+        },
         activeNames: ['1', '2'], //激活的折叠面板
         activeName: "0", // 激活的标签
         yesNoDictList: [], // 是否 字典列表
@@ -507,6 +534,20 @@
           url: [
             {required: true, message: '网站地址不能为空', trigger: 'blur'},
             {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+          ]
+        },
+        userInfoRules: {
+          oldPwd: [
+            {required: true, message: '旧密码不能为空', trigger: 'blur'},
+            {min: 5, max: 20, message: '密码长度在5到20个字符'},
+          ],
+          newPwd: [
+            {required: true, message: '新密码不能为空', trigger: 'blur'},
+            {min: 5, max: 20, message: '密码长度在5到20个字符'},
+          ],
+          newPwd2: [
+            {required: true, message: '新密码不能为空', trigger: 'blur'},
+            {min: 5, max: 20, message: '密码长度在5到20个字符'},
           ]
         }
       };
@@ -745,7 +786,6 @@
               })
               return;
             }
-            console.log('提交反馈', this.feedback);
             addFeedback(this.feedback).then(response => {
               if(response.code == "success") {
                 this.$message({
@@ -762,6 +802,44 @@
               }
             });
           }; break;
+
+          case "changePwd": {
+            let newPwd = this.userInfo.newPwd
+            let newPwd2 = this.userInfo.newPwd2
+            let oldPwd = this.userInfo.oldPwd
+            if(newPwd != newPwd2) {
+              this.$message({
+                type: "error",
+                message: "两次密码不一致"
+              })
+              return
+            }
+            if(newPwd == oldPwd) {
+              this.$message({
+                type: "error",
+                message: "新旧密码相同"
+              })
+              return
+            }
+            let params = new URLSearchParams()
+            params.append("oldPwd", oldPwd)
+            params.append("newPwd", newPwd)
+            updateUserPwd(params).then(response => {
+              if(response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                })
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                })
+              }
+              // 重置表单
+              this.$refs.userInfoForm.resetFields()
+            })
+          };break;
         }
       },
 
@@ -935,8 +1013,8 @@
   };
 </script>
 
-<style scoped>
-
+<style >
+  @import "../assets/css/emoji.css";
   .el-tag {
     height: 25px;
     line-height: 25px;
@@ -945,10 +1023,7 @@
   #starlist li .title {
     color: #00a7eb;
   }
-
-
   .userInfoAvatar {
-
     width: 35px;
     height: 35px;
     position: absolute;
@@ -1081,6 +1156,26 @@
     display: inline-block;
     width: 240px;
     margin-bottom: 5px;
+  }
+
+  .emoji-panel-btn img{
+    height: 35px;
+    width: 35px;
+  }
+  .emoji-panel-btn:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .emoji-item-common {
+    background: url("../assets/img/emoji_sprite.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+    cursor: pointer;
+  }
+  .emoji-size-small {
+    // 表情大小
+    zoom: 0.3;
   }
 
 </style>

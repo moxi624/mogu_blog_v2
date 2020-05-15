@@ -34,4 +34,6 @@ public final class MessageConf extends BaseMessageConf {
 
     public static final String BLOG_LINK_IS_NO_PUBLISH = "您申请的友链，已经下架！";
 
+    public static final String PASSWORD_IS_ERROR = "输入密码有误！";
+
 }

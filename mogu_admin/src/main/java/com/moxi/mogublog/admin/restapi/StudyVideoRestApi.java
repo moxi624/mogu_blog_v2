@@ -5,7 +5,6 @@ import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
 import com.moxi.mogublog.admin.annotion.AvoidRepeatableCommit.AvoidRepeatableCommit;
 import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
@@ -50,8 +49,6 @@ public class StudyVideoRestApi {
     StudyVideoService studyVideoService;
     @Autowired
     ResourceSortService resourceSortService;
-    @Autowired
-    PictureFeignClient pictureFeignClient;
 
     @AuthorityVerify
     @ApiOperation(value = "获取学习视频列表", notes = "获取学习视频列表", response = String.class)

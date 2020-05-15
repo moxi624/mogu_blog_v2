@@ -165,6 +165,7 @@ export default {
       isEditForm: false,
       commentTypeDictList: [], //评论类型字典
       commentSourceDictList: [], //评论来源字典
+      commentTypeDefaultValue: null, // 评论类型默认值
     };
   },
   created() {
@@ -197,8 +198,15 @@ export default {
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
           var dictMap = response.data;
+          console.log("得到的字典类型", dictMap)
           this.commentTypeDictList = dictMap.sys_comment_type.list
           this.commentSourceDictList = dictMap.sys_comment_source.list
+
+          if(dictMap.sys_comment_type.defaultValue) {
+            this.commentTypeDefaultValue = dictMap.sys_comment_type.defaultValue
+            this.queryParams.type = this.commentTypeDefaultValue
+            this.commentList()
+          }
         }
       });
     },

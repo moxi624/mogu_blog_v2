@@ -170,7 +170,9 @@
     width: 100%;
     text-align: center;
   }
-
+  .page {
+    position: relative;
+  }
   .block {
     position: relative;
     bottom: 0px;

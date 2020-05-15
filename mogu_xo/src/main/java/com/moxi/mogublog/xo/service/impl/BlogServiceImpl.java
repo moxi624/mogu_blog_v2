@@ -191,7 +191,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         });
         String pictureList = null;
-
         if (fileUids != null) {
             pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
         }
