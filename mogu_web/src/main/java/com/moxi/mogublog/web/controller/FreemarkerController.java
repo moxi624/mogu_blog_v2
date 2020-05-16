@@ -1,9 +1,7 @@
 package com.moxi.mogublog.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.commons.entity.Blog;
-import com.moxi.mogublog.commons.entity.BlogSort;
-import com.moxi.mogublog.commons.entity.Tag;
+import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -49,6 +47,9 @@ public class FreemarkerController {
     WebConfigService webConfigService;
 
     @Autowired
+    SystemConfigService systemConfigService;
+
+    @Autowired
     BlogService blogService;
 
     @Autowired
@@ -66,6 +67,12 @@ public class FreemarkerController {
     @Value(value = "${file.upload.path}")
     private String fileUploadPath;
 
+    @Value(value = "${data.webSite.url}")
+    private String webSiteUrl;
+
+    @Value(value = "${data.web.url}")
+    private String webUrl;
+
     @RequestMapping("/info/{uid}")
     public String index(Map<String, Object> map, @PathVariable("uid") String uid) {
         // fc98d2ae7756d2587390ae441b82f52d
@@ -78,9 +85,14 @@ public class FreemarkerController {
         List<Blog> fourthBlog = blogService.getBlogListByLevel(ELevel.FOURTH);
         fourthBlog = setBlog(fourthBlog);
 
-        map.put("vueWebBasePath", "http://localhost:9527/#/");
-        map.put("webBasePath", "http://localhost:8603");
-        map.put("staticBasePath", "http://localhost:8600");
+        SystemConfig systemConfig = systemConfigService.getConfig();
+        if(systemConfig == null) {
+            return ResultUtil.result(SysConf.ERROR, "系统配置为空");
+        }
+
+        map.put("vueWebBasePath", webSiteUrl);
+        map.put("webBasePath", webUrl);
+        map.put("staticBasePath", systemConfig.getLocalPictureBaseUrl());
         map.put("webConfig", webConfigService.getWebConfig());
         map.put("blog", blogService.getBlogByUid(uid));
         map.put("sameBlog", sameBlog);
@@ -189,13 +201,18 @@ public class FreemarkerController {
                 }
             });
 
+            SystemConfig systemConfig = systemConfigService.getConfig();
+            if(systemConfig == null) {
+                return ResultUtil.result(SysConf.ERROR, "系统配置为空");
+            }
+
             for (int a = 0; a < blogList.size(); a++) {
                 //数据模型
                 Map map = new HashMap();
                 List<Blog> sameBlog = blogMap.get(blogList.get(a).getBlogSortUid());
-                map.put("vueWebBasePath", "http://localhost:9527/#/");
-                map.put("webBasePath", "http://localhost:8603");
-                map.put("staticBasePath", "http://localhost:8600");
+                map.put("vueWebBasePath", webSiteUrl);
+                map.put("webBasePath", webUrl);
+                map.put("staticBasePath", systemConfig.getLocalPictureBaseUrl());
                 map.put("webConfig", webConfigService.getWebConfig());
                 map.put("blog", blogList.get(a));
                 map.put("sameBlog", sameBlog);
@@ -206,6 +223,7 @@ public class FreemarkerController {
                 String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
 
                 inputStream = IOUtils.toInputStream(content);
+
                 //输出文件
                 String savePath = fileUploadPath + "/blog/page/" + blogList.get(a).getUid() + ".html";
                 fileOutputStream = new FileOutputStream(new File(savePath));
