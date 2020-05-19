@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/content")
-@Api(value = "文章详情RestApi", tags = {"BlogContentRestApi"})
+@Api(value = "文章详情相关接口", tags = {"文章详情相关接口"})
 @Slf4j
 public class BlogContentRestApi {
 

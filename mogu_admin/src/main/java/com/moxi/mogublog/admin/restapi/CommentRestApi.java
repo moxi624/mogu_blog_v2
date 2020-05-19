@@ -35,7 +35,7 @@ import java.util.List;
  * @author xzx19950624@qq.com
  * @since 2020年1月20日16:44:25
  */
-@Api(value = "评论RestApi", tags = {"CommentRestApi"})
+@Api(value = "用户评论相关接口", tags = {"用户评论相关接口"})
 @RestController
 @RequestMapping("/comment")
 @Slf4j

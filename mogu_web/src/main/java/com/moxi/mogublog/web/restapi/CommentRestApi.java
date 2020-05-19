@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/web/comment")
-@Api(value = "评论RestApi", tags = {"CommentRestApi"})
+@Api(value = "评论相关接口", tags = {"评论相关接口"})
 @Slf4j
 public class CommentRestApi {
 

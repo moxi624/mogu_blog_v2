@@ -36,7 +36,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/auth")
-@Api(value = "需放行接口RestApi", tags = {"AuthRestApi"})
+@Api(value = "登录相关接口", tags = {"登录相关接口"})
 @Slf4j
 public class AuthRestApi {
     @Autowired

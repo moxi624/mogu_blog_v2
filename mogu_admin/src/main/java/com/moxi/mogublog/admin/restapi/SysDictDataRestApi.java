@@ -36,7 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sysDictData")
-@Api(value = "字典数据RestApi", tags = {"SysDictDataRestApi"})
+@Api(value = "字典数据相关接口", tags = {"字典数据相关接口"})
 @Slf4j
 public class SysDictDataRestApi {
 

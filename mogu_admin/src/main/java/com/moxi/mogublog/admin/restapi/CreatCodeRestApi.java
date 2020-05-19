@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/creatCode")
-@Api(value = "生成验证码RestApi", tags = {"creatCodeRestApi"})
+@Api(value = "生成验证码相关接口", tags = {"生成验证码相关接口"})
 @Slf4j
 public class CreatCodeRestApi {
 

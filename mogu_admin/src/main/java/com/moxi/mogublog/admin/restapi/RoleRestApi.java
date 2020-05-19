@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/role")
-@Api(value = "角色管理RestApi", tags = {"RoleRestApi"})
+@Api(value = "角色相关接口", tags = {"角色相关接口"})
 @Slf4j
 public class RoleRestApi {
 

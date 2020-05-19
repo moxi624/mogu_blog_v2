@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/login")
-@Api(value = "登录管理RestApi", tags = {"loginRestApi"})
+@Api(value = "登录管理相关接口", tags = {"loginRestApi"})
 @Slf4j
 public class LoginRestApi {
 
@@ -62,8 +62,8 @@ public class LoginRestApi {
     WebUtil webUtil;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
-    @ApiOperation(value = "用户登录", notes = "用户登录")
 
+    @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping("/login")
     public String login(@Validated({GetOne.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);

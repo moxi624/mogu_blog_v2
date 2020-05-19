@@ -38,7 +38,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/studyVideo")
-@Api(value = "视频RestApi", tags = {"StudyVideoRestApi"})
+@Api(value = "学习视频相关接口", tags = {"学习视频相关接口"})
 @Slf4j
 public class StudyVideoRestApi {
 

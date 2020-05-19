@@ -39,7 +39,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/blog")
-@Api(value = "博客RestApi", tags = {"BlogRestApi"})
+@Api(value = "博客相关接口", tags = {"博客相关接口"})
 @Slf4j
 public class BlogRestApi {
 

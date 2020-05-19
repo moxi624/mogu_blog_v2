@@ -35,7 +35,7 @@ import java.util.List;
  * @author xzx19950624@qq.com
  * @since 2018-09-08
  */
-@Api(value = "标签RestApi", tags = {"TagRestApi"})
+@Api(value = "博客标签相关接口", tags = {"博客标签相关接口"})
 @RestController
 @RequestMapping("/tag")
 @Slf4j

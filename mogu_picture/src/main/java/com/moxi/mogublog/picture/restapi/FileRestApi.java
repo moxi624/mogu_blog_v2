@@ -46,7 +46,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/file")
-@Api(value = "文件RestApi", tags = {"FileRestApi"})
+@Api(value = "图片服务相关接口", tags = {"图片服务相关接口"})
 @Slf4j
 public class FileRestApi {
 

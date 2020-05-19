@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/about")
-@Api(value = "关于我 RestApi", tags = {"AboutMeRestApi"})
+@Api(value = "关于我相关接口", tags = {"关于我相关接口"})
 @Slf4j
 public class AboutMeRestApi {
 

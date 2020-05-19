@@ -5,6 +5,8 @@ import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.service.QiniuService;
 import com.moxi.mogublog.picture.util.FeignUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/ckeditor")
+@Api(value = "Ckeditor相关接口", tags = {"Ckeditor相关接口"})
 @Slf4j
 public class CkEditorRestApi {
 
@@ -46,6 +49,7 @@ public class CkEditorRestApi {
      * @return
      * @throws IOException
      */
+    @ApiOperation(value = "图像中的图片上传", notes = "图像中的图片上传")
     @RequestMapping(value = "/imgUpload", method = RequestMethod.POST)
     public Object imgUpload(HttpServletRequest request) throws IOException {
         return qiniuService.imgUpload(request);
@@ -57,6 +61,7 @@ public class CkEditorRestApi {
      * @return
      * @throws IOException
      */
+    @ApiOperation(value = "复制的图片上传", notes = "复制的图片上传")
     @RequestMapping(value = "/imgUploadByUrl", method = RequestMethod.POST)
     public synchronized Object imgUploadByUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return qiniuService.uploadImgByUrl();
@@ -68,7 +73,7 @@ public class CkEditorRestApi {
      * @return
      * @throws IOException
      */
-
+    @ApiOperation(value = "工具栏的文件上传", notes = "工具栏的文件上传")
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST)
     public Object fileUpload(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return qiniuService.fileUpload(request);

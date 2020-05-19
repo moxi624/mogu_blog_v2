@@ -45,7 +45,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/admin")
-@Api(value = "管理员RestApi", tags = {"AdminRestApi"})
+@Api(value = "管理员相关接口", tags = {"管理员相关接口"})
 @Slf4j
 public class AdminRestApi {
 

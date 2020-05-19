@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/tag")
-@Api(value = "标签RestApi", tags = {"ClassifyRestApi"})
+@Api(value = "博客标签相关接口", tags = {"博客标签相关接口"})
 @Slf4j
 public class TagRestApi {
 
@@ -54,7 +54,6 @@ public class TagRestApi {
      * 通过TagUid获取文章
      *
      * @param request
-     * @param blogSortUid
      * @param currentPage
      * @param pageSize
      * @return

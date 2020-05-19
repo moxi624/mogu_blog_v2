@@ -13,6 +13,7 @@ import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/blogSort")
+@Api(value = "博客分类相关接口", tags = {"博客分类相关接口"})
 @Slf4j
 public class BlogSortRestApi {
 

@@ -34,7 +34,7 @@ import java.util.List;
  * @author xzx19950624@qq.com
  * @since 2020年1月9日19:23:28
  */
-@Api(value = "资源分类RestApi", tags = {"ResourceSortRestApi"})
+@Api(value = "资源分类相关接口", tags = {"资源分类相关接口"})
 @RestController
 @RequestMapping("/resourceSort")
 @Slf4j

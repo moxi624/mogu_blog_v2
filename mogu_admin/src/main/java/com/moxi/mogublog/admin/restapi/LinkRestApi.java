@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2018-09-08
  */
 @RestController
-@Api(value = "友链RestApi", tags = {"LinkRestApi"})
+@Api(value = "友情链接相关接口", tags = {"友情链接相关接口"})
 @RequestMapping("/link")
 @Slf4j
 public class LinkRestApi {

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author xzx19950624@qq.com
  * @since 2019年5月17日08:38:09
  */
-@Api(value = "用户访问RestApi", tags = {"用户访问RestApi"})
+@Api(value = "用户访问相关接口", tags = {"用户访问相关接口"})
 @RestController
 @RequestMapping("/webVisit")
 @Slf4j

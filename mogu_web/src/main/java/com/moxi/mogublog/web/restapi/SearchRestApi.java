@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/search")
-@Api(value = "SQL搜索RestApi", tags = {"SearchRestApi"})
+@Api(value = "SQL搜索相关接口", tags = {"SQL搜索相关接口"})
 @Slf4j
 public class SearchRestApi {
 

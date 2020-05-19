@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/classify")
-@Api(value = "分类RestApi", tags = {"ClassifyRestApi"})
+@Api(value = "分类相关接口", tags = {"分类相关接口"})
 @Slf4j
 public class ClassifyRestApi {
 

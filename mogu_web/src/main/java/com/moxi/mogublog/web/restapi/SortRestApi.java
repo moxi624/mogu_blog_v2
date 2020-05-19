@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/sort")
-@Api(value = "归档 RestApi", tags = {"SortRestApi"})
+@Api(value = "博客归档相关接口", tags = {"博客归档相关接口"})
 @Slf4j
 public class SortRestApi {
 

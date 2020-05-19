@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020年1月4日21:29:09
  */
 @RestController
-@Api(value = "用户RestApi", tags = {"UserRestApi"})
+@Api(value = "用户相关接口", tags = {"用户相关接口"})
 @RequestMapping("/user")
 @Slf4j
 public class UserRestApi {

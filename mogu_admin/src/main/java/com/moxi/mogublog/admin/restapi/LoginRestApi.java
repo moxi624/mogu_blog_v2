@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/auth")
-@Api(value = "登录管理RestApi", tags = {"loginRestApi"})
+@Api(value = "登录管理相关接口", tags = {"登录管理相关接口"})
 @Slf4j
 public class LoginRestApi {
 

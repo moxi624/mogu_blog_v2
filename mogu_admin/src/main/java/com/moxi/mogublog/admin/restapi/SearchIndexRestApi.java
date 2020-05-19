@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/search")
-@Api(value = "索引维护RestApi", tags = {"solrIndexRestApi"})
+@Api(value = "索引维护相关接口", tags = {"索引维护相关接口"})
 @Slf4j
 public class SearchIndexRestApi {
 

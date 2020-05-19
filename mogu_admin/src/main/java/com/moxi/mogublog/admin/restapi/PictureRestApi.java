@@ -11,6 +11,7 @@ import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/picture")
+@Api(value = "图片相关接口", tags = {"图片相关接口"})
 @Slf4j
 public class PictureRestApi {
 

@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/oauth")
-@Api(value = "认证RestApi", tags = {"AuthRestApi"})
+@Api(value = "第三方登录相关接口", tags = {"第三方登录相关接口"})
 @Slf4j
 public class AuthRestApi {
     @Autowired

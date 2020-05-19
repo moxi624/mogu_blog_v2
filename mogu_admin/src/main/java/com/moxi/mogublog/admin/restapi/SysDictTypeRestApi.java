@@ -37,7 +37,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sysDictType")
-@Api(value = "字典类型RestApi", tags = {"SysDictTypeRestApi"})
+@Api(value = "字典类型相关接口", tags = {"字典类型相关接口"})
 @Slf4j
 public class SysDictTypeRestApi {
 

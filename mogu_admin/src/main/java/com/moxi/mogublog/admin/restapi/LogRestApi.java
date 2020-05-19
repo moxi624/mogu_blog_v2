@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2018年9月24日15:45:18
  */
 @RestController
-@Api(value = "管理员操作日志RestApi", tags = {"LogRestApi"})
+@Api(value = "操作日志相关接口", tags = {"操作日志相关接口"})
 @RequestMapping("/log")
 @Slf4j
 public class LogRestApi {

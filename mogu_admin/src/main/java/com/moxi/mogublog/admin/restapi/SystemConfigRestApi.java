@@ -24,7 +24,7 @@ import java.util.List;
  * @author xzx19950624@qq.com
  * @since 2020年1月21日09:24:37
  */
-@Api(value = "系统配置RestApi", tags = {"SystemConfigRestApi"})
+@Api(value = "系统配置相关接口", tags = {"系统配置相关接口"})
 @RestController
 @RequestMapping("/systemConfig")
 @Slf4j

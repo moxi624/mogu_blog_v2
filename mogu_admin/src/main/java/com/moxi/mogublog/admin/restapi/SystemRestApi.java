@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/system")
-@Api(value = "系统设置RestApi", tags = {"SystemRestApi"})
+@Api(value = "系统设置相关接口", tags = {"系统设置相关接口"})
 @Slf4j
 public class SystemRestApi {
 

@@ -36,7 +36,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/resource")
-@Api(value = "学习教程 RestApi", tags = {"ResourceRestApi"})
+@Api(value = "学习教程相关接口", tags = {"学习教程相关接口"})
 @Slf4j
 public class ResourceRestApi {
     @Autowired

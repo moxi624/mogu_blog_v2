@@ -33,7 +33,7 @@ import java.util.List;
  * @since 2020年3月16日08:38:07
  */
 @RestController
-@Api(value = "反馈RestApi", tags = {"FeedbackRestApi"})
+@Api(value = "用户反馈相关接口", tags = {"用户反馈相关接口"})
 @RequestMapping("/feedback")
 @Slf4j
 public class FeedbackRestApi {

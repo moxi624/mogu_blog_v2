@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/index")
-@Api(value = "首页RestApi", tags = {"IndexRestApi"})
+@Api(value = "首页相关接口", tags = {"首页相关接口"})
 @Slf4j
 public class IndexRestApi {
 

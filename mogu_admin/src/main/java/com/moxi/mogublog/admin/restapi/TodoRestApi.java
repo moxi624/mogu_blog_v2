@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2018-09-08
  */
 @RestController
-@Api(value = "代办事项RestApi", tags = {"LinkRestApi"})
+@Api(value = "待办事项相关接口", tags = {"待办事项相关接口"})
 @RequestMapping("/todo")
 @Slf4j
 public class TodoRestApi {

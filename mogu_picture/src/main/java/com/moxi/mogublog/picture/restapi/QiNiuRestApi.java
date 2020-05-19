@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/qiNiuFile")
-@Api(value = "七牛RestApi", tags = {"QiNiuRestApi"})
+@Api(value = "七牛云相关接口", tags = {"七牛云相关接口"})
 @Slf4j
 public class QiNiuRestApi {
 
