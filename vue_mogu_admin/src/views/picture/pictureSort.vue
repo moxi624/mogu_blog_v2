@@ -205,10 +205,7 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-
-
       var dictTypeList =  ['sys_yes_no']
-
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
           var dictMap = response.data;
@@ -277,18 +274,20 @@ export default {
     },
     //点击新增
     handleAdd: function() {
+      this.title = "增加分类"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
     //点击编辑
     handleEdit: function(row) {
+      this.title = "编辑分类"
       this.dialogFormVisible = true;
       this.isEditForm = true;
       this.form = row;
     },
     handleStick: function(row) {
-      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+      this.$confirm("此操作将会把该分类放到首位, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

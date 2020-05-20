@@ -69,6 +69,7 @@ public class AvoidRepeatableCommitAspect {
         String value = redisUtil.get(key);
 
         if (StringUtils.isNotBlank(value)) {
+            log.info("请勿重复提交表单");
             return ResultUtil.result(SysConf.ERROR, "请勿重复提交表单");
         }
 

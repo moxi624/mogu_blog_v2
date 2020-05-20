@@ -194,6 +194,7 @@ export default {
       this.tagList();
     },
     handleAdd: function() {
+      this.title = "增加标签"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;

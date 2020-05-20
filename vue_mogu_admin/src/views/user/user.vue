@@ -370,7 +370,6 @@
       },
 
       cropSuccess(resData) {
-        console.log("裁剪成功", resData)
         this.imagecropperShow = false
         this.imagecropperKey = this.imagecropperKey + 1
         let photoList = []
@@ -395,9 +394,7 @@
        * 字典查询
        */
       getDictList: function () {
-
         var dictTypeList =  ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
-
         getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == "success") {
             var dictMap = response.data;

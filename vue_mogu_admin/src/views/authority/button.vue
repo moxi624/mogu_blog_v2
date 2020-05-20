@@ -180,7 +180,7 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="按钮名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -215,7 +215,7 @@
             clearable></el-cascader>
         </el-form-item>
 
-        <el-form-item label="菜单介绍" :label-width="formLabelWidth" prop="summary">
+        <el-form-item label="按钮介绍" :label-width="formLabelWidth" prop="summary">
           <el-input v-model="form.summary" auto-complete="off"></el-input>
         </el-form-item>
 
@@ -263,7 +263,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加分类",
+      title: "增加按钮",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -358,10 +358,7 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-
-
       var dictTypeList =  ['sys_menu_level', 'sys_yes_no', 'sys_menu_type']
-
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
 
@@ -402,12 +399,12 @@ export default {
       this.buttonList();
     },
     handleAdd: function() {
+      this.title = "增加按钮"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
     handleEdit: function(parentRow, row) {
-
       this.dialogFormVisible = true;
       this.isEditForm = true;
       // 设置级联的父菜单名
@@ -415,10 +412,11 @@ export default {
       parentUid.push(parentRow.parentUid)
       parentUid.push(parentRow.uid)
       this.buttonParentUid = parentUid
+      this.title = "编辑按钮"
       this.form = row;
     },
     handleStick: function(row) {
-      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+      this.$confirm("此操作将会把该按钮放到首位, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -450,7 +448,7 @@ export default {
     },
     handleDelete: function(row) {
       var that = this;
-      this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
+      this.$confirm("此操作将把按钮删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

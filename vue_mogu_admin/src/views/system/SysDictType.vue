@@ -212,6 +212,7 @@ export default {
       this.sysDictTypeList();
     },
     handleAdd: function() {
+      this.title = "增加字典类型"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;

@@ -354,12 +354,13 @@ export default {
       this.adminList();
     },
     handleAdd: function() {
+      this.title = "增加管理员"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
     handleEdit: function(row) {
-      this.title = "编辑标签";
+      this.title = "编辑管理员";
       this.dialogFormVisible = true;
       this.isEditForm = true;
       console.log(row);

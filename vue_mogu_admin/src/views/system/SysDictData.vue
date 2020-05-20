@@ -315,6 +315,7 @@
         this.sysDictDataList();
       },
       handleAdd: function () {
+        this.title = "增加数据字典"
         this.dialogFormVisible = true;
         this.form = this.getFormObject();
         this.form.dictTypeUid = this.dictTypeUid;

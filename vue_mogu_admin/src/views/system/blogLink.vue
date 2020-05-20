@@ -255,6 +255,7 @@ export default {
       this.linkList();
     },
     handleAdd: function() {
+      this.title = "增加友链"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -267,7 +268,7 @@ export default {
       this.form = row;
     },
     handleStick: function(row) {
-      this.$confirm("此操作将会把该标签放到首位, 是否继续?", "提示", {
+      this.$confirm("此操作将会把该友链放到首位, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

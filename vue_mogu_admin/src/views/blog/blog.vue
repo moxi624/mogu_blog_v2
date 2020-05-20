@@ -531,7 +531,6 @@ export default {
   },
   created() {
     var that = this;
-
     //从dashboard传递过来的 tagUid 以及 blogSortUid
     var tempTag = this.$route.query.tag;
     var tempBlogSort = this.$route.query.blogSort;
@@ -761,6 +760,7 @@ export default {
       this.blogList();
     },
     handleAdd: function() {
+      this.title = "增加博客"
       var that = this;
       var tempForm = JSON.parse(getCookie("form"));
       console.log('cookie中的', tempForm)

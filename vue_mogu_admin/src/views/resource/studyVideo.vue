@@ -295,20 +295,20 @@ export default {
     },
     //点击新增
     handleAdd: function() {
+      this.title = "增加视频"
       var that = this;
       try {
         that.$refs.ckeditor.initData(); //清空CKEditor中内容
       } catch (error) {
-        // 第一次还未加载的时候，可能会报错，不过不影响使用
-        // 暂时还没有想到可能解决的方法
+        // TODO 第一次还未加载的时候，可能会报错，不过不影响使用，暂时还没有想到可能解决的方法
       }
-      console.log("点击了添加");
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
     },
     //点击编辑
     handleEdit: function(row) {
+      this.title = "编辑视频"
       this.dialogFormVisible = true;
       this.isEditForm = true;
       this.form = row;
@@ -322,7 +322,7 @@ export default {
       console.log("点击编辑", this.form);
     },
     handleDelete: function(row) {
-      this.$confirm("此操作将会把分类下全部图片删除, 是否继续?", "提示", {
+      this.$confirm("此操作将会把分类下全部视频删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

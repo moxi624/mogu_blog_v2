@@ -82,7 +82,6 @@ public class AuthorityVerifyAspect {
             // 从Redis中获取
             urlList = JsonUtils.jsonToList(visitUrl, String.class);
         } else {
-
             // 查询数据库获取
             Admin admin = adminService.getById(adminUid);
 

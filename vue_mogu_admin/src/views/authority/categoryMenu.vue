@@ -250,7 +250,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加分类",
+      title: "增加菜单",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -311,19 +311,12 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-
-
       var dictTypeList =  ['sys_menu_level', 'sys_yes_no']
-
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
-
           var dictMap = response.data;
-
           this.menuLevelDictList = dictMap.sys_menu_level.list
-
           this.yesNoDictList = dictMap.sys_yes_no.list
-
           if(dictMap.sys_yes_no.defaultValue) {
             this.yesNoDefault = parseInt(dictMap.sys_yes_no.defaultValue);
           }
@@ -348,6 +341,7 @@ export default {
       this.menuList();
     },
     handleAdd: function() {
+      this.title = "增加菜单"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -356,6 +350,7 @@ export default {
       this.dialogFormVisible = true;
       this.isEditForm = true;
       var parentUid = row.parentUid;
+      this.title = "编辑菜单"
       this.form = row;
     },
     handleStick: function(row) {
@@ -391,7 +386,7 @@ export default {
     },
     handleDelete: function(row) {
       var that = this;
-      this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
+      this.$confirm("此操作将把菜单删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -421,7 +416,7 @@ export default {
           });
         });
     },
-    //分类远程搜索函数
+    //菜单远程搜索函数
     remoteMethod: function(query) {
       if (query !== "") {
         //这里只搜索一级菜单出来

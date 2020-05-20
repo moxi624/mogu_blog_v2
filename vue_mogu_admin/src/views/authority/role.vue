@@ -116,7 +116,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加分类",
+      title: "增加角色",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -206,6 +206,7 @@ export default {
     },
 
     handleAdd: function () {
+      this.title = "增加角色"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       setTimeout(() => {
@@ -215,7 +216,7 @@ export default {
     },
 
     handleEdit: function (row) {
-
+      this.title = "编辑角色"
       this.dialogFormVisible = true;
       this.isEditForm = true;
       this.form = row;

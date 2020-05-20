@@ -196,6 +196,7 @@ export default {
       this.blogSortList();
     },
     handleAdd: function() {
+      this.title = "增加分类"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -251,6 +252,7 @@ export default {
         });
     },
     handleEdit: function(row) {
+      this.title = "编辑分类"
       this.dialogFormVisible = true;
       this.isEditForm = true;
       this.form = row;
