@@ -1013,8 +1013,26 @@
   };
 </script>
 
-<style >
+<style>
   @import "../assets/css/emoji.css";
+  .emoji-panel-btn:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+  .emoji-item-common {
+    background: url("../assets/img/emoji_sprite.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+    cursor: pointer;
+  }
+  .emoji-size-small {
+    // 表情大小
+    zoom: 0.3;
+  }
+</style>
+
+<style scoped>
   .el-tag {
     height: 25px;
     line-height: 25px;
@@ -1162,20 +1180,4 @@
     height: 35px;
     width: 35px;
   }
-  .emoji-panel-btn:hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-  .emoji-item-common {
-    background: url("../assets/img/emoji_sprite.png");
-    display: inline-block;
-  }
-  .emoji-item-common:hover {
-    cursor: pointer;
-  }
-  .emoji-size-small {
-    // 表情大小
-    zoom: 0.3;
-  }
-
 </style>

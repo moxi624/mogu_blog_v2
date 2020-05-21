@@ -72,7 +72,14 @@ public class AuthorityVerifyAspect {
         //获取请求路径
         String url = request.getRequestURI();
 
+        // 解析出请求者的ID和用户名
         String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
+        String userName = request.getAttribute(SysConf.USER_NAME).toString();
+        // 如果是Admin账号，直接放权
+        if(SysConf.ADMIN.equals(userName)) {
+            //执行业务
+            return joinPoint.proceed();
+        }
 
         String visitUrl = redisUtil.get(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + adminUid);
 

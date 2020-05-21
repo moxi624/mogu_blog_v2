@@ -1,5 +1,6 @@
 package com.moxi.mogublog.admin.security;
 
+import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.StringUtils;
@@ -55,8 +56,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
      * iat(Issued at)：是一个时间戳，代表这个JWT的签发时间；
      * jti(JWT ID)：是JWT的唯一标识。
      *
-     * @param req
-     * @param res
      * @param chain
      * @throws IOException
      * @throws ServletException
@@ -147,7 +146,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String adminUid = jwtHelper.getUserUid(token, audience.getBase64Secret());
 
             //把adminUid存储到request中
-            request.setAttribute("adminUid", adminUid);
+            request.setAttribute(SysConf.ADMIN_UID, adminUid);
+            request.setAttribute(SysConf.USER_NAME, username);
             logger.info("解析出来用户 : " + username);
             logger.info("解析出来的用户Uid : " + adminUid);
 

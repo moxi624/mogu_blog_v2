@@ -166,7 +166,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         tag.setUpdateTime(new Date());
         tag.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_FAIL);
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
