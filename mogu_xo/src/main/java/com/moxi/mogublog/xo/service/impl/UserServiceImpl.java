@@ -229,7 +229,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setCommentStatus(userVO.getCommentStatus());
         user.setUpdateTime(new Date());
         user.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
     @Override

@@ -311,7 +311,7 @@
         rules: {
           nickName: [
             {required: true, message: '用户名不能为空', trigger: 'blur'},
-            {min: 1, max: 20, message: '长度在1到20个字符'},
+            {min: 1, max: 30, message: '长度在1到30个字符'},
           ],
           commentStatus: [
             {required: true, message: '评论状态不能为空', trigger: 'blur'}
@@ -372,17 +372,16 @@
       cropSuccess(resData) {
         this.imagecropperShow = false
         this.imagecropperKey = this.imagecropperKey + 1
-        let photoList = []
-        photoList.push(resData[0].url);
-        this.form.photoList = photoList;
+        this.form.photoUrl = resData[0].url;
         this.form.avatar = resData[0].uid
       },
       close() {
         this.imagecropperShow = false
       },
       deletePhoto: function() {
-        this.form.photoList = null;
-        this.form.fileUid = "";
+        console.log("删除图片", this.form)
+        this.form.photoUrl = null;
+        this.form.avatar = "";
         this.icon = false;
       },
       //弹出选择图片框
@@ -492,6 +491,7 @@
                   type: "success"
                 });
                 this.dialogFormVisible = false
+                this.userList();
               } else {
                 this.$notify.error({
                   title: "失败",

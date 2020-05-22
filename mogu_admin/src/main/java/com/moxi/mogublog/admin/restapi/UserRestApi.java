@@ -41,12 +41,6 @@ public class UserRestApi {
     @Autowired
     UserService userService;
 
-    @Value(value = "${DEFAULE_PWD}")
-    private String DEFAULE_PWD;
-
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
-
     @AuthorityVerify
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表", response = String.class)
     @PostMapping("/getList")

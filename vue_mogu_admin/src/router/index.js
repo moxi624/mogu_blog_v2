@@ -169,7 +169,7 @@ export const constantRouterMap = [
         path: 'pictureSort',
         name: '图片类别管理',
         component: () => import('@/views/picture/pictureSort'),
-        meta: { title: '图片管理', icon: 'picture' }
+        meta: { title: '图片类别管理', icon: 'picture' }
       },
       {
         path: 'picture',

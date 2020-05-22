@@ -1,5 +1,6 @@
 package com.moxi.mogublog.commons.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -46,6 +47,7 @@ public class User extends SuperEntity<User> {
     /**
      * 个人头像(UID)
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String avatar;
 
     /**
