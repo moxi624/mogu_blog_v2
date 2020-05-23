@@ -169,10 +169,11 @@ export default {
     };
   },
   created() {
-    // 获取字典
-    this.getDictList()
     // 获取评论
     this.commentList();
+
+    // 获取字典
+    this.getDictList()
   },
   methods: {
     // 跳转到该博客详情
@@ -192,9 +193,7 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-
       var dictTypeList =  ['sys_comment_type', 'sys_comment_source']
-
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
           var dictMap = response.data;
