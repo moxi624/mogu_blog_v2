@@ -103,3 +103,28 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+
+export function makeMap(str, expectsLowerCase) {
+  const map = Object.create(null)
+  const list = str.split(',')
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+  return expectsLowerCase
+    ? val => map[val.toLowerCase()]
+    : val => map[val]
+}
+
+// 首字母大小
+export function titleCase(str) {
+  return str.replace(/( |^)[a-z]/g, L => L.toUpperCase())
+}
+
+// 下划转驼峰
+export function camelCase(str) {
+  return str.replace(/-[a-z]/g, str1 => str1.substr(-1).toUpperCase())
+}
+
+export function isNumberStr(str) {
+  return /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g.test(str)
+}

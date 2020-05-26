@@ -177,6 +177,9 @@
 |      vue-cropper      |       图片裁剪组件        |           https://github.com/xyxiao001/vue-cropper           |
 | vue-image-crop-upload |    vue图片剪裁上传组件    |      https://github.com/dai-siki/vue-image-crop-upload       |
 |   vue-emoji-comment   |   Vue Emoji表情评论组件   |       https://github.com/pppercyWang/vue-emoji-comment       |
+|     clipboard.js      |     现代化的拷贝文字      |                  http://www.clipboardjs.cn/                  |
+|      js-beautify      |    美化JavaScript代码     |         https://github.com/beautify-web/js-beautify          |
+|     FileSaver.js      |     保存文件在客户端      |           https://github.com/eligrey/FileSaver.js            |
 
 ## 项目搭建
 
@@ -275,7 +278,7 @@
 - [x] 增加评论表情
 - [x] 增加数据字典管理
 - [x] 前端增加用户个人中心
-- [ ] 增加一个FAQ常见问题文档
+- [x] 增加一个FAQ常见问题文档
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块

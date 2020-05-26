@@ -388,6 +388,12 @@ export const constantRouterMap = [
         name: 'PictureList',
         component: () => import('@/views/test/PictureList'),
         meta: { title: '图片列表', icon: 'exception' }
+      },
+      {
+        path: 'FormBuild',
+        name: 'FormBuild',
+        component: () => import('@/views/test/build'),
+        meta: { title: '表单构建', icon: 'exception' }
       }
     ]
   },
