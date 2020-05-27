@@ -7,16 +7,18 @@
             <svg-icon icon-class="component" />输入型组件
           </div>
           <draggable
-            class="components-draggable"
             :list="inputComponents"
             :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
             :clone="cloneComponent"
-            draggable=".components-item"
             :sort="false"
+            class="components-draggable"
+            draggable=".components-item"
             @end="onEnd"
           >
             <div
-              v-for="(element, index) in inputComponents" :key="index" class="components-item"
+              v-for="(element, index) in inputComponents"
+              :key="index"
+              class="components-item"
               @click="addComponent(element)"
             >
               <div class="components-body">
@@ -29,12 +31,12 @@
             <svg-icon icon-class="component" />选择型组件
           </div>
           <draggable
-            class="components-draggable"
             :list="selectComponents"
             :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
             :clone="cloneComponent"
-            draggable=".components-item"
             :sort="false"
+            class="components-draggable"
+            draggable=".components-item"
             @end="onEnd"
           >
             <div
@@ -53,12 +55,18 @@
             <svg-icon icon-class="component" /> 布局型组件
           </div>
           <draggable
-            class="components-draggable" :list="layoutComponents"
-            :group="{ name: 'componentsGroup', pull: 'clone', put: false }" :clone="cloneComponent"
-            draggable=".components-item" :sort="false" @end="onEnd"
+            :list="layoutComponents"
+            :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
+            :clone="cloneComponent"
+            :sort="false"
+            class="components-draggable"
+            draggable=".components-item"
+            @end="onEnd"
           >
             <div
-              v-for="(element, index) in layoutComponents" :key="index" class="components-item"
+              v-for="(element, index) in layoutComponents"
+              :key="index"
+              class="components-item"
               @click="addComponent(element)"
             >
               <div class="components-body">
@@ -84,14 +92,14 @@
         </el-button>
       </div>
       <el-scrollbar class="center-scrollbar">
-        <el-row class="center-board-row" :gutter="formConf.gutter">
+        <el-row :gutter="formConf.gutter" class="center-board-row">
           <el-form
             :size="formConf.size"
             :label-position="formConf.labelPosition"
             :disabled="formConf.disabled"
             :label-width="formConf.labelWidth + 'px'"
           >
-            <draggable class="drawing-board" :list="drawingList" :animation="340" group="componentsGroup">
+            <draggable :list="drawingList" :animation="340" class="drawing-board" group="componentsGroup">
               <draggable-item
                 v-for="(element, index) in drawingList"
                 :key="element.renderKey"
@@ -122,8 +130,8 @@
 
     <code-type-dialog
       :visible.sync="dialogVisible"
-      title="选择生成类型"
       :show-file-name="showFileName"
+      title="选择生成类型"
       @confirm="generate"
     />
     <input id="copyNode" type="hidden">
@@ -156,7 +164,7 @@ import logo from '../../../assets/logo/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 
-const emptyActiveData = { style: {}, autosize: {} }
+const emptyActiveData = { style: {}, autosize: {}}
 let oldActiveId
 let tempActiveData
 
@@ -192,11 +200,11 @@ export default {
   },
   watch: {
     // eslint-disable-next-line func-names
-    'activeData.label': function (val, oldVal) {
+    'activeData.label': function(val, oldVal) {
       if (
-        this.activeData.placeholder === undefined
-        || !this.activeData.tag
-        || oldActiveId !== this.activeId
+        this.activeData.placeholder === undefined ||
+        !this.activeData.tag ||
+        oldActiveId !== this.activeId
       ) {
         return
       }
@@ -266,7 +274,7 @@ export default {
       }
     },
     generate(data) {
-      console.log("开始生成")
+      console.log('开始生成')
       const func = this[`exec${titleCase(this.operationType)}`]
       console.log(func)
       this.generateConf = data
@@ -320,6 +328,7 @@ export default {
       })
     },
     generateCode() {
+      console.log('beautifier', beautifier)
       const { type } = this.generateConf
       this.AssembleFormData()
       const script = vueScript(makeUpJs(this.formData, type))
@@ -351,8 +360,8 @@ export default {
       delete this.activeData.tagIcon
       delete this.activeData.document
       Object.keys(newTag).forEach(key => {
-        if (this.activeData[key] !== undefined
-          && typeof this.activeData[key] === typeof newTag[key]) {
+        if (this.activeData[key] !== undefined &&
+          typeof this.activeData[key] === typeof newTag[key]) {
           newTag[key] = this.activeData[key]
         }
       })

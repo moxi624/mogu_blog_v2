@@ -5,7 +5,7 @@
       <el-tab-pane label="表单属性" name="form" />
     </el-tabs>
     <div class="field-box">
-      <a class="document-link" target="_blank" :href="documentLink" title="查看组件文档">
+      <a :href="documentLink" class="document-link" target="_blank" title="查看组件文档">
         <i class="el-icon-link" />
       </a>
       <el-scrollbar class="right-scrollbar">
@@ -14,8 +14,8 @@
           <el-form-item v-if="activeData.changeTag" label="组件类型">
             <el-select
               v-model="activeData.tagIcon"
-              placeholder="请选择组件类型"
               :style="{width: '100%'}"
+              placeholder="请选择组件类型"
               @change="tagChange"
             >
               <el-option-group v-for="group in tagList" :key="group.label" :label="group.label">
@@ -25,7 +25,7 @@
                   :label="item.label"
                   :value="item.tagIcon"
                 >
-                  <svg-icon class="node-icon" :icon-class="item.tagIcon" />
+                  <svg-icon :icon-class="item.tagIcon" class="node-icon" />
                   <span> {{ item.label }}</span>
                 </el-option>
               </el-option-group>
@@ -62,7 +62,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item v-if="activeData.justify!==undefined&&activeData.type==='flex'" label="水平排列">
-            <el-select v-model="activeData.justify" placeholder="请选择水平排列" :style="{width: '100%'}">
+            <el-select v-model="activeData.justify" :style="{width: '100%'}" placeholder="请选择水平排列">
               <el-option
                 v-for="(item, index) in justifyOptions"
                 :key="index"
@@ -191,8 +191,8 @@
           >
             <el-select
               v-model="activeData.type"
-              placeholder="请选择时间类型"
               :style="{ width: '100%' }"
+              placeholder="请选择时间类型"
               @change="dateTypeChange"
             >
               <el-option
@@ -209,8 +209,8 @@
           <el-form-item v-if="activeData.accept !== undefined" label="文件类型">
             <el-select
               v-model="activeData.accept"
-              placeholder="请选择文件类型"
               :style="{ width: '100%' }"
+              placeholder="请选择文件类型"
               clearable
             >
               <el-option label="图片" value="image/*" />
@@ -284,9 +284,9 @@
                 </div>
                 <el-input v-model="item.label" placeholder="选项名" size="small" />
                 <el-input
+                  :value="item.value"
                   placeholder="选项值"
                   size="small"
-                  :value="item.value"
                   @input="setOptionValue(item, $event)"
                 />
                 <div class="close-btn select-line-icon" @click="activeData.options.splice(index, 1)">
@@ -334,11 +334,11 @@
 
             <el-tree
               v-if="activeData.dataType === 'static'"
-              draggable
               :data="activeData.options"
-              node-key="id"
               :expand-on-click-node="false"
               :render-content="renderContent"
+              draggable
+              node-key="id"
             />
             <div v-if="activeData.dataType === 'static'" style="margin-left: 20px">
               <el-button
@@ -394,8 +394,8 @@
           <el-form-item v-if="activeData.tag === 'el-color-picker'" label="颜色格式">
             <el-select
               v-model="activeData['color-format']"
-              placeholder="请选择颜色格式"
               :style="{ width: '100%' }"
+              placeholder="请选择颜色格式"
               @change="colorFormatChange"
             >
               <el-option
@@ -409,8 +409,8 @@
           <el-form-item
             v-if="activeData.size !== undefined &&
               (activeData.optionType === 'button' ||
-                activeData.border ||
-                activeData.tag === 'el-color-picker')"
+              activeData.border ||
+            activeData.tag === 'el-color-picker')"
             label="选项尺寸"
           >
             <el-radio-group v-model="activeData.size">
@@ -479,7 +479,7 @@
             >
               <span slot-scope="{ node, data }">
                 <span class="node-label">
-                  <svg-icon class="node-icon" :icon-class="data.tagIcon" />
+                  <svg-icon :icon-class="data.tagIcon" class="node-icon" />
                   {{ node.label }}
                 </span>
               </span>
@@ -696,14 +696,14 @@ export default {
   computed: {
     documentLink() {
       return (
-        this.activeData.document
-        || 'https://element.eleme.cn/#/zh-CN/component/installation'
+        this.activeData.document ||
+        'https://element.eleme.cn/#/zh-CN/component/installation'
       )
     },
     dateOptions() {
       if (
-        this.activeData.type !== undefined
-        && this.activeData.tag === 'el-date-picker'
+        this.activeData.type !== undefined &&
+        this.activeData.tag === 'el-date-picker'
       ) {
         if (this.activeData['start-placeholder'] === undefined) {
           return this.dateTypeOptions
@@ -745,16 +745,16 @@ export default {
     },
     renderContent(h, { node, data, store }) {
       return (
-        <div class="custom-tree-node">
+        <div class='custom-tree-node'>
           <span>{node.label}</span>
-          <span class="node-operation">
+          <span class='node-operation'>
             <i on-click={() => this.append(data)}
-              class="el-icon-plus"
-              title="添加"
+              class='el-icon-plus'
+              title='添加'
             ></i>
             <i on-click={() => this.remove(node, data)}
-              class="el-icon-delete"
-              title="删除"
+              class='el-icon-delete'
+              title='删除'
             ></i>
           </span>
         </div>

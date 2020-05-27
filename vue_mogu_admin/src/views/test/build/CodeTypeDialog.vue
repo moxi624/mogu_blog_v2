@@ -2,9 +2,9 @@
   <div>
     <el-dialog
       v-bind="$attrs"
-      width="500px"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
+      width="500px"
       v-on="$listeners"
       @open="onOpen"
       @close="onClose"

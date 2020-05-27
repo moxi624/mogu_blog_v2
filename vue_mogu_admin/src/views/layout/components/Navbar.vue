@@ -6,14 +6,24 @@
         :is-active="sidebar.opened"
         class="hamburger-container"
       />
+
       <breadcrumb/>
 
       <div class="right-menu">
-        <el-tooltip effect="dark" :content="menuName" placement="bottom">
+
+        <el-tooltip content="Gitee源码" effect="dark" placement="bottom">
+          <MoGuGit id="ruoyi-git" class="right-menu-item" />
+        </el-tooltip>
+
+        <el-tooltip content="文档地址" effect="dark" placement="bottom">
+          <MoGuDoc id="ruoyi-doc" class="right-menu-item" />
+        </el-tooltip>
+
+        <el-tooltip effect="dark" content="全屏" placement="bottom">
           <screenfull class="screenfull right-menu-item"></screenfull>
         </el-tooltip>
 
-        <el-tooltip effect="dark" :content="menuName2" placement="bottom">
+        <el-tooltip effect="dark" content="换肤" placement="bottom">
           <theme-picker class="theme-switch right-menu-item"></theme-picker>
         </el-tooltip>
 
@@ -63,19 +73,21 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import ThemePicker from "@/components/ThemePicker";
+import MoGuGit from '@/components/MoGu/Git'
+import MoGuDoc from '@/components/MoGu/Doc'
 
 export default {
   components: {
     Screenfull,
     Breadcrumb,
     Hamburger,
-    ThemePicker
+    ThemePicker,
+    MoGuGit,
+    MoGuDoc
   },
   data() {
     return {
       BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
-      menuName: "全屏",
-      menuName2: "换肤",
       dialogFormVisible: false,
       title: "更新日志",
       activeName: "1"

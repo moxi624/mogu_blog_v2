@@ -6,15 +6,15 @@ const components = {
   itemBtns(h, element, index, parent) {
     const { copyItem, deleteItem } = this.$listeners
     return [
-      <span class="drawing-item-copy" title="复制" onClick={event => {
+      <span class='drawing-item-copy' title='复制' onClick={event => {
         copyItem(element, parent); event.stopPropagation()
       }}>
-        <i class="el-icon-copy-document" />
+        <i class='el-icon-copy-document' />
       </span>,
-      <span class="drawing-item-delete" title="删除" onClick={event => {
+      <span class='drawing-item-delete' title='删除' onClick={event => {
         deleteItem(index, parent); event.stopPropagation()
       }}>
-        <i class="el-icon-delete" />
+        <i class='el-icon-delete' />
       </span>
     ]
   }
@@ -43,15 +43,15 @@ const layouts = {
     let child = renderChildren.apply(this, arguments)
     if (element.type === 'flex') {
       child = <el-row type={element.type} justify={element.justify} align={element.align}>
-              {child}
-            </el-row>
+        {child}
+      </el-row>
     }
     return (
       <el-col span={element.span}>
         <el-row gutter={element.gutter} class={className}
           nativeOnClick={event => { activeItem(element); event.stopPropagation() }}>
-          <span class="component-name">{element.componentName}</span>
-          <draggable list={element.children} animation={340} group="componentsGroup" class="drag-wrapper">
+          <span class='component-name'>{element.componentName}</span>
+          <draggable list={element.children} animation={340} group='componentsGroup' class='drag-wrapper'>
             {child}
           </draggable>
           {components.itemBtns.apply(this, arguments)}

@@ -248,15 +248,15 @@
 
 项目起初参考了很多开源项目的解决方案，开源不易，感谢分享
 
-- 感谢**杨青小姐姐**的博客模板：http://www.yangqq.com/
+- 感谢**杨青小姐姐**的博客模板：[http://www.yangqq.com/](http://www.yangqq.com/)
 - 感谢**PanJiaChen**提供的：[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
-- Vue项目搭建参考这篇博客：https://segmentfault.com/a/1190000009506097
-- 感谢**苞米豆**提供的**Mybatis-plus**框架：http://mp.baomidou.com/
-- 感谢**JetBrains**提供的免费开源License： https://www.jetbrains.com/?from=mogu_blog_v2 
-- 感谢**yadong.zhang**提供的第三方登录开源库：https://gitee.com/yadong.zhang/JustAuth.git
-- 感谢 **bihell** 的 Dice 项目：https://github.com/bihell/Dice
-- 感谢 **pppercyWang** 的提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
-- ......
+- Vue项目搭建参考这篇博客：[https://segmentfault.com/a/1190000009506097](https://segmentfault.com/a/1190000009506097)
+- 感谢**苞米豆**提供的**Mybatis-plus**框架：[http://mp.baomidou.com/](http://mp.baomidou.com/)
+- 感谢**JetBrains**提供的免费开源License： [https://www.jetbrains.com/?from=mogu_blog_v2](https://www.jetbrains.com/?from=mogu_blog_v2) 
+- 感谢**yadong.zhang**提供的第三方登录开源库：[https://gitee.com/yadong.zhang/JustAuth](https://gitee.com/yadong.zhang/JustAuth)
+- 感谢 **bihell** 的 Dice 博客项目：[https://github.com/bihell/Dice](https://github.com/bihell/Dice)
+- 感谢 **pppercyWang** 提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
+- 感谢 **若依** 提供的RuoYi项目：[https://gitee.com/y_project/RuoYi](https://gitee.com/y_project/RuoYi)
 
 ## 关注&交流
 
@@ -279,6 +279,7 @@
 - [x] 增加数据字典管理
 - [x] 前端增加用户个人中心
 - [x] 增加一个FAQ常见问题文档
+- [x] 集成表单构建页面，来源于[RuoYi](https://gitee.com/y_project/RuoYi)
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块
