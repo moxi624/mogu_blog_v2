@@ -35,6 +35,10 @@ public final class SysConf extends BaseSysConf {
     public static final String UUID = "uuid";
     public static final String SOURCE = "source";
     public final static String MOGU = "MOGU";
+    public final static String LOCATION = "location";
+    public final static String GENDER = "gender";
+    public final static String MALE = "male";
+    public final static String FEMALE = "female";
 
     /**
      * 评论相关

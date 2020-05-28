@@ -206,7 +206,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
 
-# 第三方登录，参考
+# 第三方登录，参考 http://moguit.cn/#/info?blogUid=fe9e352eb95205a08288f21ec3cc69e0
 justAuth:
   clientId:
     gitee: ec2dba332701caa209935512c69fc7962530b8619acd9b6cb03106a7c13c1c5e

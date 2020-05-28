@@ -25,6 +25,7 @@ import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
+import com.moxi.mougblog.base.enums.EGender;
 import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -158,10 +159,25 @@ public class AuthRestApi {
         } else {
             return;
         }
+
+        // 判断邮箱是否存在
         if (data.get(SysConf.EMAIL) != null) {
             String email = data.get(SysConf.EMAIL).toString();
             user.setEmail(email);
         }
+
+        // 判断用户性别
+        if (data.get(SysConf.GENDER) != null) {
+            Object gender = data.get(SysConf.GENDER).toString();
+            if(SysConf.MALE.equals(gender)) {
+                user.setGender(EGender.MALE);
+            } else if(SysConf.FEMALE.equals(gender)) {
+                user.setGender(EGender.FEMALE);
+            } else {
+                user.setGender(EGender.UNKNOWN);
+            }
+        }
+
 
         // 通过头像uid获取图片
         String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
