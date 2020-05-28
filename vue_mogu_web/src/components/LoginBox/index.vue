@@ -36,13 +36,13 @@
           </el-tooltip>
 
           <el-tooltip content="QQ" placement="bottom">
-            <el-button type="primary" circle disabled :disabled="loginType.qq">
+            <el-button type="primary" circle @click="goAuth('qq')" :disabled="loginType.qq">
               <span class="iconfont">&#xe601;</span>
             </el-button>
           </el-tooltip>
 
           <el-tooltip content="微信" placement="bottom">
-            <el-button type="success" circle disabled :disabled="loginType.wechat">
+            <el-button type="success" circle @click="goAuth('wechat')" :disabled="loginType.wechat">
               <span class="iconfont">&#xe66f;</span>
             </el-button>
           </el-tooltip>

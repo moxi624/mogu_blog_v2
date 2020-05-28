@@ -28,6 +28,7 @@ public final class SysConf extends BaseSysConf {
      */
     public static final String GITHUB = "github";
     public static final String GITEE = "gitee";
+    public static final String QQ = "qq";
     public static final String PIC_URL = "picUrl";
     public static final String QI_NIU_URL = "qiNiuUrl";
     public static final String NICKNAME = "nickname";

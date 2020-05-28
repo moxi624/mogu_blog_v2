@@ -41,6 +41,7 @@ import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthToken;
 import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthGithubRequest;
+import me.zhyd.oauth.request.AuthQqRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -76,8 +77,6 @@ public class AuthRestApi {
     @Autowired
     RabbitMqUtil rabbitMqUtil;
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
     private String giteeClienId;
@@ -87,6 +86,10 @@ public class AuthRestApi {
     private String githubClienId;
     @Value(value = "${justAuth.clientSecret.github}")
     private String githubClientSecret;
+    @Value(value = "${justAuth.clientId.qq}")
+    private String qqClienId;
+    @Value(value = "${justAuth.clientSecret.qq}")
+    private String qqClientSecret;
     @Value(value = "${data.webSite.url}")
     private String webSiteUrl;
     @Value(value = "${data.web.url}")
@@ -570,6 +573,13 @@ public class AuthRestApi {
                         .clientId(giteeClienId)
                         .clientSecret(giteeClientSecret)
                         .redirectUri(moguWebUrl + "/oauth/callback/gitee")
+                        .build());
+                break;
+            case SysConf.QQ:
+                authRequest = new AuthQqRequest(AuthConfig.builder()
+                        .clientId(qqClienId)
+                        .clientSecret(qqClientSecret)
+                        .redirectUri(moguWebUrl + "/oauth/callback/qq")
                         .build());
                 break;
             default:

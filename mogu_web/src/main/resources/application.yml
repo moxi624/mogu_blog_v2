@@ -206,12 +206,14 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
 
-# 第三方登录
+# 第三方登录，参考
 justAuth:
   clientId:
     gitee: ec2dba332701caa209935512c69fc7962530b8619acd9b6cb03106a7c13c1c5e
     github: c99bfe31f8774ec8e242
+    qq: XXXXXXXXXXXXXXX  # 改成自己的
   clientSecret:
     gitee: 993930de16b61b8146f7d30c693afd328b4d42116cf2da748f275077e4ef5e47
     github: ec088d14ab8076e2beed58fcb95e37a0fc586618
+    qq: XXXXXXXXXXXXXXXXXX # 改成自己的
 
