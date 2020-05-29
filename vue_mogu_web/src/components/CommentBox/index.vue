@@ -4,9 +4,8 @@
     <span class="left">
       <img :src="getUserPhoto" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"/>
     </span>
-
       <span class="right">
-      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @input="vaildCount"></textarea>
+      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @click="hideEmojiPanel" @input="vaildCount"></textarea>
     </span>
     </div>
     <div class="bottom">
@@ -17,7 +16,7 @@
       </div>
       <span class="allow p2">还能输入{{count}}个字符</span>
 
-      <emoji-panel @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
+      <emoji-panel class="emojiPanel" @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
 
     </div>
   </div>
@@ -63,6 +62,10 @@
     },
     computed: {
       ...mapGetters(['getUserPhoto'])
+    },
+    mounted() {
+      // 页面加载的时候调用监听
+      this.hideEmojiPanel()
     },
     methods: {
       vaildCount: function() {
@@ -127,7 +130,7 @@
         this.value = '';
         this.count = 1024;
         this.comments.createTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
-        this.isShowEmojiPanel = false
+        this.hideEmojiPanel()
         this.$emit("submit-box", this.comments)
       },
       emoji(word) {
@@ -142,9 +145,13 @@
         if(this.toInfo) {
           this.$emit("cancel-box", this.toInfo.commentUid)
         }
+        this.hideEmojiPanel()
       },
       showEmojiPanel() {
         this.isShowEmojiPanel = !this.isShowEmojiPanel;
+      },
+      hideEmojiPanel() {
+        this.isShowEmojiPanel = false
       },
       appendEmoji(text) {
         // const el = document.getElementById("textpanel");

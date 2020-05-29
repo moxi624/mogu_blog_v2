@@ -16,13 +16,13 @@ public class MetaObjectHandlerConfig implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("插入方法填充");
-        setFieldValByName("create_time", new Date(), metaObject);
-        setFieldValByName("update_time", new Date(), metaObject);
+        setFieldValByName("createTime", new Date(), metaObject);
+        setFieldValByName("updateTime", new Date(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("更新方法填充");
-        setFieldValByName("update_time", new Date(), metaObject);
+        setFieldValByName("updateTime", new Date(), metaObject);
     }
 }

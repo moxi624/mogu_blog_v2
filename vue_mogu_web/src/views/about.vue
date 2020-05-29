@@ -194,12 +194,12 @@
     border: 1px solid #cccccc;
     border-radius: 5px;
     background-color: #ffffff;
-    width: 380px;
-    height: 230px;
+    width: 470px;
+    height: 180px;
     position: absolute;
     z-index: 999;
     left: 35px;
-    top: 10px;
+    top: 8px;
   }
   .emoji-size-small {
     zoom: 0.3;

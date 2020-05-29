@@ -116,11 +116,15 @@ public class LoginRestApi {
     @PostMapping("/register")
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
+        if(userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
         HttpServletRequest request = RequestHolder.getRequest();
         String ip = IpUtils.getIpAddr(request);
         Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userVO.getUserName()).or().eq(SQLConf.EMAIL, userVO.getEmail()));
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         User user = userService.getOne(queryWrapper);
         if (user != null) {
             return ResultUtil.result(SysConf.ERROR, "用户已存在");

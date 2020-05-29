@@ -10,11 +10,11 @@
         </div>
       </div>
       <el-divider></el-divider>
-      <el-form :label-position="labelPosition" :model="loginForm">
-        <el-form-item label="用户名">
+      <el-form :label-position="labelPosition" :rules="loginRules" :model="loginForm" ref="loginForm">
+        <el-form-item label="用户名" prop="userName">
           <el-input v-model="loginForm.userName" placeholder="请输入用户名或邮箱" :disabled="loginType.password"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="loginForm.password" placeholder="请输入密码" :disabled="loginType.password"></el-input>
         </el-form-item>
         <el-row class="btn">
@@ -68,9 +68,9 @@
         </div>
       </div>
       <el-divider></el-divider>
-      <el-form :rules="rules" :label-position="labelPosition" :model="registerForm">
+      <el-form :rules="rules" :label-position="labelPosition" :model="registerForm" ref="registerForm">
         <el-form-item label="用户名" prop="userName">
-          <el-input v-model="registerForm.userName" :disabled="loginType.password"></el-input>
+          <el-input v-model="registerForm.userName" placeholder="用户名长度在5~20之间" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="昵称" prop="nickName">
@@ -141,9 +141,23 @@
           qq: true,
           wechat: true
         },
+        loginRules: {
+          userName: [
+            {required: true, message: '请输入用户名', trigger: 'blur'},
+            { min: 5, message: "用户名长度大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "用户名长度不能大于 20 个字符", trigger: "blur" }
+          ],
+          password: [
+            { required: true, message: "请输入密码", trigger: "blur" },
+            { min: 5, message: "密码长度需要大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "密码长度不能大于 20 个字符", trigger: "blur" }
+          ]
+        },
         rules: {
           userName: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+            {required: true, message: '请输入用户名', trigger: 'blur'},
+            { min: 5, message: "用户名长度大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "用户名长度不能大于 20 个字符", trigger: "blur" }
           ],
           nickName: [
             {required: true, message: '请输入昵称', trigger: 'blur'}
@@ -201,54 +215,68 @@
         }
       },
       startLogin: function () {
-        var params = {};
-        params.userName = this.loginForm.userName;
-        params.passWord = this.loginForm.password;
-        params.isRememberMe = 1;
-        localLogin(params).then(response => {
-          if (response.code == "success") {
-            // 跳转到首页
-            location.replace(this.vueMoguWebUrl + "/#/?token=" + response.data)
-            window.location.reload()
+        this.$refs.loginForm.validate((valid) => {
+          console.log("开始校验", valid)
+          if(!valid) {
+            console.log('校验失败')
+            return;
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            })
+            var params = {};
+            params.userName = this.loginForm.userName;
+            params.passWord = this.loginForm.password;
+            params.isRememberMe = 1;
+            localLogin(params).then(response => {
+              if (response.code == "success") {
+                // 跳转到首页
+                location.replace(this.vueMoguWebUrl + "/#/?token=" + response.data)
+                window.location.reload()
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                })
+              }
+            });
           }
-        });
+        })
       },
       startRegister: function () {
-        let passWord = this.registerForm.password;
-        let passWord2 = this.registerForm.password2;
-        if(passWord != passWord2) {
-          this.$message({
-            type: "success",
-            message: "两次密码不一致"
-          })
-          return;
-        }
-
-        var params = {};
-        params.userName = this.registerForm.userName;
-        params.passWord = this.registerForm.password;
-        params.email = this.registerForm.email;
-        params.nickName = this.registerForm.nickName
-        localRegister(params).then(response => {
-          if (response.code == "success") {
-            this.$message({
-              type: "success",
-              message: response.data
-            })
-            // 打开登录页面
-            this.goLogin();
+        this.$refs.registerForm.validate((valid) => {
+          if(!valid) {
+            console.log('校验失败')
+            return;
           } else {
-            this.$message({
-              type: "error",
-              message: response.data
-            })
+            let passWord = this.registerForm.password;
+            let passWord2 = this.registerForm.password2;
+            if(passWord != passWord2) {
+              this.$message({
+                type: "success",
+                message: "两次密码不一致"
+              })
+              return;
+            }
+            var params = {};
+            params.userName = this.registerForm.userName;
+            params.passWord = this.registerForm.password;
+            params.email = this.registerForm.email;
+            params.nickName = this.registerForm.nickName
+            localRegister(params).then(response => {
+              if (response.code == "success") {
+                this.$message({
+                  type: "success",
+                  message: response.data
+                })
+                // 打开登录页面
+                this.goLogin();
+              } else {
+                this.$message({
+                  type: "error",
+                  message: response.data
+                })
+              }
+            });
           }
-        });
+        })
       },
       goLogin: function () {
         this.showLogin = true;

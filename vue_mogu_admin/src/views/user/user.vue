@@ -3,129 +3,136 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-input
-        clearable
         @keyup.enter.native="handleFind"
         class="filter-item"
+        clearable
+        placeholder="请输入用户名"
         style="width: 200px;"
         v-model="keyword"
-        placeholder="请输入用户名"
       ></el-input>
 
-      <el-select v-model="accountSourceKeyword" clearable placeholder="账号类型" style="width:140px">
+      <el-select clearable placeholder="账号类型" style="width:140px" v-model="accountSourceKeyword">
         <el-option
+          :key="item.uid"
+          :label="item.dictLabel"
+          :value="item.dictValue"
           v-for="item in accountSourceDictList"
-          :key="item.uid"
-          :label="item.dictLabel"
-          :value="item.dictValue"
         ></el-option>
       </el-select>
 
-      <el-select v-model="commentStatusKeyword" clearable placeholder="评论状态" style="width:140px">
+      <el-select clearable placeholder="评论状态" style="width:140px" v-model="commentStatusKeyword">
         <el-option
-          v-for="item in commentStatusDictList"
           :key="item.uid"
           :label="item.dictLabel"
           :value="item.dictValue"
+          v-for="item in commentStatusDictList"
         ></el-option>
       </el-select>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/user/getList'">查找</el-button>
-<!--      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加用户</el-button>-->
+      <el-button @click="handleFind" class="filter-item" icon="el-icon-search" type="primary"
+                 v-permission="'/user/getList'">查找
+      </el-button>
+      <!--      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加用户</el-button>-->
     </div>
 
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60" align="center">
+      <el-table-column align="center" label="序号" width="60">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="头像" width="120" align="center">
+      <el-table-column align="center" label="头像" width="120">
         <template slot-scope="scope">
           <img
-            v-if="scope.row.photoUrl"
-            :src="BASE_IMAGE_URL + scope.row.photoUrl"
+            :src="scope.row.photoUrl ? BASE_IMAGE_URL + scope.row.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
             style="width: 100px;height: 100px;"
           >
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名" width="150" align="center">
+      <el-table-column align="center" label="用户名" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>
 
-<!--      <el-table-column label="性别" width="100">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>-->
-<!--          <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="性别" width="100">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>-->
+      <!--          <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
 
-      <el-table-column label="账号来源" width="100" align="center">
+      <el-table-column align="center" label="账号来源" width="100">
         <template slot-scope="scope">
           <template>
-            <el-tag v-for="item in accountSourceDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.source == item.dictValue">{{item.dictLabel}}</el-tag>
+            <el-tag :key="item.uid" :type="item.listClass" v-for="item in accountSourceDictList"
+                    v-if="scope.row.source == item.dictValue">{{item.dictLabel}}
+            </el-tag>
           </template>
         </template>
       </el-table-column>
 
-      <el-table-column label="评论状态" width="100" align="center">
+      <el-table-column align="center" label="评论状态" width="100">
         <template slot-scope="scope">
           <template>
-            <el-tag v-for="item in commentStatusDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.commentStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+            <el-tag :key="item.uid" :type="item.listClass" v-for="item in commentStatusDictList"
+                    v-if="scope.row.commentStatus == item.dictValue">{{item.dictLabel}}
+            </el-tag>
           </template>
         </template>
       </el-table-column>
 
-      <el-table-column label="用户标签" width="100" align="center">
+      <el-table-column align="center" label="用户标签" width="100">
         <template slot-scope="scope">
           <template>
-            <el-tag v-for="item in userTagDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.userTag == item.dictValue">{{item.dictLabel}}</el-tag>
+            <el-tag :key="item.uid" :type="item.listClass" v-for="item in userTagDictList"
+                    v-if="scope.row.userTag == item.dictValue">{{item.dictLabel}}
+            </el-tag>
           </template>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录次数" width="100" align="center">
+      <el-table-column align="center" label="登录次数" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录IP" width="160" align="center">
+      <el-table-column align="center" label="登录IP" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginIp }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作系统" width="160" align="center">
+      <el-table-column align="center" label="操作系统" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.os }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="浏览器" width="160" align="center">
+      <el-table-column align="center" label="浏览器" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.browser }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="最后登录时间" width="160" align="center">
+      <el-table-column align="center" label="最后登录时间" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="邮箱" width="200" align="center">
+      <el-table-column align="center" label="邮箱" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="IP来源" width="160" align="center">
+      <el-table-column align="center" label="IP来源" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.ipSource }}</span>
         </template>
@@ -145,11 +152,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="250">
+      <el-table-column fixed="right" label="操作" min-width="250">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="primary" size="small" v-permission="'/user/edit'">编辑</el-button>
-          <el-button @click="handleUpdatePassword(scope.row)" type="primary" size="small" v-permission="'/user/resetUserPassword'">重置密码</el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/user/delete'">删除</el-button>
+          <el-button @click="handleEdit(scope.row)" size="small" type="primary" v-permission="'/user/edit'">编辑
+          </el-button>
+          <el-button @click="handleUpdatePassword(scope.row)" size="small" type="primary"
+                     v-permission="'/user/resetUserPassword'">重置密码
+          </el-button>
+          <el-button @click="handleDelete(scope.row)" size="small" type="danger" v-permission="'/user/delete'">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,50 +168,50 @@
     <!--分页-->
     <div class="block">
       <el-pagination
-        @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         :page-size="pageSize"
-        layout="total, prev, pager, next, jumper"
         :total="total"
+        @current-change="handleCurrentChange"
+        layout="total, prev, pager, next, jumper"
       ></el-pagination>
     </div>
 
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="用户头像" :label-width="formLabelWidth">
+        <el-form-item :label-width="formLabelWidth" label="用户头像">
           <div class="imgBody" v-if="form.photoUrl">
-            <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoUrl" />
+            <i @click="deletePhoto()" @mouseover="icon = true" class="el-icon-error inputClass" v-show="icon"></i>
+            <img @mouseout="icon = false" @mouseover="icon = true" v-bind:src="BASE_IMAGE_URL + form.photoUrl"/>
           </div>
 
-          <div v-else class="uploadImgBody" @click="checkPhoto">
+          <div @click="checkPhoto" class="uploadImgBody" v-else>
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </div>
         </el-form-item>
 
         <el-row :gutter="24">
           <el-col :span="9">
-            <el-form-item label="用户名" :label-width="formLabelWidth" prop="nickName">
-              <el-input v-model="form.nickName" ></el-input>
+            <el-form-item :label-width="formLabelWidth" label="用户名" prop="nickName">
+              <el-input v-model="form.nickName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-              <el-input v-model="form.email" auto-complete="off"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="邮箱" prop="email">
+              <el-input auto-complete="off" v-model="form.email"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="24">
           <el-col :span="9">
-            <el-form-item label="QQ号" :label-width="formLabelWidth" prop="qqNumber">
-              <el-input v-model="form.qqNumber" auto-complete="off"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="QQ号" prop="qqNumber">
+              <el-input auto-complete="off" v-model="form.qqNumber"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="9">
-            <el-form-item label="职业" :label-width="formLabelWidth">
-              <el-input v-model="form.occupation" auto-complete="off"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="职业">
+              <el-input auto-complete="off" v-model="form.occupation"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -208,12 +219,12 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item label="评论状态" label-width="120px" prop="commentStatus">
-              <el-select v-model="form.commentStatus" size="small" placeholder="请选择" style="width:100px">
+              <el-select placeholder="请选择" size="small" style="width:100px" v-model="form.commentStatus">
                 <el-option
-                  v-for="item in commentStatusDictList"
                   :key="item.uid"
                   :label="item.dictLabel"
                   :value="parseInt(item.dictValue)"
+                  v-for="item in commentStatusDictList"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -221,12 +232,12 @@
 
           <el-col :span="6">
             <el-form-item label="用户标签" label-width="90px" prop="userTag">
-              <el-select v-model="form.userTag" size="small" placeholder="请选择" style="width:100px">
+              <el-select placeholder="请选择" size="small" style="width:100px" v-model="form.userTag">
                 <el-option
-                  v-for="item in userTagDictList"
                   :key="item.uid"
                   :label="item.dictLabel"
                   :value="parseInt(item.dictValue)"
+                  v-for="item in userTagDictList"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -234,48 +245,45 @@
 
           <el-col :span="8">
             <el-form-item label="性别" label-width="50px" prop="gender">
-              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+              <el-radio :key="gender.uid" :label="gender.dictValue" border
+                        size="medium" v-for="gender in genderDictList" v-model="form.gender">{{gender.dictLabel}}
+              </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item label="简介" :label-width="formLabelWidth">
+        <el-form-item :label-width="formLabelWidth" label="简介">
           <el-input
-            style="width: 70%"
-            type="textarea"
             :autosize="{ minRows: 3, maxRows: 10}"
             placeholder="请输入内容"
+            style="width: 70%"
+            type="textarea"
             v-model="form.summary">
           </el-input>
         </el-form-item>
 
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer" slot="footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="submitForm" type="primary">确 定</el-button>
       </div>
     </el-dialog>
 
     <avatar-cropper
-      v-show="imagecropperShow"
-      :key="imagecropperKey"
-      :width="300"
       :height="300"
+      :key="imagecropperKey"
       :url="url"
-      lang-type="zh"
+      :width="300"
       @close="close"
       @crop-upload-success="cropSuccess"
+      lang-type="zh"
+      v-show="imagecropperShow"
     />
   </div>
 </template>
 
 <script>
-  import {
-    getUserList,
-    deleteUser,
-    editUser,
-    resetUserPassword
-  } from "@/api/user";
+  import {deleteUser, editUser, getUserList, resetUserPassword} from "@/api/user";
   import AvatarCropper from '@/components/AvatarCropper'
   import {getListByDictTypeList} from "@/api/sysDictData"
 
@@ -339,7 +347,7 @@
       //传递过来的pictureSordUid
       let source = this.$route.query.source;
       let nickName = this.$route.query.nickName;
-      if(source != undefined && nickName != undefined) {
+      if (source != undefined && nickName != undefined) {
         this.accountSourceKeyword = source;
         this.keyword = nickName;
         this.userList();
@@ -350,7 +358,7 @@
       this.userList();
     },
     methods: {
-      userList: function() {
+      userList: function () {
         var params = {};
         params.keyword = this.keyword;
         params.commentStatus = this.commentStatusKeyword;
@@ -360,7 +368,7 @@
 
         getUserList(params).then(response => {
           console.log("getUserList", response);
-          if(response.code == "success") {
+          if (response.code == "success") {
             this.tableData = response.data.records;
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
@@ -378,7 +386,7 @@
       close() {
         this.imagecropperShow = false
       },
-      deletePhoto: function() {
+      deletePhoto: function () {
         console.log("删除图片", this.form)
         this.form.photoUrl = null;
         this.form.avatar = "";
@@ -393,7 +401,7 @@
        * 字典查询
        */
       getDictList: function () {
-        var dictTypeList =  ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
+        var dictTypeList = ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
         getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == "success") {
             var dictMap = response.data;
@@ -404,27 +412,27 @@
           }
         });
       },
-      getFormObject: function() {
+      getFormObject: function () {
         var formObject = {
           uid: null,
         };
         return formObject;
       },
-      handleFind: function() {
+      handleFind: function () {
         this.userList();
       },
-      handleAdd: function() {
+      handleAdd: function () {
         this.dialogFormVisible = true;
         this.form = this.getFormObject();
         this.isEditForm = false;
       },
-      handleEdit: function(row) {
+      handleEdit: function (row) {
         this.title = "编辑用户";
         this.dialogFormVisible = true;
         this.isEditForm = true;
         this.form = row;
       },
-      handleDelete: function(row) {
+      handleDelete: function (row) {
         var that = this;
         this.$confirm("此操作将把用户删除, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -449,7 +457,7 @@
             });
           });
       },
-      handleUpdatePassword: function(row) {
+      handleUpdatePassword: function (row) {
         var that = this;
         this.$confirm("此操作将把用户密码重置为初始密码?", "提示", {
           confirmButtonText: "确定",
@@ -474,17 +482,17 @@
             });
           });
       },
-      handleCurrentChange: function(val) {
+      handleCurrentChange: function (val) {
         this.currentPage = val;
         this.userList();
       },
-      submitForm: function() {
+      submitForm: function () {
         this.$refs.form.validate((valid) => {
-          if(!valid) {
+          if (!valid) {
             console.log("校验出错")
           } else {
             editUser(this.form).then(response => {
-              if(response.code == "success") {
+              if (response.code == "success") {
                 this.$notify({
                   title: "成功",
                   message: "保存成功！",
@@ -514,9 +522,11 @@
     position: relative;
     overflow: hidden;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -525,6 +535,7 @@
     line-height: 100px;
     text-align: center;
   }
+
   .imgBody {
     width: 100px;
     height: 100px;
@@ -532,6 +543,7 @@
     float: left;
     position: relative;
   }
+
   .uploadImgBody {
     margin-left: 5px;
     width: 100px;
@@ -540,16 +552,20 @@
     float: left;
     position: relative;
   }
+
   .uploadImgBody :hover {
     border: dashed 1px #00ccff;
   }
+
   .inputClass {
     position: absolute;
   }
+
   .img {
     width: 100%;
     height: 100%;
   }
+
   img {
     width: 100px;
     height: 100px;
