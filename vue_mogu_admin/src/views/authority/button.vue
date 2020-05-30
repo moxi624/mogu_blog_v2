@@ -54,6 +54,7 @@
               <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.icon }}</span>
+                  <i :class="scope_child.row.icon" />
                 </template>
               </el-table-column>
 
@@ -133,7 +134,8 @@
 
       <el-table-column label="图标" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.icon }}</span>
+          <i :class="scope.row.icon"></i>
+<!--          <span>{{ scope.row.icon }}</span>-->
         </template>
       </el-table-column>
 

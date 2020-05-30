@@ -38,7 +38,8 @@
 
               <el-table-column label width="100" align="center">
                 <template slot-scope="scope_child">
-                  <span>{{ scope_child.row.icon }}</span>
+<!--                  <span>{{ scope_child.row.icon }}</span>-->
+                  <i :class="scope_child.row.icon" />
                 </template>
               </el-table-column>
 
@@ -112,7 +113,8 @@
 
       <el-table-column label="图标" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.icon }}</span>
+          <i :class="scope.row.icon" />
+<!--          <span>{{ scope.row.icon }}</span>-->
         </template>
       </el-table-column>
 
@@ -207,7 +209,11 @@
         </el-form-item>
 
         <el-form-item label="图标" :label-width="formLabelWidth" prop="icon">
-          <el-input v-model="form.icon" auto-complete="off"></el-input>
+          <el-input v-model="form.icon" placeholder="请输入前图标名称">
+            <el-button slot="append" icon="el-icon-setting" @click="openIconsDialog('prefix-icon')">
+              选择
+            </el-button>
+          </el-input>
         </el-form-item>
 
         <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
@@ -226,6 +232,8 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
+
+    <icons-dialog :visible.sync="iconsVisible" :current="form.icon" @select="setIcon" />
   </div>
 </template>
 
@@ -240,9 +248,15 @@ import {
 } from "@/api/categoryMenu";
 import {getListByDictTypeList} from "@/api/sysDictData"
 import { formatData } from "@/utils/webUtils";
+import IconsDialog from "../../components/IconsDialog";
 export default {
+  components: {
+    IconsDialog
+  },
   data() {
     return {
+      iconsVisible: false, // 是否显示icon选择器
+      activeData: '', // 激活的图标
       showHeader: false, //是否显示表头
       tableData: [],
       keyword: "",
@@ -306,6 +320,14 @@ export default {
           this.menuOptions = response.data;
         }
       });
+    },
+    // 选择图标
+    setIcon(val) {
+      this.form.icon = val
+    },
+    openIconsDialog(model) {
+      this.iconsVisible = true
+      this.currentIconModel = model
     },
     /**
      * 字典查询
