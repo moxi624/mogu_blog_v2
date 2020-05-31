@@ -1,13 +1,12 @@
 package com.moxi.mogublog.utils;
 
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.lionsoul.ip2region.*;
 
 
 /**
@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class IpUtils {
-
     /**
      * 获取当前网络ip
      *
@@ -179,10 +178,15 @@ public class IpUtils {
     public static String getAddresses(String content, String encodingString) {
 
         String ip = content.substring(3);
-        // 判断是否是内网op
-        if (isInner(ip)) {
-            return "XX|XX|内网IP|内网IP";
+
+        if(!Util.isIpAddress(ip)) {
+            log.info("IP地址为空");
+            return null;
         }
+
+        // 淘宝IP宕机，目前使用Ip2region：https://github.com/lionsoul2014/ip2region
+        log.info("返回的IP信息：{}", getCityInfo(ip));
+        return getCityInfo(ip);
 
         // TODO 淘宝接口目前已经宕机，因此暂时注释下面代码
 //        try {
@@ -243,7 +247,7 @@ public class IpUtils {
 //            log.error(e.getMessage());
 //            return null;
 //        }
-        return null;
+//        return null;
     }
 
     /**
@@ -390,14 +394,111 @@ public class IpUtils {
         return outBuffer.toString();
     }
 
+    /**
+     * 创建ip2region文件
+     * @return
+     */
+    public static String createFtlFileByFtlArray() {
+        String ftlPath = "city/";
+        return createFtlFile(ftlPath, "ip2region.db");
+    }
+
+    /**
+     * 创建文件
+     * @param ftlPath
+     * @param ftlName
+     * @return
+     */
+    private static String createFtlFile(String ftlPath, String ftlName) {
+        InputStream certStream = null;
+        try {
+            //获取当前项目所在的绝对路径
+            String proFilePath = System.getProperty("user.dir");
+
+            //获取模板下的路径，然后存放在temp目录下　
+            String newFilePath = proFilePath + File.separator + "temp" + File.separator + ftlPath;
+            newFilePath = newFilePath.replace("/", File.separator);
+            //检查项目运行时的src下的对应路径
+            File newFile = new File(newFilePath + ftlName);
+            if (newFile.isFile() && newFile.exists()) {
+                return newFilePath;
+            }
+            //当项目打成jar包会运行下面的代码，并且复制一份到src路径下（具体结构看下面图片）
+            certStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(ftlPath + ftlName);
+            byte[] certData = org.apache.commons.io.IOUtils.toByteArray(certStream);
+            org.apache.commons.io.FileUtils.writeByteArrayToFile(newFile, certData);
+            return newFilePath;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            try {
+                certStream.close();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public static String getCityInfo(String ip) {
+
+        String dbPath = createFtlFileByFtlArray() + "ip2region.db";
+        File file = new File(dbPath);
+        if (file.exists() == false) {
+            System.out.println("Error: Invalid ip2region.db file");
+        }
+
+        //查询算法
+        //B-tree, B树搜索（更快）
+        int algorithm = DbSearcher.BTREE_ALGORITHM;
+
+        //Binary,使用二分搜索
+        //DbSearcher.BINARY_ALGORITHM
+
+        //Memory,加载内存（最快）
+        //DbSearcher.MEMORY_ALGORITYM
+        try {
+            DbConfig config = new DbConfig();
+            DbSearcher searcher = new DbSearcher(config, dbPath);
+
+            //define the method
+            Method method = null;
+            switch (algorithm) {
+                case DbSearcher.BTREE_ALGORITHM:
+                    method = searcher.getClass().getMethod("btreeSearch", String.class);
+                    break;
+                case DbSearcher.BINARY_ALGORITHM:
+                    method = searcher.getClass().getMethod("binarySearch", String.class);
+                    break;
+                case DbSearcher.MEMORY_ALGORITYM:
+                    method = searcher.getClass().getMethod("memorySearch", String.class);
+                    break;
+            }
+
+            DataBlock dataBlock = null;
+            if (Util.isIpAddress(ip) == false) {
+                System.out.println("Error: Invalid ip address");
+            }
+
+            dataBlock = (DataBlock) method.invoke(searcher, ip);
+            String ipInfo = dataBlock.getRegion();
+            if (!StringUtils.isEmpty(ipInfo)) {
+                ipInfo = ipInfo.replace("|0", "");
+                ipInfo = ipInfo.replace("0|", "");
+            }
+            return ipInfo;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void main(String args[]) {
-        //百度
-        String ip = "115.239.210.27";
-        String address = "";
-
-        address = getAddresses("ip=" + ip, "utf-8");
-
-        System.out.println(address);
+        String ip="220.248.12.158";
+        String cityIpString = getCityInfo(ip);
+        System.out.println(cityIpString);
     }
 
 }

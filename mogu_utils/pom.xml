@@ -106,5 +106,13 @@
             <version>${flexmark.version}</version>
         </dependency>
 
+        <!--通过ip获取城市信息-->
+        <!-- https://github.com/lionsoul2014/ip2region -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>${ip2region.version}</version>
+        </dependency>
+
     </dependencies>
 </project>
