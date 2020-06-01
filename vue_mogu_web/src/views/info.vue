@@ -13,6 +13,17 @@
       >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
     </h1>
     <div class="infosbox">
+
+
+      <side-catalog
+        ref="catalog"
+        class="side-catalog"
+        v-bind="catalogProps"
+      >
+        <span style="font-size: 16px;font-weight: bold;">目录</span>
+      </side-catalog>
+
+
       <div class="newsview">
         <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
         <div class="bloginfo" v-if="blogData.blogSort.uid">
@@ -58,10 +69,10 @@
         </div>
         <div
           class="news_con ck-content"
-          v-html="blogData.content"
+          v-html="blogDataContent"
           v-highlight
           @click="imageChange"
-        >{{blogData.content}}</div>
+        >{{blogDataContent}}</div>
       </div>
 
       <!--付款码和点赞-->
@@ -82,14 +93,12 @@
       <div class="news_pl">
         <h2>文章评论</h2>
         <ul>
-<!--          <sticky :sticky-top="60">-->
             <CommentBox
               :userInfo="userInfo"
               :commentInfo="commentInfo"
               @submit-box="submitBox"
               :showCancel="showCancel"
             ></CommentBox>
-<!--          </sticky>-->
           <div class="message_infos">
             <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
             <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
@@ -133,15 +142,21 @@
     import HotBlog from "../components/HotBlog";
     import FollowUs from "../components/FollowUs";
     import PayCode from "../components/PayCode";
-    import Sticky from "@/components/Sticky";
     import Link from "../components/Link";
     import { addComment, getCommentList } from "../api/comment";
     import { Loading } from "element-ui";
+    import SideCatalog from "../components/VueSideCatalog"
 
     export default {
         name: "info",
         data() {
             return {
+                catalogProps: {
+                  // 内容容器selector(必需)
+                  containerElementSelector: '.ck-content',
+                  openDomWatch: true,
+                },
+                blogDataContent: "",
                 loadingInstance: null, // loading对象
                 showCancel: false,
                 submitting: false,
@@ -176,7 +191,7 @@
             PayCode,
             CommentList,
             CommentBox,
-            Sticky,
+            SideCatalog,
             Link
         },
       mounted () {
@@ -212,21 +227,19 @@
                 fullscreen: true,
                 text: "正在努力加载中~"
             });
-
             getLink().then(response => {
                 this.linkData = response.data.records;
             });
-
             var params = new URLSearchParams();
-
             this.blogUid = this.$route.query.blogUid;
-
             this.commentInfo.blogUid = this.$route.query.blogUid;
-
             params.append("uid", this.blogUid);
             getBlogByUid(params).then(response => {
                 if (response.code == "success") {
                     this.blogData = response.data;
+                    setTimeout(()=>{
+                      this.blogDataContent = this.blogData.content
+                    },200);
                 }
                 this.loadingInstance.close();
             });
@@ -342,6 +355,11 @@
 </script>
 
 <style>
+  .side-catalog{
+    position: fixed;
+    top: 80px;
+    left:50px;
+  }
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;

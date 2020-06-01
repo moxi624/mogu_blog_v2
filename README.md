@@ -180,6 +180,7 @@
 |     clipboard.js      |     现代化的拷贝文字      |                  http://www.clipboardjs.cn/                  |
 |      js-beautify      |    美化JavaScript代码     |         https://github.com/beautify-web/js-beautify          |
 |     FileSaver.js      |     保存文件在客户端      |           https://github.com/eligrey/FileSaver.js            |
+|   vue-side-catalog    |        目录导航栏         |        https://github.com/yaowei9363/vue-side-catalog        |
 
 ## 项目搭建
 
@@ -257,6 +258,7 @@
 - 感谢 **bihell** 的 Dice 博客项目：[https://github.com/bihell/Dice](https://github.com/bihell/Dice)
 - 感谢 **pppercyWang** 提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
 - 感谢 **若依** 提供的RuoYi项目：[https://gitee.com/y_project/RuoYi](https://gitee.com/y_project/RuoYi)
+- 感谢 **yaowei9363** 提供的 侧目录组件： [vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog) 
 
 ## 关注&交流
 
@@ -280,6 +282,7 @@
 - [x] 前端增加用户个人中心
 - [x] 增加一个FAQ常见问题文档
 - [x] 集成表单构建页面，来源于[RuoYi](https://gitee.com/y_project/RuoYi)
+- [ ] 增加博客详情页目录导航，来源于[vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog)
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块

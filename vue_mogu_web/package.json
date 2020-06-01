@@ -16,6 +16,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.13.1",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "vue": "^2.5.2",
     "vue-image-crop-upload": "^2.5.0",
     "vue-router": "^3.0.1",
