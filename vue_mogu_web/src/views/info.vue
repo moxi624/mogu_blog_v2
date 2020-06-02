@@ -69,10 +69,10 @@
         </div>
         <div
           class="news_con ck-content"
-          v-html="blogDataContent"
+          v-html="blogData.content"
           v-highlight
           @click="imageChange"
-        >{{blogDataContent}}</div>
+        >{{blogData.content}}</div>
       </div>
 
       <!--付款码和点赞-->
@@ -156,7 +156,6 @@
                   containerElementSelector: '.ck-content',
                   openDomWatch: true,
                 },
-                blogDataContent: "",
                 loadingInstance: null, // loading对象
                 showCancel: false,
                 submitting: false,
@@ -196,6 +195,16 @@
         },
         mounted () {
           var that = this;
+
+          var params = new URLSearchParams();
+          params.append("uid", this.blogUid);
+          getBlogByUid(params).then(response => {
+            if (response.code == "success") {
+              this.blogData = response.data;
+            }
+            this.loadingInstance.close();
+          });
+
           $(window).scroll(function () {
             var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
             var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
@@ -230,20 +239,9 @@
             getLink().then(response => {
                 this.linkData = response.data.records;
             });
-            var params = new URLSearchParams();
+            // var params = new URLSearchParams();
             this.blogUid = this.$route.query.blogUid;
             this.commentInfo.blogUid = this.$route.query.blogUid;
-            params.append("uid", this.blogUid);
-            getBlogByUid(params).then(response => {
-                if (response.code == "success") {
-                    this.blogData = response.data;
-                    setTimeout(()=>{
-                      this.blogDataContent = this.blogData.content
-                    },50);
-                }
-                this.loadingInstance.close();
-            });
-
             var blogParams = new URLSearchParams();
             blogParams.append("blogUid", this.blogUid);
             getSameBlogByBlogUid(blogParams).then(response => {
