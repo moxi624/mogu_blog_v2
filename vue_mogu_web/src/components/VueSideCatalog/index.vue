@@ -107,11 +107,11 @@ export default {
     this.show = true;
     this.scrollElement.addEventListener(
       "scroll",
-      throttle(this.scrollHandle, 200)
+      throttle(this.scrollHandle, 50)
     );
     setTimeout(() => {
       this.setWatcher();
-    }, 200);
+    }, 50);
   },
   beforeDestroy() {
     if (this.openDomWatch) {
@@ -134,7 +134,7 @@ export default {
       this.active = ref;
       setTimeout(() => {
         this.isClick = false;
-      }, 150);
+      }, 50);
       this.$emit("title-click", ref);
     },
     // 获取ref的dom

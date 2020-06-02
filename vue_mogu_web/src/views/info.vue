@@ -194,34 +194,34 @@
             SideCatalog,
             Link
         },
-      mounted () {
-        var that = this;
-        $(window).scroll(function () {
-          var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
-          var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
-          var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
-          //还有30像素的时候,就查询
-          if(docHeight == winHeight + winScrollHeight){
-            if(that.comments.length >= that.total) {
-              console.log('已经到底了')
-              return;
-            }
-            let params = {};
-            params.source = that.commentInfo.source;
-            params.currentPage = that.currentPage + 1
-            params.pageSize = that.pageSize;
-            getCommentList(params).then(response => {
-              if (response.code == "success") {
-                that.comments = that.comments.concat(response.data.records);
-                that.setCommentList(this.comments);
-                that.currentPage = response.data.current;
-                that.pageSize = response.data.size;
-                that.total = response.data.total;
+        mounted () {
+          var that = this;
+          $(window).scroll(function () {
+            var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
+            var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
+            var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
+            //还有30像素的时候,就查询
+            if(docHeight == winHeight + winScrollHeight){
+              if(that.comments.length >= that.total) {
+                console.log('已经到底了')
+                return;
               }
-            });
-          }
-        })
-      },
+              let params = {};
+              params.source = that.commentInfo.source;
+              params.currentPage = that.currentPage + 1
+              params.pageSize = that.pageSize;
+              getCommentList(params).then(response => {
+                if (response.code == "success") {
+                  that.comments = that.comments.concat(response.data.records);
+                  that.setCommentList(this.comments);
+                  that.currentPage = response.data.current;
+                  that.pageSize = response.data.size;
+                  that.total = response.data.total;
+                }
+              });
+            }
+          })
+        },
         created() {
             this.loadingInstance = Loading.service({
                 fullscreen: true,
@@ -239,7 +239,7 @@
                     this.blogData = response.data;
                     setTimeout(()=>{
                       this.blogDataContent = this.blogData.content
-                    },200);
+                    },50);
                 }
                 this.loadingInstance.close();
             });
@@ -355,11 +355,6 @@
 </script>
 
 <style>
-  .side-catalog{
-    position: fixed;
-    top: 80px;
-    left:50px;
-  }
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
