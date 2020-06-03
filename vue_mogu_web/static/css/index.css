@@ -426,6 +426,7 @@ h1.t_nav span { display: none }
 .side-catalog {
  display: none;
 }
+
 header, .blogsbox, .banner { width: 100%; margin: auto; }
 nav { width: 100%; position: relative }
 #starlist { display: none; background: rgba(0,0,0,.5); width: 100%; margin-left: 0; }
@@ -468,6 +469,8 @@ h1.t_nav span { display: none }
 .diggit { float: none; margin-left: auto; }
 .dasbox { display: none }
 
+
+
 /*归档页面*/
 
 .sortBox .time {
@@ -490,7 +493,11 @@ h1.t_nav span { display: none }
 }
 
 }
+
 @media only screen and (max-width: 479px) {
+  .side-catalog {
+    display: none;
+  }
 header, .blogsbox, .banner { width: 100%; margin: auto; }
 nav { width: 100%; position: relative }
 #starlist { display: none; background: rgba(0,0,0,.5); width: 100%; margin-left: 0; }
