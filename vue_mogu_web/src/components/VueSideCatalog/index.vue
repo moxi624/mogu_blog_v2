@@ -169,6 +169,11 @@ export default {
       this.reverseCatalogList = JSON.parse(
         JSON.stringify(this.catalogList)
       ).reverse();
+      // 返回子组件个数
+      if(this.catalogList.length > 0) {
+        this.$emit("catalogSum", this.catalogList.length)
+        console.log("setArray", this.catalogList)
+      }
     },
     // scroll事件
     scrollHandle(e) {
@@ -209,7 +214,7 @@ export default {
     setWatcher() {
       if (this.openDomWatch) {
         // 设置dom监听
-        this.observer = new MutationObserver(debounce(this.setCatalogList, 700));
+        this.observer = new MutationObserver(debounce(this.setCatalogList, 200));
         this.observer.observe(
           document.querySelector(this.containerElementSelector),
           {

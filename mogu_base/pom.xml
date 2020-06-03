@@ -35,7 +35,6 @@
             <version>${Hutool.version}</version>
         </dependency>
 
-
     </dependencies>
 
 </project>

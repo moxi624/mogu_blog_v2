@@ -495,6 +495,38 @@ public class IpUtils {
         return null;
     }
 
+    /**
+     * 获取IP
+     * @return
+     */
+    public static String getHostIp()
+    {
+        try
+        {
+            return InetAddress.getLocalHost().getHostAddress();
+        }
+        catch (UnknownHostException e)
+        {
+        }
+        return "127.0.0.1";
+    }
+
+    /**
+     * 获取主机名
+     * @return
+     */
+    public static String getHostName()
+    {
+        try
+        {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e)
+        {
+        }
+        return "未知";
+    }
+
     public static void main(String args[]) {
         String ip="220.248.12.158";
         String cityIpString = getCityInfo(ip);

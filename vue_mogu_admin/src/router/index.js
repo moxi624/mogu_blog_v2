@@ -357,9 +357,15 @@ export const constantRouterMap = [
       },
       {
         path: 'ElasticSearch',
-        name: 'Druid',
+        name: 'ElasticSearch',
         component: () => import('@/views/monitor/ElasticSearch'),
         meta: { title: 'ElasticSearch', icon: 'exception' }
+      },
+      {
+        path: 'ServerMonitor',
+        name: '服务器监控',
+        component: () => import('@/views/monitor/ServerMonitor'),
+        meta: { title: '服务器监控', icon: 'exception' }
       },
     ]
   },

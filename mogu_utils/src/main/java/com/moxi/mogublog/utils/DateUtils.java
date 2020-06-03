@@ -9,6 +9,7 @@ package com.moxi.mogublog.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +23,21 @@ public class DateUtils {
     public final static String[] REPLACE_STRING = new String[]{"GMT+0800", "GMT+08:00"};
     public final static String SPLIT_STRING = "(中国标准时间)";
     public static Logger log = LoggerFactory.getLogger(DateUtils.class);
+
+    public static String YYYY = "yyyy";
+
+    public static String YYYY_MM = "yyyy-MM";
+
+    public static String YYYY_MM_DD = "yyyy-MM-dd";
+
+    public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+
+    public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+
+    private static String[] parsePatterns = {
+            "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
+            "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
+            "yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"};
 
     private DateUtils() {
     }
@@ -37,6 +53,16 @@ public class DateUtils {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
         return formate.format(date);
+    }
+
+    /**
+     * 获取当前Date型日期
+     *
+     * @return Date() 当前日期
+     */
+    public static Date getNowDate()
+    {
+        return new Date();
     }
 
     /**
@@ -584,6 +610,37 @@ public class DateUtils {
             lDate.add(sd.format(calBegin.getTime()));
         }
         return lDate;
+    }
+
+    /**
+     * 获取服务器启动时间
+     */
+    public static Date getServerStartDate()
+    {
+        long time = ManagementFactory.getRuntimeMXBean().getStartTime();
+        return new Date(time);
+    }
+
+    /**
+     * 计算两个时间差
+     */
+    public static String getDatePoor(Date endDate, Date nowDate)
+    {
+        long nd = 1000 * 24 * 60 * 60;
+        long nh = 1000 * 60 * 60;
+        long nm = 1000 * 60;
+        // long ns = 1000;
+        // 获得两个时间的毫秒时间差异
+        long diff = endDate.getTime() - nowDate.getTime();
+        // 计算差多少天
+        long day = diff / nd;
+        // 计算差多少小时
+        long hour = diff % nd / nh;
+        // 计算差多少分钟
+        long min = diff % nd % nh / nm;
+        // 计算差多少秒//输出结果
+        // long sec = diff % nd % nh % nm / ns;
+        return day + "天" + hour + "小时" + min + "分钟";
     }
 
 }

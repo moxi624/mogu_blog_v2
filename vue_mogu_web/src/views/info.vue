@@ -19,8 +19,9 @@
         ref="catalog"
         class="side-catalog"
         v-bind="catalogProps"
+        :catalogSum = "catalogSum"
       >
-        <span style="font-size: 16px;font-weight: bold;">目录</span>
+        <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
       </side-catalog>
 
 
@@ -151,6 +152,8 @@
         name: "info",
         data() {
             return {
+                // 目录列表数
+                catalogSum: 0,
                 catalogProps: {
                   // 内容容器selector(必需)
                   containerElementSelector: '.ck-content',
