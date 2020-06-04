@@ -13,18 +13,6 @@
       >{{blogData.blogSort ? blogData.blogSort.sortName:""}}</a>
     </h1>
     <div class="infosbox">
-
-
-      <side-catalog
-        ref="catalog"
-        class="side-catalog"
-        v-bind="catalogProps"
-        :catalogSum = "catalogSum"
-      >
-        <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
-      </side-catalog>
-
-
       <div class="newsview">
         <h3 class="news_title" v-if="blogData.title">{{blogData.title}}</h3>
         <div class="bloginfo" v-if="blogData.blogSort.uid">
@@ -107,25 +95,30 @@
         </ul>
       </div>
     </div>
-    <div class="sidebar">
-      <!--标签云-->
-      <TagCloud></TagCloud>
+    <div class="sidebar2">
 
-      <!--关注我们-->
-      <FollowUs></FollowUs>
+      <side-catalog
+        ref="catalog"
+        class="side-catalog"
+        v-bind="catalogProps"
+        :catalogSum = "catalogSum"
+        v-if="showSideCatalog"
+      >
+        <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
+      </side-catalog>
 
-      <!-- 三级推荐 -->
-      <ThirdRecommend></ThirdRecommend>
-
-      <!--四级推荐-->
-      <FourthRecommend></FourthRecommend>
-
-      <!--点击排行-->
-      <HotBlog></HotBlog>
-
-      <!-- 友情链接-->
-      <Link></Link>
+      <sticky :sticky-top="stickyTop" v-if="!showSideCatalog">
+        <side-catalog
+          ref="catalog"
+          class="side-catalog"
+          v-bind="catalogProps"
+          :catalogSum = "catalogSum"
+        >
+          <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
+        </side-catalog>
+      </sticky>
     </div>
+
   </article>
 </template>
 
@@ -147,6 +140,7 @@
     import { addComment, getCommentList } from "../api/comment";
     import { Loading } from "element-ui";
     import SideCatalog from "../components/VueSideCatalog"
+    import Sticky from "@/components/Sticky";
 
     export default {
         name: "info",
@@ -154,6 +148,8 @@
             return {
                 // 目录列表数
                 catalogSum: 0,
+                stickyTop: 10,
+                showSideCatalog: true,
                 catalogProps: {
                   // 内容容器selector(必需)
                   containerElementSelector: '.ck-content',
@@ -194,11 +190,11 @@
             CommentList,
             CommentBox,
             SideCatalog,
-            Link
+            Link,
+            Sticky
         },
         mounted () {
           var that = this;
-
           var params = new URLSearchParams();
           params.append("uid", this.blogUid);
           getBlogByUid(params).then(response => {
@@ -208,10 +204,30 @@
             this.loadingInstance.close();
           });
 
+          var offset = 200;
+          var after = 0;
           $(window).scroll(function () {
             var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
             var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
             var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
+
+            if (winScrollHeight < offset) {
+              console.log("当前值", winScrollHeight)
+              that.showSideCatalog = true
+            } else {
+              console.log("当前值", winScrollHeight)
+              that.showSideCatalog = false
+            }
+            if (winScrollHeight > after) {
+              // console.log("隐藏顶部栏", winScrollHeight)
+              that.stickyTop = 10
+            } else {
+              // console.log("显示顶部栏", winScrollHeight)
+              that.stickyTop = 70
+            }
+            after = winScrollHeight;
+
+
             //还有30像素的时候,就查询
             if(docHeight == winHeight + winScrollHeight){
               if(that.comments.length >= that.total) {
