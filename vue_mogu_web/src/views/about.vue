@@ -293,7 +293,7 @@
   }
   .message_infos {
     width: 100%;
-    min-height: 500px;
+    /*min-height: 500px;*/
     margin-left: 10px;
   }
   .noComment {

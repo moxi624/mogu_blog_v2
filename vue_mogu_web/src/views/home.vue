@@ -1055,7 +1055,7 @@
     border-radius: 50%;
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 780px) {
     .userInfoAvatar {
       width: 35px;
       height: 35px;
@@ -1115,7 +1115,6 @@
   .inputClass {
     position: absolute;
   }
-
 
   .commentList {
     width: 100%;

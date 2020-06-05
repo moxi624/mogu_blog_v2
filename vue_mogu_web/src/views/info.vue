@@ -398,7 +398,7 @@
   }
   .message_infos {
     width: 96%;
-    min-height: 500px;
+    /*min-height: 500px;*/
     margin-left: 10px;
   }
   .noComment {

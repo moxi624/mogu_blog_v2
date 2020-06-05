@@ -17,6 +17,7 @@ import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
+import com.moxi.mougblog.base.enums.EStatus;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -176,8 +177,6 @@ public class LoginRestApi {
             }
         }
 
-        //加载这些角色所能访问的菜单页面列表
-        //1)获取该管理员所有角色
         List<String> roleUid = new ArrayList<>();
         roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
@@ -190,26 +189,39 @@ public class LoginRestApi {
     public String getMenu(HttpServletRequest request) {
 
         Map<String, Object> map = new HashMap<>();
+        Collection<CategoryMenu> categoryMenuList = new ArrayList<>();
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 
-        //加载这些角色所能访问的菜单页面列表
-        //1)获取该管理员所有角色
-        List<String> roleUid = new ArrayList<>();
-        roleUid.add(admin.getRoleUid());
-        Collection<Role> roleList = roleService.listByIds(roleUid);
+        /**
+         * 判断该用户是否是admin账号，如果是开放所有的菜单
+         */
+        if(SysConf.ADMIN.equals(admin.getUserName())) {
+            QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+            categoryMenuList = categoryMenuService.list(queryWrapper);
+        } else {
+            /**
+             * 如果非admin账号
+             * 加载这些角色所能访问的菜单页面列表
+             * 获取该管理员所有角色
+             */
+            List<String> roleUid = new ArrayList<>();
+            roleUid.add(admin.getRoleUid());
+            Collection<Role> roleList = roleService.listByIds(roleUid);
 
-        List<String> categoryMenuUids = new ArrayList<>();
+            List<String> categoryMenuUids = new ArrayList<>();
 
-        roleList.forEach(item -> {
-            String caetgoryMenuUids = item.getCategoryMenuUids();
-            String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
-            for (int a = 0; a < uids.length; a++) {
-                categoryMenuUids.add(uids[a]);
-            }
+            roleList.forEach(item -> {
+                String caetgoryMenuUids = item.getCategoryMenuUids();
+                String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
+                for (int a = 0; a < uids.length; a++) {
+                    categoryMenuUids.add(uids[a]);
+                }
 
-        });
+            });
+            categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
+        }
 
-        Collection<CategoryMenu> categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
         // 从三级级分类中查询出 二级分类
         List<CategoryMenu> buttonList = new ArrayList<>();
         Set<String> secondMenuUidList = new HashSet<>();

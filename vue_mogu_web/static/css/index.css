@@ -484,6 +484,15 @@ h1.t_nav span { display: none }
 }
 
 @media only screen and (max-width: 479px) {
+.news_pl {
+  overflow: scroll;
+}
+.news_infos {
+  width: 100%;
+}
+.message_infos {
+  min-height: 20px;
+}
 header, .blogsbox, .banner { width: 100%; margin: auto; }
 nav { width: 100%; position: relative }
 #starlist { display: none; background: rgba(0,0,0,.5); width: 100%; margin-left: 0; }
@@ -504,7 +513,7 @@ article { width: 90%; margin: 70px auto 0 }
 .bloginfo { width: 100%; clear: both; }
 .blogs .blogpic { width: 100%; height: auto; margin-bottom: 10px }
 .fader { padding-top: 60%; width: 100% }
-.bloginfo ul li { margin-right: 10px }
+.bloginfo ul li { margin-right: 5px }
 .bplist li img { height: 100px }
 .bplist li { height: 100px }
 .bigpic img { height: auto }
@@ -513,7 +522,6 @@ article { width: 90%; margin: 70px auto 0 }
 .bloginfo .createTime { display: none }
 .bplist li:nth-child(2) { margin: 0 0 0 2px }
 .sidebar { display: none }
-.news_infos { width: 100% }
 h1.t_nav span { display: none }
 .container { width: 90%; margin: 20px auto; }
 .share ul li { width: 50% }
