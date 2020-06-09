@@ -14,6 +14,7 @@ import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.hardware.CentralProcessor.TickType;
 
+import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
@@ -182,6 +183,7 @@ public class ServerInfo
     private void setJvmInfo() throws UnknownHostException
     {
         Properties props = System.getProperties();
+        jvm.setName(ManagementFactory.getRuntimeMXBean().getVmName());
         jvm.setTotal(Arith.div(Runtime.getRuntime().totalMemory(), (1024 * 1024), 2));
         jvm.setMax(Arith.div(Runtime.getRuntime().maxMemory(), (1024 * 1024), 2));
         jvm.setFree(Arith.div(Runtime.getRuntime().freeMemory(), (1024 * 1024), 2));

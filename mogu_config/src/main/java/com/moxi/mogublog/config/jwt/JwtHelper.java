@@ -120,14 +120,14 @@ public class JwtHelper {
         return !isExpiration(token, base64Security);
     }
 
-    //更新token
+    // 更新token
     public String refreshToken(String token, String base64Security, long TTLMillis) {
         String refreshedToken;
         try {
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
             long nowMillis = System.currentTimeMillis();
             Date now = new Date(nowMillis);
-            //生成签名密钥
+            // 生成签名密钥
             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Security);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
@@ -138,7 +138,7 @@ public class JwtHelper {
                     .setSubject(getUsername(token, base64Security))
                     .setIssuer(getIssuer(token, base64Security))
                     .setAudience(getAudience(token, base64Security))
-                    .signWith(signatureAlgorithm, signingKey);//签名
+                    .signWith(signatureAlgorithm, signingKey);
             //添加Token过期时间
             if (TTLMillis >= 0) {
                 long expMillis = nowMillis + TTLMillis;

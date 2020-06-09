@@ -320,6 +320,12 @@ export const constantRouterMap = [
     meta: { title: '监控中心', icon: 'log' },
     children: [
       {
+        path: 'OnlineAdmin',
+        name: '在线用户',
+        component: () => import('@/views/monitor/OnlineAdmin'),
+        meta: { title: '在线用户', icon: 'log' }
+      },
+      {
         path: 'SpringBootAdmin',
         name: 'SpringBootAdmin',
         component: () => import('@/views/monitor/SpringBootAdmin'),

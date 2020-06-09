@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.restapi;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.collect.Lists;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
@@ -148,6 +149,12 @@ public class LoginRestApi {
         admin.setLastLoginIp(IpUtils.getIpAddr(request));
         admin.setLastLoginTime(new Date());
         admin.updateById();
+
+        // 设置token到validCode，用于记录登录用户
+        admin.setValidCode(token);
+        admin.setRole(roles.get(0));
+        // 添加在线用户到Redis中
+        adminService.addOnlineAdmin(admin);
 
         return ResultUtil.result(SysConf.SUCCESS, result);
     }

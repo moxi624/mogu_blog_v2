@@ -92,11 +92,11 @@ public class AuthRestApi {
         }
 
 
-        QueryWrapper<Admin> queryWrapper = new QueryWrapper<Admin>();
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userName);
         Admin admin = adminService.getOne(queryWrapper);
 
-        QueryWrapper<Admin> wrapper = new QueryWrapper<Admin>();
+        QueryWrapper<Admin> wrapper = new QueryWrapper<>();
         if (admin == null) {
             if (StringUtils.isNotEmpty(email)) {
                 wrapper.eq(SQLConf.EMAIL, email);

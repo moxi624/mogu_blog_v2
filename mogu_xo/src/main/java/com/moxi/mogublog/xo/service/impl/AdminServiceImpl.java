@@ -2,16 +2,18 @@ package com.moxi.mogublog.xo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.Admin;
+import com.moxi.mogublog.commons.entity.OnlineAdmin;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.AdminMapper;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.AdminVO;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -45,6 +49,9 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
     @Autowired
     private PictureFeignClient pictureFeignClient;
+
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public Admin getAdminByUid(String uid) {
@@ -91,6 +98,35 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             admin.setPhotoList(webUtil.getPicture(pictureList));
         }
         return admin;
+    }
+
+    @Override
+    public void addOnlineAdmin(Admin admin) {
+        HttpServletRequest request = RequestHolder.getRequest();
+        Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+        String os = map.get(SysConf.OS);
+        String browser = map.get(SysConf.BROWSER);
+        String ip = IpUtils.getIpAddr(request);
+        OnlineAdmin onlineAdmin = new OnlineAdmin();
+        onlineAdmin.setTokenId(admin.getValidCode());
+        onlineAdmin.setOs(os);
+        onlineAdmin.setBrowser(browser);
+        onlineAdmin.setIpaddr(ip);
+        onlineAdmin.setLoginTime(DateUtils.getNowTime());
+        onlineAdmin.setRoleName(admin.getRole().getRoleName());
+        onlineAdmin.setUserName(admin.getUserName());
+        //从Redis中获取IP来源
+        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+        if (StringUtils.isEmpty(jsonResult)) {
+            String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
+            if (StringUtils.isNotEmpty(addresses)) {
+                onlineAdmin.setLoginLocation(addresses);
+                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+            }
+        } else {
+            onlineAdmin.setLoginLocation(jsonResult);
+        }
+        redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), 30, TimeUnit.MINUTES);
     }
 
     @Override

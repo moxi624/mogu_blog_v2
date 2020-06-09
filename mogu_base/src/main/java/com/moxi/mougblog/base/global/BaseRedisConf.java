@@ -79,12 +79,17 @@ public class BaseRedisConf {
     public final static String USER_TOEKN = "userToken";
 
     /**
-     * token令牌
+     * 激活用户的时间
      */
     public final static String ACTIVATE_USER = "ACTIVATE_USER";
 
     /**
-     * token令牌
+     * 登录用户的token
+     */
+    public final static String LOGIN_TOKEN_KEY = "LOGIN_TOKEN_KEY";
+
+    /**
+     * 用户提交无效评论的次数
      */
     public final static String USER_PUBLISH_SPAM_COMMENT_COUNT = "USER_PUBLISH_SPAM_COMMENT_COUNT";
 

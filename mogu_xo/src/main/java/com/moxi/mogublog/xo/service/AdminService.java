@@ -39,6 +39,13 @@ public interface AdminService extends SuperService<Admin> {
     public Admin getMe();
 
     /**
+     * 添加在线用户
+     * @param admin
+     * @return
+     */
+    public void addOnlineAdmin(Admin admin);
+
+    /**
      * 编辑当前管理员信息
      *
      * @return

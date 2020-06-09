@@ -23,11 +23,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 
-        // This is invoked when user tries to access a secured REST resource without supplying any credentials
-        // We should just send a 401 Unauthorized response because there is no 'login page' to redirect to
-
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-
         response.setStatus(ECode.SUCCESS);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
@@ -35,22 +30,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         result.put("code", ECode.UNAUTHORIZED);
         result.put("data", "token无效或过期");
         response.getWriter().write(JSONObject.toJSONString(result));
-
-//    	response.setCharacterEncoding("UTF-8");
-//        response.setContentType("application/json; charset=utf-8");
-//        JSONObject result=new JSONObject();
-//        JSONObject header=new JSONObject();
-//        if(authException instanceof BadCredentialsException){
-//
-//            header.put("errorcode","8002");
-//            header.put("errorinfo","用户名或密码错误，请重新输入！");
-//            result.put("header",header);
-//        }else{
-//            header.put("errorcode","8001");
-//            header.put("errorinfo","无效的token");
-//            result.put("header",header);
-//        }
-//        response.getWriter().write(JSONObject.toJSONString(result));
     }
 }
 

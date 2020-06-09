@@ -14,6 +14,11 @@ import java.lang.management.ManagementFactory;
 public class Jvm
 {
     /**
+     * 虚拟机名称
+     */
+    private String name;
+
+    /**
      * 当前JVM占用的内存总数(M)
      */
     private double total;
