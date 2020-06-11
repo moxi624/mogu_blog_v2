@@ -4,6 +4,8 @@ import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.config.jwt.Audience;
 import com.moxi.mogublog.config.jwt.JwtHelper;
+import com.moxi.mogublog.utils.CookieUtils;
+import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -74,10 +77,25 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // 获取在线的管理员信息
             String onlineAdmin = redisUtil.get(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + authHeader);
+
             if(StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, audience.getBase64Secret())) {
-                // 重新更新过期时间
-                redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + authHeader, onlineAdmin, 30, TimeUnit.MINUTES);
-                jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond);
+                /**
+                 * 得到过期时间
+                 */
+                Date expirationDate = jwtHelper.getExpiration(token, audience.getBase64Secret());
+                long nowMillis = System.currentTimeMillis();
+                Date nowDate = new Date(nowMillis);
+                // 得到两个日期相差的间隔
+                Integer minute = DateUtils.getMinuteByTwoDay(expirationDate, nowDate);
+                // 如果小于5分钟，那么更新过期时间
+                if(minute < 5) {
+                    // 生成一个新的Token
+                    String newToken = tokenHead + jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond * 1000);
+                    // 生成新的token，发送到客户端
+                    CookieUtils.setCookie("Admin-Token", newToken, expiresSecond.intValue());
+                    // 重新更新Redis中的过期时间
+                    redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + newToken, onlineAdmin, expiresSecond, TimeUnit.SECONDS);
+                }
             } else {
                 chain.doFilter(request, response);
                 return;

@@ -377,7 +377,7 @@ public class DateUtils {
     /**
      * 得到二个日期间的间隔天数
      */
-    public static int getTwoDay(String sj1, String sj2) {
+    public static int getDayByTwoDay(String sj1, String sj2) {
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Long day = 0L;
         try {
@@ -388,6 +388,22 @@ public class DateUtils {
             return 0;
         }
         return day.intValue();
+    }
+
+    /**
+     * 得到两个日期相差的分钟
+     * @param lastDate
+     * @param date
+     * @return
+     */
+    public static int getMinuteByTwoDay(Date lastDate, Date date) {
+        Long minute = 0L;
+        try {
+            minute = (lastDate.getTime() - date.getTime()) / (60 * 1000);
+        } catch (Exception e) {
+            return 0;
+        }
+        return minute.intValue();
     }
 
     /**

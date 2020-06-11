@@ -6,6 +6,7 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 const service = axios.create({
   baseURL: '', // api 的 base_url
+  withCredentials: true, //允许后台的cookie传递到前端
   timeout: 100000 // 请求超时时间
 })
 
@@ -33,6 +34,7 @@ service.interceptors.response.use(
     // /**
     //  * code为非20000是抛错 可结合自己业务进行修改
     //  */
+
     const res = response.data
     if (res.code === 'success' || res.code === 'error') {
       return response.data
