@@ -1,0 +1,16 @@
+server:
+  port: 8601
+
+spring:
+  application:
+    name: mogu-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        #文件后缀
+        file-extension: yaml
+        #指定命名空间
+        group: dev

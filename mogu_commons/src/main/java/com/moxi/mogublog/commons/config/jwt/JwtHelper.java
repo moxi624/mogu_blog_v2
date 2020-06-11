@@ -1,6 +1,6 @@
-package com.moxi.mogublog.config.jwt;
+package com.moxi.mogublog.commons.config.jwt;
 
-import com.moxi.mogublog.config.security.SecurityUser;
+import com.moxi.mogublog.commons.config.security.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -81,7 +81,7 @@ public class JwtHelper {
 
     //效验token
     public Boolean validateToken(String token, UserDetails userDetails, String base64Security) {
-        SecurityUser SecurityUser = (SecurityUser) userDetails;
+        SecurityUser SecurityUser = (com.moxi.mogublog.commons.config.security.SecurityUser) userDetails;
         final String username = getUsername(token, base64Security);
         final boolean expiration = isExpiration(token, base64Security);
         return (

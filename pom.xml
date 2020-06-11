@@ -45,6 +45,7 @@
         <flexmark.version>0.61.0</flexmark.version>
         <ip2region.version>1.7.2</ip2region.version>
         <oshi.version>3.9.1</oshi.version>
+        <freemarker.version>2.3.28</freemarker.version>
     </properties>
 
 
@@ -72,6 +73,14 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Hoxton.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.1.0.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

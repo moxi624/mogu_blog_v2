@@ -5,7 +5,7 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.entity.SysLog;
-import com.moxi.mogublog.config.security.SecurityUser;
+import com.moxi.mogublog.commons.config.security.SecurityUser;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;

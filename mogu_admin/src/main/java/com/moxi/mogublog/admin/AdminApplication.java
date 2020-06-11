@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,12 +21,12 @@ import java.util.TimeZone;
 //redis和velocity的包会起冲突
 @SpringBootApplication
 @EnableSwagger2
-@EnableEurekaClient
+@EnableDiscoveryClient
 @EnableCaching
 @EnableRabbit
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.config",
+        "com.moxi.mogublog.commons.config",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.annotion",
         "com.moxi.mogublog.admin.security",

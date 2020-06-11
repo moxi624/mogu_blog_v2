@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.feign;
+package com.moxi.mogublog.commons.config.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

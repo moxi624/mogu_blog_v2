@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.mybatis;
+package com.moxi.mogublog.commons.config.mybatis;
 
 import com.baomidou.mybatisplus.extension.incrementer.H2KeyGenerator;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
