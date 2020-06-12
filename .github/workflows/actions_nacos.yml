@@ -3,7 +3,7 @@ name: mogu CI/CD/DEV
 on: 
   push:
     branches: 
-      - null
+      - Nacos
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
       with:
-        ref: dev 
+        ref: Nacos 
     - uses: actions/setup-java@v1
       with:
         java-version: 1.8
@@ -69,7 +69,7 @@ jobs:
     - name: Scp file to aliyun
       uses: appleboy/scp-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -78,7 +78,7 @@ jobs:
     - name: Distribution and backup
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -198,7 +198,7 @@ jobs:
     - name: Start mogu_eureka
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -209,7 +209,7 @@ jobs:
     - name: Start mogu_picture
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -220,7 +220,7 @@ jobs:
     - name: Start mogu_admin
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -231,7 +231,7 @@ jobs:
     - name: Start mogu_sms
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -242,7 +242,7 @@ jobs:
     - name: Start mogu_web
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
@@ -253,7 +253,7 @@ jobs:
     - name: Start mogu_search
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
         username: ${{ secrets.DOCKER_ID }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         port: ${{ secrets.DOCKER_PORT }}
