@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -199,35 +201,21 @@ public class LoginRestApi {
         Collection<CategoryMenu> categoryMenuList = new ArrayList<>();
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 
-        /**
-         * 判断该用户是否是admin账号，如果是开放所有的菜单
-         */
-        if(SysConf.ADMIN.equals(admin.getUserName())) {
-            QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
-            categoryMenuList = categoryMenuService.list(queryWrapper);
-        } else {
-            /**
-             * 如果非admin账号
-             * 加载这些角色所能访问的菜单页面列表
-             * 获取该管理员所有角色
-             */
-            List<String> roleUid = new ArrayList<>();
-            roleUid.add(admin.getRoleUid());
-            Collection<Role> roleList = roleService.listByIds(roleUid);
+        List<String> roleUid = new ArrayList<>();
+        roleUid.add(admin.getRoleUid());
+        Collection<Role> roleList = roleService.listByIds(roleUid);
 
-            List<String> categoryMenuUids = new ArrayList<>();
+        List<String> categoryMenuUids = new ArrayList<>();
 
-            roleList.forEach(item -> {
-                String caetgoryMenuUids = item.getCategoryMenuUids();
-                String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
-                for (int a = 0; a < uids.length; a++) {
-                    categoryMenuUids.add(uids[a]);
-                }
+        roleList.forEach(item -> {
+            String caetgoryMenuUids = item.getCategoryMenuUids();
+            String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
+            for (int a = 0; a < uids.length; a++) {
+                categoryMenuUids.add(uids[a]);
+            }
 
-            });
-            categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
-        }
+        });
+        categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
 
         // 从三级级分类中查询出 二级分类
         List<CategoryMenu> buttonList = new ArrayList<>();
@@ -280,9 +268,12 @@ public class LoginRestApi {
 
     @ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
     @PostMapping(value = "/logout")
-    public String logout(@ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
-        String destroyToken = null;
-        return ResultUtil.result(SysConf.SUCCESS, destroyToken);
+    public String logout() {
+        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attribute.getRequest();
+        String token = request.getAttribute(SysConf.TOKEN).toString();
+        redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 
     /**

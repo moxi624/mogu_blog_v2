@@ -179,4 +179,5 @@ audience:
   clientId: 098f6bcd4621d373cade4e832627b4f6
   base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
   name: mogublog
-  expiresSecond: 660  #1个小时 3600
+  expiresSecond: 3600  #1个小时 3600
+  refreshSecond: 300 # 刷新token的时间 5分钟

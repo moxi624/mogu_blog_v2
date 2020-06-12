@@ -49,8 +49,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Value(value = "${tokenHeader}")
     private String tokenHeader;
 
+    /**
+     * token过期的时间
+     */
     @Value(value = "${audience.expiresSecond}")
     private Long expiresSecond;
+
+    /**
+     * token刷新的时间
+     */
+    @Value(value = "${audience.refreshSecond}")
+    private Long refreshSecond;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -71,7 +80,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //请求头 'Authorization': tokenHead + token
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
 
-            log.error("传递过来的token为:" + authHeader);
+            log.error("传递过来的token为: {}", authHeader);
 
             final String token = authHeader.substring(tokenHead.length());
 
@@ -85,10 +94,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 Date expirationDate = jwtHelper.getExpiration(token, audience.getBase64Secret());
                 long nowMillis = System.currentTimeMillis();
                 Date nowDate = new Date(nowMillis);
-                // 得到两个日期相差的间隔
-                Integer minute = DateUtils.getMinuteByTwoDay(expirationDate, nowDate);
+                // 得到两个日期相差的间隔，秒
+                Integer second = DateUtils.getSecondByTwoDay(expirationDate, nowDate);
                 // 如果小于5分钟，那么更新过期时间
-                if(minute < 5) {
+                if(second < refreshSecond) {
                     // 生成一个新的Token
                     String newToken = tokenHead + jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond * 1000);
                     // 生成新的token，发送到客户端
@@ -107,8 +116,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             //把adminUid存储到request中
             request.setAttribute(SysConf.ADMIN_UID, adminUid);
             request.setAttribute(SysConf.USER_NAME, username);
-            logger.info("解析出来用户 : " + username);
-            logger.info("解析出来的用户Uid : " + adminUid);
+            request.setAttribute(SysConf.TOKEN, authHeader);
+            log.info("解析出来用户: {}" ,username);
+            log.info("解析出来的用户Uid: {}", adminUid);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 

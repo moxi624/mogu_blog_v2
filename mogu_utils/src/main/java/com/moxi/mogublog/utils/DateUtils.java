@@ -391,19 +391,19 @@ public class DateUtils {
     }
 
     /**
-     * 得到两个日期相差的分钟
+     * 得到两个日期相差的秒数
      * @param lastDate
      * @param date
      * @return
      */
-    public static int getMinuteByTwoDay(Date lastDate, Date date) {
-        Long minute = 0L;
+    public static int getSecondByTwoDay(Date lastDate, Date date) {
+        Long second = 0L;
         try {
-            minute = (lastDate.getTime() - date.getTime()) / (60 * 1000);
+            second = (lastDate.getTime() - date.getTime()) / 1000;
         } catch (Exception e) {
             return 0;
         }
-        return minute.intValue();
+        return second.intValue();
     }
 
     /**
