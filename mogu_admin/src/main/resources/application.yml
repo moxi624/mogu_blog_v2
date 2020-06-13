@@ -101,6 +101,7 @@ spring:
   redis:
     host: 127.0.0.1 #redis的主机ip
     port: 6379
+    #password: mogu2018  # 客户端没有设置密码，服务器中redis默认密码为 mogu2018
 
   rabbitmq:
     host: 127.0.0.1 #rabbitmq的主机ip

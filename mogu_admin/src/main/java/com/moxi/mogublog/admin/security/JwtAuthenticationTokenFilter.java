@@ -2,8 +2,8 @@ package com.moxi.mogublog.admin.security;
 
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.config.jwt.Audience;
-import com.moxi.mogublog.config.jwt.JwtHelper;
+import com.moxi.mogublog.commons.config.jwt.Audience;
+import com.moxi.mogublog.commons.config.jwt.JwtHelper;
 import com.moxi.mogublog.utils.CookieUtils;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.RedisUtil;

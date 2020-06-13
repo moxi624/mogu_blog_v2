@@ -31,7 +31,7 @@ import java.util.TimeZone;
 @EnableRabbit
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.config",
+        "com.moxi.mogublog.commons.config",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.annotion",
         "com.moxi.mogublog.admin.security",

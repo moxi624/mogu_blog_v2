@@ -1,6 +1,6 @@
 package com.moxi.mogublog.commons.feign;
 
-import com.moxi.mogublog.config.feign.FeignConfiguration;
+import com.moxi.mogublog.commons.config.feign.FeignConfiguration;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-//package com.moxi.mogublog.config.durid;
+package com.moxi.mogublog.commons.config.durid;//package com.moxi.mogublog.config.durid;
 //
 //import com.alibaba.druid.pool.DruidDataSource;
 //import com.alibaba.druid.support.http.StatViewServlet;

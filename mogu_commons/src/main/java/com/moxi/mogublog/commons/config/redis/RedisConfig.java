@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.redis;
+package com.moxi.mogublog.commons.config.redis;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;

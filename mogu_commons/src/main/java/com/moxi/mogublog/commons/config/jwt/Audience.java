@@ -1,4 +1,4 @@
-package com.moxi.mogublog.config.jwt;
+package com.moxi.mogublog.commons.config.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

@@ -25,7 +25,7 @@ import java.util.TimeZone;
 @EnableAsync // 开启异步
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.config",
+        "com.moxi.mogublog.commons.config",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.xo.utils",
         "com.moxi.mogublog.web.utils",

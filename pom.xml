@@ -49,7 +49,6 @@
 
 
     <modules>
-        <module>mogu_config</module>
         <module>mogu_utils</module>
         <module>mogu_base</module>
         <module>mogu_xo</module>

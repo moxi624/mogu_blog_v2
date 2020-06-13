@@ -38,6 +38,7 @@ spring:
   redis:
     host: 127.0.0.1 #redis的主机ip
     port: 6379
+    #password: mogu2018  # 客户端没有设置密码，服务器中redis默认密码为 mogu2018
 
   # sleuth 配置
   sleuth:
@@ -124,13 +125,3 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
-
-##jwt配置
-tokenHead: bearer;
-tokenHeader: Authorization
-isRememberMeExpiresSecond: 259200 #记住账号为3天有效
-audience:
-  clientId: 098f6bcd4621d373cade4e832627b4f6
-  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
-  name: mogublog
-  expiresSecond: 3600  #1个小时
