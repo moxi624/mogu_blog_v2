@@ -8,7 +8,7 @@ package com.moxi.mougblog.base.global;
  */
 public class BaseSysConf {
 
-    public final static String DEFAULT_UID = "uid00000000000000000000000000000000";
+    public final static String DEFAULT_UID = "uid00000000000000000000000000000";
     public final static String LIMIT_ONE = "LIMIT 1";
 
     // picture相关

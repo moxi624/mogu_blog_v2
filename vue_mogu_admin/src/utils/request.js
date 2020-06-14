@@ -36,7 +36,7 @@ service.interceptors.response.use(
     //  */
 
     const res = response.data
-    if (res.code === 'success' || res.code === 'error') {
+    if (res.code === 'success' || res.code === 'error' || res.success) {
       return response.data
     } else if(res.code === 401) {
       MessageBox.confirm(

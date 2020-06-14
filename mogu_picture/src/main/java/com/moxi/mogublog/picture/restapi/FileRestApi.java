@@ -62,21 +62,6 @@ public class FileRestApi {
     @Value(value = "${file.upload.path}")
     private String path;
 
-    @ApiOperation(value = "Hello_Picture", notes = "Hello_Picture")
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String hello(String urlString, int i) throws IOException {
-
-//        QueryWrapper<com.moxi.mogublog.picture.entity.File> queryWrapper = new QueryWrapper<>();
-//        List<com.moxi.mogublog.picture.entity.File> fileList = fileService.list(queryWrapper);
-//        fileList.forEach(item ->{
-//            String str = item.getPicUrl();
-//            String[] array = str.split("/");
-//            item.setQiNiuUrl(array[array.length - 1]);
-//        });
-//        fileService.updateBatchById(fileList);
-        return "hello";
-    }
-
     @ApiOperation(value = "截图上传", notes = "截图上传")
     @RequestMapping(value = "/cropperPicture", method = RequestMethod.POST)
     public String cropperPicture(@RequestParam("file") MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -150,7 +135,7 @@ public class FileRestApi {
 
         List<Map<String, Object>> listMap = new ArrayList<>();
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(picMap.get("code"))) {
+        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
             List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get("data");
             if (picData.size() > 0) {
                 for (int i = 0; i < picData.size(); i++) {
@@ -159,7 +144,7 @@ public class FileRestApi {
                     item.put(SysConf.UID, picData.get(i).get(SysConf.UID));
 
                     if ("1".equals(picturePriority)) {
-                        item.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
+                        item.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
                     } else {
                         item.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     }

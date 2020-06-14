@@ -1,0 +1,19 @@
+*{ margin:0; padding:0; box-sizing: border-box;}
+html{ height: 100%; }
+body{ height: 100%;font-size:16px; font-family:微软雅黑;font-style:normal;overflow-x: hidden;}
+a{ text-decoration:none}
+/*a,a:hover{  transition:background 0.5s linear;-webkit-transition:background 0.5s linear;-moz-transition:background 0.5s linear;-o-transition:background 0.5s linear;}*/
+em, i{font-style: normal;}
+ul, ol, li{list-style: none;}
+img{ border:none;vertical-align:middle;}
+input,select,textarea{outline:none;border:none;background:none;}
+textarea{resize:none;}
+p{line-height:22px;}
+.fl{float: left;}
+.fr{float: right;}
+.clear{ clear:both; height:0px; width:100%; overflow:hidden;}
+.position{position:relative;}
+ 
+/*公共样式*/
+.layout{ width:1100px; display:table; margin:0 auto;}
+.margin-bottom { margin-bottom: 15px; }

@@ -122,6 +122,12 @@ export const constantRouterMap = [
     meta: { title: '资源管理', icon: 'resource' },
     children: [
       {
+        path: 'file',
+        name: '网盘管理',
+        component: () => import('@/views/resource/file/File'),
+        meta: { title: '网盘管理', icon: 'table' }
+      },
+      {
         path: 'resourceSort',
         name: '分类管理',
         component: () => import('@/views/resource/resourceSort'),

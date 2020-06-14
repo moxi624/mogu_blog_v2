@@ -60,6 +60,8 @@ public class BaseSQLConf {
 
     // t_picture
     public final static String FILE_OLD_NAME = "file_old_name";
+    public final static String FILE_PATH = "file_path";
+    public final static String FILE_NAME = "file_name";
     public final static String DATA = "data";
 
     public final static String SORT_NAME = "sort_name";
