@@ -34,7 +34,8 @@
         </template>
         <template slot-scope="scope">
           <div style="cursor:pointer;" @click="clickFileName(scope.row)">
-            <span>{{scope.row.fileOldName}}</span>
+            <span v-if="scope.row.isDir == 1">{{scope.row.fileName}}</span>
+            <span v-else>{{scope.row.fileOldName}}</span>
           </div>
         </template>
       </el-table-column>

@@ -222,9 +222,16 @@ export default {
     createFile(fileName) {
       let data = {
         fileName: fileName,
-        filePath: this.filepath,
         isDir: 1
       }
+
+      // 判断上传路径是否存在
+      if(this.$route.query.filepath) {
+        data.filePath = this.$route.query.filepath
+      } else {
+        data.filePath = "/"
+      }
+
       createFile(data).then(res => {
         if (res.success) {
           this.$message.success('添加成功')
