@@ -270,6 +270,7 @@
 - 感谢 **pppercyWang** 提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
 - 感谢 **若依** 提供的RuoYi项目：[https://gitee.com/y_project/RuoYi](https://gitee.com/y_project/RuoYi)
 - 感谢 **yaowei9363** 提供的 侧目录组件： [vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog) 
+- 感谢 **奇文社区** 提供的 奇文网盘：https://gitee.com/qiwen-cloud/qiwen-file
 
 ## 关注&交流
 
