@@ -14,6 +14,7 @@ import com.moxi.mogublog.utils.upload.PathUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.*;
 
@@ -52,12 +53,14 @@ public class NetworkDiskRestApi {
      */
     @RequestMapping(value = "/createfile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> createFile(@RequestBody NetworkDisk networkDisk) {
+    public RestResult<String> createFile(HttpServletRequest request, @RequestBody NetworkDisk networkDisk) {
         RestResult<String> restResult = new RestResult<>();
-        if (!operationCheck().isSuccess()){
-            return operationCheck();
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            restResult.setSuccess(false);
+            restResult.setErrorMessage("请先登录");
+            return restResult;
         }
-        networkDisk.setAdminUid(SysConf.DEFAULT_UID);
+        networkDisk.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
         networkDiskService.insertFile(networkDisk);
         restResult.setSuccess(true);
         return restResult;
@@ -65,8 +68,13 @@ public class NetworkDiskRestApi {
 
     @RequestMapping(value = "/getfilelist", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<List<NetworkDisk>> getFileList(@RequestBody NetworkDisk networkDisk){
+    public RestResult<List<NetworkDisk>> getFileList(HttpServletRequest request, @RequestBody NetworkDisk networkDisk){
         RestResult<List<NetworkDisk>> restResult = new RestResult<>();
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            restResult.setSuccess(false);
+            restResult.setErrorMessage("请先登录");
+            return restResult;
+        }
         networkDisk.setFilePath(PathUtil.urlDecode(networkDisk.getFilePath()));
         List<NetworkDisk> fileList = networkDiskService.selectFileList(networkDisk);
         restResult.setData(fileList);
@@ -144,11 +152,8 @@ public class NetworkDiskRestApi {
             tempFileBean.setAdminUid(SysConf.DEFAULT_UID);
             tempFileBean.setFilePath(FileUtil.pathSplitFormat(networkDisk.getFilePath() + entryName.replace(currentFile.getName(), "")));
             if (currentFile.isDirectory()){
-
                 tempFileBean.setIsDir(1);
-
                 tempFileBean.setFileName(currentFile.getName());
-                tempFileBean.setTimestampName(currentFile.getName());
                 //tempFileBean.setFileurl(File.separator + (file.getParent() + File.separator + currentFile.getName()).replace(PathUtil.getStaticPath(), ""));
             }else{
 
@@ -157,7 +162,6 @@ public class NetworkDiskRestApi {
                 tempFileBean.setExtendName(FileUtil.getFileType(totalFileUrl));
                 tempFileBean.setFileName(FileUtil.getFileNameNotExtend(currentFile.getName()));
                 tempFileBean.setFileSize(currentFile.length());
-                tempFileBean.setTimestampName(FileUtil.getFileNameNotExtend(currentFile.getName()));
                 tempFileBean.setFileUrl(File.separator + (currentFile.getPath()).replace(PathUtil.getStaticPath(), ""));
             }
             fileBeanList.add(tempFileBean);
@@ -221,7 +225,7 @@ public class NetworkDiskRestApi {
     }
 
     public RestResult<String> operationCheck(){
-        RestResult<String> result = new RestResult<String>();
+        RestResult<String> result = new RestResult<>();
         result.setSuccess(true);
         return result;
     }
@@ -255,7 +259,6 @@ public class NetworkDiskRestApi {
 
         for (int i = 0; i < filePathList.size(); i++){
             String filePath = filePathList.get(i).getFilePath() + filePathList.get(i).getFileName() + "/";
-
             Queue<String> queue = new LinkedList<>();
             String[] strArr = filePath.split("/");
             for (int j = 0; j < strArr.length; j++){

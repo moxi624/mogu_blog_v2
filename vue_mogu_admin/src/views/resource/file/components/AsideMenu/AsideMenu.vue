@@ -1,20 +1,18 @@
 <template>
   <div class="aside-menu-wrapper" :class="{'expand': !isFolder}">
-    <div class="aside-title">
+    <div class="aside-title" @click="changeIsFolder">
       <i v-show="!isFolder"></i>
       <span v-show="!isFolder">蘑菇网盘</span>
       <el-tooltip class="item" effect="dark" content="收起分类栏" placement="bottom-end">
         <i
           class="el-icon-d-arrow-left"
           v-show="!isFolder"
-          @click="$store.commit('changeIsFolder', 1)"
         ></i>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="展开分类栏" placement="bottom-start">
         <i
           class="el-icon-d-arrow-right"
           v-show="isFolder"
-          @click="$store.commit('changeIsFolder', 0)"
         ></i>
       </el-tooltip>
     </div>
@@ -24,23 +22,23 @@
       :default-active="activeIndex"
       @select="handleSelect"
     >
-      <el-menu-item :index="0" title="全部">
+      <el-menu-item index="0" title="全部">
         <i class="el-icon-menu"></i>
         <span slot="title" v-show="!isFolder">全部</span>
       </el-menu-item>
-      <el-menu-item :index="1" title="图片">
+      <el-menu-item index="1" title="图片">
         <i class="el-icon-picture"></i>
         <span slot="title" v-show="!isFolder">图片</span>
       </el-menu-item>
-      <el-menu-item :index="2" title="文档">
+      <el-menu-item index="2" title="文档">
         <i class="el-icon-document"></i>
         <span slot="title" v-show="!isFolder">文档</span>
       </el-menu-item>
-      <el-menu-item :index="3" title="视频">
+      <el-menu-item index="3" title="视频">
         <i class="el-icon-video-camera-solid"></i>
         <span slot="title" v-show="!isFolder">视频</span>
       </el-menu-item>
-      <el-menu-item :index="4" title="音乐">
+      <el-menu-item index="4" title="音乐">
         <i class="el-icon-headset"></i>
         <span slot="title" v-show="!isFolder">音乐</span>
       </el-menu-item>
@@ -74,7 +72,6 @@ export default {
     },
     //  判断当前用户设置的左侧栏是否折叠
     isFolder() {
-      console.log(this.$store)
       return this.$store.getters.isFolder
     }
   },
@@ -85,6 +82,16 @@ export default {
         path: '/resource/file',
         query: { filepath: '/', filetype: index }
       })
+    },
+    /**
+     * 收纳
+     */
+    changeIsFolder: function () {
+      if(this.$store.getters.isFolder === 0) {
+        this.$store.commit('changeIsFolder', 1)
+      } else {
+        this.$store.commit('changeIsFolder', 0)
+      }
     }
   }
 }
@@ -97,6 +104,7 @@ export default {
   transition width 0.5s
   -webkit-transition width 0.5s
   .aside-title
+    cursor pointer
     background-color $Primary
     color #fff
     height 80px

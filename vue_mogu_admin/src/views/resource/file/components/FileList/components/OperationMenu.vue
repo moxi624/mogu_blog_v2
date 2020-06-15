@@ -1,15 +1,15 @@
 <template>
   <div class="operation-menu-wrapper">
 
-    <el-button size="medium" type="primary" icon="el-icon-upload2" id="uploadFileId" @click="handleAdd" >上传</el-button>
+    <el-button size="medium" type="primary" icon="el-icon-upload2" id="uploadFileId" @click="handleAdd" v-permission="'/networkDisk/add'">上传</el-button>
 
-    <el-button size="medium" @click="addFolder()" v-if="!filetype">新建文件夹</el-button>
+    <el-button size="medium" @click="addFolder()" v-if="!filetype" v-permission="'/networkDisk/create'">新建文件夹</el-button>
 
     <div style="display: inline-block;" v-if="selectionFile.length !== 0">
-      <el-button size="medium" icon="el-icon-delete" @click="deleteSelectedFile()">删除</el-button>
-      <el-button size="medium" icon="el-icon-edit" @click="moveSelectedFile()" v-if="!filetype">移动</el-button>
+      <el-button size="medium" icon="el-icon-delete" @click="deleteSelectedFile()" v-permission="'/networkDisk/delete'">删除</el-button>
+      <el-button size="medium" icon="el-icon-edit" @click="moveSelectedFile()" v-if="!filetype" v-permission="'/networkDisk/move'">移动</el-button>
       <!-- <el-button size="medium" icon="el-icon-document-copy">拷贝</el-button> -->
-      <el-button size="medium" icon="el-icon-download" @click="downloadSelectedFile()">下载</el-button>
+      <el-button size="medium" icon="el-icon-download" @click="downloadSelectedFile()" v-permission="'/networkDisk/download'">下载</el-button>
     </div>
 
     <!-- 多选文件下载，页面隐藏 -->

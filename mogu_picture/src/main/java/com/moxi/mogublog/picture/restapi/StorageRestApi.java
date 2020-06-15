@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.Storage;
 import com.moxi.mogublog.picture.entity.TreeNode;
+import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
+import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.FileUtil;
@@ -30,8 +32,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/storage")
 public class StorageRestApi {
-    @Resource
-    FeignUtil feignUtil;
+
+    @Autowired
+    QiniuUtil qiniuUtil;
 
     //获取上传路径
     @Value(value = "${file.upload.path}")
@@ -151,72 +154,26 @@ public class StorageRestApi {
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
     @ResponseBody
     public String uploadFile(HttpServletRequest request, NetworkDisk networkDisk) {
-
         RestResult<String> restResult = new RestResult<>();
-
-        String token = request.getParameter(SysConf.TOKEN);
-
-        // 获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
-
-        // 七牛云配置
-        Map<String, String> qiNiuConfig = new HashMap<>();
-
-        String uploadQiNiu = "";
-        String uploadLocal = "";
-        String localPictureBaseUrl = "";
-        String qiNiuPictureBaseUrl = "";
-
-        String qiNiuAccessKey = "";
-        String qiNiuSecretKey = "";
-        String qiNiuBucket = "";
-        String qiNiuArea = "";
-        String picturePriority = "";
-
-        if (qiNiuConfig == null) {
-            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
-        } else {
-
-            uploadQiNiu = qiNiuResultMap.get("uploadQiNiu");
-            uploadLocal = qiNiuResultMap.get("uploadLocal");
-            localPictureBaseUrl = qiNiuResultMap.get("localPictureBaseUrl");
-            qiNiuPictureBaseUrl = qiNiuResultMap.get("qiNiuPictureBaseUrl");
-
-            qiNiuAccessKey = qiNiuResultMap.get("qiNiuAccessKey");
-            qiNiuSecretKey = qiNiuResultMap.get("qiNiuSecretKey");
-            qiNiuBucket = qiNiuResultMap.get("qiNiuBucket");
-            qiNiuArea = qiNiuResultMap.get("qiNiuArea");
-            picturePriority = qiNiuResultMap.get("picturePriority");
-
-            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
-                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
-
-                restResult.setSuccess(false);
-                restResult.setErrorMessage("请先配置七牛云");
-                String resultJson = JSON.toJSONString(restResult);
-                return resultJson;
-            }
-
-            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
-                restResult.setSuccess(false);
-                restResult.setErrorMessage("请先配置本地图片域名");
-                String resultJson = JSON.toJSONString(restResult);
-                return resultJson;
-            }
-
-            qiNiuConfig.put("qiNiuAccessKey", qiNiuAccessKey);
-            qiNiuConfig.put("qiNiuSecretKey", qiNiuSecretKey);
-            qiNiuConfig.put("qiNiuBucket", qiNiuBucket);
-            qiNiuConfig.put("qiNiuArea", qiNiuArea);
-            qiNiuConfig.put("uploadQiNiu", uploadQiNiu);
-            qiNiuConfig.put("uploadLocal", uploadLocal);
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            restResult.setSuccess(false);
+            restResult.setErrorMessage("请先登录");
+            return JSON.toJSONString(restResult);
         }
-
+        String qiNiuConfigResult = qiniuUtil.getQiNiuConfig();
+        Map<String,String> qiNiuConfig = WebUtils.getData(qiNiuConfigResult, Map.class);
+        if(qiNiuConfig == null) {
+            restResult.setSuccess(false);
+            restResult.setErrorMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
+            String resultJson = JSON.toJSONString(restResult);
+            return resultJson;
+        }
+        // 获取文件
         List<MultipartFile> filedatas = FileUtils.getMultipartFileList(request);
-
+        // 上传文件
         String result = fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
         List<com.moxi.mogublog.picture.entity.File> fileList = WebUtils.getAllList(result, com.moxi.mogublog.picture.entity.File.class);
-
+        // 写入NetworkDisk表中
         filetransferService.uploadFile(request, networkDisk, fileList);
         restResult.setSuccess(true);
         String resultJson = JSON.toJSONString(restResult);

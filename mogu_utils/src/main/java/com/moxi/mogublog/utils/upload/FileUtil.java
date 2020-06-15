@@ -6,8 +6,8 @@ import java.util.List;
 
 public class FileUtil {
 
-    public static final String[] IMG_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg"};
-    public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf"};
+    public static final String[] IMG_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp"};
+    public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md"};
     public static final String[] VIDEO_FILE = {"avi", "mp4", "mpg", "mov", "swf"};
     public static final String[] MUSIC_FILE = {"wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"};
     public static final int IMAGE_TYPE = 1;

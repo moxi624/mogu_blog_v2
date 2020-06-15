@@ -14,6 +14,8 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -38,18 +40,18 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     @Override
     public void uploadFile(HttpServletRequest request, NetworkDisk networkDisk, List<File> fileList) {
         List<NetworkDisk> networkDiskList = new ArrayList<>();
-        for (int i = 0; i < fileList.size(); i++){
-            File file = fileList.get(i);
-                NetworkDisk saveNetworkDisk = new NetworkDisk();
-                saveNetworkDisk.setAdminUid(SysConf.DEFAULT_UID);
-                saveNetworkDisk.setFilePath(networkDisk.getFilePath());
-                saveNetworkDisk.setFileUrl(file.getPicUrl());
-                saveNetworkDisk.setFileSize(file.getFileSize());
-                saveNetworkDisk.setFileName(file.getPicName());
-                saveNetworkDisk.setExtendName(file.getPicExpandedName());
-                saveNetworkDisk.setTimestampName("");
-                saveNetworkDisk.setCreateTime(new Date());
-                networkDiskList.add(saveNetworkDisk);
+        for(File file: fileList) {
+            NetworkDisk saveNetworkDisk = new NetworkDisk();
+            saveNetworkDisk.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
+            saveNetworkDisk.setFilePath(networkDisk.getFilePath());
+            saveNetworkDisk.setQiNiuUrl(file.getQiNiuUrl());
+            saveNetworkDisk.setLocalUrl(file.getPicUrl());
+            saveNetworkDisk.setFileSize(file.getFileSize());
+            saveNetworkDisk.setFileName(file.getPicName());
+            saveNetworkDisk.setExtendName(file.getPicExpandedName());
+            saveNetworkDisk.setFileOldName(file.getFileOldName());
+            saveNetworkDisk.setCreateTime(new Date());
+            networkDiskList.add(saveNetworkDisk);
         }
         networkDiskService.saveBatch(networkDiskList);
     }

@@ -67,6 +67,8 @@ public class BaseSQLConf {
     public final static String SORT_NAME = "sort_name";
     public final static String RESOURCE_SORT_UID = "resource_sort_uid";
 
+    public final static String File_TYPE = "file_type";
+    public final static String EXTEND_NAME = "extend_name";
 
 
 }

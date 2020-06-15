@@ -21,8 +21,6 @@
       </el-table-column>
       <el-table-column
         prop="filename"
-        :sort-by="['isDir','fileName']"
-        sortable
         show-overflow-tooltip
       >
         <template slot="header" slot-scope="scope">
@@ -36,12 +34,13 @@
         </template>
         <template slot-scope="scope">
           <div style="cursor:pointer;" @click="clickFileName(scope.row)">
-            <span>{{scope.row.fileName}}</span>
+            <span>{{scope.row.fileOldName}}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
         label="路径"
+        width="200"
         prop="filepath"
         show-overflow-tooltip
         v-if="Number($route.query.filetype)"
@@ -90,16 +89,6 @@
         sortable
       ></el-table-column>
 
-
-      <el-table-column
-        label="更新日期"
-        prop="updateTime"
-        width="180"
-        :sort-by="['isDir','updateTime']"
-        show-overflow-tooltip
-        sortable
-      ></el-table-column>
-
       <el-table-column :width="operaColumnWidth">
         <template slot="header">
           <span>操作</span>
@@ -116,8 +105,8 @@
         </template>
         <template slot-scope="scope">
           <div v-if="operaColumnExpand">
-            <el-button type="danger" size="mini" @click.native="deleteFile(scope.row)">删除</el-button>
-            <el-button type="primary" size="mini" @click.native="showMoveFileDialog(scope.row)">移动</el-button>
+            <el-button type="danger" size="mini" @click.native="deleteFile(scope.row)" v-permission="'/networkDisk/delete'">删除</el-button>
+            <el-button type="primary" size="mini" @click.native="showMoveFileDialog(scope.row)" v-permission="'/networkDisk/move'">移动</el-button>
             <el-button type="success" size="mini" v-if="scope.row.isdir === 0">
               <a
                 target="_blank"
@@ -190,6 +179,8 @@ export default {
         'png',
         'jpg',
         'jpeg',
+        'webp',
+        'md',
         'docx',
         'doc',
         'ppt',
@@ -229,6 +220,8 @@ export default {
         png: require('@/assets/images/file/file_pic.png'),
         jpg: require('@/assets/images/file/file_pic.png'),
         jpeg: require('@/assets/images/file/file_pic.png'),
+        webp: require('@/assets/images/file/file_pic.png'),
+        md: require('@/assets/images/file/file_md.png'),
         docx: require('@/assets/images/file/file_word.png'),
         doc: require('@/assets/images/file/file_word.png'),
         ppt: require('@/assets/images/file/file_ppt.png'),
@@ -318,6 +311,7 @@ export default {
      */
     //  根据文件扩展名设置文件图片
     setFileImg(extendname) {
+      console.log("获取扩展名", extendname)
       if (extendname === null) {
         //  文件夹
         return this.fileImgMap.dir
@@ -362,29 +356,30 @@ export default {
       //  若是文件，则进行相应的预览
       else {
         //  若当前点击项是图片
-        const PIC = ['png', 'jpg', 'jpeg', 'gif', 'svg']
+        const PIC = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']
         if (PIC.includes(row.extendName)) {
           console.log("点击的是图片", row)
           this.$emit('getImgReviewData', row, true)
         }
         //  若当前点击项是pdf
-        if (row.extendName === 'pdf') {
-          window.open('api' + row.fileUrl, '_blank')
+        const TEXT = ['txt', 'pdf', 'md']
+        if (TEXT.includes(row.extendName)) {
+          window.open(row.fileUrl, '_blank')
         }
         //  若当前点击项是html、js、css、json
         const CODE = ['html', 'js', 'css', 'json']
         if (CODE.includes(row.extendName)) {
-          window.open('api' + row.fileUrl, '_blank')
+          window.open(row.fileUrl, '_blank')
         }
         //  若当前点击项是视频mp4格式
         const VIDEO = ['mp4']
         if (VIDEO.includes(row.extendName)) {
-          window.open('api' + row.fileUrl, '_blank')
+          window.open(row.fileUrl, '_blank')
         }
         //  若当前点击项是视频mp3格式
         const AUDIO = ['mp3']
         if (AUDIO.includes(row.extendName)) {
-          window.open('api' + row.fileUrl, '_blank')
+          window.open(row.fileUrl, '_blank')
         }
       }
     },

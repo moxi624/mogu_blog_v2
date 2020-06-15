@@ -96,10 +96,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         List<FileSort> fileSorts = fileSortService.list(queryWrapper);
 
-        System.out.println("fileSorts" + JsonUtils.objectToJson(fileSorts));
-
         FileSort fileSort = null;
-        if (fileSorts.size() > 0) {
+        if (fileSorts.size() >= 1) {
             fileSort = fileSorts.get(0);
             log.info("====fileSort====" + JsonUtils.objectToJson(fileSort));
         } else {

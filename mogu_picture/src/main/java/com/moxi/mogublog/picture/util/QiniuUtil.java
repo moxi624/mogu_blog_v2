@@ -1,8 +1,14 @@
 package com.moxi.mogublog.picture.util;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
+import com.moxi.mogublog.picture.global.SQLConf;
+import com.moxi.mogublog.picture.global.SysConf;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EQiNiuArea;
+import com.netflix.discovery.converters.Auto;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -11,12 +17,18 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 七牛云工具类
  * @author 陌溪
  * @date 2020年1月20日20:02:36
  * @comments: 七牛云图片配置
@@ -24,6 +36,9 @@ import java.util.Map;
 @Slf4j
 @Component
 public class QiniuUtil {
+
+    @Autowired
+    FeignUtil feignUtil;
 
     /**
      * 七牛云上传图片
@@ -41,7 +56,6 @@ public class QiniuUtil {
 
         //构造一个带指定Zone对象的配置类
         Configuration cfg = null;
-
 
         //zong2() 代表华南地区
         String as0 = EQiNiuArea.as0.getCode();
@@ -84,16 +98,59 @@ public class QiniuUtil {
         String upToken = auth.uploadToken(bucket);
 
         String result = null;
-
         Response response = uploadManager.put(localFilePath, key, upToken);
         //解析上传成功的结果
         DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-
         log.info("{七牛图片上传key: " + putRet.key + ",七牛图片上传hash: " + putRet.hash + "}");
-
         result = putRet.key;
 
         return result;
+    }
+
+    /**
+     * 获取七牛云配置
+     * @return
+     */
+    public String getQiNiuConfig() {
+
+        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attribute.getRequest();
+        String token = request.getAttribute(SysConf.TOKEN).toString();
+        // 获取七牛云配置文件
+        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
+        if (qiNiuResultMap == null) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+
+        String uploadQiNiu = qiNiuResultMap.get(SysConf.UPLOAD_QI_NIU);
+        String uploadLocal = qiNiuResultMap.get(SysConf.UPLOAD_LOCAL);
+        String localPictureBaseUrl = qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL);
+        String qiNiuPictureBaseUrl = qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL);
+        String qiNiuAccessKey = qiNiuResultMap.get(SysConf.QI_NIU_ACCESS_KEY);
+        String qiNiuSecretKey = qiNiuResultMap.get(SysConf.QI_NIU_SECRET_KEY);
+        String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
+        String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
+        String picturePriority = qiNiuResultMap.get(SysConf.PICTURE_PRIORITY);
+
+        if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
+        }
+
+        if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
+        }
+
+        // 七牛云配置
+        Map<String, String> qiNiuConfig = new HashMap<>();
+        qiNiuConfig.put(SysConf.QI_NIU_ACCESS_KEY, qiNiuAccessKey);
+        qiNiuConfig.put(SysConf.QI_NIU_SECRET_KEY, qiNiuSecretKey);
+        qiNiuConfig.put(SysConf.QI_NIU_BUCKET, qiNiuBucket);
+        qiNiuConfig.put(SysConf.QI_NIU_AREA, qiNiuArea);
+        qiNiuConfig.put(SysConf.UPLOAD_QI_NIU, uploadQiNiu);
+        qiNiuConfig.put(SysConf.UPLOAD_LOCAL, uploadLocal);
+        qiNiuConfig.put(SysConf.PICTURE_PRIORITY, picturePriority);
+        return ResultUtil.result(SysConf.SUCCESS, qiNiuConfig);
     }
 
 }

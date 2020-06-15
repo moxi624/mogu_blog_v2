@@ -83,7 +83,6 @@ export default {
   },
   data() {
     return {
-      FILE_API: process.env.FILE_API,
       storageValue: "0",
       fileNameSearch: '',
       loading: true, //  表格数据-loading
@@ -98,7 +97,7 @@ export default {
       filepath: '/', // 默认路径
       operationFile: {}, // 当前操作行
       selectionFile: [], // 勾选的文件
-      // filetype: 0, //  文件类型
+      filetype: 0, //  文件类型
       //  可以识别的文件类型
       fileImgTypeList: [
         'png',
@@ -187,14 +186,6 @@ export default {
     }
   },
   computed: {
-    filetype: {
-      get() {
-        return Number(this.$route.query.filetype)
-      },
-      set() {
-        return 0
-      }
-    },
     imageModel() {
       return this.$store.getters.imageModel
     }
@@ -227,6 +218,11 @@ export default {
       } else {
         data.filePath = "/"
       }
+      if(this.$route.query.filetype) {
+        data.fileType = this.$route.query.filetype
+      } else {
+        data.fileType = 0
+      }
 
       getfilelist(data).then(res => {
         if (res.success) {
@@ -240,13 +236,16 @@ export default {
     //  根据文件类型展示文件列表
     showFileListByType() {
       //  分类型
-      let data = {}
+      let data = {
+        fileType: this.fileType
+      }
       if(this.$route.query.filepath) {
         data.filePath = this.$route.query.filepath
       } else {
         data.filePath = "/"
       }
-      selectFileByFileType(data).then(res => {
+
+      getfilelist(data).then(res => {
         if (res.success) {
           this.fileList = res.data
           this.loading = false
@@ -396,13 +395,12 @@ export default {
     //  获取查看大图的数据
     getImgReviewData(row, visible) {
       if(row) {
-        console.log("查看大图", this.FILE_API + row.fileUrl)
-        this.imgReview.fileurl = this.FILE_API + row.fileUrl
+        console.log("查看大图", row.fileUrl)
+        this.imgReview.fileurl = row.fileUrl
         this.imgReview.filename = row.fileName
         this.imgReview.extendname = row.extendName
       }
       this.imgReview.visible = visible
-      console.log("是否可见的大图", this.imgReview.fileurl)
     }
   }
 }
