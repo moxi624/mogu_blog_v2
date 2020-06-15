@@ -223,13 +223,3 @@ jobs:
           cd /home/mogu_blog/mogu_web/
           ./shutdown.sh
           ./startup.sh
-    - name: Start mogu_search
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
-        username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        port: ${{ secrets.DOCKER_PORT }}
-        script: |
-          cd /home/mogu_blog/mogu_search/
-          ./shutdown.sh
