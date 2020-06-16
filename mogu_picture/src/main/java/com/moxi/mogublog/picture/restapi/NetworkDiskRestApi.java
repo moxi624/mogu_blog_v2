@@ -7,10 +7,13 @@ import com.moxi.mogublog.picture.entity.TreeNode;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
+import com.moxi.mogublog.picture.util.FeignUtil;
+import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mogublog.utils.RestResult;
 import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mogublog.utils.upload.PathUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
@@ -28,6 +31,9 @@ public class NetworkDiskRestApi {
 
     @Resource
     StorageService filetransferService;
+
+    @Autowired
+    FeignUtil feignUtil;
 
     /**
      * 是否开启共享文件模式
@@ -89,15 +95,17 @@ public class NetworkDiskRestApi {
      */
     @RequestMapping(value = "/batchdeletefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> deleteImageByIds(@RequestBody NetworkDisk networkDisk) {
+    public RestResult<String> deleteImageByIds(HttpServletRequest request, @RequestBody List<NetworkDiskVO> networkDiskVOList) {
         RestResult<String> result = new RestResult<>();
-        if (!operationCheck().isSuccess()) {
-            return operationCheck();
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            result.setSuccess(false);
+            result.setErrorMessage("请先登录");
+            return result;
         }
+        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
 
-        List<NetworkDisk> fileList = JSON.parseArray(networkDisk.getFiles(), NetworkDisk.class);
-        for (NetworkDisk file : fileList) {
-            networkDiskService.deleteFile(file);
+        for (NetworkDiskVO NetworkDiskVO : networkDiskVOList) {
+            networkDiskService.deleteFile(NetworkDiskVO, qiNiuConfig);
         }
         result.setData("批量删除文件成功");
         result.setSuccess(true);
@@ -111,12 +119,15 @@ public class NetworkDiskRestApi {
      */
     @RequestMapping(value = "/deletefile", method = RequestMethod.POST)
     @ResponseBody
-    public String deleteFile(@RequestBody NetworkDisk networkDisk) {
+    public String deleteFile(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
         RestResult<String> result = new RestResult<>();
-        if (!operationCheck().isSuccess()){
-            return JSON.toJSONString(operationCheck());
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            result.setSuccess(false);
+            result.setErrorMessage("请先登录");
+            return JSON.toJSONString(result);
         }
-        networkDiskService.deleteFile(networkDisk);
+        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
+        networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         result.setSuccess(true);
         String resultJson = JSON.toJSONString(result);
         return resultJson;

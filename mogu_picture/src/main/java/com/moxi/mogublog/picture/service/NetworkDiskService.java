@@ -2,6 +2,7 @@ package com.moxi.mogublog.picture.service;
 
 import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
+import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mougblog.base.service.SuperService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,9 +75,9 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
 
     /**
      * 删除文件
-     * @param fileBean
+     * @param networkDiskVO
      */
-    void deleteFile(NetworkDisk fileBean);
+    void deleteFile(NetworkDiskVO networkDiskVO, Map<String, String> qiNiuConfig);
 
     /**
      * 通过文件ID删除文件

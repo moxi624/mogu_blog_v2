@@ -57,19 +57,16 @@ export default {
   name: 'AsideMenu',
   data() {
     return {
-      fileListByFiletype: []
+      fileListByFiletype: [],
+      activeIndex: "0"
+    }
+  },
+  created() {
+    if(this.$route.query.filetype) {
+      this.activeIndex = this.$route.query.filetype
     }
   },
   computed: {
-    //  当前活跃菜单项index，也是当前被选中的文件类型
-    activeIndex: {
-      get() {
-        return String(this.$route.query.filetype)
-      },
-      set() {
-        return "0"
-      }
-    },
     //  判断当前用户设置的左侧栏是否折叠
     isFolder() {
       return this.$store.getters.isFolder

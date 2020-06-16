@@ -11,6 +11,7 @@ import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
+import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.FileUtil;
@@ -48,6 +49,9 @@ public class StorageRestApi {
 
     @Resource
     StorageService filetransferService;
+
+    @Autowired
+    FeignUtil feignUtil;
 
     /**
      * 旋转图片
@@ -131,13 +135,20 @@ public class StorageRestApi {
      */
     @RequestMapping(value = "/deleteimage", method = RequestMethod.POST)
     @ResponseBody
-    public String deleteImage(HttpServletRequest request, @RequestBody NetworkDisk networkDisk) {
+    public String deleteImage(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
         RestResult<String> result = new RestResult<>();
-        String imageUrl = PathUtil.getStaticPath() + networkDisk.getFileUrl();
-        String minImageUrl = imageUrl.replace("." + networkDisk.getExtendName(), "_min." + networkDisk.getExtendName());
+        if(request.getAttribute(SysConf.TOKEN) == null) {
+            result.setSuccess(false);
+            result.setErrorMessage("请先登录");
+            return JSON.toJSONString(result);
+        }
+        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfigByWebToken(request.getAttribute(SysConf.TOKEN).toString());
+
+        String imageUrl = PathUtil.getStaticPath() + networkDiskVO.getFileUrl();
+        String minImageUrl = imageUrl.replace("." + networkDiskVO.getExtendName(), "_min." + networkDiskVO.getExtendName());
         long fileSize = FileOperation.getFileSize(imageUrl);
-        networkDisk.setIsDir(0);
-        networkDiskService.deleteFile(networkDisk);
+        networkDiskVO.setIsDir(0);
+        networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         FileOperation.deleteFile(imageUrl);
         FileOperation.deleteFile(minImageUrl);
         // 更新存储空间

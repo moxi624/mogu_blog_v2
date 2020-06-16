@@ -1,12 +1,12 @@
 <template>
   <div class="operation-menu-wrapper">
 
-    <el-button size="medium" type="primary" icon="el-icon-upload2" id="uploadFileId" @click="handleAdd" v-permission="'/networkDisk/add'">上传</el-button>
+    <el-button size="medium" type="primary" icon="el-icon-upload2" id="uploadFileId" @click="handleAdd" v-permission="'/networkDisk/add'">上传文件</el-button>
 
-    <el-button size="medium" @click="addFolder()" v-if="!filetype" v-permission="'/networkDisk/create'">新建文件夹</el-button>
+    <el-button size="medium" @click="addFolder()" type="success" v-if="!filetype" v-permission="'/networkDisk/create'">新建文件夹</el-button>
 
     <div style="display: inline-block;" v-if="selectionFile.length !== 0">
-      <el-button size="medium" icon="el-icon-delete" @click="deleteSelectedFile()" v-permission="'/networkDisk/delete'">删除</el-button>
+      <el-button size="medium" type="danger" icon="el-icon-delete" @click="deleteSelectedFile()" v-permission="'/networkDisk/delete'">删除选中</el-button>
       <el-button size="medium" icon="el-icon-edit" @click="moveSelectedFile()" v-if="!filetype" v-permission="'/networkDisk/move'">移动</el-button>
       <!-- <el-button size="medium" icon="el-icon-document-copy">拷贝</el-button> -->
       <el-button size="medium" icon="el-icon-download" @click="downloadSelectedFile()" v-permission="'/networkDisk/download'">下载</el-button>
@@ -41,7 +41,7 @@
         multiple>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传图片，且不超过5MB</div>
+        <div class="el-upload__tip" slot="tip">单文件不超过100MB，总文件不超过500MB</div>
       </el-upload>
     </el-dialog>
 
@@ -244,11 +244,8 @@ export default {
 
     //  批量操作-删除按钮
     deleteSelectedFile() {
-      let data = {
-        files: JSON.stringify(this.selectionFile)
-      }
       //  批量删除接口
-      batchDeleteFile(data).then(res => {
+      batchDeleteFile(this.selectionFile).then(res => {
         if (res.success) {
           this.$message({
             message: res.data,

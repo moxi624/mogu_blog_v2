@@ -312,7 +312,6 @@ export default {
      */
     //  根据文件扩展名设置文件图片
     setFileImg(extendname) {
-      console.log("获取扩展名", extendname)
       if (extendname === null) {
         //  文件夹
         return this.fileImgMap.dir

@@ -12,6 +12,7 @@ import com.netflix.discovery.converters.Auto;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
+import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
@@ -48,17 +49,64 @@ public class QiniuUtil {
      */
     public String uploadQiniu(File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
 
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = setQiNiuArea(qiNiuConfig);
         //生成上传凭证，然后准备上传
-        String accessKey = qiNiuConfig.get("qiNiuAccessKey");
-        String secretKey = qiNiuConfig.get("qiNiuSecretKey");
-        String bucket = qiNiuConfig.get("qiNiuBucket");
+        String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
+        String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
+        String bucket = qiNiuConfig.get(SysConf.QI_NIU_BUCKET);
+        //...其他参数参考类注释
+        UploadManager uploadManager = new UploadManager(cfg);
+        String key = StringUtils.getUUID();
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        Response response = uploadManager.put(localFilePath, key, upToken);
+        //解析上传成功的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+        log.info("{七牛图片上传key: " + putRet.key + ",七牛图片上传hash: " + putRet.hash + "}");
+        return putRet.key;
+    }
+
+    /**
+     * 删除七牛云文件
+     * @param fileName
+     * @param qiNiuConfig
+     * @return
+     */
+    public int deleteFile(String fileName, Map<String, String> qiNiuConfig){
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = setQiNiuArea(qiNiuConfig);
+        //获取上传凭证
+        String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
+        String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
+        String bucket = qiNiuConfig.get(SysConf.QI_NIU_BUCKET);
+        String key = fileName;
+        Auth auth = Auth.create(accessKey, secretKey);
+        BucketManager bucketManager = new BucketManager(auth, cfg);
+        try {
+            Response delete = bucketManager.delete(bucket, key);
+            log.info("{七牛云文件 {} 删除成功" , fileName);
+            return delete.statusCode;
+        } catch (QiniuException ex) {
+            //如果遇到异常，说明删除失败
+            log.error(ex.getMessage());
+        }
+        return -1;
+    }
+
+    /**
+     * 设置七牛云上传区域（内部方法）
+     * @param qiNiuConfig
+     * @return
+     */
+    private Configuration setQiNiuArea(Map<String, String> qiNiuConfig) {
+        //生成上传凭证，然后准备上传
         String area = qiNiuConfig.get("qiNiuArea");
 
         //构造一个带指定Zone对象的配置类
         Configuration cfg = null;
 
         //zong2() 代表华南地区
-        String as0 = EQiNiuArea.as0.getCode();
         switch (EQiNiuArea.valueOf(area).getCode()) {
             case "z0": {
                 cfg = new Configuration(Zone.zone0());
@@ -89,22 +137,7 @@ public class QiniuUtil {
                 return null;
             }
         }
-
-        //...其他参数参考类注释
-        UploadManager uploadManager = new UploadManager(cfg);
-
-        String key = StringUtils.getUUID();
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
-
-        String result = null;
-        Response response = uploadManager.put(localFilePath, key, upToken);
-        //解析上传成功的结果
-        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-        log.info("{七牛图片上传key: " + putRet.key + ",七牛图片上传hash: " + putRet.hash + "}");
-        result = putRet.key;
-
-        return result;
+        return cfg;
     }
 
     /**

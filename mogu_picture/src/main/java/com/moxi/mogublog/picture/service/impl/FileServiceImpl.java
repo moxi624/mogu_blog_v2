@@ -187,14 +187,10 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
 
 
-                } catch (QiniuException e) {
-                    log.info("==上传七牛云异常===url:" + saveUrl + "-----");
-                    log.error(e.getMessage());
-                    return ResultUtil.result(SysConf.ERROR, "七牛云配置有误");
                 } catch (Exception e) {
                     log.info("==上传文件异常===url:" + saveUrl + "-----");
-                    log.error(e.getMessage());
-                    return ResultUtil.result(SysConf.ERROR, "文件上传失败");
+                    e.printStackTrace();
+                    return ResultUtil.result(SysConf.ERROR, "文件上传失败，请检查系统配置");
                 } finally {
                     if (dest != null && dest.getParentFile().exists()) {
                         dest.delete();

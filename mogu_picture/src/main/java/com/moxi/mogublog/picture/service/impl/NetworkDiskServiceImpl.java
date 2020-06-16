@@ -12,7 +12,9 @@ import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.util.FeignUtil;
+import com.moxi.mogublog.picture.util.MoGuFileUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
+import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mougblog.base.enums.EOpenStatus;
@@ -21,6 +23,7 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -46,11 +49,18 @@ import java.util.Map;
 @Service
 public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, NetworkDisk> implements NetworkDiskService {
 
+    //获取上传路径
+    @Value(value = "${file.upload.path}")
+    private String UPLOAD_PATH;
+
     @Autowired
     NetworkDiskService networkDiskService;
 
     @Autowired
     FeignUtil feignUtil;
+
+    @Autowired
+    QiniuUtil qiniuUtil;
 
     @Override
     public void insertFile(NetworkDisk networkDisk) {
@@ -116,7 +126,29 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     }
 
     @Override
-    public void deleteFile(NetworkDisk fileBean) {
+    public void deleteFile(NetworkDiskVO networkDiskVO, Map<String, String> qiNiuConfig) {
+        String uid = networkDiskVO.getUid();
+        if(StringUtils.isNotEmpty(uid)) {
+
+        }
+        NetworkDisk networkDisk = networkDiskService.getById(uid);
+        String localUrl = networkDisk.getLocalUrl();
+        String qiNiuUrl = networkDisk.getQiNiuUrl();
+        String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
+        String uploadQiNiu = qiNiuConfig.get(SysConf.UPLOAD_QI_NIU);
+        // 修改为删除状态
+        networkDisk.setStatus(EStatus.DISABLED);
+        networkDisk.updateById();
+
+        // TODO 以后这里可以写成定时器，而不是马上删除，增加回收站的功能
+        // 删除本地文件，同时移除本地文件
+        if (EOpenStatus.OPEN.equals(uploadLocal)) {
+            MoGuFileUtil.deleteFile(UPLOAD_PATH + localUrl);
+        }
+        // 删除七牛云上文件
+        if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
+            qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
+        }
 
     }
 
