@@ -2,6 +2,7 @@ package com.moxi.mogublog.picture.util;
 
 import com.moxi.mogublog.commons.feign.AdminFeignClient;
 import com.moxi.mogublog.commons.feign.WebFeignClient;
+import com.moxi.mogublog.picture.global.RedisConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.StringUtils;
@@ -46,7 +47,7 @@ public class FeignUtil {
         Map<String, String> resultMap = new HashMap<>();
 
         //从Redis中获取内容
-        String jsonResult = stringRedisTemplate.opsForValue().get(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token);
+        String jsonResult = stringRedisTemplate.opsForValue().get(RedisConf.SYSTEM_CONFIG + SysConf.REDIS_SEGMENTATION + token);
 
         // 判断Redis中是否有数据
         if (StringUtils.isNotEmpty(jsonResult)) {
@@ -63,7 +64,7 @@ public class FeignUtil {
             if (resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
                 resultMap = (Map<String, String>) resultTempMap.get(SysConf.DATA);
                 //将从token存储到redis中，设置30分钟后过期
-                stringRedisTemplate.opsForValue().set(SysConf.ADMIN_TOKEN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(resultMap), 30, TimeUnit.MINUTES);
+                stringRedisTemplate.opsForValue().set(RedisConf.SYSTEM_CONFIG + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(resultMap), 30, TimeUnit.MINUTES);
             }
         }
         return resultMap;

@@ -15,9 +15,13 @@ import com.moxi.mogublog.xo.vo.SystemConfigVO;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +35,7 @@ import java.util.Set;
  * @author 陌溪
  * @since 2020年1月21日09:06:18
  */
+@Slf4j
 @Service
 public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper, SystemConfig> implements SystemConfigService {
 
@@ -136,6 +141,15 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setUpdateTime(new Date());
             systemConfig.updateById();
 
+        }
+
+        // 更新系统配置成功后，需要删除Redis中的系统配置，主要用于mogu_picture获取上传配置信息
+        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attribute.getRequest();
+        if(request.getAttribute(SysConf.TOKEN) != null) {
+            String token = request.getAttribute(SysConf.TOKEN).toString();
+            redisUtil.delete(RedisConf.SYSTEM_CONFIG + RedisConf.SEGMENTATION + token);
+            log.info("成功删除Redis中的系统配置！");
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }

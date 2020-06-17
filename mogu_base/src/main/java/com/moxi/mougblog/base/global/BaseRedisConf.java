@@ -59,6 +59,11 @@ public class BaseRedisConf {
     public final static String ADMIN_TOKEN = "ADMIN_TOKEN";
 
     /**
+     * 系统配置
+     */
+    public final static String SYSTEM_CONFIG = "SYSTEM_CONFIG";
+
+    /**
      * 表单重复提交
      */
     public final static String AVOID_REPEATABLE_COMMIT = "AVOID_REPEATABLE_COMMIT";
