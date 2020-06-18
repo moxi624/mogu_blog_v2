@@ -3,6 +3,7 @@ package com.moxi.mogublog.picture.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * 蘑菇文件操作
@@ -51,6 +52,36 @@ public class MoGuFileUtil {
             }
         } else {
             log.error("删除单个文件失败：{} 不存在！", fileName);
+            return false;
+        }
+    }
+
+    /**
+     * 批量删除文件
+     * @param fileNameList
+     * @return
+     */
+    public static boolean deleteFileList(List<String> fileNameList) {
+        int successCount = 0;
+        for (String fileName : fileNameList) {
+            File file = new File(fileName);
+            // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+            if (file.exists() && file.isFile()) {
+                if (file.delete()) {
+                    log.info("删除单个文件：{} 成功！", fileName);
+                    successCount += 1;
+                } else {
+                    log.error("删除单个文件：{} 失败！", fileName);
+                }
+            } else {
+                log.error("删除单个文件失败：{} 不存在！", fileName);
+            }
+        }
+        if(successCount == fileNameList.size()) {
+            log.info("所有文件删除成功！");
+            return true;
+        } else {
+            log.error("存在删除失败的文件！");
             return false;
         }
     }

@@ -132,24 +132,65 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
 
         }
         NetworkDisk networkDisk = networkDiskService.getById(uid);
-        String localUrl = networkDisk.getLocalUrl();
-        String qiNiuUrl = networkDisk.getQiNiuUrl();
         String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
         String uploadQiNiu = qiNiuConfig.get(SysConf.UPLOAD_QI_NIU);
+
         // 修改为删除状态
         networkDisk.setStatus(EStatus.DISABLED);
         networkDisk.updateById();
 
-        // TODO 以后这里可以写成定时器，而不是马上删除，增加回收站的功能
-        // 删除本地文件，同时移除本地文件
-        if (EOpenStatus.OPEN.equals(uploadLocal)) {
-            MoGuFileUtil.deleteFile(UPLOAD_PATH + localUrl);
-        }
-        // 删除七牛云上文件
-        if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
-            qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
-        }
+        // 判断删除的是文件 or 文件夹
+        if(SysConf.ONE == networkDisk.getIsDir()) {
+            // 删除的是文件夹，那么需要把文件下所有的文件获得，进行删除
+            // 获取文件的路径，查询出该路径下所有的文件
+            String path = networkDisk.getFilePath() + networkDisk.getFileName();
+            QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            // 查询以  path%  开头的
+            queryWrapper.likeRight(SQLConf.FILE_PATH, path);
+            List<NetworkDisk> list = networkDiskService.list(queryWrapper);
 
+            if(list.size() > 0) {
+                // 将所有的状态设置成失效
+                list.forEach(item -> {
+                    item.setStatus(EStatus.DISABLED);
+                });
+                Boolean isUpdateSuccess = networkDiskService.updateBatchById(list);
+                if(isUpdateSuccess) {
+
+                    // 删除本地文件，同时移除本地文件
+                    if (EOpenStatus.OPEN.equals(uploadLocal)) {
+                        // 获取删除的路径
+                        List<String> fileList = new ArrayList<>();
+                        list.forEach(item -> {
+                            fileList.add(UPLOAD_PATH + item.getLocalUrl());
+                        });
+                        // 批量删除本地图片
+                        MoGuFileUtil.deleteFileList(fileList);
+                    }
+                    // 删除七牛云上文件
+                    if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
+                        List<String> fileList = new ArrayList<>();
+                        list.forEach(item -> {
+                            fileList.add(item.getQiNiuUrl());
+                        });
+                        qiniuUtil.deleteFileList(fileList, qiNiuConfig);
+                    }
+                }
+            }
+        } else {
+            // TODO 以后这里可以写成定时器，而不是马上删除，增加回收站的功能
+            // 删除本地文件，同时移除本地文件
+            if (EOpenStatus.OPEN.equals(uploadLocal)) {
+                String localUrl = networkDisk.getLocalUrl();
+                MoGuFileUtil.deleteFile(UPLOAD_PATH + localUrl);
+            }
+            // 删除七牛云上文件
+            if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
+                String qiNiuUrl = networkDisk.getQiNiuUrl();
+                qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
+            }
+        }
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,6 +93,36 @@ public class QiniuUtil {
             log.error(ex.getMessage());
         }
         return -1;
+    }
+
+    /**
+     * 批量删除七牛云图片
+     * @param fileNameList
+     * @param qiNiuConfig
+     * @return
+     */
+    public Boolean deleteFileList(List<String> fileNameList, Map<String, String> qiNiuConfig){
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = setQiNiuArea(qiNiuConfig);
+        //获取上传凭证
+        String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
+        String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
+        String bucket = qiNiuConfig.get(SysConf.QI_NIU_BUCKET);
+        int successCount = 0;
+        for(String fileName: fileNameList) {
+            String key = fileName;
+            Auth auth = Auth.create(accessKey, secretKey);
+            BucketManager bucketManager = new BucketManager(auth, cfg);
+            try {
+                Response delete = bucketManager.delete(bucket, key);
+                log.info("{七牛云文件 {} 删除成功" , fileName);
+                successCount += 1;
+            } catch (QiniuException ex) {
+                //如果遇到异常，说明删除失败
+                log.error(ex.getMessage());
+            }
+        }
+        return successCount == fileNameList.size();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.moxi.mogublog.sms.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -16,6 +17,7 @@ import javax.mail.internet.MimeMessage;
  * @author xzx19950624@qq.com
  * @date 2018年10月20日下午3:18:25
  */
+@Slf4j
 @Component
 public class SendMailUtils {
 
@@ -49,7 +51,7 @@ public class SendMailUtils {
 
         mailSender.send(mimeMessage);
 
-        System.out.println("邮件发送成功");
+        log.info("邮件发送成功");
         /*添加邮件附件
         String path = ""; //文件路径
         String fileName = ""; //文件名
