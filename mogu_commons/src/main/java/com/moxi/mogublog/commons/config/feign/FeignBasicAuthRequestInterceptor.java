@@ -23,7 +23,12 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
         HttpServletRequest request = attributes.getRequest();
 
         // 获取token，放入到feign的请求头
-        String token = request.getParameter("token");
+        String token = null;
+        if(request.getParameter("token") != null) {
+            token = request.getParameter("token");
+        } else if(request.getAttribute("token") != null) {
+            token = request.getAttribute("token").toString();
+        }
 
         if(StringUtils.isNotEmpty(token)){
             // 如果带有？说明还带有其它参数，我们只截取到token即可

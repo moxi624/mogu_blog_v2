@@ -1,22 +1,15 @@
 package com.moxi.mogublog.admin.restapi;
 
 import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
-import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.ServerInfo.ServerInfo;
-import com.moxi.mogublog.xo.service.AdminService;
-import com.moxi.mogublog.xo.vo.AdminVO;
-import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 服务监控RestApi（CPU、内存、核心）

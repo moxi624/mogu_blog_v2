@@ -339,7 +339,7 @@ public class AdminRestApi {
                                      @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                                      @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
         Set<String> keys = redisUtil.keys(RedisConf.LOGIN_TOKEN_KEY + "*");
-        List<String> onlineAdminList =  redisUtil.multiGet(keys);
+        List<String> onlineAdminList = redisUtil.multiGet(keys);
         List<OnlineAdmin> onlineAdmins = new ArrayList<>();
         for (String item : onlineAdminList) {
             OnlineAdmin onlineAdmin = JsonUtils.jsonToPojo(item, OnlineAdmin.class);
@@ -353,7 +353,7 @@ public class AdminRestApi {
     @ApiOperation(value = "强退用户", notes = "强退用户", response = String.class)
     @PostMapping(value = "/forceLogout")
     public String forceLogout(@ApiParam(name = "tokenList", value = "tokenList", required = false) @RequestBody List<String> tokenList) {
-        if(tokenList == null || tokenList.size() == 0) {
+        if (tokenList == null || tokenList.size() == 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         List<String> keyList = new ArrayList<>();

@@ -108,6 +108,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         String browser = map.get(SysConf.BROWSER);
         String ip = IpUtils.getIpAddr(request);
         OnlineAdmin onlineAdmin = new OnlineAdmin();
+        onlineAdmin.setAdminUid(admin.getUid());
         onlineAdmin.setTokenId(admin.getValidCode());
         onlineAdmin.setOs(os);
         onlineAdmin.setBrowser(browser);

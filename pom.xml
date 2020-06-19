@@ -50,14 +50,12 @@
 
 
     <modules>
-        <module>mogu_config</module>
         <module>mogu_utils</module>
         <module>mogu_base</module>
         <module>mogu_xo</module>
         <module>mogu_admin</module>
         <module>mogu_web</module>
         <module>mogu_picture</module>
-        <module>mogu_eureka</module>
         <module>mogu_sms</module>
         <module>mogu_search</module>
         <module>mogu_monitor</module>

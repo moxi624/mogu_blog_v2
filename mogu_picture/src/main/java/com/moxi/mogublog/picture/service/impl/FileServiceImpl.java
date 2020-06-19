@@ -12,7 +12,6 @@ import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
-import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,10 +95,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         List<FileSort> fileSorts = fileSortService.list(queryWrapper);
 
-        System.out.println("fileSorts" + JsonUtils.objectToJson(fileSorts));
-
         FileSort fileSort = null;
-        if (fileSorts.size() > 0) {
+        if (fileSorts.size() >= 1) {
             fileSort = fileSorts.get(0);
             log.info("====fileSort====" + JsonUtils.objectToJson(fileSort));
         } else {
@@ -189,14 +186,10 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
 
 
-                } catch (QiniuException e) {
-                    log.info("==上传七牛云异常===url:" + saveUrl + "-----");
-                    log.error(e.getMessage());
-                    return ResultUtil.result(SysConf.ERROR, "七牛云配置有误");
                 } catch (Exception e) {
                     log.info("==上传文件异常===url:" + saveUrl + "-----");
-                    log.error(e.getMessage());
-                    return ResultUtil.result(SysConf.ERROR, "文件上传失败");
+                    e.printStackTrace();
+                    return ResultUtil.result(SysConf.ERROR, "文件上传失败，请检查系统配置");
                 } finally {
                     if (dest != null && dest.getParentFile().exists()) {
                         dest.delete();

@@ -17,6 +17,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <artifactId>mogu_utils</artifactId>
+            <groupId>com.moxi</groupId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <artifactId>mogu_utils</artifactId>

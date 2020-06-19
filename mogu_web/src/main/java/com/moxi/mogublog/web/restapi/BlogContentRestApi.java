@@ -124,9 +124,6 @@ public class BlogContentRestApi {
                         24, TimeUnit.HOURS);
             }
         }
-
-        FileUtils.htmlToMarkdown(blog.getContent());
-
         log.info("返回结果");
         return ResultUtil.result(SysConf.SUCCESS, blog);
     }

@@ -28,6 +28,11 @@ public class WebUtils {
     // 三级域名提取
     private static final String RE_TOP_3 = "(\\w*\\.?){3}\\.(com.cn|net.cn|gov.cn|org\\.nz|org.cn|com|net|org|gov|cc|biz|info|cn|co)$";
 
+    private static final String SUCCESS = "success";
+    private static final String CODE = "code";
+    private static final String DATA = "data";
+    private static final String ERROR = "error";
+
     /**
      * HTML字符转义
      * <p>
@@ -104,7 +109,7 @@ public class WebUtils {
             return null;
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(dataMap.get("code"))) {
+        if (SUCCESS.equals(dataMap.get(CODE))) {
 
             Map<String, Object> data = (Map<String, Object>) dataMap.get("data");
             T t = JsonUtils.mapToPojo(data, beanType);
@@ -114,7 +119,7 @@ public class WebUtils {
     }
 
     /**
-     * 获取结果集的内容，返回的是 List<POJO>
+     * 获取结果集的内容，返回的是 List<POJO>，带分页的情况
      *
      * @param result
      * @return
@@ -124,11 +129,34 @@ public class WebUtils {
             return null;
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if ("success".equals(dataMap.get("code"))) {
+        if (SUCCESS.equals(dataMap.get(CODE))) {
 
             Map<String, Object> data = (Map<String, Object>) dataMap.get("data");
 
             List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("records");
+            List<T> resultList = new ArrayList<>();
+            list.forEach(item -> {
+                resultList.add(JsonUtils.mapToPojo(item, beanType));
+            });
+            return resultList;
+        }
+        return null;
+    }
+
+    /**
+     * 获取结果集的内容，返回的是 List<POJO>，不带分页的情况
+     * @param result
+     * @param beanType
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> getAllList(String result, Class<T> beanType) {
+        if (com.moxi.mogublog.utils.StringUtils.isEmpty(result)) {
+            return null;
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if (SUCCESS.equals(dataMap.get(CODE))) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) dataMap.get("data");
             List<T> resultList = new ArrayList<>();
             list.forEach(item -> {
                 resultList.add(JsonUtils.mapToPojo(item, beanType));

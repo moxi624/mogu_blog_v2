@@ -1,0 +1,6 @@
+.el-avatar>img {
+  width: 100%;
+}
+.el-textarea__inner {
+  font-family: inherit;
+}

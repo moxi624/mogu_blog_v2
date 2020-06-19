@@ -18,6 +18,17 @@
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 
+##  前言
+
+虽然我知道很多人来到这里，都是pull 或者dowonload了一下代码，就把项目关闭了。突然有一天想起了看看蘑菇博客这个项目有没有更新，然后继续执行以下操作：
+
+- 更新了，pull或者download代码
+- 没更新，直接关闭项目 
+
+但是我还是非常希望各位小伙伴能够 **多多star支持**，您的**点赞**就是我维护的动力！
+
+如果您有任何相关建议，欢迎在issue或者群里提出，再次感谢大家的支持~
+
 ## 项目介绍
 
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云。
@@ -61,9 +72,9 @@
 
 推荐配置：2核4G
 
-> 【阿里云】 限量爆款 低至69元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) `(仅限新用户)`
+> 【阿里云】 限量爆款低至91.8元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
 >
-> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元 [点我进入](https://cloud.tencent.com/act/cps/redirect?redirect=1054&cps_key=4e9b8ce643afe47621493331d101dd6e&from=console) `(仅限新用户)`
+> 【腾讯云】星星海SA2云服务器618钜惠，1核2G 首年95元 [点我进入](https://url.cn/WuGZnFBn)
 >
 > 【阿里云翼计划】 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
@@ -115,12 +126,11 @@
 - mogu_spider：爬虫服务`（目前还未完善）`
 - mogu_spider：网关服务`（目前还未完善）`
 - mogu_zipkin：链路追踪服务，`目前使用java -jar的方式启动`
-- mogu_search：搜索服务，ElasticSearch和Solr作为检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
-- mogu_commons: 是公共模块，主要用于存放Entity实体类和Feign远程调用接口
+- mogu_search：搜索服务，ElasticSearch和Solr作为全文检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
+- mogu_commons：公共模块，主要用于存放Entity实体类、Feign远程调用接口、以及公共config配置
 - mogu_utils: 是常用工具类；
 - mogu_xo: 是存放 VO、Service，Dao层的
 - mogu_base: 是一些Base基类
-- mogu_config: 是存放一些配置
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
@@ -141,7 +151,7 @@
 | SpringSecurity |     认证和授权框架      |          https://spring.io/projects/spring-security          |
 |  MyBatis-Plus  |         ORM框架         |                   https://mp.baomidou.com/                   |
 |   Swagger-UI   |      文档生产工具       | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui) |
-|     Kibana     |    分析和可视化平台     |                                                              |
+|     Kibana     |    分析和可视化平台     |               https://www.elastic.co/cn/kibana               |
 | Elasticsearch  |        搜索引擎         | [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch) |
 |      Solr      |        搜索引擎         |                http://lucene.apache.org/solr/                |
 |    RabbitMQ    |        消息队列         |   [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)    |
@@ -159,6 +169,7 @@
 | Github Actions |       自动化部署        |              https://help.github.com/en/actions              |
 |     Zipkin     |        链路追踪         |             https://github.com/openzipkin/zipkin             |
 | Flexmark-java  |    Markdown转换Html     |            https://github.com/vsch/flexmark-java             |
+|   Ip2region    |    离线IP地址定位库     |          https://github.com/lionsoul2014/ip2region           |
 
 ### 前端技术
 
@@ -259,6 +270,7 @@
 - 感谢 **pppercyWang** 提供的Emoji表情评论组件：[vue-emoji-comment](https://github.com/pppercyWang/vue-emoji-comment)
 - 感谢 **若依** 提供的RuoYi项目：[https://gitee.com/y_project/RuoYi](https://gitee.com/y_project/RuoYi)
 - 感谢 **yaowei9363** 提供的 侧目录组件： [vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog) 
+- 感谢 **奇文社区** 提供的 奇文网盘：https://gitee.com/qiwen-cloud/qiwen-file
 
 ## 关注&交流
 

@@ -148,7 +148,7 @@ public class BlogListener {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("更新Redis失败");
         }
     }
 }

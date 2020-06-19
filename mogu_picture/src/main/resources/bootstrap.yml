@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: mogu-monitor
+    name: mogu-picture
   cloud:
     nacos:
       discovery:

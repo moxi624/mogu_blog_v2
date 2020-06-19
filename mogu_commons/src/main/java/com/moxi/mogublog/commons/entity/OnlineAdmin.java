@@ -18,6 +18,11 @@ public class OnlineAdmin
     /** 会话编号 */
     private String tokenId;
 
+    /**
+     * 管理员的UID
+     */
+    private String adminUid;
+
     /** 用户名称 */
     private String userName;
 

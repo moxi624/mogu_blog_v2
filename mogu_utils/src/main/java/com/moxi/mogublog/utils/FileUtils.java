@@ -4,11 +4,18 @@ import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -18,6 +25,7 @@ import java.util.List;
  * @author xzx19950624@qq.com
  * @date 2017年10月2日12:16:27
  */
+@Slf4j
 public class FileUtils {
 
     // 图片类型
@@ -75,7 +83,6 @@ public class FileUtils {
     public static String htmlToMarkdown(String html) {
         MutableDataSet options = new MutableDataSet();
         String markdown = FlexmarkHtmlConverter.builder(options).build().convert(html);
-        System.out.println(markdown);
         return markdown;
     }
 
@@ -121,6 +128,41 @@ public class FileUtils {
         }
 
         return ext;
+    }
+
+    /**
+     * 从Request中获取文件
+     * @return
+     */
+    public static List<MultipartFile> getMultipartFileList(HttpServletRequest request) {
+        List<MultipartFile> files = new ArrayList<>();
+        try {
+            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                    request.getSession().getServletContext());
+            if (request instanceof MultipartHttpServletRequest) {
+                // 将request变成多部分request
+                MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+                Iterator<String> iter = multiRequest.getFileNames();
+                // 检查form中是否有enctype="multipart/form-data"
+                if (multipartResolver.isMultipart(request) && iter.hasNext()) {
+                    // 获取multiRequest 中所有的文件名
+                    while (iter.hasNext()) {
+                        List<MultipartFile> fileRows = multiRequest
+                                .getFiles(iter.next().toString());
+                        if (fileRows != null && fileRows.size() != 0) {
+                            for (MultipartFile file : fileRows) {
+                                if (file != null && !file.isEmpty()) {
+                                    files.add(file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            log.error("解析MultipartRequest错误", ex);
+        }
+        return files;
     }
 
     public static void main(String[] args) {
