@@ -6,6 +6,7 @@
 - mogu_blog_update.sql：代表mogu_blog在后续开发时候更新的字段）
 - mogu_picture.sql：代表mogu_picture数据库文件
 - mogu_picture_update.sql：代表mogu_picture在后续开发时候更新的字段）
+- nacos_config.sql：代表nacos的配置信息
 
 ## 注意
 

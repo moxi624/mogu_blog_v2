@@ -8,6 +8,7 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+        namespace: dev
       sentinel:
         transport:
           #配置Sentinel dashboard地址
@@ -18,5 +19,7 @@ spring:
         server-addr: localhost:8848
         #文件后缀
         file-extension: yaml
-        #指定命名空间
+        #指定分组
         group: dev
+        #指定命名空间
+        namespace: dev
