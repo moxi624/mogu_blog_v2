@@ -80,6 +80,7 @@ public class AdminRestApi {
         page.setSize(pageSize);
         // 去除密码
         queryWrapper.select(Admin.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         IPage<Admin> pageList = adminService.page(page, queryWrapper);
         List<Admin> list = pageList.getRecords();
 

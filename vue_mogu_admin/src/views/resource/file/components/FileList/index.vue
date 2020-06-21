@@ -64,7 +64,7 @@ import MoveFileDialog from './components/MoveFileDialog'
 import ImgReview from './components/ImgReview'
 import {
   getfilelist,
-  selectFileByFileType,
+  getfiletree,
   getFileTree,
   getstorage,
   moveFile,
@@ -299,6 +299,7 @@ export default {
      */
     //  当前操作行
     setOperationFile(operationFile) {
+      console.log("当前操作的行", operationFile)
       this.operationFile = operationFile
     },
     //  设置移动文件模态框相关数据，isBatchMove为null时是确认移动，值由之前的值而定
@@ -311,7 +312,7 @@ export default {
     },
     //  移动文件模态框：初始化文件目录树
     initFileTree() {
-      getFileTree().then(res => {
+      getfiletree().then(res => {
         if (res.success) {
           this.dialogMoveFile.fileTree = [res.data]
         } else {
@@ -325,10 +326,11 @@ export default {
     },
     //  移动文件模态框-确定按钮事件
     confirmMoveFile() {
+      console.log("批量移动")
       if (this.dialogMoveFile.isBatchMove) {
         //  批量移动
         let data = {
-          newfilepath: this.selectFilePath,
+          newFilePath: this.selectFilePath,
           files: JSON.stringify(this.selectionFile)
         }
         batchMoveFile(data).then(res => {
@@ -344,11 +346,12 @@ export default {
       } else {
         //  单文件移动
         let data = {
-          oldfilepath: this.operationFile.filepath,
-          newfilepath: this.selectFilePath,
-          filename: this.operationFile.filename,
-          extendname: this.operationFile.extendname
+          oldFilePath: this.operationFile.filePath,
+          newFilePath: this.selectFilePath,
+          fileName: this.operationFile.fileName,
+          extendName: this.operationFile.extendName
         }
+        console.log("data", data)
         moveFile(data).then(res => {
           if (res.success) {
             this.$message.success('移动文件成功')

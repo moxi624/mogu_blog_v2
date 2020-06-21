@@ -187,16 +187,15 @@ public class NetworkDiskRestApi {
     @RequestMapping(value = "/movefile", method = RequestMethod.POST)
     @ResponseBody
     public RestResult<String> moveFile(@RequestBody NetworkDisk networkDisk) {
-        RestResult<String> result = new RestResult<String>();
+        RestResult<String> result = new RestResult<>();
         if (!operationCheck().isSuccess()) {
             return operationCheck();
         }
-        String oldfilepath = networkDisk.getOldFilePath();
-        String newfilepath = networkDisk.getNewFilePath();
-        String filename = networkDisk.getFileName();
-        String extendname = networkDisk.getExtendName();
-
-        networkDiskService.updateFilepathByFilepath(oldfilepath, newfilepath, filename, extendname);
+        String oldFilePath = networkDisk.getOldFilePath();
+        String newFilePath = networkDisk.getNewFilePath();
+        String fileName = networkDisk.getFileName();
+        String extendName = networkDisk.getExtendName();
+        networkDiskService.updateFilepathByFilepath(oldFilePath, newFilePath, fileName, extendName);
         result.setSuccess(true);
         return result;
     }
@@ -250,17 +249,11 @@ public class NetworkDiskRestApi {
         return result;
     }
 
-    /**
-     * 获取文件树
-     *
-     * @return
-     */
-    @RequestMapping(value = "/getfiletree", method = RequestMethod.GET)
+    @RequestMapping(value = "/getfiletree", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<TreeNode> getFileTree() {
-        RestResult<TreeNode> result = new RestResult<TreeNode>();
-        NetworkDisk networkDisk = new NetworkDisk();
-        List<NetworkDisk> filePathList = networkDiskService.selectFilePathTreeByUserid(networkDisk);
+    public RestResult<TreeNode> getfiletree() {
+        RestResult<TreeNode> result = new RestResult<>();
+        List<NetworkDisk> filePathList = networkDiskService.selectFilePathTree();
         TreeNode resultTreeNode = new TreeNode();
         resultTreeNode.setNodeName("/");
 
@@ -281,7 +274,6 @@ public class NetworkDiskRestApi {
         result.setSuccess(true);
         result.setData(resultTreeNode);
         return result;
-
     }
 
     public TreeNode insertTreeNode(TreeNode treeNode, String filepath, Queue<String> nodeNameQueue) {

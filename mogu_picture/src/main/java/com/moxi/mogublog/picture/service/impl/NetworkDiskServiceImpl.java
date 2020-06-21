@@ -1,6 +1,7 @@
 package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
@@ -70,8 +71,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     }
 
     @Override
-    public List<NetworkDisk> selectFilePathTreeByUserid(NetworkDisk fileBean) {
-        return null;
+    public List<NetworkDisk> selectFilePathTree() {
+        QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_DIR, SysConf.ONE);
+        return networkDiskService.list(queryWrapper);
     }
 
     @Override
@@ -187,7 +191,45 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
 
     @Override
     public void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname) {
+        if ("null".equals(extendname)){
+            extendname = null;
+        }
+        //移动根目录
+        QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.FILE_PATH, oldfilepath);
+        queryWrapper.eq(SQLConf.FILE_NAME, filename);
+        if(StringUtils.isNotEmpty(extendname)) {
+            queryWrapper.eq(SQLConf.EXTEND_NAME, extendname);
+        } else {
+            queryWrapper.isNull(SQLConf.EXTEND_NAME);
+        }
+        List<NetworkDisk> networkDiskList = networkDiskService.list(queryWrapper);
+        for (NetworkDisk networkDisk: networkDiskList) {
+            networkDisk.setFilePath(newfilepath);
+        }
+        networkDiskService.updateBatchById(networkDiskList);
 
+        //移动子目录
+        oldfilepath = oldfilepath + filename + "/";
+        newfilepath = newfilepath + filename + "/";
+
+        oldfilepath = oldfilepath.replace("\\", "\\\\\\\\");
+        oldfilepath = oldfilepath.replace("'", "\\'");
+        oldfilepath = oldfilepath.replace("%", "\\%");
+        oldfilepath = oldfilepath.replace("_", "\\_");
+
+        //为null说明是目录，则需要移动子目录
+        if (extendname == null) {
+            //移动根目录
+            QueryWrapper<NetworkDisk> childQueryWrapper = new QueryWrapper<>();
+            childQueryWrapper.likeRight(SQLConf.FILE_PATH, oldfilepath);
+            List<NetworkDisk> childList = networkDiskService.list(childQueryWrapper);
+            for(NetworkDisk networkDisk: childList) {
+                String filePath = networkDisk.getFilePath();
+                networkDisk.setFilePath(filePath.replace(oldfilepath, newfilepath));
+            }
+            networkDiskService.updateBatchById(childList);
+        }
     }
 
     @Override

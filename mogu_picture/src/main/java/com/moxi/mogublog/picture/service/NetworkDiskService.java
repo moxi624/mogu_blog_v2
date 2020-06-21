@@ -47,12 +47,10 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
     NetworkDisk selectFileById(NetworkDisk networkDisk);
 
     /**
-     * 通过用户ID查询文件
-     *
-     * @param networkDisk
+     * 查询目录结构树
      * @return
      */
-    List<NetworkDisk> selectFilePathTreeByUserid(NetworkDisk networkDisk);
+    List<NetworkDisk> selectFilePathTree();
 
     /**
      * 查询文件列表
@@ -88,19 +86,19 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
     /**
      * 通过文件ID删除文件
      *
-     * @param fileidList
+     * @param fileIdList
      */
-    void deleteFileByIds(List<Integer> fileidList);
+    void deleteFileByIds(List<Integer> fileIdList);
 
     /**
      * 通过路径更新文件
      *
-     * @param oldfilepath
-     * @param newfilepath
-     * @param filename
-     * @param extendname
+     * @param oldFilePath
+     * @param newFilePath
+     * @param fileName
+     * @param extendName
      */
-    void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname);
+    void updateFilepathByFilepath(String oldFilePath, String newFilePath, String fileName, String extendName);
 
     /**
      * 通过拓展名查询文件

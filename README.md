@@ -294,7 +294,10 @@
 - [x] 前端增加用户个人中心
 - [x] 增加一个FAQ常见问题文档
 - [x] 集成表单构建页面，来源于[RuoYi](https://gitee.com/y_project/RuoYi)
-- [ ] 增加博客详情页目录导航，来源于[vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog)
+- [x] 增加博客详情页目录导航，来源于[vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog)
+- [ ] 资源管理页面集成网盘管理
+- [ ] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
+- [ ] 使用Sentinel做服务限流和熔断
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块

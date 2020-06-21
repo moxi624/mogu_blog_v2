@@ -69,6 +69,7 @@ public class BaseSQLConf {
 
     public final static String File_TYPE = "file_type";
     public final static String EXTEND_NAME = "extend_name";
+    public final static String IS_DIR = "is_dir";
 
 
 }
