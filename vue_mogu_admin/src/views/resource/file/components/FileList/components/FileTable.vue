@@ -105,15 +105,14 @@
           ></i>
         </template>
         <template slot-scope="scope">
-          <div v-if="operaColumnExpand">
+          <div>
             <el-button type="danger" size="mini" @click.native="deleteFile(scope.row)" v-permission="'/networkDisk/delete'">删除</el-button>
             <el-button type="primary" size="mini" @click.native="showMoveFileDialog(scope.row)" v-permission="'/networkDisk/move'">移动</el-button>
-            <el-button type="success" size="mini" v-if="scope.row.isdir === 0">
+            <el-button type="success" size="mini" v-if="scope.row.isDir === 0">
               <a
                 target="_blank"
                 style="display: block;color: inherit;"
-                :href="'api' + scope.row.fileUrl"
-                :download="scope.row.fileName+'.'+scope.row.extendName"
+                v-download="scope.row.fileUrl"
               >下载</a>
             </el-button>
             <el-button
@@ -123,28 +122,6 @@
               v-if="scope.row.extendname=='zip'"
             >解压缩</el-button>
           </div>
-          <el-dropdown trigger="click" v-else>
-            <el-button size="mini">
-              操作
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="deleteFile(scope.row)">删除</el-dropdown-item>
-              <el-dropdown-item @click.native="showMoveFileDialog(scope.row)">移动</el-dropdown-item>
-              <el-dropdown-item
-                v-if="scope.row.extendname === 'zip'"
-                @click.native="unzipFile(scope.row)"
-              >解压缩</el-dropdown-item>
-              <el-dropdown-item v-if="scope.row.isdir === 0">
-                <a
-                  target="_blank"
-                  style="display: block;color: inherit;"
-                  :href="'api' + scope.row.fileurl"
-                  :download="scope.row.filename+'.'+scope.row.extendname"
-                >下载</a>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>

@@ -17,8 +17,7 @@
       target="_blank"
       v-for="(item,index) in selectionFile"
       :key="index"
-      :href="'api' + item.fileurl"
-      :download="item.filename+'.' + item.extendname"
+      v-download="item.fileUrl"
       :title="'downloadLink' + index"
       :ref="'downloadLink' + index"
     ></a>
@@ -34,8 +33,6 @@
         ref="upload"
         name="filedatas"
         :action="uploadPictureHost"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
         :data="otherData"
         :on-success = "fileSuccess"
         multiple>
@@ -141,12 +138,6 @@ export default {
         this.filePath = this.$route.query.filepath
         this.otherData.filePath = this.$route.query.filepath
       }
-    },
-    handlePreview: function() {
-
-    },
-    handleRemove: function() {
-
     },
     submitNormalUpload: function() {
       console.log();
@@ -265,8 +256,14 @@ export default {
     //  批量操作：下载按钮
     downloadSelectedFile() {
       for (let i = 0; i < this.selectionFile.length; i++) {
-        let name = 'downloadLink' + i
-        this.$refs[name][0].click()
+        console.log("选中的文件", this.selectionFile[i]);
+        // 如果下载的是文件夹，那么不作处理
+        if(this.selectionFile[i].isDir == 1) {
+          this.$commonUtil.message.error("文件夹无法下载");
+        } else {
+          let name = 'downloadLink' + i
+          this.$refs[name][0].click()
+        }
       }
     }
   }
