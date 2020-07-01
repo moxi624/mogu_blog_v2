@@ -38,7 +38,7 @@ public class ElasticSearchService {
     public ESBlogIndex buidBlog(Blog eblog) {
 
         //搜索字段
-        String all = eblog.getTitle() + " " + eblog.getSummary();
+        String all = eblog.getTitle() + " " + eblog.getSummary() + " " + eblog.getContent();
 
         //构建blog对象
         ESBlogIndex blog = new ESBlogIndex();
