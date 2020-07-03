@@ -159,5 +159,13 @@ ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 C
  在t_web_config表，增加登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）
  @date 2020年2月12日10:49:56
 */
-ALTER TABLE  t_web_config ADD login_type_list VARCHAR(255) COMMENT "登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）"
+ALTER TABLE  t_web_config ADD login_type_list VARCHAR(255) COMMENT "登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）";
+
+
+
+/*
+   外部URL，菜单栏点击打开新的页面
+*/
+ALTER TABLE  t_category_menu ADD is_jump_external_url tinyint(1) DEFAULT 0 COMMENT "是否跳转外部链接 0：否，1：是(如果跳转外链，那么路由则为外部url)";
+
 

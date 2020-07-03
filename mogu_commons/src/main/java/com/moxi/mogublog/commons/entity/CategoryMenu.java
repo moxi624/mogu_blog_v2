@@ -3,6 +3,9 @@ package com.moxi.mogublog.commons.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
+import com.moxi.mougblog.base.validator.annotion.NotBlank;
+import com.moxi.mougblog.base.validator.group.Insert;
+import com.moxi.mougblog.base.validator.group.Update;
 import lombok.Data;
 
 import java.util.List;
@@ -65,6 +68,11 @@ public class CategoryMenu extends SuperEntity<CategoryMenu> implements Comparabl
      * 是否显示  1: 是  0: 否
      */
     private Integer isShow;
+
+    /**
+     * 是否跳转外部URL
+     */
+    private Integer isJumpExternalUrl;
 
     /**
      * 父菜单

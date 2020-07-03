@@ -55,23 +55,15 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="160" align="center">
-                <template slot-scope="scope_child">
-                  <span>{{ scope_child.row.createTime }}</span>
+              <el-table-column width="120" align="center">
+                <template slot-scope="scope">
+                  <el-tag v-for="item in jumpExternalDictList" :key="item.uid" v-if="scope.row.isJumpExternalUrl == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
                 </template>
               </el-table-column>
 
-              <el-table-column label width="100" align="center">
+              <el-table-column label width="160" align="center">
                 <template slot-scope="scope_child">
-                  <template v-if="scope_child.row.status == 1">
-                    <span>正常</span>
-                  </template>
-                  <template v-if="scope_child.row.status == 2">
-                    <span>推荐</span>
-                  </template>
-                  <template v-if="scope_child.row.status == 0">
-                    <span>已删除</span>
-                  </template>
+                  <span>{{ scope_child.row.createTime }}</span>
                 </template>
               </el-table-column>
 
@@ -130,23 +122,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="是否跳转外链" width="120" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <el-tag v-for="item in jumpExternalDictList" :key="item.uid" v-if="scope.row.isJumpExternalUrl == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100" align="center">
+      <el-table-column label="创建时间" width="160" align="center">
         <template slot-scope="scope">
-          <template v-if="scope.row.status == 1">
-            <span>正常</span>
-          </template>
-          <template v-if="scope.row.status == 2">
-            <span>推荐</span>
-          </template>
-          <template v-if="scope.row.status == 0">
-            <span>已删除</span>
-          </template>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
@@ -217,12 +201,18 @@
         </el-form-item>
 
         <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
-          <el-input v-model="form.url" auto-complete="off"></el-input>
+          <el-input v-model="form.url" placeholder="跳转外链时，路由为外部URL" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="是否显示" :label-width="formLabelWidth" prop="isShow">
           <el-radio-group v-model="form.isShow" size="small">
             <el-radio v-for="item in yesNoDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="是否跳转外链" :label-width="formLabelWidth" prop="isShow">
+          <el-radio-group v-model="form.isJumpExternalUrl" size="small">
+            <el-radio v-for="item in jumpExternalDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -270,7 +260,9 @@ export default {
       isEditForm: false,
       menuLevelDictList: [], //菜单等级字典
       yesNoDictList: [], // 是否字典
+      jumpExternalDictList: [], // 是否字典
       yesNoDefault: null,
+      jumpExternalDefault: null,
       form: {
         uid: null,
         name: "",
@@ -333,14 +325,18 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-      var dictTypeList =  ['sys_menu_level', 'sys_yes_no']
+      var dictTypeList =  ['sys_menu_level', 'sys_yes_no', 'sys_jump_external']
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == "success") {
           var dictMap = response.data;
           this.menuLevelDictList = dictMap.sys_menu_level.list
           this.yesNoDictList = dictMap.sys_yes_no.list
+          this.jumpExternalDictList = dictMap.sys_jump_external.list
           if(dictMap.sys_yes_no.defaultValue) {
             this.yesNoDefault = parseInt(dictMap.sys_yes_no.defaultValue);
+          }
+          if(dictMap.sys_jump_external.defaultValue) {
+            this.jumpExternalDefault = parseInt(dictMap.sys_jump_external.defaultValue);
           }
 
         }
@@ -355,7 +351,8 @@ export default {
         url: "",
         sort: "",
         menuType: 0, //菜单类型  菜单
-        isShow: this.yesNoDefault
+        isShow: this.yesNoDefault,
+        isJumpExternalUrl: this.jumpExternalDefault
       };
       return formObject;
     },

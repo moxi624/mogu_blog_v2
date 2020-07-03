@@ -68,4 +68,10 @@ public class CategoryMenuVO extends BaseVO<CategoryMenuVO> {
     @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer isShow;
 
+    /**
+     * 是否跳转外部URL，如果是，那么路由为外部的链接
+     */
+    @IntegerNotNull(groups = {Insert.class, Update.class})
+    private Integer isJumpExternalUrl;
+
 }

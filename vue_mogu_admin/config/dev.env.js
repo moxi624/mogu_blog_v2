@@ -14,6 +14,7 @@ module.exports = merge(prodEnv, {
   SPRING_BOOT_ADMIN: '"http://localhost:8606/wallboard"',
   SOLR_API: '"http://localhost:8080/solr"',
   Zipkin_Admin: '"http://localhost:9411/zipkin/"',
+  SENTINEL_ADMIN: '"http://localhost:8070/sentinel/"',
   ELASTIC_SEARCH: '"http://localhost:5601"',
   EUREKA_API: '"http://localhost:8761"',
   RABBIT_MQ_ADMIN: '"http://localhost:15672"',
