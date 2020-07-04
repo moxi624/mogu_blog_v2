@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     goTo: function(child) {
-      console.log("goto", child)
       if(child.isJumpExternalUrl == 1) {
         window.open(child.url)
       } else {
