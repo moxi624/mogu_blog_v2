@@ -20,15 +20,5 @@ module.exports = merge(prodEnv, {
   RABBIT_MQ_ADMIN: '"http://localhost:15672"',
   DRUID_ADMIN: '"http://localhost:8601/druid/login.html"',
   BLOG_WEB_URL: '"http://localhost:9527"',
-  // 使用七牛云，不需要添加图片前缀
-  BASE_IMAGE_URL: '""',
-  // 使用本地存储服务
-  // BASE_IMAGE_URL: '"http://localhost:8600"',
-
-  //开发环境
-  // ADMIN_API: '"http://localhost:8080/mogu_admin"',
-  // PICTURE_API: '"http://localhost:8080/mogu_picture"',
-  // WEB_API: '"http://localhost:8080/mogu_web"',
-  // SOLR_API: '"http://localhost:8080/solr"'
 
 })

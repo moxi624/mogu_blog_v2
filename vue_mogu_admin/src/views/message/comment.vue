@@ -41,7 +41,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.user"
-            :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            :src="scope.row.user.photoUrl"
             onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
             style="width: 100px;height: 100px;"
           >
@@ -153,7 +153,6 @@ export default {
       }, //查询参数
       multipleSelection: [], //多选，用于批量删除
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       keyword: "",
       currentPage: 1,

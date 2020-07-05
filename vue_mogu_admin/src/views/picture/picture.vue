@@ -28,7 +28,7 @@
         >
           <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
           <el-image
-            :src="BASE_IMAGE_URL + picture.pictureUrl"
+            :src="picture.pictureUrl"
             style="cursor:pointer"
             fit="scale-down"
             @click="showPicture(picture.pictureUrl)"
@@ -43,7 +43,7 @@
                 <el-button
                   size="mini"
                   icon="el-icon-copy-document"
-                  @click="copyUrl(BASE_IMAGE_URL + picture.pictureUrl)"
+                  @click="copyUrl(picture.pictureUrl)"
                 />
               </el-tooltip>
 
@@ -52,7 +52,7 @@
                   type="primary"
                   size="mini"
                   icon="el-icon-document-copy"
-                  @click="copyMarkdownUrl(BASE_IMAGE_URL + picture.pictureUrl, BASE_IMAGE_URL + picture.pictureUrl)"
+                  @click="copyMarkdownUrl(picture.pictureUrl, picture.pictureUrl)"
                 >
                 </el-button>
               </el-tooltip>
@@ -148,7 +148,6 @@ export default {
   },
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       dialogImageUrl: "", //图片显示地址
       checkedPicture: {}, // 单选的图片
       pictureCropperVisible: false, // 裁剪图片框是否显示

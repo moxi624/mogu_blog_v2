@@ -18,7 +18,7 @@
 
 	   	<el-table-column label="标题图" width="160" align="center">
 	      <template slot-scope="scope">
-	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 130px;height: 70px;"/>
+	      	<img  v-if="scope.row.photoList" :src="scope.row.photoList[0]" style="width: 130px;height: 70px;"/>
 	      </template>
 	    </el-table-column>
 
@@ -94,7 +94,7 @@
 				<el-form-item label="封面" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -154,7 +154,6 @@ export default {
   },
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       form: {
         uid: null,

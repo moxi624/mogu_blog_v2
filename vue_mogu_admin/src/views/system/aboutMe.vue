@@ -9,7 +9,7 @@
 
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" />
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
             </div>
 
             <div v-else class="uploadImgBody" @click="checkPhoto">
@@ -167,7 +167,6 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       url: process.env.PICTURE_API + "/file/cropperPicture",
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {},
       changePwdForm: {
         oldPwd: "",

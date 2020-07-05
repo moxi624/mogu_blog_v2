@@ -22,7 +22,7 @@
                 @click="deletePhoto()"
                 @mouseover="icon = true"
               ></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]">
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]">
             </div>
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -81,7 +81,7 @@
                   :on-success="fileSuccess_ali"
                   :data="otherData"
                 >
-                  <img v-if="form.aliPayPhoto" :src="BASE_IMAGE_URL + form.aliPayPhoto" class="avatar">
+                  <img v-if="form.aliPayPhoto" :src="form.aliPayPhoto" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
@@ -98,7 +98,7 @@
                   :on-success="fileSuccess_weixin"
                   :data="otherData"
                 >
-                  <img v-if="form.weixinPayPhoto" :src="BASE_IMAGE_URL + form.weixinPayPhoto" class="avatar">
+                  <img v-if="form.weixinPayPhoto" :src="form.weixinPayPhoto" class="avatar">
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
@@ -210,7 +210,6 @@ import {getListByDictType} from "@/api/sysDictData"
 export default {
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {
         name: "",
         title: "",

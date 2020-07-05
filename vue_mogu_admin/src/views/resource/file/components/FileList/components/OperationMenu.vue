@@ -64,7 +64,6 @@ export default {
   },
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       filePath: "/",
       dialogFormVisible: false,
       fileTree: [],
