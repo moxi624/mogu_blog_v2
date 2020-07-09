@@ -70,9 +70,9 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="160" align="center">
-                <template slot-scope="scope_child">
-                  <span>{{ scope_child.row.createTime }}</span>
+              <el-table-column width="100" align="center">
+                <template slot-scope="scope">
+                  <el-tag type="warning">{{ scope.row.sort }}</el-tag>
                 </template>
               </el-table-column>
 
@@ -135,7 +135,6 @@
       <el-table-column label="图标" width="100" align="center">
         <template slot-scope="scope">
           <i :class="scope.row.icon"></i>
-<!--          <span>{{ scope.row.icon }}</span>-->
         </template>
       </el-table-column>
 
@@ -151,9 +150,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="排序" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
         </template>
       </el-table-column>
 
@@ -235,6 +234,10 @@
           </el-radio-group>
         </el-form-item>
 
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -281,7 +284,7 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: ""
+        sort: 0
       },
       loading: false,
       rules: {
@@ -306,7 +309,11 @@ export default {
         ],
         isShow: [
           {required: true, message: '显示字段不能为空', trigger: 'blur'}
-        ]
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ],
       },
       options: []
     };
