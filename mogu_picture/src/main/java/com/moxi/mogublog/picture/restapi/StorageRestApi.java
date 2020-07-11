@@ -29,7 +29,11 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 存储控制类
+ * @author 陌溪
+ * @date 2020年7月11日21:23:14
+ */
 @RestController
 @RequestMapping("/storage")
 public class StorageRestApi {
@@ -180,9 +184,9 @@ public class StorageRestApi {
             return resultJson;
         }
         // 获取文件
-        List<MultipartFile> filedatas = FileUtils.getMultipartFileList(request);
+        List<MultipartFile> fileDatas = FileUtils.getMultipartFileList(request);
         // 上传文件
-        String result = fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
+        String result = fileService.uploadImgs(path, request, fileDatas, qiNiuConfig);
         List<com.moxi.mogublog.picture.entity.File> fileList = WebUtils.getAllList(result, com.moxi.mogublog.picture.entity.File.class);
         // 写入NetworkDisk表中
         filetransferService.uploadFile(request, networkDisk, fileList);
@@ -255,14 +259,12 @@ public class StorageRestApi {
      *
      * @return
      */
-    @RequestMapping(value = "/getstorage", method = RequestMethod.GET)
+    @RequestMapping(value = "/getStorage", method = RequestMethod.GET)
     @ResponseBody
     public RestResult<Storage> getStorage() {
         RestResult<Storage> restResult = new RestResult<>();
-        Storage storage = new Storage();
-        storage.setAdminUid(SysConf.DEFAULT_UID);
-        Storage result = filetransferService.selectStorageByUser(storage);
-        restResult.setData(result);
+        Storage storage = filetransferService.getStorageByAdmin();
+        restResult.setData(storage);
         restResult.setSuccess(true);
         return restResult;
     }

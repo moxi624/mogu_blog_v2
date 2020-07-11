@@ -20,5 +20,5 @@ public class Storage extends SuperEntity<Storage> {
     /**
      * 存储大小
      */
-    private long storagesize;
+    private long storageSize;
 }

@@ -66,7 +66,7 @@ import {
   getfilelist,
   getfiletree,
   getFileTree,
-  getstorage,
+  getStorage,
   moveFile,
   batchMoveFile
 } from '@/api/file.js'
@@ -366,9 +366,9 @@ export default {
 
     //  获取已占用内存
     showStorage() {
-      getstorage().then(res => {
+      getStorage().then(res => {
         if (res.success) {
-          let size = res.data ? res.data.storagesize : 0
+          let size = res.data ? res.data.storageSize : 0
           const B = 1024
           const KB = Math.pow(1024, 2)
           const MB = Math.pow(1024, 3)

@@ -1,15 +1,21 @@
 package com.moxi.mogublog.picture.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.Storage;
+import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.mapper.StorageMapper;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
+import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.est.ESTAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +39,13 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     @Autowired
     NetworkDiskService networkDiskService;
 
+    @Autowired
+    StorageService storageService;
+
     @Override
     public void uploadFile(HttpServletRequest request, NetworkDisk networkDisk, List<File> fileList) {
         List<NetworkDisk> networkDiskList = new ArrayList<>();
+        Long newStorageSize = 0L;
         for (File file : fileList) {
             NetworkDisk saveNetworkDisk = new NetworkDisk();
             saveNetworkDisk.setAdminUid(request.getAttribute(SysConf.ADMIN_UID).toString());
@@ -48,8 +58,14 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
             saveNetworkDisk.setFileOldName(file.getFileOldName());
             saveNetworkDisk.setCreateTime(new Date());
             networkDiskList.add(saveNetworkDisk);
+            newStorageSize += file.getFileSize();
         }
         networkDiskService.saveBatch(networkDiskList);
+
+        Storage storage = getStorageByAdmin();
+        Long storageSize = storage.getStorageSize() + newStorageSize;
+        storage.setStorageSize(storageSize);
+        storageService.updateById(storage);
     }
 
     @Override
@@ -68,7 +84,14 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     }
 
     @Override
-    public Storage selectStorageByUser(Storage storageBean) {
-        return null;
+    public Storage getStorageByAdmin() {
+        HttpServletRequest request = RequestHolder.getRequest();
+        String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
+        QueryWrapper<Storage> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.ADMIN_UID, adminUid);
+        queryWrapper.last("LIMIT 1");
+        Storage reStorage = storageService.getOne(queryWrapper);
+        return reStorage;
     }
 }

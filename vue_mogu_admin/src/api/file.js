@@ -24,9 +24,9 @@ export function getfiletree(params) {
  * 获取存储占用
  * @param data
  */
-export function getstorage(data) {
+export function getStorage(data) {
   return request({
-    url: process.env.PICTURE_API + '/storage/getstorage',
+    url: process.env.PICTURE_API + '/storage/getStorage',
     method: 'get',
     data
   })

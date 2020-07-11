@@ -34,7 +34,7 @@ public class NetworkDiskRestApi {
     @Resource
     NetworkDiskService networkDiskService;
     @Resource
-    StorageService filetransferService;
+    StorageService storageService;
     @Autowired
     FeignUtil feignUtil;
 
@@ -100,9 +100,11 @@ public class NetworkDiskRestApi {
         }
         Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
 
-        for (NetworkDiskVO NetworkDiskVO : networkDiskVOList) {
-            networkDiskService.deleteFile(NetworkDiskVO, qiNiuConfig);
+        for (NetworkDiskVO networkDiskVO : networkDiskVOList) {
+            networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         }
+
+
         result.setData("批量删除文件成功");
         result.setSuccess(true);
         return result;

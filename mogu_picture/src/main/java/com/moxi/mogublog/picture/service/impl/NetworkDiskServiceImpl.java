@@ -3,10 +3,12 @@ package com.moxi.mogublog.picture.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
+import com.moxi.mogublog.picture.entity.Storage;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.mapper.NetworkDiskMapper;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
+import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.MoGuFileUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
@@ -43,10 +45,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     @Autowired
     NetworkDiskService networkDiskService;
     @Autowired
+    StorageService storageService;
+    @Autowired
     FeignUtil feignUtil;
     @Autowired
     QiniuUtil qiniuUtil;
-    //获取上传路径
     @Value(value = "${file.upload.path}")
     private String UPLOAD_PATH;
 
@@ -120,7 +123,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     public void deleteFile(NetworkDiskVO networkDiskVO, Map<String, String> qiNiuConfig) {
         String uid = networkDiskVO.getUid();
         if (StringUtils.isNotEmpty(uid)) {
-
+            log.error("删除的文件不能为空");
         }
         NetworkDisk networkDisk = networkDiskService.getById(uid);
         String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
@@ -181,6 +184,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
                 String qiNiuUrl = networkDisk.getQiNiuUrl();
                 qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
             }
+
+            Storage storage = storageService.getStorageByAdmin();
+            Long storageSize = storage.getStorageSize() - networkDisk.getFileSize();
+            storage.setStorageSize(storageSize > 0 ? storageSize : 0L);
+            storageService.updateById(storage);
         }
     }
 

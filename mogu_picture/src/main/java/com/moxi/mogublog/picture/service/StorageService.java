@@ -49,10 +49,8 @@ public interface StorageService extends SuperService<Storage> {
     void updateStorageBean(Storage storageBean);
 
     /**
-     * 通过User查询存储信息
-     *
-     * @param storageBean
+     * 通过Admin查询存储信息
      * @return
      */
-    Storage selectStorageByUser(Storage storageBean);
+    Storage getStorageByAdmin();
 }
