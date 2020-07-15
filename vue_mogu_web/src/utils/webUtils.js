@@ -50,6 +50,7 @@ export function timeAgo(dateTimeStamp) {
   let week = day * 7;
   let halfamonth = day * 15;
   let month = day * 30;
+  let year = day * 365;
   let now = new Date().getTime();   //获取当前时间毫秒
   dateTimeStamp = dateTimeStamp.substring(0, 18);
   //必须把日期'-'转为'/'
@@ -67,14 +68,18 @@ export function timeAgo(dateTimeStamp) {
   let dayC = diffValue / day;
   let weekC = diffValue / week;
   let monthC = diffValue / month;
+  let yearC = diffValue / year;
 
   minC = parseInt(minC)
   hourC = parseInt(hourC)
   dayC = parseInt(dayC)
   weekC = parseInt(weekC)
   monthC = parseInt(monthC)
+  yearC = parseInt(yearC)
 
-  if (monthC >= 1 && monthC <= 3) {
+  if (yearC > 1) {
+    result = " " + parseInt(yearC) + "年前"
+  } else if (monthC >= 1 && monthC < 12) {
     result = " " + parseInt(monthC) + "月前"
   } else if (weekC >= 1 && weekC <= 4) {
     result = " " + parseInt(weekC) + "周前"
@@ -86,16 +91,6 @@ export function timeAgo(dateTimeStamp) {
     result = " " + parseInt(minC) + "分钟前"
   } else if (diffValue >= 0 && diffValue <= minute) {
     result = "刚刚"
-  } else {
-    let datetime = new Date();
-    datetime.setTime(dateTimeStamp);
-    let Nyear = datetime.getFullYear();
-    let Nmonth = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-    let Ndate = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-    let Nhour = datetime.getHours() < 10 ? "0" + datetime.getHours() : datetime.getHours();
-    let Nminute = datetime.getMinutes() < 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-    let Nsecond = datetime.getSeconds() < 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-    result = Nyear + "-" + Nmonth + "-" + Ndate
   }
   return result;
 }
