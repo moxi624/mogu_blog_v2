@@ -74,7 +74,7 @@
 
 > 【阿里云】 限量爆款低至91.8元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
 >
-> 【腾讯云】星星海SA2云服务器618钜惠，1核2G 首年95元 [点我进入](https://url.cn/WuGZnFBn)
+> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元 [点我进入](https://url.cn/ehxjf5Bv)
 >
 > 【阿里云翼计划】 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
