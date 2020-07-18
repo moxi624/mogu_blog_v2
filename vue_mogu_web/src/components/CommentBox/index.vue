@@ -51,7 +51,6 @@
     },
     data() {
       return {
-        PICTURE_HOST: process.env.PICTURE_HOST,
         comments: [],
         submitting: false,
         value: '',

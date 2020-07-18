@@ -96,7 +96,7 @@
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
         <span class="el-dropdown-link" >
           <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'">
+          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'">
           <img v-if="isLogin&&userInfo.photoUrl==undefined"
                src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>
@@ -192,7 +192,7 @@
               <el-card>
                 <div class="commentList">
                 <span class="left p1">
-                  <img v-if="comment.user" :src="comment.user.photoUrl ? PICTURE_HOST + comment.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                  <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
                   <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
                 </span>
 
@@ -225,7 +225,7 @@
               <el-card>
                 <div class="commentList">
                   <span class="left p1">
-                    <img v-if="reply.user" :src="reply.user.photoUrl ? PICTURE_HOST + reply.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                    <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
                     <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
                   </span>
 
@@ -494,7 +494,6 @@
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
         drawer: false,
-        PICTURE_HOST: process.env.PICTURE_HOST,
         info: {},
         saveTitle: "",
         keyword: "",

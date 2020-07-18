@@ -16,7 +16,7 @@
         <p>感谢您的支持，我会继续努力的!</p>
       </div>
       <div class="shang_payimg">
-        <img :src="PICTURE_HOST + payCode" alt="扫码支持" title="扫一扫">
+        <img :src="payCode" alt="扫码支持" title="扫一扫">
       </div>
       <div class="pay_explain">扫码打赏，你说多少就多少</div>
       <div class="shang_payselect">
@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      PICTURE_HOST: process.env.PICTURE_HOST,
       webConfigData: [],
       showPay: false, //是否显示支付
       payMethod: 1, // 1: 支付宝  2：微信

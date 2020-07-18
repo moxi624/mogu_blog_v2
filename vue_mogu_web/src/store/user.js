@@ -13,7 +13,7 @@ const app = {
     getUserPhoto(state) {
       if(state.isLogin) {
         if(state.userInfo.photoUrl) {
-          return process.env.PICTURE_HOST + state.userInfo.photoUrl
+          return state.userInfo.photoUrl
         } else {
           return "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif";
         }

@@ -11,7 +11,6 @@ module.exports = {
   VUE_MOGU_WEB: '"http://demoweb.moguit.cn"',
   PICTURE_API: '"http://47.115.54.30:8602"',
   WEB_API: '"http://47.115.54.30:8603"',
-  PICTURE_HOST: '""',
   ELASTICSEARCH: '"http://47.115.54.30:8605"',
 
   // 配置测试环境

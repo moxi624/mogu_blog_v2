@@ -3,7 +3,7 @@
     <div v-for="item in comments" :key="item.uid">
       <div class="commentList">
         <span class="left p1">
-          <img v-if="item.user" :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+          <img v-if="item.user" :src="item.user.photoUrl ? item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
           <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
         </span>
 
@@ -56,7 +56,6 @@
             span: ['class']
           }
         },
-        PICTURE_HOST: process.env.PICTURE_HOST,
         taggleStatue: true,
         submitting: false,
         value: '',
