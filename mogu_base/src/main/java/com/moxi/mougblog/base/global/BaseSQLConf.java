@@ -27,6 +27,14 @@ public class BaseSQLConf {
     public final static String DICT_NAME = "dict_name";
     public final static String DICT_LABEL = "dict_label";
 
+    /**
+     * 参数配置相关
+     */
+    public final static String PARAMS_NAME = "params_name";
+    public final static String PARAMS_KEY = "params_key";
+    public final static String PARAMS_VALUE = "params_value";
+    public final static String PARAMS_TYPE = "params_type";
+
     //user表
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "email";

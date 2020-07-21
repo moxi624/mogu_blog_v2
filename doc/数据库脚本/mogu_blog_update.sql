@@ -169,3 +169,22 @@ ALTER TABLE  t_web_config ADD login_type_list VARCHAR(255) COMMENT "登录方式
 ALTER TABLE  t_category_menu ADD is_jump_external_url tinyint(1) DEFAULT 0 COMMENT "是否跳转外部链接 0：否，1：是(如果跳转外链，那么路由则为外部url)";
 
 
+/*
+	参数配置表
+*/
+
+CREATE TABLE `t_sys_params` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `params_type` varchar(1) NOT NULL DEFAULT '1' COMMENT '配置类型 是否系统内置(1:，是 0:否)',  
+  `params_name` varchar(255) DEFAULT NULL COMMENT '参数名称',
+  `params_key` varchar(255) DEFAULT NULL COMMENT '参数键名',
+  `params_value` varchar(255) DEFAULT NULL COMMENT '参数键值',  
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='参数配置表'
+
+

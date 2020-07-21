@@ -7,8 +7,8 @@ import request from '@/utils/request'
 export function getAdminList(params) {
   return request({
     url: process.env.ADMIN_API + '/admin/getList',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 
@@ -32,7 +32,7 @@ export function deleteAdmin(params) {
   return request({
     url: process.env.ADMIN_API + '/admin/delete',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -40,7 +40,7 @@ export function restPwdAdmin(params) {
   return request({
     url: process.env.ADMIN_API + '/admin/restPwd',
     method: 'post',
-    params
+    data: params
   })
 }
 
@@ -51,8 +51,8 @@ export function restPwdAdmin(params) {
 export function getOnlineAdminList(params) {
   return request({
     url: process.env.ADMIN_API + '/admin/getOnlineAdminList',
-    method: 'get',
-    params
+    method: 'post',
+    data: params
   })
 }
 

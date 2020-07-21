@@ -30,12 +30,12 @@
           </el-form-item>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="网站名称" prop="oldPwd">
                 <el-input v-model="form.name" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="标题" prop="newPwd1">
                 <el-input v-model="form.title" style="width: 400px"></el-input>
               </el-form-item>
@@ -43,12 +43,12 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="关键字" prop="newPwd2">
                 <el-input v-model="form.keyword" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="描述" prop="newPwd1">
                 <el-input v-model="form.summary" style="width: 400px"></el-input>
               </el-form-item>
@@ -56,12 +56,12 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="作者" prop="newPwd2">
                 <el-input v-model="form.author" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="备案号" prop="newPwd2">
                 <el-input v-model="form.recordNum" style="width: 400px"></el-input>
               </el-form-item>
@@ -69,7 +69,7 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="3">
+            <el-col :span="4">
               <el-form-item label="阿里支付">
                 <el-upload
                   class="avatar-uploader"
@@ -86,7 +86,7 @@
                 </el-upload>
               </el-form-item>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="4">
               <el-form-item label="微信支付">
                 <el-upload
                   class="avatar-uploader"

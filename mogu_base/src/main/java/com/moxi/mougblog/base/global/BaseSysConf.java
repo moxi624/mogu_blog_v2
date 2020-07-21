@@ -171,4 +171,7 @@ public class BaseSysConf {
     public static final String CONTENT = "content";
     public static final String TARGET = "target";
 
+    // 参数配置相关
+    public static final String SYS_DEFAULT_PASSWORD = "SYS_DEFAULT_PASSWORD";
+
 }

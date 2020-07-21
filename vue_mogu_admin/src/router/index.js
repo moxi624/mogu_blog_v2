@@ -252,6 +252,12 @@ export const constantRouterMap = [
         name: '系统配置',
         component: () => import('@/views/system/systemConfig'),
         meta: { title: '系统配置', icon: 'web' }
+      },
+      {
+        path: 'sysParams',
+        name: '参数配置',
+        component: () => import('@/views/system/sysParams'),
+        meta: { title: '参数配置', icon: 'web' }
       }
     ]
   },

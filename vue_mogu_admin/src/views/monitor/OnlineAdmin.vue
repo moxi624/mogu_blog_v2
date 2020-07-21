@@ -109,7 +109,6 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getOnlineAdminList(params).then(response => {
-
         this.tableData = response.data;
         this.currentPage = response.data.current;
         this.pageSize = response.data.size;

@@ -138,7 +138,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="URL" width="200" align="center">
+      <el-table-column label="路由" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
@@ -182,7 +182,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="按钮名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" auto-complete="off"></el-input>
+          <el-input v-model="form.name" placeholder="请输入按钮名称" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
@@ -212,20 +212,20 @@
             :options="options"
             placeholder="请选择父菜单"
             v-model="buttonParentUid"
-            :props="{ checkStrictly: true }"
+            :props="{ checkStrictly: false }"
             clearable></el-cascader>
         </el-form-item>
 
         <el-form-item label="按钮介绍" :label-width="formLabelWidth" prop="summary">
-          <el-input v-model="form.summary" auto-complete="off"></el-input>
+          <el-input v-model="form.summary" placeholder="请输入按钮简介" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="图标" :label-width="formLabelWidth" prop="icon" v-if="form.menuType == 0">
           <el-input v-model="form.icon" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="URL" :label-width="formLabelWidth" prop="url">
-          <el-input v-model="form.url" auto-complete="off"></el-input>
+        <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
+          <el-input v-model="form.url" placeholder="路由对应的是前端router表中的路径" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="是否显示" :label-width="formLabelWidth" prop="isShow">
@@ -397,9 +397,10 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: "",
+        sort: 0,
         menuLevel: 3,
         isShow: this.yesNoDefault,
+        isJumpExternalUrl: 0,
         menuType: 1
       };
       return formObject;

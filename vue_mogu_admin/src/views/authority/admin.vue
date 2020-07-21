@@ -124,12 +124,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-              <el-input v-model="form.userName"></el-input>
+              <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="昵称" :label-width="formLabelWidth">
-              <el-input v-model="form.nickName"></el-input>
+              <el-input v-model="form.nickName" placeholder="请输入昵称"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -137,7 +137,7 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="角色名" :label-width="formLabelWidth">
-              <el-select v-model="form.roleUid" placeholder="请选择">
+              <el-select v-model="form.roleUid" placeholder="请选择角色名">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.uid"
@@ -157,12 +157,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-              <el-input v-model="form.email" ></el-input>
+              <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
-              <el-input v-model="form.mobile" ></el-input>
+              <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -170,12 +170,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="QQ号码" :label-width="formLabelWidth" prop="qqNumber">
-              <el-input v-model="form.qqNumber" ></el-input>
+              <el-input v-model="form.qqNumber" placeholder="请输入QQ号码"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="职业" :label-width="formLabelWidth">
-              <el-input v-model="form.occupation" ></el-input>
+              <el-input v-model="form.occupation" placeholder="请输入职业"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -272,10 +272,10 @@ export default {
   },
   methods: {
     adminList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {}
+      params.keyword = this.keyword
+      params.currentPage = this.currentPage
+      params.pageSize = this.pageSize
       getAdminList(params).then(response => {
         if(response.code == "success") {
           this.tableData = response.data.records;
@@ -310,11 +310,6 @@ export default {
         this.roleOptions = response.data.records;
       });
 
-    },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
-      console.log(this.photoVisible);
     },
     getChooseData(data) {
       var that = this;
@@ -380,14 +375,14 @@ export default {
     },
     handRest: function(row) {
       var that = this;
-      this.$confirm("此操作将会将该用户密码重置, 是否继续?", "提示", {
+      this.$confirm("此操作将会将该用户密码重置为默认密码, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {}
+          params.uid = row.uid
           restPwdAdmin(params).then(response => {
             if (response.code == "success") {
               that.$message({
