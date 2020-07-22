@@ -106,16 +106,13 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="头像" :label-width="formLabelWidth">
+
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
           <div class="imgBody" v-if="form.photoList">
-            <i
-              class="el-icon-error inputClass"
-              v-show="icon"
-              @click="deletePhoto()"
-              @mouseover="icon = true"
-            ></i>
-            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]">
+            <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
           </div>
+
           <div v-else class="uploadImgBody" @click="checkPhoto">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </div>
@@ -187,14 +184,16 @@
       </div>
     </el-dialog>
 
-    <CheckPhoto
-      @choose_data="getChooseData"
-      @cancelModel="cancelModel"
-      :photoVisible="photoVisible"
-      :photos="photoList"
-      :files="fileIds"
-      :limit="1"
-    ></CheckPhoto>
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
 
   </div>
 </template>
@@ -211,14 +210,14 @@ import {
 
 import { getRoleList } from "@/api/role";
 import {getListByDictType} from "@/api/sysDictData"
-
-
-import CheckPhoto from "../../components/CheckPhoto";
+import AvatarCropper from '@/components/AvatarCropper'
 
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
+      // 图片上传路径
+      url: process.env.PICTURE_API + "/file/cropperPicture",
       tableData: [],
       roleOptions: [], //角色候选框
       loading: false, //搜索框加载状态
@@ -233,9 +232,9 @@ export default {
       formLabelWidth: "120px",
       isEditForm: false,
       form: {},
-      photoVisible: false, //控制图片选择器的显示
+      imagecropperKey: 0,
+      imagecropperShow: false, //控制图片选择器的显示
       photoList: [],
-      fileIds: "",
       icon: false, //控制删除图标的显示
       genderDictList: [], //字典列表
       rules: {
@@ -263,7 +262,7 @@ export default {
     };
   },
   components: {
-    CheckPhoto
+    AvatarCropper
   },
   created() {
     this.getDictList();
@@ -311,30 +310,27 @@ export default {
       });
 
     },
-    getChooseData(data) {
-      var that = this;
-      this.photoVisible = false;
-      this.photoList = data.photoList;
-      this.fileIds = data.fileIds;
-      var fileId = this.fileIds.replace(",", "");
-      if (this.photoList.length >= 1) {
-        this.form.fileUid = fileId;
-        this.form.photoList = this.photoList;
-      }
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      let photoList = []
+      photoList.push(resData[0].url);
+      this.form.photoList = photoList;
+      this.form.avatar = resData[0].uid
+      console.log("裁剪成功", this.form)
     },
-    //关闭模态框
-    cancelModel() {
-      this.photoVisible = false;
+    close() {
+      this.imagecropperShow = false
     },
     deletePhoto: function() {
       this.form.photoList = null;
-      this.form.fileUid = "";
+      this.form.ava = "";
       this.icon = false;
     },
     checkPhoto() {
       this.photoList = [];
-      this.fileIds = "";
-      this.photoVisible = true;
+      this.avatar = "";
+      this.imagecropperShow = true;
     },
 
     getFormObject: function() {
@@ -357,11 +353,7 @@ export default {
       this.title = "编辑管理员";
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
-
-      this.fileIds = this.form.avatar;
-
       this.roleValue = [];
       var roleList = [];
       //设置选择的角色列表
@@ -371,7 +363,6 @@ export default {
         });
         this.roleValue = roleList;
       }
-
     },
     handRest: function(row) {
       var that = this;
@@ -448,7 +439,6 @@ export default {
         if(!valid) {
           console.log("校验出错")
         } else {
-          this.form.avatar = this.fileIds;
           if (this.isEditForm) {
             editAdmin(this.form).then(response => {
               console.log(response);
@@ -468,7 +458,6 @@ export default {
             });
           } else {
             addAdmin(this.form).then(response => {
-              console.log(response);
               if (response.code == "success") {
                 this.$message({
                   type: "success",

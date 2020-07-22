@@ -276,6 +276,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
                 }
             }
         }
+        admin.setAvatar(adminVO.getAvatar());
+        admin.setNickName(adminVO.getNickName());
+        admin.setGender(adminVO.getGender());
+        admin.setEmail(adminVO.getEmail());
+        admin.setQqNumber(adminVO.getQqNumber());
+        admin.setGithub(adminVO.getGithub());
+        admin.setGitee(adminVO.getGitee());
+        admin.setOccupation(adminVO.getOccupation());
         admin.setUpdateTime(new Date());
         // 无法直接修改密码，只能通过重置密码完成密码修改
         admin.setPassWord(null);

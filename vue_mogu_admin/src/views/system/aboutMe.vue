@@ -6,7 +6,6 @@
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像">
-
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
               <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
@@ -236,7 +235,6 @@ export default {
       });
     },
     cropSuccess(resData) {
-      console.log("裁剪成功", resData)
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       let photoList = []
