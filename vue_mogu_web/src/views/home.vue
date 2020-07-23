@@ -576,6 +576,10 @@
     watch: {
       $route(to, from) {
         this.getCurrentPageTitle()
+      },
+      // 判断登录状态位是否改变（用于控制弹框）
+      '$store.state.app.loginMessage': function (newFlag, oldFlag) {
+          this.showLogin = true
       }
     },
     created() {

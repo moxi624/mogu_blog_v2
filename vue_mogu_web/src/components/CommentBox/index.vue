@@ -25,7 +25,7 @@
 
 <script>
   import {dateFormat} from '../../utils/webUtils'
-  import {mapGetters} from 'vuex';
+  import {mapGetters, mapMutations} from 'vuex';
   import EmojiPanel from "@/components/EmojiPanel/EmojiPanel.vue";
   export default {
     name: 'CommentBox',
@@ -67,6 +67,8 @@
       this.hideEmojiPanel()
     },
     methods: {
+      //拿到vuex中的写的方法
+      ...mapMutations(['setLoginMessage']),
       vaildCount: function() {
         var count = 1024 - this.value.length;
         if(count <= 0) {
@@ -80,12 +82,15 @@
         let isLogin = this.$store.state.user.isLogin
         console.log("是否登录", isLogin);
         if(!isLogin) {
-
           this.$notify.error({
             title: '警告',
             message: '登录后才可以评论哦~',
             offset: 100
           });
+
+          // 提交消息到弹出登录框
+          this.setLoginMessage(Math.random())
+
           return;
         }
 

@@ -1,4 +1,4 @@
-import {SET_COMMENT_LIST, SET_WEB_CONFIG_DATA, SET_USER_TAG} from "./mutation-types";
+import {SET_COMMENT_LIST, SET_WEB_CONFIG_DATA, SET_USER_TAG, SET_LOGIN_MESSAGE } from "./mutation-types";
 
 const app = {
   // 全局状态
@@ -9,6 +9,8 @@ const app = {
     userTagDictList: [],
     // WebConfig网站配置
     webConfigData: {},
+    // 登录消息，用于控制登录弹框
+    loginMessage: "",
   },
   // getters是对数据的包装，例如对数据进行拼接，或者过滤
   getters: {
@@ -31,7 +33,12 @@ const app = {
     // 设置WebConfig
     [SET_WEB_CONFIG_DATA](state, webConfigData) {
       state.webConfigData = webConfigData
-    }
+    },
+
+    // 设置消息
+    [SET_LOGIN_MESSAGE] (state, loginMessage) {
+      state.loginMessage = loginMessage
+    },
   },
 
   // actions是我们定义的一些操作，正常情况下，我们很少会直接调用mutation方法来改变state
