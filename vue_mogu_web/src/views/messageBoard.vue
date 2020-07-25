@@ -140,7 +140,7 @@
         }
     };
 </script>
-<style>
+<style scoped>
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
@@ -156,6 +156,7 @@
   .emoji-size-small {
     zoom: 0.3;
     margin: 5px;
+    vertical-align: middle;
   }
   .emoji-size-large {
     zoom: 0.5; // emojipanel表情大小

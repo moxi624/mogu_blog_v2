@@ -314,6 +314,7 @@ export default {
   .emoji-size-small {
     zoom: 0.3;
     margin: 5px;
+    vertical-align: middle;
   }
 </style>
 

@@ -80,7 +80,6 @@
       handleSubmit() {
         let info = this.$store.state.user.userInfo
         let isLogin = this.$store.state.user.isLogin
-        console.log("是否登录", isLogin);
         if(!isLogin) {
           this.$notify.error({
             title: '警告',

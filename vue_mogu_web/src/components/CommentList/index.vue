@@ -21,7 +21,7 @@
           <div class="rightBottom">
             <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
             <el-link class="b1" :underline="false" @click="report(item)">举报</el-link>
-            <el-link class="b1" :underline="false" @click="delComment(item)">删除</el-link>
+            <el-link class="b1" v-if="$store.state.user.isLogin && $store.state.user.userInfo.uid == item.userUid" :underline="false" @click="delComment(item)">删除</el-link>
           </div>
 
           <div class="rightCommentList">

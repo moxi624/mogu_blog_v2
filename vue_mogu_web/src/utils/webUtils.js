@@ -48,7 +48,6 @@ export function timeAgo(dateTimeStamp) {
   let hour = minute * 60;
   let day = hour * 24;
   let week = day * 7;
-  let halfamonth = day * 15;
   let month = day * 30;
   let year = day * 365;
   let now = new Date().getTime();   //获取当前时间毫秒
@@ -77,7 +76,7 @@ export function timeAgo(dateTimeStamp) {
   monthC = parseInt(monthC)
   yearC = parseInt(yearC)
 
-  if (yearC > 1) {
+  if (monthC > 12) {
     result = " " + parseInt(yearC) + "年前"
   } else if (monthC >= 1 && monthC < 12) {
     result = " " + parseInt(monthC) + "月前"
@@ -92,5 +91,6 @@ export function timeAgo(dateTimeStamp) {
   } else if (diffValue >= 0 && diffValue <= minute) {
     result = "刚刚"
   }
+  console.log("得到的diffValue", diffValue)
   return result;
 }

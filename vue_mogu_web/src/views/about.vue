@@ -203,6 +203,7 @@
   .emoji-size-small {
     zoom: 0.3;
     margin: 5px;
+    vertical-align: middle;
   }
   .emoji-size-large {
     zoom: 0.5; // emojipanel表情大小
