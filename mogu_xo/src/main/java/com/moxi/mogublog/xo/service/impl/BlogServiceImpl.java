@@ -1374,7 +1374,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             // 给标题和简介设置高亮
             item.setTitle(getHitCode(item.getTitle(), keyword));
-            item.setSummary(getHitCode(item.getTitle(), keyword));
+            item.setSummary(getHitCode(item.getSummary(), keyword));
 
         });
 
