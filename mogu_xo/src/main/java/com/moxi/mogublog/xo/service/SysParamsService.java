@@ -37,6 +37,13 @@ public interface SysParamsService extends SuperService<SysParams> {
     public SysParams getSysParamsByKey(String paramsKey);
 
     /**
+     * 通过 参数键名 获取参数值
+     * @param paramsKey
+     * @return
+     */
+    public String getSysParamsValueByKey(String paramsKey);
+
+    /**
      * 新增参数配置
      *
      * @param sysParamsVO

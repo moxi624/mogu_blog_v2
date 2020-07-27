@@ -118,5 +118,10 @@ public class BaseRedisConf {
      */
     public final static String TAG_CLICK = "TAG_CLICK";
 
+    /**
+     * 系统参数配置
+     */
+    public final static String SYSTEM_PARAMS = "SYSTEM_PARAMS";
+
 
 }

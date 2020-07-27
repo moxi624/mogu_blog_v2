@@ -224,10 +224,10 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
         }
 
-        SysParams sysParams = sysParamsService.getSysParamsByKey(SysConf.SYS_DEFAULT_PASSWORD);
-
-        if (sysParams == null || StringUtils.isEmpty(sysParams.getParamsValue())) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+        String defaultPasswordKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + SysConf.SYS_DEFAULT_PASSWORD;
+        String defaultPassword = sysParamsService.getSysParamsValueByKey(defaultPasswordKey);
+        if (StringUtils.isEmpty(defaultPassword)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
         }
 
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
@@ -246,7 +246,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             admin.setStatus(EStatus.ENABLE);
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             //设置默认密码
-            admin.setPassWord(encoder.encode(sysParams.getParamsValue()));
+            admin.setPassWord(encoder.encode(defaultPassword));
             adminService.save(admin);
             //这里需要通过SMS模块，发送邮件告诉初始密码
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
@@ -345,13 +345,13 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
     @Override
     public String resetPwd(AdminVO adminVO) {
-        SysParams sysParams = sysParamsService.getSysParamsByKey(SysConf.SYS_DEFAULT_PASSWORD);
-        if (sysParams == null || StringUtils.isEmpty(sysParams.getParamsValue())) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+        String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
+        if (StringUtils.isEmpty(defaultPassword)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
         }
         Admin admin = adminService.getById(adminVO.getUid());
         PasswordEncoder encoder = new BCryptPasswordEncoder();
-        admin.setPassWord(encoder.encode(sysParams.getParamsValue()));
+        admin.setPassWord(encoder.encode(defaultPassword));
         admin.setUpdateTime(new Date());
         admin.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);

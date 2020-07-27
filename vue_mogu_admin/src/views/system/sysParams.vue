@@ -271,15 +271,14 @@ export default {
     },
     handleDelete: function(row) {
       var that = this;
-      this.$confirm("此操作将把友链删除, 是否继续?", "提示", {
+      this.$confirm("此操作将把参数配置删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          let params = {};
-          params.uid = row.uid;
-          deleteLink(params).then(response => {
+          let list = [row]
+          deleteBatchSysParams(list).then(response => {
             console.log(response);
             this.$message({
               type: "success",

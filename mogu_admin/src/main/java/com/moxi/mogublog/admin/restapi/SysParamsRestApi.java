@@ -82,10 +82,8 @@ public class SysParamsRestApi {
     @OperationLogger(value = "批量删除参数配置")
     @ApiOperation(value = "批量删除参数配置", notes = "批量删除参数配置", response = String.class)
     @PostMapping("/deleteBatch")
-    public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody List<SysParamsVO> SysParamsVoList, BindingResult result) {
+    public String delete(@RequestBody List<SysParamsVO> SysParamsVoList, BindingResult result) {
 
-        // 参数校验
-        ThrowableUtils.checkParamArgument(result);
         return SysParamsService.deleteBatchSysParams(SysParamsVoList);
     }
 }
