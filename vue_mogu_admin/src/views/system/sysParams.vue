@@ -20,14 +20,14 @@
         placeholder="请输入参数键名"
       ></el-input>
 
-      <el-select v-model="queryParams.paramsType" clearable placeholder="系统内置" style="width:140px">
-        <el-option
-          v-for="item in paramsTypeDictList"
-          :key="item.uid"
-          :label="item.dictLabel"
-          :value="item.dictValue"
-        ></el-option>
-      </el-select>
+<!--      <el-select v-model="queryParams.paramsType" clearable placeholder="系统内置" style="width:140px">-->
+<!--        <el-option-->
+<!--          v-for="item in paramsTypeDictList"-->
+<!--          :key="item.uid"-->
+<!--          :label="item.dictLabel"-->
+<!--          :value="item.dictValue"-->
+<!--        ></el-option>-->
+<!--      </el-select>-->
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/link/getList'">查找</el-button>
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/link/add'">添加参数</el-button>
@@ -56,7 +56,7 @@
 
       <el-table-column label="参数键值" width="200" align="center">
         <template slot-scope="scope">
-          <el-tag type="danger">{{ scope.row.paramsValue }}</el-tag>
+          <span>{{ scope.row.paramsValue }}</span>
         </template>
       </el-table-column>
 

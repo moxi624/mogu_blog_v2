@@ -456,7 +456,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .media-title {
     color: #8492a6;
     font-size: 14px;

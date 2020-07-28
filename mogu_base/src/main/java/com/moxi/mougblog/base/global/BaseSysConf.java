@@ -173,5 +173,15 @@ public class BaseSysConf {
 
     // 参数配置相关
     public static final String SYS_DEFAULT_PASSWORD = "SYS_DEFAULT_PASSWORD";
+    public static final String BLOG_NEW_COUNT = "BLOG_NEW_COUNT";
+    public static final String BLOG_FIRST_COUNT = "BLOG_FIRST_COUNT";
+    public static final String BLOG_SECOND_COUNT = "BLOG_SECOND_COUNT";
+    public static final String BLOG_THIRD_COUNT = "BLOG_THIRD_COUNT";
+    public static final String BLOG_FOURTH_COUNT = "BLOG_FOURTH_COUNT";
+    public static final String BLOG_HOT_COUNT = "BLOG_HOT_COUNT";
+    public static final String HOT_TAG_COUNT = "HOT_TAG_COUNT";
+    public static final String FRIENDLY_LINK_COUNT = "FRIENDLY_LINK_COUNT";
+    public final static String PROJECT_NAME_ = "PROJECT_NAME";
+
 
 }
