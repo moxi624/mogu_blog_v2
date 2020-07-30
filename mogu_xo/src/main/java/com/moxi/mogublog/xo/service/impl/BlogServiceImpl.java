@@ -1331,7 +1331,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
 
         //给博客增加标签和分类
-        List<Blog> list = blogService.setTagAndSortByBlogList(pageList.getRecords());
+        List<Blog> list = blogService.setTagAndSortAndPictureByBlogList(pageList.getRecords());
         pageList.setRecords(list);
         return pageList;
     }

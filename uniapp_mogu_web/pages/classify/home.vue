@@ -3,7 +3,7 @@
 		<image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg"
 		 mode="widthFix" class="response"></image>
 		<scroll-view scroll-x class="bg-white nav" scroll-with-animation :scroll-left="scrollLeft">
-			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item,index) in activities" :key="index" @tap="tabSelect" :data-id="index">
+			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item, index) in activities" :key="index" @tap="tabSelect" :data-id="index">
 				{{item.sortName}}
 			</view>
 		</scroll-view>
@@ -59,7 +59,7 @@
 				TabCur: 0,
 				scrollLeft: 0,
 				isCard: false,
-				selectBlogUid: "",
+				selectBlogSortUid: "",
 				reverse: false,
 				activities: [], // 所有分类
 				itemByDate: [], // 分类下的博客
@@ -78,9 +78,11 @@
 		},
 		methods: {
 			tabSelect(e) {
-				this.TabCur = e.currentTarget.dataset.id;
+				let index = e.currentTarget.dataset.id;
+				this.TabCur = index
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-				console.log("开始切换")
+				console.log("开始切换", this.activities[index])
+				this.getBlogList(this.activities[index].uid);
 			},
 			loadData: function() {
 				console.log("上拉加载数据", this.newBlogData.length, this.total)
@@ -88,7 +90,7 @@
 					return;
 				}
 				this.currentPage = this.currentPage + 1;
-				this.getBlogList(this.selectBlogUid);
+				this.getBlogList(this.selectBlogSortUid);
 			},
 			blogSortList() {
 				var that = this
@@ -102,9 +104,10 @@
 				})
 			},
 			getBlogList(blogSortUid) {
-			  this.selectBlogUid = blogSortUid;
+			  this.selectBlogSortUid = blogSortUid;
 			  var params = {};
 			  params.blogSortUid = blogSortUid
+			  this.loading = true;
 			  getArticleByBlogSortUid(params).then(response => {
 				console.log("通过分类uid获取文章列表", response)
 				if (response.code == "success") {
@@ -113,6 +116,13 @@
 				  this.pageSize = response.data.size;
 				  this.total = response.data.total;
 				}
+				//全部加载完毕
+				if (this.itemByDate.length >= this.total) {
+				  this.isEnd = true;
+				} else {
+					this.isEnd = false;
+				}
+				this.loading = false;
 			  });
 			},
 		}
@@ -122,5 +132,12 @@
 <style>
 	.page {
 		height: 100vh;
+	}
+	.loadStyle {
+		margin-top: 20rpx;
+		width: 100%;
+		height: 60rpx;
+		text-align: center;		
+		color: #bfbfbf;
 	}
 </style>
