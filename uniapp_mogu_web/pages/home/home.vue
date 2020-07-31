@@ -1,7 +1,6 @@
 <template name="basics">
 	<view>
 		<scroll-view scroll-y class="page" @scrolltolower="loadData">
-
 			<view class="cu-bar search bg-white">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
@@ -17,8 +16,19 @@
 			 indicator-active-color="#0081ff">
 				<swiper-item v-for="(item,index) in fristData" :key="index" :class="cardCur==index?'cur':''">
 					<view class="swiper-item">
+						
+<!-- 						<view class="bg-img bg-mask padding-tb-xl" v-if="item.photoList[0]" :style="{background:'url('+ item.photoList[0] +')'}">
+						  <view class="padding-xl text-white">
+						    <view class="padding-xs text-xl">
+						      钢铁之翼
+						    </view>
+						    <view class="padding-xs">
+						      Only the guilty need fear me.
+						    </view>
+						  </view>
+						</view> -->
+						
 						<image v-if="item.photoList" :src="item.photoList[0]" mode="aspectFill"></image>
-						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
 					</view>
 					<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;"> 
 						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
@@ -29,7 +39,7 @@
 			<!--文章类卡片-->
 			<view class="cu-card case" :class="isCard?'no-card':''">
 				<view class="cu-item shadow" v-for="item in newBlogData" :key="item.uid">
-					<view class="image" style="height: 370rpx;">
+					<view class="image" style="height: 370rpx;" @tap="goInfo(item.uid)">
 						<image v-if="item.photoList" :src="item.photoList[0]" mode="aspectFit"></image>
 						<view class="cu-tag bg-blue">{{item.blogSort.sortName}}</view>
 						<view class="cu-bar bg-shadeBottom"> <text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text></view>
@@ -109,6 +119,12 @@
 			this.getLevelBlog()
 		},
 		methods:{
+			goInfo(blogUid) {
+				console.log("跳转", blogUid)
+				uni.navigateTo({
+					url: '/pages/info/home?blogUid=' + blogUid,
+				});
+			},
 			// cardSwiper
 			cardSwiper(e) {
 				this.cardCur = e.detail.current

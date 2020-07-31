@@ -30,6 +30,10 @@
 		{
 			"path": "pages/my/home",
 			"style": {}
+		},		
+		{
+			"path": "pages/info/home",
+			"style": {}
 		}
 	],
 	"globalStyle": {

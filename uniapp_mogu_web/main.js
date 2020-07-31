@@ -21,9 +21,6 @@ Vue.component('cu-custom',cuCustom)
 
 Vue.config.productionTip = false
 
-// 定义配置
-Vue.prototype.BLOG_WEB_API = 'http://localhost:8603'; 
-
 
 App.mpType = 'app'
 const app = new Vue({
