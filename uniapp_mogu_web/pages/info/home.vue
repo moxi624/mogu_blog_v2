@@ -1,12 +1,18 @@
 <template name="basics">
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true"><block slot="backText">返回</block><block slot="content">博客详情</block></cu-custom>
+
+		<view class="fixed">
+			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
+				<block slot="content" >{{blogData.title}}</block>
+			</cu-custom>
+		</view>
+		
 		<scroll-view scroll-y class="DrawerPage">
-		    <view class="flex-sub text-center margin-sm">
+<!-- 		    <view class="flex-sub text-center margin-sm">
 		      <view class="text-xxxl" v-if="blogData.title != null">
 		        <text class="text-black text-bold" style="font-size: 20px;">{{blogData.title}}</text>
 		      </view>
-		    </view>
+		    </view> -->
 		
 			<view class="text-gray text-sm flex justify-start">
 				<view class="text-gray text-sm" v-for="(tag, index) in blogData.tagList" :key="tag.uid" style="margin-left: 20px;">
@@ -47,7 +53,7 @@
 		        </view>
 		    </view>
 		
-			<jyf-parser class="ck-content margin-sm" v-highlight :html="blogData.content"></jyf-parser>
+			<jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser>
 			
 			<!--以下是评论内容-->
 			<view class="cu-list menu-avatar comment solids-top">

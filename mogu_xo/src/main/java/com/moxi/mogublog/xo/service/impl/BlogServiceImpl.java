@@ -116,7 +116,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (sortUids.size() > 0) {
             sortList = blogSortMapper.selectBatchIds(sortUids);
         }
-        if (tagList.size() > 0) {
+        if (tagUids.size() > 0) {
             tagList = tagMapper.selectBatchIds(tagUids);
         }
         Map<String, BlogSort> sortMap = new HashMap<>();
@@ -1558,8 +1558,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
-        //给博客增加标签和分类
-        list = blogService.setTagAndSortByBlogList(list);
+        //给博客增加标签、分类、图片
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
 
         Map<String, List<Blog>> map = new HashMap<>();
         Iterator iterable = list.iterator();
@@ -1616,8 +1616,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
-        //给博客增加标签和分类
-        list = blogService.setTagAndSortByBlogList(list);
+        //给博客增加标签、分类、图片
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
 
         Map<String, List<Blog>> map = new HashMap<>();
         Iterator iterable = list.iterator();

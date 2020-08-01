@@ -34,6 +34,10 @@
 		{
 			"path": "pages/info/home",
 			"style": {}
+		},		
+		{
+			"path": "pages/search/home",
+			"style": {}
 		}
 	],
 	"globalStyle": {

@@ -1,7 +1,13 @@
 <template name="sort">
 	<view>
-		<image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg"
-		 mode="widthFix" class="response"></image>
+		
+		<swiper class="screen-swiper round-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000"
+		 duration="500">
+			<swiper-item v-for="(item,index) in levelData" :key="index" @tap="goInfo(item.uid)">
+				<image :src="item.photoList[0]" mode="aspectFill"></image>
+			</swiper-item>
+		</swiper>
+		 
 		<scroll-view scroll-x class="bg-white nav" scroll-with-animation :scroll-left="scrollLeft">
 			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item, index) in activities" :key="index" @tap="tabSelect" :data-id="index">
 				{{item.sortName}}
@@ -13,7 +19,7 @@
 		<scroll-view scroll-y class="page" @scrolltolower="loadData">
 			<!--文章类卡片-->
 			<view class="cu-card case" :class="isCard?'no-card':''">
-				<view class="cu-item shadow" v-for="item in itemByDate" :key="item.uid">
+				<view class="cu-item shadow" v-for="item in itemByDate" :key="item.uid" @tap="goInfo(item.uid)">
 					<view class="image" style="height: 370rpx;">
 						<image v-if="item.photoList" :src="item.photoList[0]" mode="aspectFit"></image>
 						<view class="cu-tag bg-blue">{{item.blogSort.sortName}}</view>
@@ -52,17 +58,18 @@
 </template>
 
 <script>
+	import {getBlogByLevel} from "../../api/index";
 	import {getArticleByBlogSortUid, getBlogSortList} from "../../api/classify.js";
 	export default {
 		name: "sort",
 		data() {
 			return {
-				sortList: ["后端开发","学习笔记","技术新闻","慢生活","机器学习","软件推荐"],
 				TabCur: 0,
 				scrollLeft: 0,
 				isCard: false,
 				selectBlogSortUid: "",
 				reverse: false,
+				levelData: [], // 二级推荐博客
 				activities: [], // 所有分类
 				itemByDate: [], // 分类下的博客
 			    currentPage: 1,
@@ -77,8 +84,26 @@
 		},
 		created() {
 			this.blogSortList()
+			this.getLevelBlog()
 		},
 		methods: {
+			getLevelBlog() {
+				var that = this
+				let params = {}
+				params.level = 2;
+				params.useSort = 1;
+				getBlogByLevel(params).then(res =>{					
+					if(res.code == "success") {
+						that.levelData = res.data.records;	
+					}
+				})
+			},
+			goInfo(blogUid) {
+				console.log("跳转", blogUid)
+				uni.navigateTo({
+					url: '/pages/info/home?blogUid=' + blogUid,
+				});
+			},
 			tabSelect(e) {
 				let index = e.currentTarget.dataset.id;
 				this.TabCur = index

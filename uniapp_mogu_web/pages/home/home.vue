@@ -1,40 +1,29 @@
 <template name="basics">
 	<view>
 		<scroll-view scroll-y class="page" @scrolltolower="loadData">
-			<view class="cu-bar search bg-white">
-				<view class="search-form round">
-					<text class="cuIcon-search"></text>
-					<input @focus="InputFocus" @blur="InputBlur" :adjust-position="false" type="text" placeholder="搜索文章" confirm-type="search"></input>
-				</view>
-				<view class="action">
-					<button class="cu-btn bg-green shadow-blur round">搜索</button>
-				</view>
-			</view>
 			 
 			<swiper class="card-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 			 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
 			 indicator-active-color="#0081ff">
 				<swiper-item v-for="(item,index) in fristData" :key="index" :class="cardCur==index?'cur':''">
-					<view class="swiper-item">
-						
-<!-- 						<view class="bg-img bg-mask padding-tb-xl" v-if="item.photoList[0]" :style="{background:'url('+ item.photoList[0] +')'}">
-						  <view class="padding-xl text-white">
-						    <view class="padding-xs text-xl">
-						      钢铁之翼
-						    </view>
-						    <view class="padding-xs">
-						      Only the guilty need fear me.
-						    </view>
-						  </view>
-						</view> -->
-						
+					<view class="swiper-item" @tap="goInfo(item.uid)">						
 						<image v-if="item.photoList" :src="item.photoList[0]" mode="aspectFill"></image>
 					</view>
-					<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;"> 
+					<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;" @tap="goInfo(item.uid)"> 
 						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
 					</view>
 				</swiper-item>
 			</swiper>
+			
+			<view class="cu-bar search bg-white">
+				<view class="search-form round">
+					<text class="cuIcon-search"></text>
+					<input v-model="keyword" :adjust-position="false" type="text" placeholder="搜索文章" confirm-type="search"></input>
+				</view>
+				<view class="action">
+					<button class="cu-btn bg-green shadow-blur round" @click="searcBlog">搜索</button>
+				</view>
+			</view>
 			 
 			<!--文章类卡片-->
 			<view class="cu-card case" :class="isCard?'no-card':''">
@@ -88,6 +77,7 @@
 		},
 		data() {
 			return {
+				keyword: "",
 				fristData: [], // 一级推荐
 				newBlogData: [], // 最新博客
 				isEnd: false, //是否到底底部了
@@ -119,6 +109,19 @@
 			this.getLevelBlog()
 		},
 		methods:{
+			searcBlog() {
+				console.log("搜索博客");
+				if(this.keyword == "") {
+					uni.showToast({
+						icon: "none",
+						title: "搜索内容不能为空",
+					})
+					return;
+				}
+				uni.navigateTo({
+					url: '/pages/search/home?keyword=' + this.keyword,
+				});
+			},
 			goInfo(blogUid) {
 				console.log("跳转", blogUid)
 				uni.navigateTo({

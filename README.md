@@ -59,6 +59,7 @@
 - **RabbitMQ管理页面：** 用户：guest，密码：guest
 - **Eureka管理页面：** 用户：user，密码：password123
 - **蘑菇博客监控页面**：用户：user，密码：password123
+- **Druid初始密码：** 用户：admin，密码：123456
 
 ## 运行配置
 
