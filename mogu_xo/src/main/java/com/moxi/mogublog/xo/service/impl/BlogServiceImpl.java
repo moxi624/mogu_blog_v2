@@ -161,7 +161,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 sortUids.add(item.getBlogSortUid());
             }
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                tagUids.add(item.getTagUid());
+                // tagUid有多个，还需要切分
+                if (StringUtils.isNotEmpty(item.getTagUid())) {
+                    List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), BaseSysConf.FILE_SEGMENTATION);
+                    for (String itemTagUid : tagUidsTemp) {
+                        tagUids.add(itemTagUid);
+                    }
+                }
             }
         });
         String pictureList = null;

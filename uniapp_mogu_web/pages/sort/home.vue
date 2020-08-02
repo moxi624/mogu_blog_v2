@@ -27,7 +27,7 @@
 							<text class="cuIcon-title text-green"></text> {{selectContent}} </view>
 					</view>
 					<view class="cu-list menu-avatar">
-						<view class="cu-item cur" v-for="(item,index) in itemByDate" :key="index" :id="'main-'+index">
+						<view class="cu-item cur" v-for="(item,index) in itemByDate" :key="index" @tap="goInfo(item.uid)">
 							
 							<image class="cu-avatar radius lg" v-if="item.photoList"  :src="item.photoList[0]"></image>
 
@@ -42,10 +42,10 @@
 								</view>
 							</view>
 							<view class="action">
-								<view>
+								<view style="font-size: 12px;">
 									<text class="cuIcon-attentionfill text-grey margin-lr-xs"></text> <span class="text-grey">{{item.clickCount}}</span>
 								</view>
-								<view>
+								<view style="font-size: 12px;">
 									<text class="cuIcon-appreciatefill text-grey margin-lr-xs"></text> <span class="text-grey">{{item.collectCount}}</span>
 								</view>
 							</view>
@@ -61,6 +61,12 @@
 	import {getBlogByLevel} from "../../api/index";
 	import {getArticleByMonth, getSortList} from "../../api/sort.js";
 	export default {
+		props:{
+			isRefresh:{
+				type : String,
+				default: "blogSort"
+			}
+		},
 		data() {
 			return {
 				selectContent: "",
@@ -73,14 +79,22 @@
 				load: true
 			};
 		},
+		watch:{
+			isRefresh:{
+				deep: true,
+				handler(newValue,oldValue){
+					console.log("下拉刷新")
+					this.levelData = []
+					this.list = []
+					this.itemByDate = []
+					this.sortList()
+					this.getLevelBlog()
+				}
+			}
+		},
 		created() {
-			uni.showLoading({
-				title: '加载中...',
-				mask: true
-			});
 			this.sortList()
 			this.getLevelBlog()
-			uni.hideLoading()
 		},
 		methods: {
 			getLevelBlog() {

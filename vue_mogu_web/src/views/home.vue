@@ -642,6 +642,7 @@
           };break;
         }
       },
+
       // 获取评论列表
       getCommentList: function() {
         let params = {}
@@ -655,7 +656,7 @@
         })
       },
 
-      // 获取评论列表
+      // 获取反馈列表
       getFeedback: function() {
         let params = {}
         getFeedbackList(params).then(response => {

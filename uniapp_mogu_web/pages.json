@@ -30,14 +30,44 @@
 		{
 			"path": "pages/my/home",
 			"style": {}
-		},		
+		},
+		{
+			"path": "pages/my/myPraise",
+			"style": {}
+		},
+		{
+			"path": "pages/my/myComment",
+			"style": {}
+		},
+		{
+			"path": "pages/my/myReply",
+			"style": {}
+		},
+		{
+			"path": "pages/my/myAppreciate",
+			"style": {}
+		},
+		{
+			"path": "pages/my/myFeedback",
+			"style": {}
+		},
+		{
+			"path": "pages/my/applyLink",
+			"style": {}
+		},
+		{
+			"path": "pages/my/about",
+			"style": {}
+		},
 		{
 			"path": "pages/info/home",
 			"style": {}
 		},		
 		{
 			"path": "pages/search/home",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {

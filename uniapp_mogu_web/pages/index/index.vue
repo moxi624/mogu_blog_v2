@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<blogHome :isRefresh='isRefresh' v-if="PageCur=='blogHome'"></blogHome>
-		<blogSort v-if="PageCur=='blogSort'"></blogSort>
-		<blogTag v-if="PageCur=='blogTag'"></blogTag>
-		<blogClassify v-if="PageCur=='blogClassify'"></blogClassify>
-		<myCenter v-if="PageCur=='myCenter'"></myCenter>
+		<blogSort :isRefresh='isRefresh' v-if="PageCur=='blogSort'"></blogSort>
+		<blogTag :isRefresh='isRefresh' v-if="PageCur=='blogTag'"></blogTag>
+		<blogClassify :isRefresh='isRefresh' v-if="PageCur=='blogClassify'"></blogClassify>
+		<myCenter :isRefresh='isRefresh' v-if="PageCur=='myCenter'"></myCenter>
 		<view class="cu-bar tabbar bg-white shadow foot">
 			
 			<view class="action" @click="NavChange" data-cur="blogHome">
@@ -61,10 +61,10 @@
 			console.log('隐藏App')
 		},
 		onPullDownRefresh() {
-			this.isRefresh = this.PageCur
+			this.isRefresh =  (new Date()).getTime().toString();
 			setTimeout(function () {
 				uni.stopPullDownRefresh()
-			}, 1000);
+			}, 500);
 		},
 		methods: {
 			NavChange: function(e) {

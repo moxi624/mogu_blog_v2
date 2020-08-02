@@ -94,13 +94,11 @@
 			isRefresh:{
 				deep: true,
 				handler(newValue,oldValue){
-					console.log("改变了值")
-					if(newValue === 0){
-						uni.showToast({
-							title: '首页刷新'
-						});
-						this.$emit("cref",9)
-					}
+					console.log("下拉刷新")
+					this.fristData = []
+					this.newBlogData = []
+					this.getBlogList()
+					this.getLevelBlog()
 				}
 			}
 		},

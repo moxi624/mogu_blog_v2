@@ -215,7 +215,7 @@ export default {
             that.currentPage = response.data.currentPage;
             var blogData = response.data.blogList;
 
-            // 判断搜索的博客是否有
+            // 判断搜索的博客是否有内容
             if(response.data.total <= 0) {
               that.isEnd = true;
               that.loading = false;

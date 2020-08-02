@@ -11,9 +11,13 @@ const send = (url, data = {}, method = 'POST', showLoading = true) => {
             url: url,
             data: data,
             header: (() => {
-                const tokeValue = token.get()
+				
+                // const tokeValue = token.get()
+				const tokeValue = "78801152b6544c5a8c61f63b474bb206"
+				
                 let config = {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    // 'Content-Type': 'application/x-www-form-urlencoded'
+					'Content-Type': 'application/json'
                 }
                 if (tokeValue) {
                     config[appConfig.tokenKey] = tokeValue

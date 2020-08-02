@@ -28,12 +28,13 @@
 					<view class="cu-list menu-avatar">
 						<view class="cu-item" style="height: 40px;">						
 							<view class="content flex-sub">
-								<view class="text-gray text-sm flex justify-between">								
-<!-- 									<view class="text-gray text-sm" v-for="(tag, index) in item.tagList" :key="item.uid + tag.uid" style="margin-left: -100rpx;">										
+								<view class="text-gray text-sm flex justify-between">
+									
+									<view class="text-gray text-sm" v-for="(tag, index) in item.tagList" :key="tag.uid" style="margin-left: -100rpx;">										
 										<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 										<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
 										<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>										
-									</view> -->
+									</view>
 									
 									<view class="text-gray text-sm">
 										<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
@@ -59,7 +60,13 @@
 	import {getBlogByLevel} from "../../api/index";
 	import {getArticleByTagUid, getTagList} from "../../api/tag.js";
 	export default {
-		name: "sort",
+		name: "tag",
+		props:{
+			isRefresh:{
+				type : String,
+				default: "blogTag"
+			}
+		},
 		data() {
 			return {
 				TabCur: 0,
@@ -77,8 +84,18 @@
 				loading: false, //是否正在加载
 			};
 		},
-		onShow() {
-			console.log("success")
+		watch:{
+			isRefresh:{
+				deep: true,
+				handler(newValue,oldValue){
+					console.log("下拉刷新")
+					this.levelData = []
+					this.activities = []
+					this.itemByDate = []
+					this.blogSortList()
+					this.getLevelBlog()
+				}
+			}
 		},
 		created() {
 			this.blogSortList()
@@ -135,7 +152,7 @@
 			  params.tagUid = blogTagUid
 			  this.loading = true;
 			  getArticleByTagUid(params).then(response => {
-				console.log("通过分类uid获取文章列表", response)
+				console.log("通过标签uid获取文章列表", response)
 				if (response.code == "success") {
 				  this.itemByDate = response.data.records;
 				  this.currentPage = response.data.current;

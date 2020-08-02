@@ -61,7 +61,13 @@
 	import {getBlogByLevel} from "../../api/index";
 	import {getArticleByBlogSortUid, getBlogSortList} from "../../api/classify.js";
 	export default {
-		name: "sort",
+		name: "classify",
+		props:{
+			isRefresh:{
+				type : String,
+				default: "blogClassify"
+			}
+		},
 		data() {
 			return {
 				TabCur: 0,
@@ -78,6 +84,19 @@
 				isEnd: false, //是否到底底部了
 				loading: false, //是否正在加载
 			};
+		},
+		watch:{
+			isRefresh:{
+				deep: true,
+				handler(newValue,oldValue){
+					console.log("下拉刷新")
+					this.levelData = []
+					this.activities = []
+					this.itemByDate = []
+					this.blogSortList()
+					this.getLevelBlog()
+				}
+			}
 		},
 		onShow() {
 			console.log("success")

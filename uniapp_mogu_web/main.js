@@ -21,6 +21,7 @@ Vue.component('cu-custom',cuCustom)
 
 Vue.config.productionTip = false
 
+import "static/iconfont/iconfont.css";
 
 App.mpType = 'app'
 const app = new Vue({

@@ -10,66 +10,84 @@
 		<view class="padding flex text-center text-grey bg-white shadow-warp">
 
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="text-xxl text-orange">{{visitTotal}}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-attentionfill"></text> View
+				<view class="margin-top-sm text-xxl">
+					<text class="cuIcon-messagefill" style="color: #00B0E8;"></text>
 				</view>
+				<view class="text-grey">留言</view>
 			</view>
 
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="text-xxl text-blue">{{starCount}}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-favorfill"></text> Star</view>
+				<view class="margin-top-sm text-xxl">
+					<text class="cuIcon-link" style="color: #ffaa00;"></text>
+				</view>
+				<view class="text-grey">友链</view>
 			</view>
 			
-			<view class="flex flex-sub flex-direction">
-				<view class="text-xxl text-green">{{forksCount}}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-fork"></text> Fork</view>
+			<view class="flex flex-sub flex-direction solid-right">
+				<view class="margin-top-sm text-xxl">
+					<text class="cuIcon-tagfill" style="color: #00ff00;"></text>
+				</view>
+				<view class="text-grey">标签</view>
+			</view>
+			
+			<view class="flex flex-sub flex-direction solid-right">
+				<view class="margin-top-sm text-xxl">
+					<text class="cuIcon-sort" style="color: #ff0000;"></text>
+				</view>
+				<view class="text-grey">分类</view>
 			</view>
 			
 		</view>
 		<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
-			<view class="cu-item arrow">
-				<view class="content" bindtap="CopyLink" data-link="https://github.com/weilanwl/ColorUI">
-					<text class="cuIcon-github text-grey"></text>
-					<text class="text-grey">联系方式</text>
-				</view>
-			</view>
 
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/about/log/log" hover-class="none">
-					<text class="cuIcon-formfill text-green"></text>
+				<navigator class="content" url="/pages/my/about" hover-class="none">
+					<text class="cuIcon-github text-grey"></text>
+					<text class="text-grey">关于我</text>
+				</navigator>
+			</view>
+			
+
+			<view class="cu-item arrow">
+				<navigator class="content" url="/pages/my/myComment" hover-class="none">
+					<text class="cuIcon-comment text-black"></text>
 					<text class="text-grey">我的评论</text>
 				</navigator>
 			</view>
 
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/about/log/log" hover-class="none">
-					<text class="cuIcon-formfill text-green"></text>
+				<navigator class="content" url="/pages/my/myReply" hover-class="none">
+					<text class="cuIcon-notice text-green"></text>
 					<text class="text-grey">我的回复</text>
 				</navigator>
 			</view>
 
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/about/log/log" hover-class="none">
-					<text class="cuIcon-formfill text-green"></text>
+				<navigator class="content" url="/pages/my/myPraise" hover-class="none">
+					<text class="cuIcon-favor text-yellow"></text>
 					<text class="text-grey">我的点赞</text>
 				</navigator>
 			</view>
-
+			
 			<view class="cu-item arrow">
-				<view class="content" bindtap="showQrcode">
+				<navigator class="content" url="/pages/my/applyLink" hover-class="none">
+					<text class="cuIcon-link text-blue"></text>
+					<text class="text-grey">友链申请</text>
+				</navigator>
+			</view>
+			
+			<view class="cu-item arrow">
+				<navigator class="content" url="/pages/my/applyLink" hover-class="none">
 					<text class="cuIcon-appreciatefill text-red"></text>
 					<text class="text-grey">赞赏支持</text>
-				</view>
+				</navigator>
 			</view>
-
+			
 			<view class="cu-item arrow">
-				<button class="cu-btn content" open-type="feedback">
-					<text class="cuIcon-writefill text-cyan"></text>
+				<navigator class="content" url="/pages/my/myFeedback" hover-class="none">
+					<text class="cuIcon-writefill text-brown"></text>
 					<text class="text-grey">意见反馈</text>
-				</button>
+				</navigator>
 			</view>
 
 		</view>
