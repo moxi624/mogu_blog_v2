@@ -126,7 +126,6 @@
 					url: '/pages/info/home?blogUid=' + blogUid,
 				});
 			},
-			// cardSwiper
 			cardSwiper(e) {
 				this.cardCur = e.detail.current
 			},

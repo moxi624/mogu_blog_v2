@@ -3,7 +3,7 @@
 
 		<view class="fixed">
 			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content"> 友链申请 </block>
+				<block slot="content"> 意见反馈 </block>
 			</cu-custom>
 		</view>
 		
@@ -110,6 +110,9 @@
 					urls: this.imgList,
 					current: e.currentTarget.dataset.url
 				});
+			},
+			DelImg(e) {
+				this.imgList.splice(e.currentTarget.dataset.index, 1)
 			},
 			submit() {
 				console.log("提交表单", this.feedback)

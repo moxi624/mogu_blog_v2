@@ -1,6 +1,6 @@
 import {appConfig} from '../config/config.js'
 
-export const token = {
+export const tokenUtil = {
     set: (s) => {
         uni.setStorageSync(appConfig.tokenKey, s)
     },

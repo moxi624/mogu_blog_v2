@@ -3,7 +3,7 @@
 
 		<view class="fixed">
 			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content" >关于我</block>
+				<block slot="content" >关于我们</block>
 			</cu-custom>
 		</view>
 

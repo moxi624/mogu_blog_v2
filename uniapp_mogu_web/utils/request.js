@@ -1,5 +1,5 @@
 import { appConfig } from '../config/config.js'
-import { token } from './token'
+import { tokenUtil } from './token'
 
 const send = (url, data = {}, method = 'POST', showLoading = true) => {
     uni.showLoading({
@@ -12,8 +12,8 @@ const send = (url, data = {}, method = 'POST', showLoading = true) => {
             data: data,
             header: (() => {
 				
-                // const tokeValue = token.get()
-				const tokeValue = "78801152b6544c5a8c61f63b474bb206"
+                const tokeValue = tokenUtil.get()
+				// const tokeValue = "78801152b6544c5a8c61f63b474bb206"
 				
                 let config = {
                     // 'Content-Type': 'application/x-www-form-urlencoded'

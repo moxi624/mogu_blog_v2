@@ -60,6 +60,10 @@
 			"style": {}
 		},
 		{
+			"path": "pages/my/link",
+			"style": {}
+		},
+		{
 			"path": "pages/info/home",
 			"style": {}
 		},		
@@ -68,6 +72,14 @@
 			"style": {
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/user/login",
+			"style": {}
+		},
+		{
+			"path": "pages/user/register",
+			"style": {}
 		}
 	],
 	"globalStyle": {

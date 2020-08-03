@@ -57,19 +57,19 @@
 		
 		<form>
 			<view class="cu-form-group margin-top">
-				<view class="title">网站名称</view>
+				<view class="title text-black">网站名称</view>
 				<input placeholder="请输入网站名称" v-model="blogLink.title"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">网站简介</view>
+				<view class="title text-black">网站简介</view>
 				<input placeholder="请输入网站简介" v-model="blogLink.summary"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">网站URL</view>
+				<view class="title text-black">网站URL</view>
 				<input placeholder="请输入网站URL" v-model="blogLink.url"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">网站LOGO</view>
+				<view class="title text-black">网站LOGO</view>
 				<input placeholder="请输入网站LOGO" v-model="blogLink.logo"></input>
 			</view>
 		</form>

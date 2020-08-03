@@ -8,3 +8,7 @@ export function getBlogByLevel (params) {
 export function getNewBlog (params) {
   return request.get(appConfig.WEB_API + '/index/getNewBlog', params)  
 }
+
+export function getLink (params) {
+  return request.get(appConfig.WEB_API + '/index/getLink', params)  
+}

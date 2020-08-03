@@ -1,53 +1,54 @@
 <template name="basics">
 	<scroll-view scroll-y class="scrollPage">
 		<view class="UCenter-bg">
-			<image src="/static/logo.png" class="png" mode="widthFix"></image>
-			<view class="text-xl" style="margin-top: 5px;">
-				蘑菇博客
+			<image v-if="userInfo.photoUrl" :src="userInfo.photoUrl" style="border-radius:50%" mode="widthFix"></image>
+			<image v-else src="../../static/logo.png" mode="widthFix" @tap="goLogin"></image>
+			<view class="text-xl" style="margin-top: 5px;" v-if="userInfo.nickName">
+				{{userInfo.nickName}}
 			</view>
 			<image src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 		</view>
 		<view class="padding flex text-center text-grey bg-white shadow-warp">
 
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="margin-top-sm text-xxl">
-					<text class="cuIcon-messagefill" style="color: #00B0E8;"></text>
-				</view>
-				<view class="text-grey">留言</view>
+				<navigator class="content" url="/pages/my/about" hover-class="none">
+					<view class="margin-top-sm text-xxl">
+						<text class="cuIcon-messagefill" style="color: #00B0E8;"></text>
+					</view>
+					<view class="text-grey">留言</view>
+				</navigator>
 			</view>
 
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="margin-top-sm text-xxl">
-					<text class="cuIcon-link" style="color: #ffaa00;"></text>
-				</view>
-				<view class="text-grey">友链</view>
+				<navigator class="content" url="/pages/my/link" hover-class="none">
+					<view class="margin-top-sm text-xxl">
+						<text class="cuIcon-link" style="color: #ffaa00;"></text>
+					</view>
+					<view class="text-grey">友链</view>
+				</navigator>
 			</view>
 			
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="margin-top-sm text-xxl">
-					<text class="cuIcon-tagfill" style="color: #00ff00;"></text>
-				</view>
-				<view class="text-grey">标签</view>
+				<navigator class="content" url="/pages/my/about" hover-class="none">
+					<view class="margin-top-sm text-xxl">
+						<text class="cuIcon-tagfill" style="color: #00ff00;"></text>
+					</view>
+					<view class="text-grey">标签</view>
+				</navigator>
 			</view>
 			
 			<view class="flex flex-sub flex-direction solid-right">
-				<view class="margin-top-sm text-xxl">
-					<text class="cuIcon-sort" style="color: #ff0000;"></text>
-				</view>
-				<view class="text-grey">分类</view>
+				<navigator class="content" url="/pages/my/about" hover-class="none">
+					<view class="margin-top-sm text-xxl">
+						<text class="cuIcon-sort" style="color: #ff0000;"></text>
+					</view>
+					<view class="text-grey">分类</view>
+				</navigator>
 			</view>
 			
 		</view>
 		<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
-
-			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/about" hover-class="none">
-					<text class="cuIcon-github text-grey"></text>
-					<text class="text-grey">关于我</text>
-				</navigator>
-			</view>
 			
-
 			<view class="cu-item arrow">
 				<navigator class="content" url="/pages/my/myComment" hover-class="none">
 					<text class="cuIcon-comment text-black"></text>
@@ -77,7 +78,14 @@
 			</view>
 			
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/applyLink" hover-class="none">
+				<navigator class="content" url="/pages/my/about" hover-class="none">
+					<text class="cuIcon-github text-grey"></text>
+					<text class="text-grey">关于我们</text>
+				</navigator>
+			</view>
+			
+			<view class="cu-item arrow">
+				<navigator class="content" url="/pages/my/myAppreciate" hover-class="none">
 					<text class="cuIcon-appreciatefill text-red"></text>
 					<text class="text-grey">赞赏支持</text>
 				</navigator>
@@ -96,14 +104,40 @@
 </template>
 
 <script>
+	import {getWebConfig} from "../../api/about.js";
 	export default {
-		name: "basics",
+		name: "my",
 		data() {
 			return {
-				starCount: 15,
-				forksCount: 20,
-				visitTotal: 25
+				webConfig: {},
+				userInfo: {},
 			}
+		},
+		created() {
+			this.getWebConfigData()
+			this.getUserInfo()
+		},
+		methods: {
+			goLogin() {
+				console.log("跳转到登录页面")
+				uni.navigateTo({
+					url: '/pages/user/login',
+				});
+			},
+			// 获取用户信息
+			getUserInfo() {
+				this.userInfo = uni.getStorageSync("userInfo")
+			},
+			getWebConfigData() {
+				var that = this
+				let params = {}
+				getWebConfig(params).then(res =>{
+					console.log("获取网站配置", res)
+					if(res.code == "success") {
+						that.webConfig = res.data;	
+					}
+				})
+			},	
 		}
 	}
 </script>

@@ -10,3 +10,18 @@ export function replyBlogLink (params) {
 export function addFeedback (params) {
   return request.post(appConfig.WEB_API + '/oauth/addFeedback', params)  
 }
+
+// 本地登录
+export function localLogin (params) {
+  return request.post(appConfig.WEB_API + '/login/login', params)  
+}
+
+// 本地注册
+export function localRegister (params) {
+  return request.post(appConfig.WEB_API + '/login/register', params)  
+}
+
+// 通过token获取信息
+export function authVerify (params) {
+  return request.get(appConfig.WEB_API + '/oauth/verify/' + params, {})  
+}
