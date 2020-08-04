@@ -53,6 +53,12 @@
 				PageCur: 'blogHome'
 			}
 		},
+		onLoad(options) {
+			console.log("传递到主页的内容", options)
+			if(options.PageCur) {
+				this.PageCur = options.PageCur
+			}
+		},
 		onShow: function() {
 			console.log('显示APP')
 		},

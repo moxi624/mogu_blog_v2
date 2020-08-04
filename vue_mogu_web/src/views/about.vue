@@ -63,7 +63,6 @@
         name: "about",
         data() {
             return {
-                source: "MESSAGE_BOARD",
                 dialogPictureVisible: false,
                 dialogImageUrl: "",
                 showCancel: false,

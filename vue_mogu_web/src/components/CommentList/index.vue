@@ -193,6 +193,7 @@
           });
           return
         }
+
         let userUid = this.$store.state.user.userInfo.uid
 
         if(userUid == item.userUid) {

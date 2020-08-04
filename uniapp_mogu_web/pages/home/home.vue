@@ -2,7 +2,17 @@
 	<view>
 		<scroll-view scroll-y class="page" @scrolltolower="loadData">
 			 
-			<swiper class="card-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
+			 <swiper class="screen-swiper round-dot" :indicator-dots="false" :circular="true" :autoplay="true" interval="5000"
+			  duration="500">
+			 	<swiper-item v-for="(item,index) in fristData" :key="index" @tap="goInfo(item.uid)">
+			 		<image :src="item.photoList[0]" mode="aspectFill"></image>
+					<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;" @tap="goInfo(item.uid)">
+						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
+					</view>
+			 	</swiper-item>
+			 </swiper>
+			 
+<!-- 			<swiper class="card-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 			 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
 			 indicator-active-color="#0081ff">
 				<swiper-item v-for="(item,index) in fristData" :key="index" :class="cardCur==index?'cur':''">
@@ -13,7 +23,7 @@
 						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
 					</view>
 				</swiper-item>
-			</swiper>
+			</swiper> -->
 			
 			<view class="cu-bar search bg-white">
 				<view class="search-form round">

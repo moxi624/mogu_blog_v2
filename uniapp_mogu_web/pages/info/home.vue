@@ -7,7 +7,7 @@
 			</cu-custom>
 		</view>
 		
-		<scroll-view scroll-y class="DrawerPage">
+		<scroll-view scroll-y class="DrawerPage page" @scrolltolower="loadData">
 <!-- 		    <view class="flex-sub text-center margin-sm">
 		      <view class="text-xxxl" v-if="blogData.title != null">
 		        <text class="text-black text-bold" style="font-size: 20px;">{{blogData.title}}</text>
@@ -55,50 +55,31 @@
 		
 			<jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser>
 			
-			<!--以下是评论内容-->
-			<view class="cu-list menu-avatar comment solids-top">
-				<view class="cu-item" style="margin-top: 10rpx">
-					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
-					<view class="content">
-						<view class="text-grey">莫甘娜</view>
-						<view class="text-gray text-content text-df" style="margin-top: 10rpx;">
-							凯尔，你被自己的光芒变的盲目。
-						</view>
-						<view class="margin-top-sm flex justify-between">
-							<view class="text-gray text-df">2018年12月4日</view>
-							<view>
-								<text class="cuIcon-appreciatefill text-red"></text>
-								<text class="cuIcon-messagefill text-gray margin-left-sm"></text>
-							</view>
-						</view>
-					</view>
-				</view>
-				
-				<view class="cu-item" style="margin-top: 10rpx">
-					<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
-					<view class="content">
-						<view class="text-grey">莫甘娜</view>
-						<view class="text-gray text-content text-df" style="margin-top: 10rpx;">
-							凯尔，你被自己的光芒变的盲目。
-						</view>
-						<view class="margin-top-sm flex justify-between">
-							<view class="text-gray text-df">2018年12月4日</view>
-							<view>
-								<text class="cuIcon-appreciatefill text-red"></text>
-								<text class="cuIcon-messagefill text-gray margin-left-sm"></text>
-							</view>
-						</view>
+			<view class="box">
+				<view class="cu-bar">
+					<view class="action border-title">
+						<text class="text-xl text-bold text-blue">评论</text>
+						<text class="bg-gradual-blue" style="width:3rem"></text>
 					</view>
 				</view>
 			</view>
+			
+			<CommentList :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess" source="BLOG_INFO" :blogUid="blogUid"></CommentList>
+
+			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
+			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
+			<view class="loadStyle" v-if="isEnd">我也是有底线的~</view>
 			<view class="cu-tabbar-height"></view>
+
 		</scroll-view>
 	</view>
 </template>
 
 <script>
 	import jyfParser from "../../components/jyf-parser/jyf-parser";
+	import CommentList from "../../components/CommentList/index.vue";
 	import {getBlogByUid} from "../../api/blogContent.js";
+	import {getCommentListByApp} from "../../api/comment.js"
 	export default {
 		name: "basics",
 		data() {
@@ -109,17 +90,61 @@
 				showLoading: false,
 				decode: true,
 				blogData : {},
+				currentPage: 1,
+				pageSize: 10,
+				total: 0, //总数量
+				comments: [],
+				isEnd: false, //是否到底底部了
+				loading: false, //是否正在加载
 			}
 		},
 		components: {
-			jyfParser
+			jyfParser,
+			CommentList
 		},
 		onLoad(option) {
 			this.blogUid = option.blogUid
 			console.log("传递过来的博客uid", option.blogUid)
 			this.getBlogInfo()
+			this.commentList()
+		},
+		created() {
+			
 		},
 		methods: {
+			commentList() {
+				var that = this
+				let params = {};
+				params.source = "BLOG_INFO";
+				params.blogUid = this.blogUid
+				params.currentPage = that.currentPage
+				params.pageSize = that.pageSize;
+				this.loading = true;
+				getCommentListByApp(params).then(response => {
+					console.log("得到的博客列表", response)
+					if (response.code == "success") {
+					  this.comments = that.comments.concat(response.data.records);
+					  that.currentPage = response.data.current;
+					  that.pageSize = response.data.size;
+					  that.total = response.data.total;
+					}
+					//全部加载完毕
+					if (this.comments.length >= this.total) {
+					  this.isEnd = true;
+					} else {
+						this.isEnd = false;
+					}
+					this.loading = false;
+				});
+			},
+			loadData: function() {
+				console.log("上拉加载数据", this.comments.length, this.total)
+				if(this.comments.length >= this.total) {
+					return;
+				}
+				this.currentPage = this.currentPage + 1;
+				this.commentList(this.selectBlogSortUid);
+			},
 			getBlogInfo() {
 				var that = this
 				let params = {}
@@ -131,6 +156,34 @@
 					}
 				})
 			},
+			deleteSuccess(commentUid) {
+				// 找到被删除的uid，移除
+				console.log("找到被移除的uid", commentUid)
+				let comments = this.comments
+				this.comments = []
+				let newCommentList = []
+				for(let a=0; a<comments.length; a++) {
+					if(comments[a].uid == commentUid) {
+						console.log("删除成功")
+						continue;
+					}
+					newCommentList.push(comments[a])
+				}
+				this.comments = newCommentList
+				// 删除后的值
+				console.log("删除后的值", this.comments)
+			},
+			commentSuccess(comment) {
+				// 评论成功后，需要更新一下
+				let comments = this.comments
+				this.comments = []
+				let newCommentList = []
+				newCommentList.push(comment)
+				for(let a=0; a<comments.length; a++) {
+					newCommentList.push(comments[a])
+				}
+				this.comments = newCommentList
+			}
 		}
 	}
 </script>
@@ -139,6 +192,17 @@
 <style>
 /* @import '../../static/css/ckeditor.css'; */
 
+.page {
+	height: 100vh;
+}
+.loadStyle {
+	margin-top: 20rpx;
+	width: 100%;
+	height: 60rpx;
+	text-align: center;		
+	color: #bfbfbf;
+}
+	
 image[class*="gif-"] {
     /* border-radius: 6rpx; */
     display: block;

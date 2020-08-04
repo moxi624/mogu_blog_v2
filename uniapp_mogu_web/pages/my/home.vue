@@ -1,21 +1,23 @@
-<template name="basics">
-	<scroll-view scroll-y class="scrollPage">
+<template name="messageBoard">
+	<scroll-view scroll-y class="scrollPage">	
 		<view class="UCenter-bg">
-			<image v-if="userInfo.photoUrl" :src="userInfo.photoUrl" style="border-radius:50%" mode="widthFix"  @tap="goUrl('myCenter')"></image>
-			<image v-else src="../../static/images/noLogin.png" mode="widthFix" @tap="goLogin"></image>
-			<view class="text-xl" style="margin-top: 5px;" v-if="userInfo.nickName">
-				{{userInfo.nickName}}
+			<navigator class="content" url="/pages/my/about" hover-class="none">
+				<image src="../../static/logo.png" mode="widthFix"></image>
+			</navigator>
+			<view class="text-xl" style="margin-top: 5px;">
+				{{webConfig.name}}
 			</view>
-			<image src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
+			<image src="../../static/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 		</view>
+		
 		<view class="padding flex text-center text-grey bg-white shadow-warp">
 
 			<view class="flex flex-sub flex-direction solid-right">
-				<navigator class="content" url="/pages/my/about" hover-class="none">
+				<navigator class="content" url="/pages/messageBoard/messageBoard" hover-class="none">
 					<view class="margin-top-sm text-xxl">
 						<text class="cuIcon-messagefill" style="color: #00B0E8;"></text>
 					</view>
-					<view class="text-grey">留言</view>
+					<view class="text-grey">留言板</view>
 				</navigator>
 			</view>
 
@@ -29,20 +31,20 @@
 			</view>
 			
 			<view class="flex flex-sub flex-direction solid-right">
-				<navigator class="content" url="/pages/my/about" hover-class="none">
-					<view class="margin-top-sm text-xxl">
-						<text class="cuIcon-tagfill" style="color: #00ff00;"></text>
-					</view>
-					<view class="text-grey">标签</view>
-				</navigator>
-			</view>
-			
-			<view class="flex flex-sub flex-direction solid-right">
-				<navigator class="content" url="/pages/my/about" hover-class="none">
+				<navigator open-type="reLaunch" class="content" url="/pages/index/index?PageCur=blogClassify" hover-class="other-navigator-hover">
 					<view class="margin-top-sm text-xxl">
 						<text class="cuIcon-sort" style="color: #ff0000;"></text>
 					</view>
 					<view class="text-grey">分类</view>
+				</navigator>
+			</view>
+			
+			<view class="flex flex-sub flex-direction solid-right">
+				<navigator open-type="reLaunch" class="content" url="/pages/index/index?PageCur=blogTag" hover-class="other-navigator-hover">
+					<view class="margin-top-sm text-xxl">
+						<text class="cuIcon-tagfill" style="color: #00ff00;"></text>
+					</view>
+					<view class="text-grey">标签</view>
 				</navigator>
 			</view>
 			
@@ -133,6 +135,7 @@
 		},
 		methods: {
 			goUrl(url) {
+				console.log("判断是否登录", this.userInfo.nickName)
 				if(this.userInfo.nickName) {
 					console.log("已经登录", this.userInfo)
 				} else {
@@ -237,12 +240,12 @@
 	}
 
 	.UCenter-bg {
-		background-image: url(https://image.weilanwl.com/color2.0/index.jpg);
+		background-image: url(../../static/images/bg.jpg);
 		background-size: cover;
-		height: 300rpx;
+		height: 350rpx;
 		display: flex;
 		justify-content: center;
-		/* padding-top: 40rpx; */
+		padding-top: 40rpx;
 		overflow: hidden;
 		position: relative;
 		flex-direction: column;

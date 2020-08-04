@@ -70,7 +70,11 @@
 		{
 			"path": "pages/info/home",
 			"style": {}
-		},		
+		},
+		{
+			"path": "pages/messageBoard/messageBoard",
+			"style": {}
+		},	
 		{
 			"path": "pages/search/home",
 			"style": {

@@ -6,10 +6,13 @@
 			</cu-custom>
 		</view>
 		
-		<swiper class="screen-swiper round-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000"
+		<swiper class="screen-swiper round-dot" :indicator-dots="false" :circular="true" :autoplay="true" interval="5000"
 		 duration="500">
 			<swiper-item v-for="(item,index) in levelData" :key="index" @tap="goInfo(item.uid)">
 				<image v-if="item.photoList[0]" :src="item.photoList[0]" mode="aspectFill"></image>
+				<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;" @tap="goInfo(item.uid)">
+					<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
+				</view>
 			</swiper-item>
 		</swiper>
 		

@@ -223,6 +223,126 @@ public class CommentRestApi {
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
+    @ApiOperation(value = "App端获取评论列表", notes = "获取评论列表")
+    @PostMapping("/getListByApp")
+    public String getListByApp(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+
+        ThrowableUtils.checkParamArgument(result);
+
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(commentVO.getBlogUid())) {
+            queryWrapper.like(SQLConf.BLOG_UID, commentVO.getBlogUid());
+        }
+        queryWrapper.eq(SQLConf.SOURCE, commentVO.getSource());
+        //分页
+        Page<Comment> page = new Page<>();
+        page.setCurrent(commentVO.getCurrentPage());
+        page.setSize(commentVO.getPageSize());
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        queryWrapper.eq(SQLConf.TYPE, ECommentType.COMMENT);
+        // 查询出该文章下所有的评论
+        IPage<Comment> pageList = commentService.page(page, queryWrapper);
+        List<Comment> list = pageList.getRecords();
+        List<String> toCommentUidList = new ArrayList<>();
+        // 判断回复评论的UID
+        list.forEach(item -> {
+            toCommentUidList.add(item.getToUid());
+        });
+
+        // 定义一个数组，用来存放全部的评论
+        List<Comment> allCommentList = new ArrayList<>();
+        allCommentList.addAll(list);
+
+        // 查询出回复的评论
+        Collection<Comment> toCommentList = null;
+        if (toCommentUidList.size() > 0) {
+            toCommentList = commentService.listByIds(toCommentUidList);
+            allCommentList.addAll(toCommentList);
+        }
+
+        // 查询出评论用户的基本信息
+        List<String> userUidList = new ArrayList<>();
+        allCommentList.forEach(item -> {
+            String userUid = item.getUserUid();
+            String toUserUid = item.getToUserUid();
+            if (StringUtils.isNotEmpty(userUid)) {
+                userUidList.add(item.getUserUid());
+            }
+            if (StringUtils.isNotEmpty(toUserUid)) {
+                userUidList.add(item.getToUserUid());
+            }
+        });
+        Collection<User> userList = new ArrayList<>();
+        if (userUidList.size() > 0) {
+            userList = userService.listByIds(userUidList);
+        }
+
+        // 过滤掉用户的敏感信息
+        List<User> filterUserList = new ArrayList<>();
+        userList.forEach(item -> {
+            User user = new User();
+            user.setAvatar(item.getAvatar());
+            user.setUid(item.getUid());
+            user.setNickName(item.getNickName());
+            user.setUserTag(item.getUserTag());
+            filterUserList.add(user);
+        });
+
+        // 获取用户头像
+        StringBuffer fileUids = new StringBuffer();
+        filterUserList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getAvatar())) {
+                fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+        String pictureList = null;
+        if (fileUids != null) {
+            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
+        Map<String, String> pictureMap = new HashMap<>();
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+
+        Map<String, User> userMap = new HashMap<>();
+        filterUserList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getAvatar()) && pictureMap.get(item.getAvatar()) != null) {
+                item.setPhotoUrl(pictureMap.get(item.getAvatar()));
+            }
+            userMap.put(item.getUid(), item);
+        });
+
+        // 定义一个评论Map键值对
+        Map<String, Comment> commentMap = new HashMap<>();
+        allCommentList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getUserUid())) {
+                item.setUser(userMap.get(item.getUserUid()));
+            }
+            if (StringUtils.isNotEmpty(item.getToUserUid())) {
+                item.setToUser(userMap.get(item.getToUserUid()));
+            }
+            commentMap.put(item.getUid(), item);
+        });
+
+        // 给查询出来的评论添加基本信息
+        List<Comment> returnCommentList = new ArrayList<>();
+        list.forEach(item -> {
+            String commentUid = item.getUid();
+            String toCommentUid = item.getToUid();
+            Comment comment = commentMap.get(commentUid);
+            if(StringUtils.isNotEmpty(toCommentUid)) {
+                comment.setToComment(commentMap.get(toCommentUid));
+            }
+            returnCommentList.add(comment);
+        });
+
+        pageList.setRecords(returnCommentList);
+
+        return ResultUtil.result(SysConf.SUCCESS, pageList);
+    }
+
     @ApiOperation(value = "获取用户的评论列表和回复", notes = "获取评论列表和回复")
     @PostMapping("/getListByUser")
     public String getListByUser(HttpServletRequest request, @Validated({GetList.class}) @RequestBody UserVO userVO) {

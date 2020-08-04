@@ -12,7 +12,7 @@
 			<view class="text-xl" style="margin-top: 5px;">
 				蘑菇博客
 			</view>
-			<image src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
+			<image src="../../static/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 		</view>
 		
 		<form>
@@ -119,12 +119,12 @@
 	}
 
 	.UCenter-bg {
-		background-image: url(https://image.weilanwl.com/color2.0/index.jpg);
+		background-image: url(../../static/images/bg.jpg);
 		background-size: cover;
-		height: 300rpx;
+		height: 350rpx;
 		display: flex;
 		justify-content: center;
-		/* padding-top: 40rpx; */
+		padding-top: 40rpx;
 		overflow: hidden;
 		position: relative;
 		flex-direction: column;
@@ -133,7 +133,6 @@
 		font-weight: 300;
 		text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 	}
-
 	.UCenter-bg text {
 		opacity: 0.8;
 	}
