@@ -110,6 +110,5 @@ export function timeAgo(dateTimeStamp) {
   } else if (diffValue >= 0 && diffValue <= minute) {
     result = "刚刚"
   }
-  console.log("得到的diffValue", diffValue)
   return result;
 }

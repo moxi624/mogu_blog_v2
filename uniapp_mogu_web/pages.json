@@ -64,6 +64,10 @@
 			"style": {}
 		},
 		{
+			"path": "pages/my/myCenter",
+			"style": {}
+		},
+		{
 			"path": "pages/info/home",
 			"style": {}
 		},		

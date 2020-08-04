@@ -88,7 +88,7 @@
 						// 跳转个人中心页
 						setTimeout(function() {
 							uni.navigateTo({
-								url: '/pages/my/home',
+								url: '/pages/index/index',
 							});
 						}, 500);
 						
@@ -121,10 +121,10 @@
 	.UCenter-bg {
 		background-image: url(https://image.weilanwl.com/color2.0/index.jpg);
 		background-size: cover;
-		height: 400rpx;
+		height: 300rpx;
 		display: flex;
 		justify-content: center;
-		padding-top: 40rpx;
+		/* padding-top: 40rpx; */
 		overflow: hidden;
 		position: relative;
 		flex-direction: column;

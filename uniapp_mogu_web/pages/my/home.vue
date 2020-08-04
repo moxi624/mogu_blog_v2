@@ -1,8 +1,8 @@
 <template name="basics">
 	<scroll-view scroll-y class="scrollPage">
 		<view class="UCenter-bg">
-			<image v-if="userInfo.photoUrl" :src="userInfo.photoUrl" style="border-radius:50%" mode="widthFix"></image>
-			<image v-else src="../../static/logo.png" mode="widthFix" @tap="goLogin"></image>
+			<image v-if="userInfo.photoUrl" :src="userInfo.photoUrl" style="border-radius:50%" mode="widthFix"  @tap="goUrl('myCenter')"></image>
+			<image v-else src="../../static/images/noLogin.png" mode="widthFix" @tap="goLogin"></image>
 			<view class="text-xl" style="margin-top: 5px;" v-if="userInfo.nickName">
 				{{userInfo.nickName}}
 			</view>
@@ -50,31 +50,38 @@
 		<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
 			
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/myComment" hover-class="none">
-					<text class="cuIcon-comment text-black"></text>
-					<text class="text-grey">我的评论</text>
-				</navigator>
-			</view>
-
-			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/myReply" hover-class="none">
-					<text class="cuIcon-notice text-green"></text>
-					<text class="text-grey">我的回复</text>
-				</navigator>
-			</view>
-
-			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/myPraise" hover-class="none">
-					<text class="cuIcon-favor text-yellow"></text>
-					<text class="text-grey">我的点赞</text>
-				</navigator>
+				<view class="content"  @tap="goUrl('myCenter')" hover-class="none">
+					<text class="cuIcon-usefull text-black"></text>
+					<text class="text-grey">我的资料</text>
+				</view>
 			</view>
 			
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/applyLink" hover-class="none">
+				<view class="content" @tap="goUrl('myComment')" hover-class="none">
+					<text class="cuIcon-comment text-black"></text>
+					<text class="text-grey">我的评论</text>
+				</view>
+			</view>
+
+			<view class="cu-item arrow">
+				<view class="content" @tap="goUrl('myReply')" hover-class="none">
+					<text class="cuIcon-notice text-green"></text>
+					<text class="text-grey">我的回复</text>
+				</view>
+			</view>
+
+			<view class="cu-item arrow">
+				<view class="content" @tap="goUrl('myPraise')" hover-class="none">
+					<text class="cuIcon-favor text-yellow"></text>
+					<text class="text-grey">我的点赞</text>
+				</view>
+			</view>
+			
+			<view class="cu-item arrow">
+				<view class="content" @tap="goUrl('applyLink')" hover-class="none">
 					<text class="cuIcon-link text-blue"></text>
 					<text class="text-grey">友链申请</text>
-				</navigator>
+				</view>
 			</view>
 			
 			<view class="cu-item arrow">
@@ -92,10 +99,17 @@
 			</view>
 			
 			<view class="cu-item arrow">
-				<navigator class="content" url="/pages/my/myFeedback" hover-class="none">
+				<view class="content" @tap="goUrl('myFeedback')" hover-class="none">
 					<text class="cuIcon-writefill text-brown"></text>
 					<text class="text-grey">意见反馈</text>
-				</navigator>
+				</view>
+			</view>
+			
+			<view class="cu-item arrow">
+				<view class="content" @click="logout" hover-class="none">
+					<text class="cuIcon-warn text-red"></text>
+					<text class="text-grey">退出登录</text>
+				</view>
 			</view>
 
 		</view>
@@ -118,6 +132,63 @@
 			this.getUserInfo()
 		},
 		methods: {
+			goUrl(url) {
+				if(this.userInfo.nickName) {
+					console.log("已经登录", this.userInfo)
+				} else {
+					// 跳转到登录页面
+					this.goLogin()
+					return
+				}
+				console.log("开始跳转", url)
+				switch(url) {
+					case 'myCenter': {
+						this.isLogin()
+						uni.navigateTo({
+							url: '/pages/my/myCenter',
+						});
+					}break;
+					
+					case 'myComment': {
+						uni.navigateTo({
+							url: '/pages/my/myComment',
+						});
+					}break;
+					
+					case 'myReply': {
+						uni.navigateTo({
+							url: '/pages/my/myReply',
+						});
+					}break;
+					
+					case 'myPraise': {
+						uni.navigateTo({
+							url: '/pages/my/myPraise',
+						});
+					}break;
+					
+					case 'applyLink': {
+						uni.navigateTo({
+							url: '/pages/my/applyLink',
+						});
+					}break;
+					
+					case 'myFeedback': {
+						uni.navigateTo({
+							url: '/pages/my/myFeedback',
+						});
+					}break;
+					
+				}
+			},
+			isLogin() {
+				if(this.userInfo.nickName) {
+					console.log("已经登录", this.userInfo)
+				} else {
+					// 跳转到登录页面
+					this.goLogin()
+				}
+			},
 			goLogin() {
 				console.log("跳转到登录页面")
 				uni.navigateTo({
@@ -137,7 +208,25 @@
 						that.webConfig = res.data;	
 					}
 				})
-			},	
+			},
+			logout() {
+				uni.showModal({
+					title: '警告',
+					content: '确定要退出登录？',
+					cancelText: '再看看',
+					confirmText: '再见',
+					success: res => {
+						if (res.confirm) {
+							uni.showToast({
+								title: "退出成功"
+							})
+							uni.removeStorageSync("userInfo")
+							this.userInfo = {}
+						}
+					}
+				})
+				console.log("点击退出登录")
+			}
 		}
 	}
 </script>
@@ -150,10 +239,10 @@
 	.UCenter-bg {
 		background-image: url(https://image.weilanwl.com/color2.0/index.jpg);
 		background-size: cover;
-		height: 400rpx;
+		height: 300rpx;
 		display: flex;
 		justify-content: center;
-		padding-top: 40rpx;
+		/* padding-top: 40rpx; */
 		overflow: hidden;
 		position: relative;
 		flex-direction: column;

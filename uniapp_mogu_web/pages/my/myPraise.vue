@@ -12,12 +12,12 @@
 				<view class="cu-time">{{timeFormat(item.createTime)}}</view>
 				<view class="cu-item">
 					<view class="content">
-						<text>点赞文章：</text> <view v-if="item.source = 'BLOG_INFO'" @tap="goInfo(item.blog.uid)" class="cu-tag bg-brown light sm round" style="font-size: 15px;">{{item.blog.title}}</view>
+						<text>点赞文章：</text> 
+						<view @tap="goInfo(item.blog.uid)" class="cu-tag bg-brown light sm round" style="font-size: 15px;">{{item.blog.title}}</view>
 					</view>
 				</view>
 			</view>
 		</scroll-view>
-
 	</view>
 </template>
 

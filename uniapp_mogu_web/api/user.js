@@ -25,3 +25,8 @@ export function localRegister (params) {
 export function authVerify (params) {
   return request.get(appConfig.WEB_API + '/oauth/verify/' + params, {})  
 }
+
+// 通过token获取信息
+export function editUser (params) {
+  return request.post(appConfig.WEB_API + '/oauth/editUser', params)  
+}

@@ -148,6 +148,8 @@
 <style>
 /* @import '../../static/css/ckeditor.css'; */
 
+/* @import '../../static/iconfont/iconfont.css'; */
+
 image[class*="gif-"] {
     /* border-radius: 6rpx; */
     display: block;

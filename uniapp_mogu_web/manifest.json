@@ -1,5 +1,5 @@
 {
-    "name" : "ColorUI-UniApp",
+    "name" : "蘑菇博客",
     "appid" : "",
     "description" : "",
     "versionName" : "ColorUi for UniApp 2.1.4",
@@ -47,8 +47,7 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        /* 小程序特有相关 */
-        "appid" : "",
+        "appid" : "wxa24be4a3d53e77c9",
         "setting" : {
             "urlCheck" : false,
             "es6" : true
