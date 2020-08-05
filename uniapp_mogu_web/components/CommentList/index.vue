@@ -34,7 +34,7 @@
 		</view>
 		
 		<!--以下是模态框-->
-		<view class="cu-modal" :class="isShow?'show':''">
+		<view class="cu-modal show" v-if="isShow">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">评论</view>
@@ -155,6 +155,7 @@
 									uni.showToast({
 										title: response.data,
 									})
+									this.content = ""
 							  } else {
 								  uni.showToast({
 								  	title: response.data,

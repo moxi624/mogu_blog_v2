@@ -12,16 +12,15 @@
 				<view class="cu-item" v-for="item in commentList" :key="item.uid">
 					<image class="cu-avatar radius lg" v-if="item.user.photoUrl"  :src="item.user.photoUrl"></image>
 					<view class="content">
-						<view class="text-grey">{{item.user.nickName}}</view>
-						<view class="text-gray text-content text-df">
-							<view class="cu-tag bg-blue light sm round" @tap="goSource(item)">{{item.sourceName}}</view>
-						</view>
 						
-						<view class="bg-grey padding-sm radius margin-top-sm  text-sm">
-							<view class="flex">
-								<view>{{item.content}}</view>
+						<view class="justify-between">
+							<view class="text-grey">{{item.user.nickName}}</view>
+							<view class="text-gray text-content text-df">
+								<view class="cu-tag bg-blue light sm round" @tap="goSource(item)">{{item.sourceName}}</view>
 							</view>
 						</view>
+
+						<view class="text-gray text-content text-df" style="margin-top: 10rpx;" v-html="item.content"></view>
 
 						<view class="margin-top-sm flex justify-between">
 							<view class="text-gray text-df">{{timeFormat(item.createTime)}}</view>

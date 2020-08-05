@@ -1774,7 +1774,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             tagList = tagService.listByIds(tagUids);
         }
 
-
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
         Map<String, String> pictureMap = new HashMap<>();
@@ -1805,7 +1804,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 List<Tag> tagListTemp = new ArrayList<Tag>();
 
                 tagUidsTemp.forEach(tag -> {
-                    tagListTemp.add(tagMap.get(tag));
+                    if(tagMap.get(tag) != null) {
+                        tagListTemp.add(tagMap.get(tag));
+                    }
                 });
                 item.setTagList(tagListTemp);
             }

@@ -39,9 +39,10 @@
 									</view>
 									
 									<view class="text-gray text-sm">
+										<text class="cuIcon-peoplefill margin-lr-xs"></text> {{item.author}}
 										<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
 										<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.collectCount}}
-										<text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}}
+										<!-- <text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}} -->
 									</view>	
 		
 								</view>
@@ -54,6 +55,7 @@
 			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
 			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
 			<view class="loadStyle" v-if="isEnd">我也是有底线的~</view>
+			<view class="cu-tabbar-height"></view>
 		</scroll-view>		
 	</view>
 </template>
@@ -130,8 +132,8 @@
 				this.getBlogList(this.activities[index].uid);
 			},
 			loadData: function() {
-				console.log("上拉加载数据", this.newBlogData.length, this.total)
-				if(this.newBlogData.length >= this.total) {
+				console.log("上拉加载数据", this.itemByDate.length, this.total)
+				if(this.itemByDate.length >= this.total) {
 					return;
 				}
 				this.currentPage = this.currentPage + 1;

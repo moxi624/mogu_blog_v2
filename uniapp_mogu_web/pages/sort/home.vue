@@ -1,10 +1,10 @@
 <template>
 	<view>
-		<view class="fixed">
+<!-- 		<view class="fixed">
 			<cu-custom :isBack="false" bgColor="bg-shadeTop text-white">
 				<block slot="content">归档</block>
 			</cu-custom>
-		</view>
+		</view> -->
 		
 		<swiper class="screen-swiper round-dot" :indicator-dots="false" :circular="true" :autoplay="true" interval="5000"
 		 duration="500">
@@ -36,14 +36,20 @@
 
 							<view class="content">
 								<view>
-									<text class="text-cut">{{item.title}}</text>
+									<text class="text-cut text-gray" style="font-size: 16px;">{{item.title}}</text>
 								</view>
+								
+								<view>
+									<view class='cu-tag line-blue sm' style="margin-bottom: 5px;">{{item.blogSort.sortName}}</view>
+								</view>
+								
 								<view class="text-gray text-sm flex" v-for="(tag, index) in item.tagList" v-if="tag.uid" :key="tag.uid">
 									<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 									<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
 									<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>
 								</view>
 							</view>
+							
 							<view class="action">
 								<view style="font-size: 12px;">
 									<text class="cuIcon-attentionfill text-grey margin-lr-xs"></text> <span class="text-grey">{{item.clickCount}}</span>
@@ -55,6 +61,7 @@
 						</view>
 					</view>
 				</view>
+				<view class="cu-tabbar-height"></view>
 			</scroll-view>
 		</view>
 	</view>

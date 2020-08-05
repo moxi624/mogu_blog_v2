@@ -14,6 +14,59 @@
 		      </view>
 		    </view> -->
 		
+		    <view class="cf">
+		        <view class="margin-sm">
+					<view class="cu-capsule round">
+					    <view class="cu-tag bg-blue sm">
+					        <text class="cuIcon-peoplefill"></text>
+					    </view>
+					    <view class="cu-tag line-blue sm">
+					    {{blogData.author}}
+					    </view>
+					</view>
+					
+					<view class="cu-capsule round">
+					    <view class="cu-tag bg-mauve sm">
+					        <text class="cuIcon-file"></text>
+					    </view>
+					    <view class="cu-tag line-mauve sm" v-if="blogData.isOriginal == 1">
+					    原创
+					    </view>
+						<view class="cu-tag line-blue sm" v-else>
+						转载
+						</view>
+					</view>
+					
+					<view class="cu-capsule round">
+					    <view class="cu-tag bg-orange sm">
+					        <text class="cuIcon-attentionfill"></text>
+					    </view>
+					    <view class="cu-tag line-orange sm">
+					    {{blogData.clickCount}}
+					    </view>
+					</view>
+					
+		            <view class="cu-capsule round">
+		                <view class="cu-tag bg-red sm">
+		                    <text class="cuIcon-appreciatefill"></text>
+		                </view>
+		                <view class="cu-tag line-red sm">
+		                {{blogData.collectCount}}
+		                </view>
+		            </view>
+
+		            <view class="cu-capsule round">
+		                <view class="cu-tag  bg-blue sm">
+		                    <text class="cuIcon-timefill"></text>
+		                </view>
+		                <view class="cu-tag line-gray sm">
+		                {{blogData.createTime}}
+		                </view>
+		            </view>
+		            <text class="cu-capsule">&nbsp;</text>
+		        </view>
+		    </view>
+			
 			<view class="text-gray text-sm flex justify-start">
 				<view class="text-gray text-sm" v-for="(tag, index) in blogData.tagList" :key="tag.uid" style="margin-left: 20px;">
 					<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
@@ -21,39 +74,26 @@
 					<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>			
 				</view>
 			</view>
-		
-		
-		    <view class="cf">
-		        <view class="margin-sm fr">
-		            <view class="cu-capsule round">
-		                <view class="cu-tag bg-red sm">
-		                    <text class="cuIcon-likefill"></text>
-		                </view>
-		                <view class="cu-tag line-red sm">
-		                {{blogData.collectCount}}
-		                </view>
-		            </view>
-		            <view class="cu-capsule round">
-		                <view class="cu-tag bg-orange sm">
-		                    <text class="cuIcon-hotfill"></text>
-		                </view>
-		                <view class="cu-tag line-orange sm">
-		                {{blogData.clickCount}}
-		                </view>
-		            </view>
-		            <view class="cu-capsule round">
-		                <view class="cu-tag  bg-blue sm">
-		                    <text class="cuIcon-timefill"></text>
-		                </view>
-		                <view class="cu-tag line-blue sm">
-		                {{blogData.createTime}}
-		                </view>
-		            </view>
-		            <text class="cu-capsule">&nbsp;</text>
-		        </view>
-		    </view>
+			
+			<view class="padding">
+				<view class="padding bg-grey radius">{{blogData.copyright}}</view>
+			</view>
 		
 			<jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser>
+			
+			<view class="box">
+				<view class="cu-bar">
+					<view class="action border-title">
+						<text class="text-xl text-bold text-blue">赞赏</text>
+						<text class="bg-gradual-blue" style="width:3rem"></text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="margin-tb-sm text-center">
+				<button class="cu-btn bg-orange round" @click="praiseBlog">很赞哦！<text v-if="praiseCount > 0">({{praiseCount}})</text></button>
+				<button class="cu-btn bg-brown round  margin-lr-xs" @click="goAppreciate">打赏本站</button>
+			</view>
 			
 			<view class="box">
 				<view class="cu-bar">
@@ -70,7 +110,6 @@
 			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
 			<view class="loadStyle" v-if="isEnd">我也是有底线的~</view>
 			<view class="cu-tabbar-height"></view>
-
 		</scroll-view>
 	</view>
 </template>
@@ -78,7 +117,7 @@
 <script>
 	import jyfParser from "../../components/jyf-parser/jyf-parser";
 	import CommentList from "../../components/CommentList/index.vue";
-	import {getBlogByUid} from "../../api/blogContent.js";
+	import {getBlogByUid, praiseBlogByUid} from "../../api/blogContent.js";
 	import {getCommentListByApp} from "../../api/comment.js"
 	export default {
 		name: "basics",
@@ -96,6 +135,7 @@
 				comments: [],
 				isEnd: false, //是否到底底部了
 				loading: false, //是否正在加载
+				praiseCount: 0,
 			}
 		},
 		components: {
@@ -152,7 +192,8 @@
 				getBlogByUid(params).then(res =>{
 					console.log(res)
 					if(res.code == "success") {
-						that.blogData = res.data;	
+						that.blogData = res.data;
+						that.praiseCount = res.data.collectCount
 					}
 				})
 			},
@@ -183,6 +224,30 @@
 					newCommentList.push(comments[a])
 				}
 				this.comments = newCommentList
+			},
+			praiseBlog() {
+				var that = this
+				let params = {}
+				params.uid = this.blogUid;
+				praiseBlogByUid(params).then(res =>{
+					console.log("点赞成功", res)
+					if(res.code == "success") {
+						uni.showToast({
+							title: "点赞成功"
+						})
+						this.praiseCount = res.data
+					} else {
+						uni.showToast({
+							title: res.data,
+							icon: "none"
+						})
+					}
+				})
+			},
+			goAppreciate() {
+				uni.navigateTo({
+					url: '/pages/my/myAppreciate',
+				});
 			}
 		}
 	}

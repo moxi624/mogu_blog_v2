@@ -11,20 +11,7 @@
 					</view>
 			 	</swiper-item>
 			 </swiper>
-			 
-<!-- 			<swiper class="card-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
-			 :autoplay="true" interval="5000" duration="500" @change="cardSwiper" indicator-color="#8799a3"
-			 indicator-active-color="#0081ff">
-				<swiper-item v-for="(item,index) in fristData" :key="index" :class="cardCur==index?'cur':''">
-					<view class="swiper-item" @tap="goInfo(item.uid)">						
-						<image v-if="item.photoList" :src="item.photoList[0]" mode="aspectFill"></image>
-					</view>
-					<view class="cu-bar bg-shadeBottom" style="margin-top: -50px;" @tap="goInfo(item.uid)"> 
-						<text class="text-cut" style="font-size: 18px; margin: 0 auto;">{{item.title}}</text>
-					</view>
-				</swiper-item>
-			</swiper> -->
-			
+
 			<view class="cu-bar search bg-white">
 				<view class="search-form round">
 					<text class="cuIcon-search"></text>
@@ -46,19 +33,20 @@
 					<view class="cu-list menu-avatar">
 						<view class="cu-item" style="height: 40px;">						
 							<view class="content flex-sub">
-								<view class="text-gray text-sm flex justify-between">								
-									<view class="text-gray text-sm" v-for="(tag, index) in item.tagList" :key="item.uid + tag.uid" style="margin-left: -100rpx;">										
+								<view class="text-gray text-sm flex justify-between">		
+														
+									<view class="text-gray text-sm" v-for="(tag, index) in item.tagList" :key="index" style="margin-left: -100rpx;">										
 										<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 										<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
 										<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>										
 									</view>
 									
 									<view class="text-gray text-sm">
+										<text class="cuIcon-peoplefill margin-lr-xs"></text> {{item.author}}
 										<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
 										<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.collectCount}}
-										<text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}}
+										<!-- <text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}} -->
 									</view>	
-
 								</view>
 							</view>
 						</view>
@@ -164,7 +152,8 @@
 				params.currentPage = that.currentPage;
 				params.pageSize = that.pageSize;
 				that.loading = true;
-				getNewBlog(params).then(res =>{					
+				getNewBlog(params).then(res =>{
+					console.log("得到的最新博客", res)
 					if(res.code == "success") {
 						var newData = that.newBlogData.concat(res.data.records);
 						that.newBlogData = newData;						

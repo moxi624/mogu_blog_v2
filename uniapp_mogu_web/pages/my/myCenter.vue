@@ -81,7 +81,10 @@
 </template>
 
 <script>
-	import {editUser} from "../../api/user.js";
+	import {editUser, authVerify} from "../../api/user.js";
+	import {cropperPicture} from "../../api/pictureUpload.js"
+	import {tokenUtil} from "../../utils/token.js"
+	import { appConfig } from '../../config/config.js'
 	export default {
 		name: "login",
 		data() {
@@ -110,9 +113,13 @@
 					success: (res) => {
 						if (this.imgList.length != 0) {
 							this.imgList = this.imgList.concat(res.tempFilePaths)
+							// 调用图片上传接口
 						} else {
 							this.imgList = res.tempFilePaths
 						}
+						console.log("选择图片成功", this.imgList)
+						// 上传图片 
+						this.uploadPicture(this.imgList[0])
 					}
 				});
 			},
@@ -126,21 +133,15 @@
 				this.imgList.splice(e.currentTarget.dataset.index, 1)
 			},
 			getUserInfo() {
-				// 设置用户信息
-				this.userInfo = uni.getStorageSync("userInfo")
-				if(this.userInfo.photoUrl) {
-					this.imgList = [this.userInfo.photoUrl]
-				}
-				console.log("从userInfo中获取", this.userInfo);
-			},
-			updateUserInfo() {
-				editUser(this.userInfo).then(response => {
+				authVerify(tokenUtil.get()).then(response => {
+				  console.log("获取用户信息", response)
 				  if (response.code == "success") {
-					uni.showToast({
-						icon: "success",
-						title: response.data,
-					})
-					uni.setStorageSync("userInfo", this.userInfo)
+					let userInfo = response.data
+					if(userInfo.photoUrl) {
+						this.imgList = [userInfo.photoUrl]
+					}
+					this.userInfo = userInfo
+					uni.setStorageSync("userInfo", userInfo)
 				  } else {
 					uni.showToast({
 						icon: "none",
@@ -149,6 +150,66 @@
 				  }
 				});
 			},
+			updateUserInfo() {
+				editUser(this.userInfo).then(response => {
+				  console.log("更新用户信息", response)
+				  if (response.code == "success") {
+					uni.showToast({
+						icon: "success",
+						title: response.data,
+					})
+					this.getUserInfo()
+				  } else {
+					uni.showToast({
+						icon: "none",
+						title: response.data,
+					})
+				  }
+				});
+			},
+			uploadPicture(pictureUrl) {
+				var that = this
+				console.log("开始上传服务器")
+				 uni.uploadFile({
+				  url : appConfig.PICTURE_API + '/file/cropperPicture',
+				  filePath: pictureUrl,
+				  name: 'file',
+				  formData: {
+				   'token': tokenUtil.get(),
+				   'source': "picture",
+				   'platform': "web",
+				   'userUid': "uid00000000000000000000000000000000",
+				   'adminUid': "uid00000000000000000000000000000000",
+				   'projectName': "blog",
+				   'sortName': "admin",
+				  },
+				  success: function (uploadFileRes) {
+					  if(uploadFileRes.statusCode == 200) {
+						  let data = uploadFileRes.data;
+						  let res = JSON.parse(data)
+						  console.log("上传成功", res)
+						  if(res.code == "success") {
+							  uni.showToast({
+							  	title: "头像上传成功"
+							  })
+							  if(res.data.length > 0) {
+								that.userInfo.avatar = res.data[0].uid
+								that.userInfo.photoUrl = res.data[0].url
+								console.log("上传成功的用户信息", that.userInfo)  
+							  }
+						  } else {
+							  uni.showToast({
+							  	title: res.data,
+								icon: "none"
+							  })
+						  }
+					  }
+				  },
+				  fail: function(err) {
+					  console.log("错误信息", err)
+				  }
+				 });
+			}
 		}
 	}
 </script>
