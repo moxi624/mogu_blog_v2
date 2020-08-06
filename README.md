@@ -29,6 +29,14 @@
 
 如果您有任何相关建议，欢迎在issue或者群里提出，再次感谢大家的支持~
 
+## 后期维护
+
+项目后台目前有Eureka版本和Nacos版本，其中Eureka版本使用的是SpringCloud一些组件，Nacos版本使用的是SpringCloudAlibaba的一些组件，例如Nacos、Sentinel
+
+- Eureka版本请切换至Eureka分支（将不再进行新功能的开发）
+- Nacos版本请切换至Nacos分支（作为以后长期维护的分支，目前文档还未完善）
+- 目前蘑菇博客移动端版本基于[uniapp](https://uniapp.dcloud.io/)和[ColorUI](https://github.com/weilanwl/ColorUI)开发，已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
+
 ## 项目介绍
 
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云。
