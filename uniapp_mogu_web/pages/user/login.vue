@@ -1,11 +1,7 @@
 <template name="basics">
 	<view>
 
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content"> 登录 </block>
-			</cu-custom>
-		</view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="登录"></nav-bar>
 		
 		<view class="UCenter-bg">
 			<image src="/static/logo.png" class="png" mode="widthFix" @tap="goLogin"></image>

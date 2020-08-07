@@ -1,11 +1,5 @@
 <template>
 	<view>
-<!-- 		<view class="fixed">
-			<cu-custom :isBack="false" bgColor="bg-shadeTop text-white">
-				<block slot="content">归档</block>
-			</cu-custom>
-		</view> -->
-		
 		<swiper class="screen-swiper round-dot" :indicator-dots="false" :circular="true" :autoplay="true" interval="5000"
 		 duration="500">
 			<swiper-item v-for="(item,index) in levelData" :key="index" @tap="goInfo(item.uid)">
@@ -23,7 +17,7 @@
 				</view>
 			</scroll-view>
 			
-			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)" >
+			<scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 375upx)">
 				<view class="padding-top padding-lr">
 					<view class="cu-bar solid-bottom bg-white">
 						<view class="action">
@@ -36,14 +30,14 @@
 
 							<view class="content">
 								<view>
-									<text class="text-cut text-gray" style="font-size: 16px;">{{item.title}}</text>
+									<text class="text-cut text-gray" style="font-size: 14px;">{{item.title}}</text>
 								</view>
 								
 								<view>
 									<view class='cu-tag line-blue sm' style="margin-bottom: 5px;">{{item.blogSort.sortName}}</view>
 								</view>
-								
-								<view class="text-gray text-sm flex" v-for="(tag, index) in item.tagList" v-if="tag.uid" :key="tag.uid">
+
+								<view class="text-gray text-sm flex" v-for="(tag, index) in item.tagList" v-if="tag.uid" :key="tag.uid" style="float: left;">
 									<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 									<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
 									<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>
@@ -130,7 +124,12 @@
 				getSortList(params).then(res =>{					
 					console.log("返回的博客标签数据", res)
 					if(res.code == "success") {
-						that.list = res.data;
+						let list = res.data;
+						let newList = []
+						for(let a = list.length -1; a >= 0 ; a--) {
+							newList.push(list[a])
+						}
+						that.list = newList
 						that.clickTime(that.list[0])
 					}
 				})
@@ -161,7 +160,7 @@
 		height: 52px;
 	}
 	.cu-list.menu-avatar>.cu-item .content {
-		width: calc(100% - 52px - 33px - 50px);
+		width: calc(100% - 52px - 33px - 35px);
 	}
 	.fixed {
 		position: fixed;

@@ -1,11 +1,8 @@
 <template name="basics">
 	<view>
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content" >留言板</block>
-			</cu-custom>
-		</view>
 
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="留言板"></nav-bar>
+		
 		<scroll-view class="page" scroll-y @scrolltolower="loadData">
 
 			<!--以下是评论内容-->

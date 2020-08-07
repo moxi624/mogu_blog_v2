@@ -1,11 +1,7 @@
 <template name="basics">
 	<view>
 
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content"> 友情链接 </block>
-			</cu-custom>
-		</view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="友情链接"></nav-bar>
 		
 		<view class="cu-chat">
 			<view class="cu-item" v-for="item in linkList" :key="item.uid">

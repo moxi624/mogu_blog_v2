@@ -31,7 +31,9 @@
 					<view class="cu-list menu-avatar">
 						<view class="cu-item" style="height: 40px;">						
 							<view class="content flex-sub">
-								<view class="text-gray text-sm flex justify-between">								
+
+								<view class="text-gray text-sm flex justify-between">
+
 									<view class="text-gray text-sm" v-for="(tag, index) in item.tagList" :key="tag.uid" style="margin-left: -100rpx;">										
 										<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 										<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
@@ -43,8 +45,7 @@
 										<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
 										<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.collectCount}}
 										<!-- <text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}} -->
-									</view>	
-		
+									</view>
 								</view>
 							</view>
 						</view>

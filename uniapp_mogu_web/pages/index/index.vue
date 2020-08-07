@@ -18,7 +18,7 @@
 				<view class='cuIcon-cu-image'>
 					<image :src="'/static/tabbar/classify' + [PageCur == 'blogClassify'?'_cur':''] + '.png'"></image>
 				</view>
-				<view :class="PageCur=='blogClassify'?'text-blue':'text-gray'">分类</view>
+				<view :class="PageCur=='blogClassify'?'text-blue':'text-gray'">分类</view>				
 			</view>
 			<view class="action" @click="NavChange" data-cur="blogTag">
 				<view class='cuIcon-cu-image'>

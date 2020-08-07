@@ -106,7 +106,7 @@ public class LoginRestApi {
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中
             redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
-
+            log.info("登录成功，返回token: ", token);
             return ResultUtil.result(SysConf.SUCCESS, token);
         } else {
             return ResultUtil.result(SysConf.ERROR, "账号或密码错误");

@@ -1,14 +1,9 @@
 <template name="basics">
 	<view>
 
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content"> 个人资料 </block>
-			</cu-custom>
-		</view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="个人资料"></nav-bar>
 
 		<form>
-			
 			<view class="cu-bar bg-white solid-top">
 				<view class="action">
 					头像
@@ -112,8 +107,8 @@
 					sourceType: ['album'], //从相册选择
 					success: (res) => {
 						if (this.imgList.length != 0) {
-							this.imgList = this.imgList.concat(res.tempFilePaths)
 							// 调用图片上传接口
+							this.imgList = this.imgList.concat(res.tempFilePaths)
 						} else {
 							this.imgList = res.tempFilePaths
 						}
@@ -147,6 +142,9 @@
 						icon: "none",
 						title: response.data,
 					})
+					uni.navigateTo({
+						url: '/pages/user/login',
+					});
 				  }
 				});
 			},

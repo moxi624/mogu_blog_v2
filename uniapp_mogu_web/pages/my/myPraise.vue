@@ -1,11 +1,7 @@
 <template name="basics">
 	<view>
 
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content" > 我的点赞 </block>
-			</cu-custom>
-		</view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="我的点赞"></nav-bar>
 		
 		<scroll-view scroll-y class="page" @scrolltolower="loadData">
 			<view class="cu-timeline" v-for="item in praiseList" :key="item.uid" >

@@ -19,6 +19,9 @@ Vue.component('myCenter',myCenter)
 import cuCustom from './colorui/components/cu-custom.vue'
 Vue.component('cu-custom',cuCustom)
 
+import zhouWeiNavBar from "./components/zhouWei-navBar";
+Vue.component("nav-bar", zhouWeiNavBar);
+
 Vue.config.productionTip = false
 
 // import "static/iconfont/iconfont.css";

@@ -1,14 +1,8 @@
 <template name="basics">
 	<view>
-
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content"> 注册 </block>
-			</cu-custom>
-		</view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="注册"></nav-bar>
 
 		<form>
-			
 			<view class="cu-bar bg-white solid-top">
 				<view class="action">
 					头像

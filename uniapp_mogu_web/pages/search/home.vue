@@ -1,51 +1,47 @@
 <template name="basics">
-	<scroll-view scroll-y class="page" @scrolltolower="loadData">
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content" >搜索详情页</block>
-			</cu-custom>
-		</view>
+	
+	<view>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="搜索详情页"></nav-bar>
 		
-		<view class="cu-bar search bg-white">
-			<view class="search-form round">
-				<text class="cuIcon-search"></text>
-				<input v-model="keyword" :adjust-position="false" type="text" placeholder="搜索文章" confirm-type="search"></input>
-			</view>
-			<view class="action">
-				<button class="cu-btn bg-green shadow-blur round" @click="clickSearch">搜索</button>
-			</view>
-		</view>
-		
-		<view class="cu-card article">
-			<view class="cu-item shadow" v-for="(item, index) in searchData" :key="index" @tap="goInfo(item.uid)">
-				<view class="title">
-					<view class="text-cut" v-html="item.title"></view>
+		<scroll-view scroll-y class="page" @scrolltolower="loadData">
+			<view class="cu-bar search bg-white">
+				<view class="search-form round">
+					<text class="cuIcon-search"></text>
+					<input v-model="keyword" :adjust-position="false" type="text" placeholder="搜索文章" confirm-type="search"></input>
 				</view>
-				<view class="content">
-					<image v-if="item.photoUrl" :src="item.photoUrl" mode="aspectFill"></image>
-					<view class="desc">
-						<view class="text-content" v-html="item.summary"></view>
-													
-						<view style="margin-bottom: 10px;">
-							<view class="cu-tag bg-red light sm round">{{item.blogSortName}}</view>
-						</view>
-
-						<view class="text-gray text-sm">
-							<text class="cuIcon-myfill margin-lr-xs"></text> {{item.author}}
-							<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
-							<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.collectCount}}
-							<text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}}
+				<view class="action">
+					<button class="cu-btn bg-green shadow-blur round" @click="clickSearch">搜索</button>
+				</view>
+			</view>
+			<view class="cu-card article">
+				<view class="cu-item shadow" v-for="(item, index) in searchData" :key="index" @tap="goInfo(item.uid)">
+					<view class="title">
+						<view class="text-cut" v-html="item.title"></view>
+					</view>
+					<view class="content">
+						<image v-if="item.photoUrl" :src="item.photoUrl" mode="aspectFill"></image>
+						<view class="desc">
+							<view class="text-content" v-html="item.summary"></view>
+														
+							<view style="margin-bottom: 10px;">
+								<view class="cu-tag bg-red light sm round">{{item.blogSortName}}</view>
+							</view>
+		
+							<view class="text-gray text-sm">
+								<text class="cuIcon-myfill margin-lr-xs"></text> {{item.author}}
+								<text class="cuIcon-attentionfill margin-lr-xs"></text> {{item.clickCount}}
+								<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{item.collectCount}}
+								<text class="cuIcon-messagefill margin-lr-xs"></text> {{item.collectCount}}
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		
-		<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
-		<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
-		<view class="loadStyle" v-if="isEnd">我也是有底线的~</view>
-
-	</scroll-view>
+			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
+			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
+			<view class="loadStyle" v-if="isEnd">我也是有底线的~</view>		
+		</scroll-view>
+	</view>	
 </template>
 
 <script>

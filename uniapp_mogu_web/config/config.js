@@ -12,6 +12,8 @@ export const appConfig = {
 	// 演示环境
 	// WEB_API: 'http://120.78.126.96:8603',
 	// PICTURE_API: 'http://120.78.126.96:8602',
-	WEB_API: 'http://apiweb.moguit.cn',
-	PICTURE_API: 'http://apipicture.moguit.cn',
+	
+	// 正式环境
+	WEB_API: 'https://apiweb.moguit.cn',
+	PICTURE_API: 'https://apipicture.moguit.cn',
 }

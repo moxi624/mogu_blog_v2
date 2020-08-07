@@ -1,19 +1,10 @@
 <template name="basics">
 	<view>
 
-		<view class="fixed">
-			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
-				<block slot="content" >{{blogData.title}}</block>
-			</cu-custom>
-		</view>
-		
+		<!-- <cu-custom bgColor="bg-gradual-blue" :isBack="true" style="height: 45px;"><block slot="backText">返回</block><block slot="content">{{blogData.title}}</block></cu-custom> -->
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" :title="blogData.title"></nav-bar>
+
 		<scroll-view scroll-y class="DrawerPage page" @scrolltolower="loadData">
-<!-- 		    <view class="flex-sub text-center margin-sm">
-		      <view class="text-xxxl" v-if="blogData.title != null">
-		        <text class="text-black text-bold" style="font-size: 20px;">{{blogData.title}}</text>
-		      </view>
-		    </view> -->
-		
 		    <view class="cf">
 		        <view class="margin-sm">
 					<view class="cu-capsule round">
@@ -75,11 +66,16 @@
 				</view>
 			</view>
 			
-			<view class="padding">
+			
+<!-- 			<view class="padding">
 				<view class="padding bg-grey radius">{{blogData.copyright}}</view>
-			</view>
+			</view> -->
 		
 			<jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser>
+			
+			<jyf-parser :html="blogData.content" lazy-load ref="article" selectable
+			 show-with-animation use-anchor @error="error" @imgtap="imgtap" @linkpress="linkpress" @ready="ready">加载中...</jyf-parser>
+			 
 			
 			<view class="box">
 				<view class="cu-bar">
@@ -124,7 +120,6 @@
 		data() {
 			return {
 				blogUid: null,
-				highlightStyle: "dracula",
 				linenums: false,
 				showLoading: false,
 				decode: true,
@@ -140,11 +135,13 @@
 		},
 		components: {
 			jyfParser,
-			CommentList
+			CommentList,
 		},
 		onLoad(option) {
 			this.blogUid = option.blogUid
-			console.log("传递过来的博客uid", option.blogUid)
+			uni.showLoading({
+			    title: '加载中'
+			})
 			this.getBlogInfo()
 			this.commentList()
 		},
@@ -248,6 +245,20 @@
 				uni.navigateTo({
 					url: '/pages/my/myAppreciate',
 				});
+			},
+			ready(e) {
+				console.log('ready', e);
+				// console.log('api: getText', this.$refs.article.getText());
+				console.log('imgList', this.$refs.article.imgList);
+			},
+			imgtap(e) {
+				console.log('imgtap', e);
+			},
+			linkpress(e) {
+				console.log('linkpress', e);
+			},
+			error(e) {
+				console.error(e);
 			}
 		}
 	}
