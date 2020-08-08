@@ -865,15 +865,20 @@
 
       getToken: function() {
         let token = this.getUrlVars()["token"];
+        console.log("从URL中获取token", token)
         // 判断url中是否含有token
         if (token != undefined) {
+          console.log("将token设置到cookie中", token)
           // 设置token七天过期
           setCookie("token", token, 7)
+        } else {
+          // 从cookie中获取token
+          token = getCookie("token")
         }
-        // 从cookie中获取token
-        token = getCookie("token")
         if (token != undefined) {
+          console.log("通过token开始请求后台")
           authVerify(token).then(response => {
+            console.log("获得的数据", response)
             if (response.code == "success") {
               this.isLogin = true;
               this.userInfo = response.data;

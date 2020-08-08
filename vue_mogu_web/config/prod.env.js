@@ -8,7 +8,7 @@ module.exports = {
   // WEB_API: '"http://120.78.126.96:8603"',
 
   //配置线上环境
-  VUE_MOGU_WEB: '"http://http://120.78.126.96:9527"',
+  VUE_MOGU_WEB: '"http://120.78.126.96:9527"',
   PICTURE_API: '"http://120.78.126.96:8602"',
   WEB_API: '"http://120.78.126.96:8603"',
   PICTURE_HOST: '""',

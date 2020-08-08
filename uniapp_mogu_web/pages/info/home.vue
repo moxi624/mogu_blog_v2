@@ -71,12 +71,11 @@
 				<view class="padding bg-grey radius">{{blogData.copyright}}</view>
 			</view> -->
 		
-			<jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser>
+			<!-- <jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser> -->
 			
-			<jyf-parser :html="blogData.content" lazy-load ref="article" selectable
+			<jyf-parser class="ck-content" :html="blogData.content" lazy-load ref="article" selectable
 			 show-with-animation use-anchor @error="error" @imgtap="imgtap" @linkpress="linkpress" @ready="ready">加载中...</jyf-parser>
 			 
-			
 			<view class="box">
 				<view class="cu-bar">
 					<view class="action border-title">
@@ -145,10 +144,20 @@
 			this.getBlogInfo()
 			this.commentList()
 		},
+		mounted() {
+
+		},
 		created() {
 			
 		},
 		methods: {
+			cutText(text, count) {
+				if(text.length < count) {
+					return text
+				} else {
+					return text.substring(0, count) + ".."
+				}
+			},
 			commentList() {
 				var that = this
 				let params = {};
@@ -249,7 +258,7 @@
 			ready(e) {
 				console.log('ready', e);
 				// console.log('api: getText', this.$refs.article.getText());
-				console.log('imgList', this.$refs.article.imgList);
+				// console.log('imgList', this.$refs.article.imgList);
 			},
 			imgtap(e) {
 				console.log('imgtap', e);
@@ -265,9 +274,12 @@
 </script>
 
 
-<style>
+<style scoped>
 /* @import '../../static/css/ckeditor.css'; */
 
+.ck-content {
+	margin: 20rpx;
+}
 .page {
 	height: 100vh;
 }

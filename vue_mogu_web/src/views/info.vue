@@ -140,7 +140,6 @@
                   // 内容容器selector(必需)
                   container: '.ck-content',
                   watch: true,
-                  height: "calc(100% - 100px)",
                   levelList: ["h2", "h3"],
                 },
                 loadingInstance: null, // loading对象
@@ -169,7 +168,6 @@
         },
         computed: {
           vueCategory: function () {
-            console.log("测试", this.showStickyTop, this.showSideCatalog)
             if(!this.showStickyTop && this.showSideCatalog) {
               return 'catalog'
             }
@@ -220,10 +218,8 @@
             var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
 
             if (winScrollHeight < offset) {
-              console.log("当前值", winScrollHeight)
               that.showStickyTop = false
             } else {
-              console.log("当前值", winScrollHeight)
               that.showStickyTop = true
             }
 
@@ -418,7 +414,7 @@
   .catalog {
     position: fixed;
     margin-left: 20px;
-    height: 700px
+    /*max-height: 700px*/
   }
   .catalog2 {
     position: fixed;

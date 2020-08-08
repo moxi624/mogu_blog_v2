@@ -3,11 +3,18 @@
 		<!--以下是评论内容-->
 		<view class="cu-list menu-avatar comment solids-top">
 			<view class="cu-form-group margin-top">
-				<textarea maxlength="-1" v-model="firstCommentContent" placeholder="既然来了,那就留下些什么吧~"></textarea>
+				<!-- <textarea maxlength="-1" v-model="firstCommentContent" placeholder="既然来了,那就留下些什么吧~"></textarea> -->
+				<textarea maxlength="-1" v-model="firstCommentContent"></textarea>
 			</view>
-			<view class="padding flex flex-direction">
-				<button class="cu-btn bg-blue lg" @click="submit">评论一下</button>
+			<view class="padding flex  justify-between align-center">
+				<button class="cu-btn bg-blue lg" style="width: 89%;" @click="submit">评论一下</button>
+				<div class="emoji-panel-btn p2" @click="showEmojiPanel">
+					<img src="../../static/images/face_logo.png" />
+				</div>
 			</view>
+			
+			<emoji-panel class="emojiPanel" @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
+			 
 			<view class="cu-item" style="margin-top: 10rpx" v-for="(item, index) in comments" :key="item.uid">
 				<image class="cu-avatar round" :src="item.user.photoUrl"></image>
 				<view class="content">
@@ -15,10 +22,16 @@
 						<text class="text-orange">{{item.user.nickName}}</text>
 						<text class="text-grey">#{{index + 1}}楼</text>
 					</view>
-					<view class="text-gray text-content text-df" style="margin-top: 10rpx;" v-html="item.content"></view>
+					
+					<view class="text-gray text-content text-df" style="margin-top: 10rpx;">
+						<jyf-parser class="ck-content margin-sm" :html="item.content"></jyf-parser>
+					</view>
+					
 					<view class="bg-grey padding-sm radius margin-top-sm  text-sm" v-if="item.toComment">
 						<view class="flex">
-							<view class="flex-sub">{{item.toComment.content}}</view>
+							<view class="flex-sub">
+								<jyf-parser class="ck-content" :html="item.toComment.content"></jyf-parser>
+							</view>
 						</view>
 					</view>
 					<view class="margin-top-sm flex justify-between">
@@ -44,12 +57,18 @@
 				</view>
 				<view class="padding-xl">
 					<view class="cu-form-group margin-top">
-						<textarea maxlength="-1" v-model="content" placeholder="既然来了,那就留下些什么吧~"></textarea>
+						<!-- <textarea maxlength="-1" v-model="content" placeholder="既然来了,那就留下些什么吧~"></textarea> -->
+						<textarea maxlength="-1" v-model="content"></textarea>
 					</view>
-					<view class="padding flex flex-direction">
-						<button class="cu-btn bg-blue lg" @click="apply">发表评论</button>
+					<view class="padding flex  justify-between align-center">
+						<button class="cu-btn bg-blue lg" style="width: 90%;" @click="apply">评论一下</button>
+						<div class="emoji-panel-btn p2" @click="showSecondEmojiPanel" style="margin-left: 5px;">
+							<img src="../../static/images/face_logo.png" />
+						</div>
 					</view>
 				</view>
+				
+				<emoji-panel class="emojiPanel" @emojiClick="secondAppendEmoji" v-if="isShowSecondEmojiPanel"></emoji-panel>
 			</view>
 		</view>
 	</view>
@@ -61,17 +80,25 @@
 <script>
 	import {timeAgo} from "../../utils/webUtils.js"
 	import {addComment, deleteComment, reportComment} from "../../api/comment.js"
+	import EmojiPanel from "../EmojiPanel/EmojiPanel.vue";
+	import jyfParser from "../jyf-parser/jyf-parser";
 	export default {
 		name: "CommentList",
 		props: ["comments", "source", "blogUid"],
 		data() {
 			return {
+				isShowEmojiPanel: false,
+				isShowSecondEmojiPanel: false,
 				userInfo: {},
 				isShow: false,
 				content: "",
 				selectComment: {}, // 选中的评论
 				firstCommentContent: "", // 一级评论
 			}
+		},
+		components: {
+		  jyfParser,
+		  EmojiPanel
 		},
 		created() {
 			this.getUserInfo()
@@ -80,7 +107,24 @@
 			hideModal(e) {
 				this.isShow = false
 			},
+			emoji(word) {
+				// 生成html
+				const type = word.substring(1, word.length - 1);
+				return `<span class="emoji-item-common emoji-${type} emoji-size-small"></span>`;
+			},
+			goLogin() {
+				console.log("跳转到登录页面")
+				uni.navigateTo({
+					url: '/pages/user/login',
+				});
+			},
 			submit() {
+				if(this.userInfo.uid == undefined) {
+					// 跳转到登录页面
+					this.goLogin()
+					return
+				}
+				
 				if(this.firstCommentContent == "") {
 					uni.showToast({
 						title: "评论的内容不能为空",
@@ -88,10 +132,12 @@
 					})
 					return
 				}
-
+				
+				let content = this.firstCommentContent.replace(/:.*?:/g, this.emoji);
+				
 				let params = {};
 				params.userUid = this.userInfo.uid;
-				params.content = this.firstCommentContent;
+				params.content = content;
 				params.blogUid = this.blogUid;
 				params.source = this.source
 				addComment(params).then(response => {
@@ -108,6 +154,7 @@
 							icon: "none"
 						})
 					}
+					this.isShowEmojiPanel = false
 					console.log("评论成功", response)
 				})
 			},
@@ -121,12 +168,11 @@
 			},
 			deleteC(commentUid) {
 				if(this.userInfo.uid == undefined) {
-					uni.showToast({
-						title: "请先登录",
-						icon: "none"
-					})
+					// 跳转到登录页面
+					this.goLogin()
 					return
 				}
+				
 				let params = {}
 				params.uid = commentUid;
 				params.userUid = this.userInfo.uid
@@ -139,7 +185,11 @@
 				})
 			},
 			report(commentUid) {
-				console.log("举报评论")
+				if(this.userInfo.uid == undefined) {
+					// 跳转到登录页面
+					this.goLogin()
+					return
+				}
 				uni.showModal({
 					title: '警告',
 					content: '确定要举报该评论？',
@@ -171,7 +221,25 @@
 				this.isShow = true
 				this.selectComment = item
 			},
+			appendEmoji(text) {
+				// const el = document.getElementById("textpanel");
+				this.firstCommentContent = this.firstCommentContent + ":" + text + ":";
+			},
+			secondAppendEmoji(text) {
+				this.content = this.content + ":" + text + ":";
+			},
+			showEmojiPanel() {
+				this.isShowEmojiPanel = !this.isShowEmojiPanel;
+			},
+			showSecondEmojiPanel() {
+				this.isShowSecondEmojiPanel = !this.isShowSecondEmojiPanel;
+			},
 			apply() {
+				if(this.userInfo.uid == undefined) {
+					// 跳转到登录页面
+					this.goLogin()
+					return
+				}
 				if(this.content == "") {
 					uni.showToast({
 						title: "评论的内容不能为空",
@@ -179,11 +247,12 @@
 					})
 					return
 				}
-				console.log("回复评论")
+				let content = this.content.replace(/:.*?:/g, this.emoji);
+				
 				let item = this.selectComment
 				let params = {};
 				params.userUid = this.userInfo.uid;
-				params.content = this.content;
+				params.content = content;
 				params.blogUid = item.blogUid;
 				params.toUid = item.uid;
 				params.toUserUid = item.userUid;
@@ -196,6 +265,8 @@
 						this.isShow = false
 						let returnComment = response.data
 						returnComment.toComment = this.selectComment
+						this.content = "";
+						this.isShowSecondEmojiPanel = false
 						this.$emit("commentSuccess", returnComment)
 					} else {
 						uni.showToast({
@@ -210,5 +281,13 @@
 	}
 </script>
 
-<style>
+<style scoped>
+  .emoji-panel-btn img{
+	height: 35px;
+	width: 35px;
+  }
+  .emoji-panel-btn:hover {
+	cursor: pointer;
+	opacity: 0.8;
+  }
 </style>

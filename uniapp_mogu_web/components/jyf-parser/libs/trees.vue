@@ -69,6 +69,7 @@
 	</view>
 </template>
 <script module="handler" lang="wxs" src="./handler.wxs"></script>
+
 <script>
 	global.Parser = {};
 	import trees from './trees'

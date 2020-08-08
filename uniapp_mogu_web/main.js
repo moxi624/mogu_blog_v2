@@ -24,7 +24,21 @@ Vue.component("nav-bar", zhouWeiNavBar);
 
 Vue.config.productionTip = false
 
-// import "static/iconfont/iconfont.css";
+// import hljs from 'highlight.js/lib/highlight';
+
+// import 'highlight.js/styles/zenburn.css'
+
+import 'static/css/ckeditor.css'
+import 'static/css/emoji.css'
+import 'static/css/index.css'
+
+// Vue.directive('highlight', function (el) {
+//   let blocks = el.querySelectorAll('pre code');
+//   console.log("获取的列表", el)
+//   blocks.forEach((block) => {
+//     hljs.highlightBlock(block)
+//   })
+// })
 
 App.mpType = 'app'
 const app = new Vue({
