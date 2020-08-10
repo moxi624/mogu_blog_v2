@@ -522,13 +522,13 @@ public class CommentRestApi {
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
 
         // 判断是否开启全局评论功能
-        if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getStartComment())) {
+        if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getOpenComment())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
         }
         // 判断博客是否开启评论功能
         if (StringUtils.isNotEmpty(commentVO.getBlogUid())) {
             Blog blog = blogService.getById(commentVO.getBlogUid());
-            if (SysConf.CAN_NOT_COMMENT.equals(blog.getStartComment())) {
+            if (SysConf.CAN_NOT_COMMENT.equals(blog.getOpenComment())) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_NO_OPEN_COMMENTS);
             }
         }

@@ -188,3 +188,11 @@ CREATE TABLE `t_sys_params` (
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='参数配置表'
 
 
+/*
+	网站配置增加字段
+*/
+ALTER TABLE  t_web_config ADD open_mobile_comment TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启移动端评论(0:否， 1:是)";
+ALTER TABLE  t_web_config ADD open_admiration TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启赞赏(0:否， 1:是)";
+ALTER TABLE  t_web_config ADD open_mobile_admiration TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启移动端赞赏(0:否， 1:是)";
+
+

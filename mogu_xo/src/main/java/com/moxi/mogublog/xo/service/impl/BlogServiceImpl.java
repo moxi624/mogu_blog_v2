@@ -698,7 +698,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setStatus(EStatus.ENABLE);
-        blog.setStartComment(blogVO.getStartComment());
+        blog.setOpenComment(blogVO.getOpenComment());
         Boolean isSave = blogService.save(blog);
 
         //保存成功后，需要发送消息到solr 和 redis
@@ -750,7 +750,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setLevel(blogVO.getLevel());
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
-        blog.setStartComment(blogVO.getStartComment());
+        blog.setOpenComment(blogVO.getOpenComment());
         blog.setUpdateTime(new Date());
         blog.setStatus(EStatus.ENABLE);
 
@@ -1005,7 +1005,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.setFileUid(picture.getFileUid());
             blog.setIsOriginal(EOriginal.ORIGINAL);
             blog.setIsPublish(EPublish.NO_PUBLISH);
-            blog.setStartComment(EOpenStatus.OPEN);
+            blog.setOpenComment(EOpenStatus.OPEN);
             blogList.add(blog);
             count++;
         }

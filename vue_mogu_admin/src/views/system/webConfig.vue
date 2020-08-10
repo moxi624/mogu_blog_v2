@@ -69,6 +69,40 @@
           </el-row>
 
           <el-row :gutter="24">
+            <el-col :span="10">
+              <el-form-item label="登录方式">
+                <el-checkbox-group v-model="form.loginTypeList">
+                  <el-checkbox label="1" style="margin-left: 10px">账号密码</el-checkbox>
+                  <el-checkbox label="2" style="margin-left: 10px">码云</el-checkbox>
+                  <el-checkbox label="3" style="margin-left: 10px">Github</el-checkbox>
+                  <el-checkbox label="4" style="margin-left: 10px">QQ</el-checkbox>
+                  <el-checkbox label="5" style="margin-left: 10px">微信</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+
+      <el-tab-pane v-permission="'/webConfig/getWebConfig'">
+        <span slot="label">
+          <i class="el-icon-date"></i> 评论&打赏
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="90px"
+          ref="from"
+        >
+
+          <el-row :gutter="24">
             <el-col :span="4">
               <el-form-item label="阿里支付">
                 <el-upload
@@ -106,23 +140,33 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="10">
-              <el-form-item label="登录方式">
-                <el-checkbox-group v-model="form.loginTypeList">
-                  <el-checkbox label="1" style="margin-left: 10px">账号密码</el-checkbox>
-                  <el-checkbox label="2" style="margin-left: 10px">码云</el-checkbox>
-                  <el-checkbox label="3" style="margin-left: 10px">Github</el-checkbox>
-                  <el-checkbox label="4" style="margin-left: 10px">QQ</el-checkbox>
-                  <el-checkbox label="5" style="margin-left: 10px">微信</el-checkbox>
-                </el-checkbox-group>
+            <el-col :span="6">
+              <el-form-item label="网站评论">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="24">
             <el-col :span="6">
-              <el-form-item label="网站评论">
-                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              <el-form-item label="网站打赏">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openAdmiration" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="移动端评论">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openMobileComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="移动端打赏">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openMobileAdmiration" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
               </el-form-item>
             </el-col>
           </el-row>
@@ -131,6 +175,7 @@
             <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
           </el-form-item>
         </el-form>
+
       </el-tab-pane>
 
       <el-tab-pane v-permission="'/webConfig/getWebConfig'">
@@ -218,7 +263,7 @@ export default {
         author: "",
         logo: "",
         recordNum: "",
-        startComment: "1",
+        openComment: "1",
         aliPay: "",
         weixinPay: "",
         aliPayPhoto: "",

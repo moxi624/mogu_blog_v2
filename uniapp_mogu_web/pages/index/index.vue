@@ -45,7 +45,9 @@
 	</view>
 </template>
 
+
 <script>
+	import {getWebConfig} from "../../api/about.js";
 	export default {
 		data() {
 			return {
@@ -71,11 +73,24 @@
 				uni.stopPullDownRefresh()
 			}, 500);
 		},
+		created() {
+			// this.getWebConfigData();
+		},
 		methods: {
 			NavChange: function(e) {
 				this.PageCur = e.currentTarget.dataset.cur
 				console.log("跳转", this.PageCur)
-			}
+			},
+			// getWebConfigData() {
+			// 	var that = this
+			// 	let params = {}
+			// 	getWebConfig(params).then(res =>{
+			// 		console.log("获取网站配置", res)
+			// 		if(res.code == "success") {
+			// 			uni.setStorageSync("webConfig", res.data)
+			// 		}
+			// 	})
+			// },
 		}
 	}
 </script>

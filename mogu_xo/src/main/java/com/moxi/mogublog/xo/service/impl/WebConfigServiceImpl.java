@@ -154,7 +154,11 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
             webConfig.setRecordNum(webConfigVO.getRecordNum());
             webConfig.setAliPay(webConfigVO.getAliPay());
             webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-            webConfig.setStartComment(webConfigVO.getStartComment());
+            webConfig.setOpenComment(webConfigVO.getOpenComment());
+            webConfig.setOpenAdmiration(webConfigVO.getOpenAdmiration());
+            // 设置移动端功能
+            webConfig.setOpenMobileAdmiration(webConfigVO.getOpenMobileAdmiration());
+            webConfig.setOpenMobileComment(webConfigVO.getOpenMobileComment());
 
             // 设置关注我们
             webConfig.setEmail(webConfigVO.getEmail());
@@ -178,7 +182,11 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
             webConfig.setRecordNum(webConfigVO.getRecordNum());
             webConfig.setAliPay(webConfigVO.getAliPay());
             webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-            webConfig.setStartComment(webConfigVO.getStartComment());
+            webConfig.setOpenComment(webConfigVO.getOpenComment());
+            webConfig.setOpenAdmiration(webConfigVO.getOpenAdmiration());
+            // 设置移动端功能
+            webConfig.setOpenMobileAdmiration(webConfigVO.getOpenMobileAdmiration());
+            webConfig.setOpenMobileComment(webConfigVO.getOpenMobileComment());
 
             // 设置关注我们
             webConfig.setEmail(webConfigVO.getEmail());

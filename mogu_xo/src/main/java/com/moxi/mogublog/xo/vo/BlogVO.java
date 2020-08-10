@@ -123,7 +123,7 @@ public class BlogVO extends BaseVO<BlogVO> {
     /**
      * 是否开启评论(0:否， 1:是)
      */
-    private String startComment;
+    private String openComment;
 
     /**
      * 无参构造方法，初始化默认值

@@ -79,7 +79,7 @@
 			<view class="box">
 				<view class="cu-bar">
 					<view class="action border-title">
-						<text class="text-xl text-bold text-blue">赞赏</text>
+						<text class="text-xl text-bold text-blue">支持</text>
 						<text class="bg-gradual-blue" style="width:3rem"></text>
 					</view>
 				</view>
@@ -87,10 +87,10 @@
 			
 			<view class="margin-tb-sm text-center">
 				<button class="cu-btn bg-orange round" @click="praiseBlog">很赞哦！<text v-if="praiseCount > 0">({{praiseCount}})</text></button>
-				<button class="cu-btn bg-brown round  margin-lr-xs" @click="goAppreciate">打赏本站</button>
+				<button class="cu-btn bg-brown round  margin-lr-xs" v-if="openMobileAdmiration == '1'" @click="goAppreciate">打赏本站</button>
 			</view>
 			
-			<view class="box">
+			<view class="box" v-if="openMobileComment == '1'">
 				<view class="cu-bar">
 					<view class="action border-title">
 						<text class="text-xl text-bold text-blue">评论</text>
@@ -99,7 +99,7 @@
 				</view>
 			</view>
 			
-			<CommentList :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess" source="BLOG_INFO" :blogUid="blogUid"></CommentList>
+			<CommentList v-if="openMobileComment == '1'" :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess" source="BLOG_INFO" :blogUid="blogUid"></CommentList>
 
 			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
 			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
@@ -110,6 +110,7 @@
 </template>
 
 <script>
+	import {getWebConfig} from "../../api/about.js";
 	import jyfParser from "../../components/jyf-parser/jyf-parser";
 	import CommentList from "../../components/CommentList/index.vue";
 	import {getBlogByUid, praiseBlogByUid} from "../../api/blogContent.js";
@@ -130,6 +131,8 @@
 				isEnd: false, //是否到底底部了
 				loading: false, //是否正在加载
 				praiseCount: 0,
+				openMobileComment: "0", // 是否开启移动端评论，（1：是，0：否）
+				openMobileAdmiration: "0", // 是否开启移动端赞赏，（1：是，0：否）
 			}
 		},
 		components: {
@@ -148,9 +151,21 @@
 
 		},
 		created() {
-			
+			this.getWebConfigData()
 		},
 		methods: {
+			getWebConfigData() {
+				var that = this
+				let params = {}
+				getWebConfig(params).then(res =>{
+					console.log("获取网站配置", res)
+					if(res.code == "success") {
+						this.openMobileComment = res.data.openMobileComment
+						this.openMobileAdmiration = res.data.openMobileAdmiration
+					}
+				})
+			},
+
 			cutText(text, count) {
 				if(text.length < count) {
 					return text

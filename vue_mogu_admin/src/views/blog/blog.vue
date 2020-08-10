@@ -164,7 +164,7 @@
       <el-table-column label="开启评论" width="100" align="center">
         <template slot-scope="scope">
           <template>
-            <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.startComment == item.dictValue">{{item.dictLabel}}</el-tag>
+            <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.openComment == item.dictValue">{{item.dictLabel}}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -308,8 +308,8 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="startComment">
-              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
+            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="openComment">
+              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
             </el-form-item>
           </el-col>
 
@@ -518,7 +518,7 @@ export default {
           {required: true, message: '原创字段不能为空', trigger: 'blur'},
           {pattern: /^[0-9]\d*$/, message: '原创字段只能为自然数'},
         ],
-        startComment: [
+        openComment: [
           {required: true, message: '网站评论不能为空', trigger: 'blur'},
           {pattern: /^[0-9]\d*$/, message: '网站评论只能为自然数'},
         ],
@@ -655,7 +655,7 @@ export default {
         isPublish: this.blogOriginalDefault, //是否发布
         author: null, //作者
         level: parseInt(this.blogLevelDefault), //推荐等级，默认是正常
-        startComment: this.openDefault, // 是否启动
+        openComment: this.openDefault, // 是否启动
         articlesPart: null //文章出处，默认蘑菇博客
       };
       return formObject;

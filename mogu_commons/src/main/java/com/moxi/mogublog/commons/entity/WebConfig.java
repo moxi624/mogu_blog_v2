@@ -78,9 +78,24 @@ public class WebConfig extends SuperEntity<WebConfig> {
     private String weixinPay;
 
     /**
-     * 是否开启评论(0:否， 1:是)
+     * 是否开启网页端评论(0:否， 1:是)
      */
-    private String startComment;
+    private String openComment;
+
+    /**
+     * 是否开启移动端评论(0:否， 1:是)
+     */
+    private String openMobileComment;
+
+    /**
+     * 是否开启赞赏(0:否， 1:是)
+     */
+    private String openAdmiration;
+
+    /**
+     * 是否开启移动端赞赏(0:否， 1:是)
+     */
+    private String openMobileAdmiration;
 
     /**
      * github地址

@@ -100,6 +100,11 @@
 				}
 			}
 		},
+		onShareAppMessage() {
+			qq.showShareMenu({
+				showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+			})
+		},
 		created() {
 			this.getBlogList()
 			this.getLevelBlog()

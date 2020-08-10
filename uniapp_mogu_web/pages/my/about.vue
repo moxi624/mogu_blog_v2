@@ -43,7 +43,7 @@
 			
 			<jyf-parser class="ck-content margin-sm " :html="userInfo.personResume"></jyf-parser>
 			
-			<view class="box">
+			<view class="box" v-if="openMobileComment == '1'">
 				<view class="cu-bar">
 					<view class="action border-title">
 						<text class="text-xl text-bold text-blue">留言</text>
@@ -53,7 +53,7 @@
 			</view>
 			
 			<!--以下是评论内容-->
-			<CommentList :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess" :source="source"></CommentList>
+			<CommentList v-if="openMobileComment == '1'" :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess" :source="source"></CommentList>
 
 			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
 			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
@@ -81,6 +81,8 @@
 				source: "ABOUT", // 评论来源
 				isEnd: false, //是否到底底部了
 				loading: false, //是否正在加载
+				openMobileComment: "0", // 是否开启移动端评论，（1：是，0：否）
+				openMobileAdmiration: "0", // 是否开启移动端赞赏，（1：是，0：否）
 			}
 		},
 		components: {
@@ -102,7 +104,9 @@
 				getMe(params).then(res =>{
 					console.log(res)
 					if(res.code == "success") {
-						that.userInfo = res.data;	
+						that.userInfo = res.data;
+						this.openMobileComment = res.data.openMobileComment
+						this.openMobileAdmiration = res.data.openMobileAdmiration
 					}
 				})
 			},

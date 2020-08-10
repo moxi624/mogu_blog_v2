@@ -12,7 +12,7 @@
 		
 		<view class="padding flex text-center text-grey bg-white shadow-warp">
 
-			<view class="flex flex-sub flex-direction solid-right">
+			<view class="flex flex-sub flex-direction solid-right" v-if="openMobileComment == '1'">
 				<navigator class="content" url="/pages/messageBoard/messageBoard" hover-class="none">
 					<view class="margin-top-sm text-xxl">
 						<text class="cuIcon-messagefill" style="color: #00B0E8;"></text>
@@ -58,14 +58,14 @@
 				</view>
 			</view>
 			
-			<view class="cu-item arrow">
+			<view class="cu-item arrow" v-if="openMobileComment == '1'">
 				<view class="content" @tap="goUrl('myComment')" hover-class="none">
 					<text class="cuIcon-comment text-black"></text>
 					<text class="text-grey">我的评论</text>
 				</view>
 			</view>
 
-			<view class="cu-item arrow">
+			<view class="cu-item arrow" v-if="openMobileComment == '1'">
 				<view class="content" @tap="goUrl('myReply')" hover-class="none">
 					<text class="cuIcon-notice text-green"></text>
 					<text class="text-grey">我的回复</text>
@@ -93,7 +93,7 @@
 				</navigator>
 			</view>
 			
-			<view class="cu-item arrow">
+			<view class="cu-item arrow" v-if="openMobileAdmiration == '1'">
 				<navigator class="content" url="/pages/my/myAppreciate" hover-class="none">
 					<text class="cuIcon-appreciatefill text-red"></text>
 					<text class="text-grey">赞赏支持</text>
@@ -127,6 +127,8 @@
 			return {
 				webConfig: {},
 				userInfo: {},
+				openMobileComment: "0", // 是否开启移动端评论，（1：是，0：否）
+				openMobileAdmiration: "0", // 是否开启移动端赞赏，（1：是，0：否）
 			}
 		},
 		created() {
@@ -208,7 +210,9 @@
 				getWebConfig(params).then(res =>{
 					console.log("获取网站配置", res)
 					if(res.code == "success") {
-						that.webConfig = res.data;	
+						that.webConfig = res.data;
+						this.openMobileComment = res.data.openMobileComment
+						this.openMobileAdmiration = res.data.openMobileAdmiration
 					}
 				})
 			},
