@@ -64,11 +64,11 @@
 				params.passWord = this.loginForm.password;
 				params.isRememberMe = 1;
 				localLogin(params).then(response => {
-				  if (response.code == "success") {
+				  if (response.code == this.$ECode.SUCCESS) {
 
 					let token = response.data;
 					authVerify(token).then(res => {
-					  if (res.code == "success") {
+					  if (res.code == this.$ECode.SUCCESS) {
 						uni.showToast({
 							icon: "none",
 							title: "登录成功",

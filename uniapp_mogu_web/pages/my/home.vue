@@ -209,7 +209,7 @@
 				let params = {}
 				getWebConfig(params).then(res =>{
 					console.log("获取网站配置", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.webConfig = res.data;
 						this.openMobileComment = res.data.openMobileComment
 						this.openMobileAdmiration = res.data.openMobileAdmiration
@@ -232,7 +232,6 @@
 						}
 					}
 				})
-				console.log("点击退出登录")
 			}
 		}
 	}

@@ -96,9 +96,7 @@
 				params.currentPage = this.currentPage
 				params.pageSize = this.pageSize
 				params.keywords = this.keyword;
-				console.log("搜索的参数", params)
 				searchBlog(params).then(res =>{	
-					console.log("查询的数据", res)
 					if(res.code == "success") {
 						var newData = this.searchData.concat(res.data.blogList);
 						this.searchData = newData;						

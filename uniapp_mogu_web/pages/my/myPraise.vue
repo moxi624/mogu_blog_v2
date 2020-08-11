@@ -54,7 +54,7 @@
 				params.currentPage = 1;
 				getPraiseListByUser(params).then(response => {
 				  console.log("获取点赞列表", response)
-				  if(response.code == "success") {
+				  if(response.code == this.$ECode.SUCCESS) {
 					this.praiseList = response.data.records;
 				  }
 				})

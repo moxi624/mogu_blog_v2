@@ -35,7 +35,7 @@
 				var params = {}
 				getLink(params).then(res =>{
 					console.log(res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						this.linkList = res.data;
 					}
 				})

@@ -73,6 +73,15 @@
 				uni.stopPullDownRefresh()
 			}, 500);
 		},
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+			  console.log(res.target)
+			}
+			return {
+			  title: '蘑菇博客',
+			  path: '/pages/index/index?PageCur=blogHome'
+			}
+		},
 		created() {
 			// this.getWebConfigData();
 		},

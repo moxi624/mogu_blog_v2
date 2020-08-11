@@ -32,6 +32,10 @@ import 'static/css/ckeditor.css'
 import 'static/css/emoji.css'
 import 'static/css/index.css'
 
+// 工具类注册
+import prototype from './utils/prototype'
+Vue.use(prototype)
+
 // Vue.directive('highlight', function (el) {
 //   let blocks = el.querySelectorAll('pre code');
 //   console.log("获取的列表", el)

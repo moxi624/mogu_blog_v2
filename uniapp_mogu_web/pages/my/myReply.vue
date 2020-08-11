@@ -96,7 +96,7 @@
 				params.currentPage = this.currentPage;
 				getCommentListByUser(params).then(response => {
 				  console.log("获取评论列表", response)
-				  if(response.code == "success") {
+				  if(response.code == this.$ECode.SUCCESS) {
 					this.commentList = response.data.replyList;
 				  }
 				  //全部加载完毕

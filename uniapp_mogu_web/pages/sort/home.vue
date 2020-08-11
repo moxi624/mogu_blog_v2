@@ -107,7 +107,7 @@
 				params.level = 4;
 				params.useSort = 1;
 				getBlogByLevel(params).then(res =>{					
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.levelData = res.data.records;	
 					}
 				})
@@ -123,7 +123,7 @@
 				let params = {}
 				getSortList(params).then(res =>{					
 					console.log("返回的博客标签数据", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						let list = res.data;
 						let newList = []
 						for(let a = list.length -1; a >= 0 ; a--) {
@@ -139,9 +139,8 @@
 			  let params = {}
 			  params.monthDate = content
 			  getArticleByMonth(params).then(response => {
-				if (response.code == "success") {
+				if (response.code == this.$ECode.SUCCESS) {
 					this.itemByDate = response.data;
-					console.log("点击的时间", this.itemByDate)
 				}
 			  });
 			},

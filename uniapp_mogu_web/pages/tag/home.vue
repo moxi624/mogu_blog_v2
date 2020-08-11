@@ -113,7 +113,7 @@
 				params.useSort = 1;
 				getBlogByLevel(params).then(res =>{
 					console.log("获取推荐博客", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.levelData = res.data.records;	
 					}
 				})
@@ -137,14 +137,14 @@
 					return;
 				}
 				this.currentPage = this.currentPage + 1;
-				this.getBlogList(this.selectBlogSortUid);
+				this.getBlogList(this.selectBlogTagUid);
 			},
 			blogSortList() {
 				var that = this
 				let params = {}
 				getTagList(params).then(res =>{					
 					console.log("返回的博客标签数据", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.activities = res.data;
 						that.getBlogList(that.activities[0].uid)
 					}
@@ -153,12 +153,15 @@
 			getBlogList(blogTagUid) {
 			  this.selectBlogTagUid = blogTagUid;
 			  var params = {};
+			  params.currentPage = this.currentPage;
+			  params.pageSize = this.pageSize;
 			  params.tagUid = blogTagUid
 			  this.loading = true;
 			  getArticleByTagUid(params).then(response => {
 				console.log("通过标签uid获取文章列表", response)
-				if (response.code == "success") {
-				  this.itemByDate = response.data.records;
+				if (response.code == this.$ECode.SUCCESS) {
+				  var newData = this.itemByDate.concat(response.data.records);
+				  this.itemByDate = newData;
 				  this.currentPage = response.data.current;
 				  this.pageSize = response.data.size;
 				  this.total = response.data.total;

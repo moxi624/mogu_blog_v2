@@ -130,7 +130,7 @@
 			getUserInfo() {
 				authVerify(tokenUtil.get()).then(response => {
 				  console.log("获取用户信息", response)
-				  if (response.code == "success") {
+				  if (response.code == this.$ECode.SUCCESS) {
 					let userInfo = response.data
 					if(userInfo.photoUrl) {
 						this.imgList = [userInfo.photoUrl]
@@ -151,7 +151,7 @@
 			updateUserInfo() {
 				editUser(this.userInfo).then(response => {
 				  console.log("更新用户信息", response)
-				  if (response.code == "success") {
+				  if (response.code == this.$ECode.SUCCESS) {
 					uni.showToast({
 						icon: "success",
 						title: response.data,
@@ -186,7 +186,7 @@
 						  let data = uploadFileRes.data;
 						  let res = JSON.parse(data)
 						  console.log("上传成功", res)
-						  if(res.code == "success") {
+						  if(res.code == this.$ECode.SUCCESS) {
 							  uni.showToast({
 							  	title: "头像上传成功"
 							  })

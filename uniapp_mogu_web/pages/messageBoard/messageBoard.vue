@@ -55,7 +55,7 @@
 				params.pageSize = that.pageSize;
 				this.loading = true;
 				getCommentListByApp(params).then(response => {
-					if (response.code == "success") {
+					if (response.code == this.$ECode.SUCCESS) {
 					  this.comments = that.comments.concat(response.data.records);
 					  that.currentPage = response.data.current;
 					  that.pageSize = response.data.size;
@@ -72,20 +72,16 @@
 			},
 			deleteSuccess(commentUid) {
 				// 找到被删除的uid，移除
-				console.log("找到被移除的uid", commentUid)
 				let comments = this.comments
 				this.comments = []
 				let newCommentList = []
 				for(let a=0; a<comments.length; a++) {
 					if(comments[a].uid == commentUid) {
-						console.log("删除成功")
 						continue;
 					}
 					newCommentList.push(comments[a])
 				}
 				this.comments = newCommentList
-				// 删除后的值
-				console.log("删除后的值", this.comments)
 			},
 			commentSuccess(comment) {
 				// 评论成功后，需要更新一下

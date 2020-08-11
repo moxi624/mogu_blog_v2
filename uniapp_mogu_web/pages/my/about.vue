@@ -103,7 +103,7 @@
 				let params = {}
 				getMe(params).then(res =>{
 					console.log(res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.userInfo = res.data;
 						this.openMobileComment = res.data.openMobileComment
 						this.openMobileAdmiration = res.data.openMobileAdmiration
@@ -115,7 +115,7 @@
 				let params = {}
 				getWebConfig(params).then(res =>{
 					console.log("获取联系方式", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.contact = res.data;	
 					}
 				})
@@ -137,7 +137,7 @@
 				that.loading = true;
 				getCommentListByApp(params).then(response => {
 					console.log("得到的评论列表", response)
-					if (response.code == "success") {
+					if (response.code == this.$ECode.SUCCESS) {
 					  that.comments = that.comments.concat(response.data.records);
 					  that.currentPage = response.data.current;
 					  that.pageSize = response.data.size;
@@ -160,14 +160,11 @@
 				let newCommentList = []
 				for(let a=0; a<comments.length; a++) {
 					if(comments[a].uid == commentUid) {
-						console.log("删除成功")
 						continue;
 					}
 					newCommentList.push(comments[a])
 				}
 				this.comments = newCommentList
-				// 删除后的值
-				console.log("删除后的值", this.comments)
 			},
 			commentSuccess(comment) {
 				// 评论成功后，需要更新一下

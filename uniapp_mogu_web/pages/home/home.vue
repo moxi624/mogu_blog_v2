@@ -100,11 +100,6 @@
 				}
 			}
 		},
-		onShareAppMessage() {
-			qq.showShareMenu({
-				showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
-			})
-		},
 		created() {
 			this.getBlogList()
 			this.getLevelBlog()
@@ -145,8 +140,8 @@
 				let params = {}
 				params.level = 1;
 				params.useSort = 1;
-				getBlogByLevel(params).then(res =>{					
-					if(res.code == "success") {
+				getBlogByLevel(params).then(res =>{
+					if(res.code == this.$ECode.SUCCESS) {
 						that.fristData = res.data.records;	
 					}
 				})
@@ -159,7 +154,7 @@
 				that.loading = true;
 				getNewBlog(params).then(res =>{
 					console.log("得到的最新博客", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						var newData = that.newBlogData.concat(res.data.records);
 						that.newBlogData = newData;						
 						that.total = res.data.total;

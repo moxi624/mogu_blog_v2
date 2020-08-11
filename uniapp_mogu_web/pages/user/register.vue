@@ -120,7 +120,7 @@
 				params.email = this.registerForm.email;
 				params.nickName = this.registerForm.nickName
 				localRegister(params).then(response => {
-				  if (response.code == "success") {
+				  if (response.code == this.$ECode.SUCCESS) {
 					uni.showToast({
 						icon: "success",
 						title: response.data,

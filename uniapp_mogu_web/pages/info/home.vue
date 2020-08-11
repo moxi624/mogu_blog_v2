@@ -153,13 +153,22 @@
 		created() {
 			this.getWebConfigData()
 		},
+		onShareAppMessage(res) {
+			if (res.from === 'button') {// 来自页面内分享按钮
+			  console.log(res.target)
+			}
+			return {
+			  title: this.blogData.title,
+			  path: '/pages/info/home?blogUid=' + this.blogUid
+			}
+		},
 		methods: {
 			getWebConfigData() {
 				var that = this
 				let params = {}
 				getWebConfig(params).then(res =>{
 					console.log("获取网站配置", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						this.openMobileComment = res.data.openMobileComment
 						this.openMobileAdmiration = res.data.openMobileAdmiration
 					}
@@ -183,7 +192,7 @@
 				this.loading = true;
 				getCommentListByApp(params).then(response => {
 					console.log("得到的博客列表", response)
-					if (response.code == "success") {
+					if (response.code == this.$ECode.SUCCESS) {
 					  this.comments = that.comments.concat(response.data.records);
 					  that.currentPage = response.data.current;
 					  that.pageSize = response.data.size;
@@ -212,7 +221,7 @@
 				params.uid = this.blogUid;
 				getBlogByUid(params).then(res =>{
 					console.log(res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.blogData = res.data;
 						that.praiseCount = res.data.collectCount
 					}
@@ -226,14 +235,11 @@
 				let newCommentList = []
 				for(let a=0; a<comments.length; a++) {
 					if(comments[a].uid == commentUid) {
-						console.log("删除成功")
 						continue;
 					}
 					newCommentList.push(comments[a])
 				}
 				this.comments = newCommentList
-				// 删除后的值
-				console.log("删除后的值", this.comments)
 			},
 			commentSuccess(comment) {
 				// 评论成功后，需要更新一下
@@ -251,8 +257,7 @@
 				let params = {}
 				params.uid = this.blogUid;
 				praiseBlogByUid(params).then(res =>{
-					console.log("点赞成功", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						uni.showToast({
 							title: "点赞成功"
 						})

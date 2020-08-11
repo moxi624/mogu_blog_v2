@@ -51,7 +51,7 @@
 				let params = {}
 				getWebConfig(params).then(res =>{
 					console.log("获取联系方式", res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						that.webConfig = res.data;	
 					}
 				})

@@ -122,7 +122,7 @@
 
 				addFeedback(this.feedback).then(res =>{
 					console.log(res)
-					if(res.code == "success") {
+					if(res.code == this.$ECode.SUCCESS) {
 						uni.showToast({
 							icon: "success",
 							title: res.data,
