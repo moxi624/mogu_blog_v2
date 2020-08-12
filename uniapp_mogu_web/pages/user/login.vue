@@ -2,7 +2,7 @@
 	<view>
 
 		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" title="登录"></nav-bar>
-		
+
 		<view class="UCenter-bg">
 			<image src="/static/logo.png" class="png" mode="widthFix" @tap="goLogin"></image>
 			<view class="text-xl" style="margin-top: 5px;">
@@ -10,29 +10,37 @@
 			</view>
 			<image src="../../static/images/wave.gif" mode="scaleToFill" class="gif-wave"></image>
 		</view>
-		
+
 		<form>
 			<view class="cu-form-group margin-top">
 				<view class="title">用户名</view>
 				<input placeholder="请输入用户名或邮箱" v-model="loginForm.userName"></input>
 			</view>
-			
+
 			<view class="cu-form-group margin-top">
 				<view class="title">密码</view>
 				<input password="" placeholder="请输入密码" v-model="loginForm.password"></input>
 			</view>
-			
+
 			<button class="cu-btn block bg-green margin-sm lg" @click="login"> 提交 </button>
 			<button class="cu-btn block bg-grey margin-sm lg" @click="goRegister"> 注册 </button>
-			
-		</form>
+			<button class="cu-btn block bg-blue margin-sm lg" open-type="getUserInfo" @getuserinfo="getUserInfo"> QQ登录 <text
+				 style="font-weight: bold;">【推荐】</text> </button>
 
+		</form>
 	</view>
 </template>
 
 <script>
-	import {localLogin, authVerify} from "../../api/user.js";
-	import { tokenUtil } from '../../utils/token.js'
+	import {
+		localLogin,
+		authVerify,
+		decryptData,
+		code2Session
+	} from "../../api/user.js";
+	import {
+		tokenUtil
+	} from '../../utils/token.js'
 	export default {
 		name: "login",
 		data() {
@@ -47,12 +55,53 @@
 
 		},
 		created() {
-			
+
 		},
 		methods: {
+			getUserInfo(res) {
+				let that = this;
+				uni.login({
+					provider: 'qq',
+					success: function(loginRes) {
+						console.log("QQ登录", loginRes)
+
+						let params = {}
+						params.encryptDataB64 = res.detail.encryptedData;
+						params.jsCode = loginRes.code;
+						params.ivB64 = res.detail.iv;
+						decryptData(params).then(res => {
+							if (res.code == that.$ECode.SUCCESS) {
+								let userInfo = res.data
+								console.log("登录成功，获取用户信息", userInfo)
+
+								// 设置token
+								tokenUtil.set(userInfo.validCode)
+
+								// 设置用户信息
+								uni.setStorageSync("userInfo", userInfo)
+
+								// 跳转个人中心页
+								setTimeout(function() {
+									uni.navigateTo({
+										url: '/pages/index/index',
+									});
+								}, 500);
+
+							} else {
+								uni.showToast({
+									title: res.data,
+									icon: "none"
+								})
+							}
+							console.log("解析用户数据", res)
+						})
+					}
+				});
+
+			},
 			login() {
 				console.log("提交表单", this.loginForm)
-				if(this.loginForm.userName == "" || this.loginForm.password == "") {
+				if (this.loginForm.userName == "" || this.loginForm.password == "") {
 					uni.showToast({
 						icon: "none",
 						title: "请先完善表单~",
@@ -64,38 +113,38 @@
 				params.passWord = this.loginForm.password;
 				params.isRememberMe = 1;
 				localLogin(params).then(response => {
-				  if (response.code == this.$ECode.SUCCESS) {
+					if (response.code == this.$ECode.SUCCESS) {
 
-					let token = response.data;
-					authVerify(token).then(res => {
-					  if (res.code == this.$ECode.SUCCESS) {
+						let token = response.data;
+						authVerify(token).then(res => {
+							if (res.code == this.$ECode.SUCCESS) {
+								uni.showToast({
+									icon: "none",
+									title: "登录成功",
+								})
+								// 设置token
+								tokenUtil.set(token)
+
+								console.log("登录成功，获取用户信息", res)
+
+								// 设置用户信息
+								uni.setStorageSync("userInfo", res.data)
+
+								// 跳转个人中心页
+								setTimeout(function() {
+									uni.navigateTo({
+										url: '/pages/index/index',
+									});
+								}, 500);
+
+							}
+						});
+					} else {
 						uni.showToast({
 							icon: "none",
-							title: "登录成功",
+							title: response.data,
 						})
-						// 设置token
-						tokenUtil.set(token)
-						
-						console.log("登录成功，获取用户信息", res)
-						
-						// 设置用户信息
-						uni.setStorageSync("userInfo", res.data)
-						
-						// 跳转个人中心页
-						setTimeout(function() {
-							uni.navigateTo({
-								url: '/pages/index/index',
-							});
-						}, 500);
-						
-					  }
-					});
-				  } else {
-					uni.showToast({
-						icon: "none",
-						title: response.data,
-					})
-				  }
+					}
 				});
 			},
 			goRegister() {
@@ -129,6 +178,7 @@
 		font-weight: 300;
 		text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 	}
+
 	.UCenter-bg text {
 		opacity: 0.8;
 	}

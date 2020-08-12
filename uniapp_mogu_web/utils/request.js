@@ -11,10 +11,7 @@ const send = (url, data = {}, method = 'POST', showLoading = true) => {
             url: url,
             data: data,
             header: (() => {
-				
                 const tokeValue = tokenUtil.get()
-				// const tokeValue = "78801152b6544c5a8c61f63b474bb206"
-				
                 let config = {
                     // 'Content-Type': 'application/x-www-form-urlencoded'
 					'Content-Type': 'application/json'

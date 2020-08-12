@@ -13,6 +13,7 @@ public final class SysConf extends BaseSysConf {
     public final static String NAME = "name";
     public final static String CONTENT = "content";
     public final static String AVATAR = "avatar";
+    public final static String AVATAR_URL = "avatarUrl";
     public final static String BLOB = "blob";
     public final static String ERROR = "error";
     public static final String ADMIN = "admin";
@@ -32,7 +33,9 @@ public final class SysConf extends BaseSysConf {
     public static final String PIC_URL = "picUrl";
     public static final String QI_NIU_URL = "qiNiuUrl";
     public static final String NICKNAME = "nickname";
+    public static final String NICK_NAME = "nickName";
     public static final String UUID = "uuid";
+    public static final String OPEN_ID = "openId";
     public static final String SOURCE = "source";
     public final static String MOGU = "MOGU";
     public final static String LOCATION = "location";

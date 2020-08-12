@@ -30,3 +30,13 @@ export function authVerify (params) {
 export function editUser (params) {
   return request.post(appConfig.WEB_API + '/oauth/editUser', params)  
 }
+
+// 解析移动端数据
+export function decryptData (params) {
+  return request.post(appConfig.WEB_API + '/oauth/decryptData', params)  
+}
+
+// 解析移动端数据
+export function code2Session(params) {
+  return request.get('https://api.q.qq.com/sns/jscode2session', params)  
+}
