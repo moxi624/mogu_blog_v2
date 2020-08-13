@@ -1,5 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -316,13 +317,27 @@ public class AuthRestApi {
             String jsCode = map.get("jsCode");
             String ivB64 = map.get("ivB64");
 
-            String params = "appid=" + APP_ID + "&secret=" + SECRET + "&js_code=" +  jsCode + "&grant_type=" + GRANT_TYPE;
-            String result = HttpRequestUtil.sendGet("https://api.q.qq.com/sns/jscode2session", params);
+//            String params = "appid=" + APP_ID + "&secret=" + SECRET + "&js_code=" +  jsCode + "&grant_type=" + GRANT_TYPE;
+//            String result = HttpRequestUtil.sendGet("https://api.q.qq.com/sns/jscode2session", params);
+
+            HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("appid", APP_ID);
+            paramMap.put("secret", SECRET);
+            paramMap.put("js_code", jsCode);
+            paramMap.put("grant_type", GRANT_TYPE);
+
+            String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
+
+            log.error("获取UnionID");
+            log.error(result);
+
             Map<String,Object> resultMap = JsonUtils.jsonToMap(result);
 
             if(resultMap != null) {
                 String sessionKey = resultMap.get("session_key").toString();
                 String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
+                log.error("解析加密数据");
+                log.error(userInfo);
                 Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
 
                 Boolean exist = false;

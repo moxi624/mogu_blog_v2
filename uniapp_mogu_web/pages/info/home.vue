@@ -141,9 +141,6 @@
 		},
 		onLoad(option) {
 			this.blogUid = option.blogUid
-			uni.showLoading({
-			    title: '加载中'
-			})
 			this.getBlogInfo()
 			this.commentList()
 		},
@@ -222,9 +219,9 @@
 				getBlogByUid(params).then(res =>{
 					console.log(res)
 					if(res.code == this.$ECode.SUCCESS) {
-						that.blogData = res.data;
+						that.blogData = res.data;						
 						that.praiseCount = res.data.collectCount
-					}
+					}										
 				})
 			},
 			deleteSuccess(commentUid) {

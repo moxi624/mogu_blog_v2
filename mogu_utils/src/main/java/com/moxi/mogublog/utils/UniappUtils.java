@@ -6,6 +6,7 @@ import org.bouncycastle.util.encoders.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.security.Security;
 /**
@@ -33,13 +34,13 @@ public class UniappUtils {
      * @param ivB64
      * @return
      */
-    public static String decryptData(String encryptDataB64, String sessionKeyB64, String ivB64) {
+    public static String decryptData(String encryptDataB64, String sessionKeyB64, String ivB64) throws UnsupportedEncodingException {
         return new String(
                 decryptOfDiyIV(
                         Base64.decode(encryptDataB64),
                         Base64.decode(sessionKeyB64),
                         Base64.decode(ivB64)
-                )
+                ),"UTF-8"
         );
     }
 

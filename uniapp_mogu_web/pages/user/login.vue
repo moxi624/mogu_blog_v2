@@ -64,7 +64,6 @@
 					provider: 'qq',
 					success: function(loginRes) {
 						console.log("QQ登录", loginRes)
-
 						let params = {}
 						params.encryptDataB64 = res.detail.encryptedData;
 						params.jsCode = loginRes.code;
@@ -73,7 +72,7 @@
 							if (res.code == that.$ECode.SUCCESS) {
 								let userInfo = res.data
 								console.log("登录成功，获取用户信息", userInfo)
-
+								
 								// 设置token
 								tokenUtil.set(userInfo.validCode)
 
