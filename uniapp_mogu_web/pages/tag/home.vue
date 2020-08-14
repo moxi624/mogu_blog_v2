@@ -129,6 +129,7 @@
 				this.TabCur = index
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
 				console.log("开始切换", this.activities[index])
+				this.itemByDate = []
 				this.getBlogList(this.activities[index].uid);
 			},
 			loadData: function() {

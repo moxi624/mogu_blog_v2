@@ -56,6 +56,10 @@
 > 【演示后端】：http://demoadmin.moguit.cn/
 >
 > 【演示账号】：mogu2018   mogu2018
+>
+> 【QQ小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支）
+
+<img src="./doc/images/uniapp/qqCode.png" width="200" />
 
 ## 项目中初始用户和密码
 
@@ -145,7 +149,7 @@
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
-- uniapp_mogu_web：基于uniapp 和 colorUi 的蘑菇博客移动端门户页面
+- uniapp_mogu_web：基于uniapp 和 colorUi 的蘑菇博客移动端门户页面（Nacos分支）
 - nuxt_mogu_web：Nuxt的门户网站，主要用于支持SEO搜索引擎优化`（目前还未完善）`
 
 ## 技术选型
@@ -313,7 +317,7 @@
 - [x] 资源管理页面集成网盘管理
 - [x] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
 - [x] 使用Sentinel做服务限流和熔断
-- [ ] 增加 蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [x] 增加 蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
@@ -343,7 +347,13 @@
 | :----------------------------------------------: | :-----------------------------------------------: |
 | <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
 
-## 相关截图
+## 移动端截图
+
+> 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支
+
+![image text](./doc/images/uniapp/uniapp.gif)
+
+## 网站截图
 
 |                        Admin端                         |                                                       |
 | :----------------------------------------------------: | :---------------------------------------------------: |
