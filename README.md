@@ -35,13 +35,12 @@
 
 - Eureka版本请切换至Eureka分支（将不再进行新功能的开发）
 - Nacos版本请切换至Nacos分支（作为以后长期维护的分支，目前文档还未完善）
-- 目前蘑菇博客移动端版本基于[uniapp](https://uniapp.dcloud.io/)和[ColorUI](https://github.com/weilanwl/ColorUI)开发，已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
+- 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
 
 ## 项目介绍
 
-蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云。
+蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云，使用uniapp和ColorUi搭建移动端博客平台。
 
-- 从大学的时候开始，就一直想要搭建一套属于自己的博客系统，但是一直被没有去弄，现在时间多了，结合目前流行的技术栈，使用前后端分离架构进行项目的开发，也希望自己能够将项目一步步进行完善。
 - 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，在加上没怎么接触公司实际项目，故有能改正的地方，还请各位老哥能够指出~
 - 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
 - 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
@@ -57,6 +56,10 @@
 > 【演示后端】：http://demoadmin.moguit.cn/
 >
 > 【演示账号】：mogu2018   mogu2018
+>
+> 【QQ小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支）
+
+<img src="./doc/images/uniapp/qqCode.png" width="200" />
 
 ## 项目中初始用户和密码
 
@@ -67,6 +70,7 @@
 - **RabbitMQ管理页面：** 用户：guest，密码：guest
 - **Eureka管理页面：** 用户：user，密码：password123
 - **蘑菇博客监控页面**：用户：user，密码：password123
+- **Druid初始密码：** 用户：admin，密码：123456
 
 ## 运行配置
 
@@ -102,6 +106,9 @@
 - 采用自定义参数校验注解，轻松实现后端参数校验
 - 采用AOP+自定义注解+Redis实现限制IP接口访问次数
 - 采用自研的评论模块，实现评论邮件通知
+- 采用Nacos作为服务发现和配置中心，轻松完成项目的配置的维护
+- 采用Sentinel流量控制框架，通过配置再也不怕网站被爆破
+- 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
 
 ## 项目文档
 
@@ -142,6 +149,7 @@
 - doc: 是蘑菇博客的一些文档和数据库文件
 - vue_mogu_admin：VUE的后台管理页面
 - vue_mogu_web：VUE的门户网站
+- uniapp_mogu_web：基于uniapp 和 colorUi 的蘑菇博客移动端门户页面（Nacos分支）
 - nuxt_mogu_web：Nuxt的门户网站，主要用于支持SEO搜索引擎优化`（目前还未完善）`
 
 ## 技术选型
@@ -200,6 +208,8 @@
 |      js-beautify      |    美化JavaScript代码     |         https://github.com/beautify-web/js-beautify          |
 |     FileSaver.js      |     保存文件在客户端      |           https://github.com/eligrey/FileSaver.js            |
 |   vue-side-catalog    |        目录导航栏         |        https://github.com/yaowei9363/vue-side-catalog        |
+|        uniapp         |     移动端跨平台语言      |                  https://uniapp.dcloud.io/                   |
+|        colorUi        |  专注视觉的小程序组件库   |             https://github.com/weilanwl/ColorUI              |
 
 ## 项目搭建
 
@@ -279,6 +289,7 @@
 - 感谢 **若依** 提供的RuoYi项目：[https://gitee.com/y_project/RuoYi](https://gitee.com/y_project/RuoYi)
 - 感谢 **yaowei9363** 提供的 侧目录组件： [vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog) 
 - 感谢 **奇文社区** 提供的 奇文网盘：https://gitee.com/qiwen-cloud/qiwen-file
+- 感谢 **weilanwl** 提供的 ColorUI：https://github.com/weilanwl/ColorUI
 
 ## 关注&交流
 
@@ -302,7 +313,12 @@
 - [x] 前端增加用户个人中心
 - [x] 增加一个FAQ常见问题文档
 - [x] 集成表单构建页面，来源于[RuoYi](https://gitee.com/y_project/RuoYi)
-- [ ] 增加博客详情页目录导航，来源于[vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog)
+- [x] 增加博客详情页目录导航，来源于[vue-side-catalog](https://github.com/yaowei9363/vue-side-catalog)
+- [x] 资源管理页面集成网盘管理
+- [x] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
+- [x] 使用Sentinel做服务限流和熔断
+- [x] 增加 蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
 - [ ] 完善网关模块
@@ -331,7 +347,13 @@
 | :----------------------------------------------: | :-----------------------------------------------: |
 | <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
 
-## 相关截图
+## 移动端截图
+
+> 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支
+
+![image text](./doc/images/uniapp/uniapp.gif)
+
+## 网站截图
 
 |                        Admin端                         |                                                       |
 | :----------------------------------------------------: | :---------------------------------------------------: |
