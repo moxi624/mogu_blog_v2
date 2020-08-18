@@ -211,7 +211,7 @@ export default {
       var getMeParams = new URLSearchParams();
       getMe(getMeParams).then(response => {
         console.log("得到的用户列表", response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.form = response.data;
           this.fileIds = this.form.avatar;
         }
@@ -229,7 +229,7 @@ export default {
       params.dictType = 'sys_user_sex';
       getListByDictType(params).then(response => {
         console.log('得到的字典', response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.genderDictList = response.data.list;
         }
       });
@@ -312,7 +312,7 @@ export default {
                 params.append("newPwd", this.changePwdForm.newPwd1);
                 changePwd(params).then(response => {
                   console.log(response);
-                  if (response.code == "success") {
+                  if (response.code == this.$ECode.SUCCESS) {
                     this.$notify({
                       title: "成功",
                       message: response.data,

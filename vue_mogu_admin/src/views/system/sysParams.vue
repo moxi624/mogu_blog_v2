@@ -244,7 +244,7 @@ export default {
       var dictTypeList = ['sys_params_type']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
           this.paramsTypeDictList = dictMap.sys_params_type.list
           if(dictMap.sys_params_type.defaultValue) {
@@ -305,7 +305,7 @@ export default {
         } else {
           if (this.isEditForm) {
             editSysParams(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -322,7 +322,7 @@ export default {
           } else {
             addSysParams(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

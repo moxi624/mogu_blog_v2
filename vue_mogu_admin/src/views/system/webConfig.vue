@@ -346,7 +346,7 @@ export default {
       var params = {};
       params.dictType = 'sys_normal_disable';
       getListByDictType(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.openDictList = response.data.list;
         }
       });
@@ -354,7 +354,7 @@ export default {
     getWebConfigFun: function() {
       getWebConfig().then(response => {
         console.log("得到的配置", response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           let data = response.data;
 
@@ -432,7 +432,7 @@ export default {
     },
     fileSuccess_ali: function(response, file, fileList) {
       console.log(response);
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.aliPay = fileList[0].uid;
@@ -451,7 +451,7 @@ export default {
 
     fileSuccess_weixin: function(response, file, fileList) {
 
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.weixinPay = fileList[0].uid;

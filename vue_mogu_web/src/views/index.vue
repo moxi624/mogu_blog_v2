@@ -168,7 +168,7 @@
       //     params.append("currentPage", that.currentPage);
       //     params.append("pageSize", that.pageSize);
       //     getNewBlog(params).then(response => {
-      //       if (response.code == "success" && response.data.records.length > 0) {
+      //       if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
       //         that.isEnd = false;
       //         var newData = that.newBlogData.concat(response.data.records);
       //         that.newBlogData = newData;
@@ -190,7 +190,7 @@
       // 是否排序
       secondParams.append("useSort", 1);
       getBlogByLevel(secondParams).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.secondData = response.data.records;
         }
       });
@@ -244,7 +244,7 @@
         params.append("currentPage", this.currentPage);
         params.append("pageSize", this.pageSize);
         getNewBlog(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             that.newBlogData = response.data.records;
             that.total = response.data.total;
             that.pageSize = response.data.size;
@@ -264,7 +264,7 @@
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         getNewBlog(params).then(response => {
-          if (response.code == "success" && response.data.records.length > 0) {
+          if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
             that.isEnd = false;
             var newData = that.newBlogData.concat(response.data.records);
             that.newBlogData = newData;

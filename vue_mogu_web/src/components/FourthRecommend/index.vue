@@ -32,13 +32,14 @@ export default {
       fourthParams.append("level", 4);
       fourthParams.append("useSort", 1);
       getBlogByLevel(fourthParams).then(response => {
-        this.fourthData = response.data.records;
+        if(response.code == this.$ECode.SUCCESS) {
+          this.fourthData = response.data.records;
+        }
       });
     },
     methods: {
       //跳转到文章详情
 	    goToInfo(uid) {
-
         let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
         window.open(routeData.href, '_blank');
 	    }

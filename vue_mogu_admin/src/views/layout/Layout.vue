@@ -51,7 +51,7 @@ export default {
   created() {
     var that = this;
     this.$store.dispatch("GetMenu").then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         var parentList = response.data.parentList;
         var sonList = response.data.sonList;
         var items = [];
@@ -92,7 +92,7 @@ export default {
     });
 
     // getMenu().then(response => {
-    //   if (response.code == "success") {
+    //   if (response.code == this.$ECode.SUCCESS) {
     //     var parentList = response.data.parentList;
     //     var sonList = response.data.sonList;
     //     var items = [];

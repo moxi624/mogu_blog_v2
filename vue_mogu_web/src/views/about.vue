@@ -106,7 +106,7 @@
               params.currentPage = that.currentPage + 1
               params.pageSize = that.pageSize;
               getCommentList(params).then(response => {
-                if (response.code == "success") {
+                if (response.code == this.$ECode.SUCCESS) {
                   that.comments = that.comments.concat(response.data.records);
                   that.setCommentList(this.comments);
                   that.currentPage = response.data.current;
@@ -120,7 +120,7 @@
         created() {
             var that = this;
             getMe().then(response => {
-                if (response.code == "success") {
+                if (response.code == this.$ECode.SUCCESS) {
                     this.info = response.data;
                 }
             });
@@ -150,7 +150,7 @@
                 params.content = e.content;
                 params.blogUid = e.blogUid;
                 addComment(params).then(response => {
-                    if (response.code == "success") {
+                    if (response.code == this.$ECode.SUCCESS) {
                         this.$notify({
                             title: "成功",
                             message: "发表成功~",
@@ -173,7 +173,7 @@
                 params.currentPage = this.currentPage;
                 params.pageSize = this.pageSize;
                 getCommentList(params).then(response => {
-                    if (response.code == "success") {
+                    if (response.code == this.$ECode.SUCCESS) {
                         this.comments = response.data.records;
                         this.setCommentList(this.comments);
                         this.currentPage = response.data.current;

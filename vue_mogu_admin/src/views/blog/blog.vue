@@ -579,7 +579,7 @@ export default {
       blogSortParams.pageSize = 100;
       blogSortParams.currentPage = 1;
       getBlogSortList(blogSortParams).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.blogSortData = response.data.records;
           this.sortOptions = response.data.records;
         }
@@ -596,7 +596,7 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getBlogList(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -612,7 +612,7 @@ export default {
       var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status', 'sys_normal_disable']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           var dictMap = response.data;
 
@@ -838,7 +838,7 @@ export default {
         action,
         success: (response) => {
           let res = JSON.parse(response)
-          if(res.code == "success") {
+          if(res.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
               message: "博客上传成功"
@@ -874,7 +874,7 @@ export default {
         action,
         success: (response) => {
           let res = JSON.parse(response)
-          if(res.code == "success") {
+          if(res.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
               message: "图片上传成功"
@@ -1059,7 +1059,7 @@ export default {
           var params = formatData(this.form);
           if (this.isEditForm) {
             editBlog(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -1078,7 +1078,7 @@ export default {
 
           } else {
             addBlog(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

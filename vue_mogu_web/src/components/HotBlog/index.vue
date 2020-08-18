@@ -26,7 +26,9 @@ export default {
   },
   created() {
     getHotBlog().then(response => {
-      this.hotBlogData = response.data.records;
+      if (response.code == this.$ECode.SUCCESS) {
+        this.hotBlogData = response.data.records;
+      }
     });
   },
   methods: {

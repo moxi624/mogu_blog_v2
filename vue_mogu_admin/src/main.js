@@ -22,6 +22,7 @@ import './directive'
 // 添加粒子特效
 import VueParticles from 'vue-particles'
 
+// 因引入CDN加速，无需再次引入
 // Vue.use(ElementUI, { locale })
 
 import xss from 'xss'

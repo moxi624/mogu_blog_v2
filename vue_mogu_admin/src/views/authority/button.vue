@@ -327,7 +327,7 @@ export default {
   methods: {
     menuList: function() {
       getAllMenu().then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           let tableData = response.data;
           let options = []
           for(let a=0; a<tableData.length; a++) {
@@ -358,7 +358,7 @@ export default {
       }
       getButtonAll(params).then(response => {
         console.log("getAllMenu", response);
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data;
         }
       });
@@ -369,7 +369,7 @@ export default {
     getDictList: function () {
       var dictTypeList =  ['sys_menu_level', 'sys_yes_no', 'sys_menu_type']
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           var dictMap = response.data;
 
@@ -435,7 +435,7 @@ export default {
           let params = {}
           params.uid = row.uid
           stickMenu(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.buttonList();
               this.$message({
                 type: "success",
@@ -467,7 +467,7 @@ export default {
           let params = {}
           params.uid = row.uid
           deleteMenu(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -516,7 +516,7 @@ export default {
           if (this.isEditForm) {
             editMenu(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -532,7 +532,7 @@ export default {
             });
           } else {
             addMenu(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

@@ -649,7 +649,7 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getCommentListByUser(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.commentList = response.data.commentList
             this.replyList = response.data.replyList
           }
@@ -660,7 +660,7 @@
       getFeedback: function() {
         let params = {}
         getFeedbackList(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.feedbackList = response.data.records;
           }
         })
@@ -672,7 +672,7 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getPraiseListByUser(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.praiseList = response.data.records;
           }
         })
@@ -741,7 +741,7 @@
                 console.log("校验失败")
               } else {
                 editUser(this.userInfo).then(response => {
-                  if(response.code == "success") {
+                  if(response.code == this.$ECode.SUCCESS) {
                     this.$message({
                       type: "success",
                       message: response.data
@@ -763,7 +763,7 @@
                 console.log("校验失败")
               } else {
                 replyBlogLink(this.blogLink).then(response => {
-                  if(response.code == "success") {
+                  if(response.code == this.$ECode.SUCCESS) {
                     this.$message({
                       type: "success",
                       message: response.data
@@ -791,7 +791,7 @@
               return;
             }
             addFeedback(this.feedback).then(response => {
-              if(response.code == "success") {
+              if(response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -829,7 +829,7 @@
             params.append("oldPwd", oldPwd)
             params.append("newPwd", newPwd)
             updateUserPwd(params).then(response => {
-              if(response.code == "success") {
+              if(response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -854,7 +854,7 @@
         var dictTypeList =  ['sys_yes_no', 'sys_user_sex', 'sys_feedback_status']
 
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.genderDictList = dictMap.sys_user_sex.list
             this.yesNoDictList = dictMap.sys_yes_no.list
@@ -879,7 +879,7 @@
           console.log("通过token开始请求后台")
           authVerify(token).then(response => {
             console.log("获得的数据", response)
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
@@ -934,7 +934,7 @@
           this.mailto = "mailto:" + this.contact.email;
         } else {
           getWebConfig().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.info = response.data;
               // 存储在Vuex中
               this.setWebConfigData(response.data)

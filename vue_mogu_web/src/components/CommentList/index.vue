@@ -89,7 +89,7 @@
         }
         var dictTypeList =  ['sys_user_tag']
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.userTagDictList = dictMap.sys_user_tag.list
             this.setUserTag(dictMap.sys_user_tag.list)
@@ -125,7 +125,7 @@
         params.toUserUid = e.toUserUid;
         params.source = e.source
         addComment(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               let commentData = response.data
               document.getElementById(commentData.toUid).style.display = 'none'
               let comments = this.$store.state.app.commentList;
@@ -160,7 +160,7 @@
         params.currentPage = 0;
         params.pageSize = 10;
         getCommentList(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.comments = response.data;
           }
         });
@@ -209,7 +209,7 @@
         params.uid = item.uid;
         params.userUid = userUid
         reportComment(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.$notify({
               title: '成功',
               message: response.data,
@@ -241,7 +241,7 @@
         params.userUid = this.$store.state.user.userInfo.uid
 
         deleteComment(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.$notify({
               title: '成功',
               message: "删除成功",

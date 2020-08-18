@@ -63,7 +63,7 @@
         params.content = e.content;
         params.blogUid = e.blogUid;
         addComment(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$notify({
                 title: '成功',
                 message: "发表成功~",
@@ -87,7 +87,7 @@
         params.currentPage = 0;
         params.pageSize = 10;
         getCommentList(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.comments = response.data;
             this.setCommentList(this.comments);
           }

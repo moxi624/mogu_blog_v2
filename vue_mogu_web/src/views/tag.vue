@@ -90,7 +90,7 @@
     created() {
       var that = this;
       getTagList().then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var activities = response.data;
           var result = [];
           for (var a = 0; a < activities.length; a++) {
@@ -114,7 +114,7 @@
         var params = new URLSearchParams();
         params.append("tagUid", tagUid);
         getArticleByTagUid(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.itemByDate = response.data.records;
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
@@ -133,7 +133,7 @@
         params.append("tagUid", this.selectBlogUid);
         params.append("currentPage", this.currentPage + 1);
         getArticleByTagUid(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.itemByDate = this.itemByDate.concat(response.data.records);
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;

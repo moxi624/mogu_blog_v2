@@ -26,7 +26,7 @@ export default {
       thirdParams.append("level", 3);
       thirdParams.append("useSort", 1);
       getBlogByLevel(thirdParams).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.thirdData = response.data.records;
         }
       });

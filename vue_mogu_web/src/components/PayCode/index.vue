@@ -74,7 +74,7 @@ export default {
   },
   created() {
     getWebConfig().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.webConfigData = response.data;
         this.payCode = this.webConfigData.aliPayPhoto;
       }
@@ -99,7 +99,7 @@ export default {
       params.append("uid", uid);
       praiseBlogByUid(params).then(response => {
         console.log(response);
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           this.$notify({
             title: '成功',
@@ -124,7 +124,7 @@ export default {
       var params = new URLSearchParams();
       params.append("uid", uid);
       getBlogPraiseCountByUid(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.praiseCount = response.data;
         }
       });

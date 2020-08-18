@@ -239,7 +239,7 @@ export default {
       var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
           this.areaDictList = dictMap.sys_storage_region.list
           this.yesNoDictList = dictMap.sys_yes_no.list
@@ -253,7 +253,7 @@ export default {
     },
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           if (response.data) {
             this.form = response.data;
           }
@@ -265,7 +265,7 @@ export default {
       let params = []
       params.push(key)
       cleanRedisByKey(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.$message({
             type: "success",
             message: response.data

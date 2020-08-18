@@ -276,7 +276,7 @@ export default {
       params.currentPage = this.currentPage
       params.pageSize = this.pageSize
       getAdminList(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -291,7 +291,7 @@ export default {
       var params = {};
       params.dictType = 'sys_user_sex';
       getListByDictType(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.genderDictList = response.data.list;
           // 设置默认值
           if(response.data.defaultValue) {
@@ -375,7 +375,7 @@ export default {
           let params = {}
           params.uid = row.uid
           restPwdAdmin(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               that.$message({
                 type: "success",
                 message: response.data
@@ -408,7 +408,7 @@ export default {
           adminUids.push(row.uid);
           params.append("adminUids", adminUids);
           deleteAdmin(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -442,7 +442,7 @@ export default {
           if (this.isEditForm) {
             editAdmin(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -458,7 +458,7 @@ export default {
             });
           } else {
             addAdmin(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

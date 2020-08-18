@@ -214,7 +214,7 @@ export default {
       )
         .then(() => {
           blogSortByClickCount().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.blogSortList();
             }
           });
@@ -239,7 +239,7 @@ export default {
       )
         .then(() => {
           blogSortByCite().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.blogSortList();
             }
           });
@@ -267,7 +267,7 @@ export default {
           var params = {};
           params.uid = row.uid;
           stickBlogSort(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.blogSortList();
               this.$message({
                 type: "success",
@@ -299,7 +299,7 @@ export default {
           var params = [];
           params.push(row);
           deleteBatchBlogSort(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -337,7 +337,7 @@ export default {
       })
         .then(() => {
           deleteBatchBlogSort(that.multipleSelection).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -369,7 +369,7 @@ export default {
           if (this.isEditForm) {
             editBlogSort(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -386,7 +386,7 @@ export default {
           } else {
             addBlogSort(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

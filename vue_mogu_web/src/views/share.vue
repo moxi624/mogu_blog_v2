@@ -58,7 +58,7 @@ export default {
   },
   created() {
     getStudyVideoBySort().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.studyVideoData = response.data.records;
         this.total = response.data.total;
         this.pageSize = response.data.size;

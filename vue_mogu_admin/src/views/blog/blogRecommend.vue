@@ -51,7 +51,7 @@
         params.useSort = 1;
         getBlogList(params).then(response => {
           this.loadingInstance.close();
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             console.log("推荐等级", level)
             console.log("推荐博客",response.data)
             switch (level) {
@@ -76,7 +76,7 @@
           list[a].sort = list.length - a;
         }
         editBatchBlog(list).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
               message: response.data

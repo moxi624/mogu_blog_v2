@@ -282,7 +282,7 @@
         params.currentPage = this.currentPage;
         params.pageSize = this.pageSize;
         getSysDictDataList(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.tableData = response.data.records;
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
@@ -296,7 +296,7 @@
         params.currentPage = 0;
         params.pageSize = 100;
         getSysDictTypeList(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.dictTypeList = response.data.records;
           }
         });
@@ -402,7 +402,7 @@
             if (this.isEditForm) {
               editSysDictData(this.form).then(response => {
                 console.log(response);
-                if (response.code == "success") {
+                if (response.code == this.$ECode.SUCCESS) {
                   this.$message({
                     type: "success",
                     message: response.data
@@ -418,7 +418,7 @@
               });
             } else {
               addSysDictData(this.form).then(response => {
-                if (response.code == "success") {
+                if (response.code == this.$ECode.SUCCESS) {
                   this.$message({
                     type: "success",
                     message: response.data

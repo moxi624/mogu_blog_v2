@@ -211,7 +211,7 @@ export default {
       params.pageSize = this.pageSize
       params.currentPage = this.currentPage
       getPictureList(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -293,7 +293,7 @@ export default {
           let params = {};
           params.uid = this.pictureUids.join(","); //将数组变成,组成
           deletePicture(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -368,7 +368,7 @@ export default {
       params.picName = checkedPicture.picName
       params.pictureSortUid = checkedPicture.pictureSortUid
       editPicture(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.$message({
             type: "success",
             message: response.data
@@ -414,7 +414,7 @@ export default {
     },
     fileSuccess: function(response, file, fileList) {
       var that = this;
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let file = response.data;
 
         for (let index = 0; index < file.length; index++) {
@@ -428,7 +428,7 @@ export default {
         this.count = this.count + 1;
         if(this.count % fileList.length == 0) {
           addPicture(this.pictureUploadList).then(res => {
-            if (res.code == "success") {
+            if (res.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: res.data

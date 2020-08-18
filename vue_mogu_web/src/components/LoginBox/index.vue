@@ -226,7 +226,7 @@
             params.passWord = this.loginForm.password;
             params.isRememberMe = 1;
             localLogin(params).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 // 跳转到首页
                 location.replace(this.vueMoguWebUrl + "/#/?token=" + response.data)
                 window.location.reload()
@@ -261,7 +261,7 @@
             params.email = this.registerForm.email;
             params.nickName = this.registerForm.nickName
             localRegister(params).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -293,7 +293,7 @@
         var params = new URLSearchParams();
         params.append("source", source);
         login(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var token = response.data.token;
             console.log(response);
             window.location.href = response.data.url

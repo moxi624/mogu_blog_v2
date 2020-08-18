@@ -192,7 +192,7 @@ export default {
       console.log('开始查找', params)
       getSysDictTypeList(params).then(response => {
         console.log("得到的类型", response)
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -237,7 +237,7 @@ export default {
           let deleteList = []
           deleteList.push(sysDictType)
           deleteBatchSysDictType(deleteList).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -274,7 +274,7 @@ export default {
       })
         .then(() => {
           deleteBatchSysDictType(that.multipleSelection).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -319,7 +319,7 @@ export default {
           if (this.isEditForm) {
             editSysDictType(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -335,7 +335,7 @@ export default {
             });
           } else {
             addSysDictType(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

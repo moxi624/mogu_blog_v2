@@ -367,7 +367,7 @@
 
         getUserList(params).then(response => {
           console.log("getUserList", response);
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.tableData = response.data.records;
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
@@ -402,7 +402,7 @@
       getDictList: function () {
         var dictTypeList = ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.accountSourceDictList = dictMap.sys_account_source.list
             this.commentStatusDictList = dictMap.sys_comment_status.list
@@ -491,7 +491,7 @@
             console.log("校验出错")
           } else {
             editUser(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$notify({
                   title: "成功",
                   message: "保存成功！",

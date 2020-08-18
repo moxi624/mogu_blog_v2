@@ -72,7 +72,7 @@ export default {
       params.append("currentPage", this.currentPage + 1);
       params.append("pageSize", this.pageSize);
       getBlogByTime(params).then(response => {
-        if (response.code == "success" && response.data.records.length > 0) {
+        if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
           that.isEnd = false;
           var newData = that.newBlogData.concat(response.data.records);
           that.newBlogData = newData;

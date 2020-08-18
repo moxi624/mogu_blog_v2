@@ -146,7 +146,7 @@ export default {
           this.$store
             .dispatch("Login", this.loginForm)
             .then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$router.push({ path: this.redirect || "/" });
               } else {
                 this.$message.error(response.data);

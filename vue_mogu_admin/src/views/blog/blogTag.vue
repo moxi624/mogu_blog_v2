@@ -212,7 +212,7 @@ export default {
       )
         .then(() => {
           tagSortByClickCount().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.tagList();
             }
           });
@@ -238,7 +238,7 @@ export default {
         .then(() => {
 
 					tagSortByCite().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.tagList();
             }
 					});
@@ -269,7 +269,7 @@ export default {
           params.uid = row.uid;
 
           stickTag(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.tagList();
               this.$message({
                 type: "success",
@@ -302,7 +302,7 @@ export default {
           var params = [];
           params.push(row);
           deleteBatchTag(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -340,7 +340,7 @@ export default {
       })
         .then(() => {
           deleteBatchTag(that.multipleSelection).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -374,7 +374,7 @@ export default {
           if (this.isEditForm) {
             editTag(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -391,7 +391,7 @@ export default {
           } else {
             addTag(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

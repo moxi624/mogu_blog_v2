@@ -68,7 +68,8 @@
 - **Redis**：密码：mogu2018
 - **远程SSH初始密码**：用户：root，密码：mogu2018
 - **RabbitMQ管理页面：** 用户：guest，密码：guest
-- **Eureka管理页面：** 用户：user，密码：password123
+- **Nacos管理页面：** 用户：nacos，密码：nacos
+- **Sentinel管理页面：** 用户：sentinel，密码：sentinel
 - **蘑菇博客监控页面**：用户：user，密码：password123
 - **Druid初始密码：** 用户：admin，密码：123456
 
@@ -76,9 +77,9 @@
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
 
-`mogu-eureka`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
+`nacos`，`nginx`，`redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
-其它的jar都可以不启动，也不影正常使用
+其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
 最低配置：1核2G `需要开启虚拟内存`
 
@@ -139,7 +140,7 @@
 - mogu_sms：消息服务，用于更新ElasticSearch、Solr索引、邮件和短信发送
 - mogu_monitor：监控服务，集成SpringBootAdmin用于管理和监控SpringBoot应用程序
 - mogu_spider：爬虫服务`（目前还未完善）`
-- mogu_spider：网关服务`（目前还未完善）`
+- mogu_gateway：网关服务`（目前还未完善）`
 - mogu_zipkin：链路追踪服务，`目前使用java -jar的方式启动`
 - mogu_search：搜索服务，ElasticSearch和Solr作为全文检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
 - mogu_commons：公共模块，主要用于存放Entity实体类、Feign远程调用接口、以及公共config配置
@@ -219,7 +220,7 @@
 
 ### Docker搭建蘑菇博客
 
-参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在服务器中，搭建好博客系统  
+参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在Linux服务器中，搭建好博客系统  
 
 ### 蘑菇博客部署到云服务器
 
@@ -240,6 +241,18 @@
 ### 使用Zipkin搭建蘑菇博客链路追踪
 
 参考[使用Zipkin搭建蘑菇博客链路追踪](http://moguit.cn/#/info?blogUid=35bd93cabc08611c7f74ce4564753ef9)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
+
+### 使用Sentinel搭建蘑菇博客流量控制
+
+参考[蘑菇博客Nacos部署指南](http://www.moguit.cn/#/info?blogUid=8dc52bd61e36fa56cfc7699815375572)，搭建蘑菇博客的服务注册和配置中心
+
+### 使用Sentinel搭建蘑菇博客流量控制
+
+参考[蘑菇博客Sentinel安装指南](http://www.moguit.cn/#/info?blogUid=7135efc7f536769efd0d0483c687ba07)，Sentinel被称为分布式系统的流量防卫兵，相当于Hystrix
+
+### 蘑菇博客小程序发布
+
+参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/#/info?blogUid=80d3eae77c16cea10e119b9f1a1da4c8)，完成蘑菇博客uniapp移动端的启动和发布
 
 ### 蘑菇博客扩展新的功能和页面
 
@@ -317,7 +330,7 @@
 - [x] 资源管理页面集成网盘管理
 - [x] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
 - [x] 使用Sentinel做服务限流和熔断
-- [x] 增加 蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
