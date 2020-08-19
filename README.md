@@ -242,7 +242,7 @@
 
 参考[使用Zipkin搭建蘑菇博客链路追踪](http://moguit.cn/#/info?blogUid=35bd93cabc08611c7f74ce4564753ef9)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
 
-### 使用Sentinel搭建蘑菇博客流量控制
+### 使用Nacos搭建蘑菇博客服务注册和配置中心
 
 参考[蘑菇博客Nacos部署指南](http://www.moguit.cn/#/info?blogUid=8dc52bd61e36fa56cfc7699815375572)，搭建蘑菇博客的服务注册和配置中心
 

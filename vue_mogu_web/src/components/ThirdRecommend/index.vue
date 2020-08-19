@@ -3,7 +3,7 @@
     <h2 class="hometitle">特别推荐</h2>
     <ul>
       <li  v-for="item in thirdData" :key="item.uid"> <i><img v-if="item.photoList" :src="item.photoList[0]"></i>
-        <p>{{item.title}} <span><a href="javascript:void(0);" @click="goToInfo(item.uid)">阅读</a></span> </p>
+        <p>{{splitStr(item.title, 30)}}<span><a href="javascript:void(0);" @click="goToInfo(item.uid)">阅读</a></span> </p>
       </li>
     </ul>
   </div>
@@ -34,11 +34,15 @@ export default {
     methods: {
       //跳转到文章详情
 	    goToInfo(uid) {
-
         let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
         window.open(routeData.href, '_blank');
 
-	    }
+	    },
+      splitStr(str, flagCount) {
+	      console.log(str)
+	      console.log(this.$commonUtil.splitStr(str, flagCount))
+        return this.$commonUtil.splitStr(str, flagCount)
+      }
     },
 
 }

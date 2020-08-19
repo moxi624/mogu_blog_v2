@@ -44,6 +44,16 @@ const FUNCTIONS = {
       return []
     }
   },
+  // 切割字符串
+  splitStr: (str, flagCount) => {
+    if (str == null || str == '') {
+      return ""
+    } else if(str.length > flagCount) {
+      return str.substring(0, flagCount) + "..."
+    } else {
+      return str
+    }
+  },
   /**
    * 复制文字到剪切板
    * @param text
