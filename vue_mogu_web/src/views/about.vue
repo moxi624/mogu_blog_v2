@@ -22,15 +22,14 @@
 
         <el-divider></el-divider>
 
-<!--        <sticky :sticky-top="60">-->
           <CommentBox
             :userInfo="userInfo"
             :commentInfo="commentInfo"
             @submit-box="submitBox"
             :showCancel="showCancel"
+            v-if="openComment == '1'"
           ></CommentBox>
-<!--        </sticky>-->
-        <div class="message_infos">
+        <div class="message_infos" v-if="openComment == '1'">
           <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
           <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
         </div>
@@ -58,6 +57,7 @@
     import { mapMutations } from "vuex";
     import { addComment, getCommentList } from "../api/comment";
     import Sticky from "@/components/Sticky";
+    import {getWebConfig} from "../api";
 
     export default {
         name: "about",
@@ -79,7 +79,8 @@
                 userInfo: {},
                 info: {},
                 sid: "test",
-                isRouterAlive: false
+                isRouterAlive: false,
+                openComment: "0", // 开启评论
             };
         },
         components: {
@@ -125,6 +126,7 @@
                 }
             });
             this.getCommentDataList();
+          this.setCommentAndAdmiration()
         },
         methods: {
             //拿到vuex中的写的两个方法
@@ -132,6 +134,22 @@
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();
+            },
+            // 设置是否开启评论和赞赏
+            setCommentAndAdmiration() {
+              let webConfigData = this.$store.state.app.webConfigData
+              if(webConfigData.createTime) {
+                this.openComment = webConfigData.openComment
+              } else {
+                getWebConfig().then(response => {
+                  if (response.code == this.$ECode.SUCCESS) {
+                    webConfigData = response.data;
+                    // 存储在Vuex中
+                    this.setWebConfigData(response.data)
+                    this.openComment = webConfigData.openComment
+                  }
+                });
+              }
             },
             imageChange: function(e) {
                 //首先需要判断点击的是否是图片

@@ -259,7 +259,7 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="标签" label-width="80px">
+            <el-form-item label="标签" label-width="80px" prop="blogTagUid">
               <el-select
                 v-model="tagValue"
                 multiple
@@ -505,6 +505,9 @@ export default {
         ],
         blogSortUid: [
           {required: true, message: '分类不能为空', trigger: 'blur'}
+        ],
+        blogTagUid: [
+          {required: true, message: '标签不能为空', trigger: 'blur'}
         ],
         level: [
           {required: true, message: '推荐等级不能为空', trigger: 'blur'},

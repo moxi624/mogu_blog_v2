@@ -67,7 +67,7 @@
 <!--          </router-link>-->
 <!--        </li>-->
 
-        <li>
+        <li v-if="openComment=='1'">
           <router-link to="/messageBoard">
             <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>
           </router-link>
@@ -513,6 +513,7 @@
         replyList: [], // 我的回复
         praiseList: [], // 我的点赞
         feedbackList: [], // 我的反馈
+        openComment: "0", // 是否开启评论
         rules: {
           qqNumber: [
             {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
@@ -609,7 +610,6 @@
 
       //跳转到文章详情
       goToInfo(uid) {
-
         let routeData = this.$router.resolve({
           path: "/info",
           query: {blogUid: uid}
@@ -932,12 +932,14 @@
         if(webConfigData.createTime) {
           this.contact = webConfigData;
           this.mailto = "mailto:" + this.contact.email;
+          this.openComment = webConfigData.openComment
         } else {
           getWebConfig().then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.info = response.data;
               // 存储在Vuex中
               this.setWebConfigData(response.data)
+              this.openComment = this.info.openComment
             }
           });
         }

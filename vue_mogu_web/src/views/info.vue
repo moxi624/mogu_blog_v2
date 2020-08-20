@@ -65,7 +65,7 @@
       </div>
 
       <!--付款码和点赞-->
-      <PayCode :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
+      <PayCode v-if="openAdmiration == '1'" :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
 
       <div class="otherlink" v-if="sameBlogData.length > 0">
         <h2>相关文章</h2>
@@ -79,9 +79,9 @@
           </li>
         </ul>
       </div>
-      <div class="news_pl">
-        <h2>文章评论</h2>
-        <ul>
+      <div class="news_pl" >
+        <h2 v-if="openComment == '1'">文章评论</h2>
+        <ul v-if="openComment == '1'">
             <CommentBox
               :userInfo="userInfo"
               :commentInfo="commentInfo"
@@ -108,9 +108,8 @@
 </template>
 
 <script>
-    import { getLink } from "../api/index";
+    import {getLink, getWebConfig} from "../api/index";
     import { getBlogByUid, getSameBlogByBlogUid } from "../api/blogContent";
-
     import CommentList from "../components/CommentList";
     import CommentBox from "../components/CommentBox";
     // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -163,7 +162,9 @@
                 sameBlogData: [], //相关文章
                 linkData: [], //友情链接
                 dialogPictureVisible: false,
-                dialogImageUrl: ""
+                dialogImageUrl: "",
+                openComment: "0", // 开启评论
+                openAdmiration: "0", // 开启赞赏
             };
         },
         computed: {
@@ -261,27 +262,51 @@
                 fullscreen: true,
                 text: "正在努力加载中~"
             });
-            getLink().then(response => {
-                this.linkData = response.data.records;
-            });
-            // var params = new URLSearchParams();
             this.blogUid = this.$route.query.blogUid;
             this.commentInfo.blogUid = this.$route.query.blogUid;
-            var blogParams = new URLSearchParams();
-            blogParams.append("blogUid", this.blogUid);
-            getSameBlogByBlogUid(blogParams).then(response => {
-                if (response.code == this.$ECode.SUCCESS) {
-                    this.sameBlogData = response.data.records;
-                }
-            });
+            this.getLinkList()
+            this.getSameBlog()
             this.getCommentDataList();
+            this.setCommentAndAdmiration()
         },
         methods: {
             //拿到vuex中的写的两个方法
-            ...mapMutations(["setCommentList"]),
+            ...mapMutations(["setCommentList", "setWebConfigData"]),
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();
+            },
+            getLinkList() {
+              getLink().then(response => {
+                this.linkData = response.data.records;
+              });
+            },
+            getSameBlog() {
+              var blogParams = new URLSearchParams();
+              blogParams.append("blogUid", this.blogUid);
+              getSameBlogByBlogUid(blogParams).then(response => {
+                if (response.code == this.$ECode.SUCCESS) {
+                  this.sameBlogData = response.data.records;
+                }
+              });
+            },
+            // 设置是否开启评论和赞赏
+            setCommentAndAdmiration() {
+              let webConfigData = this.$store.state.app.webConfigData
+              if(webConfigData.createTime) {
+                this.openAdmiration = webConfigData.openAdmiration
+                this.openComment = webConfigData.openComment
+              } else {
+                getWebConfig().then(response => {
+                  if (response.code == this.$ECode.SUCCESS) {
+                    webConfigData = response.data;
+                    // 存储在Vuex中
+                    this.setWebConfigData(response.data)
+                    this.openAdmiration = webConfigData.openAdmiration
+                    this.openComment = webConfigData.openComment
+                  }
+                });
+              }
             },
             submitBox(e) {
                 let params = {};

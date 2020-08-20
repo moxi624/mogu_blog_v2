@@ -40,9 +40,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtHelper jwtHelper;
 
-//	@Value(value="${base64Secret}")
-//	private String base64Secret;
-
     @Value(value = "${tokenHead}")
     private String tokenHead;
 
