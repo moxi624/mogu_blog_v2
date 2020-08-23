@@ -260,9 +260,6 @@ export default {
       this.form.photoList = null;
       this.form.fileUid = "";
     },
-    checkPhoto() {
-      this.photoVisible = true;
-    },
     //改变页码
     handleCurrentChange(val) {
       var that = this;

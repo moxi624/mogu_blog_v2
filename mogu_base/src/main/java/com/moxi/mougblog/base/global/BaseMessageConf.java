@@ -38,6 +38,7 @@ public class BaseMessageConf {
     public static final String PARAM_INCORRECT = "传入参数有误！";
     public static final String BLOG_UNDER_THIS_SORT = "该分类下还有博客！";
     public static final String RESOURCE_UNDER_THIS_SORT = "该分类下还有资源！";
+    public static final String SUBJECT_UNDER_THIS_SORT = "该专题下还有内容！";
     public static final String PICTURE_UNDER_THIS_SORT = "该分类下还有图片！";
     public static final String DICT_DATA_UNDER_THIS_SORT = "该分类下还有字典数据！";
     public static final String BLOG_UNDER_THIS_TAG = "该标签下还有博客！";

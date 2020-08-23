@@ -196,3 +196,36 @@ ALTER TABLE  t_web_config ADD open_admiration TINYINT(1) NOT NULL DEFAULT 0 COMM
 ALTER TABLE  t_web_config ADD open_mobile_admiration TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启移动端赞赏(0:否， 1:是)";
 
 
+/*
+	专题表
+*/
+
+CREATE TABLE `t_subject` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `subject_name` varchar(255) DEFAULT NULL COMMENT '专题名称',
+  `summary` varchar(255) DEFAULT NULL COMMENT '简介',
+  `file_uid` varchar(32) DEFAULT NULL COMMENT '封面图片UID',  
+  `click_count` int(11) NOT NULL DEFAULT '0' COMMENT '专题点击数',
+  `collect_count` int(11) NOT NULL DEFAULT '0' COMMENT '专题收藏数',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='专题表'
+
+
+/*
+	专题Item表
+*/
+
+CREATE TABLE `t_subject_item` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `subject_uid` varchar(32) NOT NULL COMMENT '专题uid',
+  `blog_uid` varchar(32) NOT NULL COMMENT '博客uid',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='专题Item表'

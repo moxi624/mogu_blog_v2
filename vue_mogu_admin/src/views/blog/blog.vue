@@ -82,6 +82,7 @@
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/blog/add'">添加博客</el-button>
       <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on" v-permission="'/blog/uploadLocalBlog'">本地上传</el-button>
       <el-button class="filter-item" type="warning" @click="handleDownload" icon="el-icon-s-flag"  v-permission="'/blog/downloadBatch'">导出选中</el-button>
+      <el-button class="filter-item" type="info" @click="handleSubject" icon="el-icon-folder-opened"  v-permission="'/blog/downloadBatch'">添加专题</el-button>
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
     </div>
 
@@ -128,12 +129,6 @@
           <span>{{ scope.row.blogSort.sortName }}</span>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="简介" width="250">
-	      <template slot-scope="scope">
-	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
-	      </template>
-      </el-table-column>-->
 
       <el-table-column label="标签" width="200" align="center">
         <template slot-scope="scope">
@@ -374,20 +369,6 @@
       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
     </el-upload>
 
-<!--      <el-upload-->
-<!--        class="upload-demo2"-->
-<!--        drag-->
-<!--        ref="upload2"-->
-<!--        name="filedatas"-->
-<!--        :action="uploadPictureHost"-->
-<!--        :data="otherData"-->
-<!--        :on-success = "fileSuccess"-->
-<!--        multiple>-->
-<!--        <i class="el-icon-upload"></i>-->
-<!--        <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>-->
-<!--        <div slot="tip" class="el-upload__tip">将博客内的本地图片选中</div>-->
-<!--      </el-upload>-->
-
     </el-dialog>
 
     <CheckPhoto
@@ -398,6 +379,8 @@
       :files="fileIds"
       :limit="1"
     ></CheckPhoto>
+
+    <SubjectSelect :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
   </div>
 </template>
 
@@ -405,19 +388,17 @@
 import { getBlogList, addBlog, uploadLocalBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
-import {
-  formatData,
-  formatDataToJson,
-  formatDataToForm
-} from "@/utils/webUtils";
+import {formatData} from "@/utils/webUtils";
 import { getToken } from '@/utils/auth'
 import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
 import {getListByDictTypeList} from "@/api/sysDictData"
+import {addSubjectItemList} from "@/api/subjectItem";
+
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
+import SubjectSelect from "../../components/SubjectSelect";
 var querystring = require("querystring");
 import { mapGetters } from "vuex";
-import data2blob from "../../components/AvatarCropper/utils/data2blob";
 import { Loading } from 'element-ui';
 export default {
   computed: {
@@ -425,7 +406,8 @@ export default {
   },
   components: {
     CheckPhoto,
-    CKEditor
+    CKEditor,
+    SubjectSelect
   },
   data() {
     return {
@@ -465,6 +447,7 @@ export default {
       total: 0, //总数量
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
+      subjectVisible: false, // 是否显示专题
       formLabelWidth: "120px",
       lineLabelWidth: "120px", //一行的间隔数
       maxLineLabelWidth: "100px",
@@ -695,10 +678,6 @@ export default {
         this.sortOptions = [];
       }
     },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
-    },
     getChooseData(data) {
       var that = this;
       this.photoVisible = false;
@@ -728,6 +707,49 @@ export default {
         return str.slice(0, index) + "...";
       }
       return str;
+    },
+    // 添加至专题
+    handleSubject() {
+      if(this.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要添加到专题的博客！"
+        });
+        return;
+      }
+      this.subjectVisible = true;
+    },
+    getSelectData(subjectUid) {
+      this.cancelSubjectSelect()
+      console.log("选中的专辑UID", subjectUid)
+
+      // 选中的博客
+      let multipleSelection = this.multipleSelection
+      let subjectItemList = []
+      for (let a=0; a<multipleSelection.length; a++) {
+        let params = {}
+        params.subjectUid = subjectUid[0];
+        params.blogUid = multipleSelection[a].uid
+        subjectItemList.push(params)
+      }
+      addSubjectItemList(subjectItemList).then(response => {
+        console.log("添加专题列表", response)
+        if (response.code == this.$ECode.SUCCESS) {
+          this.$message({
+            type: "success",
+            message: response.data
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: response.data
+          });
+        }
+      });
+
+    },
+    cancelSubjectSelect: function() {
+      this.subjectVisible = false
     },
     // 关闭窗口
     closeDialog(done) {

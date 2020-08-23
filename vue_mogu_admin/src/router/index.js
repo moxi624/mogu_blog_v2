@@ -76,6 +76,18 @@ export const constantRouterMap = [
         name: '收藏管理',
         component: () => import('@/views/blog/collect'),
         meta: { title: '收藏管理', icon: 'table' }
+      },
+      {
+        path: 'subject',
+        name: '专题管理',
+        component: () => import('@/views/blog/subject'),
+        meta: { title: '专题管理', icon: 'table' }
+      },
+      {
+        path: 'subjectItem',
+        name: '专题元素管理',
+        component: () => import('@/views/blog/subjectItem'),
+        meta: { title: '专题元素管理', icon: 'table' }
       }
     ]
   },

@@ -25,6 +25,7 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "screenfull": "^3.3.3",
+    "sortablejs": "^1.10.2",
     "stylus": "^0.54.8",
     "stylus-loader": "^3.0.2",
     "tui-editor": "^1.4.10",

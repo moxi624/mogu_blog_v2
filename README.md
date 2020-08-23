@@ -190,27 +190,28 @@
 
 ### 前端技术
 
-|         技术          |           说明            |                             官网                             |
-| :-------------------: | :-----------------------: | :----------------------------------------------------------: |
-|        Vue.js         |         前端框架          |                      https://vuejs.org/                      |
-|      Vue-router       |         路由框架          |                  https://router.vuejs.org/                   |
-|         Vuex          |     全局状态管理框架      |                   https://vuex.vuejs.org/                    |
-|        Nuxt.js        | 创建服务端渲染 (SSR) 应用 |                    https://zh.nuxtjs.org/                    |
-|        Element        |        前端ui框架         |    [ https://element.eleme.io](https://element.eleme.io/)    |
-|         Axios         |       前端HTTP框架        | [ https://github.com/axios/axios](https://github.com/axios/axios) |
-|        Echarts        |         图表框架          |                      www.echartsjs.com                       |
-|       CKEditor        |       富文本编辑器        |                    https://ckeditor.com/                     |
-|     Highlight.js      |     代码语法高亮插件      |         https://github.com/highlightjs/highlight.js          |
-|      Tui-editor       |      Markdown编辑器       |              https://github.com/nhn/tui.editor               |
-|      vue-cropper      |       图片裁剪组件        |           https://github.com/xyxiao001/vue-cropper           |
-| vue-image-crop-upload |    vue图片剪裁上传组件    |      https://github.com/dai-siki/vue-image-crop-upload       |
-|   vue-emoji-comment   |   Vue Emoji表情评论组件   |       https://github.com/pppercyWang/vue-emoji-comment       |
-|     clipboard.js      |     现代化的拷贝文字      |                  http://www.clipboardjs.cn/                  |
-|      js-beautify      |    美化JavaScript代码     |         https://github.com/beautify-web/js-beautify          |
-|     FileSaver.js      |     保存文件在客户端      |           https://github.com/eligrey/FileSaver.js            |
-|   vue-side-catalog    |        目录导航栏         |        https://github.com/yaowei9363/vue-side-catalog        |
-|        uniapp         |     移动端跨平台语言      |                  https://uniapp.dcloud.io/                   |
-|        colorUi        |  专注视觉的小程序组件库   |             https://github.com/weilanwl/ColorUI              |
+|         技术          |            说明             |                             官网                             |
+| :-------------------: | :-------------------------: | :----------------------------------------------------------: |
+|        Vue.js         |          前端框架           |                      https://vuejs.org/                      |
+|      Vue-router       |          路由框架           |                  https://router.vuejs.org/                   |
+|         Vuex          |      全局状态管理框架       |                   https://vuex.vuejs.org/                    |
+|        Nuxt.js        |  创建服务端渲染 (SSR) 应用  |                    https://zh.nuxtjs.org/                    |
+|        Element        |         前端ui框架          |    [ https://element.eleme.io](https://element.eleme.io/)    |
+|         Axios         |        前端HTTP框架         | [ https://github.com/axios/axios](https://github.com/axios/axios) |
+|        Echarts        |          图表框架           |                      www.echartsjs.com                       |
+|       CKEditor        |        富文本编辑器         |                    https://ckeditor.com/                     |
+|     Highlight.js      |      代码语法高亮插件       |         https://github.com/highlightjs/highlight.js          |
+|      Tui-editor       |       Markdown编辑器        |              https://github.com/nhn/tui.editor               |
+|      vue-cropper      |        图片裁剪组件         |           https://github.com/xyxiao001/vue-cropper           |
+| vue-image-crop-upload |     vue图片剪裁上传组件     |      https://github.com/dai-siki/vue-image-crop-upload       |
+|   vue-emoji-comment   |    Vue Emoji表情评论组件    |       https://github.com/pppercyWang/vue-emoji-comment       |
+|     clipboard.js      |      现代化的拷贝文字       |                  http://www.clipboardjs.cn/                  |
+|      js-beautify      |     美化JavaScript代码      |         https://github.com/beautify-web/js-beautify          |
+|     FileSaver.js      |      保存文件在客户端       |           https://github.com/eligrey/FileSaver.js            |
+|      SortableJS       | 功能强大的JavaScript 拖拽库 |                  http://www.sortablejs.com/                  |
+|   vue-side-catalog    |         目录导航栏          |        https://github.com/yaowei9363/vue-side-catalog        |
+|        uniapp         |      移动端跨平台语言       |                  https://uniapp.dcloud.io/                   |
+|        colorUi        |   专注视觉的小程序组件库    |             https://github.com/weilanwl/ColorUI              |
 
 ## 项目搭建
 
