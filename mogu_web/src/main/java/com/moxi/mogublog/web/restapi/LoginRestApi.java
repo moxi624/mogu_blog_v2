@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -54,13 +53,13 @@ public class LoginRestApi {
     @Autowired
     RabbitMqUtil rabbitMqUtil;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
     PictureFeignClient pictureFeignClient;
     @Autowired
     WebUtil webUtil;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RedisUtil redisUtil;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
 
@@ -117,7 +116,7 @@ public class LoginRestApi {
     @PostMapping("/register")
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
-        if(userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
+        if (userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         HttpServletRequest request = RequestHolder.getRequest();

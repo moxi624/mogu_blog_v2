@@ -25,7 +25,6 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,11 +77,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     SystemConfigService systemConfigService;
     @Autowired
+    SysParamsService sysParamsService;
+    @Autowired
     private BlogService blogService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
-    @Autowired
-    SysParamsService sysParamsService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -674,7 +673,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Blog blog = new Blog();
         //如果是原创，作者为用户的昵称
         String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-        if(StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
             log.error("参数配置有误，需重新配置！");
         }
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
@@ -732,7 +731,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             blog.setAuthor(admin.getNickName());
             String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-            if(StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+            if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
                 log.error("参数配置有误，需重新配置！");
             }
             blog.setArticlesPart(projectName);
@@ -984,7 +983,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Integer count = 1;
 
         String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-        if(StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
             log.error("参数配置有误，需重新配置！");
         }
         for (String content : fileContentList) {
@@ -1054,7 +1053,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
             break;
         }
-        if(StringUtils.isEmpty(blogCount)) {
+        if (StringUtils.isEmpty(blogCount)) {
             log.error("参数配置有误，需重新配置！");
         } else {
             page.setSize(Long.valueOf(blogCount));
@@ -1070,7 +1069,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             hotPage.setCurrent(1);
             String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
             String blogSecondCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT);
-            if(StringUtils.isEmpty(blogHotCount) || StringUtils.isEmpty(blogSecondCount)) {
+            if (StringUtils.isEmpty(blogHotCount) || StringUtils.isEmpty(blogSecondCount)) {
                 log.error("参数配置有误，需重新配置！");
             } else {
                 hotPage.setSize(Long.valueOf(blogHotCount));
@@ -1138,7 +1137,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Page<Blog> page = new Page<>();
         page.setCurrent(0);
         String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
-        if(StringUtils.isEmpty(blogHotCount)) {
+        if (StringUtils.isEmpty(blogHotCount)) {
             log.error("参数配置有误，需重新配置！");
         } else {
             page.setSize(Long.valueOf(blogHotCount));
@@ -1176,7 +1175,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
-        if(StringUtils.isEmpty(blogNewCount)) {
+        if (StringUtils.isEmpty(blogNewCount)) {
             log.error("参数配置有误，需重新配置！");
         } else {
             page.setSize(Long.valueOf(blogNewCount));
@@ -1804,7 +1803,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 List<Tag> tagListTemp = new ArrayList<Tag>();
 
                 tagUidsTemp.forEach(tag -> {
-                    if(tagMap.get(tag) != null) {
+                    if (tagMap.get(tag) != null) {
                         tagListTemp.add(tagMap.get(tag));
                     }
                 });

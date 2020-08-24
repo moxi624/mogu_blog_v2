@@ -3,22 +3,15 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.commons.entity.*;
-import com.moxi.mogublog.commons.feign.PictureFeignClient;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.global.SQLConf;
-import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.SubjectItemMapper;
-import com.moxi.mogublog.xo.mapper.SubjectMapper;
 import com.moxi.mogublog.xo.service.BlogService;
-import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mogublog.xo.service.SubjectItemService;
-import com.moxi.mogublog.xo.service.SubjectService;
-import com.moxi.mogublog.xo.utils.WebUtil;
-import com.moxi.mogublog.xo.vo.ResourceSortVO;
 import com.moxi.mogublog.xo.vo.SubjectItemVO;
-import com.moxi.mogublog.xo.vo.SubjectVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSQLConf;
@@ -50,7 +43,7 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
     public IPage<SubjectItem> getPageList(SubjectItemVO subjectItemVO) {
         QueryWrapper<SubjectItem> queryWrapper = new QueryWrapper<>();
         Page<SubjectItem> page = new Page<>();
-        if(StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
+        if (StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
             queryWrapper.eq(BaseSQLConf.SUBJECT_UID, subjectItemVO.getSubjectUid());
         }
         page.setCurrent(subjectItemVO.getCurrentPage());
@@ -64,9 +57,9 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
             blogUidList.add(item.getBlogUid());
         });
         Collection<Blog> blogCollection = null;
-        if(blogUidList.size() > 0) {
+        if (blogUidList.size() > 0) {
             blogCollection = blogService.listByIds(blogUidList);
-            if(blogCollection.size() > 0) {
+            if (blogCollection.size() > 0) {
                 List<Blog> blogTempList = new ArrayList<>(blogCollection);
                 List<Blog> blogList = blogService.setTagAndSortAndPictureByBlogList(blogTempList);
                 Map<String, Blog> blogMap = new HashMap<>();
@@ -87,9 +80,9 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
     public String addSubjectItemList(List<SubjectItemVO> subjectItemVOList) {
         List<String> blogUidList = new ArrayList<>();
         String subjectUid = "";
-        for (SubjectItemVO subjectItemVO: subjectItemVOList) {
+        for (SubjectItemVO subjectItemVO : subjectItemVOList) {
             blogUidList.add(subjectItemVO.getBlogUid());
-            if(StringUtils.isEmpty(subjectUid) && StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
+            if (StringUtils.isEmpty(subjectUid) && StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
                 subjectUid = subjectItemVO.getSubjectUid();
             }
         }
@@ -106,12 +99,12 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
 
 
         List<SubjectItem> subjectItemList = new ArrayList<>();
-        for (SubjectItemVO subjectItemVO: subjectItemVOList) {
-            if(StringUtils.isEmpty(subjectItemVO.getSubjectUid()) || StringUtils.isEmpty(subjectItemVO.getBlogUid())) {
+        for (SubjectItemVO subjectItemVO : subjectItemVOList) {
+            if (StringUtils.isEmpty(subjectItemVO.getSubjectUid()) || StringUtils.isEmpty(subjectItemVO.getBlogUid())) {
                 return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
             }
             // 判断是否重复添加
-            if(repeatBlogList.contains(subjectItemVO.getBlogUid())) {
+            if (repeatBlogList.contains(subjectItemVO.getBlogUid())) {
                 continue;
             } else {
                 SubjectItem subjectItem = new SubjectItem();
@@ -123,14 +116,14 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
         }
 
         if (subjectItemList.size() <= 0) {
-            if(repeatBlogList.size() == 0) {
+            if (repeatBlogList.size() == 0) {
                 return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL);
             } else {
                 return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL + "，已跳过" + repeatBlogList.size() + "个重复数据");
             }
         } else {
             subjectItemService.saveBatch(subjectItemList);
-            if(repeatBlogList.size() == 0) {
+            if (repeatBlogList.size() == 0) {
                 return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
             } else {
                 return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS + "，已跳过" + repeatBlogList.size() + "个重复数据，成功插入" + (subjectItemVOList.size() - repeatBlogList.size()) + "条数据");
@@ -145,9 +138,9 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
             subjectItemUidList.add(item.getUid());
         });
         Collection<SubjectItem> subjectItemCollection = null;
-        if(subjectItemUidList.size() > 0) {
+        if (subjectItemUidList.size() > 0) {
             subjectItemCollection = subjectItemService.listByIds(subjectItemUidList);
-            if(subjectItemCollection.size() > 0) {
+            if (subjectItemCollection.size() > 0) {
                 HashMap<String, SubjectItemVO> subjectItemVOHashMap = new HashMap<>();
                 subjectItemVOList.forEach(item -> {
                     subjectItemVOHashMap.put(item.getUid(), item);

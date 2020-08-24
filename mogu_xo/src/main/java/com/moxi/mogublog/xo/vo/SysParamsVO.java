@@ -1,9 +1,7 @@
 package com.moxi.mogublog.xo.vo;
 
-import com.moxi.mougblog.base.validator.annotion.BooleanNotNULL;
 import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
 import com.moxi.mougblog.base.validator.annotion.NotBlank;
-import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
@@ -38,7 +36,7 @@ public class SysParamsVO extends BaseVO<SysParamsVO> {
     private String paramsValue;
 
     /**
-     *  参数类型，是否系统内置（1：是，0：否）
+     * 参数类型，是否系统内置（1：是，0：否）
      */
     @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer paramsType;

@@ -22,6 +22,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     /**
      * 注册资源映射
+     *
      * @param registry
      */
     @Override

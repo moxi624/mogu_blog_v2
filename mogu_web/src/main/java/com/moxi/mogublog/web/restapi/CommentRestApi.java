@@ -332,7 +332,7 @@ public class CommentRestApi {
             String commentUid = item.getUid();
             String toCommentUid = item.getToUid();
             Comment comment = commentMap.get(commentUid);
-            if(StringUtils.isNotEmpty(toCommentUid)) {
+            if (StringUtils.isNotEmpty(toCommentUid)) {
                 comment.setToComment(commentMap.get(toCommentUid));
             }
             returnCommentList.add(comment);

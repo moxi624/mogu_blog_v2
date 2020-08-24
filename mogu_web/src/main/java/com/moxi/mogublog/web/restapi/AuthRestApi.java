@@ -32,7 +32,6 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
@@ -44,7 +43,6 @@ import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthQqRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -176,9 +174,9 @@ public class AuthRestApi {
         // 判断用户性别
         if (data.get(SysConf.GENDER) != null) {
             Object gender = data.get(SysConf.GENDER).toString();
-            if(SysConf.MALE.equals(gender)) {
+            if (SysConf.MALE.equals(gender)) {
                 user.setGender(EGender.MALE);
-            } else if(SysConf.FEMALE.equals(gender)) {
+            } else if (SysConf.FEMALE.equals(gender)) {
                 user.setGender(EGender.FEMALE);
             } else {
                 user.setGender(EGender.UNKNOWN);
@@ -268,7 +266,7 @@ public class AuthRestApi {
         List<String> urlList = new ArrayList<>();
         if (data.get(SysConf.AVATAR) != null) {
             urlList.add(data.get(SysConf.AVATAR).toString());
-        } else if(data.get(SysConf.AVATAR_URL) != null) {
+        } else if (data.get(SysConf.AVATAR_URL) != null) {
             urlList.add(data.get(SysConf.AVATAR_URL).toString());
         }
         fileVO.setUrlList(urlList);
@@ -305,12 +303,13 @@ public class AuthRestApi {
 
     /**
      * 解析移动端数据
+     *
      * @param map
      * @return
      */
     @ApiOperation(value = "decryptData", notes = "QQ小程序登录数据解析")
     @PostMapping("/decryptData")
-    public String decryptData(@RequestBody Map<String, String> map){
+    public String decryptData(@RequestBody Map<String, String> map) {
 
         try {
             String encryptDataB64 = map.get("encryptDataB64");
@@ -331,9 +330,9 @@ public class AuthRestApi {
             log.error("获取UnionID");
             log.error(result);
 
-            Map<String,Object> resultMap = JsonUtils.jsonToMap(result);
+            Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
 
-            if(resultMap != null) {
+            if (resultMap != null) {
                 String sessionKey = resultMap.get("session_key").toString();
                 String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
                 log.error("解析加密数据");
@@ -358,9 +357,9 @@ public class AuthRestApi {
                 if (userInfoMap.get(SysConf.GENDER) != null) {
                     String genderStr = userInfoMap.get(SysConf.GENDER).toString();
                     String gender = Double.valueOf(genderStr).intValue() + "";
-                    if(EGender.MALE.equals(gender)) {
+                    if (EGender.MALE.equals(gender)) {
                         user.setGender(EGender.MALE);
-                    } else if(EGender.FEMALE.equals(gender)) {
+                    } else if (EGender.FEMALE.equals(gender)) {
                         user.setGender(EGender.FEMALE);
                     } else {
                         user.setGender(EGender.UNKNOWN);
@@ -544,8 +543,8 @@ public class AuthRestApi {
 
     @ApiOperation(value = "更新用户密码", notes = "更新用户密码")
     @PostMapping("/updateUserPwd")
-    public String updateUserPwd(HttpServletRequest request,@RequestParam(value = "oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
-        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
+    public String updateUserPwd(HttpServletRequest request, @RequestParam(value = "oldPwd") String oldPwd, @RequestParam("newPwd") String newPwd) {
+        if (StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
@@ -554,11 +553,11 @@ public class AuthRestApi {
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
         User user = userService.getById(userUid);
         // 判断是否是第三方登录的账号
-        if(!user.getSource().equals(SysConf.MOGU)) {
+        if (!user.getSource().equals(SysConf.MOGU)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CANNOT_CHANGE_THE_PASSWORD_BY_USER);
         }
         // 判断旧密码是否一致
-        if(user.getPassWord().equals(MD5Utils.string2MD5(oldPwd))) {
+        if (user.getPassWord().equals(MD5Utils.string2MD5(oldPwd))) {
             user.setPassWord(MD5Utils.string2MD5(newPwd));
             user.updateById();
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

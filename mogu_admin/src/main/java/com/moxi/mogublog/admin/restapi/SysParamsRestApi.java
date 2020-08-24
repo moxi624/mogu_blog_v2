@@ -9,7 +9,6 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.vo.SysParamsVO;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;

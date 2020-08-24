@@ -1,6 +1,5 @@
 package com.moxi.mogublog.web.restapi;
 
-import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.xo.service.SubjectItemService;
@@ -8,10 +7,7 @@ import com.moxi.mogublog.xo.service.SubjectService;
 import com.moxi.mogublog.xo.vo.SubjectItemVO;
 import com.moxi.mogublog.xo.vo.SubjectVO;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
-import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * <p>

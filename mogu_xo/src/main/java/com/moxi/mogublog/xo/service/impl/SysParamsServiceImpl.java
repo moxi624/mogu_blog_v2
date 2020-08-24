@@ -3,10 +3,7 @@ package com.moxi.mogublog.xo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moxi.mogublog.commons.entity.SysDictType;
-import com.moxi.mogublog.commons.entity.SysLog;
 import com.moxi.mogublog.commons.entity.SysParams;
-import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -14,19 +11,18 @@ import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
-import com.moxi.mogublog.xo.mapper.SysLogMapper;
 import com.moxi.mogublog.xo.mapper.SysParamsMapper;
-import com.moxi.mogublog.xo.service.SysLogService;
 import com.moxi.mogublog.xo.service.SysParamsService;
-import com.moxi.mogublog.xo.vo.SysLogVO;
 import com.moxi.mogublog.xo.vo.SysParamsVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -82,7 +78,7 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
         String redisKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + paramsKey;
         String paramsValue = redisUtil.get(redisKey);
         // 如果不包含，从数据库获取
-        if(StringUtils.isEmpty(paramsValue)) {
+        if (StringUtils.isEmpty(paramsValue)) {
             SysParams sysParams = sysParamsService.getSysParamsByKey(paramsKey);
             if (sysParams == null || StringUtils.isEmpty(sysParams.getParamsValue())) {
                 log.error("参数配置有误，请重新导入配置！！！");

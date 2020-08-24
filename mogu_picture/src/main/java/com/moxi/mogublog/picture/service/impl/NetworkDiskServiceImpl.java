@@ -1,7 +1,6 @@
 package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.Storage;
 import com.moxi.mogublog.picture.global.SQLConf;
@@ -199,20 +198,20 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
 
     @Override
     public void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname) {
-        if ("null".equals(extendname)){
+        if ("null".equals(extendname)) {
             extendname = null;
         }
         //移动根目录
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.FILE_PATH, oldfilepath);
         queryWrapper.eq(SQLConf.FILE_NAME, filename);
-        if(StringUtils.isNotEmpty(extendname)) {
+        if (StringUtils.isNotEmpty(extendname)) {
             queryWrapper.eq(SQLConf.EXTEND_NAME, extendname);
         } else {
             queryWrapper.isNull(SQLConf.EXTEND_NAME);
         }
         List<NetworkDisk> networkDiskList = networkDiskService.list(queryWrapper);
-        for (NetworkDisk networkDisk: networkDiskList) {
+        for (NetworkDisk networkDisk : networkDiskList) {
             networkDisk.setFilePath(newfilepath);
         }
         networkDiskService.updateBatchById(networkDiskList);
@@ -232,7 +231,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             QueryWrapper<NetworkDisk> childQueryWrapper = new QueryWrapper<>();
             childQueryWrapper.likeRight(SQLConf.FILE_PATH, oldfilepath);
             List<NetworkDisk> childList = networkDiskService.list(childQueryWrapper);
-            for(NetworkDisk networkDisk: childList) {
+            for (NetworkDisk networkDisk : childList) {
                 String filePath = networkDisk.getFilePath();
                 networkDisk.setFilePath(filePath.replace(oldfilepath, newfilepath));
             }

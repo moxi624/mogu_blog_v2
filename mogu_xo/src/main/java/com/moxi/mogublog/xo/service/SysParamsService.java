@@ -1,11 +1,7 @@
 package com.moxi.mogublog.xo.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.moxi.mogublog.commons.entity.SysDictType;
-import com.moxi.mogublog.commons.entity.SysLog;
 import com.moxi.mogublog.commons.entity.SysParams;
-import com.moxi.mogublog.xo.vo.SysDictTypeVO;
-import com.moxi.mogublog.xo.vo.SysLogVO;
 import com.moxi.mogublog.xo.vo.SysParamsVO;
 import com.moxi.mougblog.base.service.SuperService;
 
@@ -31,6 +27,7 @@ public interface SysParamsService extends SuperService<SysParams> {
 
     /**
      * 通过 参数键名 获取参数配置
+     *
      * @param paramsKey
      * @return
      */
@@ -38,6 +35,7 @@ public interface SysParamsService extends SuperService<SysParams> {
 
     /**
      * 通过 参数键名 获取参数值
+     *
      * @param paramsKey
      * @return
      */

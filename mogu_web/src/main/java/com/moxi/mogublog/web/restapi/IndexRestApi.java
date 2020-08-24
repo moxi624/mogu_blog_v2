@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,7 +90,7 @@ public class IndexRestApi {
 
         log.info("按时间戳获取博客");
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
-        if(StringUtils.isEmpty(blogNewCount)) {
+        if (StringUtils.isEmpty(blogNewCount)) {
             log.error("参数配置有误，需重新配置！");
             return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
         }
@@ -103,7 +102,7 @@ public class IndexRestApi {
     public String getHotTag() {
         log.info("获取最热标签");
         String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
-        if(StringUtils.isEmpty(hotTagCount)) {
+        if (StringUtils.isEmpty(hotTagCount)) {
             log.error("参数配置有误，需重新配置！");
             return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
         }
@@ -116,7 +115,7 @@ public class IndexRestApi {
 
         log.info("获取友情链接");
         String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
-        if(StringUtils.isEmpty(friendlyLinkCount)) {
+        if (StringUtils.isEmpty(friendlyLinkCount)) {
             log.error("参数配置有误，需重新配置！");
             return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
         }

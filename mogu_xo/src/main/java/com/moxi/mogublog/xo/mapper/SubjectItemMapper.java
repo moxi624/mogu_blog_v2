@@ -1,6 +1,5 @@
 package com.moxi.mogublog.xo.mapper;
 
-import com.moxi.mogublog.commons.entity.Subject;
 import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.OnlineAdmin;
 import com.moxi.mogublog.commons.entity.Role;
-import com.moxi.mogublog.commons.entity.SysParams;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.global.MessageConf;
@@ -52,18 +51,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
     @Autowired
     AdminService adminService;
-
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
-
-    @Autowired
-    private RoleService roleService;
-
     @Autowired
     RedisUtil redisUtil;
-
     @Autowired
     SysParamsService sysParamsService;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public Admin getAdminByUid(String uid) {

@@ -50,6 +50,7 @@ public interface StorageService extends SuperService<Storage> {
 
     /**
      * 通过Admin查询存储信息
+     *
      * @return
      */
     Storage getStorageByAdmin();

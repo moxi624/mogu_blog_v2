@@ -26,6 +26,7 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 获取在线用户列表
+     *
      * @param adminVO
      * @return
      */
@@ -48,14 +49,17 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 添加在线用户
+     *
      * @param admin
      * @return
      */
     public void addOnlineAdmin(Admin admin);
 
     public String getList(AdminVO adminVO);
+
     /**
      * 添加管理员
+     *
      * @param adminVO
      * @return
      */
@@ -63,6 +67,7 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 编辑管理员
+     *
      * @param adminVO
      * @return
      */
@@ -84,6 +89,7 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 重置密码
+     *
      * @param adminVO
      * @return
      */
@@ -91,6 +97,7 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 批量删除管理员
+     *
      * @param adminUids
      * @return
      */

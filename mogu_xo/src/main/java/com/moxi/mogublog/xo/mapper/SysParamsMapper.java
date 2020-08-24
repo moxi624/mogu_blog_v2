@@ -1,7 +1,6 @@
 package com.moxi.mogublog.xo.mapper;
 
 
-import com.moxi.mogublog.commons.entity.SysLog;
 import com.moxi.mogublog.commons.entity.SysParams;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 
