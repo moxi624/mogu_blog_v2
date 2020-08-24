@@ -55,6 +55,12 @@
           </router-link>
         </li>
 
+        <li>
+          <router-link to="/subject">
+            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>
+          </router-link>
+        </li>
+
 <!--        <li>-->
 <!--          <router-link to="/share">-->
 <!--            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>-->

@@ -12,9 +12,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" label="标题" align="center">
+      <el-table-column width="250px" label="标题" align="center">
         <template slot-scope="{row}">
-          <span @click="onClick(row)" style="cursor:pointer;">{{ row.blog.title }}</span>
+          <span @click.native="onClick(row)" style="cursor:pointer;">{{ strSubstring(row.blog.title, 16) }}</span>
         </template>
       </el-table-column>
 
@@ -24,20 +24,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" label="是否原创" align="center">
+      <el-table-column width="100px" label="是否原创" align="center">
         <template slot-scope="{row}">
           <el-tag v-if="row.blog.isOriginal==1" type="success">原创</el-tag>
           <el-tag v-if="row.blog.isOriginal==0" type="info">转载</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" label="分类" align="center">
+      <el-table-column width="100px" label="分类" align="center">
         <template slot-scope="{row}">
           <span>{{ row.blog.blogSort.sortName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" label="标签" align="center">
+      <el-table-column width="300px" label="标签" align="center">
         <template slot-scope="{row}">
           <template>
             <el-tag
@@ -51,6 +51,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column width="100px" label="操作" align="center">
+        <template slot-scope="{row}">
+          <el-button @click="handleDelete(row)" type="danger" size="small" v-permission="'/subjectItem/delete'">删除</el-button>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="拖拽" width="80">
         <template slot-scope="{}">
           <svg-icon class="drag-handler" icon-class="drag" />
@@ -61,7 +67,7 @@
 </template>
 
 <script>
-  import { getSubjectItemList, editSubjectItem } from '@/api/subjectItem'
+  import { getSubjectItemList, editSubjectItem, deleteBatchSubjectItem } from '@/api/subjectItem'
   import Sortable from 'sortablejs'
 
   export default {
@@ -82,6 +88,7 @@
         total: null,
         listLoading: true,
         BLOG_WEB_URL: process.env.BLOG_WEB_URL,
+        subjectUid: "",
         listQuery: {
           page: 1,
           limit: 10
@@ -92,12 +99,15 @@
       }
     },
     created() {
+      //传递过来的pictureSordUid
+      this.subjectUid = this.$route.query.subjectUid;
+
       this.getList()
     },
     methods: {
-      async getList() {
+      getList() {
         var params = {};
-        params.keyword = "";
+        params.subjectUid = this.subjectUid;
         params.pageSize = 10;
         params.currentPage = 1;
         getSubjectItemList(params).then(response => {
@@ -111,9 +121,12 @@
           }
         })
       },
+      strSubstring(str, count) {
+        return this.$commonUtil.splitStr(str, count)
+      },
       getSubjectList() {
         var params = {};
-        params.keyword = "";
+        params.subjectUid = this.subjectUid;
         params.pageSize = 10;
         params.currentPage = 1;
         getSubjectItemList(params).then(response => {
@@ -124,9 +137,36 @@
           }
         })
       },
+      handleDelete: function(row) {
+        var that = this;
+        this.$confirm("此操作将把博客移除该专辑, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            var params = {};
+            params.uid = row.uid;
+            let subjectItemList = [params]
+            deleteBatchSubjectItem(subjectItemList).then(response => {
+              this.$message({
+                type: "success",
+                message: response.data
+              });
+              that.getSubjectList();
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
+            });
+          });
+      },
       // 跳转到该博客详情
       onClick: function(row) {
-        window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
+        console.log("点击跳转", row)
+        window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.blog.uid);
       },
       setSort() {
         console.log(this.$refs.dragTable)
@@ -138,8 +178,8 @@
           },
           onEnd: evt => {
             let list = this.list
-            const targetRow = list.splice(evt.oldIndex, 1)[0]
-            list.splice(evt.newIndex, 0, targetRow)
+            const targetRow = this.list.splice(evt.oldIndex, 1)[0]
+            this.list.splice(evt.newIndex, 0, targetRow)
 
             let subjectList = []
             for(let a=list.length-1; a >= 0; a--) {
@@ -153,8 +193,8 @@
             editSubjectItem(subjectList).then(response => {
               console.log("修改完成后的状态", response)
               if(response.code == this.$ECode.SUCCESS) {
-                // this.$commonUtil.message.success(response.data)
-                this.getSubjectList()
+                this.$commonUtil.message.success(response.data)
+
               }
             })
           }

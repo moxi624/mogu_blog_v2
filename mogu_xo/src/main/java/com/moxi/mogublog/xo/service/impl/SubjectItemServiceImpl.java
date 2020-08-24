@@ -7,6 +7,8 @@ import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.SQLConf;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.SubjectItemMapper;
 import com.moxi.mogublog.xo.mapper.SubjectMapper;
 import com.moxi.mogublog.xo.service.BlogService;
@@ -48,6 +50,9 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
     public IPage<SubjectItem> getPageList(SubjectItemVO subjectItemVO) {
         QueryWrapper<SubjectItem> queryWrapper = new QueryWrapper<>();
         Page<SubjectItem> page = new Page<>();
+        if(StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
+            queryWrapper.eq(BaseSQLConf.SUBJECT_UID, subjectItemVO.getSubjectUid());
+        }
         page.setCurrent(subjectItemVO.getCurrentPage());
         page.setSize(subjectItemVO.getPageSize());
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
@@ -80,23 +85,56 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
 
     @Override
     public String addSubjectItemList(List<SubjectItemVO> subjectItemVOList) {
+        List<String> blogUidList = new ArrayList<>();
+        String subjectUid = "";
+        for (SubjectItemVO subjectItemVO: subjectItemVOList) {
+            blogUidList.add(subjectItemVO.getBlogUid());
+            if(StringUtils.isEmpty(subjectUid) && StringUtils.isNotEmpty(subjectItemVO.getSubjectUid())) {
+                subjectUid = subjectItemVO.getSubjectUid();
+            }
+        }
+        // 查询SubjectItem中是否包含重复的博客
+        QueryWrapper<SubjectItem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.SUBJECT_UID, subjectUid);
+        queryWrapper.in(SQLConf.BLOG_UID, blogUidList);
+        List<SubjectItem> repeatSubjectItemList = subjectItemService.list(queryWrapper);
+        // 找出重复的博客UID
+        List<String> repeatBlogList = new ArrayList<>();
+        repeatSubjectItemList.forEach(item -> {
+            repeatBlogList.add(item.getBlogUid());
+        });
+
+
         List<SubjectItem> subjectItemList = new ArrayList<>();
         for (SubjectItemVO subjectItemVO: subjectItemVOList) {
             if(StringUtils.isEmpty(subjectItemVO.getSubjectUid()) || StringUtils.isEmpty(subjectItemVO.getBlogUid())) {
                 return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
             }
-            SubjectItem subjectItem = new SubjectItem();
-            subjectItem.setSubjectUid(subjectItemVO.getSubjectUid());
-            subjectItem.setBlogUid(subjectItemVO.getBlogUid());
-            subjectItem.setStatus(EStatus.ENABLE);
-            subjectItemList.add(subjectItem);
+            // 判断是否重复添加
+            if(repeatBlogList.contains(subjectItemVO.getBlogUid())) {
+                continue;
+            } else {
+                SubjectItem subjectItem = new SubjectItem();
+                subjectItem.setSubjectUid(subjectItemVO.getSubjectUid());
+                subjectItem.setBlogUid(subjectItemVO.getBlogUid());
+                subjectItem.setStatus(EStatus.ENABLE);
+                subjectItemList.add(subjectItem);
+            }
         }
 
         if (subjectItemList.size() <= 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL);
+            if(repeatBlogList.size() == 0) {
+                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL);
+            } else {
+                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL + "，已跳过" + repeatBlogList.size() + "个重复数据");
+            }
         } else {
             subjectItemService.saveBatch(subjectItemList);
-            return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
+            if(repeatBlogList.size() == 0) {
+                return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
+            } else {
+                return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS + "，已跳过" + repeatBlogList.size() + "个重复数据，成功插入" + (subjectItemVOList.size() - repeatBlogList.size()) + "条数据");
+            }
         }
     }
 

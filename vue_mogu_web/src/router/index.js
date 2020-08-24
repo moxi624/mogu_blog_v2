@@ -14,6 +14,7 @@ export const constantRouterMap = [
       { path: '/list', component: () => import('@/views/list') },
       { path: '/sort', component: () => import('@/views/sort') },
       { path: '/share', component: () => import('@/views/share') },
+      { path: '/subject', component: () => import('@/views/subject') },
       { path: '/classify', component: () => import('@/views/classify') },
       { path: '/tag', component: () => import('@/views/tag') },
       { path: '/time', component: () => import('@/views/time') },

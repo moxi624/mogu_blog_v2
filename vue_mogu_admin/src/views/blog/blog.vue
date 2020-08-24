@@ -721,8 +721,6 @@ export default {
     },
     getSelectData(subjectUid) {
       this.cancelSubjectSelect()
-      console.log("选中的专辑UID", subjectUid)
-
       // 选中的博客
       let multipleSelection = this.multipleSelection
       let subjectItemList = []
@@ -739,6 +737,8 @@ export default {
             type: "success",
             message: response.data
           });
+          // 清空选中列表
+          this.multipleSelection = []
         } else {
           this.$message({
             type: "error",

@@ -32,16 +32,29 @@ const FUNCTIONS = {
     }
     return str.substr(0, str.length - 1)
   },
-  /**
-   * 字符串转标签
-   * @param str
-   * @returns {Array}
-   */
-  stringToTags: str => {
-    if (str !== null && str !== '') {
-      return str.split(',')
+  // 切割字符串
+  splitStr: (str, flagCount) => {
+    if (str == null || str == '') {
+      return ""
+    } else if(str.length > flagCount) {
+      return str.substring(0, flagCount) + "..."
     } else {
-      return []
+      return str
+    }
+  },
+  /**
+   * 切割字符串
+   * @param str
+   * @param count
+   * @returns {string|*}
+   */
+  strSubstring: (str, count) => {
+    if (str == null || str == '') {
+      return ""
+    } else if(str.length > count) {
+      return str.substring(0, count) + "..."
+    } else {
+      return str
     }
   },
   /**
