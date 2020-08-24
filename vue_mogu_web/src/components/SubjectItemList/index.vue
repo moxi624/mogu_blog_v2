@@ -6,7 +6,7 @@
     direction="ltr"
     :with-header="false">
 
-    <div class="block" style="margin:10px">
+    <div class="block" style="margin:10px;">
       <div style="text-align: center;font-size: 16px;" v-if="subjectItemlist.length == 0">空空如也</div>
       <el-timeline>
         <div class="blogsbox">

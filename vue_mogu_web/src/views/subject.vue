@@ -103,5 +103,7 @@ export default {
   height: 160px;
   vertical-align: middle;
 }
-
+.el-drawer {
+  min-width: 400px;
+}
 </style>
