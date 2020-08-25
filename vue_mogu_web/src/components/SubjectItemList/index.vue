@@ -84,7 +84,7 @@
         getList() {
           var params = {};
           params.subjectUid = this.subjectUid;
-          params.pageSize = 20;
+          params.pageSize = 50;
           params.currentPage = 1;
           getSubjectItemList(params).then(response => {
             console.log("得到的Subject列表", response)

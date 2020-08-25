@@ -121,7 +121,6 @@
         isLogin: false,
         table: false,
         dialog: false,
-        loading: false,
         labelPosition: "right",
         loginForm: {
           userName: "",
@@ -295,7 +294,6 @@
         login(params).then(response => {
           if (response.code == this.$ECode.SUCCESS) {
             var token = response.data.token;
-            console.log(response);
             window.location.href = response.data.url
           }
         });

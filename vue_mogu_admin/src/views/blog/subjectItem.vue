@@ -69,7 +69,7 @@
 <script>
   import { getSubjectItemList, editSubjectItem, deleteBatchSubjectItem } from '@/api/subjectItem'
   import Sortable from 'sortablejs'
-
+  import { Loading } from 'element-ui';
   export default {
     name: 'DragTable',
     filters: {
@@ -177,10 +177,14 @@
             dataTransfer.setData('Text', '')
           },
           onEnd: evt => {
+            this.loading = Loading.service({
+              lock: true,
+              text: '加载中……',
+              background: 'rgba(0, 0, 0, 0.7)'
+            })
             let list = this.list
-            const targetRow = this.list.splice(evt.oldIndex, 1)[0]
-            this.list.splice(evt.newIndex, 0, targetRow)
-
+            const targetRow = list.splice(evt.oldIndex, 1)[0]
+            list.splice(evt.newIndex, 0, targetRow)
             let subjectList = []
             for(let a=list.length-1; a >= 0; a--) {
               let params = {}
@@ -194,7 +198,8 @@
               console.log("修改完成后的状态", response)
               if(response.code == this.$ECode.SUCCESS) {
                 this.$commonUtil.message.success(response.data)
-
+                this.loading.close()
+                this.$router.go(0);
               }
             })
           }
