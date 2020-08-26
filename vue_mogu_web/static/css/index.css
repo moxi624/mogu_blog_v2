@@ -243,7 +243,7 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
  .tagPage { background: url(../images/page_time.jpg) no-repeat; background-size: cover; background-position: top center; }
 .timer { background: url(../images/page_time.jpg) no-repeat; background-size: cover; background-position: top center; }
 /*share*/
-.share { min-height: 535px; overflow: hidden; padding-top: 10px }
+.share {overflow: hidden; padding-top: 10px }
 .shareli { margin: 0 15px; padding-bottom: 10px }
 .share ul li { width: 25%; float: left; overflow: hidden; position: relative; margin-bottom: 30px; -webkit-transition: all .3s ease; -moz-transition: all .3s ease; -ms-transition: all .3s ease; -o-transition: all .3s ease; transition: all .3s ease; }
 .share ul li i { display: block; overflow: hidden;}
