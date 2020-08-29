@@ -320,9 +320,8 @@
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
           <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
-          <MarkdownEditor v-if="systemConfig.editorModel == '1'" ref="editor"></MarkdownEditor>
+          <MarkdownEditor v-if="systemConfig.editorModel == '1'" ref="editor" :height="465"></MarkdownEditor>
         </el-form-item>
-
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -851,8 +850,10 @@ export default {
 
         that.$nextTick(() => {
           //DOM现在更新了
-          that.$refs.editor.initData(""); //设置富文本内容
+          that.$refs.editor.initData(); //设置富文本内容
         });
+
+
 
         that.tagValue = [];
         that.isEditForm = false;

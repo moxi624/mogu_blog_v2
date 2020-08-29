@@ -77,7 +77,7 @@
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
 
-`nacos`，`nginx`，`redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
+`nacos`，`nginx`，`rabbitmq`, `redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
