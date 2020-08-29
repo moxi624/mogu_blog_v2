@@ -198,6 +198,7 @@ ALTER TABLE  t_web_config ADD open_mobile_admiration TINYINT(1) NOT NULL DEFAULT
 
 /*
 	专题表
+	@date 2020年8月27日07:57:27
 */
 
 CREATE TABLE `t_subject` (
@@ -217,6 +218,7 @@ CREATE TABLE `t_subject` (
 
 /*
 	专题Item表
+	@date 2020年8月27日07:57:27
 */
 
 CREATE TABLE `t_subject_item` (
@@ -229,3 +231,9 @@ CREATE TABLE `t_subject_item` (
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='专题Item表'
+
+
+/*
+	系统配置表 增加编辑器模式
+*/
+ALTER TABLE  t_system_config ADD editor_model TINYINT(1) NOT NULL DEFAULT 0 COMMENT "编辑器模式，(0：富文本编辑器CKEditor，1：markdown编辑器Veditor)";

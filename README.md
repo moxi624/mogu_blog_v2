@@ -110,6 +110,7 @@
 - 采用Nacos作为服务发现和配置中心，轻松完成项目的配置的维护
 - 采用Sentinel流量控制框架，通过配置再也不怕网站被爆破
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
+- 支持多种文本编辑器，Markdown编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
 
 ## 项目文档
 
@@ -190,28 +191,30 @@
 
 ### 前端技术
 
-|         技术          |            说明             |                             官网                             |
-| :-------------------: | :-------------------------: | :----------------------------------------------------------: |
-|        Vue.js         |          前端框架           |                      https://vuejs.org/                      |
-|      Vue-router       |          路由框架           |                  https://router.vuejs.org/                   |
-|         Vuex          |      全局状态管理框架       |                   https://vuex.vuejs.org/                    |
-|        Nuxt.js        |  创建服务端渲染 (SSR) 应用  |                    https://zh.nuxtjs.org/                    |
-|        Element        |         前端ui框架          |    [ https://element.eleme.io](https://element.eleme.io/)    |
-|         Axios         |        前端HTTP框架         | [ https://github.com/axios/axios](https://github.com/axios/axios) |
-|        Echarts        |          图表框架           |                      www.echartsjs.com                       |
-|       CKEditor        |        富文本编辑器         |                    https://ckeditor.com/                     |
-|     Highlight.js      |      代码语法高亮插件       |         https://github.com/highlightjs/highlight.js          |
-|      Tui-editor       |       Markdown编辑器        |              https://github.com/nhn/tui.editor               |
-|      vue-cropper      |        图片裁剪组件         |           https://github.com/xyxiao001/vue-cropper           |
-| vue-image-crop-upload |     vue图片剪裁上传组件     |      https://github.com/dai-siki/vue-image-crop-upload       |
-|   vue-emoji-comment   |    Vue Emoji表情评论组件    |       https://github.com/pppercyWang/vue-emoji-comment       |
-|     clipboard.js      |      现代化的拷贝文字       |                  http://www.clipboardjs.cn/                  |
-|      js-beautify      |     美化JavaScript代码      |         https://github.com/beautify-web/js-beautify          |
-|     FileSaver.js      |      保存文件在客户端       |           https://github.com/eligrey/FileSaver.js            |
-|      SortableJS       | 功能强大的JavaScript 拖拽库 |                  http://www.sortablejs.com/                  |
-|   vue-side-catalog    |         目录导航栏          |        https://github.com/yaowei9363/vue-side-catalog        |
-|        uniapp         |      移动端跨平台语言       |                  https://uniapp.dcloud.io/                   |
-|        colorUi        |   专注视觉的小程序组件库    |             https://github.com/weilanwl/ColorUI              |
+|         技术          |                  说明                   |                             官网                             |
+| :-------------------: | :-------------------------------------: | :----------------------------------------------------------: |
+|        Vue.js         |                前端框架                 |                      https://vuejs.org/                      |
+|      Vue-router       |                路由框架                 |                  https://router.vuejs.org/                   |
+|         Vuex          |            全局状态管理框架             |                   https://vuex.vuejs.org/                    |
+|        Nuxt.js        |        创建服务端渲染 (SSR) 应用        |                    https://zh.nuxtjs.org/                    |
+|        Element        |               前端ui框架                |    [ https://element.eleme.io](https://element.eleme.io/)    |
+|         Axios         |              前端HTTP框架               | [ https://github.com/axios/axios](https://github.com/axios/axios) |
+|        Echarts        |                图表框架                 |                      www.echartsjs.com                       |
+|       CKEditor        |              富文本编辑器               |                    https://ckeditor.com/                     |
+|     Highlight.js      |            代码语法高亮插件             |         https://github.com/highlightjs/highlight.js          |
+|        Vditor         |             Markdown编辑器              |             https://github.com/Vanessa219/vditor             |
+|      vue-cropper      |              图片裁剪组件               |           https://github.com/xyxiao001/vue-cropper           |
+| vue-image-crop-upload |           vue图片剪裁上传组件           |      https://github.com/dai-siki/vue-image-crop-upload       |
+|   vue-emoji-comment   |          Vue Emoji表情评论组件          |       https://github.com/pppercyWang/vue-emoji-comment       |
+|     clipboard.js      |            现代化的拷贝文字             |                  http://www.clipboardjs.cn/                  |
+|      js-beautify      |           美化JavaScript代码            |         https://github.com/beautify-web/js-beautify          |
+|     FileSaver.js      |            保存文件在客户端             |           https://github.com/eligrey/FileSaver.js            |
+|      SortableJS       |       功能强大的JavaScript 拖拽库       |                  http://www.sortablejs.com/                  |
+|   vue-side-catalog    |               目录导航栏                |        https://github.com/yaowei9363/vue-side-catalog        |
+|        uniapp         |            移动端跨平台语言             |                  https://uniapp.dcloud.io/                   |
+|        colorUi        |         专注视觉的小程序组件库          |             https://github.com/weilanwl/ColorUI              |
+|       showdown        | 用Javascript编写的Markdown 到Html转换器 |            https://github.com/showdownjs/showdown            |
+|       turndown        | 用JavaScript编写的HTML到Markdown转换器  |           https://github.com/domchristie/turndown            |
 
 ## 项目搭建
 
@@ -287,6 +290,9 @@
 |   RabbitMQ    | 3.7.4  |            http://www.rabbitmq.com/download.html             |
 |     Nginx     |  1.10  |              http://nginx.org/en/download.html               |
 |     Redis     | 3.3.0  |                  https://redis.io/download                   |
+|    Zipkin     | 2.12.5 | https://search.maven.org/remote_content?g=io.zipkin.java&a=zipkin-server&v=LATEST&c=exec |
+|     Nacos     | 1.3.2  |          https://github.com/alibaba/nacos/releases           |
+|   Sentinel    | 1.7.2  |         https://github.com/alibaba/Sentinel/releases         |
 
 ## 致谢
 
@@ -332,6 +338,7 @@
 - [x] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
 - [x] 使用Sentinel做服务限流和熔断
 - [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [x] 富文本编辑器和Markdown编辑器任意切换
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块

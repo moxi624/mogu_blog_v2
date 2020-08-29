@@ -116,6 +116,9 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
             systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
+
+            // 设置系统配置
+            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
             systemConfig.insert();
         } else {
 
@@ -139,6 +142,8 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
             systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
             systemConfig.setUpdateTime(new Date());
+            // 设置系统配置
+            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
             systemConfig.updateById();
 
         }

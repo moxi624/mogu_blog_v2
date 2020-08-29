@@ -11,7 +11,6 @@ export default {
   props: ["content", "height"],
   mounted() {
     var that = this;
-
     //使用ckeditor替换textarea，设置代码块风格为 zenburn
     // 上传时，携带token信息，以便于被feign拦截后传递给mogu-admin获取七牛云相关配置
     CKEDITOR.replace('editor',
@@ -37,7 +36,6 @@ export default {
   },
   created() {
     this.textData = this.content;
-
   },
   watch: {
     content: function() {

@@ -373,11 +373,6 @@ export default {
         }
       });
     },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
-      console.log(this.photoVisible);
-    },
     getChooseData(data) {
       var that = this;
       this.photoVisible = false;

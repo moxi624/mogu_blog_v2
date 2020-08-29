@@ -130,7 +130,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="标签" width="200" align="center">
+      <el-table-column label="标签" width="200" align="center" >
         <template slot-scope="scope">
           <template>
             <el-tag
@@ -319,8 +319,10 @@
         </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
-          <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
+          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
+          <MarkdownEditor v-if="systemConfig.editorModel == '1'" ref="editor"></MarkdownEditor>
         </el-form-item>
+
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -386,6 +388,7 @@
 
 <script>
 import { getBlogList, addBlog, uploadLocalBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
+import { getSystemConfig} from "@/api/systemConfig";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
 import {formatData} from "@/utils/webUtils";
@@ -396,6 +399,7 @@ import {addSubjectItemList} from "@/api/subjectItem";
 
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
+import MarkdownEditor from "../../components/MarkdownEditor";
 import SubjectSelect from "../../components/SubjectSelect";
 var querystring = require("querystring");
 import { mapGetters } from "vuex";
@@ -407,6 +411,7 @@ export default {
   components: {
     CheckPhoto,
     CKEditor,
+    MarkdownEditor,
     SubjectSelect
   },
   data() {
@@ -424,6 +429,7 @@ export default {
         sortName: "admin",
         token: getToken()
       },
+      editorModel: 1, // 编辑器模式，0：ckeditor，1：markdown
       pictureList: [], // 上传的图片列表
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除
@@ -469,6 +475,7 @@ export default {
       openDefault: null, // 是否开启评论默认值
       fileList: [],
       localUploadVisible: false,
+      systemConfig: {}, // 系统配置
       form: {
         uid: null,
         title: null,
@@ -512,10 +519,9 @@ export default {
     };
   },
   created() {
-    var that = this;
     //从dashboard传递过来的 tagUid 以及 blogSortUid
-    var tempTag = this.$route.query.tag;
-    var tempBlogSort = this.$route.query.blogSort;
+    let tempTag = this.$route.query.tag;
+    let tempBlogSort = this.$route.query.blogSort;
     if(tempTag != undefined) {
       this.tagRemoteMethod(tempTag.name);
       this.tagKeyword = tempTag.tagUid;
@@ -524,6 +530,9 @@ export default {
       this.sortRemoteMethod(tempBlogSort.name);
       this.sortKeyword = tempBlogSort.blogSortUid;
     }
+
+    // 获取系统配置
+    this.getSystemConfigList()
 
     // 获取字典
     this.getDictList()
@@ -675,6 +684,16 @@ export default {
         this.sortOptions = [];
       }
     },
+    // 获取系统配置
+    getSystemConfigList: function() {
+      getSystemConfig().then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          if (response.data) {
+            this.systemConfig = response.data;
+          }
+        }
+      });
+    },
     getChooseData(data) {
       var that = this;
       this.photoVisible = false;
@@ -782,9 +801,8 @@ export default {
     },
     handleAdd: function() {
       this.title = "增加博客"
-      var that = this;
-      var tempForm = JSON.parse(getCookie("form"));
-      console.log('cookie中的', tempForm)
+      let that = this;
+      let tempForm = JSON.parse(getCookie("form"));
       if (tempForm != null && tempForm.title != null && tempForm.title != "") {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
@@ -792,57 +810,53 @@ export default {
           type: "warning"
         })
           .then(() => {
-            this.dialogFormVisible = true;
-            this.tagValue = [];
-            this.form = JSON.parse(getCookie("form"));
-            var tagValue = this.form.tagUid.split(",");
+            that.dialogFormVisible = true;
+            that.tagValue = [];
+            that.form = JSON.parse(getCookie("form"));
+            var tagValue = that.form.tagUid.split(",");
             for (var a = 0; a < tagValue.length; a++) {
               if (tagValue[a] != null && tagValue[a] != "") {
-                this.tagValue.push(tagValue[a]);
+                that.tagValue.push(tagValue[a]);
               }
             }
-            if(this.form.uid) {
-              this.title = "编辑博客";
-              this.isEditForm = true;
+            if(that.form.uid) {
+              that.title = "编辑博客";
+              that.isEditForm = true;
             } else {
-              this.title = "新增博客";
-              this.isEditForm = false;
+              that.title = "新增博客";
+              that.isEditForm = false;
             }
           })
           .catch(() => {
-            try {
-              that.$refs.ckeditor.initData(); //清空CKEditor中内容
-            } catch (error) {
-              // 第一次还未加载的时候，可能会报错，不过不影响使用
-              // 暂时还没有想到可能解决的方法
-            }
-            this.dialogFormVisible = true;
 
-            this.form = this.getFormObject();
+            console.log("开始设置内容")
 
-            try {
-              that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-            } catch (error) {
-              // 第一次还未加载的时候，可能会报错，不过不影响使用
-              // 暂时还没有想到可能解决的方法
-            }
-            this.tagValue = [];
-            this.isEditForm = false;
-            this.title = "新增博客";
+            that.dialogFormVisible = true;
+
+            that.form = that.getFormObject();
+
+            that.$nextTick(() => {
+              //DOM现在更新了
+              that.$refs.editor.setData(that.form.content); //设置富文本内容
+            });
+
+            that.tagValue = [];
+            that.isEditForm = false;
+            that.title = "新增博客";
             delCookie("form");
           });
       } else {
-        this.dialogFormVisible = true;
-        this.form = this.getFormObject();
-        try {
-          that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-        } catch (error) {
-          // 第一次还未加载的时候，可能会报错，不过不影响使用
-          // 暂时还没有想到可能解决的方法
-        }
-        this.tagValue = [];
-        this.isEditForm = false;
-        this.formBak();
+        that.dialogFormVisible = true;
+        that.form = this.getFormObject();
+
+        that.$nextTick(() => {
+          //DOM现在更新了
+          that.$refs.editor.initData(""); //设置富文本内容
+        });
+
+        that.tagValue = [];
+        that.isEditForm = false;
+        that.formBak();
       }
     },
     handleUpload: function() {
@@ -971,7 +985,7 @@ export default {
       if(this.changeCount > 0) {
         that.isChange = true;
         //存放到cookie中，时间10天
-        that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+        that.form.content = that.$refs.editor.getData(); //获取CKEditor中的内容
         that.form.tagUid = that.tagValue.join(",");
         setCookie("form", JSON.stringify(that.form), 10);
       }
@@ -983,33 +997,33 @@ export default {
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {
           //存放到cookie中，时间10天
-          that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          that.form.content = that.$refs.editor.getData(); //获取CKEditor中的内容
           that.form.tagUid = that.tagValue.join(",");
           setCookie("form", JSON.stringify(that.form), 10);
         }
       }, 10000);
     },
     handleEdit: function(row) {
-      this.title = "编辑博客";
-      this.form = row;
       var that = this;
-      try {
-        that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-      } catch (error) {
-        // 第一次还未加载的时候，可能会报错，不过不影响使用
-        // 暂时还没有想到可能解决的方法
-      }
-      this.tagValue = [];
+      that.title = "编辑博客";
+      that.form = row;
+
+      this.$nextTick(() => {
+        //DOM现在更新了
+        that.$refs.editor.setData(that.form.content); //设置富文本内容
+      });
+
+      that.tagValue = [];
       if (row.tagList) {
         var json = row.tagList;
         for (var i = 0, l = json.length; i < l; i++) {
           if (json[i] != null) {
-            this.tagValue.push(json[i]["uid"]);
+            that.tagValue.push(json[i]["uid"]);
           }
         }
       }
-      this.dialogFormVisible = true;
-      this.isEditForm = true;
+      that.dialogFormVisible = true;
+      that.isEditForm = true;
     },
     handleDelete: function(row) {
       var that = this;
@@ -1083,7 +1097,7 @@ export default {
         if(!valid) {
 
         } else {
-          this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          this.form.content = this.$refs.editor.getData(); //获取CKEditor中的内容
           this.form.tagUid = this.tagValue.join(",");
           var params = formatData(this.form);
           if (this.isEditForm) {
@@ -1114,7 +1128,6 @@ export default {
                 });
 
                 // 清空cookie中的内容
-                // Cookie("form", JSON.stringify(this.getFormObject()), 1);
                 delCookie("form");
 
                 // 清空触发器
