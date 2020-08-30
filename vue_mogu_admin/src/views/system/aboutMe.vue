@@ -104,7 +104,8 @@
       <el-tab-pane label="个人履历" name="third">
         <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
         <div class="editor-container">
-          <CKEditor ref="ckeditor" :content="form.personResume" :height="500"></CKEditor>
+          <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.personResume" :height="500"></CKEditor>
+          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'"  :height="660"></MarkdownEditor>
         </div>
 
         <div style="margin-top: 5px; margin-left: 10px;" >
@@ -156,6 +157,8 @@
 import AvatarCropper from '@/components/AvatarCropper'
 import { getMe, editMe, changePwd } from "@/api/system";
 import CKEditor from "@/components/CKEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { getSystemConfig} from "@/api/systemConfig";
 import {getListByDictType} from "@/api/sysDictData"
 
 export default {
@@ -167,6 +170,7 @@ export default {
       imagecropperKey: 0,
       url: process.env.PICTURE_API + "/file/cropperPicture",
       form: {},
+      systemConfig: {},
       changePwdForm: {
         oldPwd: "",
         newPwd1: "",
@@ -195,7 +199,8 @@ export default {
   },
   components: {
     AvatarCropper,
-    CKEditor
+    CKEditor,
+    MarkdownEditor
   },
   computed: {
     language() {
@@ -203,6 +208,7 @@ export default {
     }
   },
   created() {
+    this.getSystemConfigList()
     this.getDictList();
     this.getMeInfo();
   },
@@ -219,7 +225,18 @@ export default {
     },
     handleClick(tab, event) {
       //设置富文本内容
-      this.$refs.ckeditor.setData(this.form.personResume);
+      this.$refs.editor.setData(this.form.personResume);
+    },
+    // 获取系统配置
+    getSystemConfigList: function() {
+      getSystemConfig().then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          console.log("得到的配置", response)
+          if (response.data) {
+            this.systemConfig = response.data;
+          }
+        }
+      });
     },
     /**
      * 字典查询
@@ -276,7 +293,7 @@ export default {
         case "personResume":
         {
           //获取CKEditor中的内容
-          this.form.personResume = this.$refs.ckeditor.getData();
+          this.form.personResume = this.$refs.editor.getData();
           editMe(this.form).then(response => {
             console.log(response);
             this.$notify({
@@ -393,6 +410,7 @@ img {
 }
 
 .editor-container{
+  margin-top: 10px;
   margin-bottom: 30px;
 }
 </style>

@@ -96,16 +96,23 @@
       },
       //获取data
       getData: function() {
-        let text = localStorage.getItem('vditorvditor')
+        // let text = localStorage.getItem('vditorvditor')
         // 返回的文本
-        return this.$commonUtil.markdownToHtml(text);
+        // return this.$commonUtil.markdownToHtml(text);
+
+        return this.vditor.getHTML();
       },
       setData: function(data) {
+
+        // console.log("将html转", this.vditor.html2md(data))
         var that = this;
         this.$nextTick(() => {
           //DOM现在更新了
           that.initVditor()
+
           let markdownText = that.$commonUtil.htmlToMarkdown(data)
+          console.log("转换前", data)
+          console.log("得到的html", markdownText)
           localStorage.setItem('vditorvditor', markdownText)
         });
       },
@@ -120,6 +127,9 @@
 </script>
 
 <style>
+  .vditor-panel {
+    line-height: 0px;
+  }
   .index-page {
     width: 100%;
     height: 100%;

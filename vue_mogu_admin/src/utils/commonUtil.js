@@ -75,7 +75,8 @@ const FUNCTIONS = {
    * @param text
    */
   markdownToHtml: text => {
-    let converter = new showdown.Converter();
+    let converter = new showdown.Converter({tables: true});
+    let html = converter.makeHtml(text)
     return converter.makeHtml(text);
   },
   /**
@@ -84,6 +85,12 @@ const FUNCTIONS = {
    */
   htmlToMarkdown: text => {
     var turndownService = new TurndownService()
+    var turndownPluginGfm = require('turndown-plugin-gfm')
+    var gfm = turndownPluginGfm.gfm
+    var tables = turndownPluginGfm.tables
+    var strikethrough = turndownPluginGfm.strikethrough
+    turndownService.use(gfm)
+    turndownService.use([tables, strikethrough])
     return turndownService.turndown(text)
   },
   /**

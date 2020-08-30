@@ -320,7 +320,7 @@
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
           <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
-          <MarkdownEditor v-if="systemConfig.editorModel == '1'" ref="editor" :height="465"></MarkdownEditor>
+          <MarkdownEditor v-if="systemConfig.editorModel == '1'" :content="form.content" ref="editor" :height="465"></MarkdownEditor>
         </el-form-item>
       </el-form>
 
@@ -386,7 +386,7 @@
 </template>
 
 <script>
-import { getBlogList, addBlog, uploadLocalBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
+import { getBlogList, addBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
 import { getSystemConfig} from "@/api/systemConfig";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
@@ -428,7 +428,6 @@ export default {
         sortName: "admin",
         token: getToken()
       },
-      editorModel: 1, // 编辑器模式，0：ckeditor，1：markdown
       pictureList: [], // 上传的图片列表
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除

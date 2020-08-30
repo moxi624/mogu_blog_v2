@@ -97,7 +97,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
+.share {
+  min-height: 550px;
+}
 .resImg {
   width: 100%;
   height: 160px;

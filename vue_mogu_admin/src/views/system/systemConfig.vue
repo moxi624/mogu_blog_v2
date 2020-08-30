@@ -72,7 +72,7 @@
           </el-form-item>
 
           <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
-          <el-form-item label="邮件通知">
+          <el-form-item label="消息邮件通知">
             <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
@@ -239,12 +239,17 @@ export default {
 
   },
   created() {
+    var that = this
     this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
     // 获取字典
     this.getDictList()
 
     // 获取系统配置
     this.getSystemConfigList()
+
+    this.$nextTick(() => {
+      that.loadingInstance.close();
+    });
   },
   methods: {
     /**
@@ -262,9 +267,6 @@ export default {
           this.openDictList = dictMap.sys_normal_disable.list
           this.picturePriorityDictList = dictMap.sys_picture_priority.list
           this.editorModalDictList = dictMap.sys_editor_modal.list
-          this.loadingInstance.close();
-        } else {
-          this.loadingInstance.close();
         }
       });
     },
