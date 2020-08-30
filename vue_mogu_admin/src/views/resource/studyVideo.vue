@@ -172,9 +172,7 @@ import {
 
 import { getResourceSortList } from "@/api/resourceSort";
 import CKEditor from "../../components/CKEditor";
-import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
-import { Loading } from "element-ui";
 
 export default {
   components: {

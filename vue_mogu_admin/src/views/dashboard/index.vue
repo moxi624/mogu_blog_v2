@@ -155,7 +155,6 @@ export default {
   },
   created() {
     init().then(response => {
-      console.log(response);
       if (response.code == this.$ECode.SUCCESS) {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;

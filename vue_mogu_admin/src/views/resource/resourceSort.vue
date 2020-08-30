@@ -131,10 +131,7 @@ import {
   deleteBatchResourceSort,
   stickResourceSort
 } from "@/api/resourceSort";
-
-import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
-import { Loading } from "element-ui";
 
 export default {
   components: {

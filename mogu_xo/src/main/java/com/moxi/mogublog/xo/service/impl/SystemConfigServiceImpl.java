@@ -60,7 +60,6 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         if (key == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
-
         key.forEach(item -> {
             // 表示清空所有key
             if (RedisConf.ALL.equals(item)) {

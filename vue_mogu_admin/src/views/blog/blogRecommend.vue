@@ -27,7 +27,6 @@
     },
     data() {
       return {
-        loadingInstance: null, // loading对象
         group: 'mission',
         list1: [],
         list2: [],
@@ -36,7 +35,6 @@
       }
     },
     created() {
-      this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
       this.blogList(1)
       this.blogList(2)
       this.blogList(3)
@@ -50,7 +48,6 @@
         params.pageSize = 10;
         params.useSort = 1;
         getBlogList(params).then(response => {
-          this.loadingInstance.close();
           if(response.code == this.$ECode.SUCCESS) {
             console.log("推荐等级", level)
             console.log("推荐博客",response.data)

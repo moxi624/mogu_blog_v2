@@ -161,7 +161,7 @@ import {
   stickLink
 } from "@/api/link";
 import {getListByDictTypeList} from "@/api/sysDictData"
-import { formatData } from "@/utils/webUtils";
+
 export default {
   data() {
     return {

@@ -235,7 +235,6 @@ export default {
     handleEdit: function (row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
     },
 
@@ -245,7 +244,6 @@ export default {
         var params = new URLSearchParams();
         params.append("keyword", query);
         getAdminList(params).then(response => {
-          console.log(response);
           this.adminOptions = response.data.records;
         });
       } else {
@@ -277,7 +275,6 @@ export default {
           let params = new URLSearchParams();
           params.append("uid", row.uid);
           deleteAdminRole(params).then(response => {
-            console.log(response);
             this.$message({
               type: "success",
               message: response.data
@@ -299,7 +296,6 @@ export default {
     submitForm: function () {
       if (this.isEditForm) {
         editAdminRole(this.form).then(response => {
-          console.log(response);
           if (response.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
@@ -316,7 +312,6 @@ export default {
         });
       } else {
         addAdminRole(this.form).then(response => {
-          console.log(response);
           if (response.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",

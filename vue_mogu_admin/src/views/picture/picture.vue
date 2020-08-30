@@ -138,10 +138,6 @@ import { getToken } from '@/utils/auth'
 
 import PictureCropper from '@/components/PictureCropper'
 
-import { formatData } from "@/utils/webUtils";
-
-import { Loading } from "element-ui";
-
 export default {
   components: {
     PictureCropper

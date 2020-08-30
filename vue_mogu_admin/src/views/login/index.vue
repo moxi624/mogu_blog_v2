@@ -119,7 +119,6 @@ export default {
   },
   mounted() {
     // mounted钩子函数，dom已经渲染完毕，可以直接获取到dom对象进行聚焦
-
     this.$refs.userNameInput.focus()
   },
   created() {

@@ -206,7 +206,6 @@
 <script>
 import { getSystemConfig, editSystemConfig, cleanRedisByKey } from "@/api/systemConfig";
 import {getListByDictTypeList} from "@/api/sysDictData"
-import { Loading } from 'element-ui';
 export default {
   data() {
     return {
@@ -239,17 +238,10 @@ export default {
 
   },
   created() {
-    var that = this
-    this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
     // 获取字典
     this.getDictList()
-
     // 获取系统配置
     this.getSystemConfigList()
-
-    this.$nextTick(() => {
-      that.loadingInstance.close();
-    });
   },
   methods: {
     /**

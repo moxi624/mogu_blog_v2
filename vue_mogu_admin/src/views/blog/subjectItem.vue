@@ -69,7 +69,6 @@
 <script>
   import { getSubjectItemList, editSubjectItem, deleteBatchSubjectItem } from '@/api/subjectItem'
   import Sortable from 'sortablejs'
-  import { Loading } from 'element-ui';
   export default {
     name: 'DragTable',
     filters: {
@@ -101,7 +100,6 @@
     created() {
       //传递过来的pictureSordUid
       this.subjectUid = this.$route.query.subjectUid;
-
       this.getList()
     },
     methods: {
@@ -130,7 +128,6 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getSubjectItemList(params).then(response => {
-          console.log("得到的列表", response)
           if(response.code == this.$ECode.SUCCESS) {
             this.list = response.data.records
             this.total = response.total
@@ -165,11 +162,9 @@
       },
       // 跳转到该博客详情
       onClick: function(row) {
-        console.log("点击跳转", row)
         window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.blog.uid);
       },
       setSort() {
-        console.log(this.$refs.dragTable)
         const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
         this.sortable = Sortable.create(el, {
           ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
@@ -177,11 +172,6 @@
             dataTransfer.setData('Text', '')
           },
           onEnd: evt => {
-            this.loading = Loading.service({
-              lock: true,
-              text: '加载中……',
-              background: 'rgba(0, 0, 0, 0.7)'
-            })
             let list = this.list
             const targetRow = list.splice(evt.oldIndex, 1)[0]
             list.splice(evt.newIndex, 0, targetRow)
@@ -195,10 +185,8 @@
               subjectList.push(params)
             }
             editSubjectItem(subjectList).then(response => {
-              console.log("修改完成后的状态", response)
               if(response.code == this.$ECode.SUCCESS) {
                 this.$commonUtil.message.success(response.data)
-                this.loading.close()
                 this.$router.go(0);
               }
             })

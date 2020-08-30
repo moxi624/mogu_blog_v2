@@ -158,7 +158,6 @@ import {
   deleteBatchSysParams
 } from "@/api/sysParams";
 import {getListByDictTypeList} from "@/api/sysDictData"
-import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
@@ -249,7 +248,6 @@ export default {
           this.paramsTypeDictList = dictMap.sys_params_type.list
           if(dictMap.sys_params_type.defaultValue) {
             this.paramsTypeDefault = parseInt(dictMap.sys_params_type.defaultValue);
-            console.log("得到的默认值", this.paramsTypeDefault)
           }
         }
       });
@@ -279,7 +277,6 @@ export default {
         .then(() => {
           let list = [row]
           deleteBatchSysParams(list).then(response => {
-            console.log(response);
             this.$message({
               type: "success",
               message: response.data
@@ -321,7 +318,6 @@ export default {
             });
           } else {
             addSysParams(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",

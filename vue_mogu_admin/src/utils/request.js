@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message, MessageBox, Loading } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
@@ -10,7 +10,12 @@ const service = axios.create({
   timeout: 100000 // 请求超时时间
 })
 
+// 传递token
 service.defaults.headers.common['Authorization'] = getToken()
+
+// 请求计数器
+var requestNum = 0;
+var loading = null;
 
 // request拦截器
 service.interceptors.request.use(
@@ -19,6 +24,10 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
       config.headers.Authorization = getToken()
     }
+
+    // 请求加1
+    requestNum ++;
+
     return config
   },
   error => {
@@ -31,10 +40,25 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    // /**
-    //  * code为非20000是抛错 可结合自己业务进行修改
-    //  */
+    /**
+     * code为非success和error是抛错 可结合自己业务进行修改
+     */
     const res = response.data
+
+    // 请求数减1
+    requestNum --;
+
+    if(loading == null) {
+      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+    } else if (loading != null && requestNum > 0) {
+      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+      console.log("还需要请求方法")
+    } else {
+      // 请求完毕
+      console.log("请求完毕")
+      loading.close()
+    }
+
     if (res.code === 'success' || res.code === 'error' || res.success) {
       return response.data
     } else if(res.code === 401) {
@@ -71,6 +95,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+
     console.log('错误码', error) // for debug
     Message({
       message: error.message,

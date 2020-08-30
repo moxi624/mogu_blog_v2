@@ -543,7 +543,6 @@ export default {
 
     //获取博客列表
     this.blogList()
-
   },
   methods: {
     openLoading() {
@@ -745,7 +744,6 @@ export default {
         subjectItemList.push(params)
       }
       addSubjectItemList(subjectItemList).then(response => {
-        console.log("添加专题列表", response)
         if (response.code == this.$ECode.SUCCESS) {
           this.$message({
             type: "success",
@@ -827,17 +825,12 @@ export default {
           })
           .catch(() => {
 
-            console.log("开始设置内容")
-
             that.dialogFormVisible = true;
-
             that.form = that.getFormObject();
-
             that.$nextTick(() => {
               //DOM现在更新了
               that.$refs.editor.setData(that.form.content); //设置富文本内容
             });
-
             that.tagValue = [];
             that.isEditForm = false;
             that.title = "新增博客";
@@ -851,8 +844,6 @@ export default {
           //DOM现在更新了
           that.$refs.editor.initData(); //设置富文本内容
         });
-
-
 
         that.tagValue = [];
         that.isEditForm = false;

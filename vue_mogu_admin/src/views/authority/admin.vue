@@ -317,7 +317,6 @@ export default {
       photoList.push(resData[0].url);
       this.form.photoList = photoList;
       this.form.avatar = resData[0].uid
-      console.log("裁剪成功", this.form)
     },
     close() {
       this.imagecropperShow = false
@@ -430,7 +429,6 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.adminList();
     },
@@ -441,7 +439,6 @@ export default {
         } else {
           if (this.isEditForm) {
             editAdmin(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
