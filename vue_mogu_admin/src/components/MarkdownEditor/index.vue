@@ -1,5 +1,3 @@
-<!-- @format -->
-
 <template>
   <div class="index-page" v-loading="isLoading">
     <div id="vditor" class="vditor" :style="vditorClass" />

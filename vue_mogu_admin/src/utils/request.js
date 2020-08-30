@@ -95,13 +95,15 @@ service.interceptors.response.use(
     }
   },
   error => {
-
     console.log('错误码', error) // for debug
     Message({
       message: error.message,
       type: 'error',
       duration: 5 * 1000
     })
+    // 出错了直接关闭loading
+    requestNum = 0
+    loading.close();
     return Promise.reject(error)
   }
 )
