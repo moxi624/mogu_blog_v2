@@ -6,9 +6,10 @@
         v-for="(item, index) in fileList"
         :key="index"
         @click="$emit('getImgReviewData', item, true)"
+        style="list-style: none;"
       >
-        <img class="image" :src="'api' + downloadImgMin(item.fileurl)" :alt="item.filename + item.extendname" />
-        <div class="image-name">{{item.filename + '.' + item.extendname}}</div>
+        <img class="image" :src="item.fileUrl" :alt="item.fileOldName" />
+        <div class="image-name">{{splitStr(item.fileOldName, 10)}}</div>
       </li>
     </ul>
     <div v-show="imageModel === 2">
@@ -19,7 +20,7 @@
           <el-radio :label="false">正序</el-radio>
         </el-radio-group>
       </div>
-      <el-timeline class="image-timeline" :reverse="reverse" v-if="imageTimelineData.length">
+      <el-timeline class="image-timeline" :reverse="reverse" v-if="imageTimelineData.length > 0">
         <el-timeline-item
           class="image-item"
           v-for="(item, index) in imageTimelineData"
@@ -30,9 +31,9 @@
           <img
             class="image"
             v-for="image in item.imageList"
-            :key="image.fileid"
-            :src="'api' + downloadImgMin(image.fileurl)"
-            :alt="image.filename + image.extendname"
+            :key="image.uid"
+            :src="image.fileUrl"
+            :alt="image.fileOldName"
             @click="$emit('getImgReviewData', image, true)"
           />
         </el-timeline-item>
@@ -52,6 +53,9 @@ export default {
       reverse: true
     }
   },
+  created() {
+    console.log("传递过来的列表", this.fileList)
+  },
   computed: {
     imageModel() {
       return this.$store.getters.imageModel
@@ -60,8 +64,9 @@ export default {
     imageTimelineData() {
       let res = []
       //  去重，获取返回的所有日期年-月-日
+      console.log("得到的时间", this.fileList)
       let uploadtimeSet = new Set(
-        this.fileList.map(item => item.uploadtime.split(' ')[0])
+        this.fileList.map(item => item.createTime.split(' ')[0])
       )
       let uploadDate = [...uploadtimeSet]
       //  分组
@@ -69,12 +74,17 @@ export default {
         res.push({
           uploadDate: element,
           imageList: this.fileList.filter(
-            item => item.uploadtime.split(' ')[0] === element
+            item => item.createTime.split(' ')[0] === element
           ) //  过滤
         })
       })
       return res
     }
+  },
+  methods: {
+    splitStr(str, count) {
+      return this.$commonUtil.splitStr(str, count)
+    },
   }
 }
 </script>

@@ -5,7 +5,7 @@
       <OperationMenu
         :operationFile="operationFile"
         :selectionFile="selectionFile"
-        :filepath="filepath"
+        :filepath="filePath"
         :storageValue="storageValue"
         @showStorage="showStorage"
         @getTableDataByType="getTableDataByType"
@@ -16,7 +16,7 @@
       <!-- 面包屑导航栏 -->
       <BreadCrumb class="breadcrumb"></BreadCrumb>
       <!-- 图片展示模式 -->
-      <div class="change-image-model" v-show="filetype === 1">
+      <div class="change-image-model" v-show="fileType === 1">
         <el-radio-group v-model="imageGroupLable" size="mini" @change="changeImageDisplayModel">
           <el-radio-button :label="0">列表</el-radio-button>
           <el-radio-button :label="1">网格</el-radio-button>
@@ -28,7 +28,7 @@
     <FileTable
       :fileList="fileList"
       :loading="loading"
-      v-show="!imageModel || filetype !== 1"
+      v-show="!imageModel || fileType !== 1"
       @setMoveFileDialogData="setMoveFileDialogData"
       @setOperationFile="setOperationFile"
       @setSelectionFile="setSelectionFile"
@@ -36,10 +36,11 @@
       @getTableDataByType="getTableDataByType"
       @getImgReviewData="getImgReviewData"
     ></FileTable>
+
     <!-- 图片网格模式 -->
     <ImageModel
       class="image-model"
-      v-if="imageModel && filetype === 1"
+      v-if="imageModel && fileType === 1"
       :fileList="fileList"
       @getImgReviewData="getImgReviewData"
     ></ImageModel>
@@ -94,10 +95,10 @@ export default {
         fileTree: [] //  目录树
       },
       selectFilePath: '', //  移动文件路径
-      filepath: '/', // 默认路径
+      filePath: '/', // 默认路径
       operationFile: {}, // 当前操作行
       selectionFile: [], // 勾选的文件
-      filetype: 0, //  文件类型
+      fileType: 0, //  文件类型
       //  可以识别的文件类型
       fileImgTypeList: [
         'png',
@@ -202,53 +203,32 @@ export default {
      * 表格数据获取相关事件
      */
     getTableDataByType() {
-      if (this.filetype) {
-        //  分类型
-        this.showFileListByType()
-      } else {
-        //  全部文件
-        this.showFileList()
-      }
-    },
-    //  获取当前路径下的文件列表
-    showFileList() {
-      let data = {}
-      if(this.$route.query.filepath) {
-        data.filePath = this.$route.query.filepath
-      } else {
-        data.filePath = "/"
-      }
+      // 判断fileType
       if(this.$route.query.filetype) {
-        data.fileType = this.$route.query.filetype
+        this.fileType = parseInt(this.$route.query.filetype)
       } else {
-        data.fileType = 0
+        this.fileType = 0
+      }
+      if(this.$route.query.filepath) {
+        this.filePath = this.$route.query.filepath
+      } else {
+        this.filePath = "/"
       }
 
-      getfilelist(data).then(res => {
-        if (res.success) {
-          this.fileList = res.data
-          this.loading = false
-        } else {
-          this.$message.error(res.errorMessage)
-        }
-      })
+      this.showFileListByType()
     },
     //  根据文件类型展示文件列表
     showFileListByType() {
       //  分类型
-      let data = {
-        fileType: this.fileType
-      }
-      if(this.$route.query.filepath) {
-        data.filePath = this.$route.query.filepath
-      } else {
-        data.filePath = "/"
-      }
-
+      let data = {}
+      data.filePath = this.filePath
+      data.fileType = this.fileType
+      this.fileList = []
       getfilelist(data).then(res => {
         if (res.success) {
           this.fileList = res.data
           this.loading = false
+          console.log("得到的列表", this.fileList)
         } else {
           this.$message.error(res.errorMessage)
         }

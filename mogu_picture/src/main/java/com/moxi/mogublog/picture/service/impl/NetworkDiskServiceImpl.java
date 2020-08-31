@@ -87,9 +87,9 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         // 获取配置文件
         Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
         String picturePriority = qiNiuResultMap.get(SysConf.PICTURE_PRIORITY);
-
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByAsc(SQLConf.CREATE_TIME);
         // 根据扩展名查找
         if (networkDisk.getFileType() != 0) {
             queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
