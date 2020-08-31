@@ -14,6 +14,11 @@
           :rules="rules"
           ref="form"
         >
+
+          <aside>
+            图片配置主要用于配置网站的图片信息<br/>
+          </aside>
+
           <el-form-item label="本地图片域名" prop="localPictureBaseUrl">
             <el-input v-model="form.localPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
@@ -67,6 +72,10 @@
         <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="100px" >
 
+          <aside>
+            通过开关选择博客编辑时的文本编辑器<br/>
+          </aside>
+
           <el-form-item label="文本编辑器">
             <el-radio v-for="item in editorModalDictList" :key="item.uid" v-model="form.editorModel" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
@@ -86,6 +95,12 @@
       <el-tab-pane name="three" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 邮箱配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="80px" >
+
+          <aside>
+            邮箱配置主要用于配置网站消息的接收<br/>
+            例如：友链申请、网站评论、网站反馈等，可以在系统配置处选择是否开启邮件通知<br/>
+          </aside>
+
           <el-form-item label="邮箱" prop="email">
             <el-input  v-model="form.email" style="width: 400px"></el-input>
           </el-form-item>
@@ -193,8 +208,6 @@
               </el-col>
             </el-row>
           </el-form-item>
-
-
         </el-form>
       </el-tab-pane>
 
