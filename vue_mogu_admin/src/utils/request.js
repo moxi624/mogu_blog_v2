@@ -27,6 +27,13 @@ service.interceptors.request.use(
 
     // 请求加1
     requestNum ++;
+
+    if(loading == null) {
+      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+    } else if (loading != null && requestNum > 0) {
+      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
+    }
+
     return config
   },
   error => {
@@ -51,15 +58,13 @@ service.interceptors.response.use(
 
     // 请求数减1
     requestNum --;
-    if(loading == null) {
-      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
-    } else if (loading != null && requestNum > 0) {
-      loading = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
-    } else {
-      // 请求完毕
+
+    if (loading == null || requestNum <= 0) {
       loading.close()
     }
+
     if (res.code === 'success' || res.code === 'error' || res.success) {
+      // 请求完毕
       return response.data
     } else {
 

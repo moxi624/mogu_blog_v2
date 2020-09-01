@@ -20,21 +20,14 @@ import java.util.*;
  * 文件上传辅助类
  */
 public class Uploader {
-    private static final Logger LOG = LoggerFactory.getLogger(Uploader.class);
-
-
     public static final String ROOT_PATH = "upload";
-
+    private static final Logger LOG = LoggerFactory.getLogger(Uploader.class);
+    List<UploadFile> saveUploadFileList = new ArrayList<>();
     private StandardMultipartHttpServletRequest request = null;
-
     // 文件允许格式
     private String[] allowFiles = {".rar", ".doc", ".docx", ".zip", ".pdf", ".txt", ".swf", ".wmv", ".gif", ".png", ".jpg", ".jpeg", ".bmp", "blob", ".mp4"};
-
-
     // 文件大小限制，单位KB
     private int maxSize = 10000000;
-
-    List<UploadFile> saveUploadFileList = new ArrayList<>();
 
     public Uploader(HttpServletRequest request) {
         this.request = (StandardMultipartHttpServletRequest) request;
@@ -93,7 +86,7 @@ public class Uploader {
                     out = new FileOutputStream(file);
                     output = new BufferedOutputStream(out);
                     Streams.copy(in, output, true);
-                    if (FileUtil.isImageFile(uploadFile.getFileType())){
+                    if (FileUtil.isImageFile(uploadFile.getFileType())) {
                         ImageOperation.thumbnailsImage(file, minFile, 300);
                     }
 
@@ -120,7 +113,6 @@ public class Uploader {
 
         return saveUploadFileList;
     }
-
 
 
     private void closeStream(BufferedInputStream in, FileOutputStream out,
@@ -154,8 +146,7 @@ public class Uploader {
     }
 
 
-
-    private String getFileName(String fileName){
+    private String getFileName(String fileName) {
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 

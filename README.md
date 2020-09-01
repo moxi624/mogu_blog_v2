@@ -34,7 +34,7 @@
 项目后台目前有Eureka版本和Nacos版本，其中Eureka版本使用的是SpringCloud一些组件，Nacos版本使用的是SpringCloudAlibaba的一些组件，例如Nacos、Sentinel
 
 - Eureka版本请切换至Eureka分支（将不再进行新功能的开发）
-- Nacos版本请切换至Nacos分支（作为以后长期维护的分支，目前文档还未完善）
+- Nacos版本请切换至Nacos分支（作为以后长期维护的分支）
 - 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
 
 ## 项目介绍

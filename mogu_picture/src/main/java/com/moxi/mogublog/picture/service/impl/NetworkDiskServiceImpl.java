@@ -92,7 +92,12 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         queryWrapper.orderByAsc(SQLConf.CREATE_TIME);
         // 根据扩展名查找
         if (networkDisk.getFileType() != 0) {
-            queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
+            // 判断是否是其它文件
+            if(FileUtil.OTHER_TYPE == networkDisk.getFileType()) {
+                queryWrapper.notIn(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
+            } else {
+                queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
+            }
         } else if (StringUtils.isNotEmpty(networkDisk.getFilePath())) {
             // 没有扩展名时，查找全部
             queryWrapper.eq(SQLConf.FILE_PATH, networkDisk.getFilePath());
@@ -197,45 +202,61 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     }
 
     @Override
-    public void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname) {
-        if ("null".equals(extendname)) {
-            extendname = null;
+    public void updateFilepathByFilepath(NetworkDiskVO networkDiskVO) {
+        String oldFilePath = networkDiskVO.getOldFilePath();
+        String newFilePath = networkDiskVO.getNewFilePath();
+        String fileName = networkDiskVO.getFileName();
+        String fileOldName = networkDiskVO.getFileOldName();
+        String extendName = networkDiskVO.getExtendName();
+
+        if ("null".equals(networkDiskVO.getExtendName())) {
+            extendName = null;
         }
         //移动根目录
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.FILE_PATH, oldfilepath);
-        queryWrapper.eq(SQLConf.FILE_NAME, filename);
-        if (StringUtils.isNotEmpty(extendname)) {
-            queryWrapper.eq(SQLConf.EXTEND_NAME, extendname);
+        queryWrapper.eq(SQLConf.FILE_PATH, networkDiskVO.getOldFilePath());
+        queryWrapper.eq(SQLConf.FILE_NAME, networkDiskVO.getFileName());
+        if (StringUtils.isNotEmpty(extendName)) {
+            queryWrapper.eq(SQLConf.EXTEND_NAME, extendName);
         } else {
             queryWrapper.isNull(SQLConf.EXTEND_NAME);
         }
         List<NetworkDisk> networkDiskList = networkDiskService.list(queryWrapper);
         for (NetworkDisk networkDisk : networkDiskList) {
-            networkDisk.setFilePath(newfilepath);
+            // 修改新的路径
+            networkDisk.setFilePath(newFilePath);
+            // 修改旧文件名
+            networkDisk.setFileOldName(networkDiskVO.getFileOldName());
+            // 如果扩展名为空，代表是文件夹，还需要修改文件名
+            if(StringUtils.isEmpty(extendName)) {
+                networkDisk.setFileName(networkDiskVO.getFileOldName());
+            }
         }
+
         networkDiskService.updateBatchById(networkDiskList);
 
         //移动子目录
-        oldfilepath = oldfilepath + filename + "/";
-        newfilepath = newfilepath + filename + "/";
+        oldFilePath = oldFilePath + fileName + "/";
+        newFilePath = newFilePath + fileOldName + "/";
 
-        oldfilepath = oldfilepath.replace("\\", "\\\\\\\\");
-        oldfilepath = oldfilepath.replace("'", "\\'");
-        oldfilepath = oldfilepath.replace("%", "\\%");
-        oldfilepath = oldfilepath.replace("_", "\\_");
+        oldFilePath = oldFilePath.replace("\\", "\\\\\\\\");
+        oldFilePath = oldFilePath.replace("'", "\\'");
+        oldFilePath = oldFilePath.replace("%", "\\%");
+        oldFilePath = oldFilePath.replace("_", "\\_");
 
         //为null说明是目录，则需要移动子目录
-        if (extendname == null) {
+        if (extendName == null) {
             //移动根目录
             QueryWrapper<NetworkDisk> childQueryWrapper = new QueryWrapper<>();
-            childQueryWrapper.likeRight(SQLConf.FILE_PATH, oldfilepath);
+            childQueryWrapper.likeRight(SQLConf.FILE_PATH, oldFilePath);
             List<NetworkDisk> childList = networkDiskService.list(childQueryWrapper);
             for (NetworkDisk networkDisk : childList) {
                 String filePath = networkDisk.getFilePath();
-                networkDisk.setFilePath(filePath.replace(oldfilepath, newfilepath));
+                networkDisk.setFilePath(filePath.replace(oldFilePath, newFilePath));
             }
-            networkDiskService.updateBatchById(childList);
+            if(childList.size() > 0) {
+                networkDiskService.updateBatchById(childList);
+            }
         }
     }
 

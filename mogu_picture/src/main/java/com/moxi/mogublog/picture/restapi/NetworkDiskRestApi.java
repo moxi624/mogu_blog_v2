@@ -85,6 +85,25 @@ public class NetworkDiskRestApi {
     }
 
     /**
+     * 重命名文件
+     *
+     * @return
+     */
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResult<String> edit(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
+        RestResult<String> result = new RestResult<>();
+        if (request.getAttribute(SysConf.TOKEN) == null) {
+            result.setSuccess(false);
+            result.setErrorMessage("请先登录");
+            return result;
+        }
+        networkDiskService.updateFilepathByFilepath(networkDiskVO);
+        result.setSuccess(true);
+        return result;
+    }
+
+    /**
      * 批量删除文件
      *
      * @return
@@ -103,7 +122,6 @@ public class NetworkDiskRestApi {
         for (NetworkDiskVO networkDiskVO : networkDiskVOList) {
             networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         }
-
 
         result.setData("批量删除文件成功");
         result.setSuccess(true);
@@ -188,16 +206,12 @@ public class NetworkDiskRestApi {
      */
     @RequestMapping(value = "/movefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> moveFile(@RequestBody NetworkDisk networkDisk) {
+    public RestResult<String> moveFile(@RequestBody NetworkDiskVO networkDiskVO) {
         RestResult<String> result = new RestResult<>();
         if (!operationCheck().isSuccess()) {
             return operationCheck();
         }
-        String oldFilePath = networkDisk.getOldFilePath();
-        String newFilePath = networkDisk.getNewFilePath();
-        String fileName = networkDisk.getFileName();
-        String extendName = networkDisk.getExtendName();
-        networkDiskService.updateFilepathByFilepath(oldFilePath, newFilePath, fileName, extendName);
+        networkDiskService.updateFilepathByFilepath(networkDiskVO);
         result.setSuccess(true);
         return result;
     }
@@ -209,20 +223,22 @@ public class NetworkDiskRestApi {
      */
     @RequestMapping(value = "/batchmovefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> batchMoveFile(@RequestBody NetworkDisk networkDisk) {
+    public RestResult<String> batchMoveFile(@RequestBody NetworkDiskVO networkDiskVO) {
 
         RestResult<String> result = new RestResult<String>();
         if (!operationCheck().isSuccess()) {
             return operationCheck();
         }
 
-        String files = networkDisk.getFiles();
-        String newfilepath = networkDisk.getNewFilePath();
+        String files = networkDiskVO.getFiles();
+        String newfilepath = networkDiskVO.getNewFilePath();
 
-        List<NetworkDisk> fileList = JSON.parseArray(files, NetworkDisk.class);
+        List<NetworkDiskVO> fileList = JSON.parseArray(files, NetworkDiskVO.class);
 
-        for (NetworkDisk file : fileList) {
-            networkDiskService.updateFilepathByFilepath(file.getFilePath(), newfilepath, file.getFileName(), file.getExtendName());
+        for (NetworkDiskVO file : fileList) {
+            file.setNewFilePath(newfilepath);
+            file.setOldFilePath(file.getFilePath());
+            networkDiskService.updateFilepathByFilepath(file);
         }
 
         result.setData("批量移动文件成功");

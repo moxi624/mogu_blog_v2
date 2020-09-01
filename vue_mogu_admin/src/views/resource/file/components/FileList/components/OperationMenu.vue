@@ -139,7 +139,6 @@ export default {
       }
     },
     submitNormalUpload: function() {
-      console.log();
       this.$refs.upload.submit();
     },
     //  上传按钮
@@ -212,6 +211,7 @@ export default {
     createFile(fileName) {
       let data = {
         fileName: fileName,
+        fileOldName: fileName,
         isDir: 1
       }
 

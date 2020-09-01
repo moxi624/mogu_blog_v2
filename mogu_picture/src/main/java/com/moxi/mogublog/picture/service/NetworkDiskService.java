@@ -94,12 +94,9 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
     /**
      * 通过路径更新文件
      *
-     * @param oldFilePath
-     * @param newFilePath
-     * @param fileName
-     * @param extendName
+     * @param networkDiskVO
      */
-    void updateFilepathByFilepath(String oldFilePath, String newFilePath, String fileName, String extendName);
+    void updateFilepathByFilepath(NetworkDiskVO networkDiskVO);
 
     /**
      * 通过拓展名查询文件

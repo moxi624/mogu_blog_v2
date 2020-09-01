@@ -13,6 +13,7 @@ import java.util.zip.ZipFile;
  */
 public class FileOperation {
     private static Logger logger = LoggerFactory.getLogger(FileOperation.class);
+
     /**
      * 创建文件
      *
@@ -26,6 +27,7 @@ public class FileOperation {
 
     /**
      * 删除文件
+     *
      * @param file 文件
      * @return 是否删除成功
      */
@@ -39,10 +41,10 @@ public class FileOperation {
 
         }
 
-        if (file.isFile()){
+        if (file.isFile()) {
             return file.delete();
         } else {
-            for (File newfile:  file.listFiles()){
+            for (File newfile : file.listFiles()) {
                 deleteFile(newfile);
             }
         }
@@ -51,6 +53,7 @@ public class FileOperation {
 
     /**
      * 删除文件
+     *
      * @param fileUrl 文件路径
      * @return 删除是否成功
      */
@@ -67,7 +70,7 @@ public class FileOperation {
      */
     public static long getFileSize(String fileUrl) {
         File file = newFile(fileUrl);
-        if (file.exists()){
+        if (file.exists()) {
             return file.length();
         }
         return 0;
@@ -88,6 +91,7 @@ public class FileOperation {
 
     /**
      * 创建目录
+     *
      * @param file 文件
      * @return 是否创建成功
      */
@@ -105,6 +109,7 @@ public class FileOperation {
 
     /**
      * 创建目录
+     *
      * @param fileUrl 文件路径
      * @return 是否创建成功
      */
@@ -122,7 +127,8 @@ public class FileOperation {
 
     /**
      * 拷贝文件
-     * @param fileInputStream 文件输入流
+     *
+     * @param fileInputStream  文件输入流
      * @param fileOutputStream 文件输出流
      * @throws IOException io异常
      */
@@ -163,7 +169,8 @@ public class FileOperation {
 
     /**
      * 拷贝文件
-     * @param src 源文件
+     *
+     * @param src  源文件
      * @param dest 目的文件
      * @throws IOException io异常
      */
@@ -178,7 +185,8 @@ public class FileOperation {
 
     /**
      * 拷贝文件
-     * @param srcUrl 源路径
+     *
+     * @param srcUrl  源路径
      * @param destUrl 目的路径
      * @throws IOException io异常
      */
@@ -193,7 +201,8 @@ public class FileOperation {
 
     /**
      * 文件解压缩
-     * @param file 需要解压的文件
+     *
+     * @param file        需要解压的文件
      * @param destDirPath 目的路径
      * @return 解压目录列表
      */
@@ -210,9 +219,9 @@ public class FileOperation {
 
                 String[] nameStrArr = entry.getName().split("/");
                 String nameStr = "/";
-                for (int i = 0; i < nameStrArr.length; i++){
-                    if (!"".equals(nameStrArr[i])){
-                        nameStr =nameStr + "/" + nameStrArr[i];
+                for (int i = 0; i < nameStrArr.length; i++) {
+                    if (!"".equals(nameStrArr[i])) {
+                        nameStr = nameStr + "/" + nameStrArr[i];
                         set.add(nameStr);
                     }
 
@@ -260,10 +269,10 @@ public class FileOperation {
             }
         }
         List<String> res = new ArrayList<>(set);
-        return res ;
+        return res;
     }
 
-    public static long deleteFileFromDisk(String fileurl){
+    public static long deleteFileFromDisk(String fileurl) {
         String fileUrl = PathUtil.getStaticPath() + fileurl;
         String extendName = FileUtil.getFileType(fileUrl);
         String minFileUrl = fileUrl.replace("." + extendName, "_min." + extendName);

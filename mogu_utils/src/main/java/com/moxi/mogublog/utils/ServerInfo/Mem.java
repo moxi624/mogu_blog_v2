@@ -1,16 +1,14 @@
 package com.moxi.mogublog.utils.ServerInfo;
 
-import com.moxi.mogublog.utils.Arith;
 import lombok.Data;
 
 /**
  * 內存相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class Mem
-{
+public class Mem {
     /**
      * 内存总量
      */

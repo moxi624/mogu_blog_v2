@@ -1,6 +1,5 @@
 package com.moxi.mogublog.sms.listener;
 
-import com.moxi.mogublog.sms.global.SysConf;
 import com.moxi.mogublog.sms.util.SendMailUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,7 +19,7 @@ public class MailListener {
 
     @RabbitListener(queues = "mogu.email")
     public void sendMail(Map<String, String> map) {
-        if(map != null) {
+        if (map != null) {
             try {
                 sendMailUtils.sendEmail(
                         map.get("receiver"),

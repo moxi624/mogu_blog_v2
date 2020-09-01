@@ -3,10 +3,10 @@
 ## 目录
 
 - mogu_blog.sql：代表mogu_blog数据库的文件
-- mogu_blog_update.sql：代表mogu_blog在后续开发时候更新的字段（首次无需导入）
+- mogu_blog_update.sql：代表mogu_blog在后续开发时候更新的字段==（首次无需导入）==
 - mogu_picture.sql：代表mogu_picture数据库文件
-- mogu_picture_update.sql：代表mogu_picture在后续开发时候更新的字段（首次无需导入）
-- nacos_config.sql：代表nacos的配置信息
+- mogu_picture_update.sql：代表mogu_picture在后续开发时候更新的字段==（首次不需要导入）==
+- nacos_config.sql：代表nacos的配置信息，用来存放每个模块的配置信息
 
 ## 注意
 

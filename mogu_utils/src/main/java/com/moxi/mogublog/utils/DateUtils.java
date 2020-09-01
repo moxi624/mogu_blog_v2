@@ -60,8 +60,7 @@ public class DateUtils {
      *
      * @return Date() 当前日期
      */
-    public static Date getNowDate()
-    {
+    public static Date getNowDate() {
         return new Date();
     }
 
@@ -391,6 +390,7 @@ public class DateUtils {
 
     /**
      * 得到两个日期相差的秒数
+     *
      * @param lastDate
      * @param date
      * @return
@@ -630,8 +630,7 @@ public class DateUtils {
     /**
      * 获取服务器启动时间
      */
-    public static Date getServerStartDate()
-    {
+    public static Date getServerStartDate() {
         long time = ManagementFactory.getRuntimeMXBean().getStartTime();
         return new Date(time);
     }
@@ -639,8 +638,7 @@ public class DateUtils {
     /**
      * 计算两个时间差
      */
-    public static String getDatePoor(Date endDate, Date nowDate)
-    {
+    public static String getDatePoor(Date endDate, Date nowDate) {
         long nd = 1000 * 24 * 60 * 60;
         long nh = 1000 * 60 * 60;
         long nm = 1000 * 60;

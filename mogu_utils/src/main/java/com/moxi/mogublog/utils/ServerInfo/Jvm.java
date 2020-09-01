@@ -1,18 +1,14 @@
 package com.moxi.mogublog.utils.ServerInfo;
-import com.moxi.mogublog.utils.Arith;
-import com.moxi.mogublog.utils.DateUtils;
-import lombok.Data;
 
-import java.lang.management.ManagementFactory;
+import lombok.Data;
 
 /**
  * JVM相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class Jvm
-{
+public class Jvm {
     /**
      * 虚拟机名称
      */

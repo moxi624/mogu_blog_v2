@@ -1,4 +1,5 @@
 package com.moxi.mogublog.utils;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Base64;
@@ -9,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.security.Security;
+
 /**
  * uniapp工具类,用于登录解密算法
  *
@@ -29,6 +31,7 @@ public class UniappUtils {
 
     /**
      * 将传递过来的数据 用base64先行解密
+     *
      * @param encryptDataB64
      * @param sessionKeyB64
      * @param ivB64
@@ -40,7 +43,7 @@ public class UniappUtils {
                         Base64.decode(encryptDataB64),
                         Base64.decode(sessionKeyB64),
                         Base64.decode(ivB64)
-                ),"UTF-8"
+                ), "UTF-8"
         );
     }
 
@@ -68,6 +71,7 @@ public class UniappUtils {
 
     /**
      * 解密方法
+     *
      * @param encryptedData 要解密的字符串
      * @param keyBytes      解密密钥
      * @param ivs           自定义对称解密算法初始向量 iv

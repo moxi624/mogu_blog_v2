@@ -1,7 +1,10 @@
 package com.moxi.mogublog.utils;
 
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.lionsoul.ip2region.DataBlock;
+import org.lionsoul.ip2region.DbConfig;
+import org.lionsoul.ip2region.DbSearcher;
+import org.lionsoul.ip2region.Util;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.lionsoul.ip2region.*;
 
 
 /**
@@ -179,7 +181,7 @@ public class IpUtils {
 
         String ip = content.substring(3);
 
-        if(!Util.isIpAddress(ip)) {
+        if (!Util.isIpAddress(ip)) {
             log.info("IP地址为空");
             return null;
         }
@@ -396,6 +398,7 @@ public class IpUtils {
 
     /**
      * 创建ip2region文件
+     *
      * @return
      */
     public static String createFtlFileByFtlArray() {
@@ -405,6 +408,7 @@ public class IpUtils {
 
     /**
      * 创建文件
+     *
      * @param ftlPath
      * @param ftlName
      * @return
@@ -497,38 +501,32 @@ public class IpUtils {
 
     /**
      * 获取IP
+     *
      * @return
      */
-    public static String getHostIp()
-    {
-        try
-        {
+    public static String getHostIp() {
+        try {
             return InetAddress.getLocalHost().getHostAddress();
-        }
-        catch (UnknownHostException e)
-        {
+        } catch (UnknownHostException e) {
         }
         return "127.0.0.1";
     }
 
     /**
      * 获取主机名
+     *
      * @return
      */
-    public static String getHostName()
-    {
-        try
-        {
+    public static String getHostName() {
+        try {
             return InetAddress.getLocalHost().getHostName();
-        }
-        catch (UnknownHostException e)
-        {
+        } catch (UnknownHostException e) {
         }
         return "未知";
     }
 
     public static void main(String args[]) {
-        String ip="220.248.12.158";
+        String ip = "220.248.12.158";
         String cityIpString = getCityInfo(ip);
         System.out.println(cityIpString);
     }

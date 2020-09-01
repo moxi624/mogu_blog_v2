@@ -2,8 +2,10 @@ package com.moxi.mogublog.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -50,7 +52,7 @@ public class HttpRequestUtil {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
-            result =  new String(result.getBytes(), "UTF-8");
+            result = new String(result.getBytes(), "UTF-8");
         } catch (Exception e) {
             log.info("发送GET请求出现异常！" + e);
             e.printStackTrace();

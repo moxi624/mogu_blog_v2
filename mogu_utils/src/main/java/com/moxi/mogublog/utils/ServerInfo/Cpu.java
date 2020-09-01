@@ -1,18 +1,14 @@
 package com.moxi.mogublog.utils.ServerInfo;
 
-import com.moxi.mogublog.utils.Arith;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * CPU相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class Cpu
-{
+public class Cpu {
     /**
      * 核心数
      */

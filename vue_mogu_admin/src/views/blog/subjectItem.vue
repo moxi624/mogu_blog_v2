@@ -1,7 +1,10 @@
 <template>
   <div class="app-container">
-    <el-table ref="dragTable" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
+    <aside>
+      通过拖拽实现专题内列表的排序
+    </aside>
 
+    <el-table ref="dragTable" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
       <el-table-column label="标题图" width="180px" align="center">
         <template slot-scope="{row}">
           <img
@@ -197,11 +200,33 @@
   }
 </script>
 
-<style>
+<style lang="scss">
   .sortable-ghost{
     opacity: .8;
     color: #fff!important;
     background: #42b983!important;
+  }
+  aside {
+    background: #eef1f6;
+    padding: 8px 24px;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    display: block;
+    line-height: 32px;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    color: #2c3e50;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    a {
+      color: #337ab7;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(32, 160, 255);
+      }
+    }
   }
 </style>
 

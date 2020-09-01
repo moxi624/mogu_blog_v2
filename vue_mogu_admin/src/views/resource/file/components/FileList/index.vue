@@ -44,6 +44,7 @@
       :fileList="fileList"
       @getImgReviewData="getImgReviewData"
     ></ImageModel>
+
     <!-- 移动文件模态框 -->
     <MoveFileDialog
       :dialogMoveFile="dialogMoveFile"
@@ -99,78 +100,6 @@ export default {
       operationFile: {}, // 当前操作行
       selectionFile: [], // 勾选的文件
       fileType: 0, //  文件类型
-      //  可以识别的文件类型
-      fileImgTypeList: [
-        'png',
-        'jpg',
-        'jpeg',
-        'docx',
-        'doc',
-        'ppt',
-        'pptx',
-        'xls',
-        'xlsx',
-        'avi',
-        'mp4',
-        'css',
-        'csv',
-        'chm',
-        'rar',
-        'zip',
-        'dmg',
-        'mp3',
-        'open',
-        'pdf',
-        'rtf',
-        'txt',
-        'oa',
-        'js',
-        'html',
-        'img',
-        'sql',
-        'jar',
-        'svg',
-        'gif',
-        'json',
-        'exe'
-      ],
-      //  文件图片Map映射
-      fileImgMap: {
-        dir: require('@/assets/images/file/dir.png'),
-        chm: require('@/assets/images/file/file_chm.png'),
-        css: require('@/assets/images/file/file_css.png'),
-        csv: require('@/assets/images/file/file_csv.png'),
-        png: require('@/assets/images/file/file_pic.png'),
-        jpg: require('@/assets/images/file/file_pic.png'),
-        jpeg: require('@/assets/images/file/file_pic.png'),
-        docx: require('@/assets/images/file/file_word.png'),
-        doc: require('@/assets/images/file/file_word.png'),
-        ppt: require('@/assets/images/file/file_ppt.png'),
-        pptx: require('@/assets/images/file/file_ppt.png'),
-        xls: require('@/assets/images/file/file_excel.png'),
-        xlsx: require('@/assets/images/file/file_excel.png'),
-        mp4: require('@/assets/images/file/file_video.png'),
-        avi: require('@/assets/images/file/file_avi.png'),
-        rar: require('@/assets/images/file/file_rar.png'),
-        zip: require('@/assets/images/file/file_zip.png'),
-        dmg: require('@/assets/images/file/file_dmg.png'),
-        mp3: require('@/assets/images/file/file_music.png'),
-        open: require('@/assets/images/file/file_open.png'),
-        pdf: require('@/assets/images/file/file_pdf.png'),
-        rtf: require('@/assets/images/file/file_rtf.png'),
-        txt: require('@/assets/images/file/file_txt.png'),
-        oa: require('@/assets/images/file/file_oa.png'),
-        unknown: require('@/assets/images/file/file_unknown.png'),
-        js: require('@/assets/images/file/file_js.png'),
-        html: require('@/assets/images/file/file_html.png'),
-        img: require('@/assets/images/file/file_img.png'),
-        sql: require('@/assets/images/file/file_sql.png'),
-        jar: require('@/assets/images/file/file_jar.png'),
-        svg: require('@/assets/images/file/file_svg.png'),
-        gif: require('@/assets/images/file/file_gif.png'),
-        json: require('@/assets/images/file/file_json.png'),
-        exe: require('@/assets/images/file/file_exe.png')
-      },
       //  查看图片模态框数据
       imgReview: {
         visible: false,
@@ -233,19 +162,6 @@ export default {
           this.$message.error(res.errorMessage)
         }
       })
-    },
-    //  根据文件扩展名设置文件图片
-    setFileImg(extendname) {
-      if (extendname === null) {
-        //  文件夹
-        return this.fileImgMap.dir
-      } else if (!this.fileImgTypeList.includes(extendname)) {
-        //  无法识别文件类型的文件
-        return this.fileImgMap.unknown
-      } else {
-        //  可以识别文件类型的文件
-        return this.fileImgMap[extendname]
-      }
     },
     //  计算文件大小
     calculateFileSize(size) {
@@ -331,7 +247,6 @@ export default {
           fileName: this.operationFile.fileName,
           extendName: this.operationFile.extendName
         }
-        console.log("data", data)
         moveFile(data).then(res => {
           if (res.success) {
             this.$message.success('移动文件成功')
@@ -343,7 +258,6 @@ export default {
         })
       }
     },
-
     //  获取已占用内存
     showStorage() {
       getStorage().then(res => {
@@ -372,6 +286,7 @@ export default {
 
     //  切换图片查看模式
     changeImageDisplayModel(label) {
+      console.log("切换模式", label)
       this.$store.commit('changeImageModel', label)
     },
 

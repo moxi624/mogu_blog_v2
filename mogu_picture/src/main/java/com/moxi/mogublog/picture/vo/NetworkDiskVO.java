@@ -32,6 +32,11 @@ public class NetworkDiskVO extends BaseVO<NetworkDiskVO> {
     private String filePath;
 
     /**
+     * 旧文件名
+     */
+    private String fileOldName;
+
+    /**
      * 时间戳名称
      */
     private String timestampName;
@@ -57,18 +62,22 @@ public class NetworkDiskVO extends BaseVO<NetworkDiskVO> {
     private int isDir;
 
     /**
-     * 以下字段不存入数据库
+     * 旧文件路径
      */
-
-    @TableField(exist = false)
     private String oldFilePath;
 
-    @TableField(exist = false)
+    /**
+     * 新文件路径
+     */
     private String newFilePath;
 
-    @TableField(exist = false)
+    /**
+     * 文件列表
+     */
     private String files;
 
-    @TableField(exist = false)
+    /**
+     * 文件类型
+     */
     private int fileType;
 }

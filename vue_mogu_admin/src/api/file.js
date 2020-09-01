@@ -117,6 +117,18 @@ export function createFile(data) {
 }
 
 /**
+ * 编辑文件
+ * @param data
+ */
+export function editFile(data) {
+  return request({
+    url: process.env.PICTURE_API + '/networkDisk/edit',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 批量删除
  * @param data
  */
