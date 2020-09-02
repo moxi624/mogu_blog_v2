@@ -39,6 +39,15 @@
           </div>
           <div style="margin-bottom: 14px;">
             <el-button-group>
+
+              <el-tooltip class="item" effect="dark" content="专题Item" placement="bottom-start" style="margin-right: 2px">
+                <el-button
+                  size="mini"
+                  icon="el-icon-copy-document"
+                  @click="goSubjectItem(item)"
+                />
+              </el-tooltip>
+
               <el-tooltip class="item" effect="dark" content="编辑专题" placement="bottom-start" style="margin-right: 2px">
                 <el-button
                   type="primary"

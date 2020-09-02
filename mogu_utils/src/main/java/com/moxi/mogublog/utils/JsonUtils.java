@@ -88,7 +88,6 @@ public class JsonUtils {
         try {
             obj = gson.fromJson(jsonString, clazz);
         } catch (JsonSyntaxException e) {
-
             e.printStackTrace();
         }
         return obj;

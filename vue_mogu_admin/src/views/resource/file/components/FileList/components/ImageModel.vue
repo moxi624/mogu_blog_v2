@@ -1,17 +1,48 @@
 <template>
   <div class="image-model-wrapper">
-    <ul class="image-model" v-show="imageModel === 1">
-      <li
-        class="image-item"
-        v-for="(item, index) in fileList"
-        :key="index"
-        @click="$emit('getImgReviewData', item, true)"
-        style="list-style: none;"
+<!--    <ul class="image-model" v-show="imageModel === 1">-->
+<!--      <li-->
+<!--        class="image-item"-->
+<!--        v-for="(item, index) in fileList"-->
+<!--        :key="index"-->
+<!--        @click="$emit('getImgReviewData', item, true)"-->
+<!--        style="list-style: none;"-->
+<!--      >-->
+<!--        <img class="image" :src="item.fileUrl" :alt="item.fileOldName" />-->
+<!--        <div class="image-name">{{splitStr(item.fileOldName, 10)}}</div>-->
+<!--      </li>-->
+<!--    </ul>-->
+
+    <el-row v-show="imageModel === 1">
+      <el-col
+        v-for="(picture, index) in fileList"
+        :key="picture.uid"
+        style="padding: 6px"
+        :xs="24"
+        :sm="12"
+        :md="12"
+        :lg="6"
+        :xl="4"
       >
-        <img class="image" :src="item.fileUrl" :alt="item.fileOldName" />
-        <div class="image-name">{{splitStr(item.fileOldName, 10)}}</div>
-      </li>
-    </ul>
+        <el-card
+          :body-style="{ padding: '0px', textAlign: 'center' }"
+          shadow="always"
+        >
+          <el-image
+            :src="picture.fileUrl"
+            style="cursor:pointer"
+            fit="scale-down"
+            @click="$emit('getImgReviewData', picture, true)"
+          />
+          <div @click="$emit('getImgReviewData', picture, true)">
+            <span class="media-title" v-if="picture.fileOldName">{{splitStr(picture.fileOldName, 15)}}</span>
+            <span class="media-title" v-else>图片 {{index + 1}}</span>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+
     <div v-show="imageModel === 2">
       <div class="radio">
         排序：
@@ -28,14 +59,36 @@
           :timestamp="item.uploadDate"
           placement="top"
         >
-          <img
-            class="image"
-            v-for="image in item.imageList"
-            :key="image.uid"
-            :src="image.fileUrl"
-            :alt="image.fileOldName"
-            @click="$emit('getImgReviewData', image, true)"
-          />
+
+          <el-row>
+            <el-col
+              v-for="(picture, index) in item.imageList"
+              :key="picture.uid"
+              style="padding: 6px"
+              :xs="24"
+              :sm="12"
+              :md="12"
+              :lg="6"
+              :xl="4"
+            >
+              <el-card
+                :body-style="{ padding: '0px', textAlign: 'center' }"
+                shadow="always"
+              >
+                <el-image
+                  :src="picture.fileUrl"
+                  style="cursor:pointer"
+                  fit="scale-down"
+                  @click="$emit('getImgReviewData', picture, true)"
+                />
+                <div @click="$emit('getImgReviewData', picture, true)">
+                  <span class="media-title" v-if="picture.fileOldName">{{splitStr(picture.fileOldName, 15)}}</span>
+                  <span class="media-title" v-else>图片 {{index + 1}}</span>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
         </el-timeline-item>
       </el-timeline>
     </div>
@@ -88,7 +141,12 @@ export default {
   }
 }
 </script>
-
+<style scoped>
+  .el-image {
+    width: 100%;
+    height: 160px;
+  }
+</style>
 <style lang="stylus" scoped>
 @import '~@/assets/styles/mixins.styl'
 .image-model-wrapper

@@ -271,6 +271,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
                 }
             }
         }
+        admin.setUserName(adminVO.getUserName());
         admin.setAvatar(adminVO.getAvatar());
         admin.setNickName(adminVO.getNickName());
         admin.setGender(adminVO.getGender());
