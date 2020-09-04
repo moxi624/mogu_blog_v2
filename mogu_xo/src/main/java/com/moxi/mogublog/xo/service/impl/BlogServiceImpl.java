@@ -25,7 +25,6 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,31 +77,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     SystemConfigService systemConfigService;
     @Autowired
+    SysParamsService sysParamsService;
+    @Autowired
     private BlogService blogService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    @Value(value = "${PROJECT_NAME}")
-    private String PROJECT_NAME;
-
-    @Value(value = "${BLOG.FIRST_COUNT}")
-    private Integer BLOG_FIRST_COUNT;
-
-    @Value(value = "${BLOG.SECOND_COUNT}")
-    private Integer BLOG_SECOND_COUNT;
-
-    @Value(value = "${BLOG.THIRD_COUNT}")
-    private Integer BLOG_THIRD_COUNT;
-
-    @Value(value = "${BLOG.FOURTH_COUNT}")
-    private Integer BLOG_FOURTH_COUNT;
-
-    @Value(value = "${BLOG.HOT_COUNT}")
-    private Integer BLOG_HOT_COUNT;
-
-    @Value(value = "${BLOG.NEW_COUNT}")
-    private Integer BLOG_NEW_COUNT;
 
     @Override
     public List<Blog> setTagByBlogList(List<Blog> list) {
@@ -129,40 +110,32 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 }
             }
         });
-
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
-
         if (sortUids.size() > 0) {
             sortList = blogSortMapper.selectBatchIds(sortUids);
         }
-        if (tagList.size() > 0) {
+        if (tagUids.size() > 0) {
             tagList = tagMapper.selectBatchIds(tagUids);
         }
-
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
-
         sortList.forEach(item -> {
             sortMap.put(item.getUid(), item);
         });
-
         tagList.forEach(item -> {
             tagMap.put(item.getUid(), item);
         });
-
         for (Blog item : list) {
 
             //设置分类
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 item.setBlogSort(sortMap.get(item.getBlogSortUid()));
             }
-
             //获取标签
             if (StringUtils.isNotEmpty(item.getTagUid())) {
                 List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), BaseSysConf.FILE_SEGMENTATION);
                 List<Tag> tagListTemp = new ArrayList<Tag>();
-
                 tagUidsTemp.forEach(tag -> {
                     tagListTemp.add(tagMap.get(tag));
                 });
@@ -187,7 +160,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 sortUids.add(item.getBlogSortUid());
             }
             if (StringUtils.isNotEmpty(item.getTagUid())) {
-                tagUids.add(item.getTagUid());
+                // tagUid有多个，还需要切分
+                if (StringUtils.isNotEmpty(item.getTagUid())) {
+                    List<String> tagUidsTemp = StringUtils.changeStringToString(item.getTagUid(), BaseSysConf.FILE_SEGMENTATION);
+                    for (String itemTagUid : tagUidsTemp) {
+                        tagUids.add(itemTagUid);
+                    }
+                }
             }
         });
         String pictureList = null;
@@ -203,8 +182,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (tagUids.size() > 0) {
             tagList = tagService.listByIds(tagUids);
         }
-
-
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
         Map<String, String> pictureMap = new HashMap<>();
@@ -218,7 +195,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         });
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
 
 
@@ -252,9 +229,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
                 });
-
                 item.setPhotoList(pictureListTemp);
-
                 // 只设置一张标题图
                 if (pictureListTemp.size() > 0) {
                     item.setPhotoUrl(pictureListTemp.get(0));
@@ -328,7 +303,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
-
         return blogMapper.selectCount(queryWrapper);
     }
 
@@ -340,14 +314,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Map<String, Integer> tagMap = new HashMap<>();
 
         for (Map<String, Object> item : blogCoutByTagMap) {
-            String tagUid = String.valueOf(item.get("tag_uid"));
+            String tagUid = String.valueOf(item.get(SQLConf.TAG_UID));
             // java.lang.Number是Integer,Long的父类
-            Number num = (Number) item.get("count");
+            Number num = (Number) item.get(SysConf.COUNT);
             Integer count = num.intValue();
-
             //如果只有一个UID的情况
             if (tagUid.length() == 32) {
-
                 //如果没有这个内容的话，就设置
                 if (tagMap.get(tagUid) == null) {
                     tagMap.put(tagUid, count);
@@ -355,7 +327,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                     Integer tempCount = tagMap.get(tagUid) + count;
                     tagMap.put(tagUid, tempCount);
                 }
-
             } else {
                 //如果长度大于32，说明含有多个UID
                 if (StringUtils.isNotEmpty(tagUid)) {
@@ -375,7 +346,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         //把查询到的Tag放到Map中
         Set<String> tagUids = tagMap.keySet();
         Collection<Tag> tagCollection = new ArrayList<>();
-
         if (tagUids.size() > 0) {
             tagCollection = tagMapper.selectBatchIds(tagUids);
         }
@@ -389,17 +359,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         List<Map<String, Object>> resultMap = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : tagMap.entrySet()) {
-
             String tagUid = entry.getKey();
-
             if (tagEntityMap.get(tagUid) != null) {
                 String tagName = tagEntityMap.get(tagUid);
                 Integer count = entry.getValue();
-
                 Map<String, Object> itemResultMap = new HashMap<>();
-                itemResultMap.put("tagUid", tagUid);
-                itemResultMap.put("name", tagName);
-                itemResultMap.put("value", count);
+                itemResultMap.put(SysConf.TAG_UID, tagUid);
+                itemResultMap.put(SysConf.NAME, tagName);
+                itemResultMap.put(SysConf.VALUE, count);
                 resultMap.add(itemResultMap);
             }
         }
@@ -412,19 +379,16 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     public List<Map<String, Object>> getBlogCountByBlogSort() {
 
         List<Map<String, Object>> blogCoutByBlogSortMap = blogMapper.getBlogCountByBlogSort();
-
         Map<String, Integer> blogSortMap = new HashMap<>();
-
         for (Map<String, Object> item : blogCoutByBlogSortMap) {
 
-            String blogSortUid = String.valueOf(item.get("blog_sort_uid"));
+            String blogSortUid = String.valueOf(item.get(SQLConf.BLOG_SORT_UID));
             // java.lang.Number是Integer,Long的父类
-            Number num = (Number) item.get("count");
+            Number num = (Number) item.get(SysConf.COUNT);
             Integer count = 0;
             if (num != null) {
                 count = num.intValue();
             }
-
             blogSortMap.put(blogSortUid, count);
         }
 
@@ -453,15 +417,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 Integer count = entry.getValue();
 
                 Map<String, Object> itemResultMap = new HashMap<>();
-                itemResultMap.put("blogSortUid", blogSortUid);
-                itemResultMap.put("name", blogSortName);
-                itemResultMap.put("value", count);
+                itemResultMap.put(SysConf.BLOG_SORT_UID, blogSortUid);
+                itemResultMap.put(SysConf.NAME, blogSortName);
+                itemResultMap.put(SysConf.VALUE, count);
                 resultMap.add(itemResultMap);
             }
         }
-
         return resultMap;
-
     }
 
     @Override
@@ -502,8 +464,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         List<String> contributeDateList = new ArrayList<>();
         contributeDateList.add(startTime);
         contributeDateList.add(endTime);
-        resultMap.put("contributeDate", contributeDateList);
-        resultMap.put("blogContributeCount", resultList);
+        resultMap.put(SysConf.CONTRIBUTE_DATE, contributeDateList);
+        resultMap.put(SysConf.BLOG_CONTRIBUTE_COUNT, resultList);
 
         return resultMap;
     }
@@ -702,20 +664,25 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.eq(SQLConf.LEVEL, blogVO.getLevel());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Integer count = blogService.count(queryWrapper);
-        String addVerdictResult = addVerdict(count, blogVO.getLevel());
+        // 判断插入博客的时候，会不会超过预期设置
+        String addVerdictResult = addVerdict(count + 1, blogVO.getLevel());
         // 判断是否能够添加推荐
         if (StringUtils.isNotBlank(addVerdictResult)) {
             return addVerdictResult;
         }
         Blog blog = new Blog();
         //如果是原创，作者为用户的昵称
+        String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
+        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+            log.error("参数配置有误，需重新配置！");
+        }
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
             if (admin != null) {
                 blog.setAuthor(admin.getNickName());
                 blog.setAdminUid(admin.getUid());
             }
-            blog.setArticlesPart(PROJECT_NAME);
+            blog.setArticlesPart(projectName);
         } else {
             blog.setAuthor(blogVO.getAuthor());
             blog.setArticlesPart(blogVO.getArticlesPart());
@@ -730,7 +697,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setStatus(EStatus.ENABLE);
-        blog.setStartComment(blogVO.getStartComment());
+        blog.setOpenComment(blogVO.getOpenComment());
         Boolean isSave = blogService.save(blog);
 
         //保存成功后，需要发送消息到solr 和 redis
@@ -763,7 +730,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setAdminUid(admin.getUid());
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             blog.setAuthor(admin.getNickName());
-            blog.setArticlesPart(PROJECT_NAME);
+            String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
+            if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+                log.error("参数配置有误，需重新配置！");
+            }
+            blog.setArticlesPart(projectName);
         } else {
             blog.setAuthor(blogVO.getAuthor());
             blog.setArticlesPart(blogVO.getArticlesPart());
@@ -778,7 +749,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setLevel(blogVO.getLevel());
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
-        blog.setStartComment(blogVO.getStartComment());
+        blog.setOpenComment(blogVO.getOpenComment());
         blog.setUpdateTime(new Date());
         blog.setStatus(EStatus.ENABLE);
 
@@ -886,7 +857,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
-
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -915,7 +885,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             if (FileUtils.isMarkdown(fileName)) {
                 fileList.add(file);
             } else {
-                return ResultUtil.result(SysConf.ERROR, "目前仅支持Mrkdown文件");
+                return ResultUtil.result(SysConf.ERROR, "目前仅支持Markdown文件");
             }
         }
 
@@ -1011,6 +981,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         // 开始进行图片替换操作
         Integer count = 1;
+
+        String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
+        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
+            log.error("参数配置有误，需重新配置！");
+        }
         for (String content : fileContentList) {
             // 循环替换里面的图片
             for (Map.Entry<String, String> map : matchUrlMap.entrySet()) {
@@ -1021,7 +996,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.setTagUid(tag.getUid());
             blog.setAdminUid(admin.getUid());
             blog.setAuthor(admin.getNickName());
-            blog.setArticlesPart(PROJECT_NAME);
+            blog.setArticlesPart(projectName);
             blog.setLevel(ELevel.NORMAL);
             blog.setTitle("默认标题" + count);
             blog.setSummary("默认简介" + count);
@@ -1029,7 +1004,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.setFileUid(picture.getFileUid());
             blog.setIsOriginal(EOriginal.ORIGINAL);
             blog.setIsPublish(EPublish.NO_PUBLISH);
-            blog.setStartComment(EOpenStatus.OPEN);
+            blog.setOpenComment(EOpenStatus.OPEN);
             blogList.add(blog);
             count++;
         }
@@ -1055,28 +1030,35 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
+        String blogCount = null;
         switch (level) {
             case ELevel.NORMAL: {
-                page.setSize(BLOG_NEW_COUNT);
+                blogCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
             }
             break;
             case ELevel.FIRST: {
-                page.setSize(BLOG_FIRST_COUNT);
+                blogCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FIRST_COUNT);
             }
             break;
             case ELevel.SECOND: {
-                page.setSize(BLOG_SECOND_COUNT);
+                blogCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT);
             }
             break;
             case ELevel.THIRD: {
-                page.setSize(BLOG_THIRD_COUNT);
+                blogCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_THIRD_COUNT);
             }
             break;
             case ELevel.FOURTH: {
-                page.setSize(BLOG_FOURTH_COUNT);
+                blogCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FOURTH_COUNT);
             }
             break;
         }
+        if (StringUtils.isEmpty(blogCount)) {
+            log.error("参数配置有误，需重新配置！");
+        } else {
+            page.setSize(Long.valueOf(blogCount));
+        }
+
         IPage<Blog> pageList = blogService.getBlogPageByLevel(page, level, useSort);
         List<Blog> list = pageList.getRecords();
 
@@ -1085,7 +1067,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
             Page<Blog> hotPage = new Page<>();
             hotPage.setCurrent(1);
-            hotPage.setSize(BLOG_HOT_COUNT);
+            String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
+            String blogSecondCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT);
+            if (StringUtils.isEmpty(blogHotCount) || StringUtils.isEmpty(blogSecondCount)) {
+                log.error("参数配置有误，需重新配置！");
+            } else {
+                hotPage.setSize(Long.valueOf(blogHotCount));
+            }
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
             queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
@@ -1096,7 +1084,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             List<Blog> firstBlogList = new ArrayList<>();
             for (int a = 0; a < hotBlogList.size(); a++) {
                 // 当推荐大于两个的时候
-                if ((hotBlogList.size() - firstBlogList.size()) > BLOG_SECOND_COUNT) {
+                if ((hotBlogList.size() - firstBlogList.size()) > Long.valueOf(blogSecondCount)) {
                     firstBlogList.add(hotBlogList.get(a));
                 } else {
                     secondBlogList.add(hotBlogList.get(a));
@@ -1148,7 +1136,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();
         page.setCurrent(0);
-        page.setSize(BLOG_HOT_COUNT);
+        String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
+        if (StringUtils.isEmpty(blogHotCount)) {
+            log.error("参数配置有误，需重新配置！");
+        } else {
+            page.setSize(Long.valueOf(blogHotCount));
+        }
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
@@ -1165,23 +1158,28 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
     @Override
     public IPage<Blog> getNewBlog(Long currentPage, Long pageSize) {
-        // 只缓存第一页的内容
-        if (currentPage == 1L) {
-            //从Redis中获取内容
-            String jsonResult = redisUtil.get(SysConf.NEW_BLOG);
-
-            //判断redis中是否有文章
-            if (StringUtils.isNotEmpty(jsonResult)) {
-                List list = JsonUtils.jsonArrayToArrayList(jsonResult);
-                IPage pageList = new Page();
-                pageList.setRecords(list);
-                return pageList;
-            }
-        }
+//        // 只缓存第一页的内容
+//        if (currentPage == 1L) {
+//            //从Redis中获取内容
+//            String jsonResult = redisUtil.get(SysConf.NEW_BLOG);
+//
+//            //判断redis中是否有文章
+//            if (StringUtils.isNotEmpty(jsonResult)) {
+//                List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+//                IPage pageList = new Page();
+//                pageList.setRecords(list);
+//                return pageList;
+//            }
+//        }
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
-        page.setSize(BLOG_NEW_COUNT);
+        String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
+        if (StringUtils.isEmpty(blogNewCount)) {
+            log.error("参数配置有误，需重新配置！");
+        } else {
+            page.setSize(Long.valueOf(blogNewCount));
+        }
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
@@ -1198,10 +1196,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         list = setBlog(list);
 
-        //将从最新博客缓存到redis中
-        if (currentPage == 1L) {
-            redisUtil.setEx(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
-        }
+//        //将从最新博客缓存到redis中
+//        if (currentPage == 1L) {
+//            redisUtil.setEx(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
+//        }
         pageList.setRecords(list);
         return pageList;
     }
@@ -1338,7 +1336,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
 
         //给博客增加标签和分类
-        List<Blog> list = blogService.setTagAndSortByBlogList(pageList.getRecords());
+        List<Blog> list = blogService.setTagAndSortAndPictureByBlogList(pageList.getRecords());
         pageList.setRecords(list);
         return pageList;
     }
@@ -1374,7 +1372,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             // 给标题和简介设置高亮
             item.setTitle(getHitCode(item.getTitle(), keyword));
-            item.setSummary(getHitCode(item.getTitle(), keyword));
+            item.setSummary(getHitCode(item.getSummary(), keyword));
 
         });
 
@@ -1565,8 +1563,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
-        //给博客增加标签和分类
-        list = blogService.setTagAndSortByBlogList(list);
+        //给博客增加标签、分类、图片
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
 
         Map<String, List<Blog>> map = new HashMap<>();
         Iterator iterable = list.iterator();
@@ -1623,8 +1621,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
 
-        //给博客增加标签和分类
-        list = blogService.setTagAndSortByBlogList(list);
+        //给博客增加标签、分类、图片
+        list = blogService.setTagAndSortAndPictureByBlogList(list);
 
         Map<String, List<Blog>> map = new HashMap<>();
         Iterator iterable = list.iterator();
@@ -1665,32 +1663,37 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
      * @return
      */
     private String addVerdict(Integer count, Integer level) {
+
         //添加的时候进行判断
         switch (level) {
             case ELevel.FIRST: {
-                if (count > BLOG_FIRST_COUNT) {
-                    return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + BLOG_FIRST_COUNT + "个");
+                Long blogFirstCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FIRST_COUNT));
+                if (count > blogFirstCount) {
+                    return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + blogFirstCount + "个");
                 }
             }
             break;
 
             case ELevel.SECOND: {
-                if (count > BLOG_SECOND_COUNT) {
-                    return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + BLOG_SECOND_COUNT + "个");
+                Long blogSecondCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT));
+                if (count > blogSecondCount) {
+                    return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + blogSecondCount + "个");
                 }
             }
             break;
 
             case ELevel.THIRD: {
-                if (count > BLOG_THIRD_COUNT) {
-                    return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + BLOG_THIRD_COUNT + "个");
+                Long blogThirdCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_THIRD_COUNT));
+                if (count > blogThirdCount) {
+                    return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + blogThirdCount + "个");
                 }
             }
             break;
 
             case ELevel.FOURTH: {
-                if (count > BLOG_FOURTH_COUNT) {
-                    return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + BLOG_FOURTH_COUNT + "个");
+                Long blogFourthCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FOURTH_COUNT));
+                if (count > blogFourthCount) {
+                    return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + blogFourthCount + "个");
                 }
             }
             break;
@@ -1770,7 +1773,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             tagList = tagService.listByIds(tagUids);
         }
 
-
         Map<String, BlogSort> sortMap = new HashMap<>();
         Map<String, Tag> tagMap = new HashMap<>();
         Map<String, String> pictureMap = new HashMap<>();
@@ -1801,7 +1803,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 List<Tag> tagListTemp = new ArrayList<Tag>();
 
                 tagUidsTemp.forEach(tag -> {
-                    tagListTemp.add(tagMap.get(tag));
+                    if (tagMap.get(tag) != null) {
+                        tagListTemp.add(tagMap.get(tag));
+                    }
                 });
                 item.setTagList(tagListTemp);
             }

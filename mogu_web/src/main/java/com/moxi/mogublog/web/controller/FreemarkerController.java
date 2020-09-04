@@ -1,7 +1,10 @@
 package com.moxi.mogublog.web.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.commons.entity.*;
+import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -86,7 +89,7 @@ public class FreemarkerController {
         fourthBlog = setBlog(fourthBlog);
 
         SystemConfig systemConfig = systemConfigService.getConfig();
-        if(systemConfig == null) {
+        if (systemConfig == null) {
             return ResultUtil.result(SysConf.ERROR, "系统配置为空");
         }
 
@@ -202,7 +205,7 @@ public class FreemarkerController {
             });
 
             SystemConfig systemConfig = systemConfigService.getConfig();
-            if(systemConfig == null) {
+            if (systemConfig == null) {
                 return ResultUtil.result(SysConf.ERROR, "系统配置为空");
             }
 

@@ -1,5 +1,6 @@
 package com.moxi.mogublog.web.restapi;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,10 +10,7 @@ import com.moxi.mogublog.commons.entity.Link;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.MD5Utils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
@@ -45,7 +43,6 @@ import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthQqRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -101,6 +98,14 @@ public class AuthRestApi {
     private String PROJECT_NAME_EN;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
+
+    @Value(value = "${uniapp.qq.appid}")
+    private String APP_ID;
+    @Value(value = "${uniapp.qq.appid}")
+    private String SECRET;
+    @Value(value = "${uniapp.qq.grant_type}")
+    private String GRANT_TYPE;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -169,15 +174,14 @@ public class AuthRestApi {
         // 判断用户性别
         if (data.get(SysConf.GENDER) != null) {
             Object gender = data.get(SysConf.GENDER).toString();
-            if(SysConf.MALE.equals(gender)) {
+            if (SysConf.MALE.equals(gender)) {
                 user.setGender(EGender.MALE);
-            } else if(SysConf.FEMALE.equals(gender)) {
+            } else if (SysConf.FEMALE.equals(gender)) {
                 user.setGender(EGender.FEMALE);
             } else {
                 user.setGender(EGender.UNKNOWN);
             }
         }
-
 
         // 通过头像uid获取图片
         String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
@@ -260,7 +264,11 @@ public class AuthRestApi {
         fileVO.setSortName(SysConf.ADMIN);
         fileVO.setSystemConfig(systemConfigMap);
         List<String> urlList = new ArrayList<>();
-        urlList.add(data.get(SysConf.AVATAR).toString());
+        if (data.get(SysConf.AVATAR) != null) {
+            urlList.add(data.get(SysConf.AVATAR).toString());
+        } else if (data.get(SysConf.AVATAR_URL) != null) {
+            urlList.add(data.get(SysConf.AVATAR_URL).toString());
+        }
         fileVO.setUrlList(urlList);
         String res = this.pictureFeignClient.uploadPicsByUrl(fileVO);
         Map<String, Object> resultMap = JsonUtils.jsonToMap(res);
@@ -290,6 +298,144 @@ public class AuthRestApi {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 解析移动端数据
+     *
+     * @param map
+     * @return
+     */
+    @ApiOperation(value = "decryptData", notes = "QQ小程序登录数据解析")
+    @PostMapping("/decryptData")
+    public String decryptData(@RequestBody Map<String, String> map) {
+
+        try {
+            String encryptDataB64 = map.get("encryptDataB64");
+            String jsCode = map.get("jsCode");
+            String ivB64 = map.get("ivB64");
+
+//            String params = "appid=" + APP_ID + "&secret=" + SECRET + "&js_code=" +  jsCode + "&grant_type=" + GRANT_TYPE;
+//            String result = HttpRequestUtil.sendGet("https://api.q.qq.com/sns/jscode2session", params);
+
+            HashMap<String, Object> paramMap = new HashMap<>();
+            paramMap.put("appid", APP_ID);
+            paramMap.put("secret", SECRET);
+            paramMap.put("js_code", jsCode);
+            paramMap.put("grant_type", GRANT_TYPE);
+
+            String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
+
+            log.error("获取UnionID");
+            log.error(result);
+
+            Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
+
+            if (resultMap != null) {
+                String sessionKey = resultMap.get("session_key").toString();
+                String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
+                log.error("解析加密数据");
+                log.error(userInfo);
+                Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
+
+                Boolean exist = false;
+                User user = null;
+                //判断user是否存在
+                if (userInfoMap.get(SysConf.OPEN_ID) != null) {
+                    user = userService.getUserBySourceAnduuid("QQ", userInfoMap.get(SysConf.OPEN_ID).toString());
+                    if (user != null) {
+                        exist = true;
+                    } else {
+                        user = new User();
+                    }
+                } else {
+                    return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+                }
+
+                // 判断用户性别
+                if (userInfoMap.get(SysConf.GENDER) != null) {
+                    String genderStr = userInfoMap.get(SysConf.GENDER).toString();
+                    String gender = Double.valueOf(genderStr).intValue() + "";
+                    if (EGender.MALE.equals(gender)) {
+                        user.setGender(EGender.MALE);
+                    } else if (EGender.FEMALE.equals(gender)) {
+                        user.setGender(EGender.FEMALE);
+                    } else {
+                        user.setGender(EGender.UNKNOWN);
+                    }
+                }
+
+                // 通过头像uid获取图片
+                String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
+                List<String> photoList = webUtil.getPicture(pictureList);
+                Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
+
+                // 判断该用户是否含有头像信息
+                if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE)) && photoList.size() > 0) {
+                    List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
+                    String fileOldName = picData.get(0).get(SysConf.FILE_OLD_NAME).toString();
+
+                    // 判断本地的图片是否和第三方登录的一样，如果不一样，那么更新
+                    // 如果旧名称为blob表示是用户自定义的，代表用户在本网站使用了自定义头像，那么就再也不同步更新网站上的了
+                    if (fileOldName.equals(userInfoMap.get(SysConf.AVATAR_URL)) || SysConf.BLOB.equals(fileOldName)) {
+                        user.setPhotoUrl(photoList.get(0));
+                    } else {
+                        updateUserPhoto(userInfoMap, user);
+                    }
+                } else {
+                    updateUserPhoto(userInfoMap, user);
+                }
+
+                if (userInfoMap.get(SysConf.NICK_NAME) != null) {
+                    user.setNickName(userInfoMap.get(SysConf.NICK_NAME).toString());
+                }
+
+                if (user.getLoginCount() == null) {
+                    user.setLoginCount(0);
+                } else {
+                    user.setLoginCount(user.getLoginCount() + 1);
+                }
+
+                // 获取浏览器，IP来源，以及操作系统
+                user = userService.serRequestInfo(user);
+
+                // 暂时将token也存入到user表中，为了以后方便更新redis中的内容
+                String accessToken = StringUtils.getUUID();
+                user.setValidCode(accessToken);
+
+                if (exist) {
+                    user.updateById();
+                } else {
+
+                    user.setUuid(userInfoMap.get(SysConf.OPEN_ID).toString());
+                    user.setSource("QQ");
+
+                    String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
+                    user.setUserName(userName);
+                    // 如果昵称为空，那么直接设置用户名
+                    if (StringUtils.isEmpty(user.getNickName())) {
+                        user.setNickName(userName);
+                    }
+                    // 默认密码
+                    user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+                    user.insert();
+                }
+
+                // 过滤密码
+                user.setPassWord("");
+
+                if (user != null) {
+                    //将从数据库查询的数据缓存到redis中
+                    stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+                }
+                return ResultUtil.result(SysConf.SUCCESS, user);
+            } else {
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
+            return ResultUtil.result(SysConf.ERROR, MessageConf.SERVER_ERROR);
         }
     }
 
@@ -397,8 +543,8 @@ public class AuthRestApi {
 
     @ApiOperation(value = "更新用户密码", notes = "更新用户密码")
     @PostMapping("/updateUserPwd")
-    public String updateUserPwd(HttpServletRequest request,@RequestParam(value = "oldPwd") String oldPwd,@RequestParam("newPwd") String newPwd) {
-        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
+    public String updateUserPwd(HttpServletRequest request, @RequestParam(value = "oldPwd") String oldPwd, @RequestParam("newPwd") String newPwd) {
+        if (StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
@@ -407,11 +553,11 @@ public class AuthRestApi {
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
         User user = userService.getById(userUid);
         // 判断是否是第三方登录的账号
-        if(!user.getSource().equals(SysConf.MOGU)) {
+        if (!user.getSource().equals(SysConf.MOGU)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CANNOT_CHANGE_THE_PASSWORD_BY_USER);
         }
         // 判断旧密码是否一致
-        if(user.getPassWord().equals(MD5Utils.string2MD5(oldPwd))) {
+        if (user.getPassWord().equals(MD5Utils.string2MD5(oldPwd))) {
             user.setPassWord(MD5Utils.string2MD5(newPwd));
             user.updateById();
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

@@ -1,6 +1,5 @@
 package com.moxi.mogublog.picture.mapper;
 
-import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mougblog.base.mapper.SuperMapper;
 

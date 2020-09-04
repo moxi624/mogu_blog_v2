@@ -161,7 +161,7 @@ import {
   stickLink
 } from "@/api/link";
 import {getListByDictTypeList} from "@/api/sysDictData"
-import { formatData } from "@/utils/webUtils";
+
 export default {
   data() {
     return {
@@ -242,7 +242,7 @@ export default {
       var dictTypeList = ['sys_link_status']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
           this.linkStatusDictList = dictMap.sys_link_status.list
           if(dictMap.sys_link_status.defaultValue) {
@@ -277,7 +277,7 @@ export default {
           let params = {};
           params.uid = row.uid;
           stickLink(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.linkList();
               this.$message({
                 type: "success",
@@ -341,7 +341,7 @@ export default {
           if (this.isEditForm) {
             editLink(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -358,7 +358,7 @@ export default {
           } else {
             addLink(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

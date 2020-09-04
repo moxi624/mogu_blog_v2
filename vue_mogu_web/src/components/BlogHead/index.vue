@@ -85,7 +85,7 @@ export default {
     }
 
     getWebConfig().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.info = response.data;
       }
     });

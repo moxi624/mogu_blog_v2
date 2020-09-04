@@ -12,7 +12,6 @@
 
     <artifactId>mogu_utils</artifactId>
     <dependencies>
-
         <!-- https://mvnrepository.com/artifact/com.dyuproject.protostuff/protostuff-core -->
         <!-- 序列化相关-->
         <dependency>
@@ -211,7 +210,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
         <dependency>
             <groupId>commons-fileupload</groupId>

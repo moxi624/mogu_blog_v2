@@ -55,6 +55,12 @@
           </router-link>
         </li>
 
+        <li>
+          <router-link to="/subject">
+            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>
+          </router-link>
+        </li>
+
 <!--        <li>-->
 <!--          <router-link to="/share">-->
 <!--            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>-->
@@ -67,7 +73,7 @@
 <!--          </router-link>-->
 <!--        </li>-->
 
-        <li>
+        <li v-if="openComment=='1'">
           <router-link to="/messageBoard">
             <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>
           </router-link>
@@ -96,7 +102,7 @@
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
         <span class="el-dropdown-link" >
           <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="PICTURE_HOST + userInfo.photoUrl" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'">
+          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'">
           <img v-if="isLogin&&userInfo.photoUrl==undefined"
                src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif">
         </span>
@@ -192,7 +198,7 @@
               <el-card>
                 <div class="commentList">
                 <span class="left p1">
-                  <img v-if="comment.user" :src="comment.user.photoUrl ? PICTURE_HOST + comment.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                  <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
                   <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
                 </span>
 
@@ -225,7 +231,7 @@
               <el-card>
                 <div class="commentList">
                   <span class="left p1">
-                    <img v-if="reply.user" :src="reply.user.photoUrl ? PICTURE_HOST + reply.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+                    <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
                     <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
                   </span>
 
@@ -494,7 +500,6 @@
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
         drawer: false,
-        PICTURE_HOST: process.env.PICTURE_HOST,
         info: {},
         saveTitle: "",
         keyword: "",
@@ -514,6 +519,7 @@
         replyList: [], // 我的回复
         praiseList: [], // 我的点赞
         feedbackList: [], // 我的反馈
+        openComment: "0", // 是否开启评论
         rules: {
           qqNumber: [
             {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
@@ -577,6 +583,10 @@
     watch: {
       $route(to, from) {
         this.getCurrentPageTitle()
+      },
+      // 判断登录状态位是否改变（用于控制弹框）
+      '$store.state.app.loginMessage': function (newFlag, oldFlag) {
+          this.showLogin = true
       }
     },
     created() {
@@ -606,7 +616,6 @@
 
       //跳转到文章详情
       goToInfo(uid) {
-
         let routeData = this.$router.resolve({
           path: "/info",
           query: {blogUid: uid}
@@ -639,24 +648,25 @@
           };break;
         }
       },
+
       // 获取评论列表
       getCommentList: function() {
         let params = {}
         params.pageSize = 10;
         params.currentPage = 1;
         getCommentListByUser(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.commentList = response.data.commentList
             this.replyList = response.data.replyList
           }
         })
       },
 
-      // 获取评论列表
+      // 获取反馈列表
       getFeedback: function() {
         let params = {}
         getFeedbackList(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.feedbackList = response.data.records;
           }
         })
@@ -668,7 +678,7 @@
         params.pageSize = 10;
         params.currentPage = 1;
         getPraiseListByUser(params).then(response => {
-          if(response.code == "success") {
+          if(response.code == this.$ECode.SUCCESS) {
             this.praiseList = response.data.records;
           }
         })
@@ -737,7 +747,7 @@
                 console.log("校验失败")
               } else {
                 editUser(this.userInfo).then(response => {
-                  if(response.code == "success") {
+                  if(response.code == this.$ECode.SUCCESS) {
                     this.$message({
                       type: "success",
                       message: response.data
@@ -759,7 +769,7 @@
                 console.log("校验失败")
               } else {
                 replyBlogLink(this.blogLink).then(response => {
-                  if(response.code == "success") {
+                  if(response.code == this.$ECode.SUCCESS) {
                     this.$message({
                       type: "success",
                       message: response.data
@@ -787,7 +797,7 @@
               return;
             }
             addFeedback(this.feedback).then(response => {
-              if(response.code == "success") {
+              if(response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -825,7 +835,7 @@
             params.append("oldPwd", oldPwd)
             params.append("newPwd", newPwd)
             updateUserPwd(params).then(response => {
-              if(response.code == "success") {
+              if(response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -850,7 +860,7 @@
         var dictTypeList =  ['sys_yes_no', 'sys_user_sex', 'sys_feedback_status']
 
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.genderDictList = dictMap.sys_user_sex.list
             this.yesNoDictList = dictMap.sys_yes_no.list
@@ -861,16 +871,21 @@
 
       getToken: function() {
         let token = this.getUrlVars()["token"];
+        console.log("从URL中获取token", token)
         // 判断url中是否含有token
         if (token != undefined) {
+          console.log("将token设置到cookie中", token)
           // 设置token七天过期
           setCookie("token", token, 7)
+        } else {
+          // 从cookie中获取token
+          token = getCookie("token")
         }
-        // 从cookie中获取token
-        token = getCookie("token")
         if (token != undefined) {
+          console.log("通过token开始请求后台")
           authVerify(token).then(response => {
-            if (response.code == "success") {
+            console.log("获得的数据", response)
+            if (response.code == this.$ECode.SUCCESS) {
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
@@ -923,12 +938,14 @@
         if(webConfigData.createTime) {
           this.contact = webConfigData;
           this.mailto = "mailto:" + this.contact.email;
+          this.openComment = webConfigData.openComment
         } else {
           getWebConfig().then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.info = response.data;
               // 存储在Vuex中
               this.setWebConfigData(response.data)
+              this.openComment = this.info.openComment
             }
           });
         }

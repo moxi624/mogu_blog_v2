@@ -27,6 +27,14 @@ public class BaseSQLConf {
     public final static String DICT_NAME = "dict_name";
     public final static String DICT_LABEL = "dict_label";
 
+    /**
+     * 参数配置相关
+     */
+    public final static String PARAMS_NAME = "params_name";
+    public final static String PARAMS_KEY = "params_key";
+    public final static String PARAMS_VALUE = "params_value";
+    public final static String PARAMS_TYPE = "params_type";
+
     //user表
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "email";
@@ -58,6 +66,10 @@ public class BaseSQLConf {
     // t_comment表
     public final static String TYPE = "type";
 
+    // t_subject表
+    public final static String  SUBJECT_NAME = "subject_name";
+    public final static String  SUBJECT_UID = "subject_uid";
+
     // t_picture
     public final static String FILE_OLD_NAME = "file_old_name";
     public final static String FILE_PATH = "file_path";
@@ -69,6 +81,7 @@ public class BaseSQLConf {
 
     public final static String File_TYPE = "file_type";
     public final static String EXTEND_NAME = "extend_name";
+    public final static String IS_DIR = "is_dir";
 
 
 }

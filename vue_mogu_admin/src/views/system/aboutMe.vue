@@ -6,10 +6,9 @@
         <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
           <el-form-item label="用户头像">
-
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" />
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
             </div>
 
             <div v-else class="uploadImgBody" @click="checkPhoto">
@@ -105,7 +104,8 @@
       <el-tab-pane label="个人履历" name="third">
         <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
         <div class="editor-container">
-          <CKEditor ref="ckeditor" :content="form.personResume" :height="500"></CKEditor>
+          <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.personResume" :height="500"></CKEditor>
+          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'"  :height="660"></MarkdownEditor>
         </div>
 
         <div style="margin-top: 5px; margin-left: 10px;" >
@@ -157,6 +157,8 @@
 import AvatarCropper from '@/components/AvatarCropper'
 import { getMe, editMe, changePwd } from "@/api/system";
 import CKEditor from "@/components/CKEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { getSystemConfig} from "@/api/systemConfig";
 import {getListByDictType} from "@/api/sysDictData"
 
 export default {
@@ -167,8 +169,8 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       url: process.env.PICTURE_API + "/file/cropperPicture",
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {},
+      systemConfig: {},
       changePwdForm: {
         oldPwd: "",
         newPwd1: "",
@@ -197,7 +199,8 @@ export default {
   },
   components: {
     AvatarCropper,
-    CKEditor
+    CKEditor,
+    MarkdownEditor
   },
   computed: {
     language() {
@@ -205,6 +208,7 @@ export default {
     }
   },
   created() {
+    this.getSystemConfigList()
     this.getDictList();
     this.getMeInfo();
   },
@@ -213,7 +217,7 @@ export default {
       var getMeParams = new URLSearchParams();
       getMe(getMeParams).then(response => {
         console.log("得到的用户列表", response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.form = response.data;
           this.fileIds = this.form.avatar;
         }
@@ -221,7 +225,18 @@ export default {
     },
     handleClick(tab, event) {
       //设置富文本内容
-      this.$refs.ckeditor.setData(this.form.personResume);
+      this.$refs.editor.setData(this.form.personResume);
+    },
+    // 获取系统配置
+    getSystemConfigList: function() {
+      getSystemConfig().then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          console.log("得到的配置", response)
+          if (response.data) {
+            this.systemConfig = response.data;
+          }
+        }
+      });
     },
     /**
      * 字典查询
@@ -231,13 +246,12 @@ export default {
       params.dictType = 'sys_user_sex';
       getListByDictType(params).then(response => {
         console.log('得到的字典', response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.genderDictList = response.data.list;
         }
       });
     },
     cropSuccess(resData) {
-      console.log("裁剪成功", resData)
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       let photoList = []
@@ -279,7 +293,7 @@ export default {
         case "personResume":
         {
           //获取CKEditor中的内容
-          this.form.personResume = this.$refs.ckeditor.getData();
+          this.form.personResume = this.$refs.editor.getData();
           editMe(this.form).then(response => {
             console.log(response);
             this.$notify({
@@ -315,7 +329,7 @@ export default {
                 params.append("newPwd", this.changePwdForm.newPwd1);
                 changePwd(params).then(response => {
                   console.log(response);
-                  if (response.code == "success") {
+                  if (response.code == this.$ECode.SUCCESS) {
                     this.$notify({
                       title: "成功",
                       message: response.data,
@@ -345,7 +359,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -396,6 +410,7 @@ img {
 }
 
 .editor-container{
+  margin-top: 10px;
   margin-bottom: 30px;
 }
 </style>

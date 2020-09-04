@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.extension.api.IErrorCode;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.enums.ApiErrorCode;
 import com.baomidou.mybatisplus.extension.exceptions.ApiException;
+import com.moxi.mougblog.base.global.ECode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
@@ -65,10 +67,22 @@ public class GlobalExceptionHandler {
             }
         }
 
+        // 判断是否是空指针异常
+        if (e instanceof NullPointerException) {
+            logger.error("Error: handleBadRequest StackTrace : {}", e);
+            R r = new R();
+            r.setCode(ECode.SERVER_ERROR);
+            r.setMsg("系统内部出现空指针异常，请到后台查看日志记录");
+            return r;
+        }
+
         /**
          * 系统内部异常，打印异常栈
          */
         logger.error("Error: handleBadRequest StackTrace : {}", e);
-        return R.failed(ApiErrorCode.FAILED);
+        R r = new R();
+        r.setCode(ECode.SERVER_ERROR);
+        r.setMsg("系统内部出现异常，请到后台查看日志记录");
+        return r;
     }
 }

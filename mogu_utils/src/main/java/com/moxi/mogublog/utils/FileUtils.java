@@ -1,12 +1,11 @@
 package com.moxi.mogublog.utils;
+
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -41,11 +40,12 @@ public class FileUtils {
 
     /**
      * 判断是否是图片
+     *
      * @param fileName
      * @return
      */
     public static Boolean isPicture(String fileName) {
-        if(StringUtils.isEmpty(fileName)) {
+        if (StringUtils.isEmpty(fileName)) {
             return false;
         }
         String expandName = getPicExpandedName(fileName);
@@ -54,6 +54,7 @@ public class FileUtils {
 
     /**
      * 判断是否为markdown文件
+     *
      * @param fileName
      * @return
      */
@@ -63,6 +64,7 @@ public class FileUtils {
 
     /**
      * Markdown转Html
+     *
      * @param markdown
      * @return
      */
@@ -77,6 +79,7 @@ public class FileUtils {
 
     /**
      * Html 转 Markdown
+     *
      * @param html
      * @return
      */
@@ -132,6 +135,7 @@ public class FileUtils {
 
     /**
      * 从Request中获取文件
+     *
      * @return
      */
     public static List<MultipartFile> getMultipartFileList(HttpServletRequest request) {

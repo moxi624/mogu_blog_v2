@@ -2,7 +2,6 @@ package com.moxi.mogublog.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,8 +36,7 @@ public class HttpRequestUtil {
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
             // 设置通用的请求属性
-            connection.setRequestProperty("Content-type", "application/x-java-serialized-object");
-
+            connection.setRequestProperty("Content-type", "application/json; charset=UTF-8");
             // 建立实际的连接
             connection.connect();
             // 获取所有响应头字段
@@ -54,12 +52,12 @@ public class HttpRequestUtil {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
+            result = new String(result.getBytes(), "UTF-8");
         } catch (Exception e) {
             log.info("发送GET请求出现异常！" + e);
             e.printStackTrace();
-        }
-        // 使用finally块来关闭输入流
-        finally {
+        } finally {
+            // 使用finally块来关闭输入流
             try {
                 if (in != null) {
                     in.close();
@@ -68,6 +66,7 @@ public class HttpRequestUtil {
                 e2.printStackTrace();
             }
         }
+        log.info("返回的结果：", result);
         return result;
     }
 

@@ -12,13 +12,21 @@ export function getfilelist(params) {
   })
 }
 
+export function getfiletree(params) {
+  return request({
+    url: process.env.PICTURE_API + '/networkDisk/getfiletree',
+    method: 'post',
+    data: params
+  })
+}
+
 /**
  * 获取存储占用
  * @param data
  */
-export function getstorage(data) {
+export function getStorage(data) {
   return request({
-    url: process.env.PICTURE_API + '/storage/getstorage',
+    url: process.env.PICTURE_API + '/storage/getStorage',
     method: 'get',
     data
   })
@@ -72,17 +80,17 @@ export function downloadFile(data) {
   })
 }
 
-/**
- * 获取文件的树结构
- * @param data
- */
-export function getFileTree(data) {
-  return request({
-    url: process.env.PICTURE_API + '/networkDisk/getfiletree',
-    method: 'post',
-    data
-  })
-}
+// /**
+//  * 获取文件的树结构
+//  * @param data
+//  */
+// export function getFileTree(params) {
+//   return request({
+//     url: process.env.PICTURE_API + '/networkDisk/getfiletree',
+//     method: 'get',
+//     data: params
+//   })
+// }
 
 /**
  * 移动文件
@@ -103,6 +111,18 @@ export function moveFile(data) {
 export function createFile(data) {
   return request({
     url: process.env.PICTURE_API + '/networkDisk/createfile',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 编辑文件
+ * @param data
+ */
+export function editFile(data) {
+  return request({
+    url: process.env.PICTURE_API + '/networkDisk/edit',
     method: 'post',
     data
   })

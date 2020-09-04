@@ -1,12 +1,9 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.picture.entity.File;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mougblog.base.service.SuperService;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -22,38 +19,43 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
 
     /**
      * 插入文件
+     *
      * @param networkDisk
      */
     void insertFile(NetworkDisk networkDisk);
 
     /**
      * 批量插入文件
+     *
      * @param networkDiskList
      */
     void batchInsertFile(List<NetworkDisk> networkDiskList);
 
     /**
      * 更新文件
+     *
      * @param networkDisk
      */
     void updateFile(NetworkDisk networkDisk);
 
     /**
      * 通过ID查询文件
+     *
      * @param networkDisk
      * @return
      */
     NetworkDisk selectFileById(NetworkDisk networkDisk);
 
     /**
-     * 通过用户ID查询文件
-     * @param networkDisk
+     * 查询目录结构树
+     *
      * @return
      */
-    List<NetworkDisk> selectFilePathTreeByUserid(NetworkDisk networkDisk);
+    List<NetworkDisk> selectFilePathTree();
 
     /**
      * 查询文件列表
+     *
      * @param networkDisk
      * @return
      */
@@ -61,6 +63,7 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
 
     /**
      * 通过ID查询文件列表
+     *
      * @param uidList
      * @return
      */
@@ -68,6 +71,7 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
 
     /**
      * 通过文件路径查询文件列表
+     *
      * @param filePath
      * @return
      */
@@ -75,27 +79,28 @@ public interface NetworkDiskService extends SuperService<NetworkDisk> {
 
     /**
      * 删除文件
+     *
      * @param networkDiskVO
      */
     void deleteFile(NetworkDiskVO networkDiskVO, Map<String, String> qiNiuConfig);
 
     /**
      * 通过文件ID删除文件
-     * @param fileidList
+     *
+     * @param fileIdList
      */
-    void deleteFileByIds(List<Integer> fileidList);
+    void deleteFileByIds(List<Integer> fileIdList);
 
     /**
      * 通过路径更新文件
-     * @param oldfilepath
-     * @param newfilepath
-     * @param filename
-     * @param extendname
+     *
+     * @param networkDiskVO
      */
-    void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname);
+    void updateFilepathByFilepath(NetworkDiskVO networkDiskVO);
 
     /**
      * 通过拓展名查询文件
+     *
      * @param filenameList
      * @param adminUid
      * @return

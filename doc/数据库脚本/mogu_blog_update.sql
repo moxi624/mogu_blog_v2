@@ -159,5 +159,81 @@ ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 C
  在t_web_config表，增加登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）
  @date 2020年2月12日10:49:56
 */
-ALTER TABLE  t_web_config ADD login_type_list VARCHAR(255) COMMENT "登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）"
+ALTER TABLE  t_web_config ADD login_type_list VARCHAR(255) COMMENT "登录方式列表（用于控制前端登录方式，如账号密码,码云,Github,QQ,微信）";
 
+
+
+/*
+   外部URL，菜单栏点击打开新的页面
+*/
+ALTER TABLE  t_category_menu ADD is_jump_external_url tinyint(1) DEFAULT 0 COMMENT "是否跳转外部链接 0：否，1：是(如果跳转外链，那么路由则为外部url)";
+
+
+/*
+	参数配置表
+*/
+
+CREATE TABLE `t_sys_params` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `params_type` varchar(1) NOT NULL DEFAULT '1' COMMENT '配置类型 是否系统内置(1:，是 0:否)',  
+  `params_name` varchar(255) DEFAULT NULL COMMENT '参数名称',
+  `params_key` varchar(255) DEFAULT NULL COMMENT '参数键名',
+  `params_value` varchar(255) DEFAULT NULL COMMENT '参数键值',  
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='参数配置表'
+
+
+/*
+	网站配置增加字段
+*/
+ALTER TABLE  t_web_config ADD open_mobile_comment TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启移动端评论(0:否， 1:是)";
+ALTER TABLE  t_web_config ADD open_admiration TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启赞赏(0:否， 1:是)";
+ALTER TABLE  t_web_config ADD open_mobile_admiration TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启移动端赞赏(0:否， 1:是)";
+
+
+/*
+	专题表
+	@date 2020年8月27日07:57:27
+*/
+
+CREATE TABLE `t_subject` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `subject_name` varchar(255) DEFAULT NULL COMMENT '专题名称',
+  `summary` varchar(255) DEFAULT NULL COMMENT '简介',
+  `file_uid` varchar(32) DEFAULT NULL COMMENT '封面图片UID',  
+  `click_count` int(11) NOT NULL DEFAULT '0' COMMENT '专题点击数',
+  `collect_count` int(11) NOT NULL DEFAULT '0' COMMENT '专题收藏数',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='专题表'
+
+
+/*
+	专题Item表
+	@date 2020年8月27日07:57:27
+*/
+
+CREATE TABLE `t_subject_item` (
+  `uid` varchar(32) NOT NULL COMMENT '主键',
+  `subject_uid` varchar(32) NOT NULL COMMENT '专题uid',
+  `blog_uid` varchar(32) NOT NULL COMMENT '博客uid',
+  `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序字段',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间',
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='专题Item表'
+
+
+/*
+	系统配置表 增加编辑器模式
+*/
+ALTER TABLE  t_system_config ADD editor_model TINYINT(1) NOT NULL DEFAULT 0 COMMENT "编辑器模式，(0：富文本编辑器CKEditor，1：markdown编辑器Veditor)";

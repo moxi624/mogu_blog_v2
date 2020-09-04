@@ -25,7 +25,7 @@
           </h3>
           <span class="blogpic">
             <a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" title>
-              <img v-if="item.photoUrl" :src="PICTURE_HOST + item.photoUrl" alt="">
+              <img v-if="item.photoUrl" :src="item.photoUrl" alt="">
             </a>
           </span>
           <p class="blogtext" v-html="item.summary">{{item.summary}}</p>
@@ -106,7 +106,6 @@ export default {
   name: "list",
   data() {
     return {
-      PICTURE_HOST: process.env.PICTURE_HOST,
       blogData: [],
       keywords: "",
       currentPage: 1,
@@ -207,7 +206,7 @@ export default {
         params.append("pageSize", that.pageSize);
         params.append("keywords", that.keywords);
         searchBlog(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.blogList.length;
@@ -216,7 +215,7 @@ export default {
             that.currentPage = response.data.currentPage;
             var blogData = response.data.blogList;
 
-            // 判断搜索的博客是否有
+            // 判断搜索的博客是否有内容
             if(response.data.total <= 0) {
               that.isEnd = true;
               that.loading = false;
@@ -245,7 +244,7 @@ export default {
         params.append("pageSize", that.pageSize);
 
         searchBlogByTag(params).then(response => {
-          if (response.code == "success" && response.data.records.length > 0) {
+          if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
             that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.total;
@@ -284,7 +283,7 @@ export default {
         params.append("pageSize", that.pageSize);
 
         searchBlogBySort(params).then(response => {
-          if (response.code == "success" && response.data.records.length > 0) {
+          if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
             that.isEnd = false;
             //获取总页数
             that.totalPages = response.data.total;
@@ -320,7 +319,7 @@ export default {
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         searchBlogByAuthor(params).then(response => {
-          if (response.code == "success" && response.data.records.length > 0) {
+          if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
             that.loading = false;
 
             that.isEnd = false;

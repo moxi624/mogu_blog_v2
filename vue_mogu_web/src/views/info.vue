@@ -58,14 +58,14 @@
         </div>
         <div
           class="news_con ck-content"
-          v-html="blogData.content"
+          v-html="blogContent"
           v-highlight
           @click="imageChange"
-        >{{blogData.content}}</div>
+        >{{blogContent}}</div>
       </div>
 
       <!--付款码和点赞-->
-      <PayCode :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
+      <PayCode v-if="openAdmiration == '1'" :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
 
       <div class="otherlink" v-if="sameBlogData.length > 0">
         <h2>相关文章</h2>
@@ -79,9 +79,9 @@
           </li>
         </ul>
       </div>
-      <div class="news_pl">
-        <h2>文章评论</h2>
-        <ul>
+      <div class="news_pl" >
+        <h2 v-if="openComment == '1'">文章评论</h2>
+        <ul v-if="openComment == '1'">
             <CommentBox
               :userInfo="userInfo"
               :commentInfo="commentInfo"
@@ -98,34 +98,18 @@
     <div class="sidebar2">
 
       <side-catalog
-        ref="catalog"
-        class="side-catalog"
+        :class="vueCategory"
         v-bind="catalogProps"
-        :catalogSum = "catalogSum"
-        v-if="showSideCatalog"
       >
-        <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
       </side-catalog>
-
-      <sticky :sticky-top="stickyTop" v-if="!showSideCatalog">
-        <side-catalog
-          ref="catalog"
-          class="side-catalog"
-          v-bind="catalogProps"
-          :catalogSum = "catalogSum"
-        >
-          <span v-if="catalogSum > 0" style="font-size: 16px;font-weight: bold;">目录</span>
-        </side-catalog>
-      </sticky>
     </div>
 
   </article>
 </template>
 
 <script>
-    import { getLink } from "../api/index";
+    import {getLink, getWebConfig} from "../api/index";
     import { getBlogByUid, getSameBlogByBlogUid } from "../api/blogContent";
-
     import CommentList from "../components/CommentList";
     import CommentBox from "../components/CommentBox";
     // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -139,8 +123,8 @@
     import Link from "../components/Link";
     import { addComment, getCommentList } from "../api/comment";
     import { Loading } from "element-ui";
-    import SideCatalog from "../components/VueSideCatalog"
     import Sticky from "@/components/Sticky";
+    import SideCatalog from '@/components/VueSideCatalog'
 
     export default {
         name: "info",
@@ -148,12 +132,14 @@
             return {
                 // 目录列表数
                 catalogSum: 0,
-                stickyTop: 10,
+                showStickyTop: false,
                 showSideCatalog: true,
+                blogContent: "",
                 catalogProps: {
                   // 内容容器selector(必需)
-                  containerElementSelector: '.ck-content',
-                  openDomWatch: true,
+                  container: '.ck-content',
+                  watch: true,
+                  levelList: ["h2", "h3"],
                 },
                 loadingInstance: null, // loading对象
                 showCancel: false,
@@ -176,8 +162,26 @@
                 sameBlogData: [], //相关文章
                 linkData: [], //友情链接
                 dialogPictureVisible: false,
-                dialogImageUrl: ""
+                dialogImageUrl: "",
+                openComment: "0", // 开启评论
+                openAdmiration: "0", // 开启赞赏
             };
+        },
+        computed: {
+          vueCategory: function () {
+            if(!this.showStickyTop && this.showSideCatalog) {
+              return 'catalog'
+            }
+            if(!this.showStickyTop && !this.showSideCatalog) {
+              return 'catalog'
+            }
+            if(this.showStickyTop && this.showSideCatalog) {
+              return 'catalog3'
+            }
+            if(this.showStickyTop && !this.showSideCatalog) {
+              return 'catalog2'
+            }
+          }
         },
         components: {
             //注册组件
@@ -198,35 +202,37 @@
           var params = new URLSearchParams();
           params.append("uid", this.blogUid);
           getBlogByUid(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.blogData = response.data;
             }
-            this.loadingInstance.close();
+            setTimeout(()=>{
+              that.blogContent = response.data.content
+              that.loadingInstance.close();
+            }, 200)
           });
 
-          var offset = 200;
           var after = 0;
+          var offset = 110;
           $(window).scroll(function () {
             var docHeight = $(document).height(); // 获取整个页面的高度(不只是窗口,还包括为显示的页面)
             var winHeight = $(window).height(); // 获取当前窗体的高度(显示的高度)
             var winScrollHeight = $(window).scrollTop(); // 获取滚动条滚动的距离(移动距离)
 
             if (winScrollHeight < offset) {
-              console.log("当前值", winScrollHeight)
-              that.showSideCatalog = true
+              that.showStickyTop = false
             } else {
-              console.log("当前值", winScrollHeight)
-              that.showSideCatalog = false
+              that.showStickyTop = true
             }
+
             if (winScrollHeight > after) {
               // console.log("隐藏顶部栏", winScrollHeight)
-              that.stickyTop = 10
+              that.showSideCatalog = true
             } else {
               // console.log("显示顶部栏", winScrollHeight)
-              that.stickyTop = 70
+              that.showSideCatalog = false
             }
-            after = winScrollHeight;
 
+            after = winScrollHeight;
 
             //还有30像素的时候,就查询
             if(docHeight == winHeight + winScrollHeight){
@@ -236,10 +242,11 @@
               }
               let params = {};
               params.source = that.commentInfo.source;
+              params.blogUid = this.commentInfo.blogUid;
               params.currentPage = that.currentPage + 1
               params.pageSize = that.pageSize;
               getCommentList(params).then(response => {
-                if (response.code == "success") {
+                if (response.code == this.$ECode.SUCCESS) {
                   that.comments = that.comments.concat(response.data.records);
                   that.setCommentList(this.comments);
                   that.currentPage = response.data.current;
@@ -255,27 +262,51 @@
                 fullscreen: true,
                 text: "正在努力加载中~"
             });
-            getLink().then(response => {
-                this.linkData = response.data.records;
-            });
-            // var params = new URLSearchParams();
             this.blogUid = this.$route.query.blogUid;
             this.commentInfo.blogUid = this.$route.query.blogUid;
-            var blogParams = new URLSearchParams();
-            blogParams.append("blogUid", this.blogUid);
-            getSameBlogByBlogUid(blogParams).then(response => {
-                if (response.code == "success") {
-                    this.sameBlogData = response.data.records;
-                }
-            });
+            this.getLinkList()
+            this.getSameBlog()
             this.getCommentDataList();
+            this.setCommentAndAdmiration()
         },
         methods: {
             //拿到vuex中的写的两个方法
-            ...mapMutations(["setCommentList"]),
+            ...mapMutations(["setCommentList", "setWebConfigData"]),
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();
+            },
+            getLinkList() {
+              getLink().then(response => {
+                this.linkData = response.data.records;
+              });
+            },
+            getSameBlog() {
+              var blogParams = new URLSearchParams();
+              blogParams.append("blogUid", this.blogUid);
+              getSameBlogByBlogUid(blogParams).then(response => {
+                if (response.code == this.$ECode.SUCCESS) {
+                  this.sameBlogData = response.data.records;
+                }
+              });
+            },
+            // 设置是否开启评论和赞赏
+            setCommentAndAdmiration() {
+              let webConfigData = this.$store.state.app.webConfigData
+              if(webConfigData.createTime) {
+                this.openAdmiration = webConfigData.openAdmiration
+                this.openComment = webConfigData.openComment
+              } else {
+                getWebConfig().then(response => {
+                  if (response.code == this.$ECode.SUCCESS) {
+                    webConfigData = response.data;
+                    // 存储在Vuex中
+                    this.setWebConfigData(response.data)
+                    this.openAdmiration = webConfigData.openAdmiration
+                    this.openComment = webConfigData.openComment
+                  }
+                });
+              }
             },
             submitBox(e) {
                 let params = {};
@@ -285,7 +316,7 @@
                 params.content = e.content;
                 params.blogUid = e.blogUid;
                 addComment(params).then(response => {
-                    if (response.code == "success") {
+                    if (response.code == this.$ECode.SUCCESS) {
                         this.$notify({
                             title: "成功",
                             message: "发表成功~",
@@ -309,7 +340,7 @@
                 params.currentPage = this.currentPage;
                 params.pageSize = this.pageSize;
                 getCommentList(params).then(response => {
-                    if (response.code == "success") {
+                    if (response.code == this.$ECode.SUCCESS) {
                         this.comments = response.data.records;
                         this.setCommentList(this.comments);
                         this.currentPage = response.data.current;
@@ -387,6 +418,7 @@
   .emoji-size-small {
     zoom: 0.3;
     margin: 5px;
+    vertical-align: middle;
   }
   .emoji-size-large {
     zoom: 0.5; // emojipanel表情大小
@@ -398,11 +430,34 @@
   }
   .message_infos {
     width: 96%;
-    /*min-height: 500px;*/
     margin-left: 10px;
   }
   .noComment {
     width: 100%;
     text-align: center;
+  }
+  .catalog {
+    position: fixed;
+    margin-left: 20px;
+    /*max-height: 700px*/
+  }
+  .catalog2 {
+    position: fixed;
+    margin-left: 20px;
+    top: 70px;
+  }
+  .catalog3 {
+    position: fixed;
+    margin-left: 20px;
+    top: 20px;
+  }
+  .line-style {
+    display: inline-block;
+    height: 20px;
+    width: 3px;
+    background: transparent;
+  }
+  .line-style--active {
+    background: currentColor;
   }
 </style>

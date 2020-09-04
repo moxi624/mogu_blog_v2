@@ -82,6 +82,7 @@
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/blog/add'">添加博客</el-button>
       <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on" v-permission="'/blog/uploadLocalBlog'">本地上传</el-button>
       <el-button class="filter-item" type="warning" @click="handleDownload" icon="el-icon-s-flag"  v-permission="'/blog/downloadBatch'">导出选中</el-button>
+      <el-button class="filter-item" type="info" @click="handleSubject" icon="el-icon-folder-opened"  v-permission="'/blog/downloadBatch'">添加专题</el-button>
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
     </div>
 
@@ -98,7 +99,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
-            :src="BASE_IMAGE_URL + scope.row.photoList[0]"
+            :src="scope.row.photoList[0]"
             style="width: 130px;height: 70px;"
           >
         </template>
@@ -129,13 +130,7 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column label="简介" width="250">
-	      <template slot-scope="scope">
-	        <span>{{ submitStr(scope.row.summary, 30) }}</span>
-	      </template>
-      </el-table-column>-->
-
-      <el-table-column label="标签" width="200" align="center">
+      <el-table-column label="标签" width="200" align="center" >
         <template slot-scope="scope">
           <template>
             <el-tag
@@ -164,7 +159,7 @@
       <el-table-column label="开启评论" width="100" align="center">
         <template slot-scope="scope">
           <template>
-            <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.startComment == item.dictValue">{{item.dictLabel}}</el-tag>
+            <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.openComment == item.dictValue">{{item.dictLabel}}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -222,7 +217,7 @@
             <img
               @mouseover="icon = true"
               @mouseout="icon = false"
-              v-bind:src="BASE_IMAGE_URL + form.photoList[0]"
+              v-bind:src="form.photoList[0]"
               style="display:inline; width: 195px;height: 105px;"
             >
           </div>
@@ -308,8 +303,8 @@
           </el-col>
 
           <el-col :span="4.5">
-            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="startComment">
-              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
+            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="openComment">
+              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
             </el-form-item>
           </el-col>
 
@@ -324,7 +319,8 @@
         </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
-          <CKEditor ref="ckeditor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
+          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
+          <MarkdownEditor v-if="systemConfig.editorModel == '1'" :content="form.content" ref="editor" :height="465"></MarkdownEditor>
         </el-form-item>
       </el-form>
 
@@ -374,20 +370,6 @@
       <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">提交到服务器</el-button>
     </el-upload>
 
-<!--      <el-upload-->
-<!--        class="upload-demo2"-->
-<!--        drag-->
-<!--        ref="upload2"-->
-<!--        name="filedatas"-->
-<!--        :action="uploadPictureHost"-->
-<!--        :data="otherData"-->
-<!--        :on-success = "fileSuccess"-->
-<!--        multiple>-->
-<!--        <i class="el-icon-upload"></i>-->
-<!--        <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>-->
-<!--        <div slot="tip" class="el-upload__tip">将博客内的本地图片选中</div>-->
-<!--      </el-upload>-->
-
     </el-dialog>
 
     <CheckPhoto
@@ -398,26 +380,28 @@
       :files="fileIds"
       :limit="1"
     ></CheckPhoto>
+
+    <SubjectSelect :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
   </div>
 </template>
 
 <script>
-import { getBlogList, addBlog, uploadLocalBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
+import { getBlogList, addBlog, editBlog, deleteBlog, deleteBatchBlog } from "@/api/blog";
+import { getSystemConfig} from "@/api/systemConfig";
 import { getTagList } from "@/api/tag";
 import { getBlogSortList } from "@/api/blogSort";
-import {
-  formatData,
-  formatDataToJson,
-  formatDataToForm
-} from "@/utils/webUtils";
+import {formatData} from "@/utils/webUtils";
 import { getToken } from '@/utils/auth'
 import { setCookie, getCookie, delCookie } from "@/utils/cookieUtils";
 import {getListByDictTypeList} from "@/api/sysDictData"
+import {addSubjectItemList} from "@/api/subjectItem";
+
 import CheckPhoto from "../../components/CheckPhoto";
 import CKEditor from "../../components/CKEditor";
+import MarkdownEditor from "../../components/MarkdownEditor";
+import SubjectSelect from "../../components/SubjectSelect";
 var querystring = require("querystring");
 import { mapGetters } from "vuex";
-import data2blob from "../../components/AvatarCropper/utils/data2blob";
 import { Loading } from 'element-ui';
 export default {
   computed: {
@@ -425,7 +409,9 @@ export default {
   },
   components: {
     CheckPhoto,
-    CKEditor
+    CKEditor,
+    MarkdownEditor,
+    SubjectSelect
   },
   data() {
     return {
@@ -443,7 +429,6 @@ export default {
         token: getToken()
       },
       pictureList: [], // 上传的图片列表
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除
       tagOptions: [], //标签候选框
@@ -466,6 +451,7 @@ export default {
       total: 0, //总数量
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
+      subjectVisible: false, // 是否显示专题
       formLabelWidth: "120px",
       lineLabelWidth: "120px", //一行的间隔数
       maxLineLabelWidth: "100px",
@@ -487,6 +473,7 @@ export default {
       openDefault: null, // 是否开启评论默认值
       fileList: [],
       localUploadVisible: false,
+      systemConfig: {}, // 系统配置
       form: {
         uid: null,
         title: null,
@@ -519,7 +506,7 @@ export default {
           {required: true, message: '原创字段不能为空', trigger: 'blur'},
           {pattern: /^[0-9]\d*$/, message: '原创字段只能为自然数'},
         ],
-        startComment: [
+        openComment: [
           {required: true, message: '网站评论不能为空', trigger: 'blur'},
           {pattern: /^[0-9]\d*$/, message: '网站评论只能为自然数'},
         ],
@@ -530,10 +517,9 @@ export default {
     };
   },
   created() {
-    var that = this;
     //从dashboard传递过来的 tagUid 以及 blogSortUid
-    var tempTag = this.$route.query.tag;
-    var tempBlogSort = this.$route.query.blogSort;
+    let tempTag = this.$route.query.tag;
+    let tempBlogSort = this.$route.query.blogSort;
     if(tempTag != undefined) {
       this.tagRemoteMethod(tempTag.name);
       this.tagKeyword = tempTag.tagUid;
@@ -542,6 +528,9 @@ export default {
       this.sortRemoteMethod(tempBlogSort.name);
       this.sortKeyword = tempBlogSort.blogSortUid;
     }
+
+    // 获取系统配置
+    this.getSystemConfigList()
 
     // 获取字典
     this.getDictList()
@@ -554,7 +543,6 @@ export default {
 
     //获取博客列表
     this.blogList()
-
   },
   methods: {
     openLoading() {
@@ -580,7 +568,7 @@ export default {
       blogSortParams.pageSize = 100;
       blogSortParams.currentPage = 1;
       getBlogSortList(blogSortParams).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.blogSortData = response.data.records;
           this.sortOptions = response.data.records;
         }
@@ -597,7 +585,7 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getBlogList(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -613,7 +601,7 @@ export default {
       var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status', 'sys_normal_disable']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           var dictMap = response.data;
 
@@ -656,7 +644,7 @@ export default {
         isPublish: this.blogOriginalDefault, //是否发布
         author: null, //作者
         level: parseInt(this.blogLevelDefault), //推荐等级，默认是正常
-        startComment: this.openDefault, // 是否启动
+        openComment: this.openDefault, // 是否启动
         articlesPart: null //文章出处，默认蘑菇博客
       };
       return formObject;
@@ -693,9 +681,15 @@ export default {
         this.sortOptions = [];
       }
     },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
+    // 获取系统配置
+    getSystemConfigList: function() {
+      getSystemConfig().then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          if (response.data) {
+            this.systemConfig = response.data;
+          }
+        }
+      });
     },
     getChooseData(data) {
       var that = this;
@@ -726,6 +720,48 @@ export default {
         return str.slice(0, index) + "...";
       }
       return str;
+    },
+    // 添加至专题
+    handleSubject() {
+      if(this.multipleSelection.length <= 0 ) {
+        this.$message({
+          type: "error",
+          message: "请先选中需要添加到专题的博客！"
+        });
+        return;
+      }
+      this.subjectVisible = true;
+    },
+    getSelectData(subjectUid) {
+      this.cancelSubjectSelect()
+      // 选中的博客
+      let multipleSelection = this.multipleSelection
+      let subjectItemList = []
+      for (let a=0; a<multipleSelection.length; a++) {
+        let params = {}
+        params.subjectUid = subjectUid[0];
+        params.blogUid = multipleSelection[a].uid
+        subjectItemList.push(params)
+      }
+      addSubjectItemList(subjectItemList).then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          this.$message({
+            type: "success",
+            message: response.data
+          });
+          // 清空选中列表
+          this.multipleSelection = []
+        } else {
+          this.$message({
+            type: "error",
+            message: response.data
+          });
+        }
+      });
+
+    },
+    cancelSubjectSelect: function() {
+      this.subjectVisible = false
     },
     // 关闭窗口
     closeDialog(done) {
@@ -761,9 +797,8 @@ export default {
     },
     handleAdd: function() {
       this.title = "增加博客"
-      var that = this;
-      var tempForm = JSON.parse(getCookie("form"));
-      console.log('cookie中的', tempForm)
+      let that = this;
+      let tempForm = JSON.parse(getCookie("form"));
       if (tempForm != null && tempForm.title != null && tempForm.title != "") {
         this.$confirm("还有上次未完成的博客编辑，是否继续编辑?", "提示", {
           confirmButtonText: "确定",
@@ -771,57 +806,48 @@ export default {
           type: "warning"
         })
           .then(() => {
-            this.dialogFormVisible = true;
-            this.tagValue = [];
-            this.form = JSON.parse(getCookie("form"));
-            var tagValue = this.form.tagUid.split(",");
+            that.dialogFormVisible = true;
+            that.tagValue = [];
+            that.form = JSON.parse(getCookie("form"));
+            var tagValue = that.form.tagUid.split(",");
             for (var a = 0; a < tagValue.length; a++) {
               if (tagValue[a] != null && tagValue[a] != "") {
-                this.tagValue.push(tagValue[a]);
+                that.tagValue.push(tagValue[a]);
               }
             }
-            if(this.form.uid) {
-              this.title = "编辑博客";
-              this.isEditForm = true;
+            if(that.form.uid) {
+              that.title = "编辑博客";
+              that.isEditForm = true;
             } else {
-              this.title = "新增博客";
-              this.isEditForm = false;
+              that.title = "新增博客";
+              that.isEditForm = false;
             }
           })
           .catch(() => {
-            try {
-              that.$refs.ckeditor.initData(); //清空CKEditor中内容
-            } catch (error) {
-              // 第一次还未加载的时候，可能会报错，不过不影响使用
-              // 暂时还没有想到可能解决的方法
-            }
-            this.dialogFormVisible = true;
 
-            this.form = this.getFormObject();
-
-            try {
-              that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-            } catch (error) {
-              // 第一次还未加载的时候，可能会报错，不过不影响使用
-              // 暂时还没有想到可能解决的方法
-            }
-            this.tagValue = [];
-            this.isEditForm = false;
-            this.title = "新增博客";
+            that.dialogFormVisible = true;
+            that.form = that.getFormObject();
+            that.$nextTick(() => {
+              //DOM现在更新了
+              that.$refs.editor.setData(that.form.content); //设置富文本内容
+            });
+            that.tagValue = [];
+            that.isEditForm = false;
+            that.title = "新增博客";
             delCookie("form");
           });
       } else {
-        this.dialogFormVisible = true;
-        this.form = this.getFormObject();
-        try {
-          that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-        } catch (error) {
-          // 第一次还未加载的时候，可能会报错，不过不影响使用
-          // 暂时还没有想到可能解决的方法
-        }
-        this.tagValue = [];
-        this.isEditForm = false;
-        this.formBak();
+        that.dialogFormVisible = true;
+        that.form = this.getFormObject();
+
+        that.$nextTick(() => {
+          //DOM现在更新了
+          that.$refs.editor.initData(); //设置富文本内容
+        });
+
+        that.tagValue = [];
+        that.isEditForm = false;
+        that.formBak();
       }
     },
     handleUpload: function() {
@@ -839,7 +865,7 @@ export default {
         action,
         success: (response) => {
           let res = JSON.parse(response)
-          if(res.code == "success") {
+          if(res.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
               message: "博客上传成功"
@@ -875,7 +901,7 @@ export default {
         action,
         success: (response) => {
           let res = JSON.parse(response)
-          if(res.code == "success") {
+          if(res.code == this.$ECode.SUCCESS) {
             this.$message({
               type: "success",
               message: "图片上传成功"
@@ -950,7 +976,7 @@ export default {
       if(this.changeCount > 0) {
         that.isChange = true;
         //存放到cookie中，时间10天
-        that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+        that.form.content = that.$refs.editor.getData(); //获取CKEditor中的内容
         that.form.tagUid = that.tagValue.join(",");
         setCookie("form", JSON.stringify(that.form), 10);
       }
@@ -962,33 +988,33 @@ export default {
       that.interval = setInterval(function() {
         if (that.form.title != null && that.form.title != "") {
           //存放到cookie中，时间10天
-          that.form.content = that.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          that.form.content = that.$refs.editor.getData(); //获取CKEditor中的内容
           that.form.tagUid = that.tagValue.join(",");
           setCookie("form", JSON.stringify(that.form), 10);
         }
       }, 10000);
     },
     handleEdit: function(row) {
-      this.title = "编辑博客";
-      this.form = row;
       var that = this;
-      try {
-        that.$refs.ckeditor.setData(this.form.content); //设置富文本内容
-      } catch (error) {
-        // 第一次还未加载的时候，可能会报错，不过不影响使用
-        // 暂时还没有想到可能解决的方法
-      }
-      this.tagValue = [];
+      that.title = "编辑博客";
+      that.form = row;
+
+      this.$nextTick(() => {
+        //DOM现在更新了
+        that.$refs.editor.setData(that.form.content); //设置富文本内容
+      });
+
+      that.tagValue = [];
       if (row.tagList) {
         var json = row.tagList;
         for (var i = 0, l = json.length; i < l; i++) {
           if (json[i] != null) {
-            this.tagValue.push(json[i]["uid"]);
+            that.tagValue.push(json[i]["uid"]);
           }
         }
       }
-      this.dialogFormVisible = true;
-      this.isEditForm = true;
+      that.dialogFormVisible = true;
+      that.isEditForm = true;
     },
     handleDelete: function(row) {
       var that = this;
@@ -1050,17 +1076,24 @@ export default {
       this.blogList();
     },
     submitForm: function() {
+      if(this.tagValue.length <= 0) {
+        this.$message({
+          type: "error",
+          message: "标签不能为空！"
+        })
+        return;
+      }
 
       this.$refs.form.validate((valid) => {
         if(!valid) {
 
         } else {
-          this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
+          this.form.content = this.$refs.editor.getData(); //获取CKEditor中的内容
           this.form.tagUid = this.tagValue.join(",");
           var params = formatData(this.form);
           if (this.isEditForm) {
             editBlog(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -1079,14 +1112,13 @@ export default {
 
           } else {
             addBlog(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
                 });
 
                 // 清空cookie中的内容
-                // Cookie("form", JSON.stringify(this.getFormObject()), 1);
                 delCookie("form");
 
                 // 清空触发器

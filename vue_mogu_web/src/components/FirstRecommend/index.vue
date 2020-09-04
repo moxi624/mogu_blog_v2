@@ -5,7 +5,7 @@
             <img
               style="width:100%; height:100%; display:block;cursor:pointer;"
               v-if="list.photoList"
-              :src="PICTURE_HOST + list.photoList[0]"
+              :src="list.photoList[0]"
               :alt="list.title"
               @click="goToInfo(list.uid)">
             <div class="carousel-title" @click="goToInfo(list.uid)">
@@ -22,7 +22,6 @@ export default {
   name: "FirstRecommend",
   data() {
     return {
-      PICTURE_HOST: process.env.PICTURE_HOST,
       isShow: false, //控制左右滑动按钮是否显示
       slideList: [],
       currentIndex: 0,
@@ -35,7 +34,9 @@ export default {
     params.append("level", 1);
     params.append("useSort", 1);
     getBlogByLevel(params).then(response => {
-      this.slideList = response.data.records;
+      if(response.code == this.$ECode.SUCCESS) {
+        this.slideList = response.data.records;
+      }
     });
   },
   methods: {

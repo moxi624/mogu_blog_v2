@@ -76,11 +76,11 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="角色名称" :label-width="formLabelWidth" prop="roleName">
-          <el-input v-model="form.roleName" auto-complete="off"></el-input>
+          <el-input v-model="form.roleName" placeholder="请输入角色名称" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="角色介绍" :label-width="formLabelWidth">
-          <el-input v-model="form.summary" auto-complete="off"></el-input>
+          <el-input v-model="form.summary" placeholder="请输入角色介绍" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="访问菜单" :label-width="formLabelWidth">
@@ -158,7 +158,7 @@ export default {
     allMenuList: function () {
       getAllMenu().then(response => {
         console.log(response);
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           let data = response.data;
           this.categoryMenuList = data;
           console.log("得到的全部菜单", this.categoryMenuList)
@@ -176,7 +176,7 @@ export default {
 
       getRoleList(params).then(response => {
         console.log(response);
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var data = response.data.records;
 
           //初始化菜单UID
@@ -238,7 +238,7 @@ export default {
           params.uid = row.uid;
 
           deleteRole(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -286,7 +286,7 @@ export default {
             console.log("form", this.form);
             editRole(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -303,7 +303,7 @@ export default {
           } else {
             addRole(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

@@ -1,0 +1,24 @@
+server:
+  port: 8604
+
+spring:
+  application:
+    name: mogu-sms
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+      sentinel:
+        transport:
+          #配置Sentinel dashboard地址
+          dashboard: localhost:8070
+          #默认8719端口,如果被占用会向上扫描。
+          port: 8719
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        #指定分组
+        group: dev
+        #指定命名空间
+        namespace: dev

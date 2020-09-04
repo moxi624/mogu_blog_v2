@@ -34,17 +34,20 @@
 项目后台目前有Eureka版本和Nacos版本，其中Eureka版本使用的是SpringCloud一些组件，Nacos版本使用的是SpringCloudAlibaba的一些组件，例如Nacos、Sentinel
 
 - Eureka版本请切换至Eureka分支（将不再进行新功能的开发）
-- Nacos版本请切换至Nacos分支（作为以后长期维护的分支，目前文档还未完善）
+
+- Nacos版本请切换至Nacos分支（作为以后长期维护的分支）
+
 - 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
 
 ## 项目介绍
 
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云，使用uniapp和ColorUi搭建移动端博客平台。
 
-- 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，在加上没怎么接触公司实际项目，故有能改正的地方，还请各位老哥能够指出~
-- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
-- 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
-- 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因部署时遇到问题，无法完成正常部署，故搁置...欢迎有了解nuxt或者SEO优化的老哥一起探讨~）
+- 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，故有能改正的地方，还请各位老哥能够指出~
+- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，大家可以根据自己服务器配置来选择启动的服务，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
+- 原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
+- 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因开发时遇到问题，nuxt的项目暂时搁置...欢迎有了解nuxt或者Vue SEO优化的老哥一起探讨~）
+
 - [蘑菇博客](http://moguit.cn/#/)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了JVM、JUC、Java，Spring，SpringCloud，计算机网络，操作系统，数据结构，Vue、Linux 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes)一下
 
 ## 站点演示
@@ -68,7 +71,8 @@
 - **Redis**：密码：mogu2018
 - **远程SSH初始密码**：用户：root，密码：mogu2018
 - **RabbitMQ管理页面：** 用户：guest，密码：guest
-- **Eureka管理页面：** 用户：user，密码：password123
+- **Nacos管理页面：** 用户：nacos，密码：nacos
+- **Sentinel管理页面：** 用户：sentinel，密码：sentinel
 - **蘑菇博客监控页面**：用户：user，密码：password123
 - **Druid初始密码：** 用户：admin，密码：123456
 
@@ -76,9 +80,9 @@
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
 
-`mogu-eureka`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
+`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
-其它的jar都可以不启动，也不影正常使用
+其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
 最低配置：1核2G `需要开启虚拟内存`
 
@@ -86,9 +90,9 @@
 
 > 【阿里云】 限量爆款低至91.8元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
 >
-> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元 [点我进入](https://url.cn/ehxjf5Bv)
+> 【腾讯云】十周年感恩回馈，1核2G云服务器首年95元 [点我进入](https://cloud.tencent.com/act/cps/redirect?redirect=1067&cps_key=4e9b8ce643afe47621493331d101dd6e&from=console)
 >
-> 【阿里云翼计划】 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
+> 【阿里云翼计划】 轻量级应用服务器 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link&userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
 ## 项目特点
 
@@ -109,6 +113,7 @@
 - 采用Nacos作为服务发现和配置中心，轻松完成项目的配置的维护
 - 采用Sentinel流量控制框架，通过配置再也不怕网站被爆破
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
+- 支持多种文本编辑器，Markdown编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
 
 ## 项目文档
 
@@ -139,7 +144,7 @@
 - mogu_sms：消息服务，用于更新ElasticSearch、Solr索引、邮件和短信发送
 - mogu_monitor：监控服务，集成SpringBootAdmin用于管理和监控SpringBoot应用程序
 - mogu_spider：爬虫服务`（目前还未完善）`
-- mogu_spider：网关服务`（目前还未完善）`
+- mogu_gateway：网关服务`（目前还未完善）`
 - mogu_zipkin：链路追踪服务，`目前使用java -jar的方式启动`
 - mogu_search：搜索服务，ElasticSearch和Solr作为全文检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
 - mogu_commons：公共模块，主要用于存放Entity实体类、Feign远程调用接口、以及公共config配置
@@ -189,27 +194,30 @@
 
 ### 前端技术
 
-|         技术          |           说明            |                             官网                             |
-| :-------------------: | :-----------------------: | :----------------------------------------------------------: |
-|        Vue.js         |         前端框架          |                      https://vuejs.org/                      |
-|      Vue-router       |         路由框架          |                  https://router.vuejs.org/                   |
-|         Vuex          |     全局状态管理框架      |                   https://vuex.vuejs.org/                    |
-|        Nuxt.js        | 创建服务端渲染 (SSR) 应用 |                    https://zh.nuxtjs.org/                    |
-|        Element        |        前端ui框架         |    [ https://element.eleme.io](https://element.eleme.io/)    |
-|         Axios         |       前端HTTP框架        | [ https://github.com/axios/axios](https://github.com/axios/axios) |
-|        Echarts        |         图表框架          |                      www.echartsjs.com                       |
-|       CKEditor        |       富文本编辑器        |                    https://ckeditor.com/                     |
-|     Highlight.js      |     代码语法高亮插件      |         https://github.com/highlightjs/highlight.js          |
-|      Tui-editor       |      Markdown编辑器       |              https://github.com/nhn/tui.editor               |
-|      vue-cropper      |       图片裁剪组件        |           https://github.com/xyxiao001/vue-cropper           |
-| vue-image-crop-upload |    vue图片剪裁上传组件    |      https://github.com/dai-siki/vue-image-crop-upload       |
-|   vue-emoji-comment   |   Vue Emoji表情评论组件   |       https://github.com/pppercyWang/vue-emoji-comment       |
-|     clipboard.js      |     现代化的拷贝文字      |                  http://www.clipboardjs.cn/                  |
-|      js-beautify      |    美化JavaScript代码     |         https://github.com/beautify-web/js-beautify          |
-|     FileSaver.js      |     保存文件在客户端      |           https://github.com/eligrey/FileSaver.js            |
-|   vue-side-catalog    |        目录导航栏         |        https://github.com/yaowei9363/vue-side-catalog        |
-|        uniapp         |     移动端跨平台语言      |                  https://uniapp.dcloud.io/                   |
-|        colorUi        |  专注视觉的小程序组件库   |             https://github.com/weilanwl/ColorUI              |
+|         技术          |                  说明                   |                             官网                             |
+| :-------------------: | :-------------------------------------: | :----------------------------------------------------------: |
+|        Vue.js         |                前端框架                 |                      https://vuejs.org/                      |
+|      Vue-router       |                路由框架                 |                  https://router.vuejs.org/                   |
+|         Vuex          |            全局状态管理框架             |                   https://vuex.vuejs.org/                    |
+|        Nuxt.js        |        创建服务端渲染 (SSR) 应用        |                    https://zh.nuxtjs.org/                    |
+|        Element        |               前端ui框架                |    [ https://element.eleme.io](https://element.eleme.io/)    |
+|         Axios         |              前端HTTP框架               | [ https://github.com/axios/axios](https://github.com/axios/axios) |
+|        Echarts        |                图表框架                 |                      www.echartsjs.com                       |
+|       CKEditor        |              富文本编辑器               |                    https://ckeditor.com/                     |
+|     Highlight.js      |            代码语法高亮插件             |         https://github.com/highlightjs/highlight.js          |
+|        Vditor         |             Markdown编辑器              |             https://github.com/Vanessa219/vditor             |
+|      vue-cropper      |              图片裁剪组件               |           https://github.com/xyxiao001/vue-cropper           |
+| vue-image-crop-upload |           vue图片剪裁上传组件           |      https://github.com/dai-siki/vue-image-crop-upload       |
+|   vue-emoji-comment   |          Vue Emoji表情评论组件          |       https://github.com/pppercyWang/vue-emoji-comment       |
+|     clipboard.js      |            现代化的拷贝文字             |                  http://www.clipboardjs.cn/                  |
+|      js-beautify      |           美化JavaScript代码            |         https://github.com/beautify-web/js-beautify          |
+|     FileSaver.js      |            保存文件在客户端             |           https://github.com/eligrey/FileSaver.js            |
+|      SortableJS       |       功能强大的JavaScript 拖拽库       |                  http://www.sortablejs.com/                  |
+|   vue-side-catalog    |               目录导航栏                |        https://github.com/yaowei9363/vue-side-catalog        |
+|        uniapp         |            移动端跨平台语言             |                  https://uniapp.dcloud.io/                   |
+|        colorUi        |         专注视觉的小程序组件库          |             https://github.com/weilanwl/ColorUI              |
+|       showdown        | 用Javascript编写的Markdown 到Html转换器 |            https://github.com/showdownjs/showdown            |
+|       turndown        | 用JavaScript编写的HTML到Markdown转换器  |           https://github.com/domchristie/turndown            |
 
 ## 项目搭建
 
@@ -217,9 +225,13 @@
 
 参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在window下搭建蘑菇博客的开发环境
 
-### Docker搭建蘑菇博客
+### Docker搭建蘑菇博客（Eureka分支）
 
-参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在服务器中，搭建好博客系统  
+参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在Linux服务器中，搭建好博客系统  
+
+### Docker搭建蘑菇博客（Nacos分支）
+
+参考 [使用Docker快速搭建蘑菇博客（Nacos分支）](http://moguit.cn/#/info?blogUid=8100dcb585fff77e3fa25eed50e3708e)，能够快速在Linux服务器中，搭建好博客系统  
 
 ### 蘑菇博客部署到云服务器
 
@@ -240,6 +252,18 @@
 ### 使用Zipkin搭建蘑菇博客链路追踪
 
 参考[使用Zipkin搭建蘑菇博客链路追踪](http://moguit.cn/#/info?blogUid=35bd93cabc08611c7f74ce4564753ef9)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
+
+### 使用Nacos搭建蘑菇博客服务注册和配置中心
+
+参考[蘑菇博客Nacos部署指南](http://www.moguit.cn/#/info?blogUid=8dc52bd61e36fa56cfc7699815375572)，搭建蘑菇博客的服务注册和配置中心
+
+### 使用Sentinel搭建蘑菇博客流量控制
+
+参考[蘑菇博客Sentinel安装指南](http://www.moguit.cn/#/info?blogUid=7135efc7f536769efd0d0483c687ba07)，Sentinel被称为分布式系统的流量防卫兵，相当于Hystrix
+
+### 蘑菇博客小程序发布
+
+参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/#/info?blogUid=80d3eae77c16cea10e119b9f1a1da4c8)，完成蘑菇博客uniapp移动端的启动和发布
 
 ### 蘑菇博客扩展新的功能和页面
 
@@ -273,6 +297,9 @@
 |   RabbitMQ    | 3.7.4  |            http://www.rabbitmq.com/download.html             |
 |     Nginx     |  1.10  |              http://nginx.org/en/download.html               |
 |     Redis     | 3.3.0  |                  https://redis.io/download                   |
+|    Zipkin     | 2.12.5 | https://search.maven.org/remote_content?g=io.zipkin.java&a=zipkin-server&v=LATEST&c=exec |
+|     Nacos     | 1.3.2  |          https://github.com/alibaba/nacos/releases           |
+|   Sentinel    | 1.7.2  |         https://github.com/alibaba/Sentinel/releases         |
 
 ## 致谢
 
@@ -317,7 +344,8 @@
 - [x] 资源管理页面集成网盘管理
 - [x] 新建Nacos分支，用于替换Eureka作为服务发现组件和配置中心
 - [x] 使用Sentinel做服务限流和熔断
-- [x] 增加 蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
+- [x] 富文本编辑器和Markdown编辑器任意切换
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
@@ -346,6 +374,24 @@
 |                       微信                       |                      支付宝                       |
 | :----------------------------------------------: | :-----------------------------------------------: |
 | <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
+
+## 视频教程
+
+特别感谢 [俺是程序狮](https://space.bilibili.com/277038643) 在B站上给蘑菇博客录制的视频教程，课程讲的非常细致，手把手带着开发博客系统，感兴趣的小伙伴可以去学习和支持一下~
+
+- [项目介绍](https://www.bilibili.com/video/BV1Si4y1u7H4)
+- [结构介绍与本地Nginx本地图片服务器启动](https://www.bilibili.com/video/BV1AA411e7W5)
+- [mysql脚本准备](https://www.bilibili.com/video/BV1kv411v7ND)
+- [后台服务启动](https://www.bilibili.com/video/BV1Nv411i7wu)
+- [RabbitMQ启动](https://www.bilibili.com/video/BV1mD4y1U7GT)
+- [前端项目启动](https://www.bilibili.com/video/BV1B541187Ez)
+- [后台管理系统的前端工程结构介绍](https://www.bilibili.com/video/BV1D54y1U78F)
+- [后台管理系统登录页](https://www.bilibili.com/video/BV1854y127d6)
+- [后台管理系统登录页2](https://www.bilibili.com/video/BV1DD4y1d7Tx)
+- [登录页请求处理](https://www.bilibili.com/video/BV1aT4y1w7Ux)
+- [前端发起登录认证](https://www.bilibili.com/video/BV1Rp4y1Y7fj)
+- [vuerouter路由配置](https://www.bilibili.com/video/BV14A411n72S)
+- .....
 
 ## 移动端截图
 

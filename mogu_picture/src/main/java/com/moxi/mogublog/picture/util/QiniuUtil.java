@@ -1,14 +1,11 @@
 package com.moxi.mogublog.picture.util;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
-import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EQiNiuArea;
-import com.netflix.discovery.converters.Auto;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
@@ -31,6 +28,7 @@ import java.util.Map;
 
 /**
  * 七牛云工具类
+ *
  * @author 陌溪
  * @date 2020年1月20日20:02:36
  * @comments: 七牛云图片配置
@@ -70,11 +68,12 @@ public class QiniuUtil {
 
     /**
      * 删除七牛云文件
+     *
      * @param fileName
      * @param qiNiuConfig
      * @return
      */
-    public int deleteFile(String fileName, Map<String, String> qiNiuConfig){
+    public int deleteFile(String fileName, Map<String, String> qiNiuConfig) {
         //构造一个带指定Zone对象的配置类
         Configuration cfg = setQiNiuArea(qiNiuConfig);
         //获取上传凭证
@@ -86,7 +85,7 @@ public class QiniuUtil {
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
             Response delete = bucketManager.delete(bucket, key);
-            log.info("{七牛云文件 {} 删除成功" , fileName);
+            log.info("{七牛云文件 {} 删除成功", fileName);
             return delete.statusCode;
         } catch (QiniuException ex) {
             //如果遇到异常，说明删除失败
@@ -97,11 +96,12 @@ public class QiniuUtil {
 
     /**
      * 批量删除七牛云图片
+     *
      * @param fileNameList
      * @param qiNiuConfig
      * @return
      */
-    public Boolean deleteFileList(List<String> fileNameList, Map<String, String> qiNiuConfig){
+    public Boolean deleteFileList(List<String> fileNameList, Map<String, String> qiNiuConfig) {
         //构造一个带指定Zone对象的配置类
         Configuration cfg = setQiNiuArea(qiNiuConfig);
         //获取上传凭证
@@ -109,13 +109,13 @@ public class QiniuUtil {
         String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
         String bucket = qiNiuConfig.get(SysConf.QI_NIU_BUCKET);
         int successCount = 0;
-        for(String fileName: fileNameList) {
+        for (String fileName : fileNameList) {
             String key = fileName;
             Auth auth = Auth.create(accessKey, secretKey);
             BucketManager bucketManager = new BucketManager(auth, cfg);
             try {
                 Response delete = bucketManager.delete(bucket, key);
-                log.info("{七牛云文件 {} 删除成功" , fileName);
+                log.info("{七牛云文件 {} 删除成功", fileName);
                 successCount += 1;
             } catch (QiniuException ex) {
                 //如果遇到异常，说明删除失败
@@ -127,6 +127,7 @@ public class QiniuUtil {
 
     /**
      * 设置七牛云上传区域（内部方法）
+     *
      * @param qiNiuConfig
      * @return
      */
@@ -173,6 +174,7 @@ public class QiniuUtil {
 
     /**
      * 获取七牛云配置
+     *
      * @return
      */
     public String getQiNiuConfig() {

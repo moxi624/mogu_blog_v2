@@ -1,8 +1,5 @@
 package com.moxi.mogublog.picture.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.moxi.mougblog.base.validator.annotion.NotBlank;
-import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 

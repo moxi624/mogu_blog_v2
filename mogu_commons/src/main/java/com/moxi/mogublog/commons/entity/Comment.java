@@ -93,6 +93,12 @@ public class Comment extends SuperEntity<Comment> {
     private List<Comment> replyList;
 
     /**
+     * 本条评论回复的那条评论
+     */
+    @TableField(exist = false)
+    private Comment toComment;
+
+    /**
      * 评论来源名称
      */
     @TableField(exist = false)

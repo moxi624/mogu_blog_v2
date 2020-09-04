@@ -270,6 +270,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         categoryMenu.setUrl(categoryMenuVO.getUrl());
         categoryMenu.setIsShow(categoryMenuVO.getIsShow());
         categoryMenu.setUpdateTime(new Date());
+        categoryMenu.setIsJumpExternalUrl(categoryMenuVO.getIsJumpExternalUrl());
         categoryMenu.insert();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
@@ -287,6 +288,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         categoryMenu.setUrl(categoryMenuVO.getUrl());
         categoryMenu.setIsShow(categoryMenuVO.getIsShow());
         categoryMenu.setUpdateTime(new Date());
+        categoryMenu.setIsJumpExternalUrl(categoryMenuVO.getIsJumpExternalUrl());
         categoryMenu.updateById();
 
         // 修改成功后，需要删除redis中所有的admin访问路径

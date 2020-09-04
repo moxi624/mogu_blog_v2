@@ -121,8 +121,6 @@
           :total="total">
         </el-pagination>
     </div>
-
-
   </div>
 </template>
 
@@ -186,7 +184,7 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getLogList(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
           this.total = response.data.total;

@@ -14,7 +14,7 @@
             <div class="shareli">
               <a href="/" target="_blank">
                 <i>
-                  <img class="resImg" :src="PICTURE_HOST + item.photoList[0]">
+                  <img class="resImg" :src="item.photoList[0]">
                 </i>
                 <h2>
                   <b>{{item.name}}</b>
@@ -47,7 +47,6 @@ export default {
   name: "share",
   data() {
     return {
-      PICTURE_HOST: process.env.PICTURE_HOST,
       studyVideoData: [],
       currentPage: 1,
       pageSize: 8,
@@ -59,7 +58,7 @@ export default {
   },
   created() {
     getStudyVideoBySort().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.studyVideoData = response.data.records;
         this.total = response.data.total;
         this.pageSize = response.data.size;

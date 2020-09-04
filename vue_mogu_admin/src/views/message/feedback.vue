@@ -269,7 +269,7 @@
       getDictList: function () {
         var dictTypeList = ['sys_feedback_status']
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.feedbackStatusDictList = dictMap.sys_feedback_status.list
           }
@@ -325,7 +325,7 @@
         if (this.isEditForm) {
           editFeedback(this.form).then(response => {
             console.log(response);
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data

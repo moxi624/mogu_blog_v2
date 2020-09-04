@@ -42,7 +42,7 @@ export default {
         this.mailto = "mailto:" + this.contact.email;
       } else {
         getWebConfig().then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.contact = response.data;
             this.mailto = "mailto:" + this.contact.email;
             this.setWebConfigData(response.data)

@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.annotion.AuthorityVerify;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.gson.internal.LinkedTreeMap;
 import com.moxi.mogublog.admin.global.MessageConf;
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
@@ -29,9 +30,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,13 +74,15 @@ public class AuthorityVerifyAspect {
         // 解析出请求者的ID和用户名
         String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
 
-        String visitUrl = redisUtil.get(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + adminUid);
+        // 管理员能够访问的路径
+        String visitUrlStr = redisUtil.get(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + adminUid);
 
-        List<String> urlList = new ArrayList<>();
+//        List<String> urlList = new ArrayList<>();
+        LinkedTreeMap<String, String> visitMap = new LinkedTreeMap<>();
 
-        if (StringUtils.isNotEmpty(visitUrl)) {
+        if (StringUtils.isNotEmpty(visitUrlStr)) {
             // 从Redis中获取
-            urlList = JsonUtils.jsonToList(visitUrl, String.class);
+            visitMap = (LinkedTreeMap<String, String>) JsonUtils.jsonToMap(visitUrlStr, String.class);
         } else {
             // 查询数据库获取
             Admin admin = adminService.getById(adminUid);
@@ -105,29 +106,22 @@ public class AuthorityVerifyAspect {
 
             for (CategoryMenu item : buttonList) {
                 if (StringUtils.isNotEmpty(item.getUrl())) {
-                    urlList.add(item.getUrl());
+                    visitMap.put(item.getUrl(), item.getUrl());
                 }
             }
             // 将访问URL存储到Redis中
-            redisUtil.setEx(RedisConf.ADMIN_VISIT_MENU + SysConf.REDIS_SEGMENTATION + adminUid, JsonUtils.objectToJson(urlList).toString(), 1, TimeUnit.HOURS);
+            redisUtil.setEx(RedisConf.ADMIN_VISIT_MENU + SysConf.REDIS_SEGMENTATION + adminUid, JsonUtils.objectToJson(visitMap), 1, TimeUnit.HOURS);
         }
 
         // 判断该角色是否能够访问该接口
-        boolean flag = false;
-        for (String item : urlList) {
-            if (url.equals(item)) {
-                flag = true;
-                log.info("用户拥有操作权限，访问的路径: {}，拥有的权限接口：{}", url, item);
-                break;
-            }
-        }
-        if (!flag) {
+        if(visitMap.get(url) != null) {
+            log.info("用户拥有操作权限，访问的路径: {}，拥有的权限接口：{}", url, visitMap.get(url));
+            //执行业务
+            return joinPoint.proceed();
+        } else {
             log.info("用户不具有操作权限，访问的路径: {}", url);
             return ResultUtil.result(ECode.NO_OPERATION_AUTHORITY, MessageConf.RESTAPI_NO_PRIVILEGE);
         }
-
-        //执行业务
-        return joinPoint.proceed();
     }
 
 }

@@ -94,7 +94,7 @@ export default {
   created() {
     var that = this;
     getSortList().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         var activities = response.data;
         var result = [];
         for (var a = 0; a < activities.length; a++) {
@@ -115,7 +115,7 @@ export default {
       var params = new URLSearchParams();
       params.append("monthDate", content);
       getArticleByMonth(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.itemByDate = response.data;
         }
       });

@@ -91,4 +91,9 @@ public class AdminVO extends BaseVO<AdminVO> {
      * gitee地址
      */
     private String gitee;
+
+    /**
+     * 角色Uid
+     */
+    private String roleUid;
 }

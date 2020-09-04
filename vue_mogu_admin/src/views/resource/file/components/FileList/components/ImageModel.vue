@@ -1,16 +1,48 @@
 <template>
   <div class="image-model-wrapper">
-    <ul class="image-model" v-show="imageModel === 1">
-      <li
-        class="image-item"
-        v-for="(item, index) in fileList"
-        :key="index"
-        @click="$emit('getImgReviewData', item, true)"
+<!--    <ul class="image-model" v-show="imageModel === 1">-->
+<!--      <li-->
+<!--        class="image-item"-->
+<!--        v-for="(item, index) in fileList"-->
+<!--        :key="index"-->
+<!--        @click="$emit('getImgReviewData', item, true)"-->
+<!--        style="list-style: none;"-->
+<!--      >-->
+<!--        <img class="image" :src="item.fileUrl" :alt="item.fileOldName" />-->
+<!--        <div class="image-name">{{splitStr(item.fileOldName, 10)}}</div>-->
+<!--      </li>-->
+<!--    </ul>-->
+
+    <el-row v-show="imageModel === 1">
+      <el-col
+        v-for="(picture, index) in fileList"
+        :key="picture.uid"
+        style="padding: 6px"
+        :xs="24"
+        :sm="12"
+        :md="12"
+        :lg="6"
+        :xl="4"
       >
-        <img class="image" :src="'api' + downloadImgMin(item.fileurl)" :alt="item.filename + item.extendname" />
-        <div class="image-name">{{item.filename + '.' + item.extendname}}</div>
-      </li>
-    </ul>
+        <el-card
+          :body-style="{ padding: '0px', textAlign: 'center' }"
+          shadow="always"
+        >
+          <el-image
+            :src="picture.fileUrl"
+            style="cursor:pointer"
+            fit="scale-down"
+            @click="$emit('getImgReviewData', picture, true)"
+          />
+          <div @click="$emit('getImgReviewData', picture, true)">
+            <span class="media-title" v-if="picture.fileOldName">{{splitStr(picture.fileOldName, 15)}}</span>
+            <span class="media-title" v-else>图片 {{index + 1}}</span>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+
     <div v-show="imageModel === 2">
       <div class="radio">
         排序：
@@ -19,7 +51,7 @@
           <el-radio :label="false">正序</el-radio>
         </el-radio-group>
       </div>
-      <el-timeline class="image-timeline" :reverse="reverse" v-if="imageTimelineData.length">
+      <el-timeline class="image-timeline" :reverse="reverse" v-if="imageTimelineData.length > 0">
         <el-timeline-item
           class="image-item"
           v-for="(item, index) in imageTimelineData"
@@ -27,14 +59,36 @@
           :timestamp="item.uploadDate"
           placement="top"
         >
-          <img
-            class="image"
-            v-for="image in item.imageList"
-            :key="image.fileid"
-            :src="'api' + downloadImgMin(image.fileurl)"
-            :alt="image.filename + image.extendname"
-            @click="$emit('getImgReviewData', image, true)"
-          />
+
+          <el-row>
+            <el-col
+              v-for="(picture, index) in item.imageList"
+              :key="picture.uid"
+              style="padding: 6px"
+              :xs="24"
+              :sm="12"
+              :md="12"
+              :lg="6"
+              :xl="4"
+            >
+              <el-card
+                :body-style="{ padding: '0px', textAlign: 'center' }"
+                shadow="always"
+              >
+                <el-image
+                  :src="picture.fileUrl"
+                  style="cursor:pointer"
+                  fit="scale-down"
+                  @click="$emit('getImgReviewData', picture, true)"
+                />
+                <div @click="$emit('getImgReviewData', picture, true)">
+                  <span class="media-title" v-if="picture.fileOldName">{{splitStr(picture.fileOldName, 15)}}</span>
+                  <span class="media-title" v-else>图片 {{index + 1}}</span>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
         </el-timeline-item>
       </el-timeline>
     </div>
@@ -52,6 +106,9 @@ export default {
       reverse: true
     }
   },
+  created() {
+    console.log("传递过来的列表", this.fileList)
+  },
   computed: {
     imageModel() {
       return this.$store.getters.imageModel
@@ -60,8 +117,9 @@ export default {
     imageTimelineData() {
       let res = []
       //  去重，获取返回的所有日期年-月-日
+      console.log("得到的时间", this.fileList)
       let uploadtimeSet = new Set(
-        this.fileList.map(item => item.uploadtime.split(' ')[0])
+        this.fileList.map(item => item.createTime.split(' ')[0])
       )
       let uploadDate = [...uploadtimeSet]
       //  分组
@@ -69,16 +127,26 @@ export default {
         res.push({
           uploadDate: element,
           imageList: this.fileList.filter(
-            item => item.uploadtime.split(' ')[0] === element
+            item => item.createTime.split(' ')[0] === element
           ) //  过滤
         })
       })
       return res
     }
+  },
+  methods: {
+    splitStr(str, count) {
+      return this.$commonUtil.splitStr(str, count)
+    },
   }
 }
 </script>
-
+<style scoped>
+  .el-image {
+    width: 100%;
+    height: 160px;
+  }
+</style>
 <style lang="stylus" scoped>
 @import '~@/assets/styles/mixins.styl'
 .image-model-wrapper

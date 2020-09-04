@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
-    public static final  String MOGU_BLOG = "mogu.blog";
-    public static final  String MOGU_EMAIL = "mogu.email";
-    public static final  String MOGU_SMS = "mogu.sms";
-    public static final  String EXCHANGE_DIRECT = "exchange.direct";
-    public static final  String ROUTING_KEY_BLOG = "mogu.blog";
-    public static final  String ROUTING_KEY_EMAIL = "mogu.email";
-    public static final  String ROUTING_KEY_SMS = "mogu.sms";
+    public static final String MOGU_BLOG = "mogu.blog";
+    public static final String MOGU_EMAIL = "mogu.email";
+    public static final String MOGU_SMS = "mogu.sms";
+    public static final String EXCHANGE_DIRECT = "exchange.direct";
+    public static final String ROUTING_KEY_BLOG = "mogu.blog";
+    public static final String ROUTING_KEY_EMAIL = "mogu.email";
+    public static final String ROUTING_KEY_SMS = "mogu.sms";
 
 
     /**
@@ -33,6 +33,7 @@ public class RabbitMqConfig {
 
     /**
      * 申明Blog队列
+     *
      * @return
      */
     @Bean(MOGU_BLOG)
@@ -42,6 +43,7 @@ public class RabbitMqConfig {
 
     /**
      * 申明Email队列
+     *
      * @return
      */
     @Bean(MOGU_EMAIL)
@@ -51,6 +53,7 @@ public class RabbitMqConfig {
 
     /**
      * 申明SMS队列
+     *
      * @return
      */
     @Bean(MOGU_SMS)
@@ -60,6 +63,7 @@ public class RabbitMqConfig {
 
     /**
      * mogu.blog 队列绑定交换机，指定routingKey
+     *
      * @param queue
      * @param exchange
      * @return
@@ -71,6 +75,7 @@ public class RabbitMqConfig {
 
     /**
      * mogu.mail 队列绑定交换机，指定routingKey
+     *
      * @param queue
      * @param exchange
      * @return
@@ -82,6 +87,7 @@ public class RabbitMqConfig {
 
     /**
      * mogu.sms 队列绑定交换机，指定routingKey
+     *
      * @param queue
      * @param exchange
      * @return

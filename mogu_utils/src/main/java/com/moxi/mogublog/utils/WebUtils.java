@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -71,6 +70,7 @@ public class WebUtils {
 
     /**
      * 获取URL的 一级，二级，三级域名
+     *
      * @param url
      * @param level：域名等级
      * @return
@@ -78,10 +78,22 @@ public class WebUtils {
     public static String getDomainName(String url, Integer level) {
         Pattern pattern;
         switch (level) {
-            case 1: {pattern = Pattern.compile(RE_TOP , Pattern.CASE_INSENSITIVE);};break;
-            case 2: {pattern = Pattern.compile(RE_TOP_2 , Pattern.CASE_INSENSITIVE);};break;
-            case 3: {pattern = Pattern.compile(RE_TOP_3 , Pattern.CASE_INSENSITIVE);};break;
-            default:{
+            case 1: {
+                pattern = Pattern.compile(RE_TOP, Pattern.CASE_INSENSITIVE);
+            }
+            ;
+            break;
+            case 2: {
+                pattern = Pattern.compile(RE_TOP_2, Pattern.CASE_INSENSITIVE);
+            }
+            ;
+            break;
+            case 3: {
+                pattern = Pattern.compile(RE_TOP_3, Pattern.CASE_INSENSITIVE);
+            }
+            ;
+            break;
+            default: {
                 log.error("传入level有误");
                 return null;
             }
@@ -145,6 +157,7 @@ public class WebUtils {
 
     /**
      * 获取结果集的内容，返回的是 List<POJO>，不带分页的情况
+     *
      * @param result
      * @param beanType
      * @param <T>

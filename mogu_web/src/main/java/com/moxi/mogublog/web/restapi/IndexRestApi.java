@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,18 +47,10 @@ public class IndexRestApi {
 
     @Autowired
     WebConfigService webConfigService;
-
+    @Autowired
+    SysParamsService sysParamsService;
     @Autowired
     BlogService blogService;
-
-    @Value(value = "${BLOG.HOT_TAG_COUNT}")
-    private Integer BLOG_HOT_TAG_COUNT;
-
-    @Value(value = "${BLOG.FRIENDLY_LINK_COUNT}")
-    private Integer FRIENDLY_LINK_COUNT;
-
-    @Value(value = "${BLOG.NEW_COUNT}")
-    private Long BLOG_NEW_COUNT;
 
     @RequestLimit(amount = 200, time = 60000)
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
@@ -87,7 +78,7 @@ public class IndexRestApi {
                              @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         log.info("获取首页最新的博客");
-        return ResultUtil.result(SysConf.SUCCESS, blogService.getNewBlog(currentPage, BLOG_NEW_COUNT));
+        return ResultUtil.result(SysConf.SUCCESS, blogService.getNewBlog(currentPage, null));
     }
 
 
@@ -98,15 +89,24 @@ public class IndexRestApi {
                                 @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         log.info("按时间戳获取博客");
-        return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogByTime(currentPage, BLOG_NEW_COUNT));
+        String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
+        if (StringUtils.isEmpty(blogNewCount)) {
+            log.error("参数配置有误，需重新配置！");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogByTime(currentPage, Long.valueOf(blogNewCount)));
     }
 
     @ApiOperation(value = "获取最热标签", notes = "获取最热标签")
     @GetMapping("/getHotTag")
     public String getHotTag() {
-
         log.info("获取最热标签");
-        return ResultUtil.result(SysConf.SUCCESS, tagService.getHotTag(BLOG_HOT_TAG_COUNT));
+        String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
+        if (StringUtils.isEmpty(hotTagCount)) {
+            log.error("参数配置有误，需重新配置！");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, tagService.getHotTag(Integer.valueOf(hotTagCount)));
     }
 
     @ApiOperation(value = "获取友情链接", notes = "获取友情链接")
@@ -114,7 +114,12 @@ public class IndexRestApi {
     public String getLink() {
 
         log.info("获取友情链接");
-        return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(FRIENDLY_LINK_COUNT));
+        String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
+        if (StringUtils.isEmpty(friendlyLinkCount)) {
+            log.error("参数配置有误，需重新配置！");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount)));
     }
 
     @BussinessLog(value = "点击友情链接", behavior = EBehavior.FRIENDSHIP_LINK)

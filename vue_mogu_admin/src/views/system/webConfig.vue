@@ -22,7 +22,7 @@
                 @click="deletePhoto()"
                 @mouseover="icon = true"
               ></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]">
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]">
             </div>
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -30,12 +30,12 @@
           </el-form-item>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="网站名称" prop="oldPwd">
                 <el-input v-model="form.name" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="标题" prop="newPwd1">
                 <el-input v-model="form.title" style="width: 400px"></el-input>
               </el-form-item>
@@ -43,12 +43,12 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="关键字" prop="newPwd2">
                 <el-input v-model="form.keyword" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="描述" prop="newPwd1">
                 <el-input v-model="form.summary" style="width: 400px"></el-input>
               </el-form-item>
@@ -56,51 +56,14 @@
           </el-row>
 
           <el-row :gutter="24">
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="作者" prop="newPwd2">
                 <el-input v-model="form.author" style="width: 400px"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <el-form-item label="备案号" prop="newPwd2">
                 <el-input v-model="form.recordNum" style="width: 400px"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="3">
-              <el-form-item label="阿里支付">
-                <el-upload
-                  class="avatar-uploader"
-                  name="file"
-                  :action="uploadPictureHost"
-                  :file-list="fileList"
-                  :show-file-list="false"
-                  :before-upload="beforeUpload"
-                  :on-success="fileSuccess_ali"
-                  :data="otherData"
-                >
-                  <img v-if="form.aliPayPhoto" :src="BASE_IMAGE_URL + form.aliPayPhoto" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item label="微信支付">
-                <el-upload
-                  class="avatar-uploader"
-                  name="file"
-                  :action="uploadPictureHost"
-                  :file-list="fileList"
-                  :show-file-list="false"
-                  :before-upload="beforeUpload"
-                  :on-success="fileSuccess_weixin"
-                  :data="otherData"
-                >
-                  <img v-if="form.weixinPayPhoto" :src="BASE_IMAGE_URL + form.weixinPayPhoto" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
               </el-form-item>
             </el-col>
           </el-row>
@@ -119,10 +82,91 @@
             </el-col>
           </el-row>
 
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
+
+      <el-tab-pane v-permission="'/webConfig/getWebConfig'">
+        <span slot="label">
+          <i class="el-icon-date"></i> 评论&打赏
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="90px"
+          ref="from"
+        >
+
+          <el-row :gutter="24">
+            <el-col :span="4">
+              <el-form-item label="阿里支付">
+                <el-upload
+                  class="avatar-uploader"
+                  name="file"
+                  :action="uploadPictureHost"
+                  :file-list="fileList"
+                  :show-file-list="false"
+                  :before-upload="beforeUpload"
+                  :on-success="fileSuccess_ali"
+                  :data="otherData"
+                >
+                  <img v-if="form.aliPayPhoto" :src="form.aliPayPhoto" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="微信支付">
+                <el-upload
+                  class="avatar-uploader"
+                  name="file"
+                  :action="uploadPictureHost"
+                  :file-list="fileList"
+                  :show-file-list="false"
+                  :before-upload="beforeUpload"
+                  :on-success="fileSuccess_weixin"
+                  :data="otherData"
+                >
+                  <img v-if="form.weixinPayPhoto" :src="form.weixinPayPhoto" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
           <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item label="网站评论">
-                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="网站打赏">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openAdmiration" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="移动端评论">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openMobileComment" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="移动端打赏">
+                <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openMobileAdmiration" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
               </el-form-item>
             </el-col>
           </el-row>
@@ -131,6 +175,7 @@
             <el-button type="primary" @click="submitForm()" v-permission="'/webConfig/editWebConfig'">保 存</el-button>
           </el-form-item>
         </el-form>
+
       </el-tab-pane>
 
       <el-tab-pane v-permission="'/webConfig/getWebConfig'">
@@ -210,7 +255,6 @@ import {getListByDictType} from "@/api/sysDictData"
 export default {
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       form: {
         name: "",
         title: "",
@@ -219,7 +263,7 @@ export default {
         author: "",
         logo: "",
         recordNum: "",
-        startComment: "1",
+        openComment: "1",
         aliPay: "",
         weixinPay: "",
         aliPayPhoto: "",
@@ -302,7 +346,7 @@ export default {
       var params = {};
       params.dictType = 'sys_normal_disable';
       getListByDictType(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.openDictList = response.data.list;
         }
       });
@@ -310,7 +354,7 @@ export default {
     getWebConfigFun: function() {
       getWebConfig().then(response => {
         console.log("得到的配置", response)
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           let data = response.data;
 
@@ -328,11 +372,6 @@ export default {
           this.photoList = this.form.photoList;
         }
       });
-    },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
-      console.log(this.photoVisible);
     },
     getChooseData(data) {
       var that = this;
@@ -388,7 +427,7 @@ export default {
     },
     fileSuccess_ali: function(response, file, fileList) {
       console.log(response);
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.aliPay = fileList[0].uid;
@@ -407,7 +446,7 @@ export default {
 
     fileSuccess_weixin: function(response, file, fileList) {
 
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let fileList = response.data;
         if (fileList.length > 0) {
           this.form.weixinPay = fileList[0].uid;

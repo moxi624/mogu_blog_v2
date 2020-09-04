@@ -1,0 +1,15 @@
+  .emoji-item-common {
+    background: url("http://nacospicture.moguit.cn//blog/admin/png/2020/8/7/1596788970449.png");
+    display: inline-block;
+  }
+  .emoji-item-common:hover {
+     cursor: pointer;
+   }
+  .emoji-size-small {
+    // 表情大小
+    zoom: 0.3;
+  }
+  .emoji-size-large {
+    zoom: 0.5; // emojipanel表情大小
+    margin: 4px;
+  }

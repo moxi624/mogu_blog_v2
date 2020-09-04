@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 public class PathUtil {
     /**
      * 获取项目所在的根目录路径 resources路径
+     *
      * @return
      */
     public static String getProjectRootPath() {
@@ -28,17 +29,18 @@ public class PathUtil {
 
     /**
      * 路径解码
+     *
      * @param url
      * @return
      */
-    public static String urlDecode(String url){
+    public static String urlDecode(String url) {
         String decodeUrl = null;
         try {
             decodeUrl = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return  decodeUrl;
+        return decodeUrl;
     }
 
     /**
@@ -50,7 +52,7 @@ public class PathUtil {
         String projectRootAbsolutePath = getProjectRootPath();
 
         int index = projectRootAbsolutePath.indexOf("file:");
-        if (index != -1){
+        if (index != -1) {
             projectRootAbsolutePath = projectRootAbsolutePath.substring(0, index);
         }
 

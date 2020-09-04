@@ -3,7 +3,7 @@
     <div v-for="item in comments" :key="item.uid">
       <div class="commentList">
         <span class="left p1">
-          <img v-if="item.user" :src="item.user.photoUrl ? PICTURE_HOST + item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
+          <img v-if="item.user" :src="item.user.photoUrl ? item.user.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" />
           <img v-else src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" />
         </span>
 
@@ -21,7 +21,7 @@
           <div class="rightBottom">
             <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
             <el-link class="b1" :underline="false" @click="report(item)">举报</el-link>
-            <el-link class="b1" :underline="false" @click="delComment(item)">删除</el-link>
+            <el-link class="b1" v-if="$store.state.user.isLogin && $store.state.user.userInfo.uid == item.userUid" :underline="false" @click="delComment(item)">删除</el-link>
           </div>
 
           <div class="rightCommentList">
@@ -56,7 +56,6 @@
             span: ['class']
           }
         },
-        PICTURE_HOST: process.env.PICTURE_HOST,
         taggleStatue: true,
         submitting: false,
         value: '',
@@ -90,7 +89,7 @@
         }
         var dictTypeList =  ['sys_user_tag']
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.userTagDictList = dictMap.sys_user_tag.list
             this.setUserTag(dictMap.sys_user_tag.list)
@@ -126,7 +125,7 @@
         params.toUserUid = e.toUserUid;
         params.source = e.source
         addComment(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               let commentData = response.data
               document.getElementById(commentData.toUid).style.display = 'none'
               let comments = this.$store.state.app.commentList;
@@ -161,7 +160,7 @@
         params.currentPage = 0;
         params.pageSize = 10;
         getCommentList(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.comments = response.data;
           }
         });
@@ -194,6 +193,7 @@
           });
           return
         }
+
         let userUid = this.$store.state.user.userInfo.uid
 
         if(userUid == item.userUid) {
@@ -209,7 +209,7 @@
         params.uid = item.uid;
         params.userUid = userUid
         reportComment(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.$notify({
               title: '成功',
               message: response.data,
@@ -241,7 +241,7 @@
         params.userUid = this.$store.state.user.userInfo.uid
 
         deleteComment(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.$notify({
               title: '成功',
               message: "删除成功",

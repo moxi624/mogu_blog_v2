@@ -3,7 +3,7 @@
     <el-tabs type="border-card">
       <el-tab-pane v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label">
-          <i class="el-icon-date"></i> 七牛云配置
+          <i class="el-icon-date"></i> 图片配置
         </span>
 
         <el-form
@@ -14,6 +14,11 @@
           :rules="rules"
           ref="form"
         >
+
+          <aside>
+            图片配置主要用于配置网站的图片信息<br/>
+          </aside>
+
           <el-form-item label="本地图片域名" prop="localPictureBaseUrl">
             <el-input v-model="form.localPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
@@ -64,8 +69,38 @@
       </el-tab-pane>
 
       <el-tab-pane name="two" v-permission="'/systemConfig/getSystemConfig'">
+        <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
+        <el-form style="margin-left: 20px;" label-position="left"   label-width="100px" >
+
+          <aside>
+            通过开关选择博客编辑时的文本编辑器<br/>
+          </aside>
+
+          <el-form-item label="文本编辑器">
+            <el-radio v-for="item in editorModalDictList" :key="item.uid" v-model="form.editorModel" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
+          <el-form-item label="消息邮件通知">
+            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
+          </el-form-item>
+
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane name="three" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 邮箱配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="80px" >
+
+          <aside>
+            邮箱配置主要用于配置网站消息的接收<br/>
+            例如：友链申请、网站评论、网站反馈等，可以在系统配置处选择是否开启邮件通知<br/>
+          </aside>
+
           <el-form-item label="邮箱" prop="email">
             <el-input  v-model="form.email" style="width: 400px"></el-input>
           </el-form-item>
@@ -86,18 +121,13 @@
             <el-input  v-model="form.smtpPort" style="width: 400px"></el-input>
           </el-form-item>
 
-          <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
-          <el-form-item label="邮件通知">
-            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
-          </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="three" v-permission="'/systemConfig/cleanRedisByKey'">
+      <el-tab-pane name="four" v-permission="'/systemConfig/cleanRedisByKey'">
         <span slot="label"><i class="el-icon-edit"></i> Redis管理</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="120px" >
 
@@ -178,8 +208,6 @@
               </el-col>
             </el-row>
           </el-form-item>
-
-
         </el-form>
       </el-tab-pane>
 
@@ -191,7 +219,6 @@
 <script>
 import { getSystemConfig, editSystemConfig, cleanRedisByKey } from "@/api/systemConfig";
 import {getListByDictTypeList} from "@/api/sysDictData"
-import { Loading } from 'element-ui';
 export default {
   data() {
     return {
@@ -202,6 +229,7 @@ export default {
       yesNoDictList: [], //是否字典
       openDictList: [], // 开启关闭字典
       picturePriorityDictList: [], //图片显示优先级字典
+      editorModalDictList: [], // 文本编辑器字典列表
       loadingInstance: null, // loading对象
       rules: {
         localPictureBaseUrl: [
@@ -223,10 +251,8 @@ export default {
 
   },
   created() {
-    this.loadingInstance = Loading.service({ fullscreen: true, text:'正在努力加载中~' });
     // 获取字典
     this.getDictList()
-
     // 获取系统配置
     this.getSystemConfigList()
   },
@@ -236,24 +262,22 @@ export default {
      */
     getDictList: function () {
 
-      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable']
+      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable', 'sys_editor_modal']
 
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
           this.areaDictList = dictMap.sys_storage_region.list
           this.yesNoDictList = dictMap.sys_yes_no.list
           this.openDictList = dictMap.sys_normal_disable.list
           this.picturePriorityDictList = dictMap.sys_picture_priority.list
-          this.loadingInstance.close();
-        } else {
-          this.loadingInstance.close();
+          this.editorModalDictList = dictMap.sys_editor_modal.list
         }
       });
     },
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           if (response.data) {
             this.form = response.data;
           }
@@ -265,7 +289,7 @@ export default {
       let params = []
       params.push(key)
       cleanRedisByKey(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.$message({
             type: "success",
             message: response.data

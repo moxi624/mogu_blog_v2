@@ -41,7 +41,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.user"
-            :src="BASE_IMAGE_URL + scope.row.user.photoUrl"
+            :src="scope.row.user.photoUrl"
             onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
             style="width: 100px;height: 100px;"
           >
@@ -153,7 +153,6 @@ export default {
       }, //查询参数
       multipleSelection: [], //多选，用于批量删除
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       tableData: [],
       keyword: "",
       currentPage: 1,
@@ -195,7 +194,7 @@ export default {
     getDictList: function () {
       var dictTypeList =  ['sys_comment_type', 'sys_comment_source']
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
           this.commentTypeDictList = dictMap.sys_comment_type.list
           this.commentSourceDictList = dictMap.sys_comment_source.list
@@ -221,7 +220,7 @@ export default {
 			params.pageSize = this.pageSize
 
 			getCommentList(params).then(response => {
-			  if(response.code == "success") {
+			  if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -315,6 +314,7 @@ export default {
   .emoji-size-small {
     zoom: 0.3;
     margin: 5px;
+    vertical-align: middle;
   }
 </style>
 

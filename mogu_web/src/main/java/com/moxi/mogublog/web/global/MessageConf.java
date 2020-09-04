@@ -36,4 +36,6 @@ public final class MessageConf extends BaseMessageConf {
 
     public static final String PASSWORD_IS_ERROR = "输入密码有误！";
 
+    public static final String SYSTEM_PARAMS_NOT_FOUNT = "系统配置不存在！";
+
 }

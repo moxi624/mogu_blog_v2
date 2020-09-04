@@ -47,7 +47,7 @@
       <el-table-column align="center" label="头像" width="120">
         <template slot-scope="scope">
           <img
-            :src="scope.row.photoUrl ? BASE_IMAGE_URL + scope.row.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
+            :src="scope.row.photoUrl ? scope.row.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
             style="width: 100px;height: 100px;"
           >
         </template>
@@ -182,7 +182,7 @@
         <el-form-item :label-width="formLabelWidth" label="用户头像">
           <div class="imgBody" v-if="form.photoUrl">
             <i @click="deletePhoto()" @mouseover="icon = true" class="el-icon-error inputClass" v-show="icon"></i>
-            <img @mouseout="icon = false" @mouseover="icon = true" v-bind:src="BASE_IMAGE_URL + form.photoUrl"/>
+            <img @mouseout="icon = false" @mouseover="icon = true" v-bind:src="form.photoUrl"/>
           </div>
 
           <div @click="checkPhoto" class="uploadImgBody" v-else>
@@ -297,7 +297,6 @@
         imagecropperShow: false,
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
-        BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
         tableData: [],
         keyword: "",
         accountSourceKeyword: "",
@@ -368,7 +367,7 @@
 
         getUserList(params).then(response => {
           console.log("getUserList", response);
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.tableData = response.data.records;
             this.currentPage = response.data.current;
             this.pageSize = response.data.size;
@@ -403,7 +402,7 @@
       getDictList: function () {
         var dictTypeList = ['sys_account_source', 'sys_comment_status', 'sys_user_sex', 'sys_user_tag']
         getListByDictTypeList(dictTypeList).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             var dictMap = response.data;
             this.accountSourceDictList = dictMap.sys_account_source.list
             this.commentStatusDictList = dictMap.sys_comment_status.list
@@ -492,7 +491,7 @@
             console.log("校验出错")
           } else {
             editUser(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$notify({
                   title: "成功",
                   message: "保存成功！",
@@ -513,7 +512,7 @@
     }
   };
 </script>
-<style>
+<style scoped>
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

@@ -26,7 +26,7 @@
         <template slot-scope="scope">
           <img
             v-if="scope.row.photoList"
-            :src="BASE_IMAGE_URL + scope.row.photoList[0]"
+            :src="scope.row.photoList[0]"
             style="width: 100px;height: 100px;"
           >
         </template>
@@ -106,16 +106,13 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="头像" :label-width="formLabelWidth">
+
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
           <div class="imgBody" v-if="form.photoList">
-            <i
-              class="el-icon-error inputClass"
-              v-show="icon"
-              @click="deletePhoto()"
-              @mouseover="icon = true"
-            ></i>
-            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]">
+            <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
           </div>
+
           <div v-else class="uploadImgBody" @click="checkPhoto">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </div>
@@ -124,12 +121,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-              <el-input v-model="form.userName"></el-input>
+              <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="昵称" :label-width="formLabelWidth">
-              <el-input v-model="form.nickName"></el-input>
+              <el-input v-model="form.nickName" placeholder="请输入昵称"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -137,7 +134,7 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="角色名" :label-width="formLabelWidth">
-              <el-select v-model="form.roleUid" placeholder="请选择">
+              <el-select v-model="form.roleUid" placeholder="请选择角色名">
                 <el-option
                   v-for="item in roleOptions"
                   :key="item.uid"
@@ -157,12 +154,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-              <el-input v-model="form.email" ></el-input>
+              <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
-              <el-input v-model="form.mobile" ></el-input>
+              <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -170,12 +167,12 @@
         <el-row :gutter="24">
           <el-col span="10">
             <el-form-item label="QQ号码" :label-width="formLabelWidth" prop="qqNumber">
-              <el-input v-model="form.qqNumber" ></el-input>
+              <el-input v-model="form.qqNumber" placeholder="请输入QQ号码"></el-input>
             </el-form-item>
           </el-col>
           <el-col span="10">
             <el-form-item label="职业" :label-width="formLabelWidth">
-              <el-input v-model="form.occupation" ></el-input>
+              <el-input v-model="form.occupation" placeholder="请输入职业"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -187,14 +184,16 @@
       </div>
     </el-dialog>
 
-    <CheckPhoto
-      @choose_data="getChooseData"
-      @cancelModel="cancelModel"
-      :photoVisible="photoVisible"
-      :photos="photoList"
-      :files="fileIds"
-      :limit="1"
-    ></CheckPhoto>
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
 
   </div>
 </template>
@@ -211,15 +210,14 @@ import {
 
 import { getRoleList } from "@/api/role";
 import {getListByDictType} from "@/api/sysDictData"
-
-
-import CheckPhoto from "../../components/CheckPhoto";
+import AvatarCropper from '@/components/AvatarCropper'
 
 import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
+      // 图片上传路径
+      url: process.env.PICTURE_API + "/file/cropperPicture",
       tableData: [],
       roleOptions: [], //角色候选框
       loading: false, //搜索框加载状态
@@ -234,9 +232,9 @@ export default {
       formLabelWidth: "120px",
       isEditForm: false,
       form: {},
-      photoVisible: false, //控制图片选择器的显示
+      imagecropperKey: 0,
+      imagecropperShow: false, //控制图片选择器的显示
       photoList: [],
-      fileIds: "",
       icon: false, //控制删除图标的显示
       genderDictList: [], //字典列表
       rules: {
@@ -264,7 +262,7 @@ export default {
     };
   },
   components: {
-    CheckPhoto
+    AvatarCropper
   },
   created() {
     this.getDictList();
@@ -273,12 +271,12 @@ export default {
   },
   methods: {
     adminList: function() {
-      var params = new URLSearchParams();
-      params.append("keyword", this.keyword);
-      params.append("currentPage", this.currentPage);
-      params.append("pageSize", this.pageSize);
+      var params = {}
+      params.keyword = this.keyword
+      params.currentPage = this.currentPage
+      params.pageSize = this.pageSize
       getAdminList(params).then(response => {
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -293,7 +291,7 @@ export default {
       var params = {};
       params.dictType = 'sys_user_sex';
       getListByDictType(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.genderDictList = response.data.list;
           // 设置默认值
           if(response.data.defaultValue) {
@@ -312,35 +310,26 @@ export default {
       });
 
     },
-    //弹出选择图片框
-    checkPhoto: function() {
-      this.photoVisible = true;
-      console.log(this.photoVisible);
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      let photoList = []
+      photoList.push(resData[0].url);
+      this.form.photoList = photoList;
+      this.form.avatar = resData[0].uid
     },
-    getChooseData(data) {
-      var that = this;
-      this.photoVisible = false;
-      this.photoList = data.photoList;
-      this.fileIds = data.fileIds;
-      var fileId = this.fileIds.replace(",", "");
-      if (this.photoList.length >= 1) {
-        this.form.fileUid = fileId;
-        this.form.photoList = this.photoList;
-      }
-    },
-    //关闭模态框
-    cancelModel() {
-      this.photoVisible = false;
+    close() {
+      this.imagecropperShow = false
     },
     deletePhoto: function() {
       this.form.photoList = null;
-      this.form.fileUid = "";
+      this.form.ava = "";
       this.icon = false;
     },
     checkPhoto() {
       this.photoList = [];
-      this.fileIds = "";
-      this.photoVisible = true;
+      this.avatar = "";
+      this.imagecropperShow = true;
     },
 
     getFormObject: function() {
@@ -363,11 +352,7 @@ export default {
       this.title = "编辑管理员";
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
-
-      this.fileIds = this.form.avatar;
-
       this.roleValue = [];
       var roleList = [];
       //设置选择的角色列表
@@ -377,20 +362,19 @@ export default {
         });
         this.roleValue = roleList;
       }
-
     },
     handRest: function(row) {
       var that = this;
-      this.$confirm("此操作将会将该用户密码重置, 是否继续?", "提示", {
+      this.$confirm("此操作将会将该用户密码重置为默认密码, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          let params = new URLSearchParams();
-          params.append("uid", row.uid);
+          let params = {}
+          params.uid = row.uid
           restPwdAdmin(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               that.$message({
                 type: "success",
                 message: response.data
@@ -423,7 +407,7 @@ export default {
           adminUids.push(row.uid);
           params.append("adminUids", adminUids);
           deleteAdmin(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -445,7 +429,6 @@ export default {
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.adminList();
     },
@@ -454,11 +437,9 @@ export default {
         if(!valid) {
           console.log("校验出错")
         } else {
-          this.form.avatar = this.fileIds;
           if (this.isEditForm) {
             editAdmin(this.form).then(response => {
-              console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -474,8 +455,7 @@ export default {
             });
           } else {
             addAdmin(this.form).then(response => {
-              console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

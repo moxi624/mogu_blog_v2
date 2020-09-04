@@ -119,7 +119,6 @@ export default {
   },
   mounted() {
     // mounted钩子函数，dom已经渲染完毕，可以直接获取到dom对象进行聚焦
-
     this.$refs.userNameInput.focus()
   },
   created() {
@@ -146,7 +145,7 @@ export default {
           this.$store
             .dispatch("Login", this.loginForm)
             .then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$router.push({ path: this.redirect || "/" });
               } else {
                 this.$message.error(response.data);

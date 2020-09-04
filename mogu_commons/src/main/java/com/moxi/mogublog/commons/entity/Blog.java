@@ -108,7 +108,7 @@ public class Blog extends SuperEntity<Blog> {
     /**
      * 是否开启评论(0:否， 1:是)
      */
-    private String startComment;
+    private String openComment;
 
 
     // 以下字段不存入数据库，封装为了方便使用

@@ -60,7 +60,6 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         if (key == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
-
         key.forEach(item -> {
             // 表示清空所有key
             if (RedisConf.ALL.equals(item)) {
@@ -116,6 +115,9 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
             systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
+
+            // 设置系统配置
+            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
             systemConfig.insert();
         } else {
 
@@ -139,6 +141,8 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
             systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
             systemConfig.setUpdateTime(new Date());
+            // 设置系统配置
+            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
             systemConfig.updateById();
 
         }
@@ -146,7 +150,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         // 更新系统配置成功后，需要删除Redis中的系统配置，主要用于mogu_picture获取上传配置信息
         ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attribute.getRequest();
-        if(request.getAttribute(SysConf.TOKEN) != null) {
+        if (request.getAttribute(SysConf.TOKEN) != null) {
             String token = request.getAttribute(SysConf.TOKEN).toString();
             redisUtil.delete(RedisConf.SYSTEM_CONFIG + RedisConf.SEGMENTATION + token);
             log.info("成功删除Redis中的系统配置！");

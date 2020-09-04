@@ -53,13 +53,13 @@ public class LoginRestApi {
     @Autowired
     RabbitMqUtil rabbitMqUtil;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
     PictureFeignClient pictureFeignClient;
     @Autowired
     WebUtil webUtil;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RedisUtil redisUtil;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
 
@@ -105,7 +105,7 @@ public class LoginRestApi {
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中
             redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
-
+            log.info("登录成功，返回token: ", token);
             return ResultUtil.result(SysConf.SUCCESS, token);
         } else {
             return ResultUtil.result(SysConf.ERROR, "账号或密码错误");
@@ -116,7 +116,7 @@ public class LoginRestApi {
     @PostMapping("/register")
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
-        if(userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
+        if (userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         HttpServletRequest request = RequestHolder.getRequest();

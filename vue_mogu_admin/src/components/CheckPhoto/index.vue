@@ -37,7 +37,7 @@
               :key="picture.fileUid"
               class="showPicture"
               @click="checkLogoConfirm(picture.fileUid,picture.pictureUrl)"
-              :src="BASE_IMAGE_URL + picture.pictureUrl"
+              :src="picture.pictureUrl"
             >
           </div>
           <div class="addPicture" v-if="pictureSort.total - (pictureSort.pageSize*pictureSort.currentPage) < 0" @click="toPictureManager(pictureSort.pictureSortUid)">
@@ -59,7 +59,7 @@
       <span slot="footer" class="dialog-footer">
         <div class="ChooseBody" :key="index" v-for="(picture, index) in form.photoList">
           <i @click="deletePhoto(index)" class="el-icon-error inputClass" v-show="icon"></i>
-          <img style="width: 100%;height: 100%;" :src="BASE_IMAGE_URL + picture">
+          <img style="width: 100%;height: 100%;" :src="picture">
         </div>
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="commit">确 定</el-button>
@@ -137,7 +137,6 @@ export default {
 
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       dialogVisible: this.photoVisible,
       sortList: [],
       havePictureSorts: false, //是否加载完图片分类

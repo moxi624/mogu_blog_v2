@@ -20,13 +20,15 @@ public interface StorageService extends SuperService<Storage> {
 
     /**
      * 上传文件
-     * @param request 请求
+     *
+     * @param request  请求
      * @param fileList 文件列表
      */
     void uploadFile(HttpServletRequest request, NetworkDisk networkDisk, List<File> fileList);
 
     /**
      * 查询存储信息
+     *
      * @param storageBean
      * @return
      */
@@ -34,20 +36,22 @@ public interface StorageService extends SuperService<Storage> {
 
     /**
      * 添加存储信息
+     *
      * @param storageBean
      */
     void insertStorageBean(Storage storageBean);
 
     /**
      * 更新存储信息
+     *
      * @param storageBean
      */
     void updateStorageBean(Storage storageBean);
 
     /**
-     * 通过User查询存储信息
-     * @param storageBean
+     * 通过Admin查询存储信息
+     *
      * @return
      */
-    Storage selectStorageByUser(Storage storageBean);
+    Storage getStorageByAdmin();
 }

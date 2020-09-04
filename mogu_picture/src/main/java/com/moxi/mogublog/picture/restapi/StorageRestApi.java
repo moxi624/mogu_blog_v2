@@ -3,7 +3,6 @@ package com.moxi.mogublog.picture.restapi;
 import com.alibaba.fastjson.JSON;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.Storage;
-import com.moxi.mogublog.picture.entity.TreeNode;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
@@ -12,24 +11,30 @@ import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.FileUtils;
+import com.moxi.mogublog.utils.RestResult;
+import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.utils.upload.FileOperation;
-import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mogublog.utils.upload.ImageOperation;
 import com.moxi.mogublog.utils.upload.PathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-
+/**
+ * 存储控制类
+ *
+ * @author 陌溪
+ * @date 2020年7月11日21:23:14
+ */
 @RestController
 @RequestMapping("/storage")
 public class StorageRestApi {
@@ -71,14 +76,14 @@ public class StorageRestApi {
         String extendName = networkDisk.getExtendName();
         File file = FileOperation.newFile(PathUtil.getStaticPath() + imageUrl);
         File minfile = FileOperation.newFile(PathUtil.getStaticPath() + imageUrl.replace("." + extendName, "_min." + extendName));
-        if ("left".equals(direction)){
+        if ("left".equals(direction)) {
             try {
                 ImageOperation.leftTotation(file, file, 90);
                 ImageOperation.leftTotation(minfile, minfile, 90);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if ("right".equals(direction)){
+        } else if ("right".equals(direction)) {
             try {
                 ImageOperation.rightTotation(file, file, 90);
                 ImageOperation.rightTotation(minfile, minfile, 90);
@@ -137,7 +142,7 @@ public class StorageRestApi {
     @ResponseBody
     public String deleteImage(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
         RestResult<String> result = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             result.setSuccess(false);
             result.setErrorMessage("请先登录");
             return JSON.toJSONString(result);
@@ -166,23 +171,23 @@ public class StorageRestApi {
     @ResponseBody
     public String uploadFile(HttpServletRequest request, NetworkDisk networkDisk) {
         RestResult<String> restResult = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             restResult.setSuccess(false);
             restResult.setErrorMessage("请先登录");
             return JSON.toJSONString(restResult);
         }
         String qiNiuConfigResult = qiniuUtil.getQiNiuConfig();
-        Map<String,String> qiNiuConfig = WebUtils.getData(qiNiuConfigResult, Map.class);
-        if(qiNiuConfig == null) {
+        Map<String, String> qiNiuConfig = WebUtils.getData(qiNiuConfigResult, Map.class);
+        if (qiNiuConfig == null) {
             restResult.setSuccess(false);
             restResult.setErrorMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
             String resultJson = JSON.toJSONString(restResult);
             return resultJson;
         }
         // 获取文件
-        List<MultipartFile> filedatas = FileUtils.getMultipartFileList(request);
+        List<MultipartFile> fileDatas = FileUtils.getMultipartFileList(request);
         // 上传文件
-        String result = fileService.uploadImgs(path, request, filedatas, qiNiuConfig);
+        String result = fileService.uploadImgs(path, request, fileDatas, qiNiuConfig);
         List<com.moxi.mogublog.picture.entity.File> fileList = WebUtils.getAllList(result, com.moxi.mogublog.picture.entity.File.class);
         // 写入NetworkDisk表中
         filetransferService.uploadFile(request, networkDisk, fileList);
@@ -190,6 +195,7 @@ public class StorageRestApi {
         String resultJson = JSON.toJSONString(restResult);
         return resultJson;
     }
+
     /**
      * 下载文件
      *
@@ -254,14 +260,12 @@ public class StorageRestApi {
      *
      * @return
      */
-    @RequestMapping(value = "/getstorage", method = RequestMethod.GET)
+    @RequestMapping(value = "/getStorage", method = RequestMethod.GET)
     @ResponseBody
     public RestResult<Storage> getStorage() {
         RestResult<Storage> restResult = new RestResult<>();
-        Storage storage = new Storage();
-        storage.setAdminUid(SysConf.DEFAULT_UID);
-        Storage result = filetransferService.selectStorageByUser(storage);
-        restResult.setData(result);
+        Storage storage = filetransferService.getStorageByAdmin();
+        restResult.setData(storage);
         restResult.setSuccess(true);
         return restResult;
     }

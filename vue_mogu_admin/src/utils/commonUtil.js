@@ -4,13 +4,13 @@ import { Message } from 'element-ui'
 
 /** **********************************************************/
 /**
- *  全局常量
+ *  全局状态码
  */
-const STATIC = {
+const ECode = {
   // 默认页大小
-  DEFAULT_PAGE_SIZE: 10,
+  SUCCESS: "success",
   // 默认页码
-  DEFAULT_CURRENT_PAGE: 1,
+  ERROR: "error",
 }
 
 /** **********************************************************/
@@ -32,16 +32,29 @@ const FUNCTIONS = {
     }
     return str.substr(0, str.length - 1)
   },
-  /**
-   * 字符串转标签
-   * @param str
-   * @returns {Array}
-   */
-  stringToTags: str => {
-    if (str !== null && str !== '') {
-      return str.split(',')
+  // 切割字符串
+  splitStr: (str, flagCount) => {
+    if (str == null || str == '') {
+      return ""
+    } else if(str.length > flagCount) {
+      return str.substring(0, flagCount) + "..."
     } else {
-      return []
+      return str
+    }
+  },
+  /**
+   * 切割字符串
+   * @param str
+   * @param count
+   * @returns {string|*}
+   */
+  strSubstring: (str, count) => {
+    if (str == null || str == '') {
+      return ""
+    } else if(str.length > count) {
+      return str.substring(0, count) + "..."
+    } else {
+      return str
     }
   },
   /**
@@ -62,7 +75,8 @@ const FUNCTIONS = {
    * @param text
    */
   markdownToHtml: text => {
-    let converter = new showdown.Converter();
+    let converter = new showdown.Converter({tables: true});
+    let html = converter.makeHtml(text)
     return converter.makeHtml(text);
   },
   /**
@@ -71,6 +85,12 @@ const FUNCTIONS = {
    */
   htmlToMarkdown: text => {
     var turndownService = new TurndownService()
+    var turndownPluginGfm = require('turndown-plugin-gfm')
+    var gfm = turndownPluginGfm.gfm
+    var tables = turndownPluginGfm.tables
+    var strikethrough = turndownPluginGfm.strikethrough
+    turndownService.use(gfm)
+    turndownService.use([tables, strikethrough])
     return turndownService.turndown(text)
   },
   /**
@@ -134,6 +154,6 @@ const FUNCTIONS = {
 }
 
 export default {
-  STATIC,
+  ECode,
   FUNCTIONS
 }

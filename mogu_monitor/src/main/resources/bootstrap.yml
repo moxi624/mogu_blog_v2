@@ -1,0 +1,18 @@
+server:
+  port: 8606
+
+spring:
+  application:
+    name: mogu-monitor
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        #指定分组
+        group: dev
+        #指定命名空间
+        namespace: dev

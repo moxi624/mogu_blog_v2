@@ -144,7 +144,6 @@
 
 <script>
 import {getSysDictTypeList, addSysDictType, editSysDictType, deleteBatchSysDictType} from "@/api/sysDictType"
-import { formatData } from "@/utils/webUtils";
 export default {
   data() {
     return {
@@ -189,10 +188,8 @@ export default {
       params.dictType = this.query.dictType;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
-      console.log('开始查找', params)
       getSysDictTypeList(params).then(response => {
-        console.log("得到的类型", response)
-        if(response.code == "success") {
+        if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -221,7 +218,6 @@ export default {
       title: "编辑字典类型";
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      console.log(row);
       this.form = row;
     },
     handleDelete: function(row) {
@@ -237,7 +233,7 @@ export default {
           let deleteList = []
           deleteList.push(sysDictType)
           deleteBatchSysDictType(deleteList).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -274,7 +270,7 @@ export default {
       })
         .then(() => {
           deleteBatchSysDictType(that.multipleSelection).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -318,8 +314,7 @@ export default {
         } else {
           if (this.isEditForm) {
             editSysDictType(this.form).then(response => {
-              console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -335,7 +330,7 @@ export default {
             });
           } else {
             addSysDictType(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

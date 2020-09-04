@@ -28,7 +28,7 @@
         >
           <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
           <el-image
-            :src="BASE_IMAGE_URL + picture.pictureUrl"
+            :src="picture.pictureUrl"
             style="cursor:pointer"
             fit="scale-down"
             @click="showPicture(picture.pictureUrl)"
@@ -43,7 +43,7 @@
                 <el-button
                   size="mini"
                   icon="el-icon-copy-document"
-                  @click="copyUrl(BASE_IMAGE_URL + picture.pictureUrl)"
+                  @click="copyUrl(picture.pictureUrl)"
                 />
               </el-tooltip>
 
@@ -52,7 +52,7 @@
                   type="primary"
                   size="mini"
                   icon="el-icon-document-copy"
-                  @click="copyMarkdownUrl(BASE_IMAGE_URL + picture.pictureUrl, BASE_IMAGE_URL + picture.pictureUrl)"
+                  @click="copyMarkdownUrl(picture.pictureUrl, picture.pictureUrl)"
                 >
                 </el-button>
               </el-tooltip>
@@ -138,17 +138,12 @@ import { getToken } from '@/utils/auth'
 
 import PictureCropper from '@/components/PictureCropper'
 
-import { formatData } from "@/utils/webUtils";
-
-import { Loading } from "element-ui";
-
 export default {
   components: {
     PictureCropper
   },
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       dialogImageUrl: "", //图片显示地址
       checkedPicture: {}, // 单选的图片
       pictureCropperVisible: false, // 裁剪图片框是否显示
@@ -212,7 +207,7 @@ export default {
       params.pageSize = this.pageSize
       params.currentPage = this.currentPage
       getPictureList(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
@@ -294,7 +289,7 @@ export default {
           let params = {};
           params.uid = this.pictureUids.join(","); //将数组变成,组成
           deletePicture(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -369,7 +364,7 @@ export default {
       params.picName = checkedPicture.picName
       params.pictureSortUid = checkedPicture.pictureSortUid
       editPicture(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.$message({
             type: "success",
             message: response.data
@@ -415,7 +410,7 @@ export default {
     },
     fileSuccess: function(response, file, fileList) {
       var that = this;
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         let file = response.data;
 
         for (let index = 0; index < file.length; index++) {
@@ -429,7 +424,7 @@ export default {
         this.count = this.count + 1;
         if(this.count % fileList.length == 0) {
           addPicture(this.pictureUploadList).then(res => {
-            if (res.code == "success") {
+            if (res.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: res.data
@@ -457,7 +452,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .media-title {
     color: #8492a6;
     font-size: 14px;

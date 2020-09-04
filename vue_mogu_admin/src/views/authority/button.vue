@@ -70,9 +70,9 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="160" align="center">
-                <template slot-scope="scope_child">
-                  <span>{{ scope_child.row.createTime }}</span>
+              <el-table-column width="100" align="center">
+                <template slot-scope="scope">
+                  <el-tag type="warning">{{ scope.row.sort }}</el-tag>
                 </template>
               </el-table-column>
 
@@ -135,11 +135,10 @@
       <el-table-column label="图标" width="100" align="center">
         <template slot-scope="scope">
           <i :class="scope.row.icon"></i>
-<!--          <span>{{ scope.row.icon }}</span>-->
         </template>
       </el-table-column>
 
-      <el-table-column label="URL" width="200" align="center">
+      <el-table-column label="路由" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
@@ -151,9 +150,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="排序" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
         </template>
       </el-table-column>
 
@@ -183,7 +182,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
         <el-form-item label="按钮名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" auto-complete="off"></el-input>
+          <el-input v-model="form.name" placeholder="请输入按钮名称" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
@@ -213,26 +212,30 @@
             :options="options"
             placeholder="请选择父菜单"
             v-model="buttonParentUid"
-            :props="{ checkStrictly: true }"
+            :props="{ checkStrictly: false }"
             clearable></el-cascader>
         </el-form-item>
 
         <el-form-item label="按钮介绍" :label-width="formLabelWidth" prop="summary">
-          <el-input v-model="form.summary" auto-complete="off"></el-input>
+          <el-input v-model="form.summary" placeholder="请输入按钮简介" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="图标" :label-width="formLabelWidth" prop="icon" v-if="form.menuType == 0">
           <el-input v-model="form.icon" auto-complete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="URL" :label-width="formLabelWidth" prop="url">
-          <el-input v-model="form.url" auto-complete="off"></el-input>
+        <el-form-item label="路由" :label-width="formLabelWidth" prop="url">
+          <el-input v-model="form.url" placeholder="路由对应的是前端router表中的路径" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="是否显示" :label-width="formLabelWidth" prop="isShow">
           <el-radio-group v-model="form.isShow" size="small">
             <el-radio v-for="item in yesNoDictList" :key="item.uid" :label="parseInt(item.dictValue)" border>{{item.dictLabel}}</el-radio>
           </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" auto-complete="off"></el-input>
         </el-form-item>
 
       </el-form>
@@ -281,7 +284,7 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: ""
+        sort: 0
       },
       loading: false,
       rules: {
@@ -306,7 +309,11 @@ export default {
         ],
         isShow: [
           {required: true, message: '显示字段不能为空', trigger: 'blur'}
-        ]
+        ],
+        sort: [
+          {required: true, message: '排序字段不能为空', trigger: 'blur'},
+          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+        ],
       },
       options: []
     };
@@ -320,7 +327,7 @@ export default {
   methods: {
     menuList: function() {
       getAllMenu().then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           let tableData = response.data;
           let options = []
           for(let a=0; a<tableData.length; a++) {
@@ -351,7 +358,7 @@ export default {
       }
       getButtonAll(params).then(response => {
         console.log("getAllMenu", response);
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data;
         }
       });
@@ -362,7 +369,7 @@ export default {
     getDictList: function () {
       var dictTypeList =  ['sys_menu_level', 'sys_yes_no', 'sys_menu_type']
       getListByDictTypeList(dictTypeList).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
 
           var dictMap = response.data;
 
@@ -390,9 +397,10 @@ export default {
         summary: "",
         icon: "",
         url: "",
-        sort: "",
+        sort: 0,
         menuLevel: 3,
         isShow: this.yesNoDefault,
+        isJumpExternalUrl: 0,
         menuType: 1
       };
       return formObject;
@@ -427,7 +435,7 @@ export default {
           let params = {}
           params.uid = row.uid
           stickMenu(params).then(response => {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               this.buttonList();
               this.$message({
                 type: "success",
@@ -459,7 +467,7 @@ export default {
           let params = {}
           params.uid = row.uid
           deleteMenu(params).then(response => {
-            if(response.code == "success") {
+            if(response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -508,7 +516,7 @@ export default {
           if (this.isEditForm) {
             editMenu(this.form).then(response => {
               console.log(response);
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data
@@ -524,7 +532,7 @@ export default {
             });
           } else {
             addMenu(this.form).then(response => {
-              if (response.code == "success") {
+              if (response.code == this.$ECode.SUCCESS) {
                 this.$message({
                   type: "success",
                   message: response.data

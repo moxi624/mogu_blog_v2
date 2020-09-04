@@ -10,6 +10,7 @@ import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.UserMapper;
+import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
@@ -19,7 +20,6 @@ import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +44,8 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
     private UserService userService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Value(value = "${DEFAULE_PWD}")
-    private String DEFAULE_PWD;
-
+    @Autowired
+    private SysParamsService sysParamsService;
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
@@ -243,8 +242,12 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
 
     @Override
     public String resetUserPassword(UserVO userVO) {
+        String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
+        if (StringUtils.isEmpty(defaultPassword)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+        }
         User user = userService.getById(userVO.getUid());
-        user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+        user.setPassWord(MD5Utils.string2MD5(defaultPassword));
         user.setUpdateTime(new Date());
         user.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);

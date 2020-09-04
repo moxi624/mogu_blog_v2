@@ -19,7 +19,7 @@
 
 	   	<el-table-column label="标题图" width="160" align="center">
 	      <template slot-scope="scope">
-	      	<img  v-if="scope.row.photoList" :src="BASE_IMAGE_URL + scope.row.photoList[0]" style="width: 105px;height: 70px;"/>
+	      	<img  v-if="scope.row.photoList" :src="scope.row.photoList[0]" style="width: 105px;height: 70px;"/>
 	      </template>
 	    </el-table-column>
 
@@ -100,7 +100,7 @@
 				<el-form-item label="图片" :label-width="formLabelWidth">
 	    		<div class="imgBody" v-if="form.photoList">
 	    		  	<i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
-	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="BASE_IMAGE_URL + form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
+	    			<img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
 	    		</div>
 	    		<div v-else class="uploadImgBody" @click="checkPhoto">
  		 			<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -172,9 +172,7 @@ import {
 
 import { getResourceSortList } from "@/api/resourceSort";
 import CKEditor from "../../components/CKEditor";
-import { formatData } from "@/utils/webUtils";
 import CheckPhoto from "../../components/CheckPhoto";
-import { Loading } from "element-ui";
 
 export default {
   components: {
@@ -194,7 +192,6 @@ export default {
   },
   data() {
     return {
-      BASE_IMAGE_URL: process.env.BASE_IMAGE_URL,
       multipleSelection: [], //多选，用于批量删除
       tableData: [],
       resourceSortData: [], //资源分类列表
@@ -425,7 +422,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

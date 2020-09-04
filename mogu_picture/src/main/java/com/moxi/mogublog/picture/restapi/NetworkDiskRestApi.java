@@ -1,7 +1,6 @@
 package com.moxi.mogublog.picture.restapi;
 
 import com.alibaba.fastjson.JSON;
-
 import com.moxi.mogublog.picture.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.TreeNode;
 import com.moxi.mogublog.picture.global.SysConf;
@@ -16,6 +15,7 @@ import com.moxi.mogublog.utils.upload.PathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -26,21 +26,17 @@ import java.util.*;
 @RequestMapping("/networkDisk")
 public class NetworkDiskRestApi {
 
-    @Resource
-    NetworkDiskService networkDiskService;
-
-    @Resource
-    StorageService filetransferService;
-
-    @Autowired
-    FeignUtil feignUtil;
-
     /**
      * 是否开启共享文件模式
      */
     public static Boolean isShareFile = false;
-
     public static long treeid = 0;
+    @Resource
+    NetworkDiskService networkDiskService;
+    @Resource
+    StorageService storageService;
+    @Autowired
+    FeignUtil feignUtil;
 
     /**
      * @return
@@ -61,7 +57,7 @@ public class NetworkDiskRestApi {
     @ResponseBody
     public RestResult<String> createFile(HttpServletRequest request, @RequestBody NetworkDisk networkDisk) {
         RestResult<String> restResult = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             restResult.setSuccess(false);
             restResult.setErrorMessage("请先登录");
             return restResult;
@@ -74,9 +70,9 @@ public class NetworkDiskRestApi {
 
     @RequestMapping(value = "/getfilelist", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<List<NetworkDisk>> getFileList(HttpServletRequest request, @RequestBody NetworkDisk networkDisk){
+    public RestResult<List<NetworkDisk>> getFileList(HttpServletRequest request, @RequestBody NetworkDisk networkDisk) {
         RestResult<List<NetworkDisk>> restResult = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             restResult.setSuccess(false);
             restResult.setErrorMessage("请先登录");
             return restResult;
@@ -89,6 +85,25 @@ public class NetworkDiskRestApi {
     }
 
     /**
+     * 重命名文件
+     *
+     * @return
+     */
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResult<String> edit(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
+        RestResult<String> result = new RestResult<>();
+        if (request.getAttribute(SysConf.TOKEN) == null) {
+            result.setSuccess(false);
+            result.setErrorMessage("请先登录");
+            return result;
+        }
+        networkDiskService.updateFilepathByFilepath(networkDiskVO);
+        result.setSuccess(true);
+        return result;
+    }
+
+    /**
      * 批量删除文件
      *
      * @return
@@ -97,16 +112,17 @@ public class NetworkDiskRestApi {
     @ResponseBody
     public RestResult<String> deleteImageByIds(HttpServletRequest request, @RequestBody List<NetworkDiskVO> networkDiskVOList) {
         RestResult<String> result = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             result.setSuccess(false);
             result.setErrorMessage("请先登录");
             return result;
         }
         Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
 
-        for (NetworkDiskVO NetworkDiskVO : networkDiskVOList) {
-            networkDiskService.deleteFile(NetworkDiskVO, qiNiuConfig);
+        for (NetworkDiskVO networkDiskVO : networkDiskVOList) {
+            networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         }
+
         result.setData("批量删除文件成功");
         result.setSuccess(true);
         return result;
@@ -121,7 +137,7 @@ public class NetworkDiskRestApi {
     @ResponseBody
     public String deleteFile(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
         RestResult<String> result = new RestResult<>();
-        if(request.getAttribute(SysConf.TOKEN) == null) {
+        if (request.getAttribute(SysConf.TOKEN) == null) {
             result.setSuccess(false);
             result.setErrorMessage("请先登录");
             return JSON.toJSONString(result);
@@ -142,7 +158,7 @@ public class NetworkDiskRestApi {
     @ResponseBody
     public String unzipFile(@RequestBody NetworkDisk networkDisk) {
         RestResult<String> result = new RestResult<>();
-        if (!operationCheck().isSuccess()){
+        if (!operationCheck().isSuccess()) {
             return JSON.toJSONString(operationCheck());
         }
 
@@ -153,7 +169,7 @@ public class NetworkDiskRestApi {
         List<String> fileEntryNameList = FileOperation.unzip(file, unzipUrl);
 
         List<NetworkDisk> fileBeanList = new ArrayList<>();
-        for (int i = 0; i < fileEntryNameList.size(); i++){
+        for (int i = 0; i < fileEntryNameList.size(); i++) {
             String entryName = fileEntryNameList.get(i);
             String totalFileUrl = unzipUrl + entryName;
             File currentFile = FileOperation.newFile(totalFileUrl);
@@ -162,11 +178,11 @@ public class NetworkDiskRestApi {
             tempFileBean.setCreateTime(new Date());
             tempFileBean.setAdminUid(SysConf.DEFAULT_UID);
             tempFileBean.setFilePath(FileUtil.pathSplitFormat(networkDisk.getFilePath() + entryName.replace(currentFile.getName(), "")));
-            if (currentFile.isDirectory()){
+            if (currentFile.isDirectory()) {
                 tempFileBean.setIsDir(1);
                 tempFileBean.setFileName(currentFile.getName());
                 //tempFileBean.setFileurl(File.separator + (file.getParent() + File.separator + currentFile.getName()).replace(PathUtil.getStaticPath(), ""));
-            }else{
+            } else {
 
                 tempFileBean.setIsDir(0);
 
@@ -186,22 +202,16 @@ public class NetworkDiskRestApi {
     /**
      * 文件移动
      *
-     *
      * @return 返回前台移动结果
      */
     @RequestMapping(value = "/movefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> moveFile(@RequestBody NetworkDisk networkDisk) {
-        RestResult<String> result = new RestResult<String>();
-        if (!operationCheck().isSuccess()){
+    public RestResult<String> moveFile(@RequestBody NetworkDiskVO networkDiskVO) {
+        RestResult<String> result = new RestResult<>();
+        if (!operationCheck().isSuccess()) {
             return operationCheck();
         }
-        String oldfilepath = networkDisk.getOldFilePath();
-        String newfilepath = networkDisk.getNewFilePath();
-        String filename = networkDisk.getFileName();
-        String extendname = networkDisk.getExtendName();
-
-        networkDiskService.updateFilepathByFilepath(oldfilepath, newfilepath, filename, extendname);
+        networkDiskService.updateFilepathByFilepath(networkDiskVO);
         result.setSuccess(true);
         return result;
     }
@@ -209,25 +219,26 @@ public class NetworkDiskRestApi {
     /**
      * 批量移动文件
      *
-     *
      * @return 返回前台移动结果
      */
     @RequestMapping(value = "/batchmovefile", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> batchMoveFile(@RequestBody NetworkDisk networkDisk) {
+    public RestResult<String> batchMoveFile(@RequestBody NetworkDiskVO networkDiskVO) {
 
         RestResult<String> result = new RestResult<String>();
         if (!operationCheck().isSuccess()) {
             return operationCheck();
         }
 
-        String files = networkDisk.getFiles();
-        String newfilepath = networkDisk.getNewFilePath();
+        String files = networkDiskVO.getFiles();
+        String newfilepath = networkDiskVO.getNewFilePath();
 
-        List<NetworkDisk> fileList = JSON.parseArray(files, NetworkDisk.class);
+        List<NetworkDiskVO> fileList = JSON.parseArray(files, NetworkDiskVO.class);
 
-        for (NetworkDisk file : fileList) {
-            networkDiskService.updateFilepathByFilepath(file.getFilePath(), newfilepath, file.getFileName(), file.getExtendName());
+        for (NetworkDiskVO file : fileList) {
+            file.setNewFilePath(newfilepath);
+            file.setOldFilePath(file.getFilePath());
+            networkDiskService.updateFilepathByFilepath(file);
         }
 
         result.setData("批量移动文件成功");
@@ -235,7 +246,7 @@ public class NetworkDiskRestApi {
         return result;
     }
 
-    public RestResult<String> operationCheck(){
+    public RestResult<String> operationCheck() {
         RestResult<String> result = new RestResult<>();
         result.setSuccess(true);
         return result;
@@ -243,6 +254,7 @@ public class NetworkDiskRestApi {
 
     /**
      * 通过文件类型选择文件
+     *
      * @return
      */
     @RequestMapping(value = "/selectfilebyfiletype", method = RequestMethod.GET)
@@ -255,44 +267,38 @@ public class NetworkDiskRestApi {
         return result;
     }
 
-    /**
-     * 获取文件树
-     * @return
-     */
-    @RequestMapping(value = "/getfiletree", method = RequestMethod.GET)
+    @RequestMapping(value = "/getfiletree", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<TreeNode> getFileTree(){
-        RestResult<TreeNode> result = new RestResult<TreeNode>();
-        NetworkDisk networkDisk = new NetworkDisk();
-        List<NetworkDisk> filePathList = networkDiskService.selectFilePathTreeByUserid(networkDisk);
+    public RestResult<TreeNode> getfiletree() {
+        RestResult<TreeNode> result = new RestResult<>();
+        List<NetworkDisk> filePathList = networkDiskService.selectFilePathTree();
         TreeNode resultTreeNode = new TreeNode();
         resultTreeNode.setNodeName("/");
 
-        for (int i = 0; i < filePathList.size(); i++){
+        for (int i = 0; i < filePathList.size(); i++) {
             String filePath = filePathList.get(i).getFilePath() + filePathList.get(i).getFileName() + "/";
             Queue<String> queue = new LinkedList<>();
             String[] strArr = filePath.split("/");
-            for (int j = 0; j < strArr.length; j++){
-                if (!"".equals(strArr[j]) && strArr[j] != null){
+            for (int j = 0; j < strArr.length; j++) {
+                if (!"".equals(strArr[j]) && strArr[j] != null) {
                     queue.add(strArr[j]);
                 }
             }
-            if (queue.size() == 0){
+            if (queue.size() == 0) {
                 continue;
             }
-            resultTreeNode = insertTreeNode(resultTreeNode,"/", queue);
+            resultTreeNode = insertTreeNode(resultTreeNode, "/", queue);
         }
         result.setSuccess(true);
         result.setData(resultTreeNode);
         return result;
-
     }
 
-    public TreeNode insertTreeNode(TreeNode treeNode, String filepath, Queue<String> nodeNameQueue){
+    public TreeNode insertTreeNode(TreeNode treeNode, String filepath, Queue<String> nodeNameQueue) {
 
         List<TreeNode> childrenTreeNodes = treeNode.getChildren();
         String currentNodeName = nodeNameQueue.peek();
-        if (currentNodeName == null){
+        if (currentNodeName == null) {
             return treeNode;
         }
 
@@ -300,7 +306,7 @@ public class NetworkDiskRestApi {
         filepath = filepath + currentNodeName + "/";
         map.put("filepath", filepath);
 
-        if (!isExistPath(childrenTreeNodes, currentNodeName)){  //1、判断有没有该子节点，如果没有则插入
+        if (!isExistPath(childrenTreeNodes, currentNodeName)) {  //1、判断有没有该子节点，如果没有则插入
             //插入
             TreeNode resultTreeNode = new TreeNode();
             resultTreeNode.setAttributes(map);
@@ -309,7 +315,7 @@ public class NetworkDiskRestApi {
 
             childrenTreeNodes.add(resultTreeNode);
 
-        }else{  //2、如果有，则跳过
+        } else {  //2、如果有，则跳过
             nodeNameQueue.poll();
         }
 
@@ -317,7 +323,7 @@ public class NetworkDiskRestApi {
             for (int i = 0; i < childrenTreeNodes.size(); i++) {
 
                 TreeNode childrenTreeNode = childrenTreeNodes.get(i);
-                if (currentNodeName.equals(childrenTreeNode.getLabel())){
+                if (currentNodeName.equals(childrenTreeNode.getLabel())) {
                     childrenTreeNode = insertTreeNode(childrenTreeNode, filepath, nodeNameQueue);
                     childrenTreeNodes.remove(i);
                     childrenTreeNodes.add(childrenTreeNode);
@@ -325,22 +331,22 @@ public class NetworkDiskRestApi {
                 }
 
             }
-        }else{
+        } else {
             treeNode.setChildNode(childrenTreeNodes);
         }
         return treeNode;
     }
 
-    public boolean isExistPath(List<TreeNode> childrenTreeNodes, String path){
+    public boolean isExistPath(List<TreeNode> childrenTreeNodes, String path) {
         boolean isExistPath = false;
 
         try {
-            for (int i = 0; i < childrenTreeNodes.size(); i++){
-                if (path.equals(childrenTreeNodes.get(i).getLabel())){
+            for (int i = 0; i < childrenTreeNodes.size(); i++) {
+                if (path.equals(childrenTreeNodes.get(i).getLabel())) {
                     isExistPath = true;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return isExistPath;

@@ -45,6 +45,7 @@
         <flexmark.version>0.61.0</flexmark.version>
         <ip2region.version>1.7.2</ip2region.version>
         <oshi.version>3.9.1</oshi.version>
+        <freemarker.version>2.3.28</freemarker.version>
     </properties>
 
 
@@ -55,7 +56,6 @@
         <module>mogu_admin</module>
         <module>mogu_web</module>
         <module>mogu_picture</module>
-        <module>mogu_eureka</module>
         <module>mogu_sms</module>
         <module>mogu_search</module>
         <module>mogu_monitor</module>
@@ -74,22 +74,30 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.1.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!--阿里云镜像源-->
-    <repositories>
-        <repository>
-            <id>nexus-aliyun</id>
-            <name>nexus-aliyun</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+<!--    &lt;!&ndash;阿里云镜像源&ndash;&gt;-->
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>nexus-aliyun</id>-->
+<!--            <name>nexus-aliyun</name>-->
+<!--            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
 </project>

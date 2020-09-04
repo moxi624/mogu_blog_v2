@@ -40,9 +40,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtHelper jwtHelper;
 
-//	@Value(value="${base64Secret}")
-//	private String base64Secret;
-
     @Value(value = "${tokenHead}")
     private String tokenHead;
 
@@ -87,7 +84,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // 获取在线的管理员信息
             String onlineAdmin = redisUtil.get(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + authHeader);
 
-            if(StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, audience.getBase64Secret())) {
+            if (StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, audience.getBase64Secret())) {
                 /**
                  * 得到过期时间
                  */
@@ -97,7 +94,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 // 得到两个日期相差的间隔，秒
                 Integer second = DateUtils.getSecondByTwoDay(expirationDate, nowDate);
                 // 如果小于5分钟，那么更新过期时间
-                if(second < refreshSecond) {
+                if (second < refreshSecond) {
                     // 生成一个新的Token
                     String newToken = tokenHead + jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond * 1000);
                     // 生成新的token，发送到客户端
@@ -117,7 +114,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             request.setAttribute(SysConf.ADMIN_UID, adminUid);
             request.setAttribute(SysConf.USER_NAME, username);
             request.setAttribute(SysConf.TOKEN, authHeader);
-            log.info("解析出来用户: {}" ,username);
+            log.info("解析出来用户: {}", username);
             log.info("解析出来的用户Uid: {}", adminUid);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

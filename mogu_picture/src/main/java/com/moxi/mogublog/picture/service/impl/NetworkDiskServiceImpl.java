@@ -1,39 +1,31 @@
 package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.picture.entity.File;
-import com.moxi.mogublog.picture.entity.FileSort;
 import com.moxi.mogublog.picture.entity.NetworkDisk;
+import com.moxi.mogublog.picture.entity.Storage;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
-import com.moxi.mogublog.picture.mapper.FileMapper;
 import com.moxi.mogublog.picture.mapper.NetworkDiskMapper;
-import com.moxi.mogublog.picture.service.FileService;
-import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
+import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.MoGuFileUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
-import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,18 +41,16 @@ import java.util.Map;
 @Service
 public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, NetworkDisk> implements NetworkDiskService {
 
-    //获取上传路径
-    @Value(value = "${file.upload.path}")
-    private String UPLOAD_PATH;
-
     @Autowired
     NetworkDiskService networkDiskService;
-
+    @Autowired
+    StorageService storageService;
     @Autowired
     FeignUtil feignUtil;
-
     @Autowired
     QiniuUtil qiniuUtil;
+    @Value(value = "${file.upload.path}")
+    private String UPLOAD_PATH;
 
     @Override
     public void insertFile(NetworkDisk networkDisk) {
@@ -83,8 +73,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     }
 
     @Override
-    public List<NetworkDisk> selectFilePathTreeByUserid(NetworkDisk fileBean) {
-        return null;
+    public List<NetworkDisk> selectFilePathTree() {
+        QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.IS_DIR, SysConf.ONE);
+        return networkDiskService.list(queryWrapper);
     }
 
     @Override
@@ -94,19 +87,24 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         // 获取配置文件
         Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
         String picturePriority = qiNiuResultMap.get(SysConf.PICTURE_PRIORITY);
-
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.orderByAsc(SQLConf.CREATE_TIME);
         // 根据扩展名查找
-        if(networkDisk.getFileType() != 0) {
-            queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
-        } else if(StringUtils.isNotEmpty(networkDisk.getFilePath())) {
+        if (networkDisk.getFileType() != 0) {
+            // 判断是否是其它文件
+            if(FileUtil.OTHER_TYPE == networkDisk.getFileType()) {
+                queryWrapper.notIn(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
+            } else {
+                queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
+            }
+        } else if (StringUtils.isNotEmpty(networkDisk.getFilePath())) {
             // 没有扩展名时，查找全部
             queryWrapper.eq(SQLConf.FILE_PATH, networkDisk.getFilePath());
         }
         List<NetworkDisk> list = networkDiskService.list(queryWrapper);
         list.forEach(item -> {
-            if(EOpenStatus.OPEN.equals(picturePriority)) {
+            if (EOpenStatus.OPEN.equals(picturePriority)) {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL) + item.getQiNiuUrl());
             } else {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL) + item.getLocalUrl());
@@ -128,8 +126,8 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     @Override
     public void deleteFile(NetworkDiskVO networkDiskVO, Map<String, String> qiNiuConfig) {
         String uid = networkDiskVO.getUid();
-        if(StringUtils.isNotEmpty(uid)) {
-
+        if (StringUtils.isNotEmpty(uid)) {
+            log.error("删除的文件不能为空");
         }
         NetworkDisk networkDisk = networkDiskService.getById(uid);
         String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
@@ -140,7 +138,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         networkDisk.updateById();
 
         // 判断删除的是文件 or 文件夹
-        if(SysConf.ONE == networkDisk.getIsDir()) {
+        if (SysConf.ONE == networkDisk.getIsDir()) {
             // 删除的是文件夹，那么需要把文件下所有的文件获得，进行删除
             // 获取文件的路径，查询出该路径下所有的文件
             String path = networkDisk.getFilePath() + networkDisk.getFileName();
@@ -150,13 +148,13 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             queryWrapper.likeRight(SQLConf.FILE_PATH, path);
             List<NetworkDisk> list = networkDiskService.list(queryWrapper);
 
-            if(list.size() > 0) {
+            if (list.size() > 0) {
                 // 将所有的状态设置成失效
                 list.forEach(item -> {
                     item.setStatus(EStatus.DISABLED);
                 });
                 Boolean isUpdateSuccess = networkDiskService.updateBatchById(list);
-                if(isUpdateSuccess) {
+                if (isUpdateSuccess) {
 
                     // 删除本地文件，同时移除本地文件
                     if (EOpenStatus.OPEN.equals(uploadLocal)) {
@@ -190,6 +188,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
                 String qiNiuUrl = networkDisk.getQiNiuUrl();
                 qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
             }
+
+            Storage storage = storageService.getStorageByAdmin();
+            Long storageSize = storage.getStorageSize() - networkDisk.getFileSize();
+            storage.setStorageSize(storageSize > 0 ? storageSize : 0L);
+            storageService.updateById(storage);
         }
     }
 
@@ -199,8 +202,62 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     }
 
     @Override
-    public void updateFilepathByFilepath(String oldfilepath, String newfilepath, String filename, String extendname) {
+    public void updateFilepathByFilepath(NetworkDiskVO networkDiskVO) {
+        String oldFilePath = networkDiskVO.getOldFilePath();
+        String newFilePath = networkDiskVO.getNewFilePath();
+        String fileName = networkDiskVO.getFileName();
+        String fileOldName = networkDiskVO.getFileOldName();
+        String extendName = networkDiskVO.getExtendName();
 
+        if ("null".equals(networkDiskVO.getExtendName())) {
+            extendName = null;
+        }
+        //移动根目录
+        QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.FILE_PATH, networkDiskVO.getOldFilePath());
+        queryWrapper.eq(SQLConf.FILE_NAME, networkDiskVO.getFileName());
+        if (StringUtils.isNotEmpty(extendName)) {
+            queryWrapper.eq(SQLConf.EXTEND_NAME, extendName);
+        } else {
+            queryWrapper.isNull(SQLConf.EXTEND_NAME);
+        }
+        List<NetworkDisk> networkDiskList = networkDiskService.list(queryWrapper);
+        for (NetworkDisk networkDisk : networkDiskList) {
+            // 修改新的路径
+            networkDisk.setFilePath(newFilePath);
+            // 修改旧文件名
+            networkDisk.setFileOldName(networkDiskVO.getFileOldName());
+            // 如果扩展名为空，代表是文件夹，还需要修改文件名
+            if(StringUtils.isEmpty(extendName)) {
+                networkDisk.setFileName(networkDiskVO.getFileOldName());
+            }
+        }
+
+        networkDiskService.updateBatchById(networkDiskList);
+
+        //移动子目录
+        oldFilePath = oldFilePath + fileName + "/";
+        newFilePath = newFilePath + fileOldName + "/";
+
+        oldFilePath = oldFilePath.replace("\\", "\\\\\\\\");
+        oldFilePath = oldFilePath.replace("'", "\\'");
+        oldFilePath = oldFilePath.replace("%", "\\%");
+        oldFilePath = oldFilePath.replace("_", "\\_");
+
+        //为null说明是目录，则需要移动子目录
+        if (extendName == null) {
+            //移动根目录
+            QueryWrapper<NetworkDisk> childQueryWrapper = new QueryWrapper<>();
+            childQueryWrapper.likeRight(SQLConf.FILE_PATH, oldFilePath);
+            List<NetworkDisk> childList = networkDiskService.list(childQueryWrapper);
+            for (NetworkDisk networkDisk : childList) {
+                String filePath = networkDisk.getFilePath();
+                networkDisk.setFilePath(filePath.replace(oldFilePath, newFilePath));
+            }
+            if(childList.size() > 0) {
+                networkDiskService.updateBatchById(childList);
+            }
+        }
     }
 
     @Override

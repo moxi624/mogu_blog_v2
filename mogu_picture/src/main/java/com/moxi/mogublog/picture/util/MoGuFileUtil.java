@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 蘑菇文件操作
+ *
  * @author: 陌溪
  * @create: 2020-06-16-9:33
  */
@@ -15,6 +16,7 @@ public class MoGuFileUtil {
 
     /**
      * 删除文件，可以是文件或文件夹
+     *
      * @param fileName 要删除的文件名
      * @return 删除成功返回true，否则返回false
      */
@@ -35,8 +37,7 @@ public class MoGuFileUtil {
     /**
      * 删除单个文件
      *
-     * @param fileName
-     *            要删除的文件的文件名
+     * @param fileName 要删除的文件的文件名
      * @return 单个文件删除成功返回true，否则返回false
      */
     public static boolean deleteFile(String fileName) {
@@ -58,6 +59,7 @@ public class MoGuFileUtil {
 
     /**
      * 批量删除文件
+     *
      * @param fileNameList
      * @return
      */
@@ -77,7 +79,7 @@ public class MoGuFileUtil {
                 log.error("删除单个文件失败：{} 不存在！", fileName);
             }
         }
-        if(successCount == fileNameList.size()) {
+        if (successCount == fileNameList.size()) {
             log.info("所有文件删除成功！");
             return true;
         } else {
@@ -89,8 +91,7 @@ public class MoGuFileUtil {
     /**
      * 删除目录及目录下的文件
      *
-     * @param dir
-     *            要删除的目录的文件路径
+     * @param dir 要删除的目录的文件路径
      * @return 目录删除成功返回true，否则返回false
      */
     public static boolean deleteDirectory(String dir) {
@@ -138,10 +139,10 @@ public class MoGuFileUtil {
     }
 
     public static void main(String[] args) {
-          // 删除单个文件
-          String file = "D:\\mogu_blog\\data\\blog\\admin\\webp\\2020\\6\\15\\123.txt";
-          MoGuFileUtil.deleteFile(file);
-          System.out.println();
+        // 删除单个文件
+        String file = "D:\\mogu_blog\\data\\blog\\admin\\webp\\2020\\6\\15\\123.txt";
+        MoGuFileUtil.deleteFile(file);
+        System.out.println();
 
         // 删除一个目录
 //        String dir = "D:/home/web/upload/upload/files";

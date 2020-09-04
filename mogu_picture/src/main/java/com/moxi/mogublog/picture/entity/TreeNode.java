@@ -1,7 +1,5 @@
 package com.moxi.mogublog.picture.entity;
 
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

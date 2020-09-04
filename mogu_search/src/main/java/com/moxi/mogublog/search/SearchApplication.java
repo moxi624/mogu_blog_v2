@@ -21,7 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.config.feign",
+        "com.moxi.mogublog.commons.config.feign",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.search.config",
         "com.moxi.mogublog.search.mapper",

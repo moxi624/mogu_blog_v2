@@ -155,8 +155,7 @@ export default {
   },
   created() {
     init().then(response => {
-      console.log(response);
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.blogTotal = response.data.blogCount;
         this.commentTotal = response.data.commentCount;
         this.userTotal = response.data.userCount;
@@ -165,7 +164,7 @@ export default {
     });
 
     getVisitByWeek().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         var visitByWeek = response.data;
         var lineChartData = {
           date: visitByWeek.date,
@@ -179,7 +178,7 @@ export default {
 
     //通过标签获取博客数目
     getBlogCountByTag().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.blogCountByTag = response.data;
 
         var tagList = this.blogCountByTag;
@@ -194,7 +193,7 @@ export default {
 
     //通过博客分类获取博客数目
     getBlogCountByBlogSort().then(response => {
-      if (response.code == "success") {
+      if (response.code == this.$ECode.SUCCESS) {
         this.blogCountByBlogSort = response.data;
 
         var blogSortList = this.blogCountByBlogSort;

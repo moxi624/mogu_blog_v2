@@ -24,6 +24,10 @@ Object.defineProperty(Vue.prototype, '$xss', {
   value: xss
 })
 
+// 引入全局工具类
+import prototype from './utils/prototype'
+Vue.use(prototype)
+
 Vue.directive('highlight', function (el) {
   let blocks = el.querySelectorAll('pre code');
   blocks.forEach((block) => {
