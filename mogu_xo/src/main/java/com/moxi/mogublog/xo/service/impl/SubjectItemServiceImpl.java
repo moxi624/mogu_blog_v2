@@ -97,7 +97,6 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
             repeatBlogList.add(item.getBlogUid());
         });
 
-
         List<SubjectItem> subjectItemList = new ArrayList<>();
         for (SubjectItemVO subjectItemVO : subjectItemVOList) {
             if (StringUtils.isEmpty(subjectItemVO.getSubjectUid()) || StringUtils.isEmpty(subjectItemVO.getBlogUid())) {

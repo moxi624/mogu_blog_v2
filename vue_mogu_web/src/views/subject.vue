@@ -85,7 +85,6 @@ export default {
       this.subjectList();
     },
     showSubjectItemList(selectSubjectUid) {
-      console.log("显示列表", selectSubjectUid)
       this.selectSubjectUid = selectSubjectUid
       this.visiable = !this.visiable
     },

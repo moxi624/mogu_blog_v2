@@ -49,7 +49,7 @@ public class SubjectRestApi {
 
     @ApiOperation(value = "获取专题Item列表", notes = "获取专题Item列表", response = String.class)
     @PostMapping("/getItemList")
-    public String getList(@Validated({GetList.class}) @RequestBody SubjectItemVO subjectItemVO, BindingResult result) {
+    public String getItemList(@Validated({GetList.class}) @RequestBody SubjectItemVO subjectItemVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
         return ResultUtil.result(SysConf.SUCCESS, subjectItemService.getPageList(subjectItemVO));

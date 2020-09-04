@@ -14,13 +14,12 @@
             v-for="item in subjectItemlist"
             :key="item.uid"
             class="blogs"
-            data-scroll-reveal="enter bottom over 1s"
           >
             <el-timeline-item :timestamp="item.createTime" placement="top">
               <el-card>
                 <span class="blogpic" @click="goToInfo(item.blog.uid)">
                   <a href="javascript:void(0);" title>
-                    <img v-if="item.blog.photoList" :src="item.blog.photoList[0]" alt>
+                    <img v-if="item.blog && item.blog.photoList.length > 0" :src="item.blog.photoList[0]" alt>
                   </a>
                 </span>
                 <p class="blogtext" style="font-weight: bold; cursor: pointer;" @click="goToInfo(item.blog.uid)">{{item.blog.title}}</p>
@@ -67,31 +66,43 @@
           this.drawer = this.visiable;
         },
         subjectUid: function () {
+          this.currentPage = 1
+          this.subjectItemlist = []
           this.getList()
         }
       },
       data() {
         return {
           drawer: this.visiable,
-          subjectItemlist: []
+          subjectItemlist: [],
+          pageSize: 50,
+          currentPage: 1,
+          total: 0,
         };
       },
       created() {
-        console.log("修改状态")
-        this.getList()
+        // this.getList()
       },
       methods: {
         getList() {
           var params = {};
           params.subjectUid = this.subjectUid;
-          params.pageSize = 50;
-          params.currentPage = 1;
+          params.pageSize = this.pageSize;
+          params.currentPage = this.currentPage;
           getSubjectItemList(params).then(response => {
-            console.log("得到的Subject列表", response)
             if(response.code == this.$ECode.SUCCESS) {
-              this.subjectItemlist = response.data.records
+              let itemList = response.data.records
+              let oldItemList = this.subjectItemlist
+              this.currentPage = response.data.current
+              this.total = response.data.total
+              this.subjectItemlist = oldItemList.concat(itemList);
             }
           })
+        },
+        load() {
+          // console.log("加载")
+          // this.currentPage = this.currentPage + 1
+          // this.getList()
         },
         beforeClose() {
           //取消时，关闭侧边栏
@@ -134,6 +145,7 @@
   }
   .blogs {
     margin-bottom: 0px;
+    padding: 20px;
   }
   .blogs .blogtext {
     margin-top: 0px;
