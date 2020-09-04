@@ -89,7 +89,7 @@
       <el-form :model="form" :rules="rules" ref="form">
 
         <el-form-item label="封面图" :label-width="formLabelWidth">
-          <div class="imgBody" v-if="form.photoList">
+          <div class="imgBody" v-if="form.photoList && form.photoList.length > 0">
             <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
             <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
           </div>
@@ -229,7 +229,8 @@ export default {
       this.photoVisible = false;
     },
     deletePhoto: function() {
-      this.form.photoList = null;
+      console.log("要删除的", this.form)
+      this.form.photoList = [];
       this.form.fileUid = "";
     },
     //改变页码

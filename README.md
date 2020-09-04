@@ -41,10 +41,10 @@
 
 蘑菇博客，一个基于微服务架构的前后端分离博客系统。前台使用Vue + Element , 后端使用spring boot + spring cloud + mybatis-plus进行开发，使用  Jwt + Spring Security做登录验证和权限校验，使用ElasticSearch和Solr作为全文检索服务，使用Github Actions完成博客的持续集成，文件支持上传七牛云，使用uniapp和ColorUi搭建移动端博客平台。
 
-- 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，在加上没怎么接触公司实际项目，故有能改正的地方，还请各位老哥能够指出~
-- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
-- 由于原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
-- 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因部署时遇到问题，无法完成正常部署，故搁置...欢迎有了解nuxt或者SEO优化的老哥一起探讨~）
+- 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，故有能改正的地方，还请各位老哥能够指出~
+- 现在挺多是SSM或者SSH的博客管理系统，想用spring boot + spring cloud  + vue 的微服务架构进行尝试项目的构建，里面很多功能可能只是为了满足自己的学习需求而引入的，大家可以根据自己服务器配置来选择启动的服务，因此本博客也是一个非常好的SpringBoot、SpringCloud以及Vue技术的入门学习项目。
+- 原来做过vue + element-ui 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
+- 考虑到门户网站使用Vue不是很好支持SEO优化，所以门户网站采用Nuxt.js进行开发（因开发时遇到问题，nuxt的项目暂时搁置...欢迎有了解nuxt或者Vue SEO优化的老哥一起探讨~）
 - [蘑菇博客](http://moguit.cn/#/)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了JVM、JUC、Java，Spring，SpringCloud，计算机网络，操作系统，数据结构，Vue、Linux 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes)一下
 
 ## 站点演示
@@ -77,7 +77,7 @@
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
 
-`nacos`，`nginx`，`rabbitmq`, `redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
+`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
@@ -87,9 +87,9 @@
 
 > 【阿里云】 限量爆款低至91.8元/年 [点我进入](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
 >
-> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元 [点我进入](https://url.cn/ehxjf5Bv)
+> 【腾讯云】十周年感恩回馈，1核2G云服务器首年95元 [点我进入](https://cloud.tencent.com/act/cps/redirect?redirect=1067&cps_key=4e9b8ce643afe47621493331d101dd6e&from=console)
 >
-> 【阿里云翼计划】 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
+> 【阿里云翼计划】 轻量级应用服务器 1核2G 5M / 年 (博主目前使用的) 仅需114元  [点我进入 ](https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.10695662.1244717.1.641e5a06KpmU4A&accounttraceid=3ac1b990a4f445859080d2555566af8fiirr?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link?userCode=w7aungxw&tag=share_component&share_source=copy_link&userCode=w7aungxw&tag=share_component&share_source=copy_link) `(仅限学生或未满24岁的用户)`
 
 ## 项目特点
 
@@ -222,9 +222,13 @@
 
 参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在window下搭建蘑菇博客的开发环境
 
-### Docker搭建蘑菇博客
+### Docker搭建蘑菇博客（Eureka分支）
 
 参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在Linux服务器中，搭建好博客系统  
+
+### Docker搭建蘑菇博客（Nacos分支）
+
+参考 [使用Docker快速搭建蘑菇博客（Nacos分支）](http://moguit.cn/#/info?blogUid=8100dcb585fff77e3fa25eed50e3708e)，能够快速在Linux服务器中，搭建好博客系统  
 
 ### 蘑菇博客部署到云服务器
 
@@ -367,6 +371,24 @@
 |                       微信                       |                      支付宝                       |
 | :----------------------------------------------: | :-----------------------------------------------: |
 | <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
+
+## 视频教程
+
+特别感谢 [俺是程序狮](https://space.bilibili.com/277038643) 在B站上给蘑菇博客录制的视频教程，课程讲的非常细致，手把手带着开发博客系统，感兴趣的小伙伴可以去学习和支持一下~
+
+- [项目介绍](https://www.bilibili.com/video/BV1Si4y1u7H4)
+- [结构介绍与本地Nginx本地图片服务器启动](https://www.bilibili.com/video/BV1AA411e7W5)
+- [mysql脚本准备](https://www.bilibili.com/video/BV1kv411v7ND)
+- [后台服务启动](https://www.bilibili.com/video/BV1Nv411i7wu)
+- [RabbitMQ启动](https://www.bilibili.com/video/BV1mD4y1U7GT)
+- [前端项目启动](https://www.bilibili.com/video/BV1B541187Ez)
+- [后台管理系统的前端工程结构介绍](https://www.bilibili.com/video/BV1D54y1U78F)
+- [后台管理系统登录页](https://www.bilibili.com/video/BV1854y127d6)
+- [后台管理系统登录页2](https://www.bilibili.com/video/BV1DD4y1d7Tx)
+- [登录页请求处理](https://www.bilibili.com/video/BV1aT4y1w7Ux)
+- [前端发起登录认证](https://www.bilibili.com/video/BV1Rp4y1Y7fj)
+- [vuerouter路由配置](https://www.bilibili.com/video/BV14A411n72S)
+- .....
 
 ## 移动端截图
 

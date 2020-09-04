@@ -13,3 +13,4 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
+dist.zip
