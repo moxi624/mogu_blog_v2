@@ -1,4 +1,4 @@
-name: mogu CI/CD
+name: mogu_nacos CI/CD/DEV
 
 on: 
   push:
@@ -29,12 +29,6 @@ jobs:
     - name: Download config file and replace
       run: |
         git clone git@github.com:moxi624/mogu_prod_configuration.git
-        mv -f ./mogu_prod_configuration/config/mogu_admin/application.yml ./mogu_admin/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/config/mogu_eureka/application.yml ./mogu_eureka/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/config/mogu_picture/application.yml ./mogu_picture/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/config/mogu_sms/application.yml ./mogu_sms/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/config/mogu_web/application.yml ./mogu_web/src/main/resources/application.yml
-        mv -f ./mogu_prod_configuration/config/mogu_search/application.yml ./mogu_search/src/main/resources/application.yml
         mv -f ./mogu_prod_configuration/config/vue_mogu_admin/prod.env.js ./vue_mogu_admin/config/prod.env.js
         mv -f ./mogu_prod_configuration/config/vue_mogu_web/prod.env.js ./vue_mogu_web/config/prod.env.js
     - name: Build Java jar
@@ -59,7 +53,6 @@ jobs:
         mkdir -p transfer_files
         mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
         mv ./mogu_sms/target/mogu_sms-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar
-        mv ./mogu_eureka/target/mogu_eureka-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar
         mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
         mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
         mv ./mogu_search/target/mogu_search-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_search-0.0.1-SNAPSHOT.jar
@@ -111,20 +104,6 @@ jobs:
           fi
           mv /home/transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
 
-
-          echo "################# mogu_eureka moving #################"
-
-          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak" ];then
-            echo "mogu_eureka.jar.bak exists and is being deleted"
-            rm -f /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
-          fi
-          if [ -f "/home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar" ];then
-            echo "mogu_eureka.jar exists and is being backup"
-            mv /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar.bak
-          fi
-          mv /home/transfer_files/mogu_eureka-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_eureka/mogu_eureka-0.0.1-SNAPSHOT.jar
-
-
           echo "################# mogu_picture moving #################"
 
           if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak" ];then
@@ -150,7 +129,6 @@ jobs:
           fi
           mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
           
-          
           echo "################# mogu_search moving #################"
 
           if [ -f "/home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak" ];then
@@ -165,6 +143,7 @@ jobs:
 
 
           echo "################# vue_mogu_web moving #################"
+
           if [ -d "/home/mogu_blog/vue_mogu_web/dist.bak/" ];then
             echo "vue_mogu_web dist.bak exists and is being deleted"
             cd /home/mogu_blog/vue_mogu_web
@@ -175,8 +154,10 @@ jobs:
             mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
           fi
           mv /home/transfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
+          
 
           echo "################# vue_mogu_admin moving #################"
+
           if [ -d "/home/mogu_blog/vue_mogu_admin/dist.bak/" ];then
             echo "vue_mogu_admin dist.bak exists and is being deleted"
             cd /home/mogu_blog/vue_mogu_admin
@@ -190,21 +171,9 @@ jobs:
 
           echo "################# rm transfer_files.tar.gz #################"
           rm -rf /home/transfer_files.tar.gz
-
           echo "################# rm transfer_files #################"
           rm -rf /home/transfer_files
 
-    - name: Start mogu_eureka
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DOCKER_IP }}
-        username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        port: ${{ secrets.DOCKER_PORT }}
-        script: |
-          cd /home/mogu_blog/mogu_eureka/
-          ./shutdown.sh
-          ./startup.sh
     - name: Start mogu_picture
       uses: appleboy/ssh-action@master
       with:
@@ -249,14 +218,3 @@ jobs:
           cd /home/mogu_blog/mogu_web/
           ./shutdown.sh
           ./startup.sh
-    
-    - name: Start mogu_search
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.DOCKER_IP_DEV }}
-        username: ${{ secrets.DOCKER_ID }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        port: ${{ secrets.DOCKER_PORT }}
-        script: |
-          cd /home/mogu_blog/mogu_search/
-          ./shutdown.sh
