@@ -1,4 +1,4 @@
-name: mogu_nacos CI/CD/DEV
+name: mogu_master CI/CD/master
 
 on: 
   push:
