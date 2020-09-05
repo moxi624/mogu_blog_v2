@@ -358,7 +358,7 @@
   }
   .commentList .rightCenter {
     margin-left: 20px;
-    height: 50px;
+    min-height: 50px;
     margin-top: 15px;
   }
   .commentList .rightBottom {

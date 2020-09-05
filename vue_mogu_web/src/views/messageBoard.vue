@@ -80,7 +80,7 @@
               params.currentPage = that.currentPage + 1
               params.pageSize = that.pageSize;
               getCommentList(params).then(response => {
-                if (response.code == this.$ECode.SUCCESS) {
+                if (response.code == that.$ECode.SUCCESS) {
                   that.comments = that.comments.concat(response.data.records);
                   that.setCommentList(this.comments);
                   that.currentPage = response.data.current;
