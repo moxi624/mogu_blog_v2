@@ -878,7 +878,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         }
 
-
         List<MultipartFile> fileList = new ArrayList<>();
         for (MultipartFile file : filedatas) {
             String fileName = file.getOriginalFilename();

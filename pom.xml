@@ -42,7 +42,7 @@
         <springBootAdmin.version>2.2.1</springBootAdmin.version>
         <JustAuth.version>1.15.1</JustAuth.version>
         <dyuproject.version>1.1.5</dyuproject.version>
-        <flexmark.version>0.61.0</flexmark.version>
+        <flexmark.version>0.62.2</flexmark.version>
         <ip2region.version>1.7.2</ip2region.version>
         <oshi.version>3.9.1</oshi.version>
         <freemarker.version>2.3.28</freemarker.version>
