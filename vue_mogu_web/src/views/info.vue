@@ -95,15 +95,13 @@
         </ul>
       </div>
     </div>
-    <div class="sidebar2">
-
+    <div class="sidebar2" v-if="showSidebar">
       <side-catalog
         :class="vueCategory"
         v-bind="catalogProps"
       >
       </side-catalog>
     </div>
-
   </article>
 </template>
 
@@ -134,6 +132,7 @@
                 catalogSum: 0,
                 showStickyTop: false,
                 showSideCatalog: true,
+                showSidebar: true, //是否显示侧边栏
                 blogContent: "",
                 catalogProps: {
                   // 内容容器selector(必需)
@@ -256,6 +255,19 @@
               });
             }
           })
+
+
+          // 屏幕自适应
+          window.onresize = () => {
+            return (() => {
+              window.screenWidth = document.body.clientWidth
+              if(window.screenWidth > 950) {
+                that.showSidebar = true
+              } else {
+                that.showSidebar = false
+              }
+            })()
+          }
         },
         created() {
             this.loadingInstance = Loading.service({

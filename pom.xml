@@ -85,7 +85,7 @@
         </dependencies>
     </dependencyManagement>
 
-<!--    &lt;!&ndash;阿里云镜像源&ndash;&gt;-->
+<!--阿里云镜像源（因需要提交到GithubActions，会引起依赖下载过慢的问题）-->
 <!--    <repositories>-->
 <!--        <repository>-->
 <!--            <id>nexus-aliyun</id>-->

@@ -41,7 +41,7 @@ public class AdminRestApi {
     @ApiOperation(value = "获取管理员列表", notes = "获取管理员列表")
     @PostMapping("/getList")
     public String getList(@Validated({GetList.class}) @RequestBody AdminVO adminVO, BindingResult result) {
-
+        // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return adminService.getList(adminVO);
     }
@@ -90,7 +90,8 @@ public class AdminRestApi {
     @ApiOperation(value = "获取在线管理员列表", notes = "获取在线管理员列表", response = String.class)
     @PostMapping(value = "/getOnlineAdminList")
     public String getOnlineAdminList(@Validated({GetList.class}) @RequestBody AdminVO adminVO, BindingResult result) {
-
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
         return adminService.getOnlineAdminList(adminVO);
     }
 
@@ -101,6 +102,5 @@ public class AdminRestApi {
     public String forceLogout(@ApiParam(name = "tokenList", value = "tokenList", required = false) @RequestBody List<String> tokenList) {
         return adminService.forceLogout(tokenList);
     }
-
 }
 

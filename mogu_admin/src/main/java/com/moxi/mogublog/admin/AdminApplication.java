@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @EnableTransactionManagement
-//redis和velocity的包会起冲突
 @SpringBootApplication
 @EnableSwagger2
 @EnableDiscoveryClient

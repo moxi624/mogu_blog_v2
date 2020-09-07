@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- * 登录管理RestApi(为了更好地使用security放行把登录管理放在AuthRestApi中)
+ * 登录管理 RestApi(为了更好地使用security放行把登录管理放在AuthRestApi中)
  * </p>
  *
  * @author limbo
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/auth")
-@Api(value = "登录管理相关接口", tags = {"登录管理相关接口"})
+@Api(value = "登录相关接口", tags = {"登录相关接口"})
 @Slf4j
 public class LoginRestApi {
 
@@ -270,8 +270,12 @@ public class LoginRestApi {
         ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attribute.getRequest();
         String token = request.getAttribute(SysConf.TOKEN).toString();
-        redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        if(StringUtils.isEmpty(token)) {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+        } else {
+            redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        }
     }
 
     /**
@@ -292,7 +296,6 @@ public class LoginRestApi {
             surplusCount = surplusCount - 1;
             redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, "1", 30, TimeUnit.MINUTES);
         }
-
         return surplusCount;
     }
 
