@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +21,10 @@ import java.util.TimeZone;
 @EnableScheduling
 @EnableTransactionManagement
 @SpringBootApplication
-@EnableSwagger2
+@EnableOpenApi
 @EnableDiscoveryClient
-@EnableAsync // 开启异步
+// 开启异步
+@EnableAsync
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config",

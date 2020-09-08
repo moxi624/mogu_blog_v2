@@ -57,22 +57,17 @@
             </exclusions> -->
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-
         <!-- RabbitMq  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.ui.version}</version>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${swagger.starter.version}</version>
         </dependency>
 
         <!-- 添加Eureka相关依赖 -->

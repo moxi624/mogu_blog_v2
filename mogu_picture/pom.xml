@@ -72,16 +72,11 @@
             <version>${servlet.api.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.ui.version}</version>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${swagger.starter.version}</version>
         </dependency>
 
         <!-- 添加Eureka相关依赖 -->

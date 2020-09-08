@@ -9,12 +9,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 
 @EnableTransactionManagement
 @SpringBootApplication
-@EnableSwagger2
+@EnableOpenApi
 @EnableDiscoveryClient
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {

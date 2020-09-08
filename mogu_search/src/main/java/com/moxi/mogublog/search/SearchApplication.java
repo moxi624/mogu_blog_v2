@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -17,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @date 2020年1月10日21:08:23
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableSwagger2
+@EnableOpenApi
 @EnableDiscoveryClient
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {

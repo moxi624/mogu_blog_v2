@@ -33,14 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 允许对于网站静态资源的无授权访问
                 .antMatchers(
-                        "/v2/api-docs",
-                        "/configuration/ui",
-                        "/swagger-resources",
-                        "/configuration/security",
                         "/swagger-ui.html",
-                        "/webjars/**",
+                        "/swagger-ui/*",
                         "/swagger-resources/**",
-                        "/swagge‌​r-ui.html",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/webjars/**",
                         "/actuator/**"
                 ).permitAll()
                 // 对于获取token的rest api要允许匿名访问

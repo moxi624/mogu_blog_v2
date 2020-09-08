@@ -35,17 +35,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
  * 用户登录RestApi，系统自带的登录注册功能
  * 第三方登录请移步AuthRestApi
- * </p>
- *
  * @author 陌溪
- * @since 2020年5月6日17:50:23
+ * @date 2020年5月6日17:50:23
  */
 @RestController
 @RequestMapping("/login")
-@Api(value = "登录管理相关接口", tags = {"loginRestApi"})
+@Api(value = "登录管理相关接口", tags = {"登录管理相关接口"})
 @Slf4j
 public class LoginRestApi {
 
