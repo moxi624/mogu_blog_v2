@@ -1,29 +1,26 @@
-/*
- * Hopscotch
- * by Jan T. Sott
- * https://github.com/idleberg/Hopscotch
- *
- * This work is licensed under the Creative Commons CC0 1.0 Universal License
- */
+/* lioshi Theme */
+/* Original theme - https://github.com/lioshi/vscode-lioshi-theme */
 
 /* Comment */
-.hljs-comment,
+.hljs-comment {
+  color: #8d8d8d;
+}
+
+/* quote */
 .hljs-quote {
-  color: #989498;
+  color: #b3c7d8;
 }
 
 /* Red */
 .hljs-variable,
 .hljs-template-variable,
-.hljs-attribute,
 .hljs-tag,
 .hljs-name,
 .hljs-selector-id,
 .hljs-selector-class,
 .hljs-regexp,
-.hljs-link,
 .hljs-deletion {
-  color: #dd464c;
+  color: #cc6666;
 }
 
 /* Orange */
@@ -32,46 +29,49 @@
 .hljs-builtin-name,
 .hljs-literal,
 .hljs-type,
-.hljs-params {
-  color: #fd8b19;
+.hljs-subst
+.hljs-link {
+  color: #de935f;
 }
 
 /* Yellow */
-.hljs-class .hljs-title {
-  color: #fdcc59;
+.hljs-attribute {
+  color: #f0c674;
 }
 
 /* Green */
 .hljs-string,
-.hljs-symbol,
 .hljs-bullet,
+.hljs-params,
 .hljs-addition {
-  color: #8fc13e;
-}
-
-/* Aqua */
-.hljs-meta {
-  color: #149b93;
+  color: #b5bd68;
 }
 
 /* Blue */
-.hljs-function,
-.hljs-section,
-.hljs-title {
-  color: #1290bf;
+.hljs-title,
+.hljs-meta,
+.hljs-section {
+  color: #81a2be;
 }
 
 /* Purple */
+.hljs-selector-tag,
 .hljs-keyword,
-.hljs-selector-tag {
-  color: #c85e7c;
+.hljs-function,
+.hljs-class {
+  color: #be94bb;
+}
+
+/* Purple light */
+.hljs-symbol {
+  color: #dbc4d9;
 }
 
 .hljs {
   display: block;
   overflow-x: auto;
-  background: #322931;
-  color: #b9b5b8;
+  background: #303030;
+  color: #c5c8c6;
   padding: 0.5em;
 }
 
@@ -82,3 +82,7 @@
 .hljs-strong {
   font-weight: bold;
 }
+
+
+
+

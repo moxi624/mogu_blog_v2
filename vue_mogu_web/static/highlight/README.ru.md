@@ -12,7 +12,7 @@ Highlight.js — это инструмент для подсветки синт�
 
 ```html
 <link rel="stylesheet" href="/path/to/styles/default.css">
-<script src="/path/to/highlight.pack.js"></script>
+<script src="/path/to/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 ```
 
@@ -40,11 +40,11 @@ Highlight.js — это инструмент для подсветки синт�
 можно управлять тем, *что* и *когда* подсвечивать.
 
 Вот пример инициализации, эквивалентной вызову [`initHighlightingOnLoad`][1], но
-с использованием jQuery:
+с использованием `document.addEventListener`:
 
-```javascript
-$(document).ready(function() {
-  $('pre code').each(function(i, block) {
+```js
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelectorAll('pre code').forEach((block) => {
     hljs.highlightBlock(block);
   });
 });
@@ -54,10 +54,10 @@ $(document).ready(function() {
 используете контейнер, не сохраняющий переводы строк, вам нужно сказать
 highlight.js использовать для них тег `<br>`:
 
-```javascript
+```js
 hljs.configure({useBR: true});
 
-$('div.code').each(function(i, block) {
+document.querySelectorAll('div.code').forEach((block) => {
   hljs.highlightBlock(block);
 });
 ```
@@ -72,23 +72,23 @@ $('div.code').each(function(i, block) {
 
 В основном скрипте:
 
-```javascript
-addEventListener('load', function() {
-  var code = document.querySelector('#code');
-  var worker = new Worker('worker.js');
-  worker.onmessage = function(event) { code.innerHTML = event.data; }
+```js
+addEventListener('load', () => {
+  const code = document.querySelector('#code');
+  const worker = new Worker('worker.js');
+  worker.onmessage = (event) => { code.innerHTML = event.data; }
   worker.postMessage(code.textContent);
-})
+});
 ```
 
 В worker.js:
 
-```javascript
-onmessage = function(event) {
-  importScripts('<path>/highlight.pack.js');
-  var result = self.hljs.highlightAuto(event.data);
+```js
+onmessage = (event) => {
+  importScripts('<path>/highlight.min.js');
+  const result = self.hljs.highlightAuto(event.data);
   postMessage(result.value);
-}
+};
 ```
 
 
@@ -107,7 +107,8 @@ Highlight.js можно использовать в браузере прямо 
 вручную:
 
 ```html
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/go.min.js"></script>
+<script charset="UTF-8"
+ src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/languages/go.min.js"></script>
 ```
 
 **Про Almond.** Нужно задать имя модуля в оптимизаторе, например:
@@ -130,7 +131,7 @@ Highlight.js распространяется под лицензией BSD. П�
 Более подробная документация по API и другим темам расположена на
 <http://highlightjs.readthedocs.io/>.
 
-Авторы и контрибьюторы перечислены в файле [AUTHORS.ru.txt][8] file.
+Авторы и контрибьюторы перечислены в файле [AUTHORS.txt][8] file.
 
 [1]: http://highlightjs.readthedocs.io/en/latest/api.html#inithighlightingonload
 [2]: http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html
@@ -139,4 +140,4 @@ Highlight.js распространяется под лицензией BSD. П�
 [5]: https://highlightjs.org/download/
 [6]: http://highlightjs.readthedocs.io/en/latest/building-testing.html
 [7]: https://github.com/highlightjs/highlight.js/blob/master/LICENSE
-[8]: https://github.com/highlightjs/highlight.js/blob/master/AUTHORS.ru.txt
+[8]: https://github.com/highlightjs/highlight.js/blob/master/AUTHORS.txt

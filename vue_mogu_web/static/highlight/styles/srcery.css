@@ -1,21 +1,21 @@
 /*
-
-Darcula color scheme from the JetBrains family of IDEs
-
+Description: Srcery dark color scheme for highlight.js
+Author: Chen Bin <chen.bin@gmail.com>
+Website: https://srcery-colors.github.io/
+Date: 2020-04-06
 */
-
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #2b2b2b;
-  color: #bababa;
+  background: #1C1B19;
+  color: #FCE8C3;
 }
 
 .hljs-strong,
 .hljs-emphasis {
-  color: #a8a8a2;
+  color: #918175;
 }
 
 .hljs-bullet,
@@ -24,12 +24,12 @@ Darcula color scheme from the JetBrains family of IDEs
 .hljs-number,
 .hljs-regexp,
 .hljs-literal {
-  color: #6896ba;
+  color: #FF5C8F;
 }
 
 .hljs-code,
 .hljs-selector-class {
-  color: #a6e22e;
+  color: #68A8E4
 }
 
 .hljs-emphasis {
@@ -40,21 +40,25 @@ Darcula color scheme from the JetBrains family of IDEs
 .hljs-selector-tag,
 .hljs-section,
 .hljs-attribute,
-.hljs-name,
 .hljs-variable {
-  color: #cb7832;
+  color: #EF2F27;
 }
 
+.hljs-name,
+.hljs-title {
+  color: #FBB829;
+}
+
+.hljs-type,
 .hljs-params {
-  color: #b9b9b9;
+  color: #0AAEB3;
 }
 
 .hljs-string {
-  color: #6a8759;
+  color: #98BC37;
 }
 
 .hljs-subst,
-.hljs-type,
 .hljs-built_in,
 .hljs-builtin-name,
 .hljs-symbol,
@@ -64,11 +68,11 @@ Darcula color scheme from the JetBrains family of IDEs
 .hljs-template-tag,
 .hljs-template-variable,
 .hljs-addition {
-  color: #e0c46c;
+  color: #C07ABE;
 }
 
 .hljs-comment,
 .hljs-deletion,
 .hljs-meta {
-  color: #7f7f7f;
+  color: #918175;
 }
