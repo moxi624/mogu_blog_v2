@@ -1,12 +1,15 @@
-package com.moxi.mougblog.base.exception;
+package com.moxi.mougblog.base.exception.exceptionType;
 
 /**
+ * 业务异常
  * @Author: 陌溪
  * @Date: 2019年12月4日22:47:32
  */
 public class BusinessException extends RuntimeException {
 
-    // 异常编码
+    /**
+     * 异常编码
+     */
     private String code;
 
     public BusinessException() {
@@ -18,7 +21,6 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
-        this.code = code;
     }
 
     public BusinessException(String message, String code) {

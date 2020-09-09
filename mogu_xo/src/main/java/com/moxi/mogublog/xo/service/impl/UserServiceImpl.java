@@ -15,6 +15,7 @@ import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
@@ -244,7 +245,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
     public String resetUserPassword(UserVO userVO) {
         String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
         if (StringUtils.isEmpty(defaultPassword)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+            throw new UpdateException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
         }
         User user = userService.getById(userVO.getUid());
         user.setPassWord(MD5Utils.string2MD5(defaultPassword));

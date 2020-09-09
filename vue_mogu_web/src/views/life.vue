@@ -1,15 +1,8 @@
 <template>
 <html>
 
-<Head></Head>
-
 <body>
-<!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：顶部标题
--->
-<BlogHead></BlogHead>
+
 
 <div class="pagebg sh"></div>
 <div class="container">
@@ -283,9 +276,9 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="pagelist"><a title="Total record">&nbsp;<b>45</b> </a>&nbsp;&nbsp;&nbsp;<b>1</b>&nbsp;<a href="/download/index_2.html">2</a>&nbsp;<a href="/download/index_2.html">下一页</a>&nbsp;<a href="/download/index_2.html">尾页</a></div>
-    
+
   </div>
   <!--blogsbox end-->
   <div class="sidebar">
@@ -351,7 +344,7 @@
         <a href="/">陌上花开</a> <a href="/">校园生活</a> <a href="/">html5</a> <a href="/">SumSung</a> <a href="/">青春</a> <a href="/">温暖</a> <a href="/">阳光</a> <a href="/">三星</a><a href="/">索尼</a> <a href="/">华维荣耀</a> <a href="/">三星</a> <a href="/">索尼</a>
       </ul>
     </div>
-    
+
     <div class="guanzhu" id="follow-us">
       <h2 class="hometitle">关注我们 么么哒！</h2>
       <ul>
@@ -366,12 +359,6 @@
   </div>
 </div>
 
-<!--
-	作者：xzx19950624@qq.com
-	时间：2018-07-15
-	描述：博客底部
--->
-<BlogFooter></BlogFooter>
 
 <a href="#" class="cd-top">Top</a>
 </body>
@@ -379,21 +366,18 @@
 </template>
 
 <script>
-import Head from '../components/Head';
-import BlogHead from '../components/BlogHead';
-import BlogFooter from '../components/BlogFooter';
 export default {
   name: 'life',
   data () {
   	return {
-  		
+
     };
   },
   components: {
   	//注册组件
   	BlogHead,
     BlogFooter,
-    Head  	
+    Head
   }
 }
 </script>

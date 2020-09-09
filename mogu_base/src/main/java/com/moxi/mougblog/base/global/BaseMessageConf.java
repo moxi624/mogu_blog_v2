@@ -22,7 +22,6 @@ public class BaseMessageConf {
     public static final String PLEASE_SET_QI_NIU = "请先配置七牛云";
     public static final String PLEASE_SET_LOCAL = "请先配置本地图片域名";
 
-
     public static final String KEYWORD_IS_NOT_EMPTY = "关键字不能为空";
 
     public static final String COMMENT_IS_NOT_EXIST = "该评论不存在";
@@ -71,5 +70,8 @@ public class BaseMessageConf {
 
     public static final String LOGIN_TIMEOUT = "您已退出，请重新登录";
 
-    public static final String PLEASE_CONFIGURE_A_PASSWORD = "请先到参数配置，配置默认密码";
+    public static final String PLEASE_CONFIGURE_PASSWORD = "请先到参数配置，配置默认密码";
+    public static final String PLEASE_CONFIGURE_BLOG_COUNT = "请先到参数配置，配置博客显示数量";
+    public static final String PLEASE_CONFIGURE_TAG_COUNT = "请先到参数配置，配置标签显示数量";
+    public static final String PLEASE_CONFIGURE_LINK_COUNT = "请先到参数配置，配置友情链接显示数量";
 }

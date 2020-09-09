@@ -12,7 +12,7 @@
 import { getWebConfig } from "../../api/index";
 
 export default {
-  name: "Footer",
+  name: "Head",
   data() {
     return {
       info: {}

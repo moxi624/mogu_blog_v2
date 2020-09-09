@@ -74,6 +74,7 @@ export default {
   },
   created() {
     getWebConfig().then(response => {
+      console.log("从接口中获取")
       if (response.code == this.$ECode.SUCCESS) {
         this.webConfigData = response.data;
         this.payCode = this.webConfigData.aliPayPhoto;

@@ -41,7 +41,7 @@ import java.util.List;
 public class SysParamsRestApi {
 
     @Autowired
-    SysParamsService SysParamsService;
+    SysParamsService sysParamsService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取参数配置列表", notes = "获取参数配置列表", response = String.class)
@@ -51,7 +51,7 @@ public class SysParamsRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取参数配置列表");
-        return ResultUtil.result(SysConf.SUCCESS, SysParamsService.getPageList(SysParamsVO));
+        return ResultUtil.result(SysConf.SUCCESS, sysParamsService.getPageList(SysParamsVO));
     }
 
     @AvoidRepeatableCommit
@@ -63,7 +63,7 @@ public class SysParamsRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return SysParamsService.addSysParams(sysParamsVO);
+        return sysParamsService.addSysParams(sysParamsVO);
     }
 
     @AuthorityVerify
@@ -74,7 +74,7 @@ public class SysParamsRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return SysParamsService.editSysParams(SysParamsVO);
+        return sysParamsService.editSysParams(SysParamsVO);
     }
 
     @AuthorityVerify
@@ -83,7 +83,7 @@ public class SysParamsRestApi {
     @PostMapping("/deleteBatch")
     public String delete(@RequestBody List<SysParamsVO> SysParamsVoList, BindingResult result) {
 
-        return SysParamsService.deleteBatchSysParams(SysParamsVoList);
+        return sysParamsService.deleteBatchSysParams(SysParamsVoList);
     }
 }
 

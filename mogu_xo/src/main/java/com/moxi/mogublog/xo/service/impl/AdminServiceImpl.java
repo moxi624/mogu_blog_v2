@@ -19,6 +19,8 @@ import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.AdminVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.AddException;
+import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -222,7 +224,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         String defaultPasswordKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + SysConf.SYS_DEFAULT_PASSWORD;
         String defaultPassword = sysParamsService.getSysParamsValueByKey(defaultPasswordKey);
         if (StringUtils.isEmpty(defaultPassword)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+            throw new AddException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
         }
 
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
@@ -343,7 +345,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     public String resetPwd(AdminVO adminVO) {
         String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
         if (StringUtils.isEmpty(defaultPassword)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_CONFIGURE_A_PASSWORD);
+            throw new UpdateException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
         }
         Admin admin = adminService.getById(adminVO.getUid());
         PasswordEncoder encoder = new BCryptPasswordEncoder();

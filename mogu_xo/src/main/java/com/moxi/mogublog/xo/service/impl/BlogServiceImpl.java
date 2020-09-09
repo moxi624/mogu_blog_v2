@@ -1022,9 +1022,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         //判断redis中是否有文章
         if (StringUtils.isNotEmpty(jsonResult)) {
-            List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+            List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
             IPage pageList = new Page();
-            pageList.setRecords(list);
+            pageList.setRecords(jsonResult2List);
             return pageList;
         }
         Page<Blog> page = new Page<>();
@@ -1093,9 +1093,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             firstBlogList = setBlog(firstBlogList);
             secondBlogList = setBlog(secondBlogList);
 
-            //将从数据库查询的数据缓存到redis中，设置1小时后过期
-            redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList).toString(), 1, TimeUnit.HOURS);
-            redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList).toString(), 1, TimeUnit.HOURS);
+            // 将从数据库查询的数据缓存到redis中，设置1小时后过期 [避免 list 中没有数据而保存至 redis 的情况]
+            if (firstBlogList.size() > 0) {
+                redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList), 1, TimeUnit.HOURS);
+            }
+            if (secondBlogList.size() > 0) {
+                redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList), 1, TimeUnit.HOURS);
+            }
 
             switch (level) {
                 case SysConf.ONE: {
@@ -1113,11 +1117,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
 
         list = setBlog(list);
-
         pageList.setRecords(list);
 
-        //将从数据库查询的数据缓存到redis中
-        redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
+        // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
+        if(list.size() > 0) {
+            redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
+        }
         return pageList;
     }
 
@@ -1127,9 +1132,9 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         String jsonResult = redisUtil.get(SysConf.HOT_BLOG);
         //判断redis中是否有文章
         if (StringUtils.isNotEmpty(jsonResult)) {
-            List list = JsonUtils.jsonArrayToArrayList(jsonResult);
+            List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
             IPage pageList = new Page();
-            pageList.setRecords(list);
+            pageList.setRecords(jsonResult2List);
             return pageList;
         }
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
@@ -1149,10 +1154,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
         list = setBlog(list);
-        //将从热门博客缓存到redis中
-        redisUtil.setEx(SysConf.HOT_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
         pageList.setRecords(list);
-        return null;
+        // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
+        if(list.size() > 0) {
+            redisUtil.setEx(SysConf.HOT_BLOG, JsonUtils.objectToJson(list), 1, TimeUnit.HOURS);
+        }
+        return pageList;
     }
 
     @Override
@@ -1212,13 +1219,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-
         //因为首页并不需要显示内容，所以需要排除掉内容字段
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
-
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
-
         list = setBlog(list);
         pageList.setRecords(list);
         return pageList;
@@ -1269,10 +1273,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         String pariseJsonResult = redisUtil.get(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid);
 
         if (StringUtils.isEmpty(pariseJsonResult)) {
-
             //给该博客点赞数
             redisUtil.set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, "1");
-
             blog.setCollectCount(1);
             blog.updateById();
 
@@ -1282,7 +1284,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             //给该博客点赞 +1
             redisUtil.set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, count.toString());
-
             blog.setCollectCount(count);
             blog.updateById();
         }
@@ -1354,9 +1355,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         page.setSize(pageSize);
 
         IPage<Blog> iPage = blogService.page(page, queryWrapper);
-
         List<Blog> blogList = iPage.getRecords();
-
         List<String> blogSortUidList = new ArrayList<>();
         Map<String, String> pictureMap = new HashMap<>();
         final StringBuffer fileUids = new StringBuffer();

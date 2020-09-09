@@ -41,7 +41,7 @@
 
   import {mapMutations} from 'vuex';
   import CommentBox from "../CommentBox";
-  import {dateFormat, timeAgo, formatData} from "../../utils/webUtils"
+  import {timeAgo} from "../../utils/webUtils"
   import {addComment, deleteComment, getCommentList, reportComment} from "../../api/comment";
   import {getListByDictTypeList} from "@/api/sysDictData"
   export default {

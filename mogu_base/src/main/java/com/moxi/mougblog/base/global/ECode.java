@@ -37,5 +37,4 @@ public class ECode {
      * 请求次数过于频繁
      */
     public static final Integer REQUEST_OVER_LIMIT = 502;
-
 }

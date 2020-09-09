@@ -9,6 +9,7 @@ import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.exception.exceptionType.ReadException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -88,11 +89,9 @@ public class IndexRestApi {
                                 @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                                 @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
-        log.info("按时间戳获取博客");
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
         if (StringUtils.isEmpty(blogNewCount)) {
-            log.error("参数配置有误，需重新配置！");
-            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+            throw new ReadException(MessageConf.PLEASE_CONFIGURE_BLOG_COUNT);
         }
         return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogByTime(currentPage, Long.valueOf(blogNewCount)));
     }
@@ -100,11 +99,9 @@ public class IndexRestApi {
     @ApiOperation(value = "获取最热标签", notes = "获取最热标签")
     @GetMapping("/getHotTag")
     public String getHotTag() {
-        log.info("获取最热标签");
         String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
         if (StringUtils.isEmpty(hotTagCount)) {
-            log.error("参数配置有误，需重新配置！");
-            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+            throw new ReadException(MessageConf.PLEASE_CONFIGURE_TAG_COUNT);
         }
         return ResultUtil.result(SysConf.SUCCESS, tagService.getHotTag(Integer.valueOf(hotTagCount)));
     }
@@ -112,12 +109,9 @@ public class IndexRestApi {
     @ApiOperation(value = "获取友情链接", notes = "获取友情链接")
     @GetMapping("/getLink")
     public String getLink() {
-
-        log.info("获取友情链接");
         String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
         if (StringUtils.isEmpty(friendlyLinkCount)) {
-            log.error("参数配置有误，需重新配置！");
-            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_PARAMS_NOT_FOUNT);
+            throw new ReadException(MessageConf.PLEASE_CONFIGURE_LINK_COUNT);
         }
         return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount)));
     }
@@ -134,7 +128,6 @@ public class IndexRestApi {
     @ApiOperation(value = "获取网站配置", notes = "获取友情链接")
     @GetMapping("/getWebConfig")
     public String getWebConfig() {
-
         log.info("获取网站配置");
         return ResultUtil.result(SysConf.SUCCESS, webConfigService.getWebConfigByShowList());
     }

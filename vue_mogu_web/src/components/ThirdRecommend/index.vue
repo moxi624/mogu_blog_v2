@@ -39,8 +39,6 @@ export default {
 
 	    },
       splitStr(str, flagCount) {
-	      console.log(str)
-	      console.log(this.$commonUtil.splitStr(str, flagCount))
         return this.$commonUtil.splitStr(str, flagCount)
       }
     },
