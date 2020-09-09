@@ -36,7 +36,7 @@ public enum EAccountType {
     /**
      * 微信
      */
-    WeChat("5", "微信");
+    WeChat("6", "微信");
 
 
     private final String code;
