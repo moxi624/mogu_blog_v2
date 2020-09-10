@@ -79,7 +79,7 @@
           </li>
         </ul>
       </div>
-      <div class="news_pl" >
+      <div class="news_pl" :style="opemCommentCss">
         <h2 v-if="openComment == '1'">文章评论</h2>
         <ul v-if="openComment == '1'">
             <CommentBox
@@ -179,6 +179,13 @@
             }
             if(this.showStickyTop && !this.showSideCatalog) {
               return 'catalog2'
+            }
+          },
+          opemCommentCss: function () {
+            if(this.openComment == 0) {
+              return {
+                "min-height": "10px"
+              }
             }
           }
         },

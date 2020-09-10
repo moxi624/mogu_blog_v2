@@ -55,14 +55,14 @@
 
 	    <el-table-column label="评论人" width="100" align="center">
 	      <template slot-scope="scope">
-	        <span v-if="scope.row.user">{{ scope.row.user.nickName }}</span>
+	        <el-tag type="primary" v-if="scope.row.user" style="cursor: pointer;" @click.native="goUser(scope.row.user)">{{ scope.row.user.nickName }}</el-tag>
 	      </template>
 	    </el-table-column>
 
       <el-table-column label="被评论人" width="100" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.toUser">{{ scope.row.toUser.nickName }}</span>
-          <span v-else>无</span>
+          <el-tag type="info" v-if="scope.row.toUser" style="cursor: pointer;" @click.native="goUser(scope.row.user)">{{ scope.row.toUser.nickName }}</el-tag>
+          <el-tag type="info" style="cursor: pointer;" v-else>无</el-tag>
         </template>
       </el-table-column>
 
@@ -175,6 +175,11 @@ export default {
     this.getDictList()
   },
   methods: {
+    // 跳转到用户中心
+    goUser: function(user) {
+      console.log("go user", user)
+      this.$router.push({ path: "/user/user", query: { nickName: user.nickName } });
+    },
     // 跳转到该博客详情
     onClick: function(row) {
       console.log("点击跳转", row)

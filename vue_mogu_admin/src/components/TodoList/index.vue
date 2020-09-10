@@ -20,7 +20,7 @@
           @editTodo="editTodo"
           @deleteTodo="deleteTodo"
           v-for="(todo, index) in filteredTodos"
-          :key="index"
+          :key="todo.uid"
           :todo="todo"
         ></todo>
       </ul>
@@ -93,7 +93,7 @@ export default {
       params.currentPage = 1;
       params.pageSize = 30;
       getList(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.todos = response.data.records;
         }
       });
@@ -106,7 +106,7 @@ export default {
         var params = {};
         params.text = text.trim();
         addTodo(params).then(response => {
-          if (response.code == "success") {
+          if (response.code == this.$ECode.SUCCESS) {
             this.getTodoList();
           }
         });
@@ -115,13 +115,14 @@ export default {
     },
 
     toggleTodo(val) {
+      var that = this
       var params = {};
       params.done = !val.done;
       params.uid = val.uid;
       params.text = val.text;
       editTodo(params).then(response => {
-        if (response.code == "success") {
-          this.getTodoList();
+        if (response.code == this.$ECode.SUCCESS) {
+          this.getTodoList()
         }
       });
 
@@ -130,7 +131,7 @@ export default {
       var params = {};
       params.uid = todo.uid;
       deleteTodo(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.getTodoList();
         }
       });
@@ -140,9 +141,8 @@ export default {
       params.done = todo.done;
       params.uid = todo.uid;
       params.text = value.trim();
-
       editTodo(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.getTodoList();
         }
       });
@@ -156,11 +156,10 @@ export default {
 
     //切换
     toggleAll({ done }) {
-
       var params = {};
       params.done = done;
       toggleAll(params).then(response => {
-        if (response.code == "success") {
+        if (response.code == this.$ECode.SUCCESS) {
           this.getTodoList();
         }
       });

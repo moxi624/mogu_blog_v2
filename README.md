@@ -34,9 +34,8 @@
 项目后台目前有Eureka版本和Nacos版本，其中Eureka版本使用的是SpringCloud一些组件，Nacos版本使用的是SpringCloudAlibaba的一些组件，例如Nacos、Sentinel
 
 - Eureka版本请切换至Eureka分支（将不再进行新功能的开发）
-
 - Nacos版本请切换至Nacos分支（作为以后长期维护的分支）
-
+- master分支为主分支，是基于Nacos分支的稳定版本
 - 目前移动端版本的代码已经开源至Nacos分支，如果想体验的小伙伴可以移动至Nacos分支~
 
 ## 项目介绍
@@ -364,7 +363,7 @@
 2. 把fork过去的项目也就是你仓库中的项目clone到你的本地
 3. 修改代码
 4. commit后push到自己的库
-5. 发起PR（pull request） 请求，提交到`dev`分支
+5. 发起PR（pull request） 请求，提交到`Nacos`分支
 6. 等待作者合并
 
 ## 赞赏

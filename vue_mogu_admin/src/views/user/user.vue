@@ -342,11 +342,10 @@
       AvatarCropper
     },
     created() {
-
       //传递过来的pictureSordUid
       let source = this.$route.query.source;
       let nickName = this.$route.query.nickName;
-      if (source != undefined && nickName != undefined) {
+      if (source != undefined || nickName != undefined) {
         this.accountSourceKeyword = source;
         this.keyword = nickName;
         this.userList();
