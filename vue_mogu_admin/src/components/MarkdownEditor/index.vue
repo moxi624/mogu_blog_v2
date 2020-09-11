@@ -68,6 +68,7 @@
           }
         }
         this.vditor = new Vditor('vditor', options)
+        return this.vditor
         // this.vditor.focus()
       },
       onloadCallback(oEvent) {
@@ -106,11 +107,8 @@
         var that = this;
         this.$nextTick(() => {
           //DOM现在更新了
-          that.initVditor()
-
+          let vditor = that.initVditor()
           let markdownText = that.$commonUtil.htmlToMarkdown(data)
-          console.log("转换前", data)
-          console.log("得到的html", markdownText)
           localStorage.setItem('vditorvditor', markdownText)
         });
       },

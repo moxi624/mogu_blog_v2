@@ -85,6 +85,27 @@ const FUNCTIONS = {
    */
   htmlToMarkdown: text => {
     var turndownService = new TurndownService()
+
+    // 用于提取代码语言
+    turndownService.addRule('CodeBlock', {
+      filter: function (node, options) {
+        return (
+          node.nodeName === 'PRE' &&
+          node.firstChild &&
+          node.firstChild.nodeName === 'CODE'
+        )
+      },
+      replacement: function (content, node, options) {
+        var className = node.firstChild.getAttribute('class') || ''
+        var language = (className.match(/language-(\S+)/) || [null, ''])[1]
+        return (
+          '\n\n' + options.fence + language + '\n' +
+          node.firstChild.textContent +
+          '\n' + options.fence + '\n\n'
+        )
+      }
+    })
+
     var turndownPluginGfm = require('turndown-plugin-gfm')
     var gfm = turndownPluginGfm.gfm
     var tables = turndownPluginGfm.tables
