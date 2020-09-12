@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.WebConfig;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.WebConfigMapper;
@@ -15,6 +17,8 @@ import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.WebConfigVO;
 import com.moxi.mougblog.base.enums.EAccountType;
+import com.moxi.mougblog.base.exception.exceptionType.ReadException;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -38,13 +43,16 @@ import java.util.Map;
 public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebConfig> implements WebConfigService {
 
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Autowired
-    WebConfigService webConfigService;
+    private WebConfigService webConfigService;
 
     @Autowired
     private PictureFeignClient pictureFeignClient;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public WebConfig getWebConfig() {
@@ -79,9 +87,19 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
 
     @Override
     public WebConfig getWebConfigByShowList() {
+        //从Redis中获取IP来源
+        String webConfigResult = redisUtil.get(RedisConf.WEB_CONFIG);
+        if(StringUtils.isNotEmpty(webConfigResult)) {
+            WebConfig webConfig = JsonUtils.jsonToPojo(webConfigResult, WebConfig.class);
+            return webConfig;
+        }
+
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
+        if (webConfig == null) {
+            throw new ReadException("网站配置为空");
+        }
         StringBuilder stringBuilder = new StringBuilder();
         String pictureResult = "";
 
@@ -159,6 +177,8 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
                 webConfig.setWeChat(weChat);
             }
         }
+        // 将WebConfig存到Redis中 [过期时间24小时]
+        redisUtil.setEx(RedisConf.WEB_CONFIG, JsonUtils.objectToJson(webConfig), 24, TimeUnit.HOURS);
         return webConfig;
     }
 
@@ -221,6 +241,10 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
             webConfig.setUpdateTime(new Date());
             webConfigService.updateById(webConfig);
         }
+
+        // 修改配置后，清空Redis中的 WEB_CONFIG
+        redisUtil.delete(RedisConf.WEB_CONFIG);
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 }

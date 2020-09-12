@@ -123,5 +123,10 @@ public class BaseRedisConf {
      */
     public final static String SYSTEM_PARAMS = "SYSTEM_PARAMS";
 
+    /**
+     * 网站配置
+     */
+    public final static String WEB_CONFIG = "WEB_CONFIG";
+
 
 }
