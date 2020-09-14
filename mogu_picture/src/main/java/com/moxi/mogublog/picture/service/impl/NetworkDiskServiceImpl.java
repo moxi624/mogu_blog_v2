@@ -190,7 +190,12 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             }
 
             Storage storage = storageService.getStorageByAdmin();
-            Long storageSize = storage.getStorageSize() - networkDisk.getFileSize();
+            long storageSize = 0L;
+            try {
+                storageSize = storage.getStorageSize() - networkDisk.getFileSize();
+            } catch (Exception e) {
+                log.info("本地文件空间不存在!");
+            }
             storage.setStorageSize(storageSize > 0 ? storageSize : 0L);
             storageService.updateById(storage);
         }

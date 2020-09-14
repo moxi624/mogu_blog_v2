@@ -176,12 +176,18 @@ public class LoginRestApi {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), SysConf.FILE_SEGMENTATION);
             admin.setPhotoList(webUtil.getPicture(pictureList));
 
-            List<String> list = webUtil.getPicture(pictureList);
-
-            if (list.size() > 0) {
-                map.put(SysConf.AVATAR, list.get(0));
-            } else {
-                map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+            List<String> list = null;
+            try {
+                list = webUtil.getPicture(pictureList);
+            } catch (Exception e) {
+                log.info("获取头像失败!");
+            }
+            if (list != null) {
+                if (list.size() > 0) {
+                    map.put(SysConf.AVATAR, list.get(0));
+                } else {
+                    map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+                }
             }
         }
 
@@ -271,7 +277,7 @@ public class LoginRestApi {
         ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attribute.getRequest();
         String token = request.getAttribute(SysConf.TOKEN).toString();
-        if(StringUtils.isEmpty(token)) {
+        if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         } else {
             redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
