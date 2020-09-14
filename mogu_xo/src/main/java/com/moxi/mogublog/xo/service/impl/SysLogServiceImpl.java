@@ -12,6 +12,7 @@ import com.moxi.mogublog.xo.mapper.SysLogMapper;
 import com.moxi.mogublog.xo.service.SysLogService;
 import com.moxi.mogublog.xo.vo.SysLogVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class SysLogServiceImpl extends SuperServiceImpl<SysLogMapper, SysLog> im
 
         if (!StringUtils.isEmpty(sysLogVO.getStartTime())) {
             String[] time = sysLogVO.getStartTime().split(SysConf.FILE_SEGMENTATION);
-            if (time.length == 2) {
+            if (time.length == Constants.NUM_TWO) {
                 queryWrapper.between(SQLConf.CREATE_TIME, DateUtils.str2Date(time[0]), DateUtils.str2Date(time[1]));
             }
         }

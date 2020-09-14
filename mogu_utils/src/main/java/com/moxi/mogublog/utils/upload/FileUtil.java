@@ -10,7 +10,7 @@ public class FileUtil {
     public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java"};
     public static final String[] VIDEO_FILE = {"avi", "mp4", "mpg", "mov", "swf"};
     public static final String[] MUSIC_FILE = {"wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"};
-    public static final String[] All_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp",
+    public static final String[] ALL_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp",
             "doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java",
             "avi", "mp4", "mpg", "mov", "swf",
             "wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"
@@ -39,7 +39,7 @@ public class FileUtil {
                 fileExtends = Arrays.asList(MUSIC_FILE);
                 break;
             case OTHER_TYPE: {
-                fileExtends = Arrays.asList(All_FILE);
+                fileExtends = Arrays.asList(ALL_FILE);
             }
             break;
             default:

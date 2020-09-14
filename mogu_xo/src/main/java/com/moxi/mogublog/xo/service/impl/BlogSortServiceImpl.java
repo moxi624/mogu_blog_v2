@@ -241,7 +241,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
     public BlogSort getTopOne() {
         QueryWrapper<BlogSort> blogSortQueryWrapper = new QueryWrapper<>();
         blogSortQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        blogSortQueryWrapper.last("LIMIT 1");
+        blogSortQueryWrapper.last(SysConf.LIMIT_ONE);
         blogSortQueryWrapper.orderByDesc(SQLConf.SORT);
         BlogSort blogSort = blogSortService.getOne(blogSortQueryWrapper);
         return blogSort;

@@ -68,7 +68,7 @@ public class StorageRestApi {
     @RequestMapping(value = "/totationimage", method = RequestMethod.POST)
     @ResponseBody
     public RestResult<String> totationImage(@RequestBody String direction, @RequestBody String imageid) {
-        RestResult<String> result = new RestResult<String>();
+        RestResult<String> result = new RestResult<>();
         NetworkDisk networkDisk = new NetworkDisk();
         networkDisk.setUid(imageid);
         networkDisk = networkDiskService.selectFileById(networkDisk);
@@ -76,14 +76,14 @@ public class StorageRestApi {
         String extendName = networkDisk.getExtendName();
         File file = FileOperation.newFile(PathUtil.getStaticPath() + imageUrl);
         File minfile = FileOperation.newFile(PathUtil.getStaticPath() + imageUrl.replace("." + extendName, "_min." + extendName));
-        if ("left".equals(direction)) {
+        if (SysConf.LEFT.equals(direction)) {
             try {
                 ImageOperation.leftTotation(file, file, 90);
                 ImageOperation.leftTotation(minfile, minfile, 90);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if ("right".equals(direction)) {
+        } else if (SysConf.RIGHT.equals(direction)) {
             try {
                 ImageOperation.rightTotation(file, file, 90);
                 ImageOperation.rightTotation(minfile, minfile, 90);

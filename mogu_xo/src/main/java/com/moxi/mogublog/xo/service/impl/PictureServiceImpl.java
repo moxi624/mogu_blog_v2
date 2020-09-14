@@ -174,10 +174,10 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
                 picture.setUpdateTime(new Date());
                 pictureSort.updateById();
             } else {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.The_PICTURE_DOES_NOT_EXIST);
+                return ResultUtil.result(SysConf.ERROR, MessageConf.THE_PICTURE_NOT_EXIST);
             }
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.The_PICTURE_SORT_DOES_NOT_EXIST);
+            return ResultUtil.result(SysConf.ERROR, MessageConf.THE_PICTURE_SORT_NOT_EXIST);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }

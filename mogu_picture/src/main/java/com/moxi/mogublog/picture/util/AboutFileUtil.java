@@ -1,88 +1,96 @@
 package com.moxi.mogublog.picture.util;
 
+import com.moxi.mougblog.base.global.Constants;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 
-public class Aboutfile {
+/**
+ * 文件相关工具类
+ * @author 陌溪
+ * @date 2020/9/14 9:31
+ */
+@Slf4j
+public class AboutFileUtil {
+
+    public static final String[] IMG_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp"};
+    public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java"};
+    public static final String[] VIDEO_FILE = {"avi", "mp4", "mpg", "mov", "swf"};
+    public static final String[] MUSIC_FILE = {"wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"};
+    public static final String[] ALL_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp",
+            "doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java",
+            "avi", "mp4", "mpg", "mov", "swf",
+            "wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"
+    };
+
     /**
      * 判断一个文件是否存在，不存在就创建它 Method execute,只能建最后面那个目录
      *
-     * @param String path
-     * @return null
+     * @param path
+     * @return
      */
-    public void creatfile(String path) {
+    public void creatFile(String path) {
         File file = new File(path);
         if (file.isDirectory()) {
-            System.out.println("the   dir   is   exits");
+            log.error("该目录不存在");
         } else {
             file.mkdir();
-            System.out.println(path);
-            System.out.println("have   made   a   dir   ！");
-
         }
     }
 
     /**
      * 从文件名中得到其后缀名
      *
-     * @param String filename
+     * @param filename
      * @return 后缀名
      */
-    public String getfileSuffix(String filename) {
+    public String getFileSuffix(String filename) {
         String suffix;
         suffix = filename.substring(
-                filename.lastIndexOf(".") + 1);
+                filename.lastIndexOf(Constants.SYMBOL_POINT) + 1);
         return suffix;
     }
-
 
     /**
      * 通过其后缀名判断其是否合法,合法后缀名为常见的
      *
-     * @param String 后缀名
+     * @param suffix 后缀名
      * @return 合法返回true，不合法返回false
      */
     public boolean isSafe(String suffix) {
         suffix = suffix.toLowerCase();
-        if (suffix.equals("ppt") || suffix.equals("xls") || suffix.equals("pdf") || suffix.equals("docx") || suffix.equals("doc") || suffix.equals("rar")
-                || suffix.equals("zip") || suffix.equals("jpg") || suffix.equals("gif") || suffix.equals("jpeg")
-                || suffix.equals("png") || suffix.equals("svg") || suffix.equals("msi")
-                || suffix.equals("txt") || suffix.equals("docx") || suffix.equals("pptx") || suffix.equals("xlsx")
-                || suffix.equals("rm") || suffix.equals("rmvb") || suffix.equals("wmv") || suffix.equals("mp4")
-                || suffix.equals("3gp") || suffix.equals("mkv") || suffix.equals("avi")) {
-            return true;
-        } else {
-
-            return false;
+        for (int i = 0; i < ALL_FILE.length; i++) {
+            if (ALL_FILE[i].equals(suffix)) {
+                return true;
+            }
         }
-
+        return false;
     }
 
     /**
      * 通过其后缀名判断其是否是图片
      *
-     * @param String 后缀名
+     * @param suffix 后缀名
      * @return 合法返回true，不合法返回false
      */
     public boolean isPic(String suffix) {
         suffix = suffix.toLowerCase();
-        if (suffix.equals("jpg") || suffix.equals("gif") || suffix.equals("jpeg") || suffix.equals("png")) {
-            return true;
-        } else {
-
-            return false;
+        for (int i = 0; i < IMG_FILE.length; i++) {
+            if (IMG_FILE[i].equals(suffix)) {
+                return true;
+            }
         }
-
+        return false;
     }
-
 
     /**
      * 进行上传文件的相关操作
      *
-     * @param Formfile file
+     * @param file
      * @throws IOException
      * @throws FileNotFoundException
      */
-    public int upFile(File file, String fileLocation) throws FileNotFoundException, IOException {
+    public int uploadFile(File file, String fileLocation) throws IOException {
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
         int result = 1;
@@ -144,36 +152,34 @@ public class Aboutfile {
                 result = 0;
 
             }
-            return result;
         }
-
+        return result;
     }
-
 
     /**
      * 计算文件大小，将long类型转换为String类型
      *
-     * @param filesize
+     * @param fileSize
      * @return
      */
-    public String getFileStringSize(long filesize) {
+    public String getFileStringSize(long fileSize) {
         //size不能为0？
         double temp = 0.0;
         String ssize = "";
-        temp = (double) filesize / 1024;
-        if (temp >= 1024) {
-            temp = (double) temp / 1024;
-            if (temp >= 1024) {
-                temp = (double) temp / 1024;
+        temp = (double) fileSize / Constants.NUM_1024;
+        if (temp >= Constants.NUM_1024) {
+            temp = temp / Constants.NUM_1024;
+            if (temp >= Constants.NUM_1024) {
+                temp = temp / Constants.NUM_1024;
                 ssize = temp + "000";
-                ssize = ssize.substring(0, ssize.indexOf(".") + 3) + "GB";
+                ssize = ssize.substring(Constants.NUM_ZERO, ssize.indexOf(Constants.SYMBOL_POINT) + Constants.NUM_THREE) + "GB";
             } else {
                 ssize = temp + "000";
-                ssize = ssize.substring(0, ssize.indexOf(".") + 3) + "MB";
+                ssize = ssize.substring(Constants.NUM_ZERO, ssize.indexOf(Constants.SYMBOL_POINT) + Constants.NUM_THREE) + "MB";
             }
         } else {
             ssize = temp + "000";
-            ssize = ssize.substring(0, ssize.indexOf(".") + 3) + "KB";
+            ssize = ssize.substring(Constants.NUM_ZERO, ssize.indexOf(Constants.SYMBOL_POINT) + Constants.NUM_THREE) + "KB";
         }
         return ssize;
     }

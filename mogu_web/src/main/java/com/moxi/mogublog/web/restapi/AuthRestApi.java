@@ -28,6 +28,7 @@ import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
@@ -132,9 +133,9 @@ public class AuthRestApi {
         log.info("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
-        if (response.getCode() == 5000) {
+        if (response.getCode() == Constants.NUM_5000) {
             // 跳转到500错误页面
-            httpServletResponse.sendRedirect(webSiteUrl + "500");
+            httpServletResponse.sendRedirect(webSiteUrl + Constants.STR_500);
             return;
         }
         String result = JSONObject.toJSONString(response);
@@ -144,7 +145,7 @@ public class AuthRestApi {
         String accessToken = "";
         if (data == null || data.get(SysConf.TOKEN) == null) {
             // 跳转到500错误页面
-            httpServletResponse.sendRedirect(webSiteUrl + "500");
+            httpServletResponse.sendRedirect(webSiteUrl + Constants.STR_500);
             return;
         } else {
             token = JsonUtils.jsonToMap(JsonUtils.objectToJson(data.get(SysConf.TOKEN)));
@@ -152,7 +153,7 @@ public class AuthRestApi {
         }
 
         Boolean exist = false;
-        User user = null;
+        User user;
         //判断user是否存在
         if (data.get(SysConf.UUID) != null && data.get(SysConf.SOURCE) != null) {
             user = userService.getUserBySourceAnduuid(data.get(SysConf.SOURCE).toString(), data.get(SysConf.UUID).toString());
@@ -254,7 +255,7 @@ public class AuthRestApi {
     private void updateUserPhoto(Map<String, Object> data, User user) {
         QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         Map<String, Object> systemConfigMap = systemConfigService.getMap(queryWrapper);
         // 获取到头像，然后上传到自己服务器
         FileVO fileVO = new FileVO();
@@ -285,14 +286,14 @@ public class AuthRestApi {
                     user.setAvatar(pictureMap.get(SysConf.UID).toString());
 
                     // 判断图片优先展示
-                    if ("1".equals(picturePriority)) {
+                    if (EOpenStatus.OPEN.equals(picturePriority)) {
                         // 使用七牛云
-                        if (pictureMap != null && pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                        if (pictureMap.get(SysConf.QI_NIU_URL) != null && pictureMap.get(SysConf.UID) != null) {
                             user.setPhotoUrl(qiNiuPictureBaseUrl + pictureMap.get(SysConf.QI_NIU_URL).toString());
                         }
                     } else {
                         // 使用自建图片服务器
-                        if (pictureMap != null && pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
+                        if (pictureMap.get(SysConf.PIC_URL) != null && pictureMap.get(SysConf.UID) != null) {
                             user.setPhotoUrl(localPictureBaseUrl + pictureMap.get(SysConf.PIC_URL).toString());
                         }
                     }
@@ -485,7 +486,7 @@ public class AuthRestApi {
         QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
         return ResultUtil.result(SysConf.SUCCESS, SystemConfig);
     }
@@ -599,7 +600,7 @@ public class AuthRestApi {
         queryWrapper.eq(SQLConf.USER_UID, userUid);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.TITLE, linkVO.getTitle());
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         Link existLink = linkService.getOne(queryWrapper);
 
         if (existLink != null) {

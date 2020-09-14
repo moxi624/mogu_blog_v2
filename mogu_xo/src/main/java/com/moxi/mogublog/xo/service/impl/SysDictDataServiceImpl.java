@@ -95,7 +95,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         queryWrapper.eq(SQLConf.DICT_LABEL, sysDictDataVO.getDictLabel());
         queryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictDataVO.getDictTypeUid());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         SysDictData temp = sysDictDataService.getOne(queryWrapper);
         if (temp != null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
@@ -127,7 +127,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
             queryWrapper.eq(SQLConf.DICT_LABEL, sysDictDataVO.getDictLabel());
             queryWrapper.eq(SQLConf.DICT_TYPE_UID, sysDictDataVO.getDictTypeUid());
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            queryWrapper.last("LIMIT 1");
+            queryWrapper.last(SysConf.LIMIT_ONE);
             SysDictData temp = sysDictDataService.getOne(queryWrapper);
             if (temp != null) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
@@ -200,7 +200,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         queryWrapper.eq(SQLConf.DICT_TYPE, dictType);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         SysDictType sysDictType = sysDictTypeService.getOne(queryWrapper);
         if (sysDictType == null) {
             return new HashMap<>();

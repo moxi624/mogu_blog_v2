@@ -16,6 +16,7 @@ import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.vo.CategoryMenuVO;
 import com.moxi.mougblog.base.enums.EMenuType;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -326,7 +327,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
 
         //如果是二级菜单 或者 按钮，就在当前的兄弟中，找出最大的一个
-        if (categoryMenu.getMenuLevel() == 2 || categoryMenu.getMenuType() == EMenuType.BUTTON) {
+        if (categoryMenu.getMenuLevel() == Constants.NUM_TWO || categoryMenu.getMenuType() == EMenuType.BUTTON) {
             queryWrapper.eq(SQLConf.PARENT_UID, categoryMenu.getParentUid());
         }
 
@@ -334,7 +335,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
 
         queryWrapper.orderByDesc(SQLConf.SORT);
 
-        queryWrapper.last("limit 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
 
         CategoryMenu maxSort = categoryMenuService.getOne(queryWrapper);
 

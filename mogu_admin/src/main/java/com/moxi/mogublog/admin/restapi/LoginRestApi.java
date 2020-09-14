@@ -17,6 +17,7 @@ import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
+import com.moxi.mougblog.base.global.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -92,7 +93,7 @@ public class LoginRestApi {
         String limitCount = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
         if (StringUtils.isNotEmpty(limitCount)) {
             Integer tempLimitCount = Integer.valueOf(limitCount);
-            if (tempLimitCount >= 5) {
+            if (tempLimitCount >= Constants.NUM_FIVE) {
                 return ResultUtil.result(SysConf.ERROR, "密码输错次数过多,已被锁定30分钟");
             }
         }

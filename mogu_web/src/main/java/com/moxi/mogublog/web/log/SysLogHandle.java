@@ -6,6 +6,7 @@ import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @create: 2020-03-05-8:59
  */
 @Component("WebSysLogHandle")
-public class SysLogHandle extends RequestAwareRunnable {
+public class SysLogHandle extends AbstractRequestAwareRunnable {
 
     @Autowired
     RedisUtil redisUtil;

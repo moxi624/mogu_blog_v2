@@ -15,6 +15,7 @@ import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
@@ -67,7 +68,7 @@ public class LoginRestApi {
         String userName = userVO.getUserName();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userName).or().eq(SQLConf.EMAIL, userName));
-        queryWrapper.last("limit 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         User user = userService.getOne(queryWrapper);
         if (user == null || EStatus.DISABLED == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户不存在");
@@ -113,7 +114,7 @@ public class LoginRestApi {
     @PostMapping("/register")
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
-        if (userVO.getUserName().length() < 5 || userVO.getUserName().length() >= 20 || userVO.getPassWord().length() < 5 || userVO.getPassWord().length() >= 20) {
+        if (userVO.getUserName().length() < Constants.NUM_FIVE || userVO.getUserName().length() >= Constants.NUM_TWENTY || userVO.getPassWord().length() < Constants.NUM_FIVE || userVO.getPassWord().length() >= Constants.NUM_TWENTY) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         HttpServletRequest request = RequestHolder.getRequest();
@@ -124,7 +125,7 @@ public class LoginRestApi {
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         User user = userService.getOne(queryWrapper);
         if (user != null) {
-            return ResultUtil.result(SysConf.ERROR, "用户已存在");
+            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
         }
         user = new User();
         user.setUserName(userVO.getUserName());
@@ -132,7 +133,7 @@ public class LoginRestApi {
         user.setPassWord(MD5Utils.string2MD5(userVO.getPassWord()));
         user.setEmail(userVO.getEmail());
         // 设置账号来源，蘑菇博客
-        user.setSource("MOGU");
+        user.setSource(SysConf.MOGU);
         user.setLastLoginIp(ip);
         user.setBrowser(map.get(SysConf.BROWSER));
         user.setOs(map.get(SysConf.OS));

@@ -1,5 +1,7 @@
 package com.moxi.mogublog.commons.config.feign;
 
+import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -24,19 +26,19 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
 
         // 获取token，放入到feign的请求头
         String token = null;
-        if(request.getParameter("token") != null) {
-            token = request.getParameter("token");
-        } else if(request.getAttribute("token") != null) {
-            token = request.getAttribute("token").toString();
+        if(request.getParameter(BaseSysConf.TOKEN) != null) {
+            token = request.getParameter(BaseSysConf.TOKEN);
+        } else if(request.getAttribute(BaseSysConf.TOKEN) != null) {
+            token = request.getAttribute(BaseSysConf.TOKEN).toString();
         }
 
         if(StringUtils.isNotEmpty(token)){
             // 如果带有？说明还带有其它参数，我们只截取到token即可
-            if(token.indexOf("?") != -1) {
+            if(token.indexOf(Constants.SYMBOL_QUESTION) != -1) {
                 String [] params = token.split("\\?url=");
                 token = params[0];
             }
-            requestTemplate.header("pictureToken", token);
+            requestTemplate.header(BaseSysConf.PICTURE_TOKEN, token);
         }
     }
 }

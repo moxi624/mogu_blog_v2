@@ -2,12 +2,22 @@ package com.moxi.mougblog.base.enums;
 
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 行为枚举类
+ * @author 陌溪
+ * @date 2020/9/14 10:40
+ */
+@Slf4j
 public enum EBehavior {
 
+    /**
+     * 用户行为
+     */
     BLOG_TAG("点击标签", "blog_tag"),
     BLOG_SORT("点击博客分类", "blog_sort"),
     BLOG_CONTNET("点击博客", "blog_content"),
@@ -24,11 +34,10 @@ public enum EBehavior {
     VISIT_CLASSIFY("点击博客分类页面", "visit_classify"),
     VISIT_TAG("点击博客标签页面", "visit_tag");
 
-
     private String content;
     private String behavior;
 
-    private EBehavior(String content, String behavior) {
+    EBehavior(String content, String behavior) {
         this.content = content;
         this.behavior = behavior;
     }
@@ -58,7 +67,6 @@ public enum EBehavior {
                     otherData = nameAndArgsMap.get(BaseSysConf.AUTHOR).toString();
                 }
             }
-            ;
             break;
             case BLOG_SORT: {
                 // 判断是否点击博客分类
@@ -66,7 +74,6 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID).toString();
                 }
             }
-            ;
             break;
             case BLOG_TAG: {
                 // 判断是否点击博客标签
@@ -74,7 +81,6 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.TAG_UID).toString();
                 }
             }
-            ;
             break;
             case BLOG_SEARCH: {
                 // 判断是否进行搜索
@@ -82,7 +88,6 @@ public enum EBehavior {
                     otherData = nameAndArgsMap.get(BaseSysConf.KEYWORDS).toString();
                 }
             }
-            ;
             break;
             case VISIT_CLASSIFY: {
                 // 判断是否点击分类
@@ -90,7 +95,6 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.BLOG_SORT_UID).toString();
                 }
             }
-            ;
             break;
             case VISIT_SORT: {
                 // 判断是否点击归档
@@ -98,7 +102,6 @@ public enum EBehavior {
                     otherData = nameAndArgsMap.get(BaseSysConf.MONTH_DATE).toString();
                 }
             }
-            ;
             break;
             case BLOG_CONTNET: {
                 // 判断是否博客详情
@@ -106,7 +109,6 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
             }
-            ;
             break;
             case BLOG_PRAISE: {
                 // 判断是否给博客点赞
@@ -114,7 +116,6 @@ public enum EBehavior {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
                 }
             }
-            ;
             break;
             case FRIENDSHIP_LINK: {
                 // 判断是否点击友链
@@ -123,7 +124,6 @@ public enum EBehavior {
                 }
                 otherData = bussinessName;
             }
-            ;
             break;
             case VISIT_PAGE: {
                 // 访问页面
@@ -133,7 +133,6 @@ public enum EBehavior {
                     otherData = bussinessName;
                 }
             }
-            ;
             break;
             case PUBLISH_COMMENT: {
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
@@ -142,7 +141,6 @@ public enum EBehavior {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             }
-            ;
             break;
             case REPORT_COMMENT: {
                 // 举报评论
@@ -152,7 +150,6 @@ public enum EBehavior {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             }
-            ;
             break;
             case DELETE_COMMENT: {
                 // 删除评论
@@ -162,8 +159,10 @@ public enum EBehavior {
                     otherData = map.get(BaseSysConf.CONTENT).toString();
                 }
             }
-            ;
             break;
+            default: {
+                log.info("其它行为");
+            }
         }
         Map<String, String> result = new HashMap<>();
         result.put(BaseSysConf.MODULE_UID, moduleUid);

@@ -143,27 +143,22 @@ public class QiniuUtil {
             case "z0": {
                 cfg = new Configuration(Zone.zone0());
             }
-            ;
             break;
             case "z1": {
                 cfg = new Configuration(Zone.zone1());
             }
-            ;
             break;
             case "z2": {
                 cfg = new Configuration(Zone.zone2());
             }
-            ;
             break;
             case "na0": {
                 cfg = new Configuration(Zone.zoneNa0());
             }
-            ;
             break;
             case "as0": {
                 cfg = new Configuration(Zone.zoneAs0());
             }
-            ;
             break;
             default: {
                 return null;
@@ -178,7 +173,6 @@ public class QiniuUtil {
      * @return
      */
     public String getQiNiuConfig() {
-
         ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attribute.getRequest();
         String token = request.getAttribute(SysConf.TOKEN).toString();

@@ -68,6 +68,12 @@ public class NetworkDiskRestApi {
         return restResult;
     }
 
+    /**
+     * 获取文件列表
+     * @param request
+     * @param networkDisk
+     * @return
+     */
     @RequestMapping(value = "/getfilelist", method = RequestMethod.POST)
     @ResponseBody
     public RestResult<List<NetworkDisk>> getFileList(HttpServletRequest request, @RequestBody NetworkDisk networkDisk) {

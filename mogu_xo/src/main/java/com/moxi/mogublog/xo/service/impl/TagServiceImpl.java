@@ -244,7 +244,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
     public Tag getTopTag() {
         QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
         tagQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        tagQueryWrapper.last("LIMIT 1");
+        tagQueryWrapper.last(SysConf.LIMIT_ONE);
         tagQueryWrapper.orderByDesc(SQLConf.SORT);
         Tag tag = tagService.getOne(tagQueryWrapper);
         return tag;

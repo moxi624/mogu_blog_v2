@@ -40,13 +40,13 @@ public class CKImageUploadUtil {
      * 图片上传
      *
      * @param request
-     * @param DirectoryName 文件上传目录：比如upload(无需带前面的/) upload/news ..
+     * @param directoryName 文件上传目录：比如upload(无需带前面的/) upload/news ..
      * @return
      * @throws IllegalStateException
      * @throws IOException
      * @Title upload
      */
-    public static String upload(HttpServletRequest request, String DirectoryName) throws IllegalStateException,
+    public static String upload(HttpServletRequest request, String directoryName) throws IllegalStateException,
             IOException {
         // 创建一个通用的多部分解析器
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession()
@@ -77,7 +77,7 @@ public class CKImageUploadUtil {
                             continue;
                         }
                         // 获得上传路径的绝对路径地址(/upload)-->
-                        String realPath = basePath + DirectoryName;
+                        String realPath = basePath + directoryName;
                         System.out.println(realPath);
                         // 如果路径不存在，则创建该路径
                         File realPathDirectory = new File(realPath);
@@ -105,17 +105,17 @@ public class CKImageUploadUtil {
      *
      * @param request
      * @param response
-     * @param DirectoryName 文件上传目录：比如upload(无需带前面的/) upload/..
+     * @param directoryName 文件上传目录：比如upload(无需带前面的/) upload/..
      * @throws IOException
      * @Title ckeditor
      */
-    public static void ckeditor(HttpServletRequest request, HttpServletResponse response, String DirectoryName)
+    public static void ckeditor(HttpServletRequest request, HttpServletResponse response, String directoryName)
             throws IOException {
-        String fileName = upload(request, DirectoryName);
+        String fileName = upload(request, directoryName);
         // 结合ckeditor功能
         // imageContextPath为图片在服务器地址，如upload/123.jpg,非绝对路径
-        String imgURL = "http://localhost:8600/";
-        String imageContextPath = imgURL + "/" + DirectoryName + "/" + fileName;
+        String imgUrl = "http://localhost:8600/";
+        String imageContextPath = imgUrl + "/" + directoryName + "/" + fileName;
         response.setContentType("text/html;charset=UTF-8");
         String callback = request.getParameter("CKEditorFuncNum");
         PrintWriter out = response.getWriter();

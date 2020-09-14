@@ -58,6 +58,8 @@ public class BaseSysConf {
     public final static String DATA = "data";
     public final static String UID = "uid";
     public final static String PAGE_NAME = "pageName";
+    public final static String LEFT = "left";
+    public final static String RIGHT = "right";
 
     public final static String DEFAULT_VALUE = "defaultValue";
 
@@ -156,6 +158,7 @@ public class BaseSysConf {
     public final static String QI_NIU_AREA = "qiNiuArea";
     public final static String PICTURE_PRIORITY = "picturePriority";
     public final static String PICTURE = "picture";
+    public final static String PICTURE_TOKEN = "pictureToken";
     public final static String LIST = "list";
     public final static String JPG = "jpg";
 

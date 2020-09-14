@@ -10,6 +10,7 @@ import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @create: 2020-03-05-8:59
  */
 @Component
-public class SysLogHandle extends RequestAwareRunnable {
+public class SysLogHandle extends AbstractRequestAwareRunnable {
 
     @Autowired
     RedisUtil redisUtil;
@@ -71,14 +72,11 @@ public class SysLogHandle extends RequestAwareRunnable {
         this.methodName = methodName;
         this.operationName = operationName;
         this.startTime = startTime;
-
     }
 
     @Override
     protected void onRun() {
-
         SysLog sysLog = new SysLog();
-
         HttpServletRequest request = RequestHolder.getRequest();
         String ip = IpUtils.getIpAddr(request);
         sysLog.setIp(ip);
@@ -106,7 +104,6 @@ public class SysLogHandle extends RequestAwareRunnable {
 
         //设置Request的请求方式 GET POST
         sysLog.setType(request.getMethod());
-
         sysLog.setUrl(request.getRequestURI());
 
         sysLog.setOperation(operationName);
@@ -116,13 +113,10 @@ public class SysLogHandle extends RequestAwareRunnable {
         sysLog.setUserName(securityUser.getUsername());
         sysLog.setAdminUid(securityUser.getUid());
         sysLog.setParams(paramsJson);
-
         Date endTime = new Date();
         Long spendTime = DateUtil.between(startTime, endTime, DateUnit.MS);
-
         // 计算请求接口花费的时间，单位毫秒
         sysLog.setSpendTime(spendTime);
-
         sysLog.insert();
     }
 }

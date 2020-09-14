@@ -23,6 +23,7 @@ import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -551,7 +552,7 @@ public class CommentRestApi {
         String jsonResult = redisUtil.get(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid);
         if (!StringUtils.isEmpty(jsonResult)) {
             Integer count = Integer.valueOf(jsonResult);
-            if (count >= 5) {
+            if (count >= Constants.NUM_FIVE) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
             }
         }
@@ -600,6 +601,9 @@ public class CommentRestApi {
                             url = dataWebsiteUrl + "messageBoard";
                         }
                         break;
+                        default: {
+                            log.error("跳转到其它链接");
+                        }
                     }
                     map.put(SysConf.URL, url);
                     // 发送评论邮件

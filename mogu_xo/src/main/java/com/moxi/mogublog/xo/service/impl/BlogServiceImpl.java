@@ -246,8 +246,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     public Blog setTagByBlog(Blog blog) {
         String tagUid = blog.getTagUid();
         if (!StringUtils.isEmpty(tagUid)) {
-            String uids[] = tagUid.split(SysConf.FILE_SEGMENTATION);
-            List<Tag> tagList = new ArrayList<Tag>();
+            String[] uids = tagUid.split(SysConf.FILE_SEGMENTATION);
+            List<Tag> tagList = new ArrayList<>();
             for (String uid : uids) {
                 Tag tag = tagMapper.selectById(uid);
                 if (tag != null && tag.getStatus() != EStatus.DISABLED) {
@@ -1259,7 +1259,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             queryWrapper.eq(SQLConf.USER_UID, userUid);
             queryWrapper.eq(SQLConf.BLOG_UID, uid);
             queryWrapper.eq(SQLConf.TYPE, ECommentType.PRAISE);
-            queryWrapper.last("LIMIT 1");
+            queryWrapper.last(SysConf.LIMIT_ONE);
             Comment praise = commentService.getOne(queryWrapper);
             if (praise != null) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_HAVE_BEEN_PRISE);
@@ -1463,7 +1463,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         page.setCurrent(currentPage);
         page.setSize(pageSize);
 
-        queryWrapper.like(SQLConf.TagUid, tagUid);
+        queryWrapper.like(SQLConf.TAG_UID, tagUid);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);

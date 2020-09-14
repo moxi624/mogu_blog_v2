@@ -13,15 +13,21 @@ import java.util.Date;
 
 /**
  * jwt生成接口
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
+ * @date 2020/9/14 10:51
  */
 @Slf4j
 public class JwtUtil {
 
-    private final static String base64Secret = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
-    //过期时间
-    private final static int expiresSecond = 1000 * 60 * 2 * 60;
+    /**
+     * 私钥
+     */
+    private final static String Base_64_SECRET = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
+
+    /**
+     * 过期时间
+     */
+    private final static int EXPIRES_SECOND = 1000 * 60 * 2 * 60;
 
     /**
      * 解析jwt toke 获取数据
@@ -30,10 +36,10 @@ public class JwtUtil {
      * @return
      */
     public static Claims parseJWT(String jsonWebToken) {
-        log.info("解析jwt===========" + jsonWebToken);
+        log.info("解析jwt: " + jsonWebToken);
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(Base_64_SECRET))
                     .parseClaimsJws(jsonWebToken).getBody();
             return claims;
         } catch (Exception ex) {
@@ -51,14 +57,13 @@ public class JwtUtil {
      * @return
      */
     public static String createJWT(String userOpenId, Long userId, boolean isUser, Long shopId) {
-        log.info("userOpenId" + userOpenId + "userId" + userId + "isUser" + isUser + "shopId" + shopId);
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
         //生成签名密钥
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Secret);
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(Base_64_SECRET);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         //添加构成JWT的参数
@@ -69,8 +74,8 @@ public class JwtUtil {
                 .claim("user_open_id", userOpenId)
                 .signWith(signatureAlgorithm, signingKey);
         //添加Token过期时间
-        if (expiresSecond >= 0) {
-            long expMillis = nowMillis + expiresSecond;
+        if (EXPIRES_SECOND >= 0) {
+            long expMillis = nowMillis + EXPIRES_SECOND;
             Date exp = new Date(expMillis);
             builder.setExpiration(exp).setNotBefore(now);
         }
@@ -88,7 +93,7 @@ public class JwtUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         //生成签名密钥
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Secret);
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(Base_64_SECRET);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         //添加构成JWT的参数
@@ -101,8 +106,8 @@ public class JwtUtil {
 //	                .claim("user_open_id", userOpenId)
                 .signWith(signatureAlgorithm, signingKey);
         //添加Token过期时间
-        if (expiresSecond >= 0) {
-            long expMillis = nowMillis + expiresSecond;
+        if (EXPIRES_SECOND >= 0) {
+            long expMillis = nowMillis + EXPIRES_SECOND;
             Date exp = new Date(expMillis);
             builder.setExpiration(exp).setNotBefore(now);
         }

@@ -135,7 +135,7 @@ public class FileUtils {
             if (contentType.indexOf("image") != -1) {
                 //获得文件后缀名称
                 String imageName = contentType.substring(contentType.indexOf("/") + 1);
-                path = baseUrl + StrUtils.getUUID() + "." + imageName;
+                path = baseUrl + StringUtils.getUUID() + "." + imageName;
                 avatar.transferTo(new File(pathRoot + path));
             }
         }

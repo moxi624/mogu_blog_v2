@@ -13,15 +13,16 @@ import java.util.List;
  * AOP相关的工具
  *
  * @author 陌溪
- * @date 2020年2月27日08:44:28
+ * @date 2020年9月14日10:58:46
  */
 public enum AspectUtil {
-
+    /**
+     * 实例
+     */
     INSTANCE;
 
     /**
      * 获取以类路径为前缀的键
-     *
      * @param point 当前切面执行的方法
      */
     public String getKey(JoinPoint point, String prefix) {

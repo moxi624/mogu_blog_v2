@@ -12,6 +12,7 @@ import com.moxi.mogublog.xo.mapper.ExceptionLogMapper;
 import com.moxi.mogublog.xo.service.ExceptionLogService;
 import com.moxi.mogublog.xo.vo.ExceptionLogVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class ExceptionLogServiceImpl extends SuperServiceImpl<ExceptionLogMapper
 
         if (!StringUtils.isEmpty(exceptionLogVO.getStartTime())) {
             String[] time = exceptionLogVO.getStartTime().split(SysConf.FILE_SEGMENTATION);
-            if (time.length == 2) {
+            if (time.length == Constants.NUM_TWO) {
                 queryWrapper.between(SQLConf.CREATE_TIME, DateUtils.str2Date(time[0]), DateUtils.str2Date(time[1]));
             }
         }

@@ -126,7 +126,7 @@ public class QiNiuRestApi {
 
             log.info("图片上传返回结果:" + resultList);
 
-            if ("error".equals(resultList.get(0))) {
+            if (SysConf.ERROR.equals(resultList.get(0))) {
                 return ResultUtil.result(SysConf.ERROR, "上传失败");
             } else {
                 return ResultUtil.result(SysConf.SUCCESS, resultList);

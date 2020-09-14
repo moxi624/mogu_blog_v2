@@ -17,21 +17,20 @@ public class SmsListener {
 
     @RabbitListener(queues = "mogu.sms")
     public void sendSms(Map<String, String> map) {
-
-        try {
-            SendSmsResponse response = smsUtil.sendSms(
-                    map.get("mobile"),
-                    map.get("template_code"),
-                    map.get("sign_name"),
-                    map.get("param"));
-            System.out.println("code:" + response.getCode());
-            System.out.println("message:" + response.getMessage());
-
-        } catch (ClientException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        //TODO 短信发送暂时不用
+//        try {
+//            SendSmsResponse response = smsUtil.sendSms(
+//                    map.get("mobile"),
+//                    map.get("template_code"),
+//                    map.get("sign_name"),
+//                    map.get("param"));
+//            System.out.println("code:" + response.getCode());
+//            System.out.println("message:" + response.getMessage());
+//
+//        } catch (ClientException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
     }
 
 }

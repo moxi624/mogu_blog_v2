@@ -75,7 +75,7 @@ public class SysDictTypeServiceImpl extends SuperServiceImpl<SysDictTypeMapper, 
         QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.DICT_TYPE, sysDictTypeVO.getDictType());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         SysDictType temp = sysDictTypeService.getOne(queryWrapper);
         if (temp != null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
@@ -102,7 +102,7 @@ public class SysDictTypeServiceImpl extends SuperServiceImpl<SysDictTypeMapper, 
             QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.DICT_TYPE, sysDictTypeVO.getDictType());
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            queryWrapper.last("LIMIT 1");
+            queryWrapper.last(SysConf.LIMIT_ONE);
             SysDictType temp = sysDictTypeService.getOne(queryWrapper);
             if (temp != null) {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);

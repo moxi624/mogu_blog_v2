@@ -83,7 +83,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     public Admin getAdminByUser(String userName) {
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userName);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         //清空密码，防止泄露
         Admin admin = adminService.getOne(queryWrapper);
         admin.setPassWord(null);

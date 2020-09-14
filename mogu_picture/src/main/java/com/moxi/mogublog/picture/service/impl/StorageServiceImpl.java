@@ -88,7 +88,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         QueryWrapper<Storage> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.ADMIN_UID, adminUid);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         Storage reStorage = storageService.getOne(queryWrapper);
         return reStorage;
     }

@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.annotion.OperationLogger;
+package com.moxi.mougblog.base.holder;
 
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -9,12 +9,12 @@ import org.springframework.web.context.request.RequestContextHolder;
  * @author: 陌溪
  * @create: 2020-03-04-23:04
  */
-public abstract class RequestAwareRunnable implements Runnable {
+public abstract class AbstractRequestAwareRunnable implements Runnable {
 
     private final RequestAttributes requestAttributes;
     private Thread thread;
 
-    public RequestAwareRunnable() {
+    public AbstractRequestAwareRunnable() {
         this.requestAttributes = RequestContextHolder.getRequestAttributes();
         this.thread = Thread.currentThread();
     }

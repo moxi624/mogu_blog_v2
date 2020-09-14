@@ -103,7 +103,6 @@ public class ElasticSearchRestApi {
         Integer size = 0;
 
         do {
-            
             // 查询blog信息
             String result = webFeignClient.getNewBlog(page, row);
 
@@ -111,10 +110,10 @@ public class ElasticSearchRestApi {
             List<Blog> blogList = WebUtils.getList(result, Blog.class);
             size = blogList.size();
 
-            List<ESBlogIndex> eSBlogIndexList = blogList.stream()
+            List<ESBlogIndex> esBlogIndexList = blogList.stream()
                     .map(searchService::buidBlog).collect(Collectors.toList());
             //存入索引库
-            blogRepository.saveAll(eSBlogIndexList);
+            blogRepository.saveAll(esBlogIndexList);
             // 翻页
             page++;
         } while (size == 15);

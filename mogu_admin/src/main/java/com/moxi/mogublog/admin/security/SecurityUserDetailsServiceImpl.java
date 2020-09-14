@@ -15,8 +15,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用户详情实现类
+ * @author 陌溪
+ * @date 2020/9/14 10:43
+ */
 @Service
-public class SecurityUserDetailsService implements UserDetailsService {
+public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private AdminService adminService;

@@ -8,7 +8,7 @@ import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.service.QiniuService;
-import com.moxi.mogublog.picture.util.Aboutfile;
+import com.moxi.mogublog.picture.util.AboutFileUtil;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
@@ -240,7 +240,7 @@ public class QiniuServiceImpl implements QiniuService {
         InputStream inputStream = null;
 
         // 判断是否能够上传至本地
-        if ("1".equals(uploadLocal)) {
+        if (EOpenStatus.OPEN.equals(uploadLocal)) {
             // 判断文件是否存在
             File file1 = new File(newPath);
             if (!file1.exists()) {
@@ -298,7 +298,7 @@ public class QiniuServiceImpl implements QiniuService {
         }
 
         // 上传七牛云，判断是否能够上传七牛云
-        if ("1".equals(uploadQiNiu)) {
+        if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
             try {
                 File pdfFile = new File(saveUrl);
                 FileInputStream fileInputStream = new FileInputStream(pdfFile);
@@ -355,7 +355,7 @@ public class QiniuServiceImpl implements QiniuService {
         result.put(SysConf.UPLOADED, 1);
         result.put(SysConf.FILE_NAME, newFileName);
         // 设置显示方式
-        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+        if (EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
             result.put(SysConf.URL, qiNiuPictureBaseUrl + qiNiuUrl);
         } else {
             // 设置图片服务根域名
@@ -412,7 +412,7 @@ public class QiniuServiceImpl implements QiniuService {
         Map<String, Object> errorMap = new HashMap<>();
 
         //引用自己设计的一个工具类
-        Aboutfile af = new Aboutfile();
+        AboutFileUtil af = new AboutFileUtil();
 
         // 转换成多部分request
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
@@ -512,12 +512,12 @@ public class QiniuServiceImpl implements QiniuService {
             String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
 
-            if ("1".equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+            if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
             }
 
-            if ("1".equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+            if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
                 return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
             }
 
@@ -536,7 +536,7 @@ public class QiniuServiceImpl implements QiniuService {
         Map<String, Object> errorMap = new HashMap<>();
 
         //引用自己设计的一个工具类
-        Aboutfile af = new Aboutfile();
+        AboutFileUtil af = new AboutFileUtil();
 
         // 转换成多部分request
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;

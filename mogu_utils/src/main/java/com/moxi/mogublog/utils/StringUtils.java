@@ -165,7 +165,7 @@ public class StringUtils {
         List<Long> lnums = new ArrayList<>();
         for (String s : split) {
             if (!isEmpty(s)) {
-                long lnum = getLong(s, 0l);
+                long lnum = getLong(s, 0L);
                 lnums.add(lnum);
             }
 
