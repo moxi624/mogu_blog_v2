@@ -390,6 +390,7 @@
 - [登录页请求处理](https://www.bilibili.com/video/BV1aT4y1w7Ux)
 - [前端发起登录认证](https://www.bilibili.com/video/BV1Rp4y1Y7fj)
 - [vuerouter路由配置](https://www.bilibili.com/video/BV14A411n72S)
+- [侧边栏菜单的实现](https://www.bilibili.com/video/BV1tT4y1A7tn)
 - .....
 
 ## 移动端截图

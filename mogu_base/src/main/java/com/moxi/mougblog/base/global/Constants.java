@@ -1,12 +1,15 @@
 package com.moxi.mougblog.base.global;
 
 /**
- * @Author: 陌溪
- * @Date: 2019年12月4日22:47:53
+ * 字符常量
+ * @author: 陌溪
+ * @date: 2019年12月4日22:47:53
  */
 public class Constants {
 
-    // 系统全局是否标识
+    /**
+     * 系统全局是否标识
+     */
     public static final int YES = 1;
     public static final int NO = 0;
 
@@ -17,6 +20,7 @@ public class Constants {
     public final static String SYMBOL_POINT = ".";
     public final static String SYMBOL_QUESTION = "?";
     public final static String SYMBOL_COLON = ":";
+    public final static String SYMBOL_STAR = "*";
 
     /**
      * 数字

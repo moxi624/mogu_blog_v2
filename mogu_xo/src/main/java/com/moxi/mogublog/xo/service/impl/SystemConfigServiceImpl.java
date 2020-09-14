@@ -14,6 +14,7 @@ import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.vo.SystemConfigVO;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,9 @@ import java.util.Set;
 
 
 /**
- * <p>
  * 系统配置关系表 服务实现类
- * </p>
- *
  * @author 陌溪
- * @since 2020年1月21日09:06:18
+ * @date 2020年1月21日09:06:18
  */
 @Slf4j
 @Service
@@ -50,7 +48,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last("LIMIT 1");
+        queryWrapper.last(SysConf.LIMIT_ONE);
         SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
         return SystemConfig;
     }
@@ -63,11 +61,11 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         key.forEach(item -> {
             // 表示清空所有key
             if (RedisConf.ALL.equals(item)) {
-                Set<String> keys = redisUtil.keys("*");
+                Set<String> keys = redisUtil.keys(Constants.SYMBOL_STAR);
                 redisUtil.delete(keys);
             } else {
                 // 获取Redis中特定前缀
-                Set<String> keys = redisUtil.keys(key + "*");
+                Set<String> keys = redisUtil.keys(key + Constants.SYMBOL_STAR);
                 redisUtil.delete(keys);
             }
         });

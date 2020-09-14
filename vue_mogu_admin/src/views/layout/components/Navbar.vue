@@ -12,11 +12,11 @@
       <div class="right-menu">
 
         <el-tooltip content="Gitee源码" effect="dark" placement="bottom">
-          <MoGuGit id="ruoyi-git" class="right-menu-item" />
+          <MoGuGit id="mogu-git" class="right-menu-item" />
         </el-tooltip>
 
         <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <MoGuDoc id="ruoyi-doc" class="right-menu-item" />
+          <MoGuDoc id="mogu-doc" class="right-menu-item" />
         </el-tooltip>
 
         <el-tooltip effect="dark" content="全屏" placement="bottom">
@@ -101,7 +101,8 @@ export default {
     },
     logout() {
       this.$store.dispatch("LogOut").then(() => {
-        location.reload(); // 为了重新实例化vue-router对象 避免bug
+        // 为了重新实例化vue-router对象 避免bug
+        location.reload();
       });
     },
     showLog: function() {
