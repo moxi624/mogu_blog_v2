@@ -35,12 +35,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
  * 登录管理 RestApi(为了更好地使用security放行把登录管理放在AuthRestApi中)
- * </p>
- *
  * @author limbo
- * @since 2018-10-14
+ * @date 2018-10-14
  */
 @RestController
 @RequestMapping("/auth")
@@ -49,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class LoginRestApi {
 
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Autowired
     private AdminService adminService;
@@ -174,20 +171,11 @@ public class LoginRestApi {
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
             String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), SysConf.FILE_SEGMENTATION);
-            admin.setPhotoList(webUtil.getPicture(pictureList));
-
-            List<String> list = null;
-            try {
-                list = webUtil.getPicture(pictureList);
-            } catch (Exception e) {
-                log.info("获取头像失败!");
-            }
-            if (list != null) {
-                if (list.size() > 0) {
-                    map.put(SysConf.AVATAR, list.get(0));
-                } else {
-                    map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-                }
+            List<String> list = webUtil.getPicture(pictureList);
+            if (list.size() > 0) {
+                map.put(SysConf.AVATAR, list.get(0));
+            } else {
+                map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
             }
         }
 

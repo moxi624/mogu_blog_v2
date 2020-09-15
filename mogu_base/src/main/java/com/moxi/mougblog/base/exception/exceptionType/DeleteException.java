@@ -1,5 +1,8 @@
 package com.moxi.mougblog.base.exception.exceptionType;
 
+import com.moxi.mougblog.base.global.BaseMessageConf;
+import com.moxi.mougblog.base.global.ErrorCode;
+
 import java.io.Serializable;
 
 /**
@@ -10,20 +13,46 @@ import java.io.Serializable;
  */
 public class DeleteException extends RuntimeException implements Serializable {
 
+    /**
+     * 异常状态码
+     */
+    private String code;
+
     public DeleteException() {
-        super();
+        super(BaseMessageConf.DELETE_DEFAULT_ERROR);
+        this.code = ErrorCode.DELETE_DEFAULT_ERROR;
     }
 
     public DeleteException(String message, Throwable cause) {
         super(message, cause);
+        this.code = ErrorCode.DELETE_DEFAULT_ERROR;
+    }
+
+    public DeleteException(String code, String message, Throwable cause) {
+        super(message, cause);
+        this.code = code;
     }
 
     public DeleteException(String message) {
         super(message);
+        this.code = ErrorCode.DELETE_DEFAULT_ERROR;
+    }
+
+    public DeleteException(String code, String message) {
+        super(message);
+        this.code = code;
     }
 
     public DeleteException(Throwable cause) {
         super(cause);
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
 }

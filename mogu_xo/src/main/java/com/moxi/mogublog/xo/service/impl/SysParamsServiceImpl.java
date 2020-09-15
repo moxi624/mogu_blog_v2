@@ -15,6 +15,8 @@ import com.moxi.mogublog.xo.mapper.SysParamsMapper;
 import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.vo.SysParamsVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,12 +79,11 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
         // 判断Redis中是否包含该key的数据
         String redisKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + paramsKey;
         String paramsValue = redisUtil.get(redisKey);
-        // 如果不包含，从数据库获取
+        // 如果Redis中不存在，那么从数据库中获取
         if (StringUtils.isEmpty(paramsValue)) {
             SysParams sysParams = sysParamsService.getSysParamsByKey(paramsKey);
             if (sysParams == null || StringUtils.isEmpty(sysParams.getParamsValue())) {
-                log.error("参数配置有误，请重新导入配置！！！");
-                return null;
+                throw new QueryException(ErrorCode.PLEASE_CONFIGURE_SYSTEM_PARAMS, MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
             }
             paramsValue = sysParams.getParamsValue();
             redisUtil.set(redisKey, paramsValue);

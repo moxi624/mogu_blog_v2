@@ -22,10 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>
  * 验证码服务RestApi
- * </p>
- *
  * @author limbo
  * @since 2018-10-22
  */

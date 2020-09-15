@@ -25,12 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 图片表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2018年9月17日16:21:43
+ * @author 陌溪
+ * @date 2018年9月17日16:21:43
  */
 @RestController
 @RequestMapping("/picture")

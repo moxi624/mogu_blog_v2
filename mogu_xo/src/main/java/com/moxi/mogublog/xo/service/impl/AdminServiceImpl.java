@@ -22,6 +22,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.AddException;
 import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,9 +187,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         });
 
         for (Admin item : list) {
-
             Role role = roleService.getById(item.getRoleUid());
-
             item.setRole(role);
 
             //获取图片
@@ -223,10 +222,6 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
         String defaultPasswordKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + SysConf.SYS_DEFAULT_PASSWORD;
         String defaultPassword = sysParamsService.getSysParamsValueByKey(defaultPasswordKey);
-        if (StringUtils.isEmpty(defaultPassword)) {
-            throw new AddException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
-        }
-
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userName);
         Admin temp = adminService.getOne(queryWrapper);

@@ -27,12 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 专题表 RestApi
- * </p>
- *
  * @author 陌溪
- * @since 2020年8月23日08:12:54
+ * @date 2020年8月23日08:12:54
  */
 @Api(value = "专题相关接口", tags = {"专题相关接口"})
 @RestController

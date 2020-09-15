@@ -24,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 角色表 RestApi
- * </p>
- *
- * @author xuzhixiang
- * @since 2018-09-04
+ * @author 陌溪
+ * @date 2018-09-04
  */
 @RestController
 @RequestMapping("/role")

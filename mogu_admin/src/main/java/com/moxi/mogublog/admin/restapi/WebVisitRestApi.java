@@ -34,19 +34,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebVisitRestApi {
 
     @Autowired
-    WebVisitService webVisitService;
+    private WebVisitService webVisitService;
 
     @Autowired
-    TagService tagService;
+    private TagService tagService;
 
     @Autowired
-    BlogSortService blogSortService;
+    private BlogSortService blogSortService;
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @Autowired
-    LinkService linkService;
+    private LinkService linkService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取用户访问列表", notes = "获取用户访问列表")

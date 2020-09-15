@@ -96,26 +96,16 @@ service.interceptors.response.use(
         return Promise.reject('error')
       } else {
         console.log("错误信息", res)
-        Message({
-          message: res.message,
-          type: 'error',
-          duration: 5 * 1000
-        })
-        return Promise.reject('error')
+        return Promise.reject(res.message)
       }
     }
   },
   error => {
-    console.log('错误码', error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    console.log('错误码', error)
     // 出错了直接关闭loading
     requestNum = 0
     loading.close();
-    return Promise.reject(error)
+    return Promise.reject(error.message)
   }
 )
 

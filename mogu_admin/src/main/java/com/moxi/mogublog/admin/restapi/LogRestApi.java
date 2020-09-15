@@ -22,11 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 日志记录表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @since 2018年9月24日15:45:18
  */
 @RestController

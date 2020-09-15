@@ -1,6 +1,6 @@
 package com.moxi.mougblog.base.handler;
 
-import com.moxi.mougblog.base.global.ErrorConstants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
@@ -31,7 +31,7 @@ public class RestExceptionHandler {
     @ResponseBody
     public Result requestNotReadable(HttpMessageNotReadableException ex) {
         log.error("异常类 HttpMessageNotReadableException {},", ex.getMessage());
-        return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
+        return Result.createWithErrorMessage("参数异常", ErrorCode.PARAM_INCORRECT);
     }
 
     /**
@@ -44,7 +44,7 @@ public class RestExceptionHandler {
     @ResponseBody
     public Result requestTypeMismatch(TypeMismatchException ex) {
         log.error("异常类 TypeMismatchException {},", ex.getMessage());
-        return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
+        return Result.createWithErrorMessage("参数异常", ErrorCode.PARAM_INCORRECT);
     }
 
     /**
@@ -57,7 +57,7 @@ public class RestExceptionHandler {
     @ResponseBody
     public Result requestMissingServletRequest(MissingServletRequestParameterException ex) {
         log.error("异常类 MissingServletRequestParameterException {},", ex.getMessage());
-        return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
+        return Result.createWithErrorMessage("参数异常", ErrorCode.PARAM_INCORRECT);
     }
 
     /**
@@ -69,7 +69,7 @@ public class RestExceptionHandler {
     @ResponseBody
     public Result request405() {
         log.error("异常类 HttpRequestMethodNotSupportedException ");
-        return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
+        return Result.createWithErrorMessage("参数异常", ErrorCode.PARAM_INCORRECT);
     }
 
     /**
@@ -81,6 +81,6 @@ public class RestExceptionHandler {
     @ResponseBody
     public Result request415(HttpMediaTypeNotSupportedException ex) {
         log.error("异常类 HttpMediaTypeNotSupportedException {}", ex.getMessage());
-        return Result.createWithErrorMessage("参数异常", ErrorConstants.PARAM_INCORRECT);
+        return Result.createWithErrorMessage("参数异常", ErrorCode.PARAM_INCORRECT);
     }
 }

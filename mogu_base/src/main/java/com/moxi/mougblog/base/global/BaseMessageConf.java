@@ -71,8 +71,49 @@ public class BaseMessageConf {
 
     public static final String LOGIN_TIMEOUT = "您已退出，请重新登录";
 
+
+    //=========================================
+    // 查询相关异常码
+    //=========================================
+
+    /**
+     * 查询操作默认异常码
+     */
+    public static final String QUERY_DEFAULT_ERROR = "查询操作失败";
+    public static final String SYSTEM_CONFIG_IS_NOT_EXIST = "系统配置不存在，请检查t_system_config表是否有数据，并重新导入数据库";
     public static final String PLEASE_CONFIGURE_PASSWORD = "请先到参数配置，配置默认密码";
     public static final String PLEASE_CONFIGURE_BLOG_COUNT = "请先到参数配置，配置博客显示数量";
     public static final String PLEASE_CONFIGURE_TAG_COUNT = "请先到参数配置，配置标签显示数量";
     public static final String PLEASE_CONFIGURE_LINK_COUNT = "请先到参数配置，配置友情链接显示数量";
+    public static final String PLEASE_CONFIGURE_SYSTEM_PARAMS = "请先到后台参数配置，配置博客相关参数";
+
+    //=========================================
+    // 新增操作相关异常码
+    //=========================================
+
+    /**
+     * 插入操作默认异常码
+     */
+    public static final String INSERT_DEFAULT_ERROR = "插入操作失败";
+
+
+
+    //=========================================
+    // 更新操作相关异常码
+    //=========================================
+
+    /**
+     * 更新操作默认异常码
+     */
+    public static final String UPDATE_DEFAULT_ERROR = "更新操作失败";
+
+
+    //=========================================
+    // 删除操作相关异常码
+    //=========================================
+
+    /**
+     * 删除操作默认异常码
+     */
+    public static final String DELETE_DEFAULT_ERROR = "删除操作失败";
 }

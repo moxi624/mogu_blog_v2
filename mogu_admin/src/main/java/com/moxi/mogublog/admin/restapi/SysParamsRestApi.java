@@ -27,10 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * <p>
  * 参数配置 RestApi
- * </p>
- *
  * @author 陌溪
  * @date 2020年7月21日15:57:41
  */

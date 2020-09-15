@@ -2,7 +2,7 @@ package com.moxi.mougblog.base.vo;
 
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.Constants;
-import com.moxi.mougblog.base.global.ErrorConstants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -68,14 +68,14 @@ public class Result<T> {
 
     public static <T> Result<T> createWithSuccessMessage() {
         Result result = createWithSuccessFlag(Constants.YES);
-        result.setResultCode(ErrorConstants.OPERATION_SUCCESS);
+        result.setResultCode(ErrorCode.OPERATION_SUCCESS);
         result.setMessage("操作成功！");
         return result;
     }
 
     public static <T> Result<T> createWithSuccessMessage(String message) {
         Result result = createWithSuccessFlag(Constants.YES);
-        result.setResultCode(ErrorConstants.OPERATION_SUCCESS);
+        result.setResultCode(ErrorCode.OPERATION_SUCCESS);
         result.setMessage(StringUtils.isBlank(message) ? "操作成功！" : message);
         return result;
     }
@@ -119,7 +119,7 @@ public class Result<T> {
     public static <T> Result<T> createWithErrorMessage(String message, String errorCode) {
         Result result = createWithSuccessFlag(Constants.NO);
         result.setMessage(StringUtils.isBlank(message) ? "操作失败！" : message);
-        result.setResultCode(StringUtils.isBlank(errorCode) ? ErrorConstants.OPERATION_FAIL : errorCode);
+        result.setResultCode(StringUtils.isBlank(errorCode) ? ErrorCode.OPERATION_FAIL : errorCode);
         return result;
     }
 

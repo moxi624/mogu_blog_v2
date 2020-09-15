@@ -24,12 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 专题Item表 RestApi
- * </p>
- *
  * @author 陌溪
- * @since 2020年8月23日08:12:54
+ * @date 2020年8月23日08:12:54
  */
 @Api(value = "专题Item相关接口", tags = {"专题Item相关接口"})
 @RestController
@@ -38,7 +35,7 @@ import java.util.List;
 public class SubjectItemRestApi {
 
     @Autowired
-    SubjectItemService subjectItemService;
+    private SubjectItemService subjectItemService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取专题Item列表", notes = "获取专题Item列表", response = String.class)

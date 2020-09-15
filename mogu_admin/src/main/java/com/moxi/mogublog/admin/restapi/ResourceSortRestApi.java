@@ -27,12 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 资源分类表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2020年1月9日19:23:28
+ * @author 陌溪
+ * @date 2020年1月9日19:23:28
  */
 @Api(value = "资源分类相关接口", tags = {"资源分类相关接口"})
 @RestController

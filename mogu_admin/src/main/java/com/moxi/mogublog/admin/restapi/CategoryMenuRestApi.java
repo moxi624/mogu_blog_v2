@@ -22,12 +22,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <p>
  * 菜单表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2018年9月24日15:45:18
+ * @author 陌溪
+ * @date 2018年9月24日15:45:18
  */
 
 @RestController

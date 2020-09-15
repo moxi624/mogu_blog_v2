@@ -242,9 +242,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
     @Override
     public String resetUserPassword(UserVO userVO) {
         String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
-        if (StringUtils.isEmpty(defaultPassword)) {
-            throw new UpdateException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
-        }
         User user = userService.getById(userVO.getUid());
         user.setPassWord(MD5Utils.string2MD5(defaultPassword));
         user.setUpdateTime(new Date());

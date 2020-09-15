@@ -1,6 +1,7 @@
 package com.moxi.mogublog.admin.security;
 
 import com.alibaba.fastjson.JSONObject;
+import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mougblog.base.global.ECode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -28,7 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         response.setContentType("application/json; charset=utf-8");
         Map<String, Object> result = new HashMap<>();
         result.put("code", ECode.UNAUTHORIZED);
-        result.put("data", "token无效或过期");
+        result.put("data", "token无效或过期,请重新登录");
         response.getWriter().write(JSONObject.toJSONString(result));
     }
 }

@@ -138,5 +138,4 @@ public class BaseRedisConf {
      */
     public final static String WEB_CONFIG = "WEB_CONFIG";
 
-
 }

@@ -21,12 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
  * 管理员表 RestApi
- * </p>
- *
- * @author xuzhixiang
- * @since 2018-09-04
+ * @author 陌溪
+ * @date 2018-09-04
  */
 @RestController
 @RequestMapping("/admin")

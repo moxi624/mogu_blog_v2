@@ -28,12 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * <p>
  * 字典类型 RestApi
- * </p>
- *
  * @author 陌溪
- * @since 2020年2月15日21:16:31
+ * @date 2020年2月15日21:16:31
  */
 @RestController
 @RequestMapping("/sysDictType")

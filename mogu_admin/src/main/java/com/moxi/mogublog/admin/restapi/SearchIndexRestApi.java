@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * 索引维护ReastApi
- *
+ * 索引维护 ReastApi
  * @author 陌溪
- * @create 2020年1月15日16:44:27
+ * @date 2020年1月15日16:44:27
  */
 @RestController
 @RequestMapping("/search")

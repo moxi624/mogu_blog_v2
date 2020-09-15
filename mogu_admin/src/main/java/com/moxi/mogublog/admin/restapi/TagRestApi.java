@@ -28,11 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 标签表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @since 2018-09-08
  */
 @Api(value = "博客标签相关接口", tags = {"博客标签相关接口"})
@@ -42,9 +39,9 @@ import java.util.List;
 public class TagRestApi {
 
     @Autowired
-    TagService tagService;
+    private TagService tagService;
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取标签列表", notes = "获取标签列表", response = String.class)

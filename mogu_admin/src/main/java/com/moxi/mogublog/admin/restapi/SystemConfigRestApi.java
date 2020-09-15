@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
  * 系统配置表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2020年1月21日09:24:37
+ * @author 陌溪
+ * @date 2020年1月21日09:24:37
  */
 @Api(value = "系统配置相关接口", tags = {"系统配置相关接口"})
 @RestController
@@ -31,10 +28,7 @@ import java.util.List;
 public class SystemConfigRestApi {
 
     @Autowired
-    SystemConfigService systemConfigService;
-
-    @Autowired
-    RedisUtil redisUtil;
+    private SystemConfigService systemConfigService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取系统配置", notes = "获取系统配置")

@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 系统设置RestApi
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2018年11月6日下午8:23:36
  */
 

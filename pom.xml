@@ -47,6 +47,7 @@
         <ip2region.version>1.7.2</ip2region.version>
         <oshi.version>3.9.1</oshi.version>
         <freemarker.version>2.3.28</freemarker.version>
+        <jaxb.version>2.3.0</jaxb.version>
     </properties>
 
 

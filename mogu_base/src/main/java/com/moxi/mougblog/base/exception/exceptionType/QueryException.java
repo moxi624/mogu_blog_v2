@@ -6,44 +6,39 @@ import com.moxi.mougblog.base.global.ErrorCode;
 import java.io.Serializable;
 
 /**
- * 自定义登录相关的异常
+ * 自定义查询操作相关的异常
  *
  * @author 陌溪
- * @date 2020年9月9日16:41:32
+ * @date 2020年9月9日16:58:07
  */
-public class LoginException extends RuntimeException implements Serializable {
+public class QueryException extends RuntimeException implements Serializable {
 
     /**
      * 异常状态码
      */
     private String code;
 
-    public LoginException() {
+    public QueryException() {
         super(BaseMessageConf.QUERY_DEFAULT_ERROR);
         this.code = ErrorCode.QUERY_DEFAULT_ERROR;
     }
 
-    public LoginException(String message, Throwable cause) {
+    public QueryException(String message, Throwable cause) {
         super(message, cause);
         this.code = ErrorCode.QUERY_DEFAULT_ERROR;
     }
 
-    public LoginException(String code, String message, Throwable cause) {
-        super(message, cause);
-        this.code = code;
-    }
-
-    public LoginException(String message) {
+    public QueryException(String message) {
         super(message);
         this.code = ErrorCode.QUERY_DEFAULT_ERROR;
     }
 
-    public LoginException(String code, String message) {
+    public QueryException(String code, String message) {
         super(message);
         this.code = code;
     }
 
-    public LoginException(Throwable cause) {
+    public QueryException(Throwable cause) {
         super(cause);
     }
 

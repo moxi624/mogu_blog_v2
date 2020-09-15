@@ -29,12 +29,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * <p>
  * 博客表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 
 @RestController

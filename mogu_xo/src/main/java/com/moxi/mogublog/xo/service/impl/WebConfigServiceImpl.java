@@ -1,6 +1,5 @@
 package com.moxi.mogublog.xo.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.WebConfig;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
@@ -17,9 +16,9 @@ import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.WebConfigVO;
 import com.moxi.mougblog.base.enums.EAccountType;
-import com.moxi.mougblog.base.exception.exceptionType.ReadException;
-import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.Constants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,7 +97,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
         if (webConfig == null) {
-            throw new ReadException("网站配置为空");
+            throw new QueryException(ErrorCode.SYSTEM_CONFIG_IS_NOT_EXIST, MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
         }
         StringBuilder stringBuilder = new StringBuilder();
         String pictureResult = "";

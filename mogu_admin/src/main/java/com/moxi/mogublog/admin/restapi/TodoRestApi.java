@@ -23,12 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * <p>
  * 待办事项表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 @RestController
 @Api(value = "待办事项相关接口", tags = {"待办事项相关接口"})
@@ -37,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TodoRestApi {
 
     @Autowired
-    TodoService todoService;
+    private TodoService todoService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取代办事项列表", notes = "获取代办事项列表", response = String.class)

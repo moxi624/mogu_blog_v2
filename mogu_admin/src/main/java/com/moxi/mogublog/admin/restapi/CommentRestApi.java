@@ -28,11 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * <p>
  * 评论表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @since 2020年1月20日16:44:25
  */
 @Api(value = "用户评论相关接口", tags = {"用户评论相关接口"})

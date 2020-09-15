@@ -18,8 +18,10 @@ import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.enums.*;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -1053,7 +1055,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             break;
         }
         if (StringUtils.isEmpty(blogCount)) {
-            log.error("参数配置有误，需重新配置！");
+            log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
         } else {
             page.setSize(Long.valueOf(blogCount));
         }
@@ -1069,7 +1071,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
             String blogSecondCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT);
             if (StringUtils.isEmpty(blogHotCount) || StringUtils.isEmpty(blogSecondCount)) {
-                log.error("参数配置有误，需重新配置！");
+                log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
             } else {
                 hotPage.setSize(Long.valueOf(blogHotCount));
             }
@@ -1105,12 +1107,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 case SysConf.ONE: {
                     pageList.setRecords(firstBlogList);
                 }
-                ;
                 break;
                 case SysConf.TWO: {
                     pageList.setRecords(secondBlogList);
                 }
-                ;
                 break;
             }
             return pageList;
@@ -1142,7 +1142,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         page.setCurrent(0);
         String blogHotCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_HOT_COUNT);
         if (StringUtils.isEmpty(blogHotCount)) {
-            log.error("参数配置有误，需重新配置！");
+            log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
         } else {
             page.setSize(Long.valueOf(blogHotCount));
         }
@@ -1182,7 +1182,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         page.setCurrent(currentPage);
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
         if (StringUtils.isEmpty(blogNewCount)) {
-            log.error("参数配置有误，需重新配置！");
+            log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
         } else {
             page.setSize(Long.valueOf(blogNewCount));
         }
@@ -1250,8 +1250,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
 
         HttpServletRequest request = RequestHolder.getRequest();
-        String ip = IpUtils.getIpAddr(request);
-
         // 如果用户登录了
         if (request.getAttribute(SysConf.USER_UID) != null) {
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
@@ -1267,11 +1265,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_LOGIN_TO_PRISE);
         }
-
         Blog blog = blogService.getById(uid);
-
         String pariseJsonResult = redisUtil.get(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid);
-
         if (StringUtils.isEmpty(pariseJsonResult)) {
             //给该博客点赞数
             redisUtil.set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, "1");
@@ -1279,15 +1274,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.updateById();
 
         } else {
-
             Integer count = blog.getCollectCount() + 1;
-
             //给该博客点赞 +1
             redisUtil.set(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid, count.toString());
             blog.setCollectCount(count);
             blog.updateById();
         }
-
         // 已登录用户，向评论表添加点赞数据
         if (request.getAttribute(SysConf.USER_UID) != null) {
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
@@ -1324,7 +1316,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
@@ -1359,15 +1350,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         List<String> blogSortUidList = new ArrayList<>();
         Map<String, String> pictureMap = new HashMap<>();
         final StringBuffer fileUids = new StringBuffer();
-
         blogList.forEach(item -> {
-
             // 获取图片uid
             blogSortUidList.add(item.getBlogSortUid());
             if (StringUtils.isNotEmpty(item.getFileUid())) {
                 fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
             }
-
             // 给标题和简介设置高亮
             item.setTitle(getHitCode(item.getTitle(), keyword));
             item.setSummary(getHitCode(item.getSummary(), keyword));
@@ -1418,24 +1406,17 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         });
 
-
         Map<String, Object> map = new HashMap<>();
-
         // 返回总记录数
         map.put(SysConf.TOTAL, iPage.getTotal());
-
         // 返回总页数
         map.put(SysConf.TOTAL_PAGE, iPage.getPages());
-
         // 返回当前页大小
         map.put(SysConf.PAGE_SIZE, pageSize);
-
         // 返回当前页
         map.put(SysConf.CURRENT_PAGE, iPage.getCurrent());
-
         // 返回数据
         map.put(SysConf.BLOG_LIST, blogList);
-
         return map;
     }
 
@@ -1448,7 +1429,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             //从Redis取出数据，判断该用户24小时内，是否点击过该标签
             String jsonResult = redisUtil.get(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + "#" + tagUid);
             if (StringUtils.isEmpty(jsonResult)) {
-
                 //给标签点击数增加
                 int clickCount = tag.getClickCount() + 1;
                 tag.setClickCount(clickCount);
@@ -1484,32 +1464,26 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             //从Redis取出数据，判断该用户24小时内，是否点击过该分类
             String jsonResult = redisUtil.get(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + blogSortUid);
-
             if (StringUtils.isEmpty(jsonResult)) {
-
                 //给标签点击数增加
                 int clickCount = blogSort.getClickCount() + 1;
                 blogSort.setClickCount(clickCount);
                 blogSort.updateById();
-
                 //将该用户点击记录存储到redis中, 24小时后过期
                 redisUtil.setEx(RedisConf.TAG_CLICK + RedisConf.SEGMENTATION + ip + RedisConf.WELL_NUMBER + blogSortUid, clickCount + "",
                         24, TimeUnit.HOURS);
             }
-
         }
 
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-
         queryWrapper.eq(SQLConf.BLOG_SORT_UID, blogSortUid);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
-
+        // 排除博客详情
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SysConf.CONTENT));
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
@@ -1525,14 +1499,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Page<Blog> page = new Page<>();
         page.setCurrent(currentPage);
         page.setSize(pageSize);
-
         queryWrapper.eq(SQLConf.AUTHOR, author);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SysConf.CONTENT));
-
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
         List<Blog> list = pageList.getRecords();
         list = blogService.setTagAndSortAndPictureByBlogList(list);
@@ -1544,23 +1515,19 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     public String getBlogTimeSortList() {
         //从Redis中获取内容
         String monthResult = redisUtil.get(SysConf.MONTH_SET);
-
         //判断redis中时候包含归档的内容
         if (StringUtils.isNotEmpty(monthResult)) {
             List list = JsonUtils.jsonArrayToArrayList(monthResult);
             return ResultUtil.result(SysConf.SUCCESS, list);
         }
-
         // 第一次启动的时候归档
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
-
         //因为首页并不需要显示内容，所以需要排除掉内容字段
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
-
         //给博客增加标签、分类、图片
         list = blogService.setTagAndSortAndPictureByBlogList(list);
 

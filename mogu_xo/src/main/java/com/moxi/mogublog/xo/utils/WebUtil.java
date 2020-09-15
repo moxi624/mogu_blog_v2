@@ -3,9 +3,15 @@ package com.moxi.mogublog.xo.utils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.RedisUtil;
+import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.RedisConf;
+import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mougblog.base.enums.EOpenStatus;
+import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,11 +21,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * web有关的工具类
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2020年4月6日23:42:41
  */
 @Slf4j
@@ -27,7 +34,10 @@ import java.util.Map;
 public class WebUtil {
 
     @Autowired
-    SystemConfigService systemConfigService;
+    private SystemConfigService systemConfigService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 格式化数据获取图片列表
@@ -36,44 +46,85 @@ public class WebUtil {
      * @return
      */
     public List<String> getPicture(String result) {
-
-        QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
-        SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
-        String picturePriority = systemConfig.getPicturePriority();
-        String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
-        String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        String picturePriority = "";
+        String localPictureBaseUrl = "";
+        String qiNiuPictureBaseUrl = "";
+        // 从Redis中获取系统配置
+        String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
+        if(StringUtils.isEmpty(systemConfigJson)){
+            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
+            if(systemConfig == null) {
+                throw new QueryException(MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
+            } else {
+                // 将系统配置存入Redis中【设置过期时间24小时】
+                redisUtil.setEx(RedisConf.SYSTEM_CONFIG, JsonUtils.objectToJson(systemConfig), 24, TimeUnit.HOURS);
+            }
+            picturePriority = systemConfig.getPicturePriority();
+            localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+            qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        } else {
+            SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
+            picturePriority = systemConfig.getPicturePriority();
+            localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+            qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        }
 
         List<String> picUrls = new ArrayList<>();
-        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
-        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
-            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
-            if (picData.size() > 0) {
-                for (int i = 0; i < picData.size(); i++) {
-                    if ("1".equals(picturePriority)) {
-                        picUrls.add(qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
-                    } else {
-                        picUrls.add(localPictureBaseUrl + picData.get(i).get(SysConf.URL));
+        try {
+            Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+            if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
+                List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
+                if (picData.size() > 0) {
+                    for (int i = 0; i < picData.size(); i++) {
+                        if ("1".equals(picturePriority)) {
+                            picUrls.add(qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
+                        } else {
+                            picUrls.add(localPictureBaseUrl + picData.get(i).get(SysConf.URL));
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            log.error("从Json中获取图片列表失败");
+            log.error(e.getMessage());
+            return picUrls;
         }
         return picUrls;
     }
 
     /**
      * 获取图片，返回Map
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年10月21日下午12:55:18
+     * @param result
+     * @return
      */
-    @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getPictureMap(String result) {
 
-        QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
-        SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
-        String picturePriority = systemConfig.getPicturePriority();
-        String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
-        String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        String picturePriority = "";
+        String localPictureBaseUrl = "";
+        String qiNiuPictureBaseUrl = "";
+        // 从Redis中获取系统配置
+        String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
+        if(StringUtils.isEmpty(systemConfigJson)){
+            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
+            if(systemConfig == null) {
+                throw new QueryException(MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
+            } else {
+                // 将系统配置存入Redis中【设置过期时间24小时】
+                redisUtil.setEx(RedisConf.SYSTEM_CONFIG, JsonUtils.objectToJson(systemConfig), 24, TimeUnit.HOURS);
+            }
+            picturePriority = systemConfig.getPicturePriority();
+            localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+            qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        } else {
+            SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
+            picturePriority = systemConfig.getPicturePriority();
+            localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+            qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        }
 
         List<Map<String, Object>> resultList = new ArrayList<>();
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);

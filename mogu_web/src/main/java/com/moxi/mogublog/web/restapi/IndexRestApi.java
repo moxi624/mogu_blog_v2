@@ -9,7 +9,8 @@ import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.exception.exceptionType.ReadException;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
+import com.moxi.mougblog.base.global.ErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -90,9 +91,6 @@ public class IndexRestApi {
                                 @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
-        if (StringUtils.isEmpty(blogNewCount)) {
-            throw new ReadException(MessageConf.PLEASE_CONFIGURE_BLOG_COUNT);
-        }
         return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogByTime(currentPage, Long.valueOf(blogNewCount)));
     }
 
@@ -100,9 +98,6 @@ public class IndexRestApi {
     @GetMapping("/getHotTag")
     public String getHotTag() {
         String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
-        if (StringUtils.isEmpty(hotTagCount)) {
-            throw new ReadException(MessageConf.PLEASE_CONFIGURE_TAG_COUNT);
-        }
         return ResultUtil.result(SysConf.SUCCESS, tagService.getHotTag(Integer.valueOf(hotTagCount)));
     }
 
@@ -110,9 +105,6 @@ public class IndexRestApi {
     @GetMapping("/getLink")
     public String getLink() {
         String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
-        if (StringUtils.isEmpty(friendlyLinkCount)) {
-            throw new ReadException(MessageConf.PLEASE_CONFIGURE_LINK_COUNT);
-        }
         return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount)));
     }
 
@@ -120,7 +112,6 @@ public class IndexRestApi {
     @ApiOperation(value = "增加友情链接点击数", notes = "增加友情链接点击数")
     @GetMapping("/addLinkCount")
     public String addLinkCount(@ApiParam(name = "uid", value = "友情链接UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
-
         log.info("点击友链");
         return linkService.addLinkCount(uid);
     }

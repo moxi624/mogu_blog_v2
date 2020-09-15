@@ -23,12 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 用户表 RestApi
- * </p>
- *
  * @author 陌溪
- * @since 2020年1月4日21:29:09
+ * @date 2020年1月4日21:29:09
  */
 @RestController
 @Api(value = "用户相关接口", tags = {"用户相关接口"})
@@ -37,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserRestApi {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表", response = String.class)

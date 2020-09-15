@@ -29,12 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * <p>
  * 视频表 RestApi
- * </p>
- *
- * @author xzx19950624@qq.com
- * @since 2020年1月10日22:44:35
+ * @author 陌溪
+ * @date 2020年1月10日22:44:35
  */
 @RestController
 @RequestMapping("/studyVideo")
