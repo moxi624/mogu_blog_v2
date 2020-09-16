@@ -83,6 +83,16 @@ public class IndexRestApi {
         return ResultUtil.result(SysConf.SUCCESS, blogService.getNewBlog(currentPage, null));
     }
 
+    @ApiOperation(value = "mogu-search调用获取博客的接口[包含内容]", notes = "mogu-search调用获取博客的接口")
+    @GetMapping("/getBlogBySearch")
+    public String getBlogBySearch(HttpServletRequest request,
+                             @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                             @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+
+        log.info("获取首页最新的博客");
+        return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogBySearch(currentPage, null));
+    }
+
 
     @ApiOperation(value = "按时间戳获取博客", notes = "按时间戳获取博客")
     @GetMapping("/getBlogByTime")

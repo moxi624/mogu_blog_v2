@@ -44,5 +44,4 @@ public interface SearchFeignClient {
     @PostMapping("/search/initSolrIndex")
     public String initSolrIndex();
 
-
 }

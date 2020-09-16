@@ -1,6 +1,5 @@
 package com.moxi.mogublog.search.config;
 
-
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 /**
  * Swagger配置文件
+ *
  * @author 陌溪
  * @date 2020年9月7日18:09:35
  */

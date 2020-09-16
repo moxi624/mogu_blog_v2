@@ -29,6 +29,7 @@
           <div class="subjectName">{{item.subjectName}}</div>
           <input style="position: absolute;z-index: 100;" type="checkbox" :id="item.uid" :checked="selectUids.indexOf(item.uid)>=0" @click="checked(item)">
           <el-image
+            v-if="item.photoList"
             :src="item.photoList[0]"
             style="cursor:pointer"
             fit="scale-down"
@@ -88,7 +89,7 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
 
-        <el-form-item label="封面图" :label-width="formLabelWidth">
+        <el-form-item label="封面图" :label-width="formLabelWidth" prop="fileUid">
           <div class="imgBody" v-if="form.photoList && form.photoList.length > 0">
             <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
             <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" style="display:inline; width: 195px;height: 105px;"/>
@@ -160,7 +161,10 @@ export default {
       fileIds: "",
       icon: false, //控制删除图标的显示
       rules: {
-        subjectNam: [
+        fileUid: [
+          {required: true, message: '封面图片不能为空', trigger: 'blur'}
+        ],
+        subjectName: [
           {required: true, message: '专题名不能为空', trigger: 'blur'},
           {min: 1, max: 20, message: '长度在1到20个字符'},
         ],
@@ -343,7 +347,6 @@ export default {
         } else {
           if (this.isEditForm) {
             editSubject(this.form).then(response => {
-              console.log(response);
               this.$message({
                 type: "success",
                 message: response.data

@@ -1211,6 +1211,30 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     }
 
     @Override
+    public IPage<Blog> getBlogBySearch(Long currentPage, Long pageSize) {
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
+        if (StringUtils.isEmpty(blogNewCount)) {
+            log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
+        } else {
+            page.setSize(Long.valueOf(blogNewCount));
+        }
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        IPage<Blog> pageList = blogService.page(page, queryWrapper);
+        List<Blog> list = pageList.getRecords();
+        if (list.size() <= 0) {
+            return pageList;
+        }
+        list = setBlog(list);
+        pageList.setRecords(list);
+        return pageList;
+    }
+
+    @Override
     public IPage<Blog> getBlogByTime(Long currentPage, Long pageSize) {
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         Page<Blog> page = new Page<>();

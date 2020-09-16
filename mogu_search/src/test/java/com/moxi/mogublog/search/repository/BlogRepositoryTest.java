@@ -81,7 +81,8 @@
 //                    EBlog.setBlogSort(blogSort);
 //                    EBlog.setIsPublish((String) blogRecords.get(i).get("isPublish"));
 //                    EBlog.setAuthor((String) blogRecords.get(i).get("author"));
-//                    Date createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(blogRecords.get(i).get("createTime").toString());
+//                    Date createTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(blogRecords.get(i).get
+//                    ("createTime").toString());
 //                    EBlog.setCreateTime(createTime);
 //                    EBlog.setPhotoList(photoList);
 //                    EBlogList.add(EBlog);

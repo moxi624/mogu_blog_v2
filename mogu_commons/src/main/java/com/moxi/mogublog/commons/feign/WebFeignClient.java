@@ -33,8 +33,14 @@ public interface WebFeignClient {
     @RequestMapping("/content/getSameBlogByBlogUid")
     public String getSameBlogByBlogUid(@RequestParam(name = "blogUid", required = true) String blogUid, Long currentPage, @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
 
-    @RequestMapping(value = "/index/getNewBlog")
-    public String getNewBlog(@RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+    /**
+     * 获取博客列表[包含内容]
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "/index/getBlogBySearch")
+    public String getBlogBySearch(@RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
                              @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
 
 }

@@ -216,6 +216,14 @@ public interface BlogService extends SuperService<Blog> {
     public IPage<Blog> getNewBlog(Long currentPage, Long pageSize);
 
     /**
+     * mogu-search调用获取博客的接口[包含内容]
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    public IPage<Blog> getBlogBySearch(Long currentPage, Long pageSize);
+
+    /**
      * 按时间戳获取博客
      *
      * @param currentPage
