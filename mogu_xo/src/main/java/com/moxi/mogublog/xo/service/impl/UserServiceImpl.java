@@ -16,9 +16,7 @@ import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
-import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -32,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 用户表 服务实现类
+ *
  * @author 陌溪
  * @since 2018-09-04
  */

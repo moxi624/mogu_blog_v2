@@ -95,7 +95,16 @@
   margin: 0 auto;
   max-width: 100%;
   min-width: 50px;
+
 }
+
+.ck-content img {
+  width:auto;
+  height:auto;
+  max-width:100%;
+  max-height:100%;
+}
+
 /* ckeditor5-block-quote/theme/blockquote.css */
 .ck-content blockquote {
   overflow: hidden;

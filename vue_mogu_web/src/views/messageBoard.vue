@@ -140,7 +140,7 @@
         }
     };
 </script>
-<style scoped>
+<style>
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;

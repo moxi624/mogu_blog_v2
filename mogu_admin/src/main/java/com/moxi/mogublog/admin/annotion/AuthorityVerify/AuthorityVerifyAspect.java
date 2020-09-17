@@ -30,7 +30,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -114,7 +116,7 @@ public class AuthorityVerifyAspect {
         }
 
         // 判断该角色是否能够访问该接口
-        if(visitMap.get(url) != null) {
+        if (visitMap.get(url) != null) {
             log.info("用户拥有操作权限，访问的路径: {}，拥有的权限接口：{}", url, visitMap.get(url));
             //执行业务
             return joinPoint.proceed();

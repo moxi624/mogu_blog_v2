@@ -51,11 +51,11 @@ public class WebUtil {
         String qiNiuPictureBaseUrl = "";
         // 从Redis中获取系统配置
         String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
-        if(StringUtils.isEmpty(systemConfigJson)){
+        if (StringUtils.isEmpty(systemConfigJson)) {
             QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
-            if(systemConfig == null) {
+            if (systemConfig == null) {
                 throw new QueryException(MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
             } else {
                 // 将系统配置存入Redis中【设置过期时间24小时】
@@ -96,6 +96,7 @@ public class WebUtil {
 
     /**
      * 获取图片，返回Map
+     *
      * @param result
      * @return
      */
@@ -106,11 +107,11 @@ public class WebUtil {
         String qiNiuPictureBaseUrl = "";
         // 从Redis中获取系统配置
         String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
-        if(StringUtils.isEmpty(systemConfigJson)){
+        if (StringUtils.isEmpty(systemConfigJson)) {
             QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
-            if(systemConfig == null) {
+            if (systemConfig == null) {
                 throw new QueryException(MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
             } else {
                 // 将系统配置存入Redis中【设置过期时间24小时】

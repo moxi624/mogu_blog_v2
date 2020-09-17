@@ -18,10 +18,8 @@ import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.enums.*;
-import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
-import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -41,45 +39,43 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
  * 博客表 服务实现类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 @Service
 @Slf4j
 public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implements BlogService {
 
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
     @Autowired
-    WebVisitService webVisitService;
+    private WebVisitService webVisitService;
     @Autowired
-    TagService tagService;
+    private TagService tagService;
     @Autowired
-    PictureService pictureService;
+    private PictureService pictureService;
     @Autowired
-    BlogSortService blogSortService;
+    private BlogSortService blogSortService;
     @Autowired
-    LinkService linkService;
+    private LinkService linkService;
     @Autowired
-    RedisUtil redisUtil;
+    private RedisUtil redisUtil;
     @Resource
-    TagMapper tagMapper;
+    private TagMapper tagMapper;
     @Resource
-    BlogSortMapper blogSortMapper;
+    private BlogSortMapper blogSortMapper;
     @Resource
-    BlogMapper blogMapper;
+    private BlogMapper blogMapper;
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
     @Autowired
-    SystemConfigService systemConfigService;
+    private SystemConfigService systemConfigService;
     @Autowired
-    SysParamsService sysParamsService;
+    private SysParamsService sysParamsService;
     @Autowired
     private BlogService blogService;
     @Autowired
@@ -200,9 +196,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
 
-
         for (Blog item : list) {
-
             //设置分类
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
 
@@ -238,7 +232,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 } else {
                     item.setPhotoUrl("");
                 }
-
             }
         }
         return list;
@@ -468,7 +461,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         contributeDateList.add(endTime);
         resultMap.put(SysConf.CONTRIBUTE_DATE, contributeDateList);
         resultMap.put(SysConf.BLOG_CONTRIBUTE_COUNT, resultList);
-
         return resultMap;
     }
 
@@ -480,8 +472,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog = setSortByBlog(blog);
             return blog;
         }
-
-
         return null;
     }
 
@@ -1120,7 +1110,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         pageList.setRecords(list);
 
         // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
-        if(list.size() > 0) {
+        if (list.size() > 0) {
             redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + level, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
         }
         return pageList;
@@ -1156,7 +1146,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         list = setBlog(list);
         pageList.setRecords(list);
         // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
-        if(list.size() > 0) {
+        if (list.size() > 0) {
             redisUtil.setEx(SysConf.HOT_BLOG, JsonUtils.objectToJson(list), 1, TimeUnit.HOURS);
         }
         return pageList;

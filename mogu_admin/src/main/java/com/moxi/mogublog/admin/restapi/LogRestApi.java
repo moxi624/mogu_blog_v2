@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 日志记录表 RestApi
+ *
  * @author 陌溪
  * @since 2018年9月24日15:45:18
  */

@@ -39,6 +39,7 @@
     </div>
 
     <SubjectItemList :visiable="visiable" @close="closeSubjectItemList" :subjectUid="selectSubjectUid"></SubjectItemList>
+
   </div>
 </template>
 

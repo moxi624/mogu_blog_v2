@@ -61,7 +61,7 @@
 
       <el-table-column label="被评论人" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag type="info" v-if="scope.row.toUser" style="cursor: pointer;" @click.native="goUser(scope.row.user)">{{ scope.row.toUser.nickName }}</el-tag>
+          <el-tag type="info" v-if="scope.row.toUser" style="cursor: pointer;" @click.native="goUser(scope.row.toUser)">{{ scope.row.toUser.nickName }}</el-tag>
           <el-tag type="info" style="cursor: pointer;" v-else>无</el-tag>
         </template>
       </el-table-column>

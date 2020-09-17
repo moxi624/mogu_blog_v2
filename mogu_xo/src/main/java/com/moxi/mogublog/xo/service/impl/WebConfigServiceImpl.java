@@ -88,7 +88,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
     public WebConfig getWebConfigByShowList() {
         //从Redis中获取IP来源
         String webConfigResult = redisUtil.get(RedisConf.WEB_CONFIG);
-        if(StringUtils.isNotEmpty(webConfigResult)) {
+        if (StringUtils.isNotEmpty(webConfigResult)) {
             WebConfig webConfig = JsonUtils.jsonToPojo(webConfigResult, WebConfig.class);
             return webConfig;
         }

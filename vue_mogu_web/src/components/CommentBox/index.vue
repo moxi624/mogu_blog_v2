@@ -165,7 +165,7 @@
 </script>
 
 
-<style >
+<style>
   @import "../../assets/css/emoji.css";
   .commentBox {
     min-width: 700px;

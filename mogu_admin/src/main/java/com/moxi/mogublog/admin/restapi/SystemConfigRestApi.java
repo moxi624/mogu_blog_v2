@@ -4,7 +4,6 @@ package com.moxi.mogublog.admin.restapi;
 import com.moxi.mogublog.admin.annotion.AuthorityVerify.AuthorityVerify;
 import com.moxi.mogublog.admin.annotion.OperationLogger.OperationLogger;
 import com.moxi.mogublog.admin.global.SysConf;
-import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.vo.SystemConfigVO;
@@ -18,6 +17,7 @@ import java.util.List;
 
 /**
  * 系统配置表 RestApi
+ *
  * @author 陌溪
  * @date 2020年1月21日09:24:37
  */

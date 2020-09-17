@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 友链表 RestApi
+ *
  * @author 陌溪
  * @date 2018-09-08
  */

@@ -33,6 +33,7 @@
           <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
           <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
         </div>
+
       </div>
       <div class="sidebar">
         <div class="about">
@@ -204,7 +205,7 @@
     };
 </script>
 
-<style>
+<style scoped>
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
