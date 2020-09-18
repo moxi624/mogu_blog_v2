@@ -12,7 +12,7 @@ export default {
 
   data() {
     return {
-      adminSwaggerUrl: process.env.ADMIN_API + "/swagger-ui.html",
+      adminSwaggerUrl: process.env.ADMIN_API + "/swagger-ui/index.html",
     }
   },
   mounted() {

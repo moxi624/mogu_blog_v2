@@ -12,7 +12,7 @@ export default {
 
   data() {
     return {
-      pictureSwaggerUrl: process.env.PICTURE_API + "/swagger-ui.html",
+      pictureSwaggerUrl: process.env.PICTURE_API + "/swagger-ui/index.html",
     }
   },
   mounted() {
