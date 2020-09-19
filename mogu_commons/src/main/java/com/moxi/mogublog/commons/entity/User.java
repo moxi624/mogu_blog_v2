@@ -65,26 +65,31 @@ public class User extends SuperEntity<User> {
     /**
      * 手机
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String mobile;
 
     /**
      * QQ号
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String qqNumber;
 
     /**
      * 微信号
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String weChat;
 
     /**
      * 职业
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String occupation;
 
     /**
      * 自我简介最多150字
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String summary;
 
     /**

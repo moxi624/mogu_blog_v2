@@ -275,6 +275,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         admin.setGitee(adminVO.getGitee());
         admin.setOccupation(adminVO.getOccupation());
         admin.setUpdateTime(new Date());
+        admin.setMobile(adminVO.getMobile());
         // 无法直接修改密码，只能通过重置密码完成密码修改
         admin.setPassWord(null);
         admin.updateById();
