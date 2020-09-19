@@ -1,10 +1,13 @@
 package com.moxi.mogublog.commons.config.jwt;
 
 import com.moxi.mogublog.commons.config.security.SecurityUser;
+import com.moxi.mougblog.base.global.BaseSysConf;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +16,16 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 
+/**
+ * JWT工具类
+ *
+ * @author 陌溪
+ * @date 2020/6/1 18:18
+ */
 @Component
-public class JwtHelper {
+public class JwtTokenUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenUtil.class);
 
     /**
      * 解析jwt
@@ -52,9 +63,9 @@ public class JwtHelper {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         //添加构成JWT的参数
         JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT")
-                .claim("adminUid", adminUid)
-                .claim("role", roleName)
-                .claim("creatTime", now)
+                .claim(BaseSysConf.ADMIN_UID, adminUid)
+                .claim(BaseSysConf.ROLE, roleName)
+                .claim(BaseSysConf.CREATE_TIME, now)
                 .setSubject(userName)
                 .setIssuer(issuer)
                 .setAudience(audience)
@@ -69,7 +80,12 @@ public class JwtHelper {
         return builder.compact();
     }
 
-    // 判断token是否已过期
+    /**
+     * 判断token是否已过期
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public boolean isExpiration(String token, String base64Security) {
         if (parseJWT(token, base64Security) == null) {
             return true;

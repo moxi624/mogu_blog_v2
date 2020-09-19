@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * JWT相关配置
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2018年11月9日下午12:47:36
  */
 @ConfigurationProperties(prefix = "audience")

@@ -16,6 +16,7 @@ public class BaseSysConf {
     public final static String BLOG = "blog";
     public final static String USER_NAME = "userName";
     public final static String ADMIN_UID = "adminUid";
+    public final static String ROLE = "role";
     public final static String PROJECT_NAME = "projectName";
     public final static String SORT_NAME = "sortName";
     public final static String PIC_NAME = "picName";

@@ -21,6 +21,7 @@ import com.moxi.mogublog.xo.vo.AdminVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,13 +109,11 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             return new Admin();
         }
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
-
         //清空密码，防止泄露
         admin.setPassWord(null);
-
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), Constants.SYMBOL_COMMA);
             admin.setPhotoList(webUtil.getPicture(pictureList));
         }
         return admin;

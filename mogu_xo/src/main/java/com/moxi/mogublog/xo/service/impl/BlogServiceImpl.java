@@ -746,10 +746,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setStatus(EStatus.ENABLE);
 
         Boolean isSave = blog.updateById();
-
         //保存成功后，需要发送消息到solr 和 redis
         updateSolrAndRedis(isSave, blog);
-
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
@@ -788,13 +786,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         //保存成功后，需要发送消息到solr 和 redis
         if (save) {
-
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.EDIT_BATCH);
-
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
-
         }
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
@@ -813,10 +808,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             map.put(SysConf.BLOG_UID, blog.getUid());
             map.put(SysConf.LEVEL, blog.getLevel());
             map.put(SysConf.CREATE_TIME, blog.getCreateTime());
-
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
-
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -839,14 +832,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         });
 
         Boolean save = blogService.updateBatchById(blogList);
-
         //保存成功后，需要发送消息到solr 和 redis
         if (save) {
-
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.DELETE_BATCH);
             map.put(SysConf.UID, uidSbf);
-
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
         }
@@ -966,13 +956,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         // 获取当前管理员
         Admin admin = adminService.getMe();
-
         // 存储需要上传的博客
         List<Blog> blogList = new ArrayList<>();
-
         // 开始进行图片替换操作
         Integer count = 1;
-
         String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
         if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
             log.error("参数配置有误，需重新配置！");

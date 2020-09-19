@@ -75,7 +75,6 @@ public class BlogRestApi {
         return blogService.uploadLocalBlog(filedatas);
     }
 
-
     @AuthorityVerify
     @OperationLogger(value = "编辑博客")
     @ApiOperation(value = "编辑博客", notes = "编辑博客", response = String.class)

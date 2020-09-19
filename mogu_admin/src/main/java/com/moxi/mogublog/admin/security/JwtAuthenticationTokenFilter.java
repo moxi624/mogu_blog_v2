@@ -3,7 +3,7 @@ package com.moxi.mogublog.admin.security;
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.config.jwt.Audience;
-import com.moxi.mogublog.commons.config.jwt.JwtHelper;
+import com.moxi.mogublog.commons.config.jwt.JwtTokenUtil;
 import com.moxi.mogublog.utils.CookieUtils;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.RedisUtil;
@@ -27,6 +27,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * JWT认证过滤器 【验证token有效性】
+ *
+ * @author 陌溪
+ * @date 2020年9月19日10:05:40
+ */
 @Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
@@ -38,7 +44,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtHelper jwtHelper;
+    private JwtTokenUtil jwtHelper;
 
     @Value(value = "${tokenHead}")
     private String tokenHead;
@@ -68,7 +74,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //得到请求头信息authorization信息
         String authHeader = request.getHeader(tokenHeader);
 
-        // 从picture服务传递过来的token，如果有说明执行了上传操作
+        //TODO 判断是否触发 mogu-picture发送的请求【图片上传鉴权，需要用户登录，携带token请求admin，后期考虑加入OAuth服务统一鉴权】
         final String pictureToken = request.getHeader("pictureToken");
         if (StringUtils.isNotEmpty(pictureToken)) {
             authHeader = pictureToken;
@@ -80,15 +86,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             log.error("传递过来的token为: {}", authHeader);
 
             final String token = authHeader.substring(tokenHead.length());
-
+            // 私钥
+            String base64Secret = audience.getBase64Secret();
             // 获取在线的管理员信息
             String onlineAdmin = redisUtil.get(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + authHeader);
-
-            if (StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, audience.getBase64Secret())) {
+            if (StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, base64Secret)) {
                 /**
                  * 得到过期时间
                  */
-                Date expirationDate = jwtHelper.getExpiration(token, audience.getBase64Secret());
+                Date expirationDate = jwtHelper.getExpiration(token, base64Secret);
                 long nowMillis = System.currentTimeMillis();
                 Date nowDate = new Date(nowMillis);
                 // 得到两个日期相差的间隔，秒
@@ -96,7 +102,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 // 如果小于5分钟，那么更新过期时间
                 if (second < refreshSecond) {
                     // 生成一个新的Token
-                    String newToken = tokenHead + jwtHelper.refreshToken(token, audience.getBase64Secret(), expiresSecond * 1000);
+                    String newToken = tokenHead + jwtHelper.refreshToken(token, base64Secret, expiresSecond * 1000);
                     // 生成新的token，发送到客户端
                     CookieUtils.setCookie("Admin-Token", newToken, expiresSecond.intValue());
                     // 重新更新Redis中的过期时间
@@ -107,8 +113,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String username = jwtHelper.getUsername(token, audience.getBase64Secret());
-            String adminUid = jwtHelper.getUserUid(token, audience.getBase64Secret());
+            String username = jwtHelper.getUsername(token, base64Secret);
+            String adminUid = jwtHelper.getUserUid(token, base64Secret);
 
             //把adminUid存储到request中
             request.setAttribute(SysConf.ADMIN_UID, adminUid);
@@ -121,7 +127,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-                if (jwtHelper.validateToken(token, userDetails, audience.getBase64Secret())) {
+                if (jwtHelper.validateToken(token, userDetails, base64Secret)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(

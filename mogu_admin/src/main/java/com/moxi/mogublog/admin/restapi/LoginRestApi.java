@@ -6,7 +6,7 @@ import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.config.jwt.Audience;
-import com.moxi.mogublog.commons.config.jwt.JwtHelper;
+import com.moxi.mogublog.commons.config.jwt.JwtTokenUtil;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.CategoryMenu;
 import com.moxi.mogublog.commons.entity.Role;
@@ -56,7 +56,7 @@ public class LoginRestApi {
     private RoleService roleService;
 
     @Autowired
-    private JwtHelper jwtHelper;
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private CategoryMenuService categoryMenuService;
@@ -130,7 +130,7 @@ public class LoginRestApi {
         }
         String roleName = roleNames.substring(0, roleNames.length() - 2);
         long expiration = isRememberMe ? longExpiresSecond : audience.getExpiresSecond();
-        String jwtToken = jwtHelper.createJWT(admin.getUserName(),
+        String jwtToken = jwtTokenUtil.createJWT(admin.getUserName(),
                 admin.getUid(),
                 roleName,
                 audience.getClientId(),
