@@ -79,7 +79,13 @@ public class JwtHelper {
     }
 
 
-    //效验token
+    /**
+     * 效验token
+     * @param token
+     * @param userDetails
+     * @param base64Security
+     * @return
+     */
     public Boolean validateToken(String token, UserDetails userDetails, String base64Security) {
         SecurityUser SecurityUser = (com.moxi.mogublog.commons.config.security.SecurityUser) userDetails;
         final String username = getUsername(token, base64Security);
@@ -89,38 +95,73 @@ public class JwtHelper {
                         && !expiration);
     }
 
-
-    //从token中获取用户名
+    /**
+     * 从token中获取用户名
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public String getUsername(String token, String base64Security) {
         return parseJWT(token, base64Security).getSubject();
     }
 
-    //从token中获取用户UID
+    /**
+     * 从token中获取用户UID
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public String getUserUid(String token, String base64Security) {
         return parseJWT(token, base64Security).get("adminUid", String.class);
     }
 
-    //从token中获取audience
+    /**
+     * 从token中获取audience
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public String getAudience(String token, String base64Security) {
         return parseJWT(token, base64Security).getAudience();
     }
 
-    //从token中获取issuer
+    /**
+     * 从token中获取issuer
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public String getIssuer(String token, String base64Security) {
         return parseJWT(token, base64Security).getIssuer();
     }
 
-    //从token中获取issuer
+    /**
+     * 从token中获取过期时间
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public Date getExpiration(String token, String base64Security) {
         return parseJWT(token, base64Security).getExpiration();
     }
 
-    //token是否可以更新
+    /**
+     * token是否可以更新
+     * @param token
+     * @param base64Security
+     * @return
+     */
     public Boolean canTokenBeRefreshed(String token, String base64Security) {
         return !isExpiration(token, base64Security);
     }
 
-    // 更新token
+    /**
+     * 更新token
+     * @param token
+     * @param base64Security
+     * @param TTLMillis
+     * @return
+     */
     public String refreshToken(String token, String base64Security, long TTLMillis) {
         String refreshedToken;
         try {
@@ -151,5 +192,4 @@ public class JwtHelper {
         }
         return refreshedToken;
     }
-
 }

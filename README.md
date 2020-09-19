@@ -345,6 +345,8 @@
 - [x] 使用Sentinel做服务限流和熔断
 - [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [x] 富文本编辑器和Markdown编辑器任意切换
+- [ ] 增加定时任务模块
+- [ ] 增加代码生成器
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块
@@ -391,6 +393,8 @@
 - [前端发起登录认证](https://www.bilibili.com/video/BV1Rp4y1Y7fj)
 - [vuerouter路由配置](https://www.bilibili.com/video/BV14A411n72S)
 - [侧边栏菜单的实现](https://www.bilibili.com/video/BV1tT4y1A7tn)
+- [汉堡菜单实现](https://www.bilibili.com/video/BV1z5411b7ih)
+- [面包屑导航](https://www.bilibili.com/video/BV1LZ4y1N7pk)
 - .....
 
 ## 移动端截图

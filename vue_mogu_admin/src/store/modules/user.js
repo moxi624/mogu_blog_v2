@@ -37,10 +37,12 @@ const user = {
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
       const password = userInfo.password.trim()
+      const isRememberMe = userInfo.isRememberMe
       return new Promise((resolve, reject) => {
         var params = new URLSearchParams()
         params.append('username', username)
         params.append('password', password)
+        params.append('isRememberMe', isRememberMe)
         login(params).then(response => {
           const data = response.data
           setToken(data.token)

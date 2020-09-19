@@ -49,12 +49,16 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 添加在线用户
-     *
-     * @param admin
+     * @param admin 管理员
+     * @param expiration 过期时间【秒】
+     */
+    public void addOnlineAdmin(Admin admin, Long expiration);
+
+    /**
+     * 获取管理员列表
+     * @param adminVO
      * @return
      */
-    public void addOnlineAdmin(Admin admin);
-
     public String getList(AdminVO adminVO);
 
     /**

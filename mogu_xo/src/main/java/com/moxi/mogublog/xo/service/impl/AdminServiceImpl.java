@@ -121,7 +121,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     }
 
     @Override
-    public void addOnlineAdmin(Admin admin) {
+    public void addOnlineAdmin(Admin admin, Long expiration) {
         HttpServletRequest request = RequestHolder.getRequest();
         Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
         String os = map.get(SysConf.OS);
@@ -147,7 +147,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         } else {
             onlineAdmin.setLoginLocation(jsonResult);
         }
-        redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), 30, TimeUnit.MINUTES);
+        redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), expiration, TimeUnit.SECONDS);
     }
 
     @Override

@@ -81,12 +81,11 @@ public class LoginRestApi {
     public String login(HttpServletRequest request,
                         @ApiParam(name = "username", value = "用户名或邮箱或手机号", required = false) @RequestParam(name = "username", required = false) String username,
                         @ApiParam(name = "password", value = "密码", required = false) @RequestParam(name = "password", required = false) String password,
-                        @ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = false) @RequestParam(name = "isRememberMe", required = false, defaultValue = "0") int isRememberMe) {
+                        @ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = false) @RequestParam(name = "isRememberMe", required = false) Boolean isRememberMe) {
 
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");
         }
-
         String ip = IpUtils.getIpAddr(request);
         String limitCount = redisUtil.get(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip);
         if (StringUtils.isNotEmpty(limitCount)) {
@@ -127,13 +126,13 @@ public class LoginRestApi {
         }
         String roleNames = null;
         for (Role role : roles) {
-            roleNames += (role.getRoleName() + ",");
+            roleNames += (role.getRoleName() + Constants.SYMBOL_COMMA);
         }
         String roleName = roleNames.substring(0, roleNames.length() - 2);
-        long expiration = isRememberMe == 1 ? longExpiresSecond : audience.getExpiresSecond();
+        long expiration = isRememberMe ? longExpiresSecond : audience.getExpiresSecond();
         String jwtToken = jwtHelper.createJWT(admin.getUserName(),
                 admin.getUid(),
-                roleName.toString(),
+                roleName,
                 audience.getClientId(),
                 audience.getName(),
                 expiration * 1000,
@@ -148,13 +147,11 @@ public class LoginRestApi {
         admin.setLastLoginIp(IpUtils.getIpAddr(request));
         admin.setLastLoginTime(new Date());
         admin.updateById();
-
         // 设置token到validCode，用于记录登录用户
         admin.setValidCode(token);
         admin.setRole(roles.get(0));
-        // 添加在线用户到Redis中
-        adminService.addOnlineAdmin(admin);
-
+        // 添加在线用户到Redis中【设置过期时间】
+        adminService.addOnlineAdmin(admin, expiration);
         return ResultUtil.result(SysConf.SUCCESS, result);
     }
 

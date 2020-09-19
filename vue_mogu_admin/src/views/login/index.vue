@@ -39,6 +39,9 @@
           <svg-icon icon-class="eye"/>
         </span>
       </el-form-item>
+
+      <el-checkbox v-model="loginForm.isRememberMe" style="margin:0px 0px 25px 0px;"><span style="color: #eee">七天免登录</span></el-checkbox>
+
       <el-form-item>
         <el-button
           :loading="loading"
@@ -96,7 +99,8 @@ export default {
     return {
       loginForm: {
         username: "",
-        password: ""
+        password: "",
+        isRememberMe: false,
       },
       loginRules: {
         username: [
