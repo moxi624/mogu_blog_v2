@@ -64,7 +64,7 @@ public class BlogListener {
 //                    searchFeignClient.deleteElasticSearchByUids(uid);
 
                     // 删除Solr博客索引
-                    searchFeignClient.deleteSolrIndexByUids(uid);
+//                    searchFeignClient.deleteSolrIndexByUids(uid);
                 }
                 break;
                 case SysConf.EDIT_BATCH: {
@@ -83,7 +83,7 @@ public class BlogListener {
 //                    searchFeignClient.addElasticSearchIndexByUid(uid);
 
                     // 增加solr索引
-                    searchFeignClient.addSolrIndexByUid(uid);
+//                    searchFeignClient.addSolrIndexByUid(uid);
                 }
                 break;
 
@@ -95,7 +95,7 @@ public class BlogListener {
 //                    searchFeignClient.addElasticSearchIndexByUid(uid);
 
                     // 更新Solr索引
-                    searchFeignClient.updateSolrIndexByUid(uid);
+//                    searchFeignClient.updateSolrIndexByUid(uid);
                 }
                 break;
 
@@ -107,7 +107,7 @@ public class BlogListener {
 //                    searchFeignClient.deleteElasticSearchByUid(uid);
 
                     // 删除Solr索引
-                    searchFeignClient.deleteSolrIndexByUid(uid);
+//                    searchFeignClient.deleteSolrIndexByUid(uid);
                 }
                 break;
                 default: {
