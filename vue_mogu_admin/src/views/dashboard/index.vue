@@ -180,13 +180,10 @@ export default {
     getBlogCountByTag().then(response => {
       if (response.code == this.$ECode.SUCCESS) {
         this.blogCountByTag = response.data;
-
         var tagList = this.blogCountByTag;
-
         for (var a = 0; a < this.blogCountByTag.length; a++) {
           this.tagNameArray.push(tagList[a].name);
         }
-
         this.showPieChart = true;
       }
     });

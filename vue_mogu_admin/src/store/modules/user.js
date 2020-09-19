@@ -45,7 +45,9 @@ const user = {
         params.append('isRememberMe', isRememberMe)
         login(params).then(response => {
           const data = response.data
+          // 向cookie中设置token
           setToken(data.token)
+          // 向store中设置cookie
           commit('SET_TOKEN', data.token)
           resolve(response)
         }).catch(error => {
