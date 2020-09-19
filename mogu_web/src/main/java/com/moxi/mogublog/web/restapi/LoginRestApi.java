@@ -102,7 +102,7 @@ public class LoginRestApi {
             // 过滤密码
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中
-            redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            redisUtil.setEx(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
             log.info("登录成功，返回token: ", token);
             return ResultUtil.result(SysConf.SUCCESS, token);
         } else {
@@ -178,7 +178,7 @@ public class LoginRestApi {
         if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         }
-        redisUtil.set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, "");
+        redisUtil.set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, "");
         return ResultUtil.result(SysConf.SUCCESS, "退出成功");
     }
 

@@ -39,10 +39,10 @@ import java.util.Set;
 public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper, SystemConfig> implements SystemConfigService {
 
     @Autowired
-    SystemConfigService systemConfigService;
+    private SystemConfigService systemConfigService;
 
     @Autowired
-    RedisUtil redisUtil;
+    private RedisUtil redisUtil;
 
     @Override
     public SystemConfig getConfig() {
@@ -93,9 +93,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         }
 
         if (StringUtils.isEmpty(systemConfigVO.getUid())) {
-
             SystemConfig systemConfig = new SystemConfig();
-
             // 设置七牛云相关
             systemConfig.setLocalPictureBaseUrl(systemConfigVO.getLocalPictureBaseUrl());
             systemConfig.setQiNiuPictureBaseUrl(systemConfigVO.getQiNiuPictureBaseUrl());
@@ -146,14 +144,9 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
 
         }
 
-        // 更新系统配置成功后，需要删除Redis中的系统配置，主要用于mogu_picture获取上传配置信息
-        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attribute.getRequest();
-        if (request.getAttribute(SysConf.TOKEN) != null) {
-            String token = request.getAttribute(SysConf.TOKEN).toString();
-            redisUtil.delete(RedisConf.SYSTEM_CONFIG + RedisConf.SEGMENTATION + token);
-            log.info("成功删除Redis中的系统配置！");
-        }
+        // 更新系统配置成功后，需要删除Redis中的系统配置
+        redisUtil.delete(RedisConf.SYSTEM_CONFIG);
+
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 }

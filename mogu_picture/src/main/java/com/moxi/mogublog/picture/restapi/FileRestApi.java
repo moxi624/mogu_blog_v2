@@ -37,11 +37,9 @@ import java.net.URLConnection;
 import java.util.*;
 
 /**
- * <p>
  * 图片上传RestApi
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-17
  */
 @RestController
@@ -376,13 +374,10 @@ public class FileRestApi {
     public synchronized Object uploadPicsByUrl(HttpServletRequest request, @Validated({GetList.class}) @RequestBody FileVO fileVO, BindingResult result) {
 
         String token = request.getParameter(SysConf.TOKEN);
-
         // 获取七牛云配置文件
         Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
-
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
-
         String uploadQiNiu = "";
         String uploadLocal = "";
         String localPictureBaseUrl = "";
@@ -534,8 +529,6 @@ public class FileRestApi {
                         while ((len = inputStream.read(bs)) != -1) {
                             os.write(bs, 0, len);
                         }
-
-
                     } catch (Exception e) {
                         log.info("==上传文件异常===url:" + saveUrl + "-----");
                         e.printStackTrace();
@@ -584,25 +577,17 @@ public class FileRestApi {
                         }
                     }
                 }
-
-
                 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
-
                 file.setCreateTime(new Date(System.currentTimeMillis()));
                 file.setFileSortUid(fileSort.getUid());
                 file.setFileOldName(itemUrl);
                 file.setFileSize(0L);
                 file.setPicExpandedName("jpg");
                 file.setPicName(newFileName);
-
-                String url = "";
-
                 // 设置本地图片
                 file.setPicUrl(localPictureBaseUrl + picurl);
-
                 // 设置七牛云图片
                 file.setQiNiuUrl(qiNiuPictureBaseUrl + qiNiuUrl);
-
                 file.setStatus(EStatus.ENABLE);
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);
@@ -819,22 +804,16 @@ public class FileRestApi {
 
 
                 com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
-
                 file.setCreateTime(new Date(System.currentTimeMillis()));
                 file.setFileSortUid(fileSort.getUid());
                 file.setFileOldName(itemUrl);
                 file.setFileSize(0L);
                 file.setPicExpandedName("jpg");
                 file.setPicName(newFileName);
-
-                String url = "";
-
                 // 设置本地图片
                 file.setPicUrl(picurl);
-
                 // 设置七牛云图片
                 file.setQiNiuUrl(qiNiuUrl);
-
                 file.setStatus(EStatus.ENABLE);
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);

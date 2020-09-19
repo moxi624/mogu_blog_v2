@@ -4,8 +4,10 @@ import com.moxi.mogublog.commons.entity.WebVisit;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +66,12 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
         webVisit.setIp(ip);
 
         //从Redis中获取IP来源
-        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+        String jsonResult = redisUtil.get(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip);
         if (StringUtils.isEmpty(jsonResult)) {
             String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
             if (StringUtils.isNotEmpty(addresses)) {
                 webVisit.setIpSource(addresses);
-                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+                redisUtil.setEx(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip, addresses, 24, TimeUnit.HOURS);
             }
         } else {
             webVisit.setIpSource(jsonResult);

@@ -38,7 +38,6 @@ public class BaseSysConf {
      */
     public final static String OS = "OS";
     public final static String BROWSER = "BROWSER";
-    public final static String IP_SOURCE = "IP_SOURCE";
     public final static String IP = "ip";
     public final static String UTF_8 = "utf-8";
 
@@ -110,20 +109,10 @@ public class BaseSysConf {
     public final static String MONTH_SET = "MONTH_SET";
     // 博客等级
     public final static String BLOG_LEVEL = "BLOG_LEVEL";
-    // 最热博客
-    public final static String HOT_BLOG = "HOT_BLOG";
-    // 最新博客
-    public final static String NEW_BLOG = "NEW_BLOG";
-    // 管理员Token
-    public final static String ADMIN_TOKEN = "ADMIN_TOKEN";
-    // Web端用户Token
-    public final static String WEB_TOKEN = "WEB_TOKEN";
+
 
     // 字典类型
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";
-
-    // token令牌
-    public final static String USER_TOEKN = "userToken";
 
     // 文件分割符
     public final static String FILE_SEGMENTATION = ",";
@@ -145,7 +134,6 @@ public class BaseSysConf {
     public static final int TEN = 10;
 
     public static final int TWO_TWO_FIVE = 225;
-
     public static final int ONE_ZERO_TWO_FOUR = 1024;
 
     // SystemConfig相关
@@ -186,6 +174,4 @@ public class BaseSysConf {
     public static final String HOT_TAG_COUNT = "HOT_TAG_COUNT";
     public static final String FRIENDLY_LINK_COUNT = "FRIENDLY_LINK_COUNT";
     public final static String PROJECT_NAME_ = "PROJECT_NAME";
-
-
 }

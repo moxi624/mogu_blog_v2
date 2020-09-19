@@ -2,10 +2,12 @@ package com.moxi.mogublog.admin.annotion.OperationLogger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.entity.ExceptionLog;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -79,12 +81,12 @@ public class LoggerAspect {
         String operationName = AspectUtil.INSTANCE.parseParams(joinPoint.getArgs(), operationLogger.value());
 
         //从Redis中获取IP来源
-        String jsonResult = redisUtil.get(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip);
+        String jsonResult = redisUtil.get(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip);
         if (StringUtils.isEmpty(jsonResult)) {
             String addresses = IpUtils.getAddresses(SysConf.IP + SysConf.EQUAL_TO + ip, SysConf.UTF_8);
             if (StringUtils.isNotEmpty(addresses)) {
                 exception.setIpSource(addresses);
-                redisUtil.setEx(SysConf.IP_SOURCE + BaseSysConf.REDIS_SEGMENTATION + ip, addresses, 24, TimeUnit.HOURS);
+                redisUtil.setEx(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip, addresses, 24, TimeUnit.HOURS);
             }
         } else {
             exception.setIpSource(jsonResult);

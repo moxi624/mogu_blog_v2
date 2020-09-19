@@ -747,12 +747,12 @@ public class CommentRestApi {
         // 通过user中获取的token，去修改redis中的信息
         if (StringUtils.isNotEmpty(user.getValidCode())) {
             String accessToken = user.getValidCode();
-            String userInfo = redisUtil.get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
+            String userInfo = redisUtil.get(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken);
             if (StringUtils.isNotEmpty(userInfo)) {
                 Map<String, Object> map = JsonUtils.jsonToMap(userInfo);
                 // 关闭邮件通知
                 map.put(SysConf.START_EMAIL_NOTIFICATION, 0);
-                redisUtil.setEx(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(map), userTokenSurvivalTime, TimeUnit.HOURS);
+                redisUtil.setEx(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(map), userTokenSurvivalTime, TimeUnit.HOURS);
             }
         }
 

@@ -46,12 +46,12 @@ public class BlogListener {
             String uid = map.get(SysConf.BLOG_UID);
 
             //从Redis清空对应的数据
-            redisUtil.set(SysConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_ONE, "");
-            redisUtil.set(SysConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_TWO, "");
-            redisUtil.set(SysConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_THREE, "");
-            redisUtil.set(SysConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_FOUR, "");
-            redisUtil.set(SysConf.HOT_BLOG, "");
-            redisUtil.set(SysConf.NEW_BLOG, "");
+            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_ONE, "");
+            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_TWO, "");
+            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_THREE, "");
+            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_FOUR, "");
+            redisUtil.set(RedisConf.HOT_BLOG, "");
+            redisUtil.set(RedisConf.NEW_BLOG, "");
 
             switch (comment) {
                 case SysConf.DELETE_BATCH: {

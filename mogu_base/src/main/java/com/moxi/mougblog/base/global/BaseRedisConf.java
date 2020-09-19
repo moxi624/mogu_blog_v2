@@ -91,7 +91,7 @@ public class BaseRedisConf {
     /**
      * token令牌
      */
-    public final static String USER_TOEKN = "userToken";
+    public final static String USER_TOKEN = "USER_TOKEN";
 
     /**
      * 激活用户的时间

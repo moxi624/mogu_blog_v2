@@ -28,9 +28,7 @@ import java.util.List;
 
 
 /**
- * <p>
  * 参数配置 服务实现类
- * </p>
  *
  * @author 陌溪
  * @date 2020年7月21日16:41:28
@@ -115,7 +113,6 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
 
     @Override
     public String editSysParams(SysParamsVO sysParamsVO) {
-
         SysParams sysParams = sysParamsService.getById(sysParamsVO.getUid());
         // 判断编辑的参数键名是否存在
         if (!sysParamsVO.getParamsKey().equals(sysParams.getParamsKey())) {
@@ -151,7 +148,6 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
             Collection<SysParams> sysParamsList = sysParamsService.listByIds(sysParamsUidList);
             // 更新完成数据库后，还需要清空Redis中的缓存，因此需要存储键值
             List<String> redisKeys = new ArrayList<>();
-
             sysParamsList.forEach(item -> {
                 item.setStatus(EStatus.DISABLED);
                 redisKeys.add(RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + item.getParamsKey());

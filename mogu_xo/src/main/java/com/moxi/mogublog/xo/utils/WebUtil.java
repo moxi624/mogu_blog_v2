@@ -139,11 +139,11 @@ public class WebUtil {
                     }
                     // 图片优先显示 七牛云 or 本地
                     if (EOpenStatus.OPEN.equals(picturePriority)) {
-                        map.put(SysConf.URL, qiNiuPictureBaseUrl + (String) picData.get(i).get(SysConf.QI_NIU_URL));
+                        map.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
                     } else {
-                        map.put(SysConf.URL, localPictureBaseUrl + (String) picData.get(i).get(SysConf.URL));
+                        map.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.URL));
                     }
-                    map.put(SysConf.UID, (String) picData.get(i).get(SysConf.UID));
+                    map.put(SysConf.UID, picData.get(i).get(SysConf.UID));
                     resultList.add(map);
                 }
             }

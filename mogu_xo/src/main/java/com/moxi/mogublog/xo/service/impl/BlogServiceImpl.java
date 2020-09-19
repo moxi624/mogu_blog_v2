@@ -20,6 +20,7 @@ import com.moxi.mogublog.xo.vo.BlogVO;
 import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -1074,10 +1075,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
             // 将从数据库查询的数据缓存到redis中，设置1小时后过期 [避免 list 中没有数据而保存至 redis 的情况]
             if (firstBlogList.size() > 0) {
-                redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.ONE, JsonUtils.objectToJson(firstBlogList), 1, TimeUnit.HOURS);
+                redisUtil.setEx(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_ONE, JsonUtils.objectToJson(firstBlogList), 1, TimeUnit.HOURS);
             }
             if (secondBlogList.size() > 0) {
-                redisUtil.setEx(SysConf.BLOG_LEVEL + SysConf.REDIS_SEGMENTATION + SysConf.TWO, JsonUtils.objectToJson(secondBlogList), 1, TimeUnit.HOURS);
+                redisUtil.setEx(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_TWO, JsonUtils.objectToJson(secondBlogList), 1, TimeUnit.HOURS);
             }
 
             switch (level) {
@@ -1106,7 +1107,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Override
     public IPage<Blog> getHotBlog() {
         //从Redis中获取内容
-        String jsonResult = redisUtil.get(SysConf.HOT_BLOG);
+        String jsonResult = redisUtil.get(RedisConf.HOT_BLOG);
         //判断redis中是否有文章
         if (StringUtils.isNotEmpty(jsonResult)) {
             List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
@@ -1134,7 +1135,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         pageList.setRecords(list);
         // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
         if (list.size() > 0) {
-            redisUtil.setEx(SysConf.HOT_BLOG, JsonUtils.objectToJson(list), 1, TimeUnit.HOURS);
+            redisUtil.setEx(RedisConf.HOT_BLOG, JsonUtils.objectToJson(list), 1, TimeUnit.HOURS);
         }
         return pageList;
     }

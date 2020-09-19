@@ -12,6 +12,7 @@ import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.global.MessageConf;
+import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
@@ -54,6 +55,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -202,6 +204,7 @@ public class AuthRestApi {
                 updateUserPhoto(data, user);
             }
         } else {
+            // 当获取头像失败时，需要从网站上进行获取
             updateUserPhoto(data, user);
         }
 
@@ -246,12 +249,17 @@ public class AuthRestApi {
 
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
-            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
         }
 
         httpServletResponse.sendRedirect(webSiteUrl + "?token=" + accessToken);
     }
 
+    /**
+     * 更新用户头像
+     * @param data
+     * @param user
+     */
     private void updateUserPhoto(Map<String, Object> data, User user) {
         QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
@@ -282,9 +290,7 @@ public class AuthRestApi {
                     String localPictureBaseUrl = systemConfigMap.get(SQLConf.LOCAL_PICTURE_BASE_URL).toString();
                     String qiNiuPictureBaseUrl = systemConfigMap.get(SQLConf.QI_NIU_PICTURE_BASE_URL).toString();
                     String picturePriority = systemConfigMap.get(SQLConf.PICTURE_PRIORITY).toString();
-
                     user.setAvatar(pictureMap.get(SysConf.UID).toString());
-
                     // 判断图片优先展示
                     if (EOpenStatus.OPEN.equals(picturePriority)) {
                         // 使用七牛云
@@ -310,16 +316,11 @@ public class AuthRestApi {
      */
     @ApiOperation(value = "decryptData", notes = "QQ小程序登录数据解析")
     @PostMapping("/decryptData")
-    public String decryptData(@RequestBody Map<String, String> map) {
+    public String decryptData(@RequestBody Map<String, String> map) throws UnsupportedEncodingException {
 
-        try {
             String encryptDataB64 = map.get("encryptDataB64");
             String jsCode = map.get("jsCode");
             String ivB64 = map.get("ivB64");
-
-//            String params = "appid=" + APP_ID + "&secret=" + SECRET + "&js_code=" +  jsCode + "&grant_type=" + GRANT_TYPE;
-//            String result = HttpRequestUtil.sendGet("https://api.q.qq.com/sns/jscode2session", params);
-
             HashMap<String, Object> paramMap = new HashMap<>();
             paramMap.put("appid", APP_ID);
             paramMap.put("secret", SECRET);
@@ -328,16 +329,16 @@ public class AuthRestApi {
 
             String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
 
-            log.error("获取UnionID");
-            log.error(result);
+            log.info("获取UnionID");
+            log.info(result);
 
             Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
 
             if (resultMap != null) {
                 String sessionKey = resultMap.get("session_key").toString();
                 String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
-                log.error("解析加密数据");
-                log.error(userInfo);
+                log.info("解析加密数据");
+                log.info(userInfo);
                 Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
 
                 Boolean exist = false;
@@ -346,16 +347,20 @@ public class AuthRestApi {
                 if (userInfoMap.get(SysConf.OPEN_ID) != null) {
                     user = userService.getUserBySourceAnduuid("QQ", userInfoMap.get(SysConf.OPEN_ID).toString());
                     if (user != null) {
+                        log.info("用户已存在");
                         exist = true;
                     } else {
+                        log.info("用户未存在，开始创建新用户");
                         user = new User();
                     }
                 } else {
+                    log.info("无法获取到openId");
                     return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
                 }
 
                 // 判断用户性别
                 if (userInfoMap.get(SysConf.GENDER) != null) {
+                    log.info("获取用户性别:{}", userInfoMap.get(SysConf.GENDER));
                     String genderStr = userInfoMap.get(SysConf.GENDER).toString();
                     String gender = Double.valueOf(genderStr).intValue() + "";
                     if (EGender.MALE.equals(gender)) {
@@ -371,7 +376,7 @@ public class AuthRestApi {
                 String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
                 List<String> photoList = webUtil.getPicture(pictureList);
                 Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
-
+                log.info("获取用户头像信息:{}", JsonUtils.objectToJson(picMap));
                 // 判断该用户是否含有头像信息
                 if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE)) && photoList.size() > 0) {
                     List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
@@ -407,11 +412,11 @@ public class AuthRestApi {
 
                 if (exist) {
                     user.updateById();
+                    log.info("向数据库更新用户信息");
+                    log.info(JsonUtils.objectToJson(user));
                 } else {
-
                     user.setUuid(userInfoMap.get(SysConf.OPEN_ID).toString());
                     user.setSource("QQ");
-
                     String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
                     user.setUserName(userName);
                     // 如果昵称为空，那么直接设置用户名
@@ -421,6 +426,8 @@ public class AuthRestApi {
                     // 默认密码
                     user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
                     user.insert();
+                    log.info("向数据库插入一条新的用户信息");
+                    log.info(JsonUtils.objectToJson(user));
                 }
 
                 // 过滤密码
@@ -428,16 +435,13 @@ public class AuthRestApi {
 
                 if (user != null) {
                     //将从数据库查询的数据缓存到redis中
-                    stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+                    stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
                 }
                 return ResultUtil.result(SysConf.SUCCESS, user);
             } else {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
             }
-        } catch (Exception e) {
-            e.getStackTrace();
-            return ResultUtil.result(SysConf.ERROR, MessageConf.SERVER_ERROR);
-        }
+
     }
 
     @RequestMapping("/revoke/{source}/{token}")
@@ -455,7 +459,7 @@ public class AuthRestApi {
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/verify/{accessToken}")
     public String verifyUser(@PathVariable("accessToken") String accessToken) {
-        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
+        String userInfo = stringRedisTemplate.opsForValue().get(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken);
         if (StringUtils.isEmpty(userInfo)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         } else {
@@ -467,7 +471,7 @@ public class AuthRestApi {
     @ApiOperation(value = "删除accessToken", notes = "删除accessToken")
     @RequestMapping("/delete/{accessToken}")
     public String deleteUserAccessToken(@PathVariable("accessToken") String accessToken) {
-        stringRedisTemplate.delete(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + accessToken);
+        stringRedisTemplate.delete(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken);
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
@@ -479,7 +483,7 @@ public class AuthRestApi {
      */
     @GetMapping("/getSystemConfig")
     public String getSystemConfig(@RequestParam("token") String token) {
-        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token);
+        String userInfo = stringRedisTemplate.opsForValue().get(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token);
         if (StringUtils.isEmpty(userInfo)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
@@ -534,10 +538,10 @@ public class AuthRestApi {
             rabbitMqUtil.sendRegisterEmail(user, token);
 
             // 修改成功后，更新Redis中的用户信息
-            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
             return ResultUtil.result(SysConf.SUCCESS, "您已修改邮箱，请先到邮箱进行确认绑定");
         } else {
-            stringRedisTemplate.opsForValue().set(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
             return ResultUtil.result(SysConf.SUCCESS, "修改成功");
         }
     }
@@ -545,7 +549,7 @@ public class AuthRestApi {
     @ApiOperation(value = "更新用户密码", notes = "更新用户密码")
     @PostMapping("/updateUserPwd")
     public String updateUserPwd(HttpServletRequest request, @RequestParam(value = "oldPwd") String oldPwd, @RequestParam("newPwd") String newPwd) {
-        if (StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(oldPwd)) {
+        if (StringUtils.isEmpty(oldPwd)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         if (request.getAttribute(SysConf.USER_UID) == null || request.getAttribute(SysConf.TOKEN) == null) {
@@ -706,7 +710,7 @@ public class AuthRestApi {
     @GetMapping("/bindUserEmail/{token}/{code}")
     public String bindUserEmail(@PathVariable("token") String token, @PathVariable("code") String code) {
 
-        String userInfo = stringRedisTemplate.opsForValue().get(SysConf.USER_TOEKN + SysConf.REDIS_SEGMENTATION + token);
+        String userInfo = stringRedisTemplate.opsForValue().get(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token);
         if (StringUtils.isEmpty(userInfo)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
