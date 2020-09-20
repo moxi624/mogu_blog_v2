@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * web有关的工具类
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2017年9月24日23:27:03
  */
 @Slf4j
@@ -81,17 +81,14 @@ public class WebUtils {
             case 1: {
                 pattern = Pattern.compile(RE_TOP, Pattern.CASE_INSENSITIVE);
             }
-            ;
             break;
             case 2: {
                 pattern = Pattern.compile(RE_TOP_2, Pattern.CASE_INSENSITIVE);
             }
-            ;
             break;
             case 3: {
                 pattern = Pattern.compile(RE_TOP_3, Pattern.CASE_INSENSITIVE);
             }
-            ;
             break;
             default: {
                 log.error("传入level有误");

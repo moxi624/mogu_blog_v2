@@ -1,9 +1,9 @@
 package com.moxi.mogublog.utils;
 /**
- * 对时间的操作的工具类
+ * 时间操作工具类
  *
  * @author 陌溪
- * 2018年5月8日  上午9:20:33
+ * 2018年5月8日 上午9:20:33
  */
 
 import org.slf4j.Logger;

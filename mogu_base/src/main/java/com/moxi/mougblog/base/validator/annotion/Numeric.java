@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * 是否为数字
+ * 判断是否为数字【注解】
  *
  * @author 陌溪
  * @date 2019年12月4日13:14:24

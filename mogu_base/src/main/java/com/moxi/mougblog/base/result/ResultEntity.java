@@ -26,6 +26,17 @@ public class ResultEntity<T> {
      */
     private T data;
 
+    public ResultEntity() {
+
+    }
+
+    public ResultEntity(String result, String message, T data) {
+        super();
+        this.result = result;
+        this.message = message;
+        this.data = data;
+    }
+
     /**
      * 请求处理成功且不需要返回数据时使用的工具方法
      *
@@ -53,17 +64,6 @@ public class ResultEntity<T> {
      */
     public static <Type> ResultEntity<Type> failed(String message) {
         return new ResultEntity<Type>(FAILED, message, null);
-    }
-
-    public ResultEntity() {
-
-    }
-
-    public ResultEntity(String result, String message, T data) {
-        super();
-        this.result = result;
-        this.message = message;
-        this.data = data;
     }
 
     @Override

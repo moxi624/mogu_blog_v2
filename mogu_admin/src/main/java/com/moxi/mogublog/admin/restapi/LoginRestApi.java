@@ -109,14 +109,13 @@ public class LoginRestApi {
             // 设置错误登录次数
             return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
-        //验证密码
+        // 对密码进行加盐加密验证，采用SHA-256 + 随机盐【动态加盐】 + 密钥对密码进行加密
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         boolean isPassword = encoder.matches(password, admin.getPassWord());
         if (!isPassword) {
             //密码错误，返回提示
             return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
-
         List<String> roleUids = new ArrayList<>();
         roleUids.add(admin.getRoleUid());
         List<Role> roles = (List<Role>) roleService.listByIds(roleUids);

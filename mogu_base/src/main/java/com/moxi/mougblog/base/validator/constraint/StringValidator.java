@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 不为空字符串
+ * 判断是否为空字符串【校验器】
  *
  * @author 陌溪
  * @date 2019年12月4日13:17:17

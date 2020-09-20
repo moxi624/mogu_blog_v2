@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 行为枚举类
+ *
  * @author 陌溪
  * @date 2020/9/14 10:40
  */
@@ -135,6 +136,7 @@ public enum EBehavior {
             }
             break;
             case PUBLISH_COMMENT: {
+                // 发表评论
                 Object object = nameAndArgsMap.get(BaseSysConf.COMMENT_VO);
                 Map<String, Object> map = JsonUtils.objectToMap(object);
                 if (map.get(BaseSysConf.CONTENT) != null) {

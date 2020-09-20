@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @description: 400 统一异常处理
+ * @description: RestApi参数校验异常处理
  * @author: 陌溪
  * @date: 2019年12月4日22:48:18
  */

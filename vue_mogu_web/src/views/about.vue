@@ -131,7 +131,7 @@
         },
         methods: {
             //拿到vuex中的写的两个方法
-            ...mapMutations(["setCommentList"]),
+            ...mapMutations(["setCommentList", "setWebConfigData"]),
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();
@@ -207,16 +207,7 @@
 
 <style scoped>
   .emoji-panel-wrap {
-    box-sizing: border-box;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    background-color: #ffffff;
     width: 470px;
-    height: 180px;
-    position: absolute;
-    z-index: 999;
-    left: 35px;
-    top: 8px;
   }
   .emoji-size-small {
     zoom: 0.3;

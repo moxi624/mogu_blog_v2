@@ -167,6 +167,27 @@
 
 <style>
   @import "../../assets/css/emoji.css";
+  .emoji-panel-wrap {
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    width: 650px;
+    height: 135px;
+    position: absolute;
+    z-index: 999;
+    left: 50px;
+    top: 10px;
+  }
+  .emoji-size-small {
+    zoom: 0.3;
+    margin: 5px;
+    vertical-align: middle;
+  }
+  .emoji-size-large {
+    zoom: 0.5; // emojipanel表情大小
+    margin: 5px;
+  }
   .commentBox {
     min-width: 700px;
     width: 100%;

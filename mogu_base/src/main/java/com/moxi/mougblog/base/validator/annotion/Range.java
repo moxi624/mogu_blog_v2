@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * 字符串范围约束
+ * 字符串范围约束，限制长度【注解】
  *
  * @author 陌溪
  * @date 2019年12月4日22:48:34

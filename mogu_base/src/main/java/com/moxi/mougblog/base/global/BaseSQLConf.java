@@ -67,8 +67,8 @@ public class BaseSQLConf {
     public final static String TYPE = "type";
 
     // t_subject表
-    public final static String  SUBJECT_NAME = "subject_name";
-    public final static String  SUBJECT_UID = "subject_uid";
+    public final static String SUBJECT_NAME = "subject_name";
+    public final static String SUBJECT_UID = "subject_uid";
 
     // t_picture
     public final static String FILE_OLD_NAME = "file_old_name";

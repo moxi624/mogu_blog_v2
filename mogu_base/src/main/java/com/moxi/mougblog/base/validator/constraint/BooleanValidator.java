@@ -6,6 +6,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
+ * 判断Boolean类型是否为空【校验器】
+ *
  * @author 陌溪
  * @date 2019年12月4日13:16:06
  */

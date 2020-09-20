@@ -1,5 +1,6 @@
 package com.moxi.mogublog.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,12 +11,14 @@ import java.util.UUID;
 /**
  * 对字符串转换的一些操作
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
+ * @date 2020年9月20日10:56:45
  */
+@Slf4j
 public class StringUtils {
 
-    public static Logger log = LoggerFactory.getLogger(StringUtils.class);
-    private static int machineId = 1; //集群号
+    //集群号
+    private static int machineId = 1;
 
     /**
      * 把String 转换为 long
@@ -214,12 +217,12 @@ public class StringUtils {
     public static String getOrderNumberByUUID() {
 
         int hashCodeV = UUID.randomUUID().toString().hashCode();
-        if (hashCodeV < 0) {//有可能是负数
-            hashCodeV = -hashCodeV;
+        //有可能是负数
+        if (hashCodeV < 0) {
+            hashCodeV = - hashCodeV;
         }
         String orderNumber = machineId + String.format("%015d", hashCodeV);
         return orderNumber;
-
     }
 
     /**
@@ -230,7 +233,8 @@ public class StringUtils {
     public static String getOutRefundNoByUUID() {
 
         int hashCodeV = UUID.randomUUID().toString().hashCode();
-        if (hashCodeV < 0) {//有可能是负数
+        //有可能是负数
+        if (hashCodeV < 0) {
             hashCodeV = -hashCodeV;
         }
         String out_refund_no = "BACK" + machineId + String.format("%015d", hashCodeV);
@@ -260,8 +264,6 @@ public class StringUtils {
      * @return
      */
     public static String listToString(List<Long> list, String code) {
-
-
         String s = "";
         if (list == null || list.size() <= 0) {
             return s;
@@ -282,8 +284,6 @@ public class StringUtils {
      * @return
      */
     public static String listTranformString(List<String> list, String code) {
-
-
         String s = "";
         if (list == null || list.size() <= 0) {
             return s;
@@ -292,10 +292,20 @@ public class StringUtils {
         return s;
     }
 
+    /**
+     * 判断是否为非空字符串
+     * @param str
+     * @return
+     */
     public static boolean isNotBlank(String str) {
         return !StringUtils.isBlank(str);
     }
 
+    /**
+     * 判断是否为空字符串
+     * @param str
+     * @return
+     */
     public static boolean isBlank(String str) {
         int strLen;
         if (str == null || (strLen = str.length()) == 0) {
@@ -352,19 +362,16 @@ public class StringUtils {
         if (str == null) {
             return null;
         }
-
         // handle negatives, which means last n characters
         if (start < 0) {
-            start = str.length() + start; // remember start is negative
+            start = str.length() + start;
         }
-
         if (start < 0) {
             start = 0;
         }
         if (start > str.length()) {
             return "";
         }
-
         return str.substring(start);
     }
 

@@ -97,7 +97,6 @@ public class BaseMessageConf {
     public static final String INSERT_DEFAULT_ERROR = "插入操作失败";
 
 
-
     //=========================================
     // 更新操作相关异常码
     //=========================================

@@ -27,9 +27,9 @@ import java.util.List;
 
 
 /**
- * 文件有关的工具类
+ * 文件操作工具类
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2017年10月2日12:16:27
  */
 @Slf4j

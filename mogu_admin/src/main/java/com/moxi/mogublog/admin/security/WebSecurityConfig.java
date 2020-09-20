@@ -16,6 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * SpringSecurity配置文件
+ * 用于配置哪些请求被拦截，哪些请求可以匿名访问
+ *
+ * @author 陌溪
+ * @date 2020年9月19日10:05:40
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -70,22 +77,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        //原因是因为springSecurty使用X-Frame-Options防止网页被Frame。所以需要关闭为了让后端的接口管理的swagger页面正常显示
+        //因为springSecurty使用X-Frame-Options防止网页被Frame。所以需要关闭为了让后端的接口管理的swagger页面正常显示
         httpSecurity.headers().frameOptions().disable();
 
         httpSecurity
-                // 由于使用的是JWT，我们这里不需要csrf
-                .cors()//新加入,允许跨域
+                //新加入,允许跨域
+                .cors()
                 .and()
+                // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-
                 // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
                 .authorizeRequests()
                 //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                 // 允许对于网站静态资源的无授权访问
                 .antMatchers(
                         "/swagger-ui.html",
@@ -97,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/actuator/**",
                         "/druid/**"
                 ).permitAll()
-                // 对于获取token的rest api要允许匿名访问
+                // 对于获取token的RestApi要允许匿名访问
                 .antMatchers("/auth/**",
                         "/creatCode/**",
                         "/file/**"
@@ -105,7 +110,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
 
-        // 添加JWT filter
+        // 添加两个过滤器
+        // JwtAuthenticationTokenFilter: JWT认证过滤器,验证token有效性
+        // UsernamePasswordAuthenticationFilter: 认证操作全靠这个过滤器
         httpSecurity.addFilterBefore(registrationBean(new JwtAuthenticationTokenFilter()).getFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 禁用缓存

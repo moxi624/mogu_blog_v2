@@ -2,6 +2,7 @@ package com.moxi.mougblog.base.global;
 
 /**
  * 字符常量
+ *
  * @author: 陌溪
  * @date: 2019年12月4日22:47:53
  */
@@ -104,7 +105,6 @@ public class Constants {
     public final static String DATE_FORMAT_YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public final static String DATE_FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-
 
 
     public static final int THIRTY_TWO = 32;

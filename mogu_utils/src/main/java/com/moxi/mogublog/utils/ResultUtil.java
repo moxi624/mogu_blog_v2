@@ -10,6 +10,9 @@ import java.util.Map;
  * 2018年9月9日19:22:20
  */
 public class ResultUtil {
+    final static String CODE = "code";
+    final static String DATA = "data";
+
     /**
      * @param code success error
      * @param data 返回的数据
@@ -17,9 +20,8 @@ public class ResultUtil {
      */
     public static String result(Object code, Object data) {
         Map<Object, Object> map = new HashMap<>();
-        map.put("code", code);
-        map.put("data", data);
+        map.put(CODE, code);
+        map.put(DATA, data);
         return JsonUtils.objectToJson(map);
     }
-
 }

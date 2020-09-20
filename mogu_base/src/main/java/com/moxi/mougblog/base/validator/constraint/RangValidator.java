@@ -1,13 +1,14 @@
 package com.moxi.mougblog.base.validator.constraint;
 
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mougblog.base.validator.Messages;
 import com.moxi.mougblog.base.validator.annotion.Range;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
+ * 字符串范围约束，限制长度【校验器】
+ *
  * @author 陌溪
  * @date 2019年12月4日13:17:03
  */

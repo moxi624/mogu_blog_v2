@@ -8,8 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * 这里有些冗余了，其实面对控制器的VO对象，应该全为String类型。
- * 作为后端程序员，不应该相信前端传递的任何参数，所以字符串类型也应该被识别。
+ * ID校验器，主要判断是否为空，并且长度是否为32
  *
  * @author 陌溪
  * @date 2019年12月4日22:48:43

@@ -6,6 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * SpringSecurity中的用户实体类
+ * @author 陌溪
+ * @date 2020年9月19日21:43:47
+ */
 public class SecurityUser implements UserDetails {
     /**
      *
@@ -31,7 +36,10 @@ public class SecurityUser implements UserDetails {
         this.authorities = authorities;
     }
 
-    //返回分配给用户的角色列表
+    /**
+     * 返回分配给用户的角色列表
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -53,28 +61,40 @@ public class SecurityUser implements UserDetails {
         return username;
     }
 
-    // 账户是否激活
+    /**
+     * 账户是否激活
+     * @return
+     */
     @JsonIgnore
     @Override
     public boolean isEnabled() {
         return enabled;
     }
 
-    // 账户是否未过期
+    /**
+     * 账户是否未过期
+     * @return
+     */
     @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    // 账户是否未锁定
+    /**
+     * 账户是否未锁定
+     * @return
+     */
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    // 密码是否未过期
+    /**
+     * 密码是否未过期
+     * @return
+     */
     @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {

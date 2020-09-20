@@ -47,6 +47,10 @@ public class UniappUtils {
         );
     }
 
+    /**
+     * 初始化方法
+     * @param keyBytes
+     */
     private static void init(byte[] keyBytes) {
         // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
         int base = 16;

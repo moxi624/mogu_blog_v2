@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 发送http请求的工具类
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  */
 @Slf4j
 public class HttpRequestUtil {

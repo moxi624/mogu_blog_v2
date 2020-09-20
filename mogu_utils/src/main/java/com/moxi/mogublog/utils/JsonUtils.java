@@ -23,8 +23,8 @@ import java.util.Map;
 /**
  * json解析的工具类
  *
- * @author xzx19950624@qq.com
- * 2018年5月7日  下午5:21:23
+ * @author 陌溪
+ * 2018年5月7日 下午5:21:23
  */
 public class JsonUtils {
 
@@ -37,13 +37,11 @@ public class JsonUtils {
      *
      * @param obj
      * @return
-     * @author xuzhixiang
+     * 
      * 2018年5月7日  下午5:27:16
      */
     public static String objectToJson(Object obj) {
-
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-
         try {
             String json = gson.toJson(obj);
             return json;
@@ -55,7 +53,6 @@ public class JsonUtils {
 
     /**
      * 将Object转换成Map
-     *
      * @param obj
      * @return
      */
@@ -74,12 +71,9 @@ public class JsonUtils {
 
     /**
      * 把json字符串转化为对象
-     *
      * @param jsonString
      * @param clazz
      * @return
-     * @author xuzhixiang
-     * 2018年5月7日  下午5:39:43
      */
     public static Object jsonToObject(String jsonString, Class<?> clazz) {
 
@@ -95,11 +89,8 @@ public class JsonUtils {
 
     /**
      * josn转arrayList
-     *
      * @param jsonArray
      * @return
-     * @author xuzhixiang
-     * 2018年5月7日  下午5:49:18
      */
     public static ArrayList<?> jsonArrayToArrayList(String jsonArray) {
 
@@ -122,9 +113,6 @@ public class JsonUtils {
 
     /**
      * JSON 转 ArrayList
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年10月27日下午4:43:25
      */
     public static ArrayList<?> jsonArrayToArrayList(String jsonArray, Class<?> clazz) {
 
@@ -145,11 +133,8 @@ public class JsonUtils {
 
     /**
      * 把json转换为map类型的数据
-     *
      * @param json
      * @return
-     * @author xuzhixiang
-     * 2018年5月7日  下午5:54:22
      */
     public static Map<String, Object> jsonToMap(String json) {
 
@@ -172,7 +157,6 @@ public class JsonUtils {
 
     /**
      * 将Json转换成Map<String, ?>
-     *
      * @param json
      * @param clazz
      * @return
@@ -198,12 +182,10 @@ public class JsonUtils {
 
     /**
      * 将map转换成pojo
-     *
      * @param map
      * @param beanType
      * @param <T>
      * @return
-     * @date 2020年1月16日11:05:51
      */
     public static <T> T mapToPojo(Map<String, Object> map, Class<T> beanType) {
 
@@ -221,7 +203,6 @@ public class JsonUtils {
 
     /**
      * 将json结果集转化为对象
-     *
      * @param jsonData
      * @param beanType
      * @param <T>
@@ -239,9 +220,6 @@ public class JsonUtils {
 
     /**
      * 将json数据转换成pojo对象list
-     * <p>Title: jsonToList</p>
-     * <p>Description: </p>
-     *
      * @param jsonData
      * @param beanType
      * @return
@@ -260,7 +238,6 @@ public class JsonUtils {
 
     /**
      * 将任意pojo转化成map
-     *
      * @param t pojo对象
      * @return
      */

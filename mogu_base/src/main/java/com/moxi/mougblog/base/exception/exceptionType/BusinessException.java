@@ -1,9 +1,10 @@
 package com.moxi.mougblog.base.exception.exceptionType;
 
 /**
- * 业务异常
- * @Author: 陌溪
- * @Date: 2019年12月4日22:47:32
+ * 自定义业务异常
+ *
+ * @author 陌溪
+ * @date 2019年12月4日22:47:32
  */
 public class BusinessException extends RuntimeException {
 

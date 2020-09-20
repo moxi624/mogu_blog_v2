@@ -26,6 +26,25 @@ public class ResultVO<T> {
      */
     private T data;
 
+    public ResultVO() {
+
+    }
+
+    public ResultVO(T data) {
+        this(ResultCode.SUCCESS, data);
+    }
+
+    public ResultVO(ResultCode resultCode, T data) {
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMsg();
+        this.data = data;
+    }
+
+    public ResultVO(int code, String msg) {
+        this.code = code;
+        this.message = msg;
+    }
+
     /**
      * 请求处理成功且不需要返回数据时使用的工具方法
      *
@@ -71,25 +90,6 @@ public class ResultVO<T> {
      */
     public static <Type> ResultVO<Type> failed(ResultCode resultCode) {
         return new ResultVO<Type>(resultCode, null);
-    }
-
-    public ResultVO() {
-
-    }
-
-    public ResultVO(T data) {
-        this(ResultCode.SUCCESS, data);
-    }
-
-    public ResultVO(ResultCode resultCode, T data) {
-        this.code = resultCode.getCode();
-        this.message = resultCode.getMsg();
-        this.data = data;
-    }
-
-    public ResultVO(int code, String msg) {
-        this.code = code;
-        this.message = msg;
     }
 
     @Override

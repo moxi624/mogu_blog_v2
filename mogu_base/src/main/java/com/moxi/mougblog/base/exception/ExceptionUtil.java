@@ -7,6 +7,7 @@ import com.moxi.mougblog.base.vo.Result;
 
 /**
  * 异常工具类
+ *
  * @Author: 陌溪
  * @Date: 2019年12月4日22:47:08
  */
