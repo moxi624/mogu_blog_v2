@@ -1,18 +1,13 @@
 package com.moxi.mogublog.utils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Paths;
 
 /**
@@ -24,8 +19,6 @@ import java.nio.file.Paths;
 public class ImageUtils {
 
     public static void main(String[] args) throws Exception {
-
-        createStringMark("D://test.png", "测试文字","D://test1.png");
 
         System.out.println(System.currentTimeMillis());
         //输出目录
@@ -99,44 +92,5 @@ public class ImageUtils {
         g.dispose();
         // 输出png图片，formatName 对应图片的格式
         ImageIO.write(image, "png", outFile);
-    }
-
-
-    /**
-     * 给图片添加文字
-     * @param filePath    源图片路径
-     * @param markContent 图片中添加内容
-     * @param outPath     输出图片路径
-     *                    字体颜色等在函数内部实现的
-     */
-    public static boolean createStringMark(String filePath, String markContent, String outPath) {
-        ImageIcon imgIcon = new ImageIcon(filePath);
-        Image theImg = imgIcon.getImage();
-        int width = theImg.getWidth(null) == -1 ? 200 : theImg.getWidth(null);
-        int height = theImg.getHeight(null) == -1 ? 200 : theImg.getHeight(null);
-        BufferedImage bimage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = bimage.createGraphics();
-
-        g.setColor(Color.red);
-        g.setBackground(Color.red);
-        g.drawImage(theImg, 0, 0, null);
-        //字体、字型、字号
-        g.setFont(new Font("宋体", Font.PLAIN, 50));
-
-        //画文字
-        g.drawString(markContent, width / 3, height / 3);
-        g.dispose();
-        try {
-            //先用一个特定的输出文件名
-            FileOutputStream out = new FileOutputStream(outPath);
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-            JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(bimage);
-            param.setQuality(100, true);
-            encoder.encode(bimage, param);
-            out.close();
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
     }
 }
