@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * <p>
  * Web访问记录 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018年12月8日09:42:05
+ * @author 陌溪
+ * @date 2018年12月8日09:42:05
  */
 public interface WebVisitService extends SuperService<WebVisit> {
 

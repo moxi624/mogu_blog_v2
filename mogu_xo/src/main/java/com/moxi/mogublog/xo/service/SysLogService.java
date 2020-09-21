@@ -6,12 +6,10 @@ import com.moxi.mogublog.xo.vo.SysLogVO;
 import com.moxi.mougblog.base.service.SuperService;
 
 /**
- * <p>
  * 操作日志 服务类
- * </p>
  *
  * @author limbo
- * @since 2018-09-30
+ * @date 2018-09-30
  */
 public interface SysLogService extends SuperService<SysLog> {
 

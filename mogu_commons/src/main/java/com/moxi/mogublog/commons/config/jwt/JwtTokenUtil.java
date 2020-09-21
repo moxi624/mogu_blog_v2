@@ -55,6 +55,9 @@ public class JwtTokenUtil {
      */
     public String createJWT(String userName, String adminUid, String roleName,
                             String audience, String issuer, long TTLMillis, String base64Security) {
+        // HS256是一种对称算法, 双方之间仅共享一个 密钥
+        // 由于使用相同的密钥生成签名和验证签名, 因此必须注意确保密钥不被泄密
+        // 也可以改成RS256: 非对称加密算法，使用私钥进行加密，使用公钥来验证Token的有效性
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
@@ -82,6 +85,7 @@ public class JwtTokenUtil {
 
     /**
      * 判断token是否已过期
+     *
      * @param token
      * @param base64Security
      * @return
@@ -97,13 +101,14 @@ public class JwtTokenUtil {
 
     /**
      * 效验token
+     *
      * @param token
      * @param userDetails
      * @param base64Security
      * @return
      */
     public Boolean validateToken(String token, UserDetails userDetails, String base64Security) {
-        SecurityUser SecurityUser = (com.moxi.mogublog.commons.config.security.SecurityUser) userDetails;
+        SecurityUser SecurityUser = (SecurityUser) userDetails;
         final String username = getUsername(token, base64Security);
         final boolean expiration = isExpiration(token, base64Security);
         return (
@@ -113,6 +118,7 @@ public class JwtTokenUtil {
 
     /**
      * 从token中获取用户名
+     *
      * @param token
      * @param base64Security
      * @return
@@ -123,16 +129,18 @@ public class JwtTokenUtil {
 
     /**
      * 从token中获取用户UID
+     *
      * @param token
      * @param base64Security
      * @return
      */
     public String getUserUid(String token, String base64Security) {
-        return parseJWT(token, base64Security).get("adminUid", String.class);
+        return parseJWT(token, base64Security).get(BaseSysConf.ADMIN_UID, String.class);
     }
 
     /**
      * 从token中获取audience
+     *
      * @param token
      * @param base64Security
      * @return
@@ -143,6 +151,7 @@ public class JwtTokenUtil {
 
     /**
      * 从token中获取issuer
+     *
      * @param token
      * @param base64Security
      * @return
@@ -153,6 +162,7 @@ public class JwtTokenUtil {
 
     /**
      * 从token中获取过期时间
+     *
      * @param token
      * @param base64Security
      * @return
@@ -163,6 +173,7 @@ public class JwtTokenUtil {
 
     /**
      * token是否可以更新
+     *
      * @param token
      * @param base64Security
      * @return
@@ -173,10 +184,11 @@ public class JwtTokenUtil {
 
     /**
      * 更新token
+     *
      * @param token
      * @param base64Security
      * @param TTLMillis
-     * @return
+     * @return refreshedToken 返回更新后的token，需要客户端进行更新
      */
     public String refreshToken(String token, String base64Security, long TTLMillis) {
         String refreshedToken;
@@ -206,6 +218,7 @@ public class JwtTokenUtil {
         } catch (Exception e) {
             refreshedToken = null;
         }
+        log.info("刷新后的token: {}", refreshedToken);
         return refreshedToken;
     }
 }

@@ -8,12 +8,10 @@ import com.moxi.mougblog.base.service.SuperService;
 import java.util.List;
 
 /**
- * <p>
  * 参数配置 服务类
- * </p>
  *
  * @author 陌溪
- * @since 2020年7月21日15:54:00
+ * @date 2020年7月21日15:54:00
  */
 public interface SysParamsService extends SuperService<SysParams> {
 

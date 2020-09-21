@@ -1,11 +1,7 @@
 package com.moxi.mogublog.commons.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
-import com.moxi.mougblog.base.validator.annotion.IntegerNotNull;
-import com.moxi.mougblog.base.validator.group.Insert;
-import com.moxi.mougblog.base.validator.group.Update;
 import lombok.Data;
 
 
@@ -37,7 +33,7 @@ public class SysParams extends SuperEntity<SysParams> {
     private String paramsValue;
 
     /**
-     *  参数类型，是否系统内置（1：是，0：否）
+     * 参数类型，是否系统内置（1：是，0：否）
      */
     private Integer paramsType;
 

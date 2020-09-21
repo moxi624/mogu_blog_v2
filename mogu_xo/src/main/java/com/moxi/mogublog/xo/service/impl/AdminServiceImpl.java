@@ -20,7 +20,6 @@ import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.AdminVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
-import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -120,7 +119,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     }
 
     @Override
-    public void addOnlineAdmin(Admin admin, Long expiration) {
+    public void addOnlineAdmin(Admin admin, Long expirationSecond) {
         HttpServletRequest request = RequestHolder.getRequest();
         Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
         String os = map.get(SysConf.OS);
@@ -135,6 +134,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         onlineAdmin.setLoginTime(DateUtils.getNowTime());
         onlineAdmin.setRoleName(admin.getRole().getRoleName());
         onlineAdmin.setUserName(admin.getUserName());
+        onlineAdmin.setExpireTime(DateUtils.getDateStr(new Date(), expirationSecond));
         //从Redis中获取IP来源
         String jsonResult = redisUtil.get(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip);
         if (StringUtils.isEmpty(jsonResult)) {
@@ -146,7 +146,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         } else {
             onlineAdmin.setLoginLocation(jsonResult);
         }
-        redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), expiration, TimeUnit.SECONDS);
+        redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), expirationSecond, TimeUnit.SECONDS);
     }
 
     @Override

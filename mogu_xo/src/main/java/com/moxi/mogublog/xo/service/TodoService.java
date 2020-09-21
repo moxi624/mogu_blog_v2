@@ -6,12 +6,10 @@ import com.moxi.mogublog.xo.vo.TodoVO;
 import com.moxi.mougblog.base.service.SuperService;
 
 /**
- * <p>
  * 待办事项表 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2019年6月29日10:31:18
+ * @author 陌溪
+ * @date 2019年6月29日10:31:18
  */
 public interface TodoService extends SuperService<Todo> {
 

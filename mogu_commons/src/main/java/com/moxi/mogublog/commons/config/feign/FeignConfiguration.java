@@ -19,7 +19,7 @@ public class FeignConfiguration {
      * @return
      */
     @Bean
-    public RequestInterceptor requestInterceptor(){
+    public RequestInterceptor requestInterceptor() {
         return new FeignBasicAuthRequestInterceptor();
     }
 

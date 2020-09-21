@@ -478,9 +478,7 @@ public class DateUtils {
      * @return
      */
     public static Date getDate(String date, int day) {
-
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         Calendar cal = Calendar.getInstance();
         try {
             Date beforeDate = formate.parse(date);
@@ -492,8 +490,25 @@ public class DateUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return null;
+    }
+
+    /**
+     * 获取某个日期 在加上 秒数的时间
+     * @param beforeDate yyyy-MM-dd HH:mm:ss
+     * @param timeSecond  加减的秒数
+     * @return
+     */
+    public static String getDateStr(Date beforeDate, Long timeSecond) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            // 返回毫秒数 + 添加的毫秒数
+            Long time = beforeDate.getTime() + timeSecond * 1000;
+            return format.format(time);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return "";
     }
 
     /**

@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * Web访问记录表 Mapper 接口
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @date 2018年12月8日09:43:25
  */
 public interface WebVisitMapper extends SuperMapper<WebVisit> {

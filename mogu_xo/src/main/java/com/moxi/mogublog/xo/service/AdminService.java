@@ -7,12 +7,10 @@ import com.moxi.mougblog.base.service.SuperService;
 import java.util.List;
 
 /**
- * <p>
  * 管理员表 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-04
+ * @author 陌溪
+ * @date 2018-09-04
  */
 public interface AdminService extends SuperService<Admin> {
 
@@ -49,13 +47,15 @@ public interface AdminService extends SuperService<Admin> {
 
     /**
      * 添加在线用户
-     * @param admin 管理员
-     * @param expiration 过期时间【秒】
+     *
+     * @param admin            管理员
+     * @param expirationSecond 过期时间【秒】
      */
-    public void addOnlineAdmin(Admin admin, Long expiration);
+    public void addOnlineAdmin(Admin admin, Long expirationSecond);
 
     /**
      * 获取管理员列表
+     *
      * @param adminVO
      * @return
      */

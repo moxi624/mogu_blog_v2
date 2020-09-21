@@ -45,7 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.eraseCredentials(false);
     }
 
-    // 装载BCrypt密码编码器
+    /**
+     * 装载BCrypt密码编码器
+     *
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -77,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        //因为springSecurty使用X-Frame-Options防止网页被Frame。所以需要关闭为了让后端的接口管理的swagger页面正常显示
+        //因为SpringSecurity使用X-Frame-Options防止网页被Frame。所以需要关闭为了让后端的接口管理的swagger页面正常显示
         httpSecurity.headers().frameOptions().disable();
 
         httpSecurity
@@ -86,6 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 由于使用的是JWT，我们这里不需要csrf
                 .csrf().disable()
+                // 异常的处理器，将执行未鉴权的处理方法
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -113,7 +118,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 添加两个过滤器
         // JwtAuthenticationTokenFilter: JWT认证过滤器,验证token有效性
         // UsernamePasswordAuthenticationFilter: 认证操作全靠这个过滤器
-        httpSecurity.addFilterBefore(registrationBean(new JwtAuthenticationTokenFilter()).getFilter(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(registrationBean(new JwtAuthenticationTokenFilter()).getFilter(),
+                UsernamePasswordAuthenticationFilter.class);
 
         // 禁用缓存
         httpSecurity.headers().cacheControl();

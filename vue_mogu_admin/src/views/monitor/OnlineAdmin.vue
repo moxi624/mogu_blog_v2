@@ -8,13 +8,13 @@
     <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
-      <el-table-column label="序号" width="60" align="center">
+      <el-table-column label="序号" width="50" align="center">
         <template slot-scope="scope">
           <span>{{scope.$index + 1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名" width="120" align="center">
+      <el-table-column label="用户名" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userName }}</span>
         </template>
@@ -53,6 +53,12 @@
       <el-table-column label="登录时间" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.loginTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="过期时间" width="160" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.expireTime }}</span>
         </template>
       </el-table-column>
 
@@ -110,13 +116,13 @@ export default {
       params.pageSize = this.pageSize;
       getOnlineAdminList(params).then(response => {
         this.tableData = response.data;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        // this.currentPage = response.data.current;
+        // this.pageSize = response.data.size;
+        // this.total = response.data.total;
       });
     },
     handleFind: function() {
-      this.tagList();
+      this.onlineAdminList();
     },
     handleDelete: function(row) {
       console.log(row)

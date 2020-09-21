@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 博客表 Mapper 接口
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-08
  */
 public interface BlogMapper extends SuperMapper<Blog> {

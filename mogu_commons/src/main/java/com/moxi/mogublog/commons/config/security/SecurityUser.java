@@ -8,6 +8,7 @@ import java.util.Collection;
 
 /**
  * SpringSecurity中的用户实体类
+ *
  * @author 陌溪
  * @date 2020年9月19日21:43:47
  */
@@ -38,6 +39,7 @@ public class SecurityUser implements UserDetails {
 
     /**
      * 返回分配给用户的角色列表
+     *
      * @return
      */
     @Override
@@ -63,6 +65,7 @@ public class SecurityUser implements UserDetails {
 
     /**
      * 账户是否激活
+     *
      * @return
      */
     @JsonIgnore
@@ -73,6 +76,7 @@ public class SecurityUser implements UserDetails {
 
     /**
      * 账户是否未过期
+     *
      * @return
      */
     @JsonIgnore
@@ -83,6 +87,7 @@ public class SecurityUser implements UserDetails {
 
     /**
      * 账户是否未锁定
+     *
      * @return
      */
     @JsonIgnore
@@ -93,6 +98,7 @@ public class SecurityUser implements UserDetails {
 
     /**
      * 密码是否未过期
+     *
      * @return
      */
     @JsonIgnore

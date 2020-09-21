@@ -1,6 +1,5 @@
 server:
   port: 8601
-
 spring:
   application:
     name: mogu-admin

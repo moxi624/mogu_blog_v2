@@ -4,10 +4,9 @@ import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.config.jwt.Audience;
 import com.moxi.mogublog.commons.config.jwt.JwtTokenUtil;
-import com.moxi.mogublog.utils.CookieUtils;
-import com.moxi.mogublog.utils.DateUtils;
-import com.moxi.mogublog.utils.RedisUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.commons.entity.OnlineAdmin;
+import com.moxi.mogublog.utils.*;
+import com.moxi.mougblog.base.global.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtTokenUtil jwtHelper;
+    private JwtTokenUtil jwtTokenUtil;
 
     @Value(value = "${tokenHead}")
     private String tokenHead;
@@ -90,31 +89,38 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String base64Secret = audience.getBase64Secret();
             // 获取在线的管理员信息
             String onlineAdmin = redisUtil.get(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + authHeader);
-            if (StringUtils.isNotEmpty(onlineAdmin) && !jwtHelper.isExpiration(token, base64Secret)) {
+            if (StringUtils.isNotEmpty(onlineAdmin) && !jwtTokenUtil.isExpiration(token, base64Secret)) {
                 /**
                  * 得到过期时间
                  */
-                Date expirationDate = jwtHelper.getExpiration(token, base64Secret);
+                Date expirationDate = jwtTokenUtil.getExpiration(token, base64Secret);
                 long nowMillis = System.currentTimeMillis();
                 Date nowDate = new Date(nowMillis);
                 // 得到两个日期相差的间隔，秒
-                Integer second = DateUtils.getSecondByTwoDay(expirationDate, nowDate);
-                // 如果小于5分钟，那么更新过期时间
-                if (second < refreshSecond) {
+                Integer survivalSecond = DateUtils.getSecondByTwoDay(expirationDate, nowDate);
+                // 当存活时间小于更新时间，那么将颁发新的Token到客户端，同时重置新的过期时间
+                // 而旧的Token将会在不久之后从Redis中过期
+                if (survivalSecond < refreshSecond) {
                     // 生成一个新的Token
-                    String newToken = tokenHead + jwtHelper.refreshToken(token, base64Secret, expiresSecond * 1000);
+                    String newToken = tokenHead + jwtTokenUtil.refreshToken(token, base64Secret, expiresSecond * 1000);
                     // 生成新的token，发送到客户端
                     CookieUtils.setCookie("Admin-Token", newToken, expiresSecond.intValue());
-                    // 重新更新Redis中的过期时间
-                    redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + newToken, onlineAdmin, expiresSecond, TimeUnit.SECONDS);
+                    OnlineAdmin newOnlineAdmin = JsonUtils.jsonToPojo(onlineAdmin, OnlineAdmin.class);
+                    newOnlineAdmin.setTokenId(newToken);
+                    newOnlineAdmin.setExpireTime(DateUtils.getDateStr(new Date(), expiresSecond));
+                    newOnlineAdmin.setLoginTime(DateUtils.getNowTime());
+                    // 移除原来的旧Token
+                    redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + authHeader);
+                    // 将新的Token存入Redis中
+                    redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + newToken, JsonUtils.objectToJson(newOnlineAdmin), expiresSecond, TimeUnit.SECONDS);
                 }
             } else {
                 chain.doFilter(request, response);
                 return;
             }
 
-            String username = jwtHelper.getUsername(token, base64Secret);
-            String adminUid = jwtHelper.getUserUid(token, base64Secret);
+            String username = jwtTokenUtil.getUsername(token, base64Secret);
+            String adminUid = jwtTokenUtil.getUserUid(token, base64Secret);
 
             //把adminUid存储到request中
             request.setAttribute(SysConf.ADMIN_UID, adminUid);
@@ -124,15 +130,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             log.info("解析出来的用户Uid: {}", adminUid);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+                // 通过用户名加载SpringSecurity用户
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-                if (jwtHelper.validateToken(token, userDetails, base64Secret)) {
+                // 校验Token的有效性
+                if (jwtTokenUtil.validateToken(token, userDetails, base64Secret)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(
                             request));
-
                     //以后可以security中取得SecurityUser信息
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }

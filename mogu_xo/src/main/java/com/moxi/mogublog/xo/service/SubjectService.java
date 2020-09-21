@@ -8,12 +8,10 @@ import com.moxi.mougblog.base.service.SuperService;
 import java.util.List;
 
 /**
- * <p>
  * 专题表 服务类
- * </p>
  *
  * @author 陌溪
- * @since 2020年8月22日22:03:52
+ * @date 2020年8月22日22:03:52
  */
 public interface SubjectService extends SuperService<Subject> {
 

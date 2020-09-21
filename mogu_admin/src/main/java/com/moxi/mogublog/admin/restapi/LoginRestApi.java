@@ -68,7 +68,7 @@ public class LoginRestApi {
     private String tokenHead;
 
     @Value(value = "${isRememberMeExpiresSecond}")
-    private int longExpiresSecond;
+    private int isRememberMeExpiresSecond;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -128,7 +128,7 @@ public class LoginRestApi {
             roleNames += (role.getRoleName() + Constants.SYMBOL_COMMA);
         }
         String roleName = roleNames.substring(0, roleNames.length() - 2);
-        long expiration = isRememberMe ? longExpiresSecond : audience.getExpiresSecond();
+        long expiration = isRememberMe ? isRememberMeExpiresSecond : audience.getExpiresSecond();
         String jwtToken = jwtTokenUtil.createJWT(admin.getUserName(),
                 admin.getUid(),
                 roleName,

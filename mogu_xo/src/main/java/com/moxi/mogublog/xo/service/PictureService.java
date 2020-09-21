@@ -8,12 +8,10 @@ import com.moxi.mougblog.base.service.SuperService;
 import java.util.List;
 
 /**
- * <p>
  * 图片表 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018年9月17日16:17:22
+ * @author 陌溪
+ * @date 2018年9月17日16:17:22
  */
 public interface PictureService extends SuperService<Picture> {
 
@@ -29,6 +27,7 @@ public interface PictureService extends SuperService<Picture> {
      * 新增图片
      *
      * @param pictureVOList
+     * @return
      */
     public String addPicture(List<PictureVO> pictureVOList);
 
@@ -36,6 +35,7 @@ public interface PictureService extends SuperService<Picture> {
      * 编辑图片
      *
      * @param pictureVO
+     * @return
      */
     public String editPicture(PictureVO pictureVO);
 

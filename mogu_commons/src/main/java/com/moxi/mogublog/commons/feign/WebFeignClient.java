@@ -35,12 +35,13 @@ public interface WebFeignClient {
 
     /**
      * 获取博客列表[包含内容]
+     *
      * @param currentPage
      * @param pageSize
      * @return
      */
     @RequestMapping(value = "/index/getBlogBySearch")
     public String getBlogBySearch(@RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
+                                  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize);
 
 }

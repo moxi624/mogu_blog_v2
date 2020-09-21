@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 字典数据 服务类
- * </p>
  *
  * @author 陌溪
- * @since 2020年2月15日21:06:45
+ * @date 2020年2月15日21:06:45
  */
 public interface SysDictDataService extends SuperService<SysDictData> {
     /**

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 将SpringSecurity中的用户管理和我们数据库的管理员对应起来
+ * 将SpringSecurity中的用户管理和数据库的管理员对应起来
  *
  * @author 陌溪
  * @date 2020/9/14 10:43
@@ -32,7 +32,6 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
     private RoleService roleService;
 
     /**
-     *
      * @param username 浏览器输入的用户名【需要保证用户名的唯一性】
      * @return
      * @throws UsernameNotFoundException

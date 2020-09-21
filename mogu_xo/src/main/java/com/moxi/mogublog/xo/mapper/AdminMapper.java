@@ -5,11 +5,9 @@ import com.moxi.mougblog.base.mapper.SuperMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * <p>
  * 管理员表 Mapper 接口
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 public interface AdminMapper extends SuperMapper<Admin> {

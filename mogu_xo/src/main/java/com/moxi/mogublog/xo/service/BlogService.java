@@ -12,12 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 博客表 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 public interface BlogService extends SuperService<Blog> {
 

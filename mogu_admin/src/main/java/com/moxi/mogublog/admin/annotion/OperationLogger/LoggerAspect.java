@@ -6,7 +6,6 @@ import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.entity.ExceptionLog;
 import com.moxi.mogublog.utils.*;
-import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.util.RequestUtil;

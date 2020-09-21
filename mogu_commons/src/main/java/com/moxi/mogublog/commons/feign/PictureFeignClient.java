@@ -3,7 +3,6 @@ package com.moxi.mogublog.commons.feign;
 import com.moxi.mogublog.commons.config.feign.FeignConfiguration;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;

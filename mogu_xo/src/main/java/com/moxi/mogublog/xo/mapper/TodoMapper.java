@@ -8,11 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
- * <p>
  * 待办事项表 Mapper 接口
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2019年6月29日10:30:37
  */
 public interface TodoMapper extends SuperMapper<Todo> {

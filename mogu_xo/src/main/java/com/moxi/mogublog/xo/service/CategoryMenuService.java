@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 菜单表 服务类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018年11月23日10:41:47
+ * @author 陌溪
+ * @date 2018年11月23日10:41:47
  */
 public interface CategoryMenuService extends SuperService<CategoryMenu> {
 

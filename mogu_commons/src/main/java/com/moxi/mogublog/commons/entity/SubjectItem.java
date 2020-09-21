@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * <p>
  * 专题Item表

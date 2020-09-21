@@ -26,16 +26,16 @@ public class FeignBasicAuthRequestInterceptor implements RequestInterceptor {
 
         // 获取token，放入到feign的请求头
         String token = null;
-        if(request.getParameter(BaseSysConf.TOKEN) != null) {
+        if (request.getParameter(BaseSysConf.TOKEN) != null) {
             token = request.getParameter(BaseSysConf.TOKEN);
-        } else if(request.getAttribute(BaseSysConf.TOKEN) != null) {
+        } else if (request.getAttribute(BaseSysConf.TOKEN) != null) {
             token = request.getAttribute(BaseSysConf.TOKEN).toString();
         }
 
-        if(StringUtils.isNotEmpty(token)){
+        if (StringUtils.isNotEmpty(token)) {
             // 如果带有？说明还带有其它参数，我们只截取到token即可
-            if(token.indexOf(Constants.SYMBOL_QUESTION) != -1) {
-                String [] params = token.split("\\?url=");
+            if (token.indexOf(Constants.SYMBOL_QUESTION) != -1) {
+                String[] params = token.split("\\?url=");
                 token = params[0];
             }
             requestTemplate.header(BaseSysConf.PICTURE_TOKEN, token);
