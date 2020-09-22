@@ -119,12 +119,12 @@
         </el-form-item>
 
         <el-row :gutter="24">
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
               <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
             </el-form-item>
           </el-col>
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="昵称" :label-width="formLabelWidth">
               <el-input v-model="form.nickName" placeholder="请输入昵称"></el-input>
             </el-form-item>
@@ -132,7 +132,7 @@
         </el-row>
 
         <el-row :gutter="24">
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="角色名" :label-width="formLabelWidth">
               <el-select v-model="form.roleUid" placeholder="请选择角色名">
                 <el-option
@@ -144,7 +144,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="性别"  :label-width="formLabelWidth" prop="gender">
               <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="form.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
             </el-form-item>
@@ -152,12 +152,12 @@
         </el-row>
 
         <el-row :gutter="24">
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
               <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
             </el-form-item>
           </el-col>
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
               <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
             </el-form-item>
@@ -165,12 +165,12 @@
         </el-row>
 
         <el-row :gutter="24">
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="QQ号码" :label-width="formLabelWidth" prop="qqNumber">
               <el-input v-model="form.qqNumber" placeholder="请输入QQ号码"></el-input>
             </el-form-item>
           </el-col>
-          <el-col span="10">
+          <el-col :span="10">
             <el-form-item label="职业" :label-width="formLabelWidth">
               <el-input v-model="form.occupation" placeholder="请输入职业"></el-input>
             </el-form-item>
