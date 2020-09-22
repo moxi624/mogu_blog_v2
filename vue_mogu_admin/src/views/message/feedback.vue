@@ -55,27 +55,17 @@
 
       <el-table-column label="反馈内容" width="200" align="center">
         <template slot-scope="scope">
-          <el-popover
-            v-if="scope.row.content"
-            placement="top-start"
-            width="400"
-            trigger="hover"
-            :content="scope.row.content">
-            <el-button slot="reference">{{subText(scope.row.content, 10)}}</el-button>
-          </el-popover>
+          <el-tooltip class="item" effect="dark" :content="scope.row.content" placement="top">
+            <span>{{subText(scope.row.content, 10)}}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
 
       <el-table-column label="回复" width="200" align="center">
         <template slot-scope="scope">
-          <el-popover
-            v-if="scope.row.reply"
-            placement="top-start"
-            width="400"
-            trigger="hover"
-            :content="scope.row.reply">
-            <el-button slot="reference">{{subText(scope.row.reply, 10)}}</el-button>
-          </el-popover>
+          <el-tooltip class="item" effect="dark" :content="scope.row.reply" placement="top">
+            <span>{{subText(scope.row.reply, 10)}}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
 

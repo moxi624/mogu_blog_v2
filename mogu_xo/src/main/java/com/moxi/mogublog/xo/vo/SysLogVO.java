@@ -74,4 +74,10 @@ public class SysLogVO extends BaseVO<SysLogVO> {
      * 方法请求花费的时间，单位毫秒
      */
     private Long spendTime;
+
+    /**
+     * 方法请求花费的时间，(包含起始时间和结束)
+     */
+    private String spendTimeStr;
+
 }

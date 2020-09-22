@@ -37,18 +37,29 @@ public class SysLogServiceImpl extends SuperServiceImpl<SysLogMapper, SysLog> im
 
         QueryWrapper<SysLog> queryWrapper = new QueryWrapper<>();
 
-        if (StringUtils.isNotEmpty(sysLogVO.getUserName()) && !StringUtils.isEmpty(sysLogVO.getUserName().trim())) {
-            queryWrapper.like(SQLConf.USER_NAME, sysLogVO.getUserName().trim());
+        if (StringUtils.isNotBlank(sysLogVO.getUserName())) {
+            queryWrapper.eq(SQLConf.USER_NAME, sysLogVO.getUserName().trim());
         }
 
-        if (!StringUtils.isEmpty(sysLogVO.getOperation())) {
-            queryWrapper.like(SQLConf.OPERATION, sysLogVO.getOperation());
+        if (StringUtils.isNotBlank(sysLogVO.getOperation())) {
+            queryWrapper.eq(SQLConf.OPERATION, sysLogVO.getOperation());
         }
 
-        if (!StringUtils.isEmpty(sysLogVO.getStartTime())) {
+        if (StringUtils.isNotBlank(sysLogVO.getIp())) {
+            queryWrapper.eq(SQLConf.IP, sysLogVO.getIp());
+        }
+
+        if (StringUtils.isNotBlank(sysLogVO.getStartTime())) {
             String[] time = sysLogVO.getStartTime().split(SysConf.FILE_SEGMENTATION);
             if (time.length == Constants.NUM_TWO) {
                 queryWrapper.between(SQLConf.CREATE_TIME, DateUtils.str2Date(time[0]), DateUtils.str2Date(time[1]));
+            }
+        }
+
+        if (StringUtils.isNotBlank(sysLogVO.getSpendTimeStr())) {
+            String[] spendTimeList = StringUtils.split(sysLogVO.getSpendTimeStr(), Constants.SYMBOL_UNDERLINE);
+            if (spendTimeList.length == Constants.NUM_TWO) {
+                queryWrapper.between(SQLConf.SPEND_TIME, Integer.valueOf(spendTimeList[0]), Integer.valueOf(spendTimeList[1]));
             }
         }
 

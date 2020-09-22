@@ -2,8 +2,19 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="userName" placeholder="操作人"></el-input>
-        <el-input clearable class="filter-item" style="width: 200px;" v-model="operation" placeholder="接口名"></el-input>
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.userName" placeholder="请输入操作人"></el-input>
+        <el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.operation" placeholder="请输入接口名"></el-input>
+        <el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.ip" placeholder="请输入IP"></el-input>
+
+        <el-select v-model="queryParams.spendTime" placeholder="请求耗时" style="width:150px" clearable>
+          <el-option
+            v-for="item in spendTimeDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
+
         <el-date-picker
           clearable
           v-model="value5"
@@ -14,6 +25,7 @@
           end-placeholder="结束日期"
           align="right">
         </el-date-picker>
+
 	      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/log/getLogList'">查找</el-button>
 	    </div>
 
@@ -83,9 +95,7 @@
 
       <el-table-column label="请求耗时" width="160" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.spendTime < 2000">{{ scope.row.spendTime}} ms </el-tag>
-          <el-tag v-else-if="scope.row.spendTime < 5000 && scope.row.spendTime >= 2000" type="warning">{{ scope.row.spendTime}} ms </el-tag>
-          <el-tag v-else type="danger">{{ scope.row.spendTime}} ms </el-tag>
+          <el-tag v-for="item in spendTimeDictList" :type="item.listClass"  v-if="scope.row.spendTime >= splitTime(item.dictValue)[0] && scope.row.spendTime < splitTime(item.dictValue)[1]">{{ scope.row.spendTime}} ms </el-tag>
         </template>
       </el-table-column>
 
@@ -126,12 +136,19 @@
 
 <script>
 import { getLogList } from "@/api/log";
+import {getListByDictTypeList} from "@/api/sysDictData"
 export default {
   data() {
     return {
+      // 查询对象
+      queryParams: {
+        userName: "",
+        operation: "",
+        ip: "",
+        spendTime: "",
+      },
+      spendTimeDictList: [],
       tableData: [],
-      userName: "",
-      operation: "",
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -171,13 +188,16 @@ export default {
     };
   },
   created() {
+    this.getDictList()
     this.logList();
   },
   methods: {
     logList: function() {
       var params = {};
-      params.userName = this.userName;
-      params.operation = this.operation;
+      params.userName = this.queryParams.userName;
+      params.operation = this.queryParams.operation;
+      params.ip = this.queryParams.ip;
+      params.spendTimeStr = this.queryParams.spendTime;
       if(this.value5.length >= 2) {
         params.startTime = this.value5[0] + "," + this.value5[1];
       }
@@ -191,6 +211,22 @@ export default {
           this.tableData = response.data.records;
         }
 
+      });
+    },
+    splitTime: function (spendTimeStr){
+      // 切割耗时区间
+      return spendTimeStr.split("_")
+    },
+    /**
+     * 字典查询
+     */
+    getDictList: function () {
+      var dictTypeList =  ['sys_spend_time']
+      getListByDictTypeList(dictTypeList).then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          var dictMap = response.data;
+          this.spendTimeDictList = dictMap.sys_spend_time.list
+        }
       });
     },
     handleFind: function() {

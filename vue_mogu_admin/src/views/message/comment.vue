@@ -2,10 +2,10 @@
   <div class="app-container">
       <!-- 查询和其他操作 -->
 	    <div class="filter-container" style="margin: 10px 0 10px 0;">
-				<el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.content" placeholder="请输入评论名"></el-input>
-        <el-input clearable class="filter-item" style="width: 150px;" v-model="queryParams.userName" placeholder="请输入用户名"></el-input>
+				<el-input clearable class="filter-item" style="width: 200px;" v-model="queryParams.content" placeholder="请输入评论内容"></el-input>
+        <el-input clearable class="filter-item" style="width: 150px;" v-model="queryParams.userName" placeholder="请输入评论人"></el-input>
 
-        <el-select v-model="queryParams.type" clearable placeholder="评论类型" style="width:110px">
+        <el-select v-model="queryParams.type" clearable placeholder="评论类型" style="margin-left:5px;width:110px">
           <el-option
             v-for="item in commentTypeDictList"
             :key="item.uid"
@@ -14,7 +14,7 @@
           ></el-option>
         </el-select>
 
-        <el-select v-model="queryParams.source" clearable placeholder="评论来源" style="width:110px">
+        <el-select v-model="queryParams.source" clearable placeholder="评论来源" style="margin-left:5px;width:110px">
           <el-option
             v-for="item in commentSourceDictList"
             :key="item.uid"
@@ -53,20 +53,20 @@
         </template>
       </el-table-column>
 
-	    <el-table-column label="评论人" width="100" align="center">
+	    <el-table-column label="评论人" width="150" align="center">
 	      <template slot-scope="scope">
-	        <el-tag type="primary" v-if="scope.row.user" style="cursor: pointer;" @click.native="goUser(scope.row.user)">{{ scope.row.user.nickName }}</el-tag>
+          <el-tag type="primary" v-if="scope.row.user"  style="cursor: pointer;" @click.native="goUser(scope.row.user)">{{ scope.row.user.nickName }}</el-tag>
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="被评论人" width="100" align="center">
+      <el-table-column label="被评论人" width="150" align="center">
         <template slot-scope="scope">
           <el-tag type="info" v-if="scope.row.toUser" style="cursor: pointer;" @click.native="goUser(scope.row.toUser)">{{ scope.row.toUser.nickName }}</el-tag>
           <el-tag type="info" style="cursor: pointer;" v-else>无</el-tag>
         </template>
       </el-table-column>
 
-        <el-table-column label="类型" width="150" align="center">
+        <el-table-column label="类型" width="80" align="center">
           <template slot-scope="scope">
             <template>
               <el-tag type="danger" v-if="scope.row.type == 1">点赞</el-tag>
@@ -75,7 +75,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="来源" width="150" align="center">
+        <el-table-column label="来源" width="80" align="center">
           <template slot-scope="scope">
             <template>
               <el-tag type="warning" @click.native="goPage(scope.row.source, scope.row.blog)" style="cursor: pointer;">{{scope.row.sourceName}}</el-tag>
@@ -86,12 +86,12 @@
 <!--        <el-table-column label="来源博客" width="160" align="center">-->
 <!--          <template slot-scope="scope">-->
 <!--            <template>-->
-<!--              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subComment(scope.row.blog.title, 8 )}}</el-tag>-->
+<!--              <el-tag type="error" v-if="scope.row.source == 'BLOG_INFO'" @click.native="onClick(scope.row.blog)" style="cursor: pointer;">{{subStr(scope.row.blog.title, 8 )}}</el-tag>-->
 <!--            </template>-->
 <!--          </template>-->
 <!--        </el-table-column>-->
 
-        <el-table-column label="内容" width="250" align="center">
+        <el-table-column label="内容" width="300" align="center">
           <template slot-scope="scope">
 <!--            <el-popover-->
 <!--              v-if="scope.row.content"-->
@@ -99,7 +99,7 @@
 <!--              width="400"-->
 <!--              trigger="hover"-->
 <!--              :content="scope.row.content">-->
-<!--              <el-button slot="reference">{{subComment(scope.row.content, 10)}}</el-button>-->
+<!--              <el-button slot="reference">{{subStr(scope.row.content, 10)}}</el-button>-->
 <!--            </el-popover>-->
             <span v-html="$xss(scope.row.content, options)"></span>
           </template>
@@ -233,14 +233,14 @@ export default {
         }
 			});
 		},
-    subComment(str, index) {
+    subStr(str, index) {
       if(str == null || str == undefined) {
         return "";
       }
 		  if(str.length < index){
 		    return str;
       } else {
-		    return str.substring(0, index) + "..."
+		    return str.substring(0, index) + ".."
       }
     },
 		handleFind: function() {

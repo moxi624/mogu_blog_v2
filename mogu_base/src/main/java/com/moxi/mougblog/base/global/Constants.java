@@ -24,6 +24,7 @@ public class Constants {
     public final static String SYMBOL_STAR = "*";
     public final static String SYMBOL_WELL = "#";
     public final static String SYMBOL_HYPHEN = "-";
+    public final static String SYMBOL_UNDERLINE = "_";
     public final static String SYMBOL_LEFT_BRACKET = "{";
     public final static String SYMBOL_RIGHT_BRACKET = "}";
     public final static String SYMBOL_RIGHT_EQUAL = "=";
