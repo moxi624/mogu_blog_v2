@@ -23,21 +23,19 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * <p>
  * 标签表 服务实现类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 @Service
 public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements TagService {
 
     @Autowired
-    TagService tagService;
+    private TagService tagService;
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @Override
     public IPage<Tag> getPageList(TagVO tagVO) {
@@ -101,6 +99,8 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         tag.setSort(tagVO.getSort());
         tag.setUpdateTime(new Date());
         tag.updateById();
+        // 删除和标签相关的博客缓存
+        blogService.deleteRedisByBlogTag();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
@@ -131,7 +131,8 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         });
 
         Boolean save = tagService.updateBatchById(tagList);
-
+        // 删除和标签相关的博客缓存
+        blogService.deleteRedisByBlogTag();
         if (save) {
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {

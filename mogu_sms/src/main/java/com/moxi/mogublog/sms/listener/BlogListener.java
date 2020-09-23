@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 博客监听器(用于更新Redis和索引)
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2018年11月3日下午12:53:23
  */
 @Component
@@ -35,23 +35,23 @@ public class BlogListener {
     private SearchFeignClient searchFeignClient;
 
 // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
-
     @RabbitListener(queues = "mogu.blog")
     public void updateRedis(Map<String, String> map) {
 
         if (map != null) {
-
             String comment = map.get(SysConf.COMMAND);
-
             String uid = map.get(SysConf.BLOG_UID);
 
             //从Redis清空对应的数据
-            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_ONE, "");
-            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_TWO, "");
-            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_THREE, "");
-            redisUtil.set(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_FOUR, "");
-            redisUtil.set(RedisConf.HOT_BLOG, "");
-            redisUtil.set(RedisConf.NEW_BLOG, "");
+            redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_ONE);
+            redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_TWO);
+            redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_THREE);
+            redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + Constants.NUM_FOUR);
+            redisUtil.delete(RedisConf.HOT_BLOG);
+            redisUtil.delete(RedisConf.NEW_BLOG);
+            redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_CONTRIBUTE_COUNT);
+            redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_SORT);
+            redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_TAG);
 
             switch (comment) {
                 case SysConf.DELETE_BATCH: {
@@ -128,7 +128,7 @@ public class BlogListener {
             String year = list[0];
             String month = list[1];
             String key = year + "年" + month + "月";
-            redisUtil.set(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON + key, "");
+            redisUtil.delete(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON + key);
             String jsonResult = redisUtil.get(RedisConf.MONTH_SET);
             ArrayList<String> monthSet = (ArrayList<String>) JsonUtils.jsonArrayToArrayList(jsonResult);
             Boolean haveMonth = false;

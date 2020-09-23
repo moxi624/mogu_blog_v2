@@ -304,11 +304,15 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
     @Override
     public List<Map<String, Object>> getBlogCountByTag() {
+        // 从Redis中获取标签下包含的博客数量
+        String jsonArrayList = redisUtil.get(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_TAG);
+        if (StringUtils.isNotEmpty(jsonArrayList)) {
+            ArrayList jsonList = JsonUtils.jsonArrayToArrayList(jsonArrayList);
+            return jsonList;
+        }
 
         List<Map<String, Object>> blogCoutByTagMap = blogMapper.getBlogCountByTag();
-
         Map<String, Integer> tagMap = new HashMap<>();
-
         for (Map<String, Object> item : blogCoutByTagMap) {
             String tagUid = String.valueOf(item.get(SQLConf.TAG_UID));
             // java.lang.Number是Integer,Long的父类
@@ -353,7 +357,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         }
 
-        List<Map<String, Object>> resultMap = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : tagMap.entrySet()) {
             String tagUid = entry.getKey();
             if (tagEntityMap.get(tagUid) != null) {
@@ -363,17 +367,24 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 itemResultMap.put(SysConf.TAG_UID, tagUid);
                 itemResultMap.put(SysConf.NAME, tagName);
                 itemResultMap.put(SysConf.VALUE, count);
-                resultMap.add(itemResultMap);
+                resultList.add(itemResultMap);
             }
         }
-
-        return resultMap;
-
+        // 将 每个标签下文章数目 存入到Redis【过期时间2小时】
+        if(resultList.size() > 0) {
+            redisUtil.setEx(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_TAG, JsonUtils.objectToJson(resultList), 2, TimeUnit.HOURS);
+        }
+        return resultList;
     }
 
     @Override
     public List<Map<String, Object>> getBlogCountByBlogSort() {
-
+        // 从Redis中获取博客分类下包含的博客数量
+        String jsonArrayList = redisUtil.get(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_SORT);
+        if (StringUtils.isNotEmpty(jsonArrayList)) {
+            ArrayList jsonList = JsonUtils.jsonArrayToArrayList(jsonArrayList);
+            return jsonList;
+        }
         List<Map<String, Object>> blogCoutByBlogSortMap = blogMapper.getBlogCountByBlogSort();
         Map<String, Integer> blogSortMap = new HashMap<>();
         for (Map<String, Object> item : blogCoutByBlogSortMap) {
@@ -403,7 +414,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             }
         }
 
-        List<Map<String, Object>> resultMap = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
         for (Map.Entry<String, Integer> entry : blogSortMap.entrySet()) {
 
             String blogSortUid = entry.getKey();
@@ -411,36 +422,38 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             if (blogSortEntityMap.get(blogSortUid) != null) {
                 String blogSortName = blogSortEntityMap.get(blogSortUid);
                 Integer count = entry.getValue();
-
                 Map<String, Object> itemResultMap = new HashMap<>();
                 itemResultMap.put(SysConf.BLOG_SORT_UID, blogSortUid);
                 itemResultMap.put(SysConf.NAME, blogSortName);
                 itemResultMap.put(SysConf.VALUE, count);
-                resultMap.add(itemResultMap);
+                resultList.add(itemResultMap);
             }
         }
-        return resultMap;
+        // 将 每个分类下文章数目 存入到Redis【过期时间2小时】
+        if(resultList.size() > 0) {
+            redisUtil.setEx(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_SORT, JsonUtils.objectToJson(resultList), 2, TimeUnit.HOURS);
+        }
+        return resultList;
     }
 
     @Override
     public Map<String, Object> getBlogContributeCount() {
+        // 从Redis中获取博客分类下包含的博客数量
+        String jsonMap = redisUtil.get(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_CONTRIBUTE_COUNT);
+        if (StringUtils.isNotEmpty(jsonMap)) {
+            Map<String, Object> resultMap = JsonUtils.jsonToMap(jsonMap);
+            return resultMap;
+        }
 
         // 获取今天结束时间
         String endTime = DateUtils.getNowTime();
-
         // 获取365天前的日期
         Date temp = DateUtils.getDate(endTime, -365);
-
         String startTime = DateUtils.dateTimeToStr(temp);
-
         List<Map<String, Object>> blogContributeMap = blogMapper.getBlogContributeCount(startTime, endTime);
-
         List<String> dateList = DateUtils.getDayBetweenDates(startTime, endTime);
-
         Map<String, Object> dateMap = new HashMap<>();
-
         for (Map<String, Object> itemMap : blogContributeMap) {
-
             dateMap.put(itemMap.get("DATE").toString(), itemMap.get("COUNT"));
         }
 
@@ -456,12 +469,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             resultList.add(objectList);
         }
 
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>(Constants.NUM_TWO);
         List<String> contributeDateList = new ArrayList<>();
         contributeDateList.add(startTime);
         contributeDateList.add(endTime);
         resultMap.put(SysConf.CONTRIBUTE_DATE, contributeDateList);
         resultMap.put(SysConf.BLOG_CONTRIBUTE_COUNT, resultList);
+        // 将 全年博客贡献度 存入到Redis【过期时间2小时】
+        redisUtil.setEx(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_CONTRIBUTE_COUNT, JsonUtils.objectToJson(resultMap), 2, TimeUnit.HOURS);
         return resultMap;
     }
 
@@ -993,6 +1008,32 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
     }
 
+    @Override
+    public void deleteRedisByBlogSort() {
+        // 删除Redis中博客分类下的博客数量
+        redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_SORT);
+        // 删除博客相关缓存
+        deleteRedisByBlog();
+    }
+
+    @Override
+    public void deleteRedisByBlogTag() {
+        // 删除Redis中博客分类下的博客数量
+        redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_TAG);
+        // 删除博客相关缓存
+        deleteRedisByBlog();
+    }
+
+    @Override
+    public void deleteRedisByBlog() {
+        // 删除博客相关缓存
+        redisUtil.delete(RedisConf.NEW_BLOG);
+        redisUtil.delete(RedisConf.HOT_BLOG);
+        redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + ELevel.FIRST);
+        redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + ELevel.SECOND);
+        redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + ELevel.THIRD);
+        redisUtil.delete(RedisConf.BLOG_LEVEL + Constants.SYMBOL_COLON + ELevel.FOURTH);
+    }
 
     @Override
     public IPage<Blog> getBlogPageByLevel(Integer level, Long currentPage, Integer useSort) {

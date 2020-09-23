@@ -23,21 +23,19 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * <p>
  * 博客分类表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-08
  */
 @Service
 public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSort> implements BlogSortService {
 
     @Autowired
-    BlogSortService blogSortService;
+    private BlogSortService blogSortService;
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @Override
     public IPage<BlogSort> getPageList(BlogSortVO blogSortVO) {
@@ -86,7 +84,6 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
     @Override
     public String editBlogSort(BlogSortVO blogSortVO) {
         BlogSort blogSort = blogSortService.getById(blogSortVO.getUid());
-
         /**
          * 判断需要编辑的博客分类是否存在
          */
@@ -99,13 +96,14 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
                 return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
             }
         }
-
         blogSort.setContent(blogSortVO.getContent());
         blogSort.setSortName(blogSortVO.getSortName());
         blogSort.setSort(blogSortVO.getSort());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.setUpdateTime(new Date());
         blogSort.updateById();
+        // 删除和博客相关的Redis缓存
+        blogService.deleteRedisByBlogSort();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 
@@ -128,17 +126,15 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         if (blogCount > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_SORT);
         }
-
         Collection<BlogSort> blogSortList = blogSortService.listByIds(uids);
-
         blogSortList.forEach(item -> {
             item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
-
         Boolean save = blogSortService.updateBatchById(blogSortList);
-
         if (save) {
+            // 删除和博客相关的Redis缓存
+            blogService.deleteRedisByBlogSort();
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
@@ -165,15 +161,10 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         if (maxSort.getUid().equals(blogSort.getUid())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
         }
-
         Integer sortCount = maxSort.getSort() + 1;
-
         blogSort.setSort(sortCount);
-
         blogSort.setUpdateTime(new Date());
-
         blogSort.updateById();
-
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
     }
 

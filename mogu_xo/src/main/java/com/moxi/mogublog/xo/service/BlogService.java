@@ -92,9 +92,6 @@ public interface BlogService extends SuperService<Blog> {
 
     /**
      * 通过标签获取博客数目
-     *
-     * @author Administrator
-     * @date 2019年11月27日13:14:34
      */
     public List<Map<String, Object>> getBlogCountByBlogSort();
 
@@ -183,9 +180,21 @@ public interface BlogService extends SuperService<Blog> {
     public String uploadLocalBlog(List<MultipartFile> filedatas) throws IOException;
 
     /**
-     *  mogu-web端使用的接口
+     * 删除和博客分类有关的Redis缓存
      */
+    public void deleteRedisByBlogSort();
 
+    /**
+     * 删除和博客标签有关的Redis缓存
+     */
+    public void deleteRedisByBlogTag();
+
+    /**
+     * 删除和博客有关的Redis缓存
+     */
+    public void deleteRedisByBlog();
+
+    //========================mogu-web使用==========================
     /**
      * 通过推荐等级获取博客Page
      *

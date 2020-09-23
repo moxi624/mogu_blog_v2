@@ -138,4 +138,30 @@ public class BaseRedisConf {
      */
     public final static String WEB_CONFIG = "WEB_CONFIG";
 
+    /**
+     * 首页展示
+     */
+    public final static String DASHBOARD = "DASHBOARD";
+
+    /**
+     * 一周访问量
+     */
+    public final static String WEEK_VISIT = "WEEK_VISIT";
+
+    /**
+     * 博客标签下包含的博客数量
+     */
+    public final static String BLOG_COUNT_BY_TAG = "BLOG_COUNT_BY_TAG";
+
+    /**
+     * 博客分类下包含的博客数量
+     */
+    public final static String BLOG_COUNT_BY_SORT = "BLOG_COUNT_BY_SORT";
+
+    /**
+     * 全年博客贡献数
+     */
+    public final static String BLOG_CONTRIBUTE_COUNT = "BLOG_CONTRIBUTE_COUNT";
+
+
 }

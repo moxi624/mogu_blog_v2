@@ -66,7 +66,6 @@ public class IndexRestApi {
     public String getVisitByWeek() {
 
         Map<String, Object> visitByWeek = webVisitService.getVisitByWeek();
-
         return ResultUtil.result(SysConf.SUCCESS, visitByWeek);
     }
 
@@ -75,7 +74,6 @@ public class IndexRestApi {
     public String getBlogCountByTag() {
 
         List<Map<String, Object>> blogCountByTag = blogService.getBlogCountByTag();
-
         return ResultUtil.result(SysConf.SUCCESS, blogCountByTag);
     }
 
