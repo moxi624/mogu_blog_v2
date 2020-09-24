@@ -265,6 +265,12 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
                 }
             }
         }
+
+        // 判断是否更改了RoleUid，更新redis中admin的URL访问路径
+        if (StringUtils.isNotEmpty(adminVO.getRoleUid()) && !admin.getRoleUid().equals(adminVO.getRoleUid())) {
+            redisUtil.delete(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + admin.getUid());
+        }
+
         admin.setUserName(adminVO.getUserName());
         admin.setAvatar(adminVO.getAvatar());
         admin.setNickName(adminVO.getNickName());
@@ -276,14 +282,11 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         admin.setOccupation(adminVO.getOccupation());
         admin.setUpdateTime(new Date());
         admin.setMobile(adminVO.getMobile());
+        admin.setRoleUid(adminVO.getRoleUid());
         // 无法直接修改密码，只能通过重置密码完成密码修改
         admin.setPassWord(null);
         admin.updateById();
 
-        // 修改成功后，判断是否更改了RoleUid，更新redis中admin的URL访问路径
-        if (!admin.getRoleUid().equals(admin.getRoleUid())) {
-            redisUtil.delete(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + admin.getUid());
-        }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 

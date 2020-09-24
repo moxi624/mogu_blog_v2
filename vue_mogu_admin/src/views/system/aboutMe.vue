@@ -105,7 +105,7 @@
         <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
         <div class="editor-container">
           <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.personResume" :height="500"></CKEditor>
-          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'"  :height="660"></MarkdownEditor>
+          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'" :height="660"></MarkdownEditor>
         </div>
 
         <div style="margin-top: 5px; margin-left: 10px;" >
@@ -225,13 +225,14 @@ export default {
     },
     handleClick(tab, event) {
       //设置富文本内容
-      this.$refs.editor.setData(this.form.personResume);
+      if (this.form.personResume) {
+        this.$refs.editor.setData(this.form.personResume);
+      }
     },
     // 获取系统配置
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          console.log("得到的配置", response)
           if (response.data) {
             this.systemConfig = response.data;
           }

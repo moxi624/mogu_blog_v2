@@ -331,7 +331,6 @@ export default {
       this.avatar = "";
       this.imagecropperShow = true;
     },
-
     getFormObject: function() {
       var formObject = {
         uid: null,
