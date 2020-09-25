@@ -254,8 +254,4 @@
     // 表情大小
     zoom: 0.3;
   }
-  .emoji-size-large {
-    zoom: 0.5; // emojipanel表情大小
-    margin: 4px;
-  }
 </style>

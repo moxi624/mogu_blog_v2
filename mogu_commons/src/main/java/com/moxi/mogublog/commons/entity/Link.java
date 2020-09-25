@@ -5,19 +5,16 @@ import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
 
 /**
- * <p>
  * 友情链接表
- * </p>
  *
- * @author xuzhixiang
- * @since 22018年9月26日09:54:43
+ * @author 陌溪
+ * @since 2018年9月26日09:54:43
  */
 @Data
 @TableName("t_link")
 public class Link extends SuperEntity<Link> {
 
     private static final long serialVersionUID = 1L;
-
 
     /**
      * 友链标题
@@ -58,4 +55,5 @@ public class Link extends SuperEntity<Link> {
      * 申请用户Uid
      */
     private String userUid;
+
 }

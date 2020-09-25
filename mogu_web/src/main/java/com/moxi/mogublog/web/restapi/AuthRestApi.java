@@ -524,25 +524,21 @@ public class AuthRestApi {
             return ResultUtil.result(SysConf.ERROR, "必须填写并绑定邮箱后，才能开启评论邮件通知~");
         }
         user.setStartEmailNotification(userVO.getStartEmailNotification());
-
         user.updateById();
         user.setPassWord("");
         user.setPhotoUrl(userVO.getPhotoUrl());
 
         // 判断用户是否更改了邮箱
         if (userVO.getEmail() != null && !userVO.getEmail().equals(user.getEmail())) {
-
             user.setEmail(userVO.getEmail());
-
             // 使用RabbitMQ发送邮件
             rabbitMqUtil.sendRegisterEmail(user, token);
-
             // 修改成功后，更新Redis中的用户信息
             stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
             return ResultUtil.result(SysConf.SUCCESS, "您已修改邮箱，请先到邮箱进行确认绑定");
         } else {
             stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + token, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
-            return ResultUtil.result(SysConf.SUCCESS, "修改成功");
+            return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
         }
     }
 

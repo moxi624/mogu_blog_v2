@@ -51,7 +51,7 @@
     components: {
       VueCropper,
     },
-    props: ['modelSrc'],
+    props: ['modelSrc', 'fileName'],
     data() {
       return {
         model: false,
@@ -94,13 +94,7 @@
           this.picUrl = data;
           //裁剪后的图片显示
           this.example2.img = this.modelSrc;
-
-          // this.toBlob(data)
-          // console.log(data)
-          // console.log(this.toBlob(data))
-
         })
-
       },
       // base64转blob
       toBlob(ndata) {
@@ -113,9 +107,10 @@
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n);
         }
-        return new Blob([u8arr], {
+        let blob = new Blob([u8arr], {
           type: mime
         })
+        return new window.File([blob], this.fileName, {type: mime})
       },
 
       /**

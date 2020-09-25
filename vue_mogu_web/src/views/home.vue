@@ -1035,6 +1035,7 @@
   .emoji-item-common {
     background: url("../assets/img/emoji_sprite.png");
     display: inline-block;
+    zoom: 0.3;
   }
   .emoji-item-common:hover {
     cursor: pointer;
@@ -1186,10 +1187,5 @@
     display: inline-block;
     width: 240px;
     margin-bottom: 5px;
-  }
-
-  .emoji-panel-btn img{
-    height: 35px;
-    width: 35px;
   }
 </style>

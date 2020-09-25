@@ -119,7 +119,7 @@
     </el-dialog>
 
     <el-dialog :visible.sync="pictureCropperVisible" fullscreen>
-      <PictureCropper v-if="reFresh" :modelSrc="checkedPicture.pictureUrl" @cropperSuccess="cropperSuccess"></PictureCropper>
+      <PictureCropper v-if="reFresh" :modelSrc="checkedPicture.pictureUrl" :fileName="checkedPicture.picName" @cropperSuccess="cropperSuccess"></PictureCropper>
     </el-dialog>
 
 
@@ -345,6 +345,7 @@ export default {
 
     },
     handleCropper: function(picture) {
+      console.log("选中的图片", picture)
       this.checkedPicture = picture;
       setTimeout(() => {
 

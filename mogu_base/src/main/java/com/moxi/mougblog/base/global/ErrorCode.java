@@ -22,6 +22,9 @@ public class ErrorCode {
     public static final String PLEASE_CONFIGURE_TAG_COUNT = "00104";
     public static final String PLEASE_CONFIGURE_LINK_COUNT = "00105";
     public static final String PLEASE_CONFIGURE_SYSTEM_PARAMS = "00106";
+    public static final String PLEASE_SET_QI_NIU = "00107";
+    public static final String PLEASE_SET_LOCAL = "00108";
+
 
 
     //=========================================

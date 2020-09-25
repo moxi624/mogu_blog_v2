@@ -176,8 +176,7 @@ public class StorageRestApi {
             restResult.setErrorMessage("请先登录");
             return JSON.toJSONString(restResult);
         }
-        String qiNiuConfigResult = qiniuUtil.getQiNiuConfig();
-        Map<String, String> qiNiuConfig = WebUtils.getData(qiNiuConfigResult, Map.class);
+        Map<String, String> qiNiuConfig = qiniuUtil.getQiNiuConfig();
         if (qiNiuConfig == null) {
             restResult.setSuccess(false);
             restResult.setErrorMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
