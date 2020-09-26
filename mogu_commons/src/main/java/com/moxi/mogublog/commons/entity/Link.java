@@ -1,8 +1,11 @@
 package com.moxi.mogublog.commons.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 友情链接表
@@ -55,5 +58,21 @@ public class Link extends SuperEntity<Link> {
      * 申请用户Uid
      */
     private String userUid;
+
+    /**
+     * 站长邮箱
+     */
+    private String email;
+
+    /**
+     * 网站图标uid
+     */
+    private String fileUid;
+
+    /**
+     * 网站图标URL 【该字段不存入数据库】
+     */
+    @TableField(exist = false)
+    private List<String> photoList;
 
 }

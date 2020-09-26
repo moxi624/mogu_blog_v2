@@ -33,6 +33,16 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="网站图标" width="80" align="center">
+        <template slot-scope="scope">
+          <img
+            v-if="scope.row.photoList"
+            :src="scope.row.photoList[0]"
+            style="width: 50px;height:50px;"
+          >
+        </template>
+      </el-table-column>
+
       <el-table-column label="友链名" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
@@ -48,6 +58,12 @@
       <el-table-column label="友链URL" width="200" align="center">
         <template slot-scope="scope">
           <span @click="onClick(scope.row)" style="cursor:pointer;">{{ scope.row.url }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="站长邮箱" width="200" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
 
@@ -77,19 +93,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100" align="center">
-        <template slot-scope="scope">
-          <template v-if="scope.row.status == 1">
-            <span>正常</span>
-          </template>
-          <template v-if="scope.row.status == 2">
-            <span>推荐</span>
-          </template>
-          <template v-if="scope.row.status == 0">
-            <span>已删除</span>
-          </template>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="状态" width="100" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <template v-if="scope.row.status == 1">-->
+<!--            <span>正常</span>-->
+<!--          </template>-->
+<!--          <template v-if="scope.row.status == 2">-->
+<!--            <span>推荐</span>-->
+<!--          </template>-->
+<!--          <template v-if="scope.row.status == 0">-->
+<!--            <span>已删除</span>-->
+<!--          </template>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
 
       <el-table-column label="操作" fixed="right" min-width="240">
         <template slot-scope="scope">
@@ -115,6 +131,16 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
 
+        <el-form-item label="网站图标" :label-width="formLabelWidth">
+          <div class="imgBody" v-if="form.photoList">
+            <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+            <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="form.photoList[0]" />
+          </div>
+          <div v-else class="uploadImgBody" @click="checkPhoto">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </div>
+        </el-form-item>
+
         <el-form-item label="友链名" :label-width="formLabelWidth" prop="title">
           <el-input v-model="form.title" auto-complete="off"></el-input>
         </el-form-item>
@@ -127,6 +153,9 @@
           <el-input v-model="form.url" auto-complete="off"></el-input>
         </el-form-item>
 
+        <el-form-item label="站长邮箱" :label-width="formLabelWidth" prop="email">
+          <el-input v-model="form.email" auto-complete="off"></el-input>
+        </el-form-item>
 
         <el-form-item label="友链状态" :label-width="formLabelWidth" prop="linkStatus">
           <el-select v-model="form.linkStatus" size="small" placeholder="请选择" style="width:100px">
@@ -149,6 +178,17 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
+
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
   </div>
 </template>
 
@@ -161,7 +201,7 @@ import {
   stickLink
 } from "@/api/link";
 import {getListByDictTypeList} from "@/api/sysDictData"
-
+import AvatarCropper from '@/components/AvatarCropper'
 export default {
   data() {
     return {
@@ -177,6 +217,13 @@ export default {
       linkStatusDefault: null, // 友链状态默认值
       formLabelWidth: "120px",
       isEditForm: false,
+      imagecropperShow: false, // 是否显示截图框
+      imagecropperKey: 0,
+      url: process.env.PICTURE_API + "/file/cropperPicture",
+      photoVisible: false, //控制图片选择器的显示
+      photoList: [],
+      fileIds: "",
+      icon: false, //控制删除图标的显示
       form: {
         uid: null,
         content: "",
@@ -184,12 +231,15 @@ export default {
       },
       rules: {
         title: [
-          {required: true, message: '标题不能为空', trigger: 'blur'},
-          {min: 1, max: 10, message: '长度在1到10个字符'},
+          {required: true, message: '友链名称不能为空', trigger: 'blur'},
+          {min: 1, max: 20, message: '长度在1到20个字符'},
         ],
         url: [
           {required: true, message: 'URL不能为空', trigger: 'blur'},
           {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+        ],
+        email: [
+          {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
         ],
         linkStatus: [
           {required: true, message: '友链状态不能为空', trigger: 'blur'}
@@ -200,6 +250,9 @@ export default {
         ]
       }
     };
+  },
+  components: {
+    AvatarCropper
   },
   created() {
     // 字典查询
@@ -238,9 +291,7 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-
       var dictTypeList = ['sys_link_status']
-
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
           var dictMap = response.data;
@@ -250,6 +301,26 @@ export default {
           }
         }
       });
+    },
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      let photoList = []
+      photoList.push(resData[0].url);
+      this.form.photoList = photoList;
+      this.form.fileUid = resData[0].uid
+    },
+    //弹出选择图片框
+    checkPhoto() {
+      this.imagecropperShow = true
+    },
+    close() {
+      this.imagecropperShow = false
+    },
+    deletePhoto: function() {
+      this.form.photoList = null;
+      this.form.fileUid = "";
+      this.icon = false;
     },
     handleFind: function() {
       this.linkList();
@@ -380,3 +451,53 @@ export default {
   }
 };
 </script>
+<style scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  margin: 0, 0, 0, 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+.imgBody {
+  width: 100px;
+  height: 100px;
+  border: solid 2px #ffffff;
+  float: left;
+  position: relative;
+}
+.uploadImgBody {
+  margin-left: 5px;
+  width: 100px;
+  height: 100px;
+  border: dashed 1px #c0c0c0;
+  float: left;
+  position: relative;
+}
+.uploadImgBody :hover {
+  border: dashed 1px #00ccff;
+}
+.inputClass {
+  position: absolute;
+}
+.img {
+  width: 100%;
+  height: 100%;
+}
+img {
+  width: 100px;
+  height: 100px;
+}
+</style>

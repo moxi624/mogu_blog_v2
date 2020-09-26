@@ -180,7 +180,6 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
-
       //定义规则
       rules: {
         oldPwd: [
@@ -272,13 +271,11 @@ export default {
     checkPhoto() {
       this.imagecropperShow = true
     },
-
     submitForm: function(type) {
       switch (type) {
         // 1、改变用户信息
         case "changeAdminForm":
           {
-            console.log("提交的内容", this.form);
             editMe(this.form).then(response => {
               console.log(response);
               this.$notify({

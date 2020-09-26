@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Link;
+import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.xo.global.MessageConf;
@@ -11,34 +12,36 @@ import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.LinkMapper;
 import com.moxi.mogublog.xo.service.LinkService;
+import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
- * <p>
  * 友链表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-08
  */
 @Service
 public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implements LinkService {
 
     @Resource
-    LinkMapper linkMapper;
-
+    private LinkMapper linkMapper;
     @Autowired
-    LinkService linkService;
+    private LinkService linkService;
+    @Autowired
+    private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private WebUtil webUtil;
 
     @Override
     public List<Link> getListByPageSize(Integer pageSize) {
@@ -59,17 +62,45 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         if (StringUtils.isNotEmpty(linkVO.getKeyword()) && !StringUtils.isEmpty(linkVO.getKeyword().trim())) {
             queryWrapper.like(SQLConf.TITLE, linkVO.getKeyword().trim());
         }
-
         if (linkVO.getLinkStatus() != null) {
             queryWrapper.eq(SQLConf.LINK_STATUS, linkVO.getLinkStatus());
         }
-
         Page<Link> page = new Page<>();
         page.setCurrent(linkVO.getCurrentPage());
         page.setSize(linkVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Link> pageList = linkService.page(page, queryWrapper);
+        List<Link> linkList = pageList.getRecords();
+        final StringBuffer fileUids = new StringBuffer();
+        // 给友情链接添加图片
+        linkList.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                fileUids.append(item.getFileUid() + SysConf.FILE_SEGMENTATION);
+            }
+        });
+        String pictureList = null;
+        Map<String, String> pictureMap = new HashMap<>();
+        if (fileUids != null) {
+            pictureList = pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
+        }
+        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
+        picList.forEach(item -> {
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
+        });
+        for (Link item : linkList) {
+            //获取图片
+            if (StringUtils.isNotEmpty(item.getFileUid())) {
+                List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), Constants.SYMBOL_COMMA);
+                List<String> pictureListTemp = new ArrayList<String>();
+
+                pictureUidsTemp.forEach(picture -> {
+                    pictureListTemp.add(pictureMap.get(picture));
+                });
+                item.setPhotoList(pictureListTemp);
+            }
+        }
+        pageList.setRecords(linkList);
         return pageList;
     }
 
@@ -82,6 +113,8 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.setClickCount(0);
         link.setLinkStatus(linkVO.getLinkStatus());
         link.setSort(linkVO.getSort());
+        link.setEmail(linkVO.getEmail());
+        link.setFileUid(linkVO.getFileUid());
         link.setStatus(EStatus.ENABLE);
         link.setUpdateTime(new Date());
         link.insert();
@@ -96,6 +129,8 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.setLinkStatus(linkVO.getLinkStatus());
         link.setUrl(linkVO.getUrl());
         link.setSort(linkVO.getSort());
+        link.setEmail(linkVO.getEmail());
+        link.setFileUid(linkVO.getFileUid());
         link.setUpdateTime(new Date());
         link.updateById();
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
@@ -113,7 +148,6 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
     @Override
     public String stickLink(LinkVO linkVO) {
         Link link = linkService.getById(linkVO.getUid());
-
         //查找出最大的那一个
         QueryWrapper<Link> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc(SQLConf.SORT);
@@ -149,7 +183,6 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         } else {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
     }
 }

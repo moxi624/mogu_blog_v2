@@ -237,3 +237,10 @@ CREATE TABLE `t_subject_item` (
 	系统配置表 增加编辑器模式
 */
 ALTER TABLE  t_system_config ADD editor_model TINYINT(1) NOT NULL DEFAULT 0 COMMENT "编辑器模式，(0：富文本编辑器CKEditor，1：markdown编辑器Veditor)";
+
+
+/*
+*	友情链接表添加 邮箱和图标字段
+*/
+ALTER TABLE  t_link ADD email VARCHAR(255) DEFAULT NULL COMMENT "站长邮箱";
+ALTER TABLE  t_link ADD file_uid VARCHAR(255) DEFAULT NULL COMMENT "网站图标";

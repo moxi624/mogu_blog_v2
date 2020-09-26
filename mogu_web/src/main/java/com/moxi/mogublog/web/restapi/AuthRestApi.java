@@ -630,6 +630,8 @@ public class AuthRestApi {
         link.setUrl(linkVO.getUrl());
         link.setClickCount(0);
         link.setSort(0);
+        link.setFileUid(linkVO.getFileUid());
+        link.setEmail(linkVO.getEmail());
         link.setStatus(EStatus.ENABLE);
         link.setUserUid(userUid);
         link.insert();

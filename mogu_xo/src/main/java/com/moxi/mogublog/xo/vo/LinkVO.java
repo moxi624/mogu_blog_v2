@@ -41,6 +41,16 @@ public class LinkVO extends BaseVO<LinkVO> {
     private Integer sort;
 
     /**
+     * 站长邮箱
+     */
+    private String email;
+
+    /**
+     * 网站图标uid
+     */
+    private String fileUid;
+
+    /**
      * 无参构造方法，初始化默认值
      */
     LinkVO() {

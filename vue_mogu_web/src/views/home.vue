@@ -381,6 +381,17 @@
 
           <el-divider></el-divider>
 
+          <el-form-item label="网站图标">
+            <div class="imgBody" v-if="blogLink.photoList">
+              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]" />
+            </div>
+
+            <div v-else class="uploadImgBody" @click="checkPhoto">
+              <i class="el-icon-plus avatar-uploader-icon"></i>
+            </div>
+          </el-form-item>
+
           <el-form-item label="网站名称" :label-width="labelWidth" prop="title">
             <el-input v-model="blogLink.title" style="width: 100%"></el-input>
           </el-form-item>
@@ -389,9 +400,12 @@
             <el-input v-model="blogLink.summary" style="width: 100%"></el-input>
           </el-form-item>
 
-
           <el-form-item label="网站地址" :label-width="labelWidth" prop="url">
             <el-input v-model="blogLink.url" style="width: 100%"></el-input>
+          </el-form-item>
+
+          <el-form-item label="站长邮箱" :label-width="labelWidth" prop="email">
+            <el-input v-model="blogLink.email" placeholder="用于申请通过邮件通知" style="width: 100%"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -540,6 +554,9 @@
           url: [
             {required: true, message: '网站地址不能为空', trigger: 'blur'},
             {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+          ],
+          email: [
+            {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
           ]
         },
         userInfoRules: {
@@ -727,8 +744,19 @@
       cropSuccess(resData) {
         this.imagecropperShow = false
         this.imagecropperKey = this.imagecropperKey + 1
-        this.userInfo.photoUrl = resData[0].url
-        this.userInfo.avatar = resData[0].uid
+        console.log("判断激活", this.activeName)
+        // 判断当前激活的页面
+        if(this.activeName == "0") {
+          // 激活个人中心页面
+          this.userInfo.photoUrl = resData[0].url
+          this.userInfo.avatar = resData[0].uid
+        } else if(this.activeName == "5") {
+          let photoList = []
+          photoList.push(resData[0].url);
+          this.blogLink.photoList = photoList
+          this.blogLink.fileUid = resData[0].uid
+        }
+
       },
       deletePhoto: function() {
         this.userInfo.photoUrl = null;

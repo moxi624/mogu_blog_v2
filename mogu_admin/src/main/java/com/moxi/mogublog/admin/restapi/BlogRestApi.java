@@ -62,7 +62,6 @@ public class BlogRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
         return blogService.addBlog(blogVO);
     }
 
