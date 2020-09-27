@@ -93,14 +93,14 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             SystemConfig systemConfig = new SystemConfig();
 
             // 设置七牛云、邮箱、系统配置相关属性
-            BeanUtils.copyProperties(systemConfigVO, systemConfig);
+            BeanUtils.copyProperties(systemConfigVO, systemConfig, "status");
             systemConfig.insert();
         } else {
 
             SystemConfig systemConfig = systemConfigService.getById(systemConfigVO.getUid());
 
             // 设置七牛云、邮箱、系统配置相关属性
-            BeanUtils.copyProperties(systemConfigVO, systemConfig);
+            BeanUtils.copyProperties(systemConfigVO, systemConfig, "status", "uid");
             systemConfig.updateById();
 
         }
