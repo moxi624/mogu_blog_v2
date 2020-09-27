@@ -17,10 +17,10 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -91,52 +91,16 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
 
         if (StringUtils.isEmpty(systemConfigVO.getUid())) {
             SystemConfig systemConfig = new SystemConfig();
-            // 设置七牛云相关
-            systemConfig.setLocalPictureBaseUrl(systemConfigVO.getLocalPictureBaseUrl());
-            systemConfig.setQiNiuPictureBaseUrl(systemConfigVO.getQiNiuPictureBaseUrl());
-            systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
-            systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
-            systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
-            systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
-            systemConfig.setUploadLocal(systemConfigVO.getUploadLocal());
-            systemConfig.setUploadQiNiu(systemConfigVO.getUploadQiNiu());
-            systemConfig.setPicturePriority(systemConfigVO.getPicturePriority());
 
-            // 设置邮箱相关
-            systemConfig.setEmail(systemConfigVO.getEmail());
-            systemConfig.setEmailPassword(systemConfigVO.getEmailPassword());
-            systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
-            systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
-            systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
-            systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
-
-            // 设置系统配置
-            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
+            // 设置七牛云、邮箱、系统配置相关属性
+            BeanUtils.copyProperties(systemConfigVO, systemConfig);
             systemConfig.insert();
         } else {
 
             SystemConfig systemConfig = systemConfigService.getById(systemConfigVO.getUid());
-            // 设置七牛云相关
-            systemConfig.setLocalPictureBaseUrl(systemConfigVO.getLocalPictureBaseUrl());
-            systemConfig.setQiNiuPictureBaseUrl(systemConfigVO.getQiNiuPictureBaseUrl());
-            systemConfig.setQiNiuAccessKey(systemConfigVO.getQiNiuAccessKey());
-            systemConfig.setQiNiuSecretKey(systemConfigVO.getQiNiuSecretKey());
-            systemConfig.setQiNiuBucket(systemConfigVO.getQiNiuBucket());
-            systemConfig.setQiNiuArea(systemConfigVO.getQiNiuArea());
-            systemConfig.setUploadLocal(systemConfigVO.getUploadLocal());
-            systemConfig.setUploadQiNiu(systemConfigVO.getUploadQiNiu());
-            systemConfig.setPicturePriority(systemConfigVO.getPicturePriority());
 
-            // 设置邮箱相关
-            systemConfig.setEmail(systemConfigVO.getEmail());
-            systemConfig.setEmailPassword(systemConfigVO.getEmailPassword());
-            systemConfig.setEmailUserName(systemConfigVO.getEmailUserName());
-            systemConfig.setSmtpAddress(systemConfigVO.getSmtpAddress());
-            systemConfig.setSmtpPort(systemConfigVO.getSmtpPort());
-            systemConfig.setStartEmailNotification(systemConfigVO.getStartEmailNotification());
-            systemConfig.setUpdateTime(new Date());
-            // 设置系统配置
-            systemConfig.setEditorModel(systemConfigVO.getEditorModel());
+            // 设置七牛云、邮箱、系统配置相关属性
+            BeanUtils.copyProperties(systemConfigVO, systemConfig);
             systemConfig.updateById();
 
         }
