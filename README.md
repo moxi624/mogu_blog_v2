@@ -164,32 +164,34 @@
 
 ### 后端技术
 
-|      技术      |          说明           |                             官网                             |
-| :------------: | :---------------------: | :----------------------------------------------------------: |
-|   SpringBoot   |         MVC框架         | [ https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot) |
-|  SpringCloud   |       微服务框架        |           https://spring.io/projects/spring-cloud/           |
-| SpringSecurity |     认证和授权框架      |          https://spring.io/projects/spring-security          |
-|  MyBatis-Plus  |         ORM框架         |                   https://mp.baomidou.com/                   |
-|   Swagger-UI   |      文档生产工具       | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui) |
-|     Kibana     |    分析和可视化平台     |               https://www.elastic.co/cn/kibana               |
-| Elasticsearch  |        搜索引擎         | [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch) |
-|      Solr      |        搜索引擎         |                http://lucene.apache.org/solr/                |
-|    RabbitMQ    |        消息队列         |   [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)    |
-|     Redis      |       分布式缓存        |                      https://redis.io/                       |
-|     Docker     |       容器化部署        |      [ https://www.docker.com](https://www.docker.com/)      |
-|     Druid      |      数据库连接池       | [ https://github.com/alibaba/druid](https://github.com/alibaba/druid) |
-|     七牛云     |    七牛云 - 对象储存    |         https://developer.qiniu.com/sdk#official-sdk         |
-|      JWT       |       JWT登录支持       |                 https://github.com/jwtk/jjwt                 |
-|     SLF4J      |        日志框架         |                    http://www.slf4j.org/                     |
-|     Lombok     |    简化对象封装工具     | [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok) |
-|     Nginx      | HTTP和反向代理web服务器 |                      http://nginx.org/                       |
-|    JustAuth    |    第三方登录的工具     |             https://github.com/justauth/JustAuth             |
-|     Hutool     |     Java工具包类库      |                  https://hutool.cn/docs/#/                   |
-|    阿里大于    |      短信发送平台       |            https://doc.alidayu.com/doc2/index.htm            |
-| Github Actions |       自动化部署        |              https://help.github.com/en/actions              |
-|     Zipkin     |        链路追踪         |             https://github.com/openzipkin/zipkin             |
-| Flexmark-java  |    Markdown转换Html     |            https://github.com/vsch/flexmark-java             |
-|   Ip2region    |    离线IP地址定位库     |          https://github.com/lionsoul2014/ip2region           |
+|      技术      |           说明            |                             官网                             |
+| :------------: | :-----------------------: | :----------------------------------------------------------: |
+|   SpringBoot   |          MVC框架          | [ https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot) |
+|  SpringCloud   |        微服务框架         |           https://spring.io/projects/spring-cloud/           |
+| SpringSecurity |      认证和授权框架       |          https://spring.io/projects/spring-security          |
+|  MyBatis-Plus  |          ORM框架          |                   https://mp.baomidou.com/                   |
+|   Swagger-UI   |       文档生产工具        | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui) |
+|     Kibana     |     分析和可视化平台      |               https://www.elastic.co/cn/kibana               |
+| Elasticsearch  |         搜索引擎          | [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch) |
+|                |     轻量型数据采集器      |               https://www.elastic.co/cn/beats/               |
+|    Logstash    | 用于接收Beats的数据并处理 |              https://www.elastic.co/cn/logstash              |
+|      Solr      |         搜索引擎          |                http://lucene.apache.org/solr/                |
+|    RabbitMQ    |         消息队列          |   [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)    |
+|     Redis      |        分布式缓存         |                      https://redis.io/                       |
+|     Docker     |        容器化部署         |      [ https://www.docker.com](https://www.docker.com/)      |
+|     Druid      |       数据库连接池        | [ https://github.com/alibaba/druid](https://github.com/alibaba/druid) |
+|     七牛云     |     七牛云 - 对象储存     |         https://developer.qiniu.com/sdk#official-sdk         |
+|      JWT       |        JWT登录支持        |                 https://github.com/jwtk/jjwt                 |
+|     SLF4J      |         日志框架          |                    http://www.slf4j.org/                     |
+|     Lombok     |     简化对象封装工具      | [ https://github.com/rzwitserloot/lombok](https://github.com/rzwitserloot/lombok) |
+|     Nginx      |  HTTP和反向代理web服务器  |                      http://nginx.org/                       |
+|    JustAuth    |     第三方登录的工具      |             https://github.com/justauth/JustAuth             |
+|     Hutool     |      Java工具包类库       |                  https://hutool.cn/docs/#/                   |
+|    阿里大于    |       短信发送平台        |            https://doc.alidayu.com/doc2/index.htm            |
+| Github Actions |        自动化部署         |              https://help.github.com/en/actions              |
+|     Zipkin     |         链路追踪          |             https://github.com/openzipkin/zipkin             |
+| Flexmark-java  |     Markdown转换Html      |            https://github.com/vsch/flexmark-java             |
+|   Ip2region    |     离线IP地址定位库      |          https://github.com/lionsoul2014/ip2region           |
 
 ### 前端技术
 
