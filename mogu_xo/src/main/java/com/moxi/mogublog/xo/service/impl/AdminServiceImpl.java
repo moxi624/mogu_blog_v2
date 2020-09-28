@@ -23,6 +23,7 @@ import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import com.openhtmltopdf.css.parser.property.PageSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,22 +35,18 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
  * 管理员表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 @Service
 public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> implements AdminService {
 
     @Resource
-    AdminMapper adminMapper;
-
+    private AdminMapper adminMapper;
     @Autowired
-    WebUtil webUtil;
-
+    private WebUtil webUtil;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -68,14 +65,29 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
     @Override
     public String getOnlineAdminList(AdminVO adminVO) {
+        // 获取Redis中匹配的所有key
         Set<String> keys = redisUtil.keys(RedisConf.LOGIN_TOKEN_KEY + "*");
-        List<String> onlineAdminList = redisUtil.multiGet(keys);
-        List<OnlineAdmin> onlineAdmins = new ArrayList<>();
-        for (String item : onlineAdminList) {
+        List<String> onlineAdminJsonList = redisUtil.multiGet(keys);
+        // 拼装分页信息
+        int pageSize = adminVO.getPageSize().intValue();
+        int currentPage = adminVO.getCurrentPage().intValue();
+        int total = onlineAdminJsonList.size();
+        int startIndex =  Math.max((currentPage - 1) * pageSize, 0);
+        int endIndex = Math.min(currentPage * pageSize, total);
+        //TODO 截取出当前分页下的内容，后面考虑用Redis List做分页
+        List<String> onlineAdminSubList = onlineAdminJsonList.subList(startIndex, endIndex);
+
+        List<OnlineAdmin> onlineAdminList = new ArrayList<>();
+        for (String item : onlineAdminSubList) {
             OnlineAdmin onlineAdmin = JsonUtils.jsonToPojo(item, OnlineAdmin.class);
-            onlineAdmins.add(onlineAdmin);
+            onlineAdminList.add(onlineAdmin);
         }
-        return ResultUtil.result(SysConf.SUCCESS, onlineAdmins);
+        Page<OnlineAdmin> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setTotal(total);
+        page.setSize(pageSize);
+        page.setRecords(onlineAdminList);
+        return ResultUtil.result(SysConf.SUCCESS, page);
     }
 
     @Override
@@ -88,7 +100,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         admin.setPassWord(null);
         //获取图片
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), ",");
+            String pictureList = this.pictureFeignClient.getPicture(admin.getAvatar(), Constants.SYMBOL_COMMA);
             admin.setPhotoList(webUtil.getPicture(pictureList));
         }
         Admin result = new Admin();
@@ -208,21 +220,17 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         String mobile = adminVO.getMobile();
         String userName = adminVO.getUserName();
         String email = adminVO.getEmail();
-
         if (StringUtils.isEmpty(userName)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-
         if (StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
             return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
         }
-
         String defaultPasswordKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + SysConf.SYS_DEFAULT_PASSWORD;
         String defaultPassword = sysParamsService.getSysParamsValueByKey(defaultPasswordKey);
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userName);
         Admin temp = adminService.getOne(queryWrapper);
-
         if (temp == null) {
             Admin admin = new Admin();
             admin.setAvatar(adminVO.getAvatar());
@@ -231,13 +239,13 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             admin.setUserName(adminVO.getUserName());
             admin.setNickName(adminVO.getNickName());
             admin.setRoleUid(adminVO.getRoleUid());
-            /* 设置为未审核状态 */
+            // 设置为未审核状态
             admin.setStatus(EStatus.ENABLE);
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             //设置默认密码
             admin.setPassWord(encoder.encode(defaultPassword));
             adminService.save(admin);
-            //这里需要通过SMS模块，发送邮件告诉初始密码
+            //TODO 这里需要通过SMS模块，发送邮件告诉初始密码
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
         }
         return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);

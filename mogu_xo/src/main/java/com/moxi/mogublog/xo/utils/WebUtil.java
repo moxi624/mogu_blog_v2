@@ -183,9 +183,7 @@ public class WebUtil {
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
         if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
-
             Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.DATA);
-
             List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(SysConf.RECORDS);
             List<T> resultList = new ArrayList<>();
             list.forEach(item -> {
