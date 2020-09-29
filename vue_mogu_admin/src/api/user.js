@@ -8,6 +8,15 @@ export function getUserList(params) {
   })
 }
 
+export function addUser(params) {
+  return request({
+    url: process.env.ADMIN_API + '/user/add',
+    method: 'post',
+    data: params
+  })
+}
+
+
 export function editUser(params) {
   return request({
     url: process.env.ADMIN_API + '/user/edit',

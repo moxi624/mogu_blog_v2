@@ -51,7 +51,8 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
         } else if (exception instanceof ApiInvalidParamException) {
             // 自定义参数校验相关的异常
             // 自动拼接异常信息
-            message = ErrorMessageUtil.getErrorMessage(errorCode, null);
+            errorCode = ErrorCode.PARAM_INCORRECT;
+            message = exception.getMessage();
         } else if (exception instanceof LoginException) {
             // 自定义登录相关的异常
             errorCode = ((LoginException) exception).getCode();

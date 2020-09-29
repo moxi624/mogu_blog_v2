@@ -10,6 +10,7 @@ import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.Delete;
 import com.moxi.mougblog.base.validator.group.GetList;
+import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +47,17 @@ public class UserRestApi {
         ThrowableUtils.checkParamArgument(result);
         log.info("获取用户列表");
         return ResultUtil.result(SysConf.SUCCESS, userService.getPageList(userVO));
+    }
+
+    @AuthorityVerify
+    @OperationLogger(value = "新增用户")
+    @ApiOperation(value = "新增用户", notes = "新增用户", response = String.class)
+    @PostMapping("/add")
+    public String add(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
+
+        // 参数校验
+        ThrowableUtils.checkParamArgument(result);
+        return userService.addUser(userVO);
     }
 
     @AuthorityVerify

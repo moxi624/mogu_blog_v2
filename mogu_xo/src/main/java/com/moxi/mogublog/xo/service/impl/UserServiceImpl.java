@@ -15,11 +15,13 @@ import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
+import com.moxi.mougblog.base.enums.EAccountType;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -211,8 +213,21 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
     }
 
     @Override
+    public String addUser(UserVO userVO) {
+        User user = new User();
+        // 字段拷贝【将userVO中的内容拷贝至user】
+        BeanUtils.copyProperties(userVO, user, SysConf.STATUS);
+        String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
+        user.setPassWord(MD5Utils.string2MD5(defaultPassword));
+        user.setSource("MOGU");
+        user.insert();
+        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+    }
+
+    @Override
     public String editUser(UserVO userVO) {
         User user = userService.getById(userVO.getUid());
+        user.setUserName(userVO.getUserName());
         user.setEmail(userVO.getEmail());
         user.setStartEmailNotification(userVO.getStartEmailNotification());
         user.setOccupation(userVO.getOccupation());

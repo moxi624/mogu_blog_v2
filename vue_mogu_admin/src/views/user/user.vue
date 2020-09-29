@@ -32,7 +32,8 @@
       <el-button @click="handleFind" class="filter-item" icon="el-icon-search" type="primary"
                  v-permission="'/user/getList'">查找
       </el-button>
-      <!--      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit">添加用户</el-button>-->
+
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/user/add'">添加用户</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -53,18 +54,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="用户名" width="150">
+      <el-table-column align="center" label="昵称" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>
 
-      <!--      <el-table-column label="性别" width="100">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>-->
-      <!--          <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
 
       <el-table-column align="center" label="账号来源" width="100">
         <template slot-scope="scope">
@@ -96,7 +91,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="登录次数" width="100">
+      <el-table-column align="center" label="登录次数" width="50">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
         </template>
@@ -192,15 +187,17 @@
 
         <el-row :gutter="24">
           <el-col :span="9">
-            <el-form-item :label-width="formLabelWidth" label="用户名" prop="nickName">
+            <el-form-item :label-width="formLabelWidth" label="用户名" prop="userName">
+              <el-input v-model="form.userName"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="9">
+            <el-form-item :label-width="formLabelWidth" label="昵称" prop="nickName">
               <el-input v-model="form.nickName"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="9">
-            <el-form-item :label-width="formLabelWidth" label="邮箱" prop="email">
-              <el-input auto-complete="off" v-model="form.email"></el-input>
-            </el-form-item>
-          </el-col>
+
         </el-row>
 
         <el-row :gutter="24">
@@ -217,9 +214,27 @@
         </el-row>
 
         <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="评论状态" label-width="120px" prop="commentStatus">
-              <el-select placeholder="请选择" size="small" style="width:100px" v-model="form.commentStatus">
+          <el-col :span="9">
+            <el-form-item :label-width="formLabelWidth" label="邮箱" prop="email">
+              <el-input auto-complete="off" v-model="form.email"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="9">
+            <el-form-item label="性别" :label-width="formLabelWidth" prop="gender">
+              <el-radio :key="gender.uid" :label="gender.dictValue" border
+                        size="medium" v-for="gender in genderDictList" v-model="form.gender">{{gender.dictLabel}}
+              </el-radio>
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+
+
+        <el-row :gutter="24">
+          <el-col :span="9">
+            <el-form-item label="评论状态" :label-width="formLabelWidth" prop="commentStatus">
+              <el-select placeholder="请选择" style="width:205px" v-model="form.commentStatus">
                 <el-option
                   :key="item.uid"
                   :label="item.dictLabel"
@@ -230,9 +245,9 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="6">
-            <el-form-item label="用户标签" label-width="90px" prop="userTag">
-              <el-select placeholder="请选择" size="small" style="width:100px" v-model="form.userTag">
+          <el-col :span="9">
+            <el-form-item label="用户标签" :label-width="formLabelWidth" prop="userTag">
+              <el-select placeholder="请选择"  style="width:205px" v-model="form.userTag">
                 <el-option
                   :key="item.uid"
                   :label="item.dictLabel"
@@ -240,14 +255,6 @@
                   v-for="item in userTagDictList"
                 ></el-option>
               </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item label="性别" label-width="50px" prop="gender">
-              <el-radio :key="gender.uid" :label="gender.dictValue" border
-                        size="medium" v-for="gender in genderDictList" v-model="form.gender">{{gender.dictLabel}}
-              </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -283,7 +290,7 @@
 </template>
 
 <script>
-  import {deleteUser, editUser, getUserList, resetUserPassword} from "@/api/user";
+  import {deleteUser, addUser, editUser, getUserList, resetUserPassword} from "@/api/user";
   import AvatarCropper from '@/components/AvatarCropper'
   import {getListByDictTypeList} from "@/api/sysDictData"
 
@@ -316,8 +323,12 @@
         genderDictList: [], //评论状态字典
         userTagDictList: [], // 用户标签列表
         rules: {
-          nickName: [
+          userName: [
             {required: true, message: '用户名不能为空', trigger: 'blur'},
+            {min: 5, max: 30, message: '长度在1到30个字符'},
+          ],
+          nickName: [
+            {required: true, message: '昵称不能为空', trigger: 'blur'},
             {min: 1, max: 30, message: '长度在1到30个字符'},
           ],
           commentStatus: [
@@ -489,22 +500,41 @@
           if (!valid) {
             console.log("校验出错")
           } else {
-            editUser(this.form).then(response => {
-              if (response.code == this.$ECode.SUCCESS) {
-                this.$notify({
-                  title: "成功",
-                  message: "保存成功！",
-                  type: "success"
-                });
-                this.dialogFormVisible = false
-                this.userList();
-              } else {
-                this.$notify.error({
-                  title: "失败",
-                  message: response.data
-                });
-              }
-            });
+            if(this.isEditForm) {
+              editUser(this.form).then(response => {
+                if (response.code == this.$ECode.SUCCESS) {
+                  this.$notify({
+                    title: "成功",
+                    message: "保存成功！",
+                    type: "success"
+                  });
+                  this.dialogFormVisible = false
+                  this.userList();
+                } else {
+                  this.$notify.error({
+                    title: "失败",
+                    message: response.data
+                  });
+                }
+              });
+            } else {
+              addUser(this.form).then(response => {
+                if (response.code == this.$ECode.SUCCESS) {
+                  this.$notify({
+                    title: "成功",
+                    message: "保存成功！",
+                    type: "success"
+                  });
+                  this.dialogFormVisible = false
+                  this.userList();
+                } else {
+                  this.$notify.error({
+                    title: "失败",
+                    message: response.data
+                  });
+                }
+              });
+            }
           }
         })
       }

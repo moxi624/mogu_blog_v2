@@ -64,6 +64,12 @@ public interface UserService extends SuperService<User> {
      */
     public IPage<User> getPageList(UserVO userVO);
 
+    /**
+     * 新增用户
+     *
+     * @param userVO
+     */
+    public String addUser(UserVO userVO);
 
     /**
      * 编辑用户
