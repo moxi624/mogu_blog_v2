@@ -226,8 +226,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         if (StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
             return ResultUtil.result(SysConf.ERROR, "邮箱和手机号至少一项不能为空");
         }
-        String defaultPasswordKey = RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + SysConf.SYS_DEFAULT_PASSWORD;
-        String defaultPassword = sysParamsService.getSysParamsValueByKey(defaultPasswordKey);
+        String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
         QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_NAME, userName);
         Admin temp = adminService.getOne(queryWrapper);
