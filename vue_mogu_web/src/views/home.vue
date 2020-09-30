@@ -1097,7 +1097,7 @@
     border-radius: 50%;
   }
 
-  @media only screen and (max-width: 780px) {
+  @media only screen and (max-width: 1300px) {
     .userInfoAvatar {
       width: 35px;
       height: 35px;

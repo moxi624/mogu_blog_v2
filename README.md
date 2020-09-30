@@ -273,7 +273,7 @@
 
 ###  使用ELK搭建蘑菇博客日志收集
 
-参考[ 使用ELK搭建蘑菇博客日志收集]([https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_使用ELK搭建蘑菇博客日志收集))，使用Docker快速搭建ELK环境用于蘑菇博客日志收集
+参考[搭建蘑菇博客日志收集](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86)，使用Docker快速搭建ELK环境用于蘑菇博客日志收集
 
 ## 环境搭建
 

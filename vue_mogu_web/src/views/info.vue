@@ -263,16 +263,11 @@
             }
           })
 
-
           // 屏幕自适应
           window.onresize = () => {
             return (() => {
-              window.screenWidth = document.body.clientWidth
-              if(window.screenWidth > 950) {
-                that.showSidebar = true
-              } else {
-                that.showSidebar = false
-              }
+              // 屏幕大于950px的时候，显示侧边栏
+              that.showSidebar = document.body.clientWidth > 950
             })()
           }
         },
@@ -287,6 +282,8 @@
             this.getSameBlog()
             this.getCommentDataList();
             this.setCommentAndAdmiration()
+            // 屏幕大于950px的时候，显示侧边栏
+            this.showSidebar = document.body.clientWidth > 950
         },
         methods: {
             //拿到vuex中的写的两个方法
