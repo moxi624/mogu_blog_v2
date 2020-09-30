@@ -113,6 +113,7 @@
 - 采用Sentinel流量控制框架，通过配置再也不怕网站被爆破
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
 - 支持多种文本编辑器，Markdown编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
+- 采用ElasticStack【ElasticSearch+Beats+Kibana+Logstash】[搭建蘑菇博客日志收集](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86)
 
 ## 项目文档
 
@@ -270,6 +271,10 @@
 
 参考[蘑菇博客如何扩展新的功能和页面](http://moguit.cn/#/info?blogUid=4eb7694c58cf8205885b1e8565b1a94e)，在蘑菇博客现有架构基础上，开发自己需要的页面。
 
+###  使用ELK搭建蘑菇博客日志收集
+
+参考[ 使用ELK搭建蘑菇博客日志收集]([https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_使用ELK搭建蘑菇博客日志收集))，使用Docker快速搭建ELK环境用于蘑菇博客日志收集
+
 ## 环境搭建
 
 ### 开发工具
@@ -347,6 +352,7 @@
 - [x] 使用Sentinel做服务限流和熔断
 - [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [x] 富文本编辑器和Markdown编辑器任意切换
+- [x] 使用ELK搭建蘑菇博客日志收集功能
 - [ ] 增加定时任务模块
 - [ ] 增加代码生成器
 - [ ] 完善网盘管理
