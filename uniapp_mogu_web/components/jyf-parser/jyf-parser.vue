@@ -5,7 +5,7 @@
 		<web-view id="_top" ref="web" :style="'margin-top:-2px;height:'+height+'px'" @onPostMessage="_message" />
 		<!--#endif-->
 		<!--#ifndef APP-PLUS-NVUE-->
-		<view id="_top" :style="showAm+(selectable?';user-select:text;-webkit-user-select:text':'')">
+		<view id="_top" :style="showAm+(selectable?';user-select:text;-webkit-user-select:text':'')" style="margin:20rpx">
 			<!--#ifdef H5 || MP-360-->
 			<div :id="'rtf'+uid"></div>
 			<!--#endif-->
