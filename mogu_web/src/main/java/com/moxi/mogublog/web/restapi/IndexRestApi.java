@@ -39,20 +39,15 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexRestApi {
 
     @Autowired
-    TagService tagService;
-
+    private TagService tagService;
     @Autowired
-    LinkService linkService;
-
+    private LinkService linkService;
     @Autowired
-    BlogSortService blogSortService;
-
+    private WebConfigService webConfigService;
     @Autowired
-    WebConfigService webConfigService;
+    private SysParamsService sysParamsService;
     @Autowired
-    SysParamsService sysParamsService;
-    @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @RequestLimit(amount = 200, time = 60000)
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
