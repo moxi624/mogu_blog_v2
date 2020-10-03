@@ -1,6 +1,7 @@
 package com.moxi.mogublog.commons.feign;
 
 import com.moxi.mogublog.commons.config.feign.FeignConfiguration;
+import com.moxi.mogublog.commons.fallback.PictureFeignFallback;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,11 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * mogu_picture相关接口
+ * 图片服务feign远程调用
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
+ * @date 2020年10月3日21:16:34
  */
-@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class)
+@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class, fallback = PictureFeignFallback.class)
 public interface PictureFeignClient {
 
 

@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 搜索服务feign远程调用
+ */
 @FeignClient(name = "mogu-search", configuration = FeignConfiguration.class)
 public interface SearchFeignClient {
 

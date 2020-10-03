@@ -1,6 +1,7 @@
 package com.moxi.mougblog.base.vo;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
  * @create: 2019年12月31日15:19:31
  */
 @Data
+@ToString
 public class FileVO extends BaseVO<FileVO> {
     /**
      * 如果是用户上传，则包含用户uid
@@ -42,6 +44,5 @@ public class FileVO extends BaseVO<FileVO> {
      * 系统配置
      */
     private Map<String, Object> systemConfig;
-
 
 }

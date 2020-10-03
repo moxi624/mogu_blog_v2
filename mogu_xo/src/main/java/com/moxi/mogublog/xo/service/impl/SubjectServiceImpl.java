@@ -44,7 +44,7 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
     PictureFeignClient pictureFeignClient;
 
     @Resource
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Override
     public IPage<Subject> getPageList(SubjectVO subjectVO) {

@@ -25,6 +25,7 @@ import java.util.TimeZone;
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config",
+        "com.moxi.mogublog.commons.handler",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.annotion",
         "com.moxi.mogublog.admin.security",
@@ -40,14 +41,6 @@ public class AdminApplication {
         SpringApplication.run(AdminApplication.class, args);
     }
 
-//    private CorsConfiguration buildConfig() {
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.addAllowedOrigin("localhost");
-//        corsConfiguration.addAllowedHeader("*");
-//        corsConfiguration.addAllowedMethod("*");
-//        return corsConfiguration;
-//    }
-
     /**
      * 设置时区
      */
@@ -56,17 +49,7 @@ public class AdminApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
-    /**
-     * 跨域过滤器
-     *
-     * @return
-     */
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", buildConfig());
-//        return new CorsFilter(source);
-//    }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

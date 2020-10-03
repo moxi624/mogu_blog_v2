@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * mogu_admin相关接口
+ * 后端服务feign远程调用
  *
  * @author 陌溪
  * @date 2020年1月21日22:19:10

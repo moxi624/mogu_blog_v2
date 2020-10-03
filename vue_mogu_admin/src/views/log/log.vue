@@ -95,7 +95,7 @@
 
       <el-table-column label="请求耗时" width="160" align="center">
         <template slot-scope="scope">
-          <el-tag v-for="item in spendTimeDictList" :type="item.listClass"  v-if="scope.row.spendTime >= splitTime(item.dictValue)[0] && scope.row.spendTime < splitTime(item.dictValue)[1]">{{ scope.row.spendTime}} ms </el-tag>
+          <el-tag v-for="item in spendTimeDictList" :type="item.listClass" :key="item.uid" v-if="scope.row.spendTime >= splitTime(item.dictValue)[0] && scope.row.spendTime < splitTime(item.dictValue)[1]">{{ scope.row.spendTime}} ms </el-tag>
         </template>
       </el-table-column>
 
