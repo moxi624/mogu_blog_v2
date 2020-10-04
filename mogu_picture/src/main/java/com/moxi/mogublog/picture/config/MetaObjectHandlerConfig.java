@@ -9,11 +9,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * Mybatis-plus自动填充
+ * @author 陌溪
+ * @date 2020年10月4日10:48:28
+ */
 @Component
 public class MetaObjectHandlerConfig implements MetaObjectHandler {
 
     Logger log = LoggerFactory.getLogger(MetaObjectHandlerConfig.class);
-
 
     @Override
     public void insertFill(MetaObject metaObject) {

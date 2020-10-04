@@ -17,8 +17,8 @@ import java.io.PrintWriter;
 /**
  * 异常处理类【全局异常处理】
  *
- * @Author: 陌溪
- * @Date: 2019年12月4日22:48:08
+ * @author 陌溪
+ * @date 2019年12月4日22:48:08
  */
 @Slf4j
 public class HandlerExceptionResolver implements org.springframework.web.servlet.HandlerExceptionResolver {
@@ -41,7 +41,7 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
         }
 
         // 组装错误提示信息
-        String errorCode = ErrorCode.OPERATION_FAIL;
+        String errorCode = ErrorCode.ERROR;
         String message = BaseMessageConf.OPERATION_FAIL;
 
         // 自定义业务相关异常
@@ -73,6 +73,8 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
             // 自定义删除操作相关的异常
             errorCode = ((DeleteException) exception).getCode();
             message = exception.getMessage();
+        } else if(exception instanceof Exception) {
+            log.error(exception.getMessage());
         }
 
         // 响应类型设置

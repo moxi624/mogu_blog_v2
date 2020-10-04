@@ -147,6 +147,10 @@ public class WebUtil {
           resultList.add(map);
         }
       }
+    } else if(SysConf.ERROR.equals(picMap.get(SysConf.CODE))){
+      log.error("{}", picMap.get(SysConf.DATA));
+    } else {
+      log.error("获取图片失败");
     }
     return resultList;
   }

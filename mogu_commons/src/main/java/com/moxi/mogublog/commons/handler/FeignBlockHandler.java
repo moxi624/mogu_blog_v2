@@ -7,8 +7,8 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowException;
 import com.alibaba.csp.sentinel.slots.system.SystemBlockException;
-import com.alibaba.fastjson.JSON;
 import com.moxi.mogublog.utils.ResultUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,24 +21,29 @@ import java.io.IOException;
  * @date: 2020-10-03-21:56
  */
 @Component
+@Slf4j
 public class FeignBlockHandler implements UrlBlockHandler {
 
     @Override
     public void blocked(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, BlockException e) throws IOException {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
+        StringBuffer requestURL = httpServletRequest.getRequestURL();
         String message = null;
         if (e instanceof FlowException) {
-            message = "接口被限流了";
+            message = "请求接口被限流了";
         } else if (e instanceof DegradeException) {
-            message = "接口被降级了";
+            message = "请求接口被降级了";
         } else if (e instanceof ParamFlowException) {
-            message = "接口被热点限流了";
+            message = "请求接口被热点限流了";
         } else if (e instanceof AuthorityException) {
-            message = "接口被授权规则限制访问了";
+            message = "请求接口被授权规则限制访问了";
         } else if (e instanceof SystemBlockException) {
-            message = "接口被系统规则限制了";
+            message = "请求接口被系统规则限制了";
         }
+
+        log.error("{}, 请求路径为:{}", message, requestURL);
         String result = ResultUtil.result("error", message);
+        httpServletResponse.setContentType("application/json;charset=utf-8");
         httpServletResponse.getWriter().write(result);
     }
 }

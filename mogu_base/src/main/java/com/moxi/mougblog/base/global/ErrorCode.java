@@ -50,6 +50,8 @@ public class ErrorCode {
     // 删除操作相关异常码
     //=========================================
 
+    public static final String ERROR = "error";
+
     /**
      * 删除操作默认异常码
      */

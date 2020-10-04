@@ -1,4 +1,4 @@
-package com.moxi.mogublog.admin.config;
+package com.moxi.mogublog.picture.config;
 
 import com.moxi.mougblog.base.handler.HandlerExceptionResolver;
 import org.springframework.context.annotation.Bean;

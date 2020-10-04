@@ -25,7 +25,7 @@ import java.util.TimeZone;
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config",
-        "com.moxi.mogublog.commons.handler",
+        "com.moxi.mogublog.commons.fallback",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.admin.annotion",
         "com.moxi.mogublog.admin.security",
@@ -49,7 +49,6 @@ public class AdminApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
-
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -66,5 +65,4 @@ public class AdminApplication {
             }
         };
     }
-
 }

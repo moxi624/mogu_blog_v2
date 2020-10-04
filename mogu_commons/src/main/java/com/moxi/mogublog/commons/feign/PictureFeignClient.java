@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class, fallback = PictureFeignFallback.class)
 public interface PictureFeignClient {
 
-
     /**
      * 获取文件的信息接口
      *
@@ -26,7 +25,7 @@ public interface PictureFeignClient {
      * @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")
      */
     @RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)
-    public String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);
+    String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);
 
     /**
      * 通过URL List上传图片
@@ -35,6 +34,6 @@ public interface PictureFeignClient {
      * @return
      */
     @RequestMapping(value = "/file/uploadPicsByUrl2", method = RequestMethod.POST)
-    public String uploadPicsByUrl(FileVO fileVO);
+    String uploadPicsByUrl(FileVO fileVO);
 
 }

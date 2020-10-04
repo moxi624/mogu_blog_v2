@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
+ * 自定义拦截器
  * @author: 陌溪
  * @create: 2020-06-14-21:55
  */

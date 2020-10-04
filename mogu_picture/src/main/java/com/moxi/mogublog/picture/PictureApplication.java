@@ -19,6 +19,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config.feign",
+        "com.moxi.mogublog.commons.handler",
         "com.moxi.mogublog.commons.config.redis",
         "com.moxi.mogublog.picture.config",
         "com.moxi.mogublog.utils",
