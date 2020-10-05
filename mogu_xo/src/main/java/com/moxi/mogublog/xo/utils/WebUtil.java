@@ -148,7 +148,7 @@ public class WebUtil {
         }
       }
     } else if(SysConf.ERROR.equals(picMap.get(SysConf.CODE))){
-      log.error("{}", picMap.get(SysConf.DATA));
+      log.error("获取图片失败，图片服务出现异常：{}", picMap.get(SysConf.MESSAGE));
     } else {
       log.error("获取图片失败");
     }

@@ -1,6 +1,7 @@
 package com.moxi.mougblog.base.handler;
 
 import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mougblog.base.exception.ErrorMessageUtil;
 import com.moxi.mougblog.base.exception.exceptionType.*;
 import com.moxi.mougblog.base.global.BaseMessageConf;
@@ -74,6 +75,8 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
             errorCode = ((DeleteException) exception).getCode();
             message = exception.getMessage();
         } else if(exception instanceof Exception) {
+            // 其它异常
+            message = exception.getMessage();
             log.error(exception.getMessage());
         }
 
@@ -82,7 +85,7 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
 
         // 响应结果输出
         try (PrintWriter writer = response.getWriter()) {
-            writer.write(JsonUtils.objectToJson(Result.createWithErrorMessage(message, errorCode)));
+            writer.write(ResultUtil.resultWithMessage(errorCode, message));
         } catch (Exception e) {
             log.error("响应输出失败！原因如下：", e);
         }

@@ -24,7 +24,7 @@ public class PictureFeignFallback implements PictureFeignClient {
         HttpServletRequest request = RequestHolder.getRequest();
         StringBuffer requestURL = request.getRequestURL();
         log.error("图片服务出现异常，服务降级返回，请求路径: {}", requestURL);
-        return ResultUtil.result("error", "获取图片失败，服务降级返回");
+        return ResultUtil.errorWithMessage("获取图片服务降级返回");
     }
 
     @Override
@@ -32,6 +32,6 @@ public class PictureFeignFallback implements PictureFeignClient {
         HttpServletRequest request = RequestHolder.getRequest();
         StringBuffer requestURL = request.getRequestURL();
         log.error("图片服务出现异常，更新图片失败，服务降级返回，请求路径: {}", requestURL);
-        return ResultUtil.result("error", "更新图片失败，服务降级返回");
+        return ResultUtil.errorWithMessage("更新图片服务降级返回");
     }
 }

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 全局feign异常处理
+ * 全局feign异常处理类
  * @author: 陌溪
  * @date: 2020-10-03-21:56
  */
@@ -30,19 +30,18 @@ public class FeignBlockHandler implements UrlBlockHandler {
         StringBuffer requestURL = httpServletRequest.getRequestURL();
         String message = null;
         if (e instanceof FlowException) {
-            message = "请求接口被限流了";
+            message = "请求接口被限流";
         } else if (e instanceof DegradeException) {
-            message = "请求接口被降级了";
+            message = "请求接口被降级";
         } else if (e instanceof ParamFlowException) {
-            message = "请求接口被热点限流了";
+            message = "请求接口被热点限流";
         } else if (e instanceof AuthorityException) {
-            message = "请求接口被授权规则限制访问了";
+            message = "请求接口被授权规则限制访问";
         } else if (e instanceof SystemBlockException) {
-            message = "请求接口被系统规则限制了";
+            message = "请求接口被系统规则限制";
         }
-
         log.error("{}, 请求路径为:{}", message, requestURL);
-        String result = ResultUtil.result("error", message);
+        String result = ResultUtil.errorWithMessage(message);
         httpServletResponse.setContentType("application/json;charset=utf-8");
         httpServletResponse.getWriter().write(result);
     }
