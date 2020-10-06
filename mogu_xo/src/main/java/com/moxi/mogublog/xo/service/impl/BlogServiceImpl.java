@@ -976,9 +976,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         // 开始进行图片替换操作
         Integer count = 1;
         String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
-            log.error("参数配置有误，需重新配置！");
-        }
         for (String content : fileContentList) {
             // 循环替换里面的图片
             for (Map.Entry<String, String> map : matchUrlMap.entrySet()) {

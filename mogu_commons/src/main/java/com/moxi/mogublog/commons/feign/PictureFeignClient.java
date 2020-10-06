@@ -9,20 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 图片服务feign远程调用
+ * mogu_picture相关接口
  *
  * @author 陌溪
- * @date 2020年10月3日21:16:34
  */
-@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class, fallback = PictureFeignFallback.class)
+@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class,  fallback = PictureFeignFallback.class)
 public interface PictureFeignClient {
 
     /**
      * 获取文件的信息接口
-     *
+     * @param fileIds 图片uid
+     * @param code 分隔符
      * @return
-     * @ApiImplicitParam(name = "fileIds", value = "fileIds", required = false, dataType = "String"),
-     * @ApiImplicitParam(name = "code", value = "分割符", required = false, dataType = "String")
      */
     @RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)
     String getPicture(@RequestParam("fileIds") String fileIds, @RequestParam("code") String code);

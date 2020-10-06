@@ -1,35 +1,37 @@
 package com.moxi.mogublog.commons.feign;
 
 import com.moxi.mogublog.commons.config.feign.FeignConfiguration;
-import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.fallback.SearchFeignFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 搜索服务feign远程调用
+ * @author 陌溪
+ * @date 2020年10月6日09:08:13
  */
-@FeignClient(name = "mogu-search", configuration = FeignConfiguration.class)
+@FeignClient(name = "mogu-search", configuration = FeignConfiguration.class, fallback = SearchFeignFallback.class)
 public interface SearchFeignClient {
 
-    /**
-     * ElasticSearch添加博客
-     *
-     * @param Eblog
-     * @return
-     */
-    @PostMapping("/search/addBlogbyUid")
-    public String addBlogIndex(@RequestBody Blog Eblog);
 
     /**
-     * 通过ElasticSearch删除博客
+     * 通过博客uid删除ElasticSearch博客索引
      *
      * @param uid
      * @return
      */
-    @PostMapping("/search/delBlogbyUid")
-    public String delBlog(@RequestParam(required = true) String uid);
+    @PostMapping("/search/deleteElasticSearchByUid")
+    public String deleteElasticSearchByUid(@RequestParam(required = true) String uid);
+
+    /**
+     * 通过uids删除ElasticSearch博客索引
+     *
+     * @param uids
+     * @return
+     */
+    @PostMapping("/search/deleteElasticSearchByUids")
+    public String deleteElasticSearchByUids(@RequestParam(required = true) String uids);
 
     /**
      * 初始化ElasticSearch索引
@@ -40,11 +42,54 @@ public interface SearchFeignClient {
     public String initElasticSearchIndex();
 
     /**
+     * 通过uid来增加ElasticSearch索引
+     *
+     * @return
+     */
+    @PostMapping("/search/addElasticSearchIndexByUid")
+    public String addElasticSearchIndexByUid(@RequestParam(required = true) String uid);
+
+
+    /**
+     * 通过博客uid删除Solr博客索引
+     *
+     * @param uid
+     * @return
+     */
+    @PostMapping("/search/deleteSolrIndexByUid")
+    public String deleteSolrIndexByUid(@RequestParam(required = true) String uid);
+
+    /**
+     * 通过uids删除Solr博客索引
+     *
+     * @param uids
+     * @return
+     */
+    @PostMapping("/search/deleteSolrIndexByUids")
+    public String deleteSolrIndexByUids(@RequestParam(required = true) String uids);
+
+    /**
      * 初始化Solr索引
      *
      * @return
      */
     @PostMapping("/search/initSolrIndex")
     public String initSolrIndex();
+
+    /**
+     * 通过uid来增加Solr索引
+     *
+     * @return
+     */
+    @PostMapping("/search/addSolrIndexByUid")
+    public String addSolrIndexByUid(@RequestParam(required = true) String uid);
+
+    /**
+     * 通过uid来更新Solr索引
+     *
+     * @return
+     */
+    @PostMapping("/search/updateSolrIndexByUid")
+    public String updateSolrIndexByUid(@RequestParam(required = true) String uid);
 
 }

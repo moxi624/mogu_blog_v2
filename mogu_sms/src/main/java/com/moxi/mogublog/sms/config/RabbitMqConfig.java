@@ -21,18 +21,17 @@ public class RabbitMqConfig {
     public static final String ROUTING_KEY_EMAIL = "mogu.email";
     public static final String ROUTING_KEY_SMS = "mogu.sms";
 
-
     /**
-     * 申明交换机
+     * 声明交换机
      */
     @Bean(EXCHANGE_DIRECT)
     public Exchange EXCHANGE_DIRECT() {
-        // 申明路由交换机，durable:在rabbitmq重启后，交换机还在
+        // 声明路由交换机，durable:在rabbitmq重启后，交换机还在
         return ExchangeBuilder.directExchange(EXCHANGE_DIRECT).durable(true).build();
     }
 
     /**
-     * 申明Blog队列
+     * 声明Blog队列
      *
      * @return
      */
@@ -42,7 +41,7 @@ public class RabbitMqConfig {
     }
 
     /**
-     * 申明Email队列
+     * 声明Email队列
      *
      * @return
      */
@@ -52,7 +51,7 @@ public class RabbitMqConfig {
     }
 
     /**
-     * 申明SMS队列
+     * 声明SMS队列
      *
      * @return
      */

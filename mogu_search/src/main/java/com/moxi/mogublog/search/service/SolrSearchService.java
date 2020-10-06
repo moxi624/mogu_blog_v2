@@ -122,7 +122,7 @@ public class SolrSearchService {
         solrIndex.setCreateTime(blog.getCreateTime());
         solrTemplate.saveBean(collection, solrIndex);
         solrTemplate.commit(collection);
-
+        log.info("添加Solr索引成功");
     }
 
     //更新索引

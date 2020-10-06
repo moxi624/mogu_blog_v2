@@ -1,16 +1,14 @@
 package com.moxi.mogublog.sms.listener;
 
-import com.moxi.mogublog.sms.feign.SearchFeignClient;
+import com.moxi.mogublog.commons.feign.SearchFeignClient;
 import com.moxi.mogublog.sms.global.RedisConf;
 import com.moxi.mogublog.sms.global.SysConf;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
-import com.moxi.mougblog.base.global.BaseRedisConf;
 import com.moxi.mougblog.base.global.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -19,7 +17,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * 博客监听器(用于更新Redis和索引)
+ * 博客监听器【用于更新Redis和索引】
  *
  * @author 陌溪
  * @date 2018年11月3日下午12:53:23
@@ -34,7 +32,7 @@ public class BlogListener {
     @Autowired
     private SearchFeignClient searchFeignClient;
 
-// TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
+    // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
     @RabbitListener(queues = "mogu.blog")
     public void updateRedis(Map<String, String> map) {
 
@@ -83,7 +81,7 @@ public class BlogListener {
 //                    searchFeignClient.addElasticSearchIndexByUid(uid);
 
                     // 增加solr索引
-//                    searchFeignClient.addSolrIndexByUid(uid);
+                    searchFeignClient.addSolrIndexByUid(uid);
                 }
                 break;
 

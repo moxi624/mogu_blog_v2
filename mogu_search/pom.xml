@@ -44,6 +44,18 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--Sentinel流量控制-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!--Sentinel持久化到Nacos-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+
         <!-- 引入Solr相关依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

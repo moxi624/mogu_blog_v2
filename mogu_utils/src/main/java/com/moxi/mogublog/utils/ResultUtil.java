@@ -53,12 +53,45 @@ public class ResultUtil {
     }
 
     /**
+     * 返回结果【携带数据和消息】
+     * @param code
+     * @param data
+     * @param message
+     * @return
+     */
+    public static String resultWithDataAndMessage(Object code, Object data, String message) {
+        Map<Object, Object> map = new HashMap<>(NUM_TWO);
+        map.put(CODE, code);
+        map.put(DATA, data);
+        map.put(MESSAGE, message);
+        return JsonUtils.objectToJson(map);
+    }
+
+    /**
      * 返回成功的结果【只携带数据】
      * @param data
      * @return
      */
     public static String successWithData(Object data) {
         return resultWithData(SUCCESS, data);
+    }
+
+    /**
+     * 返回成功的结果【只携带消息】
+     * @param message
+     * @return
+     */
+    public static String successWithMessage(String message) {
+        return resultWithMessage(SUCCESS, message);
+    }
+
+    /**
+     * 返回成功的结果【携带数据和消息】
+     * @param message
+     * @return
+     */
+    public static String successWithDataAndMessage(Object data, String message) {
+        return resultWithDataAndMessage(SUCCESS, data, message);
     }
 
     /**

@@ -46,19 +46,14 @@
           .then(() => {
             initElasticIndex().then(response => {
               if(response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: "初始化成功!"
-                });
+                this.$commonUtil.message.success(response.message);
+              } else {
+                this.$commonUtil.message.error(response.message);
               }
             })
-
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消"
-            });
+            this.$commonUtil.message.info("已取消");
           });
       }
     }

@@ -41,9 +41,9 @@ public class SearchIndexRestApi {
         String result = searchFeignClient.initElasticSearchIndex();
         Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
         if (SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.errorWithMessage(blogMap.get(SysConf.MESSAGE).toString());
         }
     }
 
@@ -56,9 +56,9 @@ public class SearchIndexRestApi {
         String result = searchFeignClient.initSolrIndex();
         Map<String, Object> blogMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
         if (SysConf.SUCCESS.equals(blogMap.get(SysConf.CODE))) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.errorWithMessage(blogMap.get(SysConf.MESSAGE).toString());
         }
     }
 }

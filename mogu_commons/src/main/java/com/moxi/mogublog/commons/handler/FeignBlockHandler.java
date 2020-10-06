@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 全局feign异常处理类
+ * 全局Sentinel异常处理器
  * @author: 陌溪
  * @date: 2020-10-03-21:56
  */

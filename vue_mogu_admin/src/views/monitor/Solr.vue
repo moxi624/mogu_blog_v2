@@ -46,24 +46,15 @@
           .then(() => {
             initSolrIndex().then(response => {
               if(response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message);
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message);
               }
             })
 
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消"
-            });
+            this.$commonUtil.message.info("已取消");
           });
       }
     }

@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <artifactId>mogu_base</artifactId>
+            <artifactId>mogu_commons</artifactId>
             <groupId>com.moxi</groupId>
             <version>0.0.1-SNAPSHOT</version>
             <exclusions>
@@ -30,6 +30,7 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <!--sentinel规则持久化到nacos-->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
@@ -63,12 +64,6 @@
             <artifactId>servlet-api</artifactId>
             <version>${servlet.api.version}</version>
         </dependency>
-
-        <!-- 添加Eureka相关依赖 -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>-->
-        <!--        </dependency>-->
 
         <!-- 添加Nacos相关依赖-->
         <dependency>

@@ -59,9 +59,8 @@ public class SolrRestApi {
     @ApiOperation(value = "通过博客Uid添加Solr索引", notes = "通过博客Uid添加Solr索引", response = String.class)
     @PostMapping("/addSolrIndexByUid")
     public String addSolrIndexByUid(@RequestParam(required = true) String uid) {
-
+        log.info("通过博客Uid添加Solr索引");
         String result = webFeignClient.getBlogByUid(uid);
-
         Blog blog = WebUtils.getData(result, Blog.class);
         if (blog == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INSERT_SUCCESS);
