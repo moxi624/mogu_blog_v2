@@ -50,12 +50,11 @@ public class ErrorCode {
     // 删除操作相关异常码
     //=========================================
 
-    public static final String ERROR = "error";
-
     /**
      * 删除操作默认异常码
      */
     public static final String DELETE_DEFAULT_ERROR = "00400";
+    public static final String DELETE_FAILED_PLEASE_CHECK_UID = "00401";
 
     /**
      * 操作成功
@@ -118,4 +117,5 @@ public class ErrorCode {
     public static final String LOGIN_TIMEOUT = "00999";
 
 
+    public static final String ERROR = "error";
 }

@@ -80,6 +80,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     private BlogService blogService;
     @Autowired
+    private SubjectItemService subjectItemService;
+    @Resource
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -816,7 +818,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setStatus(EStatus.DISABLED);
         Boolean save = blog.updateById();
 
-        //保存成功后，需要发送消息到solr 和 redis
+        //保存成功后，需要发送消息到solr 和 redis, 同时从专题管理Item中移除该博客
         if (save) {
             Map<String, Object> map = new HashMap<>();
             map.put(SysConf.COMMAND, SysConf.DELETE);
@@ -825,6 +827,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             map.put(SysConf.CREATE_TIME, blog.getCreateTime());
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+            // 移除所有包含该博客的专题Item
+            List<String> blogUidList = new ArrayList<>(Constants.NUM_ONE);
+            blogUidList.add(blogVO.getUid());
+            subjectItemService.deleteBatchSubjectItemByBlogUid(blogUidList);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -834,13 +840,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (blogVoList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-        List<String> uids = new ArrayList<>();
+        List<String> uidList = new ArrayList<>();
         StringBuffer uidSbf = new StringBuffer();
         blogVoList.forEach(item -> {
-            uids.add(item.getUid());
+            uidList.add(item.getUid());
             uidSbf.append(item.getUid() + SysConf.FILE_SEGMENTATION);
         });
-        Collection<Blog> blogList = blogService.listByIds(uids);
+        Collection<Blog> blogList = blogService.listByIds(uidList);
 
         blogList.forEach(item -> {
             item.setStatus(EStatus.DISABLED);
@@ -854,12 +860,15 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             map.put(SysConf.UID, uidSbf);
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
+            // 移除所有包含该博客的专题Item
+            subjectItemService.deleteBatchSubjectItemByBlogUid(uidList);
         }
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
 
     @Override
-    public String uploadLocalBlog(List<MultipartFile> filedatas) throws IOException {
+    public String uploadLocalBlog(List<MultipartFile> filedatas) {
 
         SystemConfig systemConfig = systemConfigService.getConfig();
         if (systemConfig == null) {

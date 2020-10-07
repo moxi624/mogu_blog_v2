@@ -8,6 +8,8 @@ import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.SubjectMapper;
 import com.moxi.mogublog.xo.service.SubjectItemService;
 import com.moxi.mogublog.xo.service.SubjectService;
@@ -18,6 +20,7 @@ import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,16 +37,13 @@ import java.util.*;
 @Service
 public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject> implements SubjectService {
 
+    @Autowired
+    private SubjectService subjectService;
+    @Autowired
+    private SubjectItemService subjectItemService;
     @Resource
-    SubjectService subjectService;
-
-    @Resource
-    SubjectItemService subjectItemService;
-
-    @Resource
-    PictureFeignClient pictureFeignClient;
-
-    @Resource
+    private PictureFeignClient pictureFeignClient;
+    @Autowired
     private WebUtil webUtil;
 
     @Override
@@ -52,7 +52,6 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
         if (StringUtils.isNotEmpty(subjectVO.getKeyword()) && !StringUtils.isEmpty(subjectVO.getKeyword().trim())) {
             queryWrapper.like(BaseSQLConf.SUBJECT_NAME, subjectVO.getKeyword().trim());
         }
-
         Page<Subject> page = new Page<>();
         page.setCurrent(subjectVO.getCurrentPage());
         page.setSize(subjectVO.getPageSize());
@@ -69,16 +68,13 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
         });
         String pictureResult = null;
         Map<String, String> pictureMap = new HashMap<>();
-
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), BaseSysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
-
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
-
         for (Subject item : list) {
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
@@ -105,9 +101,8 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
         queryWrapper.last(BaseSysConf.LIMIT_ONE);
         Subject tempSubject = subjectService.getOne(queryWrapper);
         if (tempSubject != null) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
-
         Subject subject = new Subject();
         subject.setSubjectName(subjectVO.getSubjectName());
         subject.setSummary(subjectVO.getSummary());
@@ -117,12 +112,11 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
         subject.setSort(subjectVO.getSort());
         subject.setStatus(EStatus.ENABLE);
         subject.insert();
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
     public String editSubject(SubjectVO subjectVO) {
-
         Subject subject = subjectService.getById(subjectVO.getUid());
         /**
          * 判断需要编辑的分类是否存在
@@ -133,10 +127,9 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
             queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
             Subject tempSubject = subjectService.getOne(queryWrapper);
             if (tempSubject != null) {
-                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
-
         subject.setSubjectName(subjectVO.getSubjectName());
         subject.setSummary(subjectVO.getSummary());
         subject.setFileUid(subjectVO.getFileUid());
@@ -146,41 +139,36 @@ public class SubjectServiceImpl extends SuperServiceImpl<SubjectMapper, Subject>
         subject.setStatus(EStatus.ENABLE);
         subject.setUpdateTime(new Date());
         subject.updateById();
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchSubject(List<SubjectVO> subjectVOList) {
         if (subjectVOList.size() <= 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         subjectVOList.forEach(item -> {
             uids.add(item.getUid());
         });
-
         // 判断要删除的分类，是否有资源
         QueryWrapper<SubjectItem> subjectItemQueryWrapper = new QueryWrapper<>();
         subjectItemQueryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         subjectItemQueryWrapper.in(BaseSQLConf.SUBJECT_UID, uids);
         Integer count = subjectItemService.count(subjectItemQueryWrapper);
         if (count > 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.SUBJECT_UNDER_THIS_SORT);
+            return ResultUtil.errorWithMessage(MessageConf.SUBJECT_UNDER_THIS_SORT);
         }
-
         Collection<Subject> subjectList = subjectService.listByIds(uids);
-
         subjectList.forEach(item -> {
             item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
-
         Boolean save = subjectService.updateBatchById(subjectList);
-
         if (save) {
-            return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 

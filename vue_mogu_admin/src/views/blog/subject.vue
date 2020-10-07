@@ -269,24 +269,15 @@ export default {
           params.push(row);
           deleteBatchSubject(params).then(response => {
             if (response.code == "success") {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             this.subjectList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已经取消删除")
         });
     },
     goSubjectItem: function(row) {
@@ -298,12 +289,8 @@ export default {
     },
     handleDeleteBatch: function() {
       var that = this;
-      console.log("需要删除的selectUid", this.selectUids)
       if(that.selectUids.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要删除的内容！"
-        });
+        this.$commonUtil.message.error("请先选中需要删除的内容！")
         return;
       }
       this.$confirm("此操作将把选中的专题删除, 是否继续?", "提示", {
@@ -319,25 +306,16 @@ export default {
             deleteList.push(params)
           }
           deleteBatchSubject(deleteList).then(response => {
-            if (response.code == "success") {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+            if (response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             that.subjectList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     submitForm: function() {
@@ -347,29 +325,23 @@ export default {
         } else {
           if (this.isEditForm) {
             editSubject(this.form).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              this.dialogFormVisible = false;
-              this.subjectList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                this.dialogFormVisible = false;
+                this.subjectList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
             });
           } else {
             addSubject(this.form).then(response => {
-              if (response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+              if (response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                this.dialogFormVisible = false;
+                this.subjectList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
-
-              this.dialogFormVisible = false;
-              this.subjectList();
             });
           }
         }

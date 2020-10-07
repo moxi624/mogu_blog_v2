@@ -7,15 +7,18 @@ import com.moxi.mogublog.commons.entity.Blog;
 import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.mapper.SubjectItemMapper;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.SubjectItemService;
 import com.moxi.mogublog.xo.vo.SubjectItemVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.DeleteException;
 import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +38,6 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
 
     @Resource
     SubjectItemService subjectItemService;
-
     @Resource
     BlogService blogService;
 
@@ -100,7 +102,7 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
         List<SubjectItem> subjectItemList = new ArrayList<>();
         for (SubjectItemVO subjectItemVO : subjectItemVOList) {
             if (StringUtils.isEmpty(subjectItemVO.getSubjectUid()) || StringUtils.isEmpty(subjectItemVO.getBlogUid())) {
-                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
+                return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
             }
             // 判断是否重复添加
             if (repeatBlogList.contains(subjectItemVO.getBlogUid())) {
@@ -116,16 +118,16 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
 
         if (subjectItemList.size() <= 0) {
             if (repeatBlogList.size() == 0) {
-                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL);
+                return ResultUtil.errorWithMessage(MessageConf.INSERT_FAIL);
             } else {
-                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.INSERT_FAIL + "，已跳过" + repeatBlogList.size() + "个重复数据");
+                return ResultUtil.errorWithMessage(MessageConf.INSERT_FAIL + "，已跳过" + repeatBlogList.size() + "个重复数据");
             }
         } else {
             subjectItemService.saveBatch(subjectItemList);
             if (repeatBlogList.size() == 0) {
-                return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
+                return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
             } else {
-                return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS + "，已跳过" + repeatBlogList.size() + "个重复数据，成功插入" + (subjectItemVOList.size() - repeatBlogList.size()) + "条数据");
+                return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS + "，已跳过" + repeatBlogList.size() + "个重复数据，成功插入" + (subjectItemVOList.size() - repeatBlogList.size()) + "条数据");
             }
         }
     }
@@ -158,19 +160,31 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
                 subjectItemService.updateBatchById(subjectItemList);
             }
         }
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchSubjectItem(List<SubjectItemVO> subjectItemVOList) {
         if (subjectItemVOList.size() <= 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         subjectItemVOList.forEach(item -> {
             uids.add(item.getUid());
         });
         subjectItemService.removeByIds(uids);
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
+    }
+
+    @Override
+    public String deleteBatchSubjectItemByBlogUid(List<String> blogUid) {
+        boolean checkSuccess = StringUtils.checkUidList(blogUid);
+        if (!checkSuccess) {
+            throw new DeleteException(ErrorCode.DELETE_FAILED_PLEASE_CHECK_UID, MessageConf.DELETE_FAILED_PLEASE_CHECK_UID);
+        }
+        QueryWrapper<SubjectItem> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(SQLConf.BLOG_UID, blogUid);
+        subjectItemService.remove(queryWrapper);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 }

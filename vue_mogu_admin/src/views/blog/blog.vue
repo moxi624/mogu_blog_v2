@@ -86,7 +86,7 @@
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData" ref="articleTable" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60" align="center">
@@ -745,17 +745,12 @@ export default {
       }
       addSubjectItemList(subjectItemList).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          this.$message({
-            type: "success",
-            message: response.data
-          });
+          this.$commonUtil.message.success(response.message)
           // 清空选中列表
           this.multipleSelection = []
+          this.$refs.articleTable.clearSelection();
         } else {
-          this.$message({
-            type: "error",
-            message: response.data
-          });
+          this.$commonUtil.message.error(response.message)
         }
       });
 

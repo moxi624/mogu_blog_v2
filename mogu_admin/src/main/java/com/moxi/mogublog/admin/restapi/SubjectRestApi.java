@@ -47,7 +47,7 @@ public class SubjectRestApi {
     public String getList(@Validated({GetList.class}) @RequestBody SubjectVO subjectVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, subjectService.getPageList(subjectVO));
+        return ResultUtil.successWithData(subjectService.getPageList(subjectVO));
     }
 
     @AvoidRepeatableCommit
@@ -56,7 +56,6 @@ public class SubjectRestApi {
     @ApiOperation(value = "增加专题", notes = "增加专题", response = String.class)
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody SubjectVO subjectVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return subjectService.addSubject(subjectVO);
@@ -67,7 +66,6 @@ public class SubjectRestApi {
     @ApiOperation(value = "编辑专题", notes = "编辑专题", response = String.class)
     @PostMapping("/edit")
     public String edit(@Validated({Update.class}) @RequestBody SubjectVO subjectVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return subjectService.editSubject(subjectVO);
@@ -78,7 +76,6 @@ public class SubjectRestApi {
     @ApiOperation(value = "批量删除专题", notes = "批量删除专题", response = String.class)
     @PostMapping("/deleteBatch")
     public String delete(@Validated({Delete.class}) @RequestBody List<SubjectVO> subjectVOList, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return subjectService.deleteBatchSubject(subjectVOList);

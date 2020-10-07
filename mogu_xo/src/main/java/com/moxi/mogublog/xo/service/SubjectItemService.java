@@ -21,27 +21,34 @@ public interface SubjectItemService extends SuperService<SubjectItem> {
      * @param subjectItemVO
      * @return
      */
-    public IPage<SubjectItem> getPageList(SubjectItemVO subjectItemVO);
+    IPage<SubjectItem> getPageList(SubjectItemVO subjectItemVO);
 
     /**
      * 批量新增专题
      *
      * @param subjectItemVOList
      */
-    public String addSubjectItemList(List<SubjectItemVO> subjectItemVOList);
+    String addSubjectItemList(List<SubjectItemVO> subjectItemVOList);
 
     /**
      * 编辑专题item
      *
      * @param subjectItemVOList
      */
-    public String editSubjectItemList(List<SubjectItemVO> subjectItemVOList);
+    String editSubjectItemList(List<SubjectItemVO> subjectItemVOList);
 
     /**
      * 批量删除专题item
      *
      * @param subjectItemVOList
      */
-    public String deleteBatchSubjectItem(List<SubjectItemVO> subjectItemVOList);
+    String deleteBatchSubjectItem(List<SubjectItemVO> subjectItemVOList);
+
+    /**
+     * 通过博客uid批量删除专题item
+     * @param blogUid
+     * @return
+     */
+    String deleteBatchSubjectItemByBlogUid(List<String> blogUid);
 
 }

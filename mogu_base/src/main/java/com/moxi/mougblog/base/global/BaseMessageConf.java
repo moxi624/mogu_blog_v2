@@ -117,4 +117,5 @@ public class BaseMessageConf {
      * 删除操作默认异常码
      */
     public static final String DELETE_DEFAULT_ERROR = "删除操作失败";
+    public static final String DELETE_FAILED_PLEASE_CHECK_UID = "删除操作失败，请检查uid是否合法";
 }

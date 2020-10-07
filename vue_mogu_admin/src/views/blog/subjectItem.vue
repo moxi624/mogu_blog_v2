@@ -107,12 +107,12 @@
     },
     methods: {
       getList() {
+        // TODO 这里暂时没有做成分页而是全部显示，考虑到分页后不太好拖拽
         var params = {};
         params.subjectUid = this.subjectUid;
-        params.pageSize = 10;
+        params.pageSize = 100;
         params.currentPage = 1;
         getSubjectItemList(params).then(response => {
-          console.log("得到的列表", response)
           if(response.code == this.$ECode.SUCCESS) {
             this.list = response.data.records
             this.total = response.total
@@ -138,7 +138,6 @@
         })
       },
       handleDelete: function(row) {
-        var that = this;
         this.$confirm("此操作将把博客移除该专辑, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -149,18 +148,16 @@
             params.uid = row.uid;
             let subjectItemList = [params]
             deleteBatchSubjectItem(subjectItemList).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              that.getSubjectList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
+              this.getSubjectList();
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消删除")
           });
       },
       // 跳转到该博客详情
@@ -189,7 +186,7 @@
             }
             editSubjectItem(subjectList).then(response => {
               if(response.code == this.$ECode.SUCCESS) {
-                this.$commonUtil.message.success(response.data)
+                this.$commonUtil.message.success(response.message)
                 this.$router.go(0);
               }
             })
