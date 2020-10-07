@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,8 @@ public class StringUtils {
 
     //集群号
     private static int machineId = 1;
+
+    private final static int NUM_32 = 32;
 
     /**
      * 把String 转换为 long
@@ -42,6 +45,12 @@ public class StringUtils {
 
     }
 
+    /**
+     * 转换成Boolean类型
+     * @param str
+     * @param defaultData
+     * @return
+     */
     public static Boolean getBoolean(String str, Boolean defaultData) {
         Boolean lnum = defaultData;
 
@@ -59,18 +68,15 @@ public class StringUtils {
 
     /**
      * 把String转换成int数据
-     *
      * @param str
      * @param defaultData
      * @return
      */
     public static int getInt(String str, Integer defaultData) {
         int inum = defaultData;
-
         if (isEmpty(str)) {
             return inum;
         }
-
         try {
             inum = Integer.valueOf(str.trim()).intValue();
         } catch (NumberFormatException e) {
@@ -94,7 +100,7 @@ public class StringUtils {
         try {
             dnum = Double.valueOf(str.trim()).doubleValue();
         } catch (NumberFormatException e) {
-            log.warn("把String转换成double数据========== " + str);
+            log.error("把String转换成double数据: {}", str);
         }
         return dnum;
     }
@@ -114,7 +120,7 @@ public class StringUtils {
         try {
             dnum = Float.valueOf(str.trim()).floatValue();
         } catch (NumberFormatException e) {
-            log.warn("把String转换成float数据========== " + str);
+            log.error("把String转换成float数据: {}", str);
         }
         return dnum;
     }
@@ -246,8 +252,6 @@ public class StringUtils {
      * 获取UUID，去掉了-
      *
      * @return
-     * @author xuzhixiang
-     * @date 2017年9月24日16:16:11
      */
     public static String getUUID() {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
@@ -299,6 +303,23 @@ public class StringUtils {
      */
     public static boolean isNotBlank(String str) {
         return !StringUtils.isBlank(str);
+    }
+
+    /**
+     * 校验uid列表，检查里面元素是否满足限定长度为32
+     * @param collection
+     * @return
+     */
+    public static boolean checkUidList(Collection<String> collection) {
+        if(collection.size() == 0) {
+            return false;
+        }
+        for(String uid: collection) {
+            if(uid.trim().length() != NUM_32) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

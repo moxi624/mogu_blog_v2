@@ -80,7 +80,6 @@ public class AdminRestApi {
     @ApiOperation(value = "批量删除管理员", notes = "批量删除管理员")
     @PostMapping("/delete")
     public String delete(@ApiParam(name = "adminUids", value = "管理员uid集合", required = true) @RequestParam(name = "adminUids", required = true) List<String> adminUids) {
-
         return adminService.deleteBatchAdmin(adminUids);
     }
 

@@ -45,21 +45,20 @@ public class CategoryMenuRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, categoryMenuService.getPageList(categoryMenuVO));
+        return ResultUtil.successWithData(categoryMenuService.getPageList(categoryMenuVO));
     }
 
     @ApiOperation(value = "获取所有菜单列表", notes = "获取所有列表", response = String.class)
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public String getAll(@RequestParam(value = "keyword", required = false) String keyword) {
-
-        return ResultUtil.result(SysConf.SUCCESS, categoryMenuService.getAllList(keyword));
+        return ResultUtil.successWithData(categoryMenuService.getAllList(keyword));
     }
 
     @ApiOperation(value = "获取所有二级菜单-按钮列表", notes = "获取所有二级菜单-按钮列表", response = String.class)
     @RequestMapping(value = "/getButtonAll", method = RequestMethod.GET)
     public String getButtonAll(@RequestParam(value = "keyword", required = false) String keyword) {
 
-        return ResultUtil.result(SysConf.SUCCESS, categoryMenuService.getButtonAllList(keyword));
+        return ResultUtil.successWithData(categoryMenuService.getButtonAllList(keyword));
     }
 
     @AvoidRepeatableCommit
@@ -68,7 +67,6 @@ public class CategoryMenuRestApi {
     @ApiOperation(value = "增加菜单", notes = "增加菜单", response = String.class)
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody CategoryMenuVO categoryMenuVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return categoryMenuService.addCategoryMenu(categoryMenuVO);
@@ -78,7 +76,6 @@ public class CategoryMenuRestApi {
     @ApiOperation(value = "编辑菜单", notes = "编辑菜单", response = String.class)
     @PostMapping("/edit")
     public String edit(@Validated({Update.class}) @RequestBody CategoryMenuVO categoryMenuVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return categoryMenuService.editCategoryMenu(categoryMenuVO);
@@ -89,7 +86,6 @@ public class CategoryMenuRestApi {
     @ApiOperation(value = "删除菜单", notes = "删除菜单", response = String.class)
     @PostMapping("/delete")
     public String delete(@Validated({Delete.class}) @RequestBody CategoryMenuVO categoryMenuVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return categoryMenuService.deleteCategoryMenu(categoryMenuVO);

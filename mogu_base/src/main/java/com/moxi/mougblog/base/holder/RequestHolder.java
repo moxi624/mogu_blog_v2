@@ -120,6 +120,10 @@ public class RequestHolder {
         return servletRequestAttributes.getAttributeNames(RequestAttributes.SCOPE_SESSION);
     }
 
+    /**
+     * 获取AdminUid
+     * @return
+     */
     public static String getAdminUid() {
         HttpServletRequest request = RequestHolder.getRequest();
         if (request.getAttribute(BaseSysConf.ADMIN_UID) != null) {

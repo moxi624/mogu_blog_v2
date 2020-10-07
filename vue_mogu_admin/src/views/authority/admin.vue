@@ -374,27 +374,17 @@ export default {
           params.uid = row.uid
           restPwdAdmin(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
-              that.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              that.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleDelete: function(row) {
-      var that = this;
       this.$confirm("此操作将该管理员删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -407,24 +397,15 @@ export default {
           params.append("adminUids", adminUids);
           deleteAdmin(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
-            that.adminList();
+            this.adminList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {
@@ -439,33 +420,21 @@ export default {
           if (this.isEditForm) {
             editAdmin(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.adminList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           } else {
             addAdmin(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.adminList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }

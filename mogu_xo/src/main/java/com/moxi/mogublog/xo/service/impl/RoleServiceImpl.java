@@ -37,10 +37,8 @@ public class RoleServiceImpl extends SuperServiceImpl<RoleMapper, Role> implemen
 
     @Autowired
     RedisUtil redisUtil;
-
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private AdminService adminService;
 
@@ -72,7 +70,7 @@ public class RoleServiceImpl extends SuperServiceImpl<RoleMapper, Role> implemen
             role.insert();
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
         }
-        return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+        return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
     }
 
     @Override
@@ -80,18 +78,16 @@ public class RoleServiceImpl extends SuperServiceImpl<RoleMapper, Role> implemen
         String uid = roleVO.getUid();
         Role getRole = roleService.getById(uid);
         if (getRole == null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         getRole.setRoleName(roleVO.getRoleName());
         getRole.setCategoryMenuUids(roleVO.getCategoryMenuUids());
         getRole.setSummary(roleVO.getSummary());
         getRole.setUpdateTime(new Date());
         getRole.updateById();
-
         // 修改成功后，需要删除redis中所有的admin访问路径
         deleteAdminVisitUrl();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -102,17 +98,14 @@ public class RoleServiceImpl extends SuperServiceImpl<RoleMapper, Role> implemen
         blogQueryWrapper.in(SQLConf.ROLEUID, roleVO.getUid());
         Integer adminCount = adminService.count(blogQueryWrapper);
         if (adminCount > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ADMIN_UNDER_THIS_ROLE);
+            return ResultUtil.errorWithMessage(MessageConf.ADMIN_UNDER_THIS_ROLE);
         }
-
         Role role = roleService.getById(roleVO.getUid());
         role.setStatus(EStatus.DISABLED);
         role.setUpdateTime(new Date());
         role.updateById();
-
         deleteAdminVisitUrl();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
 

@@ -46,7 +46,7 @@ public class RoleRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取角色信息列表");
-        return ResultUtil.result(SysConf.SUCCESS, roleService.getPageList(roleVO));
+        return ResultUtil.successWithData(roleService.getPageList(roleVO));
     }
 
     @AvoidRepeatableCommit
@@ -55,7 +55,6 @@ public class RoleRestApi {
     @ApiOperation(value = "新增角色信息", notes = "新增角色信息")
     @PostMapping("/add")
     public String add(@Validated({Insert.class}) @RequestBody RoleVO roleVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return roleService.addRole(roleVO);
@@ -66,7 +65,6 @@ public class RoleRestApi {
     @ApiOperation(value = "更新角色信息", notes = "更新角色信息")
     @PostMapping("/edit")
     public String update(@Validated({Update.class}) @RequestBody RoleVO roleVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return roleService.editRole(roleVO);
@@ -77,11 +75,8 @@ public class RoleRestApi {
     @ApiOperation(value = "删除角色信息", notes = "删除角色信息")
     @PostMapping("/delete")
     public String delete(@Validated({Delete.class}) @RequestBody RoleVO roleVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return roleService.deleteRole(roleVO);
     }
-
-
 }

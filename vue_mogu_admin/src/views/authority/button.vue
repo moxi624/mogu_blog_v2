@@ -357,7 +357,6 @@ export default {
         params.keyword = keyword[keyword.length - 1]
       }
       getButtonAll(params).then(response => {
-        console.log("getAllMenu", response);
         if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data;
         }
@@ -437,23 +436,14 @@ export default {
           stickMenu(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.buttonList();
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消置顶"
-          });
+          this.$commonUtil.message.info("已取消置顶")
         });
     },
     handleDelete: function(row) {
@@ -468,24 +458,15 @@ export default {
           params.uid = row.uid
           deleteMenu(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             that.buttonList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
 
@@ -494,62 +475,43 @@ export default {
         if(!valid) {
           console.log("校验失败")
         } else {
-
           // 如果菜单类型是 按钮，那么设置菜单等级为 3
           let menuType = this.form.menuType
           if(menuType == 1) {
             this.form.menuLevel = 3
           }
-
           let buttonParentUid = this.buttonParentUid
           if(buttonParentUid.length > 0) {
             // 选取最后一个元素
             this.form.parentUid = buttonParentUid[buttonParentUid.length - 1]
           } else {
-            this.$message({
-              type: "error",
-              message: "请选中父菜单"
-            })
+            this.$commonUtil.message.error("请选中父菜单")
             return;
           }
 
           if (this.isEditForm) {
             editMenu(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.buttonList();
               } else {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           } else {
             addMenu(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.buttonList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }
         }
       })
-
     }
   }
 };

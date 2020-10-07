@@ -142,7 +142,6 @@ export default {
     };
   },
   created() {
-
     this.allMenuList();
     this.roleList();
   },
@@ -161,7 +160,6 @@ export default {
         if (response.code == this.$ECode.SUCCESS) {
           let data = response.data;
           this.categoryMenuList = data;
-          console.log("得到的全部菜单", this.categoryMenuList)
         }
       });
     },
@@ -175,7 +173,6 @@ export default {
       params.pageSize = this.pageSize;
 
       getRoleList(params).then(response => {
-        console.log(response);
         if (response.code == this.$ECode.SUCCESS) {
           var data = response.data.records;
 
@@ -226,8 +223,6 @@ export default {
     },
 
     handleDelete: function (row) {
-
-      var that = this;
       this.$confirm("此操作将把分类删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -236,27 +231,17 @@ export default {
         .then(() => {
           var params = {};
           params.uid = row.uid;
-
           deleteRole(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
-            that.roleList();
+            this.roleList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleCurrentChange: function (val) {
@@ -271,7 +256,6 @@ export default {
         } else {
           //得到选中树的UID
           var categoryMenuUids = this.$refs.tree.getCheckedKeys();
-          console.log("全选UID", categoryMenuUids)
 
           // // 得到的半选UID(也就是父级菜单)
           // var halfCategoryMenuUids = this.$refs.tree.getHalfCheckedKeys();
@@ -283,38 +267,23 @@ export default {
 
           this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
           if (this.isEditForm) {
-            console.log("form", this.form);
             editRole(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.roleList();
               } else {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           } else {
             addRole(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.roleList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }

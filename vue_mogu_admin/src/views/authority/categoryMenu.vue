@@ -312,7 +312,6 @@ export default {
   methods: {
     menuList: function() {
       getAllMenu().then(response => {
-        console.log("getAllMenu", response);
         if (response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data;
           this.menuOptions = response.data;
@@ -344,7 +343,6 @@ export default {
           if(dictMap.sys_jump_external.defaultValue) {
             this.jumpExternalDefault = parseInt(dictMap.sys_jump_external.defaultValue);
           }
-
         }
       });
     },
@@ -374,7 +372,6 @@ export default {
     handleEdit: function(row) {
       this.dialogFormVisible = true;
       this.isEditForm = true;
-      var parentUid = row.parentUid;
       this.title = "编辑菜单"
       this.form = row;
     },
@@ -390,27 +387,17 @@ export default {
           stickMenu(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.menuList();
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消置顶"
-          });
+          this.$commonUtil.message.info("已取消置顶")
         });
     },
     handleDelete: function(row) {
-      var that = this;
       this.$confirm("此操作将把菜单删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -421,24 +408,15 @@ export default {
           params.uid = row.uid
           deleteMenu(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
-            that.menuList();
+            this.menuList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     //菜单远程搜索函数
@@ -467,42 +445,27 @@ export default {
         } else {
           if (this.isEditForm) {
             editMenu(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.menuList();
               } else {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           } else {
             addMenu(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.menuList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }
         }
       })
-
     }
   }
 };

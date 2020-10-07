@@ -81,7 +81,7 @@ public class BlogListener {
 //                    searchFeignClient.addElasticSearchIndexByUid(uid);
 
                     // 增加solr索引
-                    searchFeignClient.addSolrIndexByUid(uid);
+//                    searchFeignClient.addSolrIndexByUid(uid);
                 }
                 break;
 

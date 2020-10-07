@@ -273,7 +273,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         categoryMenu.setUpdateTime(new Date());
         categoryMenu.setIsJumpExternalUrl(categoryMenuVO.getIsJumpExternalUrl());
         categoryMenu.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -291,11 +291,9 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         categoryMenu.setUpdateTime(new Date());
         categoryMenu.setIsJumpExternalUrl(categoryMenuVO.getIsJumpExternalUrl());
         categoryMenu.updateById();
-
         // 修改成功后，需要删除redis中所有的admin访问路径
         deleteAdminVisitUrl();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -305,50 +303,38 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         queryWrapper.in(SQLConf.PARENT_UID, categoryMenuVO.getUid());
         Integer menuCount = categoryMenuService.count(queryWrapper);
         if (menuCount > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.CHILDREN_MENU_UNDER_THIS_MENU);
+            return ResultUtil.errorWithMessage(MessageConf.CHILDREN_MENU_UNDER_THIS_MENU);
         }
-
         CategoryMenu categoryMenu = categoryMenuService.getById(categoryMenuVO.getUid());
         categoryMenu.setStatus(EStatus.DISABLED);
         categoryMenu.setUpdateTime(new Date());
         categoryMenu.updateById();
-
         // 修改成功后，需要删除redis中所有的admin访问路径
         deleteAdminVisitUrl();
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
     public String stickCategoryMenu(CategoryMenuVO categoryMenuVO) {
         CategoryMenu categoryMenu = categoryMenuService.getById(categoryMenuVO.getUid());
-
         //查找出最大的那一个
         QueryWrapper<CategoryMenu> queryWrapper = new QueryWrapper<>();
-
         //如果是二级菜单 或者 按钮，就在当前的兄弟中，找出最大的一个
         if (categoryMenu.getMenuLevel() == Constants.NUM_TWO || categoryMenu.getMenuType() == EMenuType.BUTTON) {
             queryWrapper.eq(SQLConf.PARENT_UID, categoryMenu.getParentUid());
         }
-
         queryWrapper.eq(SQLConf.MENU_LEVEL, categoryMenu.getMenuLevel());
-
         queryWrapper.orderByDesc(SQLConf.SORT);
-
         queryWrapper.last(SysConf.LIMIT_ONE);
-
         CategoryMenu maxSort = categoryMenuService.getOne(queryWrapper);
-
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.OPERATION_FAIL);
         }
-
         Integer sortCount = maxSort.getSort() + 1;
-
         categoryMenu.setSort(sortCount);
         categoryMenu.setUpdateTime(new Date());
         categoryMenu.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     /**
