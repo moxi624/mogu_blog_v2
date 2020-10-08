@@ -42,13 +42,13 @@ import java.util.Map;
 public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, NetworkDisk> implements NetworkDiskService {
 
     @Autowired
-    NetworkDiskService networkDiskService;
+    private NetworkDiskService networkDiskService;
     @Autowired
-    StorageService storageService;
+    private StorageService storageService;
     @Autowired
-    FeignUtil feignUtil;
+    private FeignUtil feignUtil;
     @Autowired
-    QiniuUtil qiniuUtil;
+    private QiniuUtil qiniuUtil;
     @Value(value = "${file.upload.path}")
     private String UPLOAD_PATH;
 
@@ -93,7 +93,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         // 根据扩展名查找
         if (networkDisk.getFileType() != 0) {
             // 判断是否是其它文件
-            if(FileUtil.OTHER_TYPE == networkDisk.getFileType()) {
+            if (FileUtil.OTHER_TYPE == networkDisk.getFileType()) {
                 queryWrapper.notIn(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
             } else {
                 queryWrapper.in(SQLConf.EXTEND_NAME, FileUtil.getFileExtendsByType(networkDisk.getFileType()));
@@ -233,12 +233,14 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             // 修改旧文件名
             networkDisk.setFileOldName(networkDiskVO.getFileOldName());
             // 如果扩展名为空，代表是文件夹，还需要修改文件名
-            if(StringUtils.isEmpty(extendName)) {
+            if (StringUtils.isEmpty(extendName)) {
                 networkDisk.setFileName(networkDiskVO.getFileOldName());
             }
         }
 
-        networkDiskService.updateBatchById(networkDiskList);
+        if (networkDiskList.size() > 0) {
+            networkDiskService.updateBatchById(networkDiskList);
+        }
 
         //移动子目录
         oldFilePath = oldFilePath + fileName + "/";
@@ -259,7 +261,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
                 String filePath = networkDisk.getFilePath();
                 networkDisk.setFilePath(filePath.replace(oldFilePath, newFilePath));
             }
-            if(childList.size() > 0) {
+            if (childList.size() > 0) {
                 networkDiskService.updateBatchById(childList);
             }
         }

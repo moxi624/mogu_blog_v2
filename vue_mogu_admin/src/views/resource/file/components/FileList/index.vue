@@ -3,20 +3,20 @@
     <!-- 操作按钮 -->
     <el-header class="file-list-header">
       <OperationMenu
-        :operationFile="operationFile"
-        :selectionFile="selectionFile"
+        :operation-file="operationFile"
+        :selection-file="selectionFile"
         :filepath="filePath"
-        :storageValue="storageValue"
+        :storage-value="storageValue"
         @showStorage="showStorage"
         @getTableDataByType="getTableDataByType"
         @setMoveFileDialogData="setMoveFileDialogData"
-      ></OperationMenu>
+      />
     </el-header>
     <div class="middle-wrapper">
       <!-- 面包屑导航栏 -->
-      <BreadCrumb class="breadcrumb"></BreadCrumb>
+      <BreadCrumb class="breadcrumb"/>
       <!-- 图片展示模式 -->
-      <div class="change-image-model" v-show="fileType === 1">
+      <div v-show="fileType === 1" class="change-image-model">
         <el-radio-group v-model="imageGroupLable" size="mini" @change="changeImageDisplayModel">
           <el-radio-button :label="0">列表</el-radio-button>
           <el-radio-button :label="1">网格</el-radio-button>
@@ -26,34 +26,34 @@
     </div>
     <!-- 文件列表表格 -->
     <FileTable
-      :fileList="fileList"
-      :loading="loading"
       v-show="!imageModel || fileType !== 1"
+      :file-list="fileList"
+      :loading="loading"
       @setMoveFileDialogData="setMoveFileDialogData"
       @setOperationFile="setOperationFile"
       @setSelectionFile="setSelectionFile"
       @showStorage="showStorage"
       @getTableDataByType="getTableDataByType"
       @getImgReviewData="getImgReviewData"
-    ></FileTable>
+    />
 
     <!-- 图片网格模式 -->
     <ImageModel
-      class="image-model"
       v-if="imageModel && fileType === 1"
-      :fileList="fileList"
+      :file-list="fileList"
+      class="image-model"
       @getImgReviewData="getImgReviewData"
-    ></ImageModel>
+    />
 
     <!-- 移动文件模态框 -->
     <MoveFileDialog
-      :dialogMoveFile="dialogMoveFile"
+      :dialog-move-file="dialogMoveFile"
       @setSelectFilePath="setSelectFilePath"
       @confirmMoveFile="confirmMoveFile"
       @setMoveFileDialogData="setMoveFileDialogData"
-    ></MoveFileDialog>
+    />
     <!-- 查看大图 -->
-    <ImgReview :imgReview="imgReview" @getImgReviewData="getImgReviewData"></ImgReview>
+    <ImgReview :img-review="imgReview" @getImgReviewData="getImgReviewData"/>
   </div>
 </template>
 
@@ -65,8 +65,7 @@ import ImageModel from './components/ImageModel'
 import MoveFileDialog from './components/MoveFileDialog'
 import ImgReview from './components/ImgReview'
 import {
-  getfilelist,
-  getfiletree,
+  getFileList,
   getFileTree,
   getStorage,
   moveFile,
@@ -85,7 +84,7 @@ export default {
   },
   data() {
     return {
-      storageValue: "0",
+      storageValue: '0',
       fileNameSearch: '',
       loading: true, //  表格数据-loading
       fileList: [], //  表格数据-文件列表
@@ -110,14 +109,14 @@ export default {
       imageGroupLable: 0
     }
   },
-  watch:{
-    $route(to,from){
-      this.getTableDataByType()
-    }
-  },
   computed: {
     imageModel() {
       return this.$store.getters.imageModel
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.getTableDataByType()
     }
   },
   created() {
@@ -133,37 +132,39 @@ export default {
      */
     getTableDataByType() {
       // 判断fileType
-      if(this.$route.query.filetype) {
+      if (this.$route.query.filetype) {
         this.fileType = parseInt(this.$route.query.filetype)
       } else {
         this.fileType = 0
       }
-      if(this.$route.query.filepath) {
+      if (this.$route.query.filepath) {
         this.filePath = this.$route.query.filepath
       } else {
-        this.filePath = "/"
+        this.filePath = '/'
       }
 
       this.showFileListByType()
     },
-    //  根据文件类型展示文件列表
+    /**
+     * 根据文件类型展示文件列表
+     */
     showFileListByType() {
-      //  分类型
-      let data = {}
+      const data = {}
       data.filePath = this.filePath
       data.fileType = this.fileType
       this.fileList = []
-      getfilelist(data).then(res => {
-        if (res.success) {
+      getFileList(data).then(res => {
+        if (res.code == this.$ECode.SUCCESS) {
           this.fileList = res.data
           this.loading = false
-          console.log("得到的列表", this.fileList)
         } else {
           this.$message.error(res.errorMessage)
         }
       })
     },
-    //  计算文件大小
+    /**
+     * 计算文件大小
+     * */
     calculateFileSize(size) {
       const B = 1024
       const KB = Math.pow(1024, 2)
@@ -185,7 +186,6 @@ export default {
     /**
      * 表格勾选框事件
      */
-    //  勾选的行
     setSelectionFile(selection) {
       this.selectionFile = selection
     },
@@ -193,23 +193,19 @@ export default {
     /**
      * 移动按钮相关事件
      */
-    //  当前操作行
     setOperationFile(operationFile) {
-      console.log("当前操作的行", operationFile)
       this.operationFile = operationFile
     },
     //  设置移动文件模态框相关数据，isBatchMove为null时是确认移动，值由之前的值而定
     setMoveFileDialogData(isBatchMove, visible) {
       this.initFileTree()
-      this.dialogMoveFile.isBatchMove = isBatchMove
-        ? isBatchMove
-        : this.dialogMoveFile.isBatchMove
+      this.dialogMoveFile.isBatchMove = isBatchMove || this.dialogMoveFile.isBatchMove
       this.dialogMoveFile.visible = visible
     },
     //  移动文件模态框：初始化文件目录树
     initFileTree() {
-      getfiletree().then(res => {
-        if (res.success) {
+      getFileTree().then(res => {
+        if (res.code == this.$ECode.SUCCESS) {
           this.dialogMoveFile.fileTree = [res.data]
         } else {
           this.$message.error(res.errorMessage)
@@ -222,38 +218,38 @@ export default {
     },
     //  移动文件模态框-确定按钮事件
     confirmMoveFile() {
-      console.log("批量移动")
       if (this.dialogMoveFile.isBatchMove) {
         //  批量移动
-        let data = {
+        const data = {
           newFilePath: this.selectFilePath,
           files: JSON.stringify(this.selectionFile)
         }
         batchMoveFile(data).then(res => {
-          if (res.success) {
-            this.$message.success(res.data)
+          if (res.code == this.$ECode.SUCCESS) {
+            this.$commonUtil.message.success(res.message)
             this.getTableDataByType()
             this.dialogMoveFile.visible = false
             this.selectionFile = []
           } else {
-            this.$message.error(res.errorMessage)
+            this.$commonUtil.message.error(res.message)
           }
         })
       } else {
         //  单文件移动
-        let data = {
+        const data = {
           oldFilePath: this.operationFile.filePath,
           newFilePath: this.selectFilePath,
           fileName: this.operationFile.fileName,
+          fileOldName: this.operationFile.fileOldName,
           extendName: this.operationFile.extendName
         }
         moveFile(data).then(res => {
-          if (res.success) {
-            this.$message.success('移动文件成功')
+          if (res.code == this.$ECode.SUCCESS) {
+            this.$commonUtil.message.success(res.message)
             this.getTableDataByType()
             this.dialogMoveFile.visible = false
           } else {
-            this.$message.error(res.errorMessage)
+            this.$commonUtil.message.error(res.message)
           }
         })
       }
@@ -261,8 +257,8 @@ export default {
     //  获取已占用内存
     showStorage() {
       getStorage().then(res => {
-        if (res.success) {
-          let size = res.data ? res.data.storageSize : 0
+        if (res.code == this.$ECode.SUCCESS) {
+          const size = res.data ? res.data.storageSize : 0
           const B = 1024
           const KB = Math.pow(1024, 2)
           const MB = Math.pow(1024, 3)
@@ -279,21 +275,19 @@ export default {
             this.storageValue = (size / GB).toFixed(4) + 'TB'
           }
         } else {
-          this.$message.error(res.errorMessage)
+          this.$commonUtil.message.error(res.message)
         }
       })
     },
 
     //  切换图片查看模式
     changeImageDisplayModel(label) {
-      console.log("切换模式", label)
       this.$store.commit('changeImageModel', label)
     },
 
     //  获取查看大图的数据
     getImgReviewData(row, visible) {
-      if(row) {
-        console.log("查看大图", row.fileUrl)
+      if (row) {
         this.imgReview.fileurl = row.fileUrl
         this.imgReview.filename = row.fileName
         this.imgReview.extendname = row.extendName
@@ -311,10 +305,13 @@ export default {
     .el-dialog-div
       height 200px
       overflow auto
+
   .middle-wrapper
     display flex
+
     .breadcrumb
       flex 1
+
     .change-image-model
       margin-right 20px
       height 30px

@@ -57,6 +57,7 @@ export default {
         if (typeof innerText !== 'string') return
         style.innerText = this.updateStyle(innerText, originalCluster, themeCluster)
       })
+
       this.$message({
         message: '换肤成功',
         type: 'success'

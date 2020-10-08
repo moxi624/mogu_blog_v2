@@ -14,6 +14,7 @@ public class BaseMessageConf {
     public static final String UPDATE_SUCCESS = "更新成功";
     public static final String UPDATE_FAIL = "更新失败";
     public static final String DELETE_SUCCESS = "删除成功";
+    public static final String BATCH_DELETE_SUCCESS = "批量删除成功";
     public static final String DELETE_FAIL = "删除失败";
 
     public static final String ENTITY_EXIST = "该实体已存在";

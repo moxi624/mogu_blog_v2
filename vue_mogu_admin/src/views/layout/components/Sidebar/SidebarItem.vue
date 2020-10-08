@@ -7,18 +7,11 @@
           <span v-if="item.parent.name" slot="title">{{item.parent.name}}</span>
         </template>
 
-        <template v-for="(child,index2) in item.sonItem" v-if="hasOneShowingChildren(child)">
+        <template v-for="child in item.sonItem" v-if="hasOneShowingChildren(child)">
             <el-menu-item :index="child.url" :key="child.name" @click="goTo(child)">
               <i v-if="child.icon" :class="child.icon"></i>
               <span v-if="child.name" slot="title">{{child.name}}</span>
             </el-menu-item>
-
-<!--          <router-link :to="child.url" :key="index2">-->
-<!--            <el-menu-item :index="child.url" :key="child.name">-->
-<!--              <i v-if="child.icon" :class="child.icon"></i>-->
-<!--              <span v-if="child.name" slot="title">{{child.name}}</span>-->
-<!--            </el-menu-item>-->
-<!--          </router-link>-->
         </template>
       </el-submenu>
 
@@ -55,7 +48,6 @@ export default {
       } else {
         this.$router.push({path: child.url})
       }
-
     },
     hasOneShowingChildren(children) {
       return (children.isShow == 1)

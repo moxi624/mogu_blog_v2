@@ -2,21 +2,21 @@
   <div class="file-table-wrapper">
     <!-- 文件表格 -->
     <el-table
-      class="file-table"
-      ref="multipleTable"
-      fit
       v-loading="loading"
-      element-loading-text="数据加载中"
-      tooltip-effect="dark"
+      ref="multipleTable"
       :data="tableData"
       :default-sort="{ prop: 'isDir', order: 'descending'}"
+      class="file-table"
+      fit
+      element-loading-text="数据加载中"
+      tooltip-effect="dark"
       @select-all="selectAllFileRow"
       @select="selectFileRow"
     >
-      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="selection" width="55"/>
       <el-table-column label prop="isDir" width="60">
         <template slot-scope="scope">
-          <img :src="setFileImg(scope.row.extendName)" style="width: 30px;" />
+          <img :src="setFileImg(scope.row.extendName)" style="width: 30px;" >
         </template>
       </el-table-column>
       <el-table-column
@@ -34,61 +34,61 @@
         </template>
         <template slot-scope="scope">
           <div style="cursor:pointer;" @click="clickFileName(scope.row)">
-            <span v-if="scope.row.isDir == 1">{{scope.row.fileName}}</span>
-            <span v-else>{{scope.row.fileOldName}}</span>
+            <span v-if="scope.row.isDir == 1">{{ scope.row.fileName }}</span>
+            <span v-else>{{ scope.row.fileOldName }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column
+        v-if="Number($route.query.filetype)"
         label="路径"
         width="200"
         prop="filepath"
         show-overflow-tooltip
-        v-if="Number($route.query.filetype)"
       >
         <template slot-scope="scope">
           <span
             style="cursor: pointer;"
             title="点击跳转"
             @click="$router.push({ query: { filepath:scope.row.filePath, filetype: 0 } })"
-          >{{scope.row.filePath}}</span>
+          >{{ scope.row.filePath }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        :sort-by="['isDir','extendName']"
         label="类型"
         width="80"
         prop="extendname"
-        :sort-by="['isDir','extendName']"
         sortable
         show-overflow-tooltip
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.extendName">{{scope.row.extendName}}</span>
+          <span v-if="scope.row.extendName">{{ scope.row.extendName }}</span>
           <span v-else>文件夹</span>
         </template>
       </el-table-column>
       <el-table-column
+        :sort-by="['isDir','fileSize']"
         label="大小"
         width="80"
         prop="filesize"
-        :sort-by="['isDir','fileSize']"
         sortable
         show-overflow-tooltip
         align="right"
       >
         <template slot-scope="scope">
-          <div style="padding: 0 10px;">{{calculateFileSize(scope.row.fileSize)}}</div>
+          <div style="padding: 0 10px;">{{ calculateFileSize(scope.row.fileSize) }}</div>
         </template>
       </el-table-column>
 
       <el-table-column
+        :sort-by="['isDir','createTime']"
         label="创建时间"
         prop="createTime"
         width="180"
-        :sort-by="['isDir','createTime']"
         show-overflow-tooltip
         sortable
-      ></el-table-column>
+      />
 
       <el-table-column :width="operaColumnWidth">
         <template slot="header">
@@ -97,53 +97,53 @@
             class="el-icon-circle-plus"
             title="展开操作列按钮"
             @click="$store.commit('changeOperaColumnExpand', 1)"
-          ></i>
+          />
           <i
             class="el-icon-remove"
             title="收起操作列按钮"
             @click="$store.commit('changeOperaColumnExpand', 0)"
-          ></i>
+          />
         </template>
 
         <template slot-scope="scope">
           <div v-if="operaColumnExpand">
             <el-button type="warning" size="mini" @click.native="showEditDialog(scope.row)">重命名</el-button>
-            <el-button type="danger" size="mini" @click.native="deleteFile(scope.row)" v-permission="'/networkDisk/delete'">删除</el-button>
-            <el-button type="primary" size="mini" @click.native="showMoveFileDialog(scope.row)" v-permission="'/networkDisk/move'">移动</el-button>
-            <el-button type="success" size="mini" v-if="scope.row.isDir === 0">
+            <el-button v-permission="'/networkDisk/delete'" type="danger" size="mini" @click.native="deleteFile(scope.row)">删除</el-button>
+            <el-button v-permission="'/networkDisk/move'" type="primary" size="mini" @click.native="showMoveFileDialog(scope.row)">移动</el-button>
+            <el-button v-if="scope.row.isDir === 0" type="success" size="mini">
               <a
+                v-download="scope.row.fileUrl"
                 target="_blank"
                 style="display: block;color: inherit;"
-                v-download="scope.row.fileUrl"
               >下载</a>
             </el-button>
             <el-button
+              v-if="scope.row.extendname=='zip'"
               type="warning"
               size="mini"
-              @click.native="unzipFile(scope.row)"
-              v-if="scope.row.extendname=='zip'"
+              @click.native="handleUnzipFile(scope.row)"
             >解压缩</el-button>
           </div>
 
-          <el-dropdown trigger="click" v-else>
+          <el-dropdown v-else trigger="click">
             <el-button size="mini">
               操作
-              <i class="el-icon-arrow-down el-icon--right"></i>
+              <i class="el-icon-arrow-down el-icon--right"/>
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="showEditDialog(scope.row)" >重命名</el-dropdown-item>
-              <el-dropdown-item @click.native="deleteFile(scope.row)" v-permission="'/networkDisk/delete'">删除</el-dropdown-item>
-              <el-dropdown-item @click.native="showMoveFileDialog(scope.row)" v-permission="'/networkDisk/move'">移动</el-dropdown-item>
+              <el-dropdown-item v-permission="'/networkDisk/delete'" @click.native="deleteFile(scope.row)">删除</el-dropdown-item>
+              <el-dropdown-item v-permission="'/networkDisk/move'" @click.native="showMoveFileDialog(scope.row)">移动</el-dropdown-item>
               <el-dropdown-item v-if="scope.row.isDir === 0">
                 <a
+                  v-download="scope.row.fileUrl"
                   target="_blank"
                   style="display: block;color: inherit;"
-                  v-download="scope.row.fileUrl"
                 >下载</a>
               </el-dropdown-item>
               <el-dropdown-item
-                @click.native="unzipFile(scope.row)"
                 v-if="scope.row.extendname=='zip'"
+                @click.native="handleUnzipFile(scope.row)"
               >解压缩</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -153,11 +153,11 @@
     </el-table>
 
     <!-- 添加或修改对话框 -->
-    <el-dialog title="重命名" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form">
+    <el-dialog :visible.sync="dialogFormVisible" title="重命名">
+      <el-form ref="form" :model="form" :rules="rules">
 
         <el-form-item label="文件名" label-width="120px" prop="content">
-          <el-input v-model="form.fileOldName" auto-complete="off"></el-input>
+          <el-input v-model="form.fileOldName" auto-complete="off"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { unzipfile, deleteFile, editFile } from '@/api/file.js'
+import { unzipFile, deleteFile, editFile } from '@/api/file.js'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -187,12 +187,12 @@ export default {
       form: {},
       rules: {
         fileOldName: [
-          {required: true, message: '名称不能为空', trigger: 'blur'},
-          {min: 1, max: 10, message: '长度在1到10个字符'},
+          { required: true, message: '名称不能为空', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在1到10个字符' }
         ],
         sort: [
-          {required: true, message: '排序字段不能为空', trigger: 'blur'},
-          {pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数'},
+          { required: true, message: '排序字段不能为空', trigger: 'blur' },
+          { pattern: /^[0-9]\d*$/, message: '排序字段只能为自然数' }
         ]
       },
       //  移动文件模态框数据
@@ -297,7 +297,7 @@ export default {
   },
   computed: {
     //  selectedColumnList:判断当前用户设置的左侧栏是否折叠, operaColumnExpand:判断当前用户设置的操作列是否展开
-    ...mapGetters(['selectedColumnList','operaColumnExpand']),
+    ...mapGetters(['selectedColumnList', 'operaColumnExpand']),
     //  当前查看的文件路径
     filepath: {
       get() {
@@ -309,7 +309,6 @@ export default {
     },
     //  过滤后的表格数据
     tableData() {
-      console.log("得到的数据", this.fileList)
       return this.fileList.filter(
         data =>
           !this.fileNameSearch ||
@@ -342,13 +341,12 @@ export default {
   methods: {
     // 显示编辑框
     showEditDialog: function(row) {
-      console.log("编辑的row", row)
       this.dialogFormVisible = true
       this.form = row
     },
     submitForm: function() {
       //  重命名
-      let data = {
+      const data = {
         uid: this.form.uid,
         fileOldName: this.form.fileOldName,
         fileName: this.form.fileName,
@@ -356,19 +354,17 @@ export default {
         newFilePath: this.form.filePath,
         extendName: this.form.extendName
       }
-
-      console.log("上传文件", data)
-
+      console.log('上传文件', data)
       editFile(data).then(res => {
-        if (res.success) {
+        if (res.code == this.$ECode.SUCCESS) {
           this.$message.success('重命名成功')
-          if(this.form.extendName == null) {
-            console.log("对文件重命名")
+          if (this.form.extendName == null) {
+            console.log('对文件重命名')
             this.form.fileName = this.form.fileOldName
           }
           this.dialogFormVisible = false
         } else {
-          this.$message.error(res.errorMessage)
+          this.$message.error(res.message)
         }
       })
     },
@@ -377,7 +373,8 @@ export default {
      */
     //  根据文件扩展名设置文件图片
     setFileImg(extendname) {
-      if (extendname === null) {
+      // 根据扩展名设置图片
+      if (extendname === undefined) {
         //  文件夹
         return this.fileImgMap.dir
       } else if (!this.fileImgTypeList.includes(extendname)) {
@@ -423,7 +420,6 @@ export default {
         //  若当前点击项是图片
         const PIC = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']
         if (PIC.includes(row.extendName)) {
-          console.log("点击的是图片", row)
           this.$emit('getImgReviewData', row, true)
         }
         //  若当前点击项是pdf
@@ -472,21 +468,21 @@ export default {
     },
 
     //  操作列-解压缩按钮
-    unzipFile(fileInfo) {
+    handleUnzipFile(fileInfo) {
       const loading = this.$loading({
         lock: true,
         text: '正在解压缩，请稍等片刻...',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      unzipfile(fileInfo).then(res => {
-        if (res.success) {
+      unzipFile(fileInfo).then(res => {
+        if (res.code == this.$ECode.SUCCESS) {
           this.$emit('getTableDataByType')
           this.$emit('showStorage')
           this.$message.success('解压成功')
           loading.close()
         } else {
-          this.$message.error(res.errorMessage)
+          this.$message.error(res.message)
         }
       })
     },
@@ -505,21 +501,18 @@ export default {
           this.confirmDeleteFile(fileInfo)
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          this.$commonUtil.message.info('已取消删除')
         })
     },
     //  删除文件模态框-确定按钮
     confirmDeleteFile(fileInfo) {
       deleteFile(fileInfo).then(res => {
-        if (res.success) {
+        if (res.code == this.$ECode.SUCCESS) {
           this.$emit('getTableDataByType')
           this.$emit('showStorage')
           this.$message.success('删除成功')
         } else {
-          this.$message.error(res.errorMessage)
+          this.$message.error(res.message)
         }
       })
     }

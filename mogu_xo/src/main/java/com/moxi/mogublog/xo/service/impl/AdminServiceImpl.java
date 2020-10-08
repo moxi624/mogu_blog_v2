@@ -19,7 +19,6 @@ import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.AdminVO;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -42,10 +41,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> implements AdminService {
 
-    @Resource
-    private AdminMapper adminMapper;
-    @Autowired
-    private WebUtil webUtil;
     @Autowired
     AdminService adminService;
     @Autowired
@@ -53,9 +48,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Autowired
     SysParamsService sysParamsService;
     @Resource
+    private AdminMapper adminMapper;
+    @Autowired
+    private WebUtil webUtil;
+    @Resource
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private RoleService roleService;
+
     @Override
     public Admin getAdminByUid(String uid) {
         return adminMapper.getAdminByUid(uid);
@@ -70,7 +70,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         int pageSize = adminVO.getPageSize().intValue();
         int currentPage = adminVO.getCurrentPage().intValue();
         int total = onlineAdminJsonList.size();
-        int startIndex =  Math.max((currentPage - 1) * pageSize, 0);
+        int startIndex = Math.max((currentPage - 1) * pageSize, 0);
         int endIndex = Math.min(currentPage * pageSize, total);
         //TODO 截取出当前分页下的内容，后面考虑用Redis List做分页
         List<String> onlineAdminSubList = onlineAdminJsonList.subList(startIndex, endIndex);
@@ -182,12 +182,10 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         });
 
         Map<String, String> pictureMap = new HashMap<>(Constants.NUM_TEN);
-
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
-
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
         });
@@ -264,7 +262,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
                     if (item.getUid().equals(adminVO.getUid())) {
                         continue;
                     } else {
-                        return ResultUtil.successWithMessage("修改失败，用户名存在");
+                        return ResultUtil.errorWithMessage("修改失败，用户名存在");
                     }
                 }
             }
@@ -296,7 +294,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String editMe(AdminVO adminVO) {
         String adminUid = RequestHolder.getAdminUid();
-        if(StringUtils.isNotBlank(adminUid)) {
+        if (StringUtils.isNotBlank(adminUid)) {
             return ResultUtil.errorWithMessage(MessageConf.INVALID_TOKEN);
         }
         Admin admin = new Admin();
@@ -337,14 +335,11 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String resetPwd(AdminVO adminVO) {
         String defaultPassword = sysParamsService.getSysParamsValueByKey(SysConf.SYS_DEFAULT_PASSWORD);
-        if (StringUtils.isEmpty(defaultPassword)) {
-            throw new UpdateException(MessageConf.PLEASE_CONFIGURE_PASSWORD);
-        }
         // 获取当前用户的管理员uid
         String adminUid = RequestHolder.getAdminUid();
         Admin admin = adminService.getById(adminVO.getUid());
         // 判断是否是admin重置密码【其它超级管理员，无法重置admin的密码】
-        if(SysConf.ADMIN.equals(admin.getUserName()) && !admin.getUid().equals(adminUid)) {
+        if (SysConf.ADMIN.equals(admin.getUserName()) && !admin.getUid().equals(adminUid)) {
             return ResultUtil.errorWithMessage(MessageConf.UPDATE_ADMIN_PASSWORD_FAILED);
         } else {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -358,7 +353,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String deleteBatchAdmin(List<String> adminUidList) {
         boolean checkResult = StringUtils.checkUidList(adminUidList);
-        if(!checkResult) {
+        if (!checkResult) {
             return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<Admin> adminList = new ArrayList<>();
@@ -376,7 +371,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String forceLogout(List<String> tokenList) {
         if (tokenList == null || tokenList.size() == 0) {
-            return ResultUtil.successWithMessage(MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> keyList = new ArrayList<>();
         String keyPrefix = RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION;

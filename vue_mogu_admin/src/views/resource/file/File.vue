@@ -2,11 +2,11 @@
   <div class="file-wrapper">
     <el-container class="el-container">
       <el-aside width="auto">
-        <AsideMenu></AsideMenu>
+        <AsideMenu/>
       </el-aside>
       <el-container>
         <el-main class="el-main">
-          <FileList></FileList>
+          <FileList/>
         </el-main>
       </el-container>
     </el-container>

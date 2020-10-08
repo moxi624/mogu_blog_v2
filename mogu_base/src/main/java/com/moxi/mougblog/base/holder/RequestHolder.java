@@ -1,6 +1,10 @@
 package com.moxi.mougblog.base.holder;
 
+import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
+import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
+import com.moxi.mougblog.base.global.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -122,6 +126,7 @@ public class RequestHolder {
 
     /**
      * 获取AdminUid
+     *
      * @return
      */
     public static String getAdminUid() {
@@ -131,5 +136,30 @@ public class RequestHolder {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 获取AdminToken
+     *
+     * @return
+     */
+    public static String getAdminToken() {
+        HttpServletRequest request = RequestHolder.getRequest();
+        if (request.getAttribute(BaseSysConf.TOKEN) != null) {
+            return request.getAttribute(BaseSysConf.TOKEN).toString();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 检查当前用户是否登录【未登录操作将抛出QueryException异常】
+     */
+    public static String checkLogin() {
+        if (StringUtils.isEmpty(getAdminUid())) {
+            log.error("用户未登录");
+            throw new QueryException(ErrorCode.INVALID_TOKEN, BaseMessageConf.INVALID_TOKEN);
+        }
+        return getAdminUid();
     }
 }

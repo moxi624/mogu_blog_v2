@@ -171,11 +171,9 @@ export default {
       params.keyword = this.keyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
-
       getRoleList(params).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
           var data = response.data.records;
-
           //初始化菜单UID
           for (let a = 0; a < data.length; a++) {
             if (data[a].categoryMenuUids) {
@@ -189,7 +187,6 @@ export default {
           this.pageSize = response.data.size;
           this.total = response.data.total;
         }
-
       });
     },
     getFormObject: function () {
@@ -256,7 +253,6 @@ export default {
         } else {
           //得到选中树的UID
           var categoryMenuUids = this.$refs.tree.getCheckedKeys();
-
           // // 得到的半选UID(也就是父级菜单)
           // var halfCategoryMenuUids = this.$refs.tree.getHalfCheckedKeys();
           // console.log("半选UID", halfCategoryMenuUids)

@@ -12,11 +12,12 @@ import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mogublog.utils.FileUtils;
-import com.moxi.mogublog.utils.RestResult;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.ImageOperation;
 import com.moxi.mogublog.utils.upload.PathUtil;
+import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,24 +40,18 @@ import java.util.Map;
 @RequestMapping("/storage")
 public class StorageRestApi {
 
-    @Autowired
-    QiniuUtil qiniuUtil;
-
-    //获取上传路径
     @Value(value = "${file.upload.path}")
     String path;
-
-    @Resource
-    FileService fileService;
-
-    @Resource
-    NetworkDiskService networkDiskService;
-
-    @Resource
-    StorageService filetransferService;
-
     @Autowired
-    FeignUtil feignUtil;
+    private QiniuUtil qiniuUtil;
+    @Resource
+    private FileService fileService;
+    @Resource
+    private NetworkDiskService networkDiskService;
+    @Resource
+    private StorageService storageService;
+    @Autowired
+    private FeignUtil feignUtil;
 
     /**
      * 旋转图片
@@ -67,8 +62,7 @@ public class StorageRestApi {
      */
     @RequestMapping(value = "/totationimage", method = RequestMethod.POST)
     @ResponseBody
-    public RestResult<String> totationImage(@RequestBody String direction, @RequestBody String imageid) {
-        RestResult<String> result = new RestResult<>();
+    public String totationImage(@RequestBody String direction, @RequestBody String imageid) {
         NetworkDisk networkDisk = new NetworkDisk();
         networkDisk.setUid(imageid);
         networkDisk = networkDiskService.selectFileById(networkDisk);
@@ -91,8 +85,7 @@ public class StorageRestApi {
                 e.printStackTrace();
             }
         }
-        result.setSuccess(true);
-        return result;
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     /**
@@ -103,9 +96,7 @@ public class StorageRestApi {
     @RequestMapping(value = "/deleteimagebyids", method = RequestMethod.POST)
     @ResponseBody
     public String deleteImageByIds(@RequestBody String imageids) {
-        RestResult<String> result = new RestResult<>();
         List<Integer> imageidList = JSON.parseArray(imageids, Integer.class);
-
         List<NetworkDisk> fileList = networkDiskService.selectFileListByIds(imageidList);
         networkDiskService.deleteFileByIds(imageidList);
         long totalFileSize = 0;
@@ -116,20 +107,7 @@ public class StorageRestApi {
             FileOperation.deleteFile(imageUrl);
             FileOperation.deleteFile(minImageUrl);
         }
-//        Storage storage = filetransferService.selectStorageBean(new Storage(SysConf.DEFAULT_UID));
-//        if (storage != null){
-//            long updateFileSize = storage.getStoragesize() - totalFileSize;
-//            if (updateFileSize < 0){
-//                updateFileSize = 0;
-//            }
-//            storage.setStoragesize(updateFileSize);
-//            filetransferService.updateStorageBean(storage);
-//        }
-
-        result.setData("删除文件成功");
-        result.setSuccess(true);
-        String resultJson = JSON.toJSONString(result);
-        return resultJson;
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     /**
@@ -141,24 +119,17 @@ public class StorageRestApi {
     @RequestMapping(value = "/deleteimage", method = RequestMethod.POST)
     @ResponseBody
     public String deleteImage(HttpServletRequest request, @RequestBody NetworkDiskVO networkDiskVO) {
-        RestResult<String> result = new RestResult<>();
-        if (request.getAttribute(SysConf.TOKEN) == null) {
-            result.setSuccess(false);
-            result.setErrorMessage("请先登录");
-            return JSON.toJSONString(result);
-        }
-        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfigByWebToken(request.getAttribute(SysConf.TOKEN).toString());
-
+        RequestHolder.checkLogin();
+        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfigByWebToken(RequestHolder.getAdminToken());
         String imageUrl = PathUtil.getStaticPath() + networkDiskVO.getFileUrl();
         String minImageUrl = imageUrl.replace("." + networkDiskVO.getExtendName(), "_min." + networkDiskVO.getExtendName());
         long fileSize = FileOperation.getFileSize(imageUrl);
         networkDiskVO.setIsDir(0);
         networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
+        // 更新存储空间
         FileOperation.deleteFile(imageUrl);
         FileOperation.deleteFile(minImageUrl);
-        // 更新存储空间
-        String resultJson = JSON.toJSONString(result);
-        return resultJson;
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     /**
@@ -167,21 +138,13 @@ public class StorageRestApi {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     @ResponseBody
     public String uploadFile(HttpServletRequest request, NetworkDisk networkDisk) {
-        RestResult<String> restResult = new RestResult<>();
-        if (request.getAttribute(SysConf.TOKEN) == null) {
-            restResult.setSuccess(false);
-            restResult.setErrorMessage("请先登录");
-            return JSON.toJSONString(restResult);
-        }
+        RequestHolder.checkLogin();
         Map<String, String> qiNiuConfig = qiniuUtil.getQiNiuConfig();
         if (qiNiuConfig == null) {
-            restResult.setSuccess(false);
-            restResult.setErrorMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
-            String resultJson = JSON.toJSONString(restResult);
-            return resultJson;
+            return ResultUtil.errorWithMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
         }
         // 获取文件
         List<MultipartFile> fileDatas = FileUtils.getMultipartFileList(request);
@@ -189,70 +152,9 @@ public class StorageRestApi {
         String result = fileService.uploadImgs(path, request, fileDatas, qiNiuConfig);
         List<com.moxi.mogublog.picture.entity.File> fileList = WebUtils.getAllList(result, com.moxi.mogublog.picture.entity.File.class);
         // 写入NetworkDisk表中
-        filetransferService.uploadFile(request, networkDisk, fileList);
-        restResult.setSuccess(true);
-        String resultJson = JSON.toJSONString(restResult);
-        return resultJson;
+        storageService.uploadFile(request, networkDisk, fileList);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
-
-    /**
-     * 下载文件
-     *
-     * @return
-     */
-    @RequestMapping(value = "/downloadfile", method = RequestMethod.GET)
-    public String downloadFile(HttpServletResponse response, NetworkDisk networkDisk) {
-        RestResult<String> restResult = new RestResult<>();
-        String fileName = null;// 文件名
-        try {
-            fileName = new String(networkDisk.getFileName().getBytes("utf-8"), "ISO-8859-1");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if (fileName != null) {
-            fileName = fileName + "." + networkDisk.getExtendName();
-            //设置文件路径
-            File file = FileOperation.newFile(PathUtil.getStaticPath() + networkDisk.getFileUrl());
-            if (file.exists()) {
-                response.setContentType("application/force-download");// 设置强制下载不打开
-                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = null;
-                BufferedInputStream bis = null;
-                try {
-                    fis = new FileInputStream(file);
-                    bis = new BufferedInputStream(fis);
-                    OutputStream os = response.getOutputStream();
-                    int i = bis.read(buffer);
-                    while (i != -1) {
-                        os.write(buffer, 0, i);
-                        i = bis.read(buffer);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (bis != null) {
-                        try {
-                            bis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-
-    }
-
 
     /**
      * 获取存储信息
@@ -261,11 +163,9 @@ public class StorageRestApi {
      */
     @RequestMapping(value = "/getStorage", method = RequestMethod.GET)
     @ResponseBody
-    public RestResult<Storage> getStorage() {
-        RestResult<Storage> restResult = new RestResult<>();
-        Storage storage = filetransferService.getStorageByAdmin();
-        restResult.setData(storage);
-        restResult.setSuccess(true);
-        return restResult;
+    public String getStorage() {
+        RequestHolder.checkLogin();
+        Storage storage = storageService.getStorageByAdmin();
+        return ResultUtil.successWithData(storage);
     }
 }
