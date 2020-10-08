@@ -195,6 +195,7 @@ public interface BlogService extends SuperService<Blog> {
     public void deleteRedisByBlog();
 
     //========================mogu-web使用==========================
+
     /**
      * 通过推荐等级获取博客Page
      *

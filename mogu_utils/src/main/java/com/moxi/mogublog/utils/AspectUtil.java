@@ -23,6 +23,7 @@ public enum AspectUtil {
 
     /**
      * 获取以类路径为前缀的键
+     *
      * @param point 当前切面执行的方法
      */
     public String getKey(JoinPoint point, String prefix) {

@@ -6,7 +6,6 @@ import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
 import com.moxi.mougblog.base.holder.RequestHolder;

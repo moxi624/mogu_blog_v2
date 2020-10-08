@@ -1,12 +1,9 @@
 package com.moxi.mougblog.base.handler;
 
-import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mougblog.base.exception.ErrorMessageUtil;
 import com.moxi.mougblog.base.exception.exceptionType.*;
 import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.ErrorCode;
-import com.moxi.mougblog.base.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.ModelAndView;
@@ -74,7 +71,7 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
             // 自定义删除操作相关的异常
             errorCode = ((DeleteException) exception).getCode();
             message = exception.getMessage();
-        } else if(exception instanceof Exception) {
+        } else if (exception instanceof Exception) {
             // 其它异常
             message = exception.getMessage();
             log.error(exception.getMessage());

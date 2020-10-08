@@ -1,8 +1,6 @@
 package com.moxi.mogublog.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,10 +16,9 @@ import java.util.UUID;
 @Slf4j
 public class StringUtils {
 
+    private final static int NUM_32 = 32;
     //集群号
     private static int machineId = 1;
-
-    private final static int NUM_32 = 32;
 
     /**
      * 把String 转换为 long
@@ -47,6 +44,7 @@ public class StringUtils {
 
     /**
      * 转换成Boolean类型
+     *
      * @param str
      * @param defaultData
      * @return
@@ -68,6 +66,7 @@ public class StringUtils {
 
     /**
      * 把String转换成int数据
+     *
      * @param str
      * @param defaultData
      * @return
@@ -225,7 +224,7 @@ public class StringUtils {
         int hashCodeV = UUID.randomUUID().toString().hashCode();
         //有可能是负数
         if (hashCodeV < 0) {
-            hashCodeV = - hashCodeV;
+            hashCodeV = -hashCodeV;
         }
         String orderNumber = machineId + String.format("%015d", hashCodeV);
         return orderNumber;
@@ -298,6 +297,7 @@ public class StringUtils {
 
     /**
      * 判断是否为非空字符串
+     *
      * @param str
      * @return
      */
@@ -307,15 +307,16 @@ public class StringUtils {
 
     /**
      * 校验uid列表，检查里面元素是否满足限定长度为32
+     *
      * @param collection
      * @return
      */
     public static boolean checkUidList(Collection<String> collection) {
-        if(collection.size() == 0) {
+        if (collection.size() == 0) {
             return false;
         }
-        for(String uid: collection) {
-            if(uid.trim().length() != NUM_32) {
+        for (String uid : collection) {
+            if (uid.trim().length() != NUM_32) {
                 return false;
             }
         }
@@ -324,6 +325,7 @@ public class StringUtils {
 
     /**
      * 判断是否为空字符串
+     *
      * @param str
      * @return
      */

@@ -9,8 +9,6 @@ import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mougblog.base.enums.EBehavior;
-import com.moxi.mougblog.base.exception.exceptionType.QueryException;
-import com.moxi.mougblog.base.global.ErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -81,8 +79,8 @@ public class IndexRestApi {
     @ApiOperation(value = "mogu-search调用获取博客的接口[包含内容]", notes = "mogu-search调用获取博客的接口")
     @GetMapping("/getBlogBySearch")
     public String getBlogBySearch(HttpServletRequest request,
-                             @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
-                             @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+                                  @ApiParam(name = "currentPage", value = "当前页数", required = false) @RequestParam(name = "currentPage", required = false, defaultValue = "1") Long currentPage,
+                                  @ApiParam(name = "pageSize", value = "每页显示数目", required = false) @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 
         log.info("获取首页最新的博客");
         return ResultUtil.result(SysConf.SUCCESS, blogService.getBlogBySearch(currentPage, null));

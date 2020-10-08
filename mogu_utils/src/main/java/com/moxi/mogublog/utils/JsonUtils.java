@@ -36,9 +36,7 @@ public class JsonUtils {
      * 把对象转换为json数据
      *
      * @param obj
-     * @return
-     * 
-     * 2018年5月7日  下午5:27:16
+     * @return 2018年5月7日  下午5:27:16
      */
     public static String objectToJson(Object obj) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -53,6 +51,7 @@ public class JsonUtils {
 
     /**
      * 将Object转换成Map
+     *
      * @param obj
      * @return
      */
@@ -71,6 +70,7 @@ public class JsonUtils {
 
     /**
      * 把json字符串转化为对象
+     *
      * @param jsonString
      * @param clazz
      * @return
@@ -89,6 +89,7 @@ public class JsonUtils {
 
     /**
      * josn转arrayList
+     *
      * @param jsonArray
      * @return
      */
@@ -133,6 +134,7 @@ public class JsonUtils {
 
     /**
      * 把json转换为map类型的数据
+     *
      * @param json
      * @return
      */
@@ -157,6 +159,7 @@ public class JsonUtils {
 
     /**
      * 将Json转换成Map<String, ?>
+     *
      * @param json
      * @param clazz
      * @return
@@ -182,6 +185,7 @@ public class JsonUtils {
 
     /**
      * 将map转换成pojo
+     *
      * @param map
      * @param beanType
      * @param <T>
@@ -203,6 +207,7 @@ public class JsonUtils {
 
     /**
      * 将json结果集转化为对象
+     *
      * @param jsonData
      * @param beanType
      * @param <T>
@@ -220,6 +225,7 @@ public class JsonUtils {
 
     /**
      * 将json数据转换成pojo对象list
+     *
      * @param jsonData
      * @param beanType
      * @return
@@ -238,6 +244,7 @@ public class JsonUtils {
 
     /**
      * 将任意pojo转化成map
+     *
      * @param t pojo对象
      * @return
      */

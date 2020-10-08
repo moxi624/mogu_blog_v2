@@ -26,7 +26,6 @@ public class ErrorCode {
     public static final String PLEASE_SET_LOCAL = "00108";
 
 
-
     //=========================================
     // 新增操作相关异常码
     //=========================================

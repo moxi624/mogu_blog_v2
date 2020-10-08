@@ -15,6 +15,7 @@ import javax.validation.ConstraintValidatorContext;
 public class RangValidator implements ConstraintValidator<Range, String> {
     private long min;
     private long max;
+
     @Override
     public void initialize(Range constraintAnnotation) {
         this.min = constraintAnnotation.min();

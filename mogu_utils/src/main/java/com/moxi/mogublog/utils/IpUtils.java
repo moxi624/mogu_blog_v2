@@ -151,7 +151,7 @@ public class IpUtils {
             } else {
                 browser = "UnKnown";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("获取浏览器版本失败");
             log.error(e.getMessage());
             browser = "UnKnown";

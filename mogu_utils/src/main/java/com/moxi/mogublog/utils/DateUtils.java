@@ -44,6 +44,7 @@ public class DateUtils {
 
     /**
      * 获取现在的时间 yyyy-MM-dd HH:mm:ss
+     *
      * @return
      */
     public static String getNowTime() {
@@ -54,6 +55,7 @@ public class DateUtils {
 
     /**
      * 获取当前Date型日期
+     *
      * @return Date() 当前日期
      */
     public static Date getNowDate() {
@@ -85,6 +87,7 @@ public class DateUtils {
 
     /**
      * 获取今天开始的时间
+     *
      * @return
      */
     public static String getToDayStartTime() {
@@ -95,6 +98,7 @@ public class DateUtils {
 
     /**
      * 获取今天结束的时间
+     *
      * @return
      */
     public static String getToDayEndTime() {
@@ -105,6 +109,7 @@ public class DateUtils {
 
     /**
      * 获取昨天开始的时间
+     *
      * @return
      */
     public static String getYestodayStartTime() {
@@ -115,6 +120,7 @@ public class DateUtils {
 
     /**
      * 获取昨天结束的时间
+     *
      * @return
      */
     public static String getYestodayEndTime() {
@@ -125,6 +131,7 @@ public class DateUtils {
 
     /**
      * 获取某天开始的时间
+     *
      * @return
      */
     public static String getOneDayStartTime(String oneDay) {
@@ -135,6 +142,7 @@ public class DateUtils {
 
     /**
      * 获取某天开始的日期
+     *
      * @param oneDay
      * @return
      */
@@ -145,6 +153,7 @@ public class DateUtils {
 
     /**
      * 获取某天结束的时间
+     *
      * @return
      */
     public static String getOneDayEndTime(String oneDay) {
@@ -155,6 +164,7 @@ public class DateUtils {
 
     /**
      * 获取某天结束的日期
+     *
      * @param oneDay
      * @return
      */
@@ -166,6 +176,7 @@ public class DateUtils {
 
     /**
      * 获取本周开始的时间
+     *
      * @return
      */
     public static Date getWeekStartTime() {
@@ -178,6 +189,7 @@ public class DateUtils {
 
     /**
      * 将  String 转换成  date
+     *
      * @param dateTime
      * @return
      */
@@ -194,6 +206,7 @@ public class DateUtils {
 
     /**
      * 将  date 转换成  时间戳
+     *
      * @return
      */
     public static Long dateToStamp(String s) throws ParseException {
@@ -206,6 +219,7 @@ public class DateUtils {
 
     /**
      * Date 转换成  String
+     *
      * @param dateTime
      * @return
      */
@@ -217,6 +231,7 @@ public class DateUtils {
 
     /**
      * 获取本周开始的时间的字符串
+     *
      * @return
      */
     public static String getWeekStartTimeStr() {
@@ -230,6 +245,7 @@ public class DateUtils {
 
     /**
      * 获取本周结束的时间
+     *
      * @return
      */
     public static Date getWeekEndTime() {
@@ -241,6 +257,7 @@ public class DateUtils {
 
     /**
      * 获取本周结束的时间的字符串
+     *
      * @return
      */
     public static String getWeekEndTimeStr() {
@@ -253,6 +270,7 @@ public class DateUtils {
 
     /**
      * 获取上周开始的时间的字符串
+     *
      * @return
      */
     public static String getLastWeekStartTimeStr() {
@@ -267,6 +285,7 @@ public class DateUtils {
 
     /**
      * 获取本月开始的时间
+     *
      * @return
      */
     public static Date getMonthStartTime() {
@@ -278,6 +297,7 @@ public class DateUtils {
 
     /**
      * 获取本月开始的时间的字符串
+     *
      * @return
      */
     public static String getMonthStartTimeStr() {
@@ -290,6 +310,7 @@ public class DateUtils {
 
     /**
      * 获取本月结束的时间
+     *
      * @return
      */
     public static Date getMonthEndTime() {
@@ -302,6 +323,7 @@ public class DateUtils {
 
     /**
      * 获取本月结束的时间的字符串
+     *
      * @return
      */
     public static String getMonthEndTimeStr() {
@@ -326,6 +348,7 @@ public class DateUtils {
 
     /**
      * 得到二个日期间的间隔天数
+     *
      * @param date1
      * @param date2
      * @return
@@ -345,6 +368,7 @@ public class DateUtils {
 
     /**
      * 得到两个日期相差的秒数
+     *
      * @param lastDate
      * @param date
      * @return
@@ -361,6 +385,7 @@ public class DateUtils {
 
     /**
      * 判断某个日期属于本周的第几天 (星期一代表第一天)
+     *
      * @param dateTime
      * @return
      * @throws ParseException
@@ -380,6 +405,7 @@ public class DateUtils {
 
     /**
      * 判断某个日期属于本月的第几天
+     *
      * @param dateTime
      * @return
      * @throws ParseException
@@ -410,6 +436,7 @@ public class DateUtils {
 
     /**
      * 获取当前的年
+     *
      * @return
      */
     public static Integer getYears() {
@@ -421,6 +448,7 @@ public class DateUtils {
 
     /**
      * 获取当前的月
+     *
      * @return
      */
     public static Integer getMonth() {
@@ -432,6 +460,7 @@ public class DateUtils {
 
     /**
      * 获取当前天
+     *
      * @return
      */
     public static Integer getDay() {
@@ -442,6 +471,7 @@ public class DateUtils {
 
     /**
      * wx支付的过期时间
+     *
      * @param hour
      * @return
      */
@@ -457,7 +487,8 @@ public class DateUtils {
 
     /**
      * 获得当前日期与本周日相差的天数
-      * @return
+     *
+     * @return
      */
     private static int getMondayPlus() {
         Calendar cd = Calendar.getInstance();
@@ -473,6 +504,7 @@ public class DateUtils {
 
     /**
      * 获取几天之后的日期
+     *
      * @param date yyyy-MM-dd HH:mm:ss
      * @param day  加减的天数
      * @return
@@ -495,8 +527,9 @@ public class DateUtils {
 
     /**
      * 获取某个日期 在加上 秒数的时间
+     *
      * @param beforeDate yyyy-MM-dd HH:mm:ss
-     * @param timeSecond  加减的秒数
+     * @param timeSecond 加减的秒数
      * @return
      */
     public static String getDateStr(Date beforeDate, Long timeSecond) {
@@ -513,6 +546,7 @@ public class DateUtils {
 
     /**
      * 把date转换成字符串
+     *
      * @param date
      * @param code 例如  yyyy-MM-dd 00:00:00
      * @return
@@ -525,6 +559,7 @@ public class DateUtils {
 
     /**
      * 获取过去N天内的日期数组
+     *
      * @param intervals intervals天内
      * @param formatStr 格式化字符串   yyyy-MM-dd
      * @return 日期数组
@@ -539,6 +574,7 @@ public class DateUtils {
 
     /**
      * 获取过去第几天的日期
+     *
      * @param past
      * @return
      */
@@ -553,6 +589,7 @@ public class DateUtils {
 
     /**
      * 获取某个时间段内所有日期
+     *
      * @param begin
      * @param end
      * @return

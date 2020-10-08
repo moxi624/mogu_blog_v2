@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 自定义拦截器
+ *
  * @author: 陌溪
  * @create: 2020-06-14-21:55
  */
@@ -23,6 +24,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     /**
      * 注册资源映射
+     *
      * @param registry
      */
     @Override

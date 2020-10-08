@@ -16,7 +16,6 @@ import com.moxi.mogublog.xo.service.SubjectService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.SubjectVO;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;

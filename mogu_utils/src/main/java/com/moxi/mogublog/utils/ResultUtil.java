@@ -42,6 +42,7 @@ public class ResultUtil {
 
     /**
      * 返回结果【只携带消息】
+     *
      * @param code success error
      * @return String
      */
@@ -54,6 +55,7 @@ public class ResultUtil {
 
     /**
      * 返回结果【携带数据和消息】
+     *
      * @param code
      * @param data
      * @param message
@@ -69,6 +71,7 @@ public class ResultUtil {
 
     /**
      * 返回成功的结果【只携带数据】
+     *
      * @param data
      * @return
      */
@@ -78,6 +81,7 @@ public class ResultUtil {
 
     /**
      * 返回成功的结果【只携带消息】
+     *
      * @param message
      * @return
      */
@@ -87,6 +91,7 @@ public class ResultUtil {
 
     /**
      * 返回成功的结果【携带数据和消息】
+     *
      * @param message
      * @return
      */
@@ -96,6 +101,7 @@ public class ResultUtil {
 
     /**
      * 返回失败的结果【只携带消息】
+     *
      * @param message
      * @return
      */

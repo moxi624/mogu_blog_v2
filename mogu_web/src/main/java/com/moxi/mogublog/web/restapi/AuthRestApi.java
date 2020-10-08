@@ -257,6 +257,7 @@ public class AuthRestApi {
 
     /**
      * 更新用户头像
+     *
      * @param data
      * @param user
      */
@@ -318,129 +319,129 @@ public class AuthRestApi {
     @PostMapping("/decryptData")
     public String decryptData(@RequestBody Map<String, String> map) throws UnsupportedEncodingException {
 
-            String encryptDataB64 = map.get("encryptDataB64");
-            String jsCode = map.get("jsCode");
-            String ivB64 = map.get("ivB64");
-            HashMap<String, Object> paramMap = new HashMap<>();
-            paramMap.put("appid", APP_ID);
-            paramMap.put("secret", SECRET);
-            paramMap.put("js_code", jsCode);
-            paramMap.put("grant_type", GRANT_TYPE);
+        String encryptDataB64 = map.get("encryptDataB64");
+        String jsCode = map.get("jsCode");
+        String ivB64 = map.get("ivB64");
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("appid", APP_ID);
+        paramMap.put("secret", SECRET);
+        paramMap.put("js_code", jsCode);
+        paramMap.put("grant_type", GRANT_TYPE);
 
-            String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
+        String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
 
-            log.info("获取UnionID");
-            log.info(result);
+        log.info("获取UnionID");
+        log.info(result);
 
-            Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
+        Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
 
-            if (resultMap != null) {
-                String sessionKey = resultMap.get("session_key").toString();
-                String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
-                log.info("解析加密数据");
-                log.info(userInfo);
-                Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
+        if (resultMap != null) {
+            String sessionKey = resultMap.get("session_key").toString();
+            String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
+            log.info("解析加密数据");
+            log.info(userInfo);
+            Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
 
-                Boolean exist = false;
-                User user = null;
-                //判断user是否存在
-                if (userInfoMap.get(SysConf.OPEN_ID) != null) {
-                    user = userService.getUserBySourceAnduuid("QQ", userInfoMap.get(SysConf.OPEN_ID).toString());
-                    if (user != null) {
-                        log.info("用户已存在");
-                        exist = true;
-                    } else {
-                        log.info("用户未存在，开始创建新用户");
-                        user = new User();
-                    }
+            Boolean exist = false;
+            User user = null;
+            //判断user是否存在
+            if (userInfoMap.get(SysConf.OPEN_ID) != null) {
+                user = userService.getUserBySourceAnduuid("QQ", userInfoMap.get(SysConf.OPEN_ID).toString());
+                if (user != null) {
+                    log.info("用户已存在");
+                    exist = true;
                 } else {
-                    log.info("无法获取到openId");
-                    return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+                    log.info("用户未存在，开始创建新用户");
+                    user = new User();
                 }
+            } else {
+                log.info("无法获取到openId");
+                return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            }
 
-                // 判断用户性别
-                if (userInfoMap.get(SysConf.GENDER) != null) {
-                    log.info("获取用户性别:{}", userInfoMap.get(SysConf.GENDER));
-                    String genderStr = userInfoMap.get(SysConf.GENDER).toString();
-                    String gender = Double.valueOf(genderStr).intValue() + "";
-                    if (EGender.MALE.equals(gender)) {
-                        user.setGender(EGender.MALE);
-                    } else if (EGender.FEMALE.equals(gender)) {
-                        user.setGender(EGender.FEMALE);
-                    } else {
-                        user.setGender(EGender.UNKNOWN);
-                    }
+            // 判断用户性别
+            if (userInfoMap.get(SysConf.GENDER) != null) {
+                log.info("获取用户性别:{}", userInfoMap.get(SysConf.GENDER));
+                String genderStr = userInfoMap.get(SysConf.GENDER).toString();
+                String gender = Double.valueOf(genderStr).intValue() + "";
+                if (EGender.MALE.equals(gender)) {
+                    user.setGender(EGender.MALE);
+                } else if (EGender.FEMALE.equals(gender)) {
+                    user.setGender(EGender.FEMALE);
+                } else {
+                    user.setGender(EGender.UNKNOWN);
                 }
+            }
 
-                // 通过头像uid获取图片
-                String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
-                List<String> photoList = webUtil.getPicture(pictureList);
-                Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
-                log.info("获取用户头像信息:{}", JsonUtils.objectToJson(picMap));
-                // 判断该用户是否含有头像信息
-                if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE)) && photoList.size() > 0) {
-                    List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
-                    String fileOldName = picData.get(0).get(SysConf.FILE_OLD_NAME).toString();
+            // 通过头像uid获取图片
+            String pictureList = this.pictureFeignClient.getPicture(user.getAvatar(), SysConf.FILE_SEGMENTATION);
+            List<String> photoList = webUtil.getPicture(pictureList);
+            Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(pictureList, Map.class);
+            log.info("获取用户头像信息:{}", JsonUtils.objectToJson(picMap));
+            // 判断该用户是否含有头像信息
+            if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE)) && photoList.size() > 0) {
+                List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
+                String fileOldName = picData.get(0).get(SysConf.FILE_OLD_NAME).toString();
 
-                    // 判断本地的图片是否和第三方登录的一样，如果不一样，那么更新
-                    // 如果旧名称为blob表示是用户自定义的，代表用户在本网站使用了自定义头像，那么就再也不同步更新网站上的了
-                    if (fileOldName.equals(userInfoMap.get(SysConf.AVATAR_URL)) || SysConf.BLOB.equals(fileOldName)) {
-                        user.setPhotoUrl(photoList.get(0));
-                    } else {
-                        updateUserPhoto(userInfoMap, user);
-                    }
+                // 判断本地的图片是否和第三方登录的一样，如果不一样，那么更新
+                // 如果旧名称为blob表示是用户自定义的，代表用户在本网站使用了自定义头像，那么就再也不同步更新网站上的了
+                if (fileOldName.equals(userInfoMap.get(SysConf.AVATAR_URL)) || SysConf.BLOB.equals(fileOldName)) {
+                    user.setPhotoUrl(photoList.get(0));
                 } else {
                     updateUserPhoto(userInfoMap, user);
                 }
-
-                if (userInfoMap.get(SysConf.NICK_NAME) != null) {
-                    user.setNickName(userInfoMap.get(SysConf.NICK_NAME).toString());
-                }
-
-                if (user.getLoginCount() == null) {
-                    user.setLoginCount(0);
-                } else {
-                    user.setLoginCount(user.getLoginCount() + 1);
-                }
-
-                // 获取浏览器，IP来源，以及操作系统
-                user = userService.serRequestInfo(user);
-
-                // 暂时将token也存入到user表中，为了以后方便更新redis中的内容
-                String accessToken = StringUtils.getUUID();
-                user.setValidCode(accessToken);
-
-                if (exist) {
-                    user.updateById();
-                    log.info("向数据库更新用户信息");
-                    log.info(JsonUtils.objectToJson(user));
-                } else {
-                    user.setUuid(userInfoMap.get(SysConf.OPEN_ID).toString());
-                    user.setSource("QQ");
-                    String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
-                    user.setUserName(userName);
-                    // 如果昵称为空，那么直接设置用户名
-                    if (StringUtils.isEmpty(user.getNickName())) {
-                        user.setNickName(userName);
-                    }
-                    // 默认密码
-                    user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
-                    user.insert();
-                    log.info("向数据库插入一条新的用户信息");
-                    log.info(JsonUtils.objectToJson(user));
-                }
-
-                // 过滤密码
-                user.setPassWord("");
-
-                if (user != null) {
-                    //将从数据库查询的数据缓存到redis中
-                    stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
-                }
-                return ResultUtil.result(SysConf.SUCCESS, user);
             } else {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+                updateUserPhoto(userInfoMap, user);
             }
+
+            if (userInfoMap.get(SysConf.NICK_NAME) != null) {
+                user.setNickName(userInfoMap.get(SysConf.NICK_NAME).toString());
+            }
+
+            if (user.getLoginCount() == null) {
+                user.setLoginCount(0);
+            } else {
+                user.setLoginCount(user.getLoginCount() + 1);
+            }
+
+            // 获取浏览器，IP来源，以及操作系统
+            user = userService.serRequestInfo(user);
+
+            // 暂时将token也存入到user表中，为了以后方便更新redis中的内容
+            String accessToken = StringUtils.getUUID();
+            user.setValidCode(accessToken);
+
+            if (exist) {
+                user.updateById();
+                log.info("向数据库更新用户信息");
+                log.info(JsonUtils.objectToJson(user));
+            } else {
+                user.setUuid(userInfoMap.get(SysConf.OPEN_ID).toString());
+                user.setSource("QQ");
+                String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
+                user.setUserName(userName);
+                // 如果昵称为空，那么直接设置用户名
+                if (StringUtils.isEmpty(user.getNickName())) {
+                    user.setNickName(userName);
+                }
+                // 默认密码
+                user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+                user.insert();
+                log.info("向数据库插入一条新的用户信息");
+                log.info(JsonUtils.objectToJson(user));
+            }
+
+            // 过滤密码
+            user.setPassWord("");
+
+            if (user != null) {
+                //将从数据库查询的数据缓存到redis中
+                stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
+            }
+            return ResultUtil.result(SysConf.SUCCESS, user);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+        }
 
     }
 

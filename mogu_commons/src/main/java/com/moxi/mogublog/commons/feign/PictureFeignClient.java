@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author 陌溪
  */
-@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class,  fallback = PictureFeignFallback.class)
+@FeignClient(name = "mogu-picture", configuration = FeignConfiguration.class, fallback = PictureFeignFallback.class)
 public interface PictureFeignClient {
 
     /**
      * 获取文件的信息接口
+     *
      * @param fileIds 图片uid
-     * @param code 分隔符
+     * @param code    分隔符
      * @return
      */
     @RequestMapping(value = "/file/getPicture", method = RequestMethod.GET)

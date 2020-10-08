@@ -49,6 +49,7 @@ public class UniappUtils {
 
     /**
      * 初始化方法
+     *
      * @param keyBytes
      */
     private static void init(byte[] keyBytes) {

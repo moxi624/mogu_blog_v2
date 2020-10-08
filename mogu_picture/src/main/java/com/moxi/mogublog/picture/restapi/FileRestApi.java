@@ -99,6 +99,7 @@ public class FileRestApi {
      * 获取文件的信息接口
      * fileIds 获取文件信息的ids
      * code ids用什么分割的，默认“,”
+     *
      * @return
      */
 

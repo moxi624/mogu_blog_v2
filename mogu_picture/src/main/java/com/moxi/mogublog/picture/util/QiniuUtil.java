@@ -3,7 +3,6 @@ package com.moxi.mogublog.picture.util;
 import com.google.gson.Gson;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SysConf;
-import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EQiNiuArea;
