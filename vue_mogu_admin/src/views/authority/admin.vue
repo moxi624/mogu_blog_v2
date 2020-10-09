@@ -57,6 +57,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="已用空间" width="160" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ calculateFileSize(scope.row.storageSize)}}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column label="登录IP" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginIp }}</span>
@@ -383,6 +389,24 @@ export default {
         .catch(() => {
           this.$commonUtil.message.info("已取消删除")
         });
+    },
+    //  计算文件大小
+    calculateFileSize(size) {
+      const B = 1024
+      const KB = Math.pow(1024, 2)
+      const MB = Math.pow(1024, 3)
+      const GB = Math.pow(1024, 4)
+      if (!size) {
+        return '_'
+      } else if (size < KB) {
+        return (size / B).toFixed(0) + 'KB'
+      } else if (size < MB) {
+        return (size / KB).toFixed(1) + 'MB'
+      } else if (size < GB) {
+        return (size / MB).toFixed(2) + 'GB'
+      } else {
+        return (size / GB).toFixed(3) + 'TB'
+      }
     },
     handleDelete: function(row) {
       this.$confirm("此操作将该管理员删除, 是否继续?", "提示", {

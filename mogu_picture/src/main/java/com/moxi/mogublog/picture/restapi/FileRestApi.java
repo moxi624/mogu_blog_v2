@@ -2,14 +2,12 @@ package com.moxi.mogublog.picture.restapi;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.commons.feign.AdminFeignClient;
-import com.moxi.mogublog.picture.entity.FileSort;
+import com.moxi.mogublog.commons.entity.FileSort;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
-import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.JsonUtils;
@@ -50,10 +48,6 @@ import java.util.*;
 @Slf4j
 public class FileRestApi {
 
-    @Autowired
-    private AdminFeignClient adminFeignClient;
-    @Autowired
-    private FeignUtil feignUtil;
     @Autowired
     private FileService fileService;
     @Autowired
@@ -118,11 +112,11 @@ public class FileRestApi {
         } else {
             List<Map<String, Object>> list = new ArrayList<>();
             List<String> changeStringToString = StringUtils.changeStringToString(fileIds, code);
-            QueryWrapper<com.moxi.mogublog.picture.entity.File> queryWrapper = new QueryWrapper<>();
+            QueryWrapper<com.moxi.mogublog.commons.entity.File> queryWrapper = new QueryWrapper<>();
             queryWrapper.in(SQLConf.UID, changeStringToString);
-            List<com.moxi.mogublog.picture.entity.File> fileList = fileService.list(queryWrapper);
+            List<com.moxi.mogublog.commons.entity.File> fileList = fileService.list(queryWrapper);
             if (fileList.size() > 0) {
-                for (com.moxi.mogublog.picture.entity.File file : fileList) {
+                for (com.moxi.mogublog.commons.entity.File file : fileList) {
                     if (file != null) {
                         Map<String, Object> remap = new HashMap<>();
                         // 获取七牛云地址
@@ -164,7 +158,7 @@ public class FileRestApi {
 
         if (StringUtils.isEmpty(fileId)) {
 
-            com.moxi.mogublog.picture.entity.File oneById = fileService.getById(fileId);
+            com.moxi.mogublog.commons.entity.File oneById = fileService.getById(fileId);
             if (oneById != null) {
                 //aim_test//文件名,不传就用默认的，或者是oldName
                 String fileName = request.getParameter("fileName");
@@ -318,7 +312,7 @@ public class FileRestApi {
         } else {
             sortUrl = fileSort.getUrl();
         }
-        List<com.moxi.mogublog.picture.entity.File> lists = new ArrayList<>();
+        List<com.moxi.mogublog.commons.entity.File> lists = new ArrayList<>();
         //文件上传
         if (urlList != null && urlList.size() > 0) {
             for (String itemUrl : urlList) {
@@ -424,7 +418,7 @@ public class FileRestApi {
                         }
                     }
                 }
-                com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
+                com.moxi.mogublog.commons.entity.File file = new com.moxi.mogublog.commons.entity.File();
                 file.setCreateTime(new Date(System.currentTimeMillis()));
                 file.setFileSortUid(fileSort.getUid());
                 file.setFileOldName(itemUrl);

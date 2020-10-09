@@ -1,8 +1,8 @@
 package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.picture.entity.File;
-import com.moxi.mogublog.picture.entity.FileSort;
+import com.moxi.mogublog.commons.entity.File;
+import com.moxi.mogublog.commons.entity.FileSort;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.mapper.FileMapper;
@@ -26,11 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 文件服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-17
  */
 @Slf4j
@@ -112,7 +110,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
             sortUrl = fileSort.getUrl();
         }
 
-        List<com.moxi.mogublog.picture.entity.File> lists = new ArrayList<>();
+        List<File> lists = new ArrayList<>();
         //文件上传
         if (filedatas != null && filedatas.size() > 0) {
             for (MultipartFile filedata : filedatas) {
@@ -196,7 +194,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                     }
                 }
 
-                com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
+                File file = new File();
                 file.setCreateTime(new Date(System.currentTimeMillis()));
                 file.setFileSortUid(fileSort.getUid());
                 file.setFileOldName(oldName);

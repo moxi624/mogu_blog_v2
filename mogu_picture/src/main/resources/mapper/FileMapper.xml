@@ -3,7 +3,7 @@
 <mapper namespace="com.moxi.mogublog.picture.mapper.FileMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.moxi.mogublog.picture.entity.File">
+    <resultMap id="BaseResultMap" type="com.moxi.mogublog.commons.entity.File">
         <result column="uid" property="uid"/>
         <result column="file_old_name" property="fileOldName"/>
         <result column="file_size" property="fileSize"/>

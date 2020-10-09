@@ -1,8 +1,8 @@
 package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.picture.entity.NetworkDisk;
-import com.moxi.mogublog.picture.entity.Storage;
+import com.moxi.mogublog.commons.entity.NetworkDisk;
+import com.moxi.mogublog.commons.entity.Storage;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.mapper.NetworkDiskMapper;

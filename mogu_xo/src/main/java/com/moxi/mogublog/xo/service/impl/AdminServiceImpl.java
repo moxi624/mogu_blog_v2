@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.OnlineAdmin;
 import com.moxi.mogublog.commons.entity.Role;
+import com.moxi.mogublog.commons.entity.Storage;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.global.MessageConf;
@@ -175,10 +176,12 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         List<Admin> list = pageList.getRecords();
 
         final StringBuffer fileUids = new StringBuffer();
+        List<String> adminUidList = new ArrayList<>();
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getAvatar())) {
                 fileUids.append(item.getAvatar() + SysConf.FILE_SEGMENTATION);
             }
+            adminUidList.add(item.getUid());
         });
 
         Map<String, String> pictureMap = new HashMap<>(Constants.NUM_TEN);
@@ -188,6 +191,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
         picList.forEach(item -> {
             pictureMap.put(item.get(SQLConf.UID).toString(), item.get(SQLConf.URL).toString());
+        });
+
+        // 获取用户的网盘存储空间
+        String storageListJson = pictureFeignClient.getStorageByAdminUid(adminUidList);
+        List<Storage> storageList = webUtil.getList(storageListJson, Storage.class);
+        Map<String, Storage> storageMap = new HashMap<>();
+        storageList.forEach(item -> {
+            storageMap.put(item.getAdminUid(), item);
         });
 
         for (Admin item : list) {
@@ -204,6 +215,13 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
                     }
                 });
                 item.setPhotoList(pictureListTemp);
+            }
+
+            // 设置已用容量大小和最大容量
+            Storage storage = storageMap.get(item.getUid());
+            if(storage != null) {
+                item.setStorageSize(storage.getStorageSize());
+                item.setMaxStorageSize(storage.getMaxStorageSize());
             }
         }
         return ResultUtil.successWithData(pageList);
@@ -240,6 +258,11 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             admin.setPassWord(encoder.encode(defaultPassword));
             adminService.save(admin);
             //TODO 这里需要通过SMS模块，发送邮件告诉初始密码
+
+            // 更新成功后，同时申请网盘存储空间
+            String maxStorageSize = sysParamsService.getSysParamsValueByKey(SysConf.MAX_STORAGE_SIZE);
+            // 初始化网盘的容量, 单位 B
+            pictureFeignClient.initStorageSize(admin.getUid(), StringUtils.getLong(maxStorageSize, 0L) * 1024 * 1024);
             return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
         }
         return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);

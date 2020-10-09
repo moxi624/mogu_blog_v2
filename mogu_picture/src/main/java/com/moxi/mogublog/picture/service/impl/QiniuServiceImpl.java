@@ -2,7 +2,7 @@ package com.moxi.mogublog.picture.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.picture.entity.FileSort;
+import com.moxi.mogublog.commons.entity.FileSort;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
@@ -334,7 +334,7 @@ public class QiniuServiceImpl implements QiniuService {
             }
         }
 
-        com.moxi.mogublog.picture.entity.File file = new com.moxi.mogublog.picture.entity.File();
+        com.moxi.mogublog.commons.entity.File file = new com.moxi.mogublog.commons.entity.File();
         file.setCreateTime(new Date(System.currentTimeMillis()));
         file.setFileSortUid(fileSort.getUid());
         file.setFileOldName(itemUrl);

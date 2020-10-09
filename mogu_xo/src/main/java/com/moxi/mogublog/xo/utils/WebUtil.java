@@ -167,7 +167,6 @@ public class WebUtil {
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
         if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
-
             Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.CODE);
             T t = JsonUtils.mapToPojo(data, beanType);
             return t;
@@ -176,25 +175,48 @@ public class WebUtil {
     }
 
     /**
-     * 获取结果集的内容，返回的是 List<POJO>
+     * 获取结果集的内容 【带有分页信息】
+     *
+     * @param result
+     * @return
+     */
+    public <T> List<T> getListByPage(String result, Class<T> beanType) {
+        if (StringUtils.isEmpty(result)) {
+            return null;
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        List<T> resultList = new ArrayList<>();
+        if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
+            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.DATA);
+            List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(SysConf.RECORDS);
+            list.forEach(item -> {
+                resultList.add(JsonUtils.mapToPojo(item, beanType));
+            });
+            return resultList;
+        } else {
+            log.error((String) dataMap.get(SysConf.MESSAGE));
+            return resultList;
+        }
+    }
+
+    /**
+     * 获取结果集的内容
      *
      * @param result
      * @return
      */
     public <T> List<T> getList(String result, Class<T> beanType) {
-        if (com.moxi.mogublog.utils.StringUtils.isEmpty(result)) {
-            return null;
-        }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        List<T> resultList = new ArrayList<>();
         if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
-            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.DATA);
-            List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(SysConf.RECORDS);
-            List<T> resultList = new ArrayList<>();
-            list.forEach(item -> {
+            List<Map<String, Object>> data = (List<Map<String, Object>>) dataMap.get(SysConf.DATA);
+            data.forEach(item -> {
                 resultList.add(JsonUtils.mapToPojo(item, beanType));
             });
             return resultList;
+        } else {
+            log.error((String) dataMap.get(SysConf.MESSAGE));
+            return resultList;
         }
-        return null;
     }
 }

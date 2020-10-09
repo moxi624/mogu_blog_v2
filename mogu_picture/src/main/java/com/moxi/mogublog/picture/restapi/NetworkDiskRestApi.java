@@ -1,7 +1,7 @@
 package com.moxi.mogublog.picture.restapi;
 
 import com.alibaba.fastjson.JSON;
-import com.moxi.mogublog.picture.entity.NetworkDisk;
+import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.picture.entity.TreeNode;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SysConf;
@@ -13,8 +13,13 @@ import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mogublog.utils.upload.PathUtil;
 import com.moxi.mougblog.base.holder.RequestHolder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.util.*;
@@ -27,18 +32,16 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/networkDisk")
+@Api(value = "网盘服务相关接口", tags = {"网盘服务相关接口"})
 public class NetworkDiskRestApi {
 
     /**
      * 是否开启共享文件模式
      */
     public static Boolean isShareFile = false;
-
     public static long treeid = 0;
-
     @Autowired
     private NetworkDiskService networkDiskService;
-
     @Autowired
     private FeignUtil feignUtil;
 
@@ -48,8 +51,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "创建文件", notes = "创建文件")
     @RequestMapping(value = "/createFile", method = RequestMethod.POST)
-    @ResponseBody
     public String createFile(@RequestBody NetworkDisk networkDisk) {
         String adminUid = RequestHolder.checkLogin();
         networkDisk.setAdminUid(adminUid);
@@ -60,12 +63,11 @@ public class NetworkDiskRestApi {
     /**
      * 获取文件列表
      *
-     * @param request
      * @param networkDisk
      * @return
      */
+    @ApiOperation(value = "获取文件列表", notes = "获取文件列表")
     @RequestMapping(value = "/getFileList", method = RequestMethod.POST)
-    @ResponseBody
     public String getFileList(@RequestBody NetworkDisk networkDisk) {
         RequestHolder.checkLogin();
         networkDisk.setFilePath(PathUtil.urlDecode(networkDisk.getFilePath()));
@@ -78,8 +80,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "重命名文件", notes = "重命名文件")
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    @ResponseBody
     public String edit(@RequestBody NetworkDiskVO networkDiskVO) {
         RequestHolder.checkLogin();
         networkDiskService.updateFilepathByFilepath(networkDiskVO);
@@ -91,8 +93,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "批量删除文件", notes = "批量删除文件")
     @RequestMapping(value = "/batchDeleteFile", method = RequestMethod.POST)
-    @ResponseBody
     public String batchDeleteFile(@RequestBody List<NetworkDiskVO> networkDiskVOList) {
         RequestHolder.checkLogin();
         Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(RequestHolder.getAdminToken());
@@ -107,8 +109,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "删除文件", notes = "删除文件")
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST)
-    @ResponseBody
     public String deleteFile(@RequestBody NetworkDiskVO networkDiskVO) {
         RequestHolder.checkLogin();
         Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(RequestHolder.getAdminToken());
@@ -121,8 +123,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "解压文件", notes = "解压文件")
     @RequestMapping(value = "/unzipFile", method = RequestMethod.POST)
-    @ResponseBody
     public String unzipFile(@RequestBody NetworkDisk networkDisk) {
         RequestHolder.checkLogin();
         String zipFileUrl = PathUtil.getStaticPath() + networkDisk.getFileUrl();
@@ -159,8 +161,8 @@ public class NetworkDiskRestApi {
      *
      * @return 返回前台移动结果
      */
+    @ApiOperation(value = "文件移动", notes = "文件移动")
     @RequestMapping(value = "/moveFile", method = RequestMethod.POST)
-    @ResponseBody
     public String moveFile(@RequestBody NetworkDiskVO networkDiskVO) {
         RequestHolder.checkLogin();
         networkDiskService.updateFilepathByFilepath(networkDiskVO);
@@ -172,8 +174,8 @@ public class NetworkDiskRestApi {
      *
      * @return 返回前台移动结果
      */
+    @ApiOperation(value = "批量移动文件", notes = "批量移动文件")
     @RequestMapping(value = "/batchMoveFile", method = RequestMethod.POST)
-    @ResponseBody
     public String batchMoveFile(@RequestBody NetworkDiskVO networkDiskVO) {
         RequestHolder.checkLogin();
         String files = networkDiskVO.getFiles();
@@ -189,12 +191,12 @@ public class NetworkDiskRestApi {
     }
 
     /**
-     * 通过文件类型选择文件
+     * 通过文件类型查询文件
      *
      * @return
      */
+    @ApiOperation(value = "通过文件类型查询文件", notes = "通过文件类型查询文件")
     @RequestMapping(value = "/selectFileByFileType", method = RequestMethod.GET)
-    @ResponseBody
     public String selectFileByFileType(NetworkDisk networkDisk) {
         List<NetworkDisk> networkDiskList = networkDiskService.selectFileByExtendName(FileUtil.getFileExtendsByType(networkDisk.getFileType()), SysConf.DEFAULT_UID);
         return ResultUtil.successWithData(networkDiskList);
@@ -205,8 +207,8 @@ public class NetworkDiskRestApi {
      *
      * @return
      */
+    @ApiOperation(value = "获取文件树", notes = "获取文件树")
     @RequestMapping(value = "/getFileTree", method = RequestMethod.POST)
-    @ResponseBody
     public String getFileTree() {
         List<NetworkDisk> filePathList = networkDiskService.selectFilePathTree();
         TreeNode resultTreeNode = new TreeNode();

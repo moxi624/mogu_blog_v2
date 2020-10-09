@@ -1,6 +1,6 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.picture.entity.NetworkDisk;
+import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mougblog.base.service.SuperService;
 

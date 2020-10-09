@@ -160,4 +160,16 @@ public class Admin extends SuperEntity<Admin> {
     @TableField(exist = false)
     private String validCode;
 
+    /**
+     * 已用网盘容量
+     */
+    @TableField(exist = false)
+    private Long storageSize;
+
+    /**
+     * 最大网盘容量
+     */
+    @TableField(exist = false)
+    private Long maxStorageSize;
+
 }

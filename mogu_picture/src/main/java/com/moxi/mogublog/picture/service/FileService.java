@@ -1,6 +1,6 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.picture.entity.File;
+import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mougblog.base.service.SuperService;
 import org.springframework.web.multipart.MultipartFile;
 
