@@ -222,6 +222,10 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             if(storage != null) {
                 item.setStorageSize(storage.getStorageSize());
                 item.setMaxStorageSize(storage.getMaxStorageSize());
+            } else {
+                // 如果没有，默认为0
+                item.setStorageSize(0L);
+                item.setMaxStorageSize(0L);
             }
         }
         return ResultUtil.successWithData(pageList);
@@ -311,7 +315,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         admin.setPassWord(null);
         admin.updateById();
 
-        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
+        // 更新完成后，判断是否调整了网盘的大小
+        String result = pictureFeignClient.editStorageSize(admin.getUid(), adminVO.getMaxStorageSize() * 1024 * 1024);
+        Map<String, String> resultMap = webUtil.getMessage(result);
+        if(SysConf.SUCCESS.equals(resultMap.get(SysConf.CODE))) {
+            return ResultUtil.successWithMessage(resultMap.get(SysConf.MESSAGE));
+        } else {
+            return ResultUtil.errorWithMessage(resultMap.get(SysConf.MESSAGE));
+        }
     }
 
     @Override

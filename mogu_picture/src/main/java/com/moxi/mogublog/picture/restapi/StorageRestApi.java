@@ -55,7 +55,7 @@ public class StorageRestApi {
     }
 
     /**
-     * 初始化容量大小
+     * 编辑容量大小
      *
      * @return
      */

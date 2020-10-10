@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="性别" width="100" align="center">
+      <el-table-column label="性别" width="60" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.gender==1" type="success">男</el-tag>
           <el-tag v-if="scope.row.gender==2" type="danger">女</el-tag>
@@ -57,9 +57,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="已用空间" width="160" align="center">
+      <el-table-column label="已用空间" width="100" align="center">
         <template slot-scope="scope">
           <el-tag type="warning">{{ calculateFileSize(scope.row.storageSize)}}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="网盘大小" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ calculateFileSize(scope.row.maxStorageSize * 1024 * 1024)}}</el-tag>
         </template>
       </el-table-column>
 
@@ -183,6 +189,14 @@
           </el-col>
         </el-row>
 
+        <el-row :gutter="24">
+          <el-col :span="10">
+            <el-form-item label="网盘容量(MB)" :label-width="formLabelWidth" prop="maxStorageSize">
+              <el-input-number v-model="form.maxStorageSize" :min="0"  label="用户最大网盘容量"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -283,7 +297,12 @@ export default {
       params.pageSize = this.pageSize
       getAdminList(params).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
-          this.tableData = response.data.records;
+          let tableData = response.data.records;
+          for(let a=0; a< tableData.length; a++) {
+            tableData[a].maxStorageSize = tableData[a].maxStorageSize / 1024 / 1024
+
+          }
+          this.tableData = tableData
           this.currentPage = response.data.current;
           this.pageSize = response.data.size;
           this.total = response.data.total;

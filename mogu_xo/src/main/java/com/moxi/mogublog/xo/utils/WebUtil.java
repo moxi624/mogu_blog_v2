@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
+import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.xo.global.MessageConf;
 import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
@@ -156,7 +157,7 @@ public class WebUtil {
     }
 
     /**
-     * 获取结果集的内容
+     * 获取结果集的数据
      *
      * @param result
      * @return
@@ -167,12 +168,38 @@ public class WebUtil {
         }
         Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
         if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE))) {
-            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.CODE);
+            Map<String, Object> data = (Map<String, Object>) dataMap.get(SysConf.DATA);
             T t = JsonUtils.mapToPojo(data, beanType);
             return t;
         }
         return null;
     }
+
+    /**
+     * 获取结果集的消息
+     *
+     * @param result
+     * @return
+     */
+    public Map<String, String> getMessage(String result) {
+        Map<String, String> ret = new HashMap<>();
+        if (StringUtils.isEmpty(result)) {
+            ret.put(SysConf.CODE, SysConf.ERROR);
+            ret.put(SysConf.MESSAGE, MessageConf.PARAM_INCORRECT);
+            return ret;
+        }
+        Map<String, Object> dataMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if (SysConf.SUCCESS.equals(dataMap.get(SysConf.CODE)) && dataMap.get(SysConf.MESSAGE) != null) {
+            ret.put(SysConf.CODE, SysConf.SUCCESS);
+            ret.put(SysConf.MESSAGE, dataMap.get(SysConf.MESSAGE).toString());
+            return ret;
+        } else {
+            ret.put(SysConf.CODE, SysConf.ERROR);
+            ret.put(SysConf.MESSAGE, dataMap.get(SysConf.MESSAGE).toString());
+            return ret;
+        }
+    }
+
 
     /**
      * 获取结果集的内容 【带有分页信息】

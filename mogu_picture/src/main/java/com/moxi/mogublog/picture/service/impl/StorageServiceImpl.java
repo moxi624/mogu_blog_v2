@@ -68,6 +68,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         } else {
             Storage saveStorage = new Storage();
             saveStorage.setAdminUid(adminUid);
+            saveStorage.setStorageSize(0L);
             saveStorage.setMaxStorageSize(maxStorageSize);
             saveStorage.insert();
             return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
@@ -81,8 +82,13 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         queryWrapper.last(SysConf.LIMIT_ONE);
         Storage storage = storageService.getOne(queryWrapper);
         if (storage == null) {
-            return ResultUtil.errorWithMessage(MessageConf.ENTITY_NOT_EXIST);
+            // 如果没有分配容量，那么初始化一个为0的
+            log.error("未分配内存空间，重新初始化一个！");
+            return initStorageSize(adminUid, maxStorageSize);
         } else {
+            if(maxStorageSize < storage.getStorageSize()) {
+                return ResultUtil.errorWithMessage("网盘容量不能小于当前已用空间");
+            }
             storage.setMaxStorageSize(maxStorageSize);
             storage.updateById();
             return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
