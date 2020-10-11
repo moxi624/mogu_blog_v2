@@ -86,10 +86,8 @@
             message: '登录后才可以评论哦~',
             offset: 100
           });
-
-          // 提交消息到弹出登录框
+          // 未登录，自动弹出登录框
           this.setLoginMessage(Math.random())
-
           return;
         }
 

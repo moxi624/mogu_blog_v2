@@ -53,6 +53,7 @@ import {
   praiseBlogByUid,
   getBlogPraiseCountByUid
 } from "../../api/blogContent";
+import {mapMutations} from "vuex";
 export default {
   name: "PayCode",
   props: {
@@ -82,6 +83,8 @@ export default {
     });
   },
   methods: {
+    //拿到vuex中的写的方法
+    ...mapMutations(['setLoginMessage']),
     dashangToggle: function() {
       this.showPay = !this.showPay;
     },
@@ -101,22 +104,21 @@ export default {
       praiseBlogByUid(params).then(response => {
         console.log(response);
         if (response.code == this.$ECode.SUCCESS) {
-
           this.$notify({
             title: '成功',
             message: "点赞成功",
             type: 'success',
             offset: 100
           });
-
           this.praiseCount = response.data;
-
         } else {
           this.$notify.error({
             title: '错误',
             message: response.data,
             offset: 100
           });
+          // 未登录，自动弹出登录框
+          this.setLoginMessage(Math.random())
         }
       });
     },

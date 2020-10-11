@@ -90,22 +90,19 @@ public class CommentRestApi {
     /**
      * 获取评论列表
      *
-     * @param request
      * @param commentVO
      * @param result
      * @return
      */
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表")
     @PostMapping("/getList")
-    public String getList(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String getList(@Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(commentVO.getBlogUid())) {
             queryWrapper.like(SQLConf.BLOG_UID, commentVO.getBlogUid());
         }
-
         queryWrapper.eq(SQLConf.SOURCE, commentVO.getSource());
 
         //分页
@@ -148,7 +145,6 @@ public class CommentRestApi {
             }
         });
         Collection<User> userList = new ArrayList<>();
-
         if (userUidList.size() > 0) {
             userList = userService.listByIds(userUidList);
         }
@@ -163,7 +159,6 @@ public class CommentRestApi {
             user.setUserTag(item.getUserTag());
             filterUserList.add(user);
         });
-
 
         // 获取用户头像
         StringBuffer fileUids = new StringBuffer();
@@ -201,8 +196,8 @@ public class CommentRestApi {
             commentMap.put(item.getUid(), item);
         });
 
+        // 设置一级评论下的子评论
         Map<String, List<Comment>> toCommentListMap = new HashMap<>();
-
         for (int a = 0; a < list.size(); a++) {
             List<Comment> tempList = new ArrayList<>();
             for (int b = 0; b < list.size(); b++) {
@@ -212,21 +207,19 @@ public class CommentRestApi {
             }
             toCommentListMap.put(list.get(a).getUid(), tempList);
         }
-
         List<Comment> firstComment = new ArrayList<>();
         list.forEach(item -> {
             if (StringUtils.isEmpty(item.getToUid())) {
                 firstComment.add(item);
             }
         });
-
         pageList.setRecords(getCommentReplys(firstComment, toCommentListMap));
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
     @ApiOperation(value = "App端获取评论列表", notes = "获取评论列表")
     @PostMapping("/getListByApp")
-    public String getListByApp(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String getListByApp(@Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
 
@@ -338,9 +331,7 @@ public class CommentRestApi {
             }
             returnCommentList.add(comment);
         });
-
         pageList.setRecords(returnCommentList);
-
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
@@ -351,9 +342,7 @@ public class CommentRestApi {
         if (request.getAttribute(SysConf.USER_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
-
         String requestUserUid = request.getAttribute(SysConf.USER_UID).toString();
-
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
 
         //分页
@@ -367,7 +356,6 @@ public class CommentRestApi {
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_UID, requestUserUid).or().eq(SQLConf.TO_USER_UID, requestUserUid));
         IPage<Comment> pageList = commentService.page(page, queryWrapper);
         List<Comment> list = pageList.getRecords();
-
         List<String> userUidList = new ArrayList<>();
         list.forEach(item -> {
             String userUid = item.getUserUid();
@@ -382,11 +370,9 @@ public class CommentRestApi {
 
         // 获取用户列表
         Collection<User> userList = new ArrayList<>();
-
         if (userUidList.size() > 0) {
             userList = userService.listByIds(userUidList);
         }
-
         // 过滤掉用户的敏感信息
         List<User> filterUserList = new ArrayList<>();
         userList.forEach(item -> {
@@ -396,8 +382,6 @@ public class CommentRestApi {
             user.setNickName(item.getNickName());
             filterUserList.add(user);
         });
-
-
         // 获取用户头像
         StringBuffer fileUids = new StringBuffer();
         filterUserList.forEach(item -> {
@@ -434,13 +418,10 @@ public class CommentRestApi {
             if (StringUtils.isNotEmpty(item.getToUserUid())) {
                 item.setToUser(userMap.get(item.getToUserUid()));
             }
-
-
             // 设置sourceName
             if (StringUtils.isNotEmpty(item.getSource())) {
                 item.setSourceName(ECommentSource.valueOf(item.getSource()).getName());
             }
-
             if (requestUserUid.equals(item.getUserUid())) {
                 commentList.add(item);
             }
@@ -542,12 +523,10 @@ public class CommentRestApi {
         if (commentVO.getContent().length() > SysConf.ONE_ZERO_TWO_FOUR) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_1024);
         }
-
         // 判断该用户是否被禁言
         if (user.getCommentStatus() == SysConf.ZERO) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_DONT_HAVE_PERMISSION_TO_SPEAK);
         }
-
         // 判断是否发送过多无意义评论
         String jsonResult = redisUtil.get(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid);
         if (!StringUtils.isEmpty(jsonResult)) {
@@ -556,9 +535,7 @@ public class CommentRestApi {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
             }
         }
-
         String content = commentVO.getContent();
-
         // 判断是否垃圾评论
         if (StringUtils.isCommentSpam(content)) {
             if (StringUtils.isEmpty(jsonResult)) {
@@ -567,7 +544,6 @@ public class CommentRestApi {
             } else {
                 redisUtil.incrBy(RedisConf.USER_PUBLISH_SPAM_COMMENT_COUNT + BaseSysConf.REDIS_SEGMENTATION + userUid, 1);
             }
-
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_SPAM);
         }
 
@@ -655,9 +631,7 @@ public class CommentRestApi {
                 user.setPhotoUrl(webUtil.getPicture(pictureList).get(0));
             }
         }
-
         comment.setUser(user);
-
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
 
@@ -668,9 +642,7 @@ public class CommentRestApi {
     public String reportComment(HttpServletRequest request, @Validated({GetOne.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-
         Comment comment = commentService.getById(commentVO.getUid());
-
         // 判断评论是否被删除
         if (comment == null || comment.getStatus() == EStatus.DISABLED) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_NOT_EXIST);
@@ -680,7 +652,6 @@ public class CommentRestApi {
         if (comment.getUserUid().equals(commentVO.getUserUid())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPORT_YOURSELF_COMMENTS);
         }
-
         // 查看该用户是否重复举报该评论
         QueryWrapper<CommentReport> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.USER_UID, commentVO.getUserUid());
@@ -689,7 +660,6 @@ public class CommentRestApi {
         if (commentReportList.size() > 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.CAN_NOT_REPEAT_REPORT_COMMENT);
         }
-
         CommentReport commentReport = new CommentReport();
         commentReport.setContent(commentVO.getContent());
         commentReport.setProgress(0);
@@ -718,17 +688,44 @@ public class CommentRestApi {
     public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-
         Comment comment = commentService.getById(commentVO.getUid());
-
         // 判断该评论是否能够删除
         if (!comment.getUserUid().equals(commentVO.getUserUid())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.DATA_NO_PRIVILEGE);
         }
-
         comment.setStatus(EStatus.DISABLED);
-
         comment.updateById();
+
+        // 获取该评论下的子评论进行删除
+        // 传入需要被删除的评论 【因为这里是一条，我们需要用List包装一下，以后可以用于多评论的子评论删除】
+        List<Comment> commentList = new ArrayList<>(Constants.NUM_ONE);
+        commentList.add(comment);
+
+        // 判断删除的是一级评论还是子评论
+        String firstCommentUid = "";
+        if(StringUtils.isNotEmpty(comment.getFirstCommentUid())) {
+            // 删除的是子评论
+            firstCommentUid = comment.getFirstCommentUid();
+        } else {
+            // 删除的是一级评论
+            firstCommentUid = comment.getUid();
+        }
+
+        // 获取该评论一级评论下所有的子评论
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.FIRST_COMMENT_UID, firstCommentUid);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        List<Comment> toCommentList = commentService.list(queryWrapper);
+        List<Comment> resultList = new ArrayList<>();
+        this.getToCommentList(comment, toCommentList, resultList);
+        // 将所有的子评论也删除
+        if(resultList.size() > 0) {
+            resultList.forEach(item -> {
+                item.setStatus(EStatus.DISABLED);
+                item.setUpdateTime(new Date());
+            });
+            commentService.updateBatchById(resultList);
+        }
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
     }
@@ -768,24 +765,36 @@ public class CommentRestApi {
      * @return
      */
     private List<Comment> getCommentReplys(List<Comment> list, Map<String, List<Comment>> toCommentListMap) {
-
-
         if (list == null || list.size() == 0) {
             return new ArrayList<>();
         } else {
-
             list.forEach(item -> {
                 String commentUid = item.getUid();
                 List<Comment> replyCommentList = toCommentListMap.get(commentUid);
-
                 List<Comment> replyComments = getCommentReplys(replyCommentList, toCommentListMap);
-
-                item.setReplyList(getCommentReplys(replyCommentList, toCommentListMap));
-
+                item.setReplyList(replyComments);
             });
-
             return list;
         }
     }
+
+    /**
+     * 获取某条评论下的所有子评论
+     * @return
+     */
+    private void getToCommentList(Comment comment, List<Comment> commentList, List<Comment> resultList){
+        if (comment == null) {
+            return;
+        }
+        String commentUid = comment.getUid();
+        for (Comment item : commentList) {
+            if (commentUid.equals(item.getToUid())) {
+                resultList.add(item);
+                // 寻找子评论的子评论
+                getToCommentList(item, commentList, resultList);
+            }
+        }
+    }
+
 }
 

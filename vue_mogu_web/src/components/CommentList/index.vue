@@ -235,33 +235,47 @@
           });
           return
         }
-        var that = this;
-        let params = {};
-        params.uid = item.uid;
-        params.userUid = this.$store.state.user.userInfo.uid
 
-        deleteComment(params).then(response => {
-          if (response.code == this.$ECode.SUCCESS) {
-            this.$notify({
-              title: '成功',
-              message: "删除成功",
-              type: 'success',
-              offset: 100
+        this.$confirm("此操作将把本评论和子评论删除, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            let params = {};
+            params.uid = item.uid;
+            params.userUid = this.$store.state.user.userInfo.uid
+            deleteComment(params).then(response => {
+              if (response.code == this.$ECode.SUCCESS) {
+                this.$notify({
+                  title: '成功',
+                  message: "删除成功",
+                  type: 'success',
+                  offset: 100
+                });
+
+              } else {
+                this.$notify.error({
+                  title: '错误',
+                  message: "删除失败",
+                  offset: 100
+                });
+              }
+              let comments = this.$store.state.app.commentList;
+              this.deleteCommentList(comments, params.uid, null)
+              this.$store.commit("setCommentList", comments);
+              this.$emit("deleteComment", "")
             });
 
-          } else {
-            this.$notify.error({
-              title: '错误',
-              message: "删除失败",
-              type: 'success',
-              offset: 100
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除"
             });
-          }
-          let comments = this.$store.state.app.commentList;
-          this.deleteCommentList(comments, params.uid, null)
-          this.$store.commit("setCommentList", comments);
-          this.$emit("deleteComment", "")
-        });
+          });
+
+
       },
       // 校验是否登录
       validLogin() {

@@ -13,6 +13,7 @@
           </li>
           <li class="link-type"><a href="https://gitee.com/moxi159753/mogu_blog_v2">蘑菇博客源码</a></li>
           <li class="link-type"><a href="http://moxi159753.gitee.io/mogu_blog_doc">蘑菇博客文档</a></li>
+          <li class="link-type"><a href="https://gitee.com/moxi159753/LearningNotes">学习笔记</a></li>
           <li><a @click.prevent="dialogVisible=true" href="#">点我看图</a></li>
         </ul>
       </el-col>

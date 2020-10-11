@@ -83,7 +83,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         Storage storage = storageService.getOne(queryWrapper);
         if (storage == null) {
             // 如果没有分配容量，那么初始化一个为0的
-            log.error("未分配内存空间，重新初始化一个！");
+            log.error("未分配存储空间，重新初始化网盘空间！");
             return initStorageSize(adminUid, maxStorageSize);
         } else {
             if(maxStorageSize < storage.getStorageSize()) {
