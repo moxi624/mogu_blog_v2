@@ -244,3 +244,9 @@ ALTER TABLE  t_system_config ADD editor_model TINYINT(1) NOT NULL DEFAULT 0 COMM
 */
 ALTER TABLE  t_link ADD email VARCHAR(255) DEFAULT NULL COMMENT "站长邮箱";
 ALTER TABLE  t_link ADD file_uid VARCHAR(255) DEFAULT NULL COMMENT "网站图标";
+
+/*
+* 系统配置增加主题颜色字段
+* @date 2020年10月11日19:54:51
+*/
+ALTER TABLE t_system_config add theme_color varchar(10) default '#409EFF' not null COMMENT "主题颜色";

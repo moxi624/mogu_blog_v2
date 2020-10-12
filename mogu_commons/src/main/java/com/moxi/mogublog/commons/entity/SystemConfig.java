@@ -112,4 +112,9 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
      */
     private String editorModel;
 
+    /**
+     * 主题颜色
+     */
+    private String themeColor;
+
 }

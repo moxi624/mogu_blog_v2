@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <aside>
-      通过拖拽实现专题内列表的排序
+      在博客管理添加专题元素，通过拖拽实现专题内列表的排序
     </aside>
 
     <el-table ref="dragTable" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
@@ -17,7 +17,9 @@
 
       <el-table-column width="250px" label="标题" align="center">
         <template slot-scope="{row}">
-          <span @click.native="onClick(row)" style="cursor:pointer;">{{ strSubstring(row.blog.title, 16) }}</span>
+          <el-tooltip @click.native="onClick(row)" class="item" effect="dark" :content="row.blog.title" placement="top">
+            <span style="cursor:pointer;">{{ strSubstring(row.blog.title, 20) }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
 

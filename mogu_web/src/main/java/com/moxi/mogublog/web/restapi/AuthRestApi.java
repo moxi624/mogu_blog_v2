@@ -61,6 +61,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 第三方登录认证
+ * @author 陌溪
+ * @date 2020年10月11日10:25:58
  */
 @RestController
 @RequestMapping("/oauth")
@@ -68,15 +70,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AuthRestApi {
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
     @Autowired
-    SystemConfigService systemConfigService;
+    private SystemConfigService systemConfigService;
     @Autowired
-    FeedbackService feedbackService;
+    private FeedbackService feedbackService;
     @Autowired
-    LinkService linkService;
+    private LinkService linkService;
     @Autowired
-    RabbitMqUtil rabbitMqUtil;
+    private RabbitMqUtil rabbitMqUtil;
     @Autowired
     private UserService userService;
     @Value(value = "${justAuth.clientId.gitee}")
@@ -101,7 +103,6 @@ public class AuthRestApi {
     private String PROJECT_NAME_EN;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;
-
     @Value(value = "${uniapp.qq.appid}")
     private String APP_ID;
     @Value(value = "${uniapp.qq.appid}")
@@ -329,10 +330,8 @@ public class AuthRestApi {
         paramMap.put("grant_type", GRANT_TYPE);
 
         String result = HttpUtil.get("https://api.q.qq.com/sns/jscode2session", paramMap);
-
         log.info("获取UnionID");
         log.info(result);
-
         Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
 
         if (resultMap != null) {

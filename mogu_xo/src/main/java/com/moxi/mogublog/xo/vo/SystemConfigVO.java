@@ -99,4 +99,8 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
      */
     private String editorModel;
 
+    /**
+     * 主题颜色
+     */
+    private String themeColor;
 }
