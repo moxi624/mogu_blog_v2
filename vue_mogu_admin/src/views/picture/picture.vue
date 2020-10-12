@@ -10,80 +10,97 @@
     </div>
 
 
-    <el-row>
-      <el-col
-        v-for="(picture, index) in tableData"
-        :key="picture.uid"
-        style="padding: 6px"
-        :xs="24"
-        :sm="12"
-        :md="12"
-        :lg="6"
-        :xl="4"
-      >
+  <el-tabs
+    v-model="activeName"
+    type="border-card"
+    tab-position="left"
+    style="height: 800px; width: 100%;"
+    @tab-click="clickTab"
+  >
+    <el-tab-pane
+      style="height: 800px; width: 100%; overflow:auto;"
+      v-for="(pictureSort, index) in pictureSorts"
+      :key="index"
+    >
+      <div class="sortItem" slot="label" style="float:left">
+        <i class="el-icon-picture"></i>
+        {{pictureSort.name}}
+      </div>
 
-        <el-card
-          :body-style="{ padding: '0px', textAlign: 'center' }"
-          shadow="always"
+      <el-row>
+        <el-col
+          v-for="(picture, index) in pictureSort.pictures"
+          :key="picture.uid"
+          style="padding: 6px"
+          :xs="24"
+          :sm="12"
+          :md="12"
+          :lg="6"
+          :xl="4"
         >
-          <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
-          <el-image
-            :src="picture.pictureUrl"
-            style="cursor:pointer"
-            fit="scale-down"
-            @click="showPicture(picture.pictureUrl)"
-          />
-          <div @click="showPicture(picture.pictureUrl)">
-            <span class="media-title" v-if="picture.picName">{{picture.picName}}</span>
-            <span class="media-title" v-else>图片 {{index + 1}}</span>
-          </div>
-          <div style="margin-bottom: 14px;">
-            <el-button-group>
-              <el-tooltip class="item" effect="dark" content="复制图片地址" placement="bottom-start" style="margin-right: 2px">
-                <el-button
-                  size="mini"
-                  icon="el-icon-copy-document"
-                  @click="copyUrl(picture.pictureUrl)"
-                />
-              </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="复制Markdown格式图片地址" placement="bottom-start" style="margin-right: 2px">
-                <el-button
-                  type="primary"
-                  size="mini"
-                  icon="el-icon-document-copy"
-                  @click="copyMarkdownUrl(picture.pictureUrl, picture.pictureUrl)"
-                >
-                </el-button>
-              </el-tooltip>
+          <el-card
+            :body-style="{ padding: '0px', textAlign: 'center' }"
+            shadow="always"
+          >
+            <input style="position: absolute;z-index: 100;" type="checkbox" :id="picture.uid" :checked="pictureUids.indexOf(picture.uid)>=0" @click="checked(picture)">
+            <el-image
+              :src="picture.pictureUrl"
+              style="cursor:pointer"
+              fit="scale-down"
+              @click="showPicture(picture.pictureUrl)"
+            />
+            <div @click="showPicture(picture.pictureUrl)">
+              <span class="media-title" v-if="picture.picName">{{picture.picName}}</span>
+              <span class="media-title" v-else>图片 {{index + 1}}</span>
+            </div>
+            <div style="margin-bottom: 14px;">
+              <el-button-group>
+                <el-tooltip class="item" effect="dark" content="复制图片地址" placement="bottom-start" style="margin-right: 2px">
+                  <el-button
+                    size="mini"
+                    icon="el-icon-copy-document"
+                    @click="copyUrl(picture.pictureUrl)"
+                  />
+                </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/add'">
-                <el-button
-                  type="warning"
-                  size="mini"
-                  icon="el-icon-s-open"
-                  @click="handleCropper(picture)"
-                />
-              </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="复制Markdown格式图片地址" placement="bottom-start" style="margin-right: 2px">
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    icon="el-icon-document-copy"
+                    @click="copyMarkdownUrl(picture.pictureUrl, picture.pictureUrl)"
+                  >
+                  </el-button>
+                </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/delete'">
-                <el-button
-                  type="danger"
-                  size="mini"
-                  icon="el-icon-delete"
-                  @click="handleDelete(picture)"
-                />
-              </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="裁剪图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/add'">
+                  <el-button
+                    type="warning"
+                    size="mini"
+                    icon="el-icon-s-open"
+                    @click="handleCropper(picture)"
+                  />
+                </el-tooltip>
 
-            </el-button-group>
-          </div>
-        </el-card>
+                <el-tooltip class="item" effect="dark" content="删除图片" placement="bottom-start" style="margin-right: 2px" v-permission="'/picture/delete'">
+                  <el-button
+                    type="danger"
+                    size="mini"
+                    icon="el-icon-delete"
+                    @click="handleDelete(picture)"
+                  />
+                </el-tooltip>
 
-      </el-col>
-    </el-row>
+              </el-button-group>
+            </div>
+          </el-card>
 
-		<!--分页-->
-    <div class="block">
+        </el-col>
+      </el-row>
+
+      <!--分页-->
+      <div class="block">
         <el-pagination
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage"
@@ -91,7 +108,11 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-    </div>
+      </div>
+    </el-tab-pane>
+
+  </el-tabs>
+
 
 	  <!-- 添加或修改对话框 -->
 		<el-dialog :title="title" :visible.sync="dialogFormVisible">
@@ -122,7 +143,6 @@
       <PictureCropper v-if="reFresh" :modelSrc="checkedPicture.pictureUrl" :fileName="checkedPicture.picName" @cropperSuccess="cropperSuccess"></PictureCropper>
     </el-dialog>
 
-
   </div>
 </template>
 
@@ -134,9 +154,10 @@ import {
   deletePicture,
   setCover
 } from "@/api/picture";
+import { getPictureSortList, getPictureSortByUid } from "@/api/pictureSort";
 import { getToken } from '@/utils/auth'
-
 import PictureCropper from '@/components/PictureCropper'
+import Vue from "vue";
 
 export default {
   components: {
@@ -151,7 +172,8 @@ export default {
       tableData: [],
       uploadPictureHost: null,
       fileList: [],
-      pictureSortUid: "",
+      pictureSortUid: undefined, // 当前选中的图片分类uid
+      pictureSort: {}, //当前选中的图片分类
       pictureUids: [], //图片uid集合
       pictureUploadList: [], //图片上传列表
       chooseTitle: "全选",
@@ -172,6 +194,9 @@ export default {
       dialogFormVisible: false,
       keyword: "",
       reFresh: true, //是否刷新组件
+      activeName: "0",
+      pictureSorts: [],
+      havePictureSorts: false, //是否加载完图片分类
     };
   },
   watch: {
@@ -182,13 +207,8 @@ export default {
   created() {
     //传递过来的pictureSordUid
     this.pictureSortUid = this.$route.query.pictureSortUid;
-
-    // 获取图片列表
-    this.pictureList()
-
     //图片上传地址
     this.uploadPictureHost = process.env.PICTURE_API + "/file/pictures";
-
     //其它数据
     this.otherData = {
       source: "picture",
@@ -198,25 +218,103 @@ export default {
       sortName: "admin",
       token: getToken()
     };
+    this.initPictureSortList()
   },
   methods: {
-    pictureList: function() {
+    initPictureSortList: function (){
+      //先加载分类
+      var that = this
+      if (!this.havePictureSorts) {
+        var params = {};
+        // TODO 全部把分类加载出来，如果图片很多的话，不能这么做
+        params.pageSize = 500
+        params.currentPage = 1;
+        getPictureSortList(params).then(function(response) {
+          if (response.code == that.$ECode.SUCCESS) {
+            var pictureSorts = response.data.records;
+            that.pictureSorts = pictureSorts;
+            if (pictureSorts.length > 0) {
+              // 判断是否通过图片分类跳转的
+              var pictureSortUid = that.pictureSortUid
+              //默认初始化第一个【给第一个tab添加初始化信息】
+              if (pictureSortUid == undefined) {
+                // 当没有被定义的时候，默认加载第一个
+                that.pictureSortUid = pictureSorts[0].uid;
+                pictureSortUid = pictureSorts[0].uid;
+                // 设置默认选中的图片分类
+                that.pictureSort = pictureSorts[0]
+              } else {
+                // 如果不为空，说明是通过图片分类跳转的，找出当前id所在的角标
+                for (let i = 0; i < pictureSorts.length; i++) {
+                  if(pictureSorts[i].uid == pictureSortUid) {
+                    // 设置选中的分类和激活的index
+                    that.activeName = "" + i
+                    that.pictureSort = pictureSorts[i]
+                  }
+                }
+              }
+              that.clickTab(null)
+            }
+          } else {
+            that.$message({ type: "error", message: response.data });
+          }
+        })
+      }
+    },
+    clickTab(e) {
+      var that = this;
+      var index = this.activeName;
+      var pictureSortUid = this.pictureSorts[index].uid == undefined ? this.pictureSorts[index].pictureSortUid : this.pictureSorts[index].uid;
+      this.pictureSortUid = pictureSortUid; //当前pictureSortUid
+      var name = this.pictureSorts[index].name;
       var params = {};
-      params.keyword = this.keyword
-      params.pictureSortUid = this.pictureSortUid
-      params.pageSize = this.pageSize
-      params.currentPage = this.currentPage
-      getPictureList(params).then(response => {
-        if (response.code == this.$ECode.SUCCESS) {
-          this.tableData = response.data.records;
-          this.currentPage = response.data.current;
-          this.pageSize = response.data.size;
-          this.total = response.data.total;
+      params.currentPage = 1;
+      params.pictureSortUid = pictureSortUid;
+      params.pageSize = that.pageSize;
+      getPictureList(params).then(function(response) {
+        if (response.code == that.$ECode.SUCCESS) {
+          if (response.data.records.length > 0) {
+            var newObject = {
+              pictureSortUid: pictureSortUid,
+              name: name,
+              pictures: response.data.records,
+              pageSize: response.data.size,
+              currentPage: response.data.current,
+              total: response.data.total
+            };
+            that.pageSize = response.data.size
+            that.currentPage = response.data.current
+            that.total = response.data.total
+            Vue.set(that.pictureSorts, index, newObject);
+          }
         } else {
-          this.$message({
-            type: "error",
-            message: response.data
-          });
+          this.$message({ type: "error", message: response.data });
+        }
+      });
+    },
+    handleCurrentChange: function(val) {
+      var that = this
+      var pictureSort = this.pictureSort;
+      var params = {}
+      params.pictureSortUid = pictureSort.uid
+      params.currentPage = val
+      params.pageSize = that.pageSize
+      getPictureList(params).then(function(response) {
+        if (response.code == that.$ECode.SUCCESS) {
+          var newObject = {
+            pictureSortUid: pictureSort.uid,
+            name: pictureSort.name,
+            pictures: response.data.records,
+            pageSize: response.data.size,
+            currentPage: response.data.current,
+            total: response.data.total
+          };
+          that.pageSize = response.data.size
+          that.currentPage = response.data.current
+          that.total = response.data.total
+          Vue.set(that.pictureSorts, that.activeName, newObject);
+        } else {
+          this.$message({ type: "error", message: response.data });
         }
       });
     },
@@ -294,12 +392,10 @@ export default {
                 type: "success",
                 message: response.data
               });
-
               // 清空选中的列表
               this.pictureUids = []
               this.checkedPicture = []
-
-              this.pictureList();
+              this.handleCurrentChange(this.currentPage);
             }
           });
         })
@@ -345,13 +441,10 @@ export default {
 
     },
     handleCropper: function(picture) {
-      console.log("选中的图片", picture)
       this.checkedPicture = picture;
       setTimeout(() => {
-
         this.pictureCropperVisible = true;
         this.reFresh = true;
-
       }, 10)
     },
     // 裁剪成功后的回调
@@ -370,12 +463,9 @@ export default {
             type: "success",
             message: response.data
           });
-          this.pictureList();
+          this.handleCurrentChange(this.currentPage);
         } else {
-          this.$message({
-            type: "error",
-            message: response.data
-          });
+          this.$commonUtil.message.error(response.message)
         }
       });
 
@@ -389,12 +479,6 @@ export default {
         path: "pictureSort",
         query: {}
       });
-    },
-    //改变页码
-    handleCurrentChange(val) {
-      var that = this;
-      this.currentPage = val; //改变当前所指向的页数
-      this.pictureList();
     },
     handleAdd: function() {
       this.dialogFormVisible = true;
@@ -430,7 +514,7 @@ export default {
                 type: "success",
                 message: res.data
               });
-              that.pictureList();
+              this.handleCurrentChange(this.currentPage);
             } else {
               this.$message({
                 type: "error",
@@ -457,7 +541,7 @@ export default {
   .media-title {
     color: #8492a6;
     font-size: 14px;
-    padding: 14px;
+    padding: 3px;
     display: inline-block;
     white-space: nowrap;
     width: 60%;
