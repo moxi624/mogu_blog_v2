@@ -265,7 +265,9 @@ export default {
       var that = this;
       var index = this.activeName;
       var pictureSortUid = this.pictureSorts[index].uid == undefined ? this.pictureSorts[index].pictureSortUid : this.pictureSorts[index].uid;
-      this.pictureSortUid = pictureSortUid; //当前pictureSortUid
+      //当前pictureSortUid
+      this.pictureSortUid = pictureSortUid;
+      this.pictureSort = this.pictureSorts[index]
       var name = this.pictureSorts[index].name;
       var params = {};
       params.currentPage = 1;
@@ -312,7 +314,10 @@ export default {
           that.pageSize = response.data.size
           that.currentPage = response.data.current
           that.total = response.data.total
+          console.log("设置前", that.pictureSorts)
+          console.log("设置前的分类", pictureSort)
           Vue.set(that.pictureSorts, that.activeName, newObject);
+          console.log("设置后", that.pictureSorts)
         } else {
           this.$message({ type: "error", message: response.data });
         }

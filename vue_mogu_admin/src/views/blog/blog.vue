@@ -373,6 +373,7 @@
     </el-dialog>
 
     <CheckPhoto
+      v-if="photoVisible"
       @choose_data="getChooseData"
       @cancelModel="cancelModel"
       :photoVisible="photoVisible"
@@ -381,7 +382,7 @@
       :limit="1"
     ></CheckPhoto>
 
-    <SubjectSelect :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
+    <SubjectSelect v-if="subjectVisible" :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
   </div>
 </template>
 

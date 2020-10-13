@@ -16,17 +16,20 @@ export default {
     return {
       chalk: '', // content of theme-chalk css
       theme: ORIGINAL_THEME,
-      systemConfig: {}
+      systemConfig: {},
+      isEdit: false
     }
   },
   watch: {
     theme(val, oldVal) {
-      this.systemConfig.themeColor = val
-      editSystemConfig(this.systemConfig).then(res => {
-        if (res.code = this.$ECode.SUCCESS) {
-          this.updateColorStyle(val, oldVal)
-        }
-      });
+      if(this.isEdit) {
+        this.systemConfig.themeColor = val
+        editSystemConfig(this.systemConfig).then(res => {
+          if (res.code = this.$ECode.SUCCESS) {
+            this.updateColorStyle(val, oldVal)
+          }
+        });
+      }
     }
   },
   created() {
@@ -34,12 +37,17 @@ export default {
   },
   methods: {
     getSystemConfigData: function() {
+      var that = this
       getSystemConfig().then(response => {
         if (response.code == this.$ECode.SUCCESS) {
           this.systemConfig = response.data;
           let themeColor = this.systemConfig.themeColor ? this.systemConfig.themeColor:ORIGINAL_THEME
           this.theme = themeColor
           this.updateColorStyle(themeColor, ORIGINAL_THEME)
+          // 调整状态位，避免初始化请求后台
+          setTimeout(()=>{
+            that.isEdit = true
+          }, 10)
         }
       });
     },

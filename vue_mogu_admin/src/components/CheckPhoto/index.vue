@@ -281,7 +281,7 @@ export default {
           pictureParams.pageSize = 24
           pictureParams.currentPage = 1;
           getPictureList(pictureParams).then(function(response) {
-            if (response.code == "success") {
+            if (response.code == this.$ECode.SUCCESS) {
               var newObject = {
                 pictureSortUid: pictureSortUid,
                 name: name,
@@ -304,7 +304,7 @@ export default {
       var that = this;
       var index = this.activeName;
       var pictureSortUid = this.pictureSorts[index].uid == undefined ? this.pictureSorts[index].pictureSortUid : this.pictureSorts[index].uid;
-      this.currentPictureSortUid = pictureSortUid; //当前pictureSortUid
+      this.currentPictureSortUid = pictureSortUid;
       var name = this.pictureSorts[index].name;
       var params = {};
       params.currentPage = 1;

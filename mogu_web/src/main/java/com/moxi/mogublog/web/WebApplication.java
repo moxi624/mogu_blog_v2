@@ -13,7 +13,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import springfox.documentation.oas.annotations.EnableOpenApi;
-
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
@@ -27,6 +26,7 @@ import java.util.TimeZone;
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config",
+        "com.moxi.mogublog.commons.fallback",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.xo.utils",
         "com.moxi.mogublog.web.utils",
