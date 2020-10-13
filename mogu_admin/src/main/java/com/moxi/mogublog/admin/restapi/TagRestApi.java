@@ -41,8 +41,6 @@ public class TagRestApi {
 
     @Autowired
     private TagService tagService;
-    @Autowired
-    private BlogService blogService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取标签列表", notes = "获取标签列表", response = String.class)
@@ -64,6 +62,7 @@ public class TagRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("增加标签");
         return tagService.addTag(tagVO);
     }
 
@@ -75,7 +74,7 @@ public class TagRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
+        log.info("编辑标签");
         return tagService.editTag(tagVO);
     }
 
@@ -87,7 +86,7 @@ public class TagRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
+        log.info("批量删除标签");
         return tagService.deleteBatchTag(tagVoList);
     }
 
@@ -96,9 +95,9 @@ public class TagRestApi {
     @ApiOperation(value = "置顶标签", notes = "置顶标签", response = String.class)
     @PostMapping("/stick")
     public String stick(@Validated({Delete.class}) @RequestBody TagVO tagVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("置顶标签");
         return tagService.stickTag(tagVO);
     }
 
@@ -107,6 +106,7 @@ public class TagRestApi {
     @ApiOperation(value = "通过点击量排序标签", notes = "通过点击量排序标签", response = String.class)
     @PostMapping("/tagSortByClickCount")
     public String tagSortByClickCount() {
+        log.info("通过点击量排序标签");
         return tagService.tagSortByClickCount();
     }
 
@@ -121,6 +121,7 @@ public class TagRestApi {
     @ApiOperation(value = "通过引用量排序标签", notes = "通过引用量排序标签", response = String.class)
     @PostMapping("/tagSortByCite")
     public String tagSortByCite() {
+        log.info("通过引用量排序标签");
         return tagService.tagSortByCite();
     }
 }

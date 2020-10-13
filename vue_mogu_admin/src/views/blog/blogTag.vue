@@ -213,15 +213,13 @@ export default {
         .then(() => {
           tagSortByClickCount().then(response => {
             if (response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
               this.tagList();
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消批量排序"
-          });
+          this.$commonUtil.message.info("已取消批量排序")
         });
     },
     // 通过点击量排序
@@ -239,16 +237,14 @@ export default {
 
 					tagSortByCite().then(response => {
             if (response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
               this.tagList();
             }
 					});
 
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消批量排序"
-          });
+          this.$commonUtil.message.info("已取消批量排序")
         });
     },
     handleEdit: function(row) {
@@ -271,23 +267,14 @@ export default {
           stickTag(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.tagList();
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消置顶"
-          });
+          this.$commonUtil.message.info("已取消置顶")
         });
     },
     handleDelete: function(row) {
@@ -303,34 +290,22 @@ export default {
           params.push(row);
           deleteBatchTag(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             that.tagList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleDeleteBatch: function() {
       var that = this;
       var that = this;
       if(that.multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要删除的内容！"
-        });
+        this.$commonUtil.message.error("请先选中需要删除的内容")
         return;
       }
       this.$confirm("此操作将把选中的标签删除, 是否继续?", "提示", {
@@ -341,24 +316,15 @@ export default {
         .then(() => {
           deleteBatchTag(that.multipleSelection).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             that.tagList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {
@@ -373,36 +339,23 @@ export default {
         } else {
           if (this.isEditForm) {
             editTag(this.form).then(response => {
-              console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.tagList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           } else {
             addTag(this.form).then(response => {
               console.log(response);
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
                 this.tagList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }

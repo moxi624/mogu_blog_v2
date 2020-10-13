@@ -50,7 +50,7 @@ public class BlogRestApi {
     public String getList(@Validated({GetList.class}) @RequestBody BlogVO blogVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, blogService.getPageList(blogVO));
+        return ResultUtil.successWithData(blogService.getPageList(blogVO));
     }
 
     @AvoidRepeatableCommit

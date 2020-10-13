@@ -69,7 +69,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         BlogSort tempSort = blogSortService.getOne(queryWrapper);
         if (tempSort != null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
 
         BlogSort blogSort = new BlogSort();
@@ -78,7 +78,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         blogSort.setSort(blogSortVO.getSort());
         blogSort.setStatus(EStatus.ENABLE);
         blogSort.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             BlogSort tempSort = blogSortService.getOne(queryWrapper);
             if (tempSort != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
         blogSort.setContent(blogSortVO.getContent());
@@ -104,13 +104,13 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         blogSort.updateById();
         // 删除和博客相关的Redis缓存
         blogService.deleteRedisByBlogSort();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchBlogSort(List<BlogSortVO> blogSortVoList) {
         if (blogSortVoList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
 
@@ -124,7 +124,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         blogQueryWrapper.in(SQLConf.BLOG_SORT_UID, uids);
         Integer blogCount = blogService.count(blogQueryWrapper);
         if (blogCount > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_SORT);
+            return ResultUtil.errorWithMessage(MessageConf.BLOG_UNDER_THIS_SORT);
         }
         Collection<BlogSort> blogSortList = blogSortService.listByIds(uids);
         blogSortList.forEach(item -> {
@@ -135,9 +135,9 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         if (save) {
             // 删除和博客相关的Redis缓存
             blogService.deleteRedisByBlogSort();
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 
@@ -156,29 +156,25 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         BlogSort maxSort = list.get(0);
 
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(blogSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
+            return ResultUtil.errorWithMessage(MessageConf.THIS_SORT_IS_TOP);
         }
         Integer sortCount = maxSort.getSort() + 1;
         blogSort.setSort(sortCount);
         blogSort.setUpdateTime(new Date());
         blogSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
     public String blogSortByClickCount() {
         QueryWrapper<BlogSort> queryWrapper = new QueryWrapper();
-
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-
         // 按点击从高到低排序
         queryWrapper.orderByDesc(SQLConf.CLICK_COUNT);
-
         List<BlogSort> blogSortList = blogSortService.list(queryWrapper);
-
         // 设置初始化最大的sort值
         Integer maxSort = blogSortList.size();
         for (BlogSort item : blogSortList) {
@@ -186,14 +182,13 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
             item.setUpdateTime(new Date());
         }
         blogSortService.updateBatchById(blogSortList);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
     public String blogSortByCite() {
         // 定义Map   key：tagUid,  value: 引用量
         Map<String, Integer> map = new HashMap<>();
-
         QueryWrapper<BlogSort> blogSortQueryWrapper = new QueryWrapper<>();
         blogSortQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         List<BlogSort> blogSortList = blogSortService.list(blogSortQueryWrapper);
@@ -201,7 +196,6 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
         blogSortList.forEach(item -> {
             map.put(item.getUid(), 0);
         });
-
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
@@ -224,8 +218,7 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
             item.setUpdateTime(new Date());
         });
         blogSortService.updateBatchById(blogSortList);
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override

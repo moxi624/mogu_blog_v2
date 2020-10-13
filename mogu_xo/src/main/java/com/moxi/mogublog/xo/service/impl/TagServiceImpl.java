@@ -33,7 +33,6 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
 
     @Autowired
     private TagService tagService;
-
     @Autowired
     private BlogService blogService;
 
@@ -69,7 +68,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Tag tempTag = tagService.getOne(queryWrapper);
         if (tempTag != null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
         Tag tag = new Tag();
         tag.setContent(tagVO.getContent());
@@ -77,7 +76,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         tag.setStatus(EStatus.ENABLE);
         tag.setSort(tagVO.getSort());
         tag.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
             queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
             Tag tempTag = tagService.getOne(queryWrapper);
             if (tempTag != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
 
@@ -101,13 +100,13 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         tag.updateById();
         // 删除和标签相关的博客缓存
         blogService.deleteRedisByBlogTag();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchTag(List<TagVO> tagVOList) {
         if (tagVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         tagVOList.forEach(item -> {
@@ -120,7 +119,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         blogQueryWrapper.in(SQLConf.TAG_UID, uids);
         Integer blogCount = blogService.count(blogQueryWrapper);
         if (blogCount > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_UNDER_THIS_TAG);
+            return ResultUtil.errorWithMessage(MessageConf.BLOG_UNDER_THIS_TAG);
         }
 
         Collection<Tag> tagList = tagService.listByIds(uids);
@@ -134,9 +133,9 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         // 删除和标签相关的博客缓存
         blogService.deleteRedisByBlogTag();
         if (save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 
@@ -155,10 +154,10 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         Tag maxTag = list.get(0);
 
         if (StringUtils.isEmpty(maxTag.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         if (maxTag.getUid().equals(tag.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_TAG_IS_TOP);
+            return ResultUtil.errorWithMessage(MessageConf.THIS_TAG_IS_TOP);
         }
 
         Integer sortCount = maxTag.getSort() + 1;
@@ -167,7 +166,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         tag.setUpdateTime(new Date());
         tag.updateById();
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
@@ -184,14 +183,13 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
             item.setCreateTime(new Date());
         }
         tagService.updateBatchById(tagList);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
     public String tagSortByCite() {
         // 定义Map   key：tagUid,  value: 引用量
         Map<String, Integer> map = new HashMap<>();
-
         QueryWrapper<Tag> tagQueryWrapper = new QueryWrapper<>();
         tagQueryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         List<Tag> tagList = tagService.list(tagQueryWrapper);
@@ -225,7 +223,7 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
             item.setUpdateTime(new Date());
         });
         tagService.updateBatchById(tagList);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override

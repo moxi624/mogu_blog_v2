@@ -681,9 +681,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Blog blog = new Blog();
         //如果是原创，作者为用户的昵称
         String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-        if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
-            log.error("参数配置有误，需重新配置！");
-        }
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
             if (admin != null) {
@@ -710,7 +707,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         //保存成功后，需要发送消息到solr 和 redis
         updateSolrAndRedis(isSave, blog);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -732,16 +729,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (StringUtils.isNotBlank(addVerdictResult)) {
             return addVerdictResult;
         }
-
         //如果是原创，作者为用户的昵称
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
         blog.setAdminUid(admin.getUid());
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             blog.setAuthor(admin.getNickName());
             String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
-            if (StringUtils.isEmpty(projectName) || StringUtils.isEmpty(projectName)) {
-                log.error("参数配置有误，需重新配置！");
-            }
             blog.setArticlesPart(projectName);
         } else {
             blog.setAuthor(blogVO.getAuthor());
@@ -764,13 +757,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Boolean isSave = blog.updateById();
         //保存成功后，需要发送消息到solr 和 redis
         updateSolrAndRedis(isSave, blog);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String editBatch(List<BlogVO> blogVOList) {
         if (blogVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> blogUidList = new ArrayList<>();
         Map<String, BlogVO> blogVOMap = new HashMap<>();
@@ -808,7 +801,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
         }
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -831,13 +824,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blogUidList.add(blogVO.getUid());
             subjectItemService.deleteBatchSubjectItemByBlogUid(blogUidList);
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
     public String deleteBatchBlog(List<BlogVO> blogVoList) {
         if (blogVoList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uidList = new ArrayList<>();
         StringBuffer uidSbf = new StringBuffer();
@@ -863,23 +856,22 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             // 移除所有包含该博客的专题Item
             subjectItemService.deleteBatchSubjectItemByBlogUid(uidList);
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
     public String uploadLocalBlog(List<MultipartFile> filedatas) {
-
         SystemConfig systemConfig = systemConfigService.getConfig();
         if (systemConfig == null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.SYSTEM_CONFIG_NOT_EXIST);
         } else {
             if (EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu()) && (StringUtils.isEmpty(systemConfig.getQiNiuPictureBaseUrl()) || StringUtils.isEmpty(systemConfig.getQiNiuAccessKey())
                     || StringUtils.isEmpty(systemConfig.getQiNiuSecretKey()) || StringUtils.isEmpty(systemConfig.getQiNiuBucket()) || StringUtils.isEmpty(systemConfig.getQiNiuArea()))) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_QI_NIU);
+                return ResultUtil.errorWithMessage(MessageConf.PLEASE_SET_QI_NIU);
             }
 
             if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal()) && StringUtils.isEmpty(systemConfig.getLocalPictureBaseUrl())) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_SET_LOCAL);
+                return ResultUtil.errorWithMessage(MessageConf.PLEASE_SET_LOCAL);
             }
         }
 
@@ -889,12 +881,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             if (FileUtils.isMarkdown(fileName)) {
                 fileList.add(file);
             } else {
-                return ResultUtil.result(SysConf.ERROR, "目前仅支持Markdown文件");
+                return ResultUtil.errorWithMessage("目前仅支持Markdown文件");
             }
         }
 
         if (fileList.size() == 0) {
-            return ResultUtil.result(SysConf.ERROR, "请选中需要上传的文件");
+            return ResultUtil.errorWithMessage("请选中需要上传的文件");
         }
 
         // 文档解析
@@ -974,7 +966,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         // 获取任意博客封面
         Picture picture = pictureService.getTopOne();
         if (blogSort == null || tag == null || picture == null) {
-            return ResultUtil.result(SysConf.ERROR, "使用本地上传，请先确保博客分类，博客标签，博客图片中含有数据");
+            return ResultUtil.errorWithMessage("使用本地上传，请先确保博客分类，博客标签，博客图片中含有数据");
         }
 
         // 获取当前管理员
@@ -1009,7 +1001,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         // 批量添加博客
         blogService.saveBatch(blogList);
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -1293,7 +1285,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Override
     public String praiseBlogByUid(String uid) {
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
 
         HttpServletRequest request = RequestHolder.getRequest();
@@ -1307,10 +1299,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             queryWrapper.last(SysConf.LIMIT_ONE);
             Comment praise = commentService.getOne(queryWrapper);
             if (praise != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.YOU_HAVE_BEEN_PRISE);
+                return ResultUtil.errorWithMessage(MessageConf.YOU_HAVE_BEEN_PRISE);
             }
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_LOGIN_TO_PRISE);
+            return ResultUtil.errorWithMessage(MessageConf.PLEASE_LOGIN_TO_PRISE);
         }
         Blog blog = blogService.getById(uid);
         String pariseJsonResult = redisUtil.get(RedisConf.BLOG_PRAISE + RedisConf.SEGMENTATION + uid);
@@ -1337,7 +1329,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             comment.setType(ECommentType.PRAISE);
             comment.insert();
         }
-        return ResultUtil.result(SysConf.SUCCESS, blog.getCollectCount());
+        return ResultUtil.successWithData(blog.getCollectCount());
     }
 
     @Override
@@ -1565,7 +1557,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         //判断redis中时候包含归档的内容
         if (StringUtils.isNotEmpty(monthResult)) {
             List list = JsonUtils.jsonArrayToArrayList(monthResult);
-            return ResultUtil.result(SysConf.SUCCESS, list);
+            return ResultUtil.successWithData(list);
         }
         // 第一次启动的时候归档
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
@@ -1607,13 +1599,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
         //将从数据库查询的数据缓存到redis中
         redisUtil.set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
-        return ResultUtil.result(SysConf.SUCCESS, monthSet);
+        return ResultUtil.successWithData(monthSet);
     }
 
     @Override
     public String getArticleByMonth(String monthDate) {
         if (StringUtils.isEmpty(monthDate)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         //从Redis中获取内容
         String contentResult = redisUtil.get(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + monthDate);
@@ -1621,7 +1613,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         //判断redis中时候包含该日期下的文章
         if (StringUtils.isNotEmpty(contentResult)) {
             List list = JsonUtils.jsonArrayToArrayList(contentResult);
-            return ResultUtil.result(SysConf.SUCCESS, list);
+            return ResultUtil.successWithData(list);
         }
 
         // 第一次启动的时候归档
@@ -1663,8 +1655,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             redisUtil.set(SysConf.BLOG_SORT_BY_MONTH + SysConf.REDIS_SEGMENTATION + key, JsonUtils.objectToJson(value).toString());
         });
         //将从数据库查询的数据缓存到redis中
-        redisUtil.set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet).toString());
-        return ResultUtil.result(SysConf.SUCCESS, map.get(monthDate));
+        redisUtil.set(SysConf.MONTH_SET, JsonUtils.objectToJson(monthSet));
+        return ResultUtil.successWithData(map.get(monthDate));
     }
 
     /**
@@ -1681,7 +1673,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             case ELevel.FIRST: {
                 Long blogFirstCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FIRST_COUNT));
                 if (count > blogFirstCount) {
-                    return ResultUtil.result(SysConf.ERROR, "一级推荐不能超过" + blogFirstCount + "个");
+                    return ResultUtil.errorWithMessage("一级推荐不能超过" + blogFirstCount + "个");
                 }
             }
             break;
@@ -1689,7 +1681,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             case ELevel.SECOND: {
                 Long blogSecondCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_SECOND_COUNT));
                 if (count > blogSecondCount) {
-                    return ResultUtil.result(SysConf.ERROR, "二级推荐不能超过" + blogSecondCount + "个");
+                    return ResultUtil.errorWithMessage("二级推荐不能超过" + blogSecondCount + "个");
                 }
             }
             break;
@@ -1697,7 +1689,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             case ELevel.THIRD: {
                 Long blogThirdCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_THIRD_COUNT));
                 if (count > blogThirdCount) {
-                    return ResultUtil.result(SysConf.ERROR, "三级推荐不能超过" + blogThirdCount + "个");
+                    return ResultUtil.errorWithMessage("三级推荐不能超过" + blogThirdCount + "个");
                 }
             }
             break;
@@ -1705,7 +1697,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             case ELevel.FOURTH: {
                 Long blogFourthCount = Long.valueOf(sysParamsService.getSysParamsValueByKey(SysConf.BLOG_FOURTH_COUNT));
                 if (count > blogFourthCount) {
-                    return ResultUtil.result(SysConf.ERROR, "四级推荐不能超过" + blogFourthCount + "个");
+                    return ResultUtil.errorWithMessage("四级推荐不能超过" + blogFourthCount + "个");
                 }
             }
             break;
@@ -1844,23 +1836,18 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
      * @return
      */
     private String getHitCode(String str, String keyword) {
-
         if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(str)) {
             return str;
         }
-
         String startStr = "<span style = 'color:red'>";
         String endStr = "</span>";
-
         // 判断关键字是否直接是搜索的内容，否者直接返回
         if (str.equals(keyword)) {
             return startStr + str + endStr;
         }
-
         String lowerCaseStr = str.toLowerCase();
         String lowerKeyword = keyword.toLowerCase();
         String[] lowerCaseArray = lowerCaseStr.split(lowerKeyword);
-
         Boolean isEndWith = lowerCaseStr.endsWith(lowerKeyword);
 
         // 计算分割后的字符串位置
@@ -1868,7 +1855,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         List<Map<String, Integer>> list = new ArrayList<>();
         List<Map<String, Integer>> keyList = new ArrayList<>();
         for (int a = 0; a < lowerCaseArray.length; a++) {
-
             // 将切割出来的存储map
             Map<String, Integer> map = new HashMap<>();
             Map<String, Integer> keyMap = new HashMap<>();
@@ -1877,7 +1863,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             count += len;
             map.put("endIndex", count);
             list.add(map);
-
             if (a < lowerCaseArray.length - 1 || isEndWith) {
                 // 将keyword存储map
                 keyMap.put("startIndex", count);
@@ -1885,9 +1870,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 keyMap.put("endIndex", count);
                 keyList.add(keyMap);
             }
-
         }
-
         // 截取切割对象
         List<String> arrayList = new ArrayList<>();
         for (Map<String, Integer> item : list) {
@@ -1896,7 +1879,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             String itemStr = str.substring(start, end);
             arrayList.add(itemStr);
         }
-
         // 截取关键字
         List<String> keyArrayList = new ArrayList<>();
         for (Map<String, Integer> item : keyList) {
@@ -1907,11 +1889,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
 
         StringBuffer sb = new StringBuffer();
-
         for (int a = 0; a < arrayList.size(); a++) {
-
             sb.append(arrayList.get(a));
-
             if (a < arrayList.size() - 1 || isEndWith) {
                 sb.append(startStr);
                 sb.append(keyArrayList.get(a));

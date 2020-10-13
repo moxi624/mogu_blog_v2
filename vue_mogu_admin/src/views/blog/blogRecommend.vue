@@ -49,21 +49,19 @@
         params.useSort = 1;
         getBlogList(params).then(response => {
           if(response.code == this.$ECode.SUCCESS) {
-            console.log("推荐等级", level)
-            console.log("推荐博客",response.data)
             switch (level) {
               case 1: {
                 this.list1 = response.data.records;
-              }; break;
+              } break;
               case 2: {
                 this.list2 = response.data.records;
-              }; break;
+              } break;
               case 3: {
                 this.list3 = response.data.records;
-              }; break;
+              } break;
               case 4: {
                 this.list4 = response.data.records;
-              }; break;
+              } break;
             }
           }
         });
@@ -74,10 +72,7 @@
         }
         editBatchBlog(list).then(response => {
           if(response.code == this.$ECode.SUCCESS) {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            this.$commonUtil.message.success(response.message)
           }
         });
       },

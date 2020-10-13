@@ -725,10 +725,7 @@ export default {
     // 添加至专题
     handleSubject() {
       if(this.multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要添加到专题的博客！"
-        });
+        this.$commonUtil.message.error("请先选中需要添加到专题的博客!")
         return;
       }
       this.subjectVisible = true;
@@ -775,10 +772,7 @@ export default {
             done();
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消关闭"
-            });
+            this.$commonUtil.message.info("已取消")
           });
       } else {
         // 清空触发器
@@ -862,21 +856,14 @@ export default {
         success: (response) => {
           let res = JSON.parse(response)
           if(res.code == this.$ECode.SUCCESS) {
-            this.$message({
-              type: "success",
-              message: "博客上传成功"
-            })
+            this.$commonUtil.message.success(res.message)
             //获取博客列表
             this.blogList()
           } else {
-            this.$message({
-              type: "error",
-              message: res.data
-            })
+            this.$commonUtil.message.error(res.message)
           }
           this.localUploadVisible = false
           this.closeLoading()
-
           // 上传成功后，将里面的内容删除
           this.$refs.uploadFile.clearFiles();
           this.$refs.uploadPicture.clearFiles();
@@ -898,10 +885,7 @@ export default {
         success: (response) => {
           let res = JSON.parse(response)
           if(res.code == this.$ECode.SUCCESS) {
-            this.$message({
-              type: "success",
-              message: "图片上传成功"
-            })
+            this.$commonUtil.message.success("图片上传成功")
             let pictureList = res.data
             let list = []
             for(let a=0; a<pictureList.length; a++) {
@@ -954,10 +938,7 @@ export default {
     },
     handleDownload: function() {
       if(this.multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要导出的博客！"
-        });
+        this.$commonUtil.message.error("请先选中需要导出的博客")
         return;
       }
 
@@ -1023,27 +1004,18 @@ export default {
           var params = {};
           params.uid = row.uid;
           deleteBlog(params).then(response => {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            that.$commonUtil.message.success(response.message)
             that.blogList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          that.$commonUtil.message.info("已取消删除")
         });
     },
     handleDeleteBatch: function(row) {
       var that = this;
       if(that.multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要删除的博客！"
-        });
+        that.$commonUtil.message.error("请先选中需要删除的博客")
         return;
       }
       this.$confirm("此操作将把选中博客删除, 是否继续?", "提示", {
@@ -1053,18 +1025,16 @@ export default {
       })
         .then(() => {
           deleteBatchBlog(that.multipleSelection).then(response => {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            that.blogList();
+            if (response.code == this.$ECode.SUCCESS) {
+              that.$commonUtil.message.success(response.message)
+              that.blogList();
+            } else {
+              that.$commonUtil.message.error(response.message)
+            }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          that.$commonUtil.message.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {
@@ -1073,10 +1043,7 @@ export default {
     },
     submitForm: function() {
       if(this.tagValue.length <= 0) {
-        this.$message({
-          type: "error",
-          message: "标签不能为空！"
-        })
+        this.$commonUtil.message.error("标签不能为空!")
         return;
       }
 
@@ -1090,43 +1057,28 @@ export default {
           if (this.isEditForm) {
             editBlog(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
                 // 清空cookie中的内容
                 delCookie("form");
                 this.dialogFormVisible = false;
                 this.blogList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
 
           } else {
             addBlog(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
-
+                this.$commonUtil.message.success(response.message)
                 // 清空cookie中的内容
                 delCookie("form");
-
                 // 清空触发器
                 clearInterval(this.interval);
-
                 this.dialogFormVisible = false;
                 this.blogList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
             });
           }
@@ -1140,7 +1092,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
