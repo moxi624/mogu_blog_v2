@@ -16,18 +16,12 @@ import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
-import com.moxi.mogublog.xo.service.FeedbackService;
-import com.moxi.mogublog.xo.service.LinkService;
-import com.moxi.mogublog.xo.service.SystemConfigService;
-import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
-import com.moxi.mougblog.base.enums.EGender;
-import com.moxi.mougblog.base.enums.ELinkStatus;
-import com.moxi.mougblog.base.enums.EOpenStatus;
-import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.enums.*;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.Insert;
@@ -52,6 +46,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -73,6 +68,8 @@ public class AuthRestApi {
     private WebUtil webUtil;
     @Autowired
     private SystemConfigService systemConfigService;
+    @Autowired
+    private WebConfigService webConfigService;
     @Autowired
     private FeedbackService feedbackService;
     @Autowired
@@ -112,12 +109,17 @@ public class AuthRestApi {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "获取认证", notes = "获取认证")
     @RequestMapping("/render")
-    public String renderAuth(String source, HttpServletResponse response) throws IOException {
+    public String renderAuth(String source) {
+        // 将传递过来的转换成大写
+        Boolean isOpenLoginType = webConfigService.isOpenLoginType(source.toUpperCase());
+        if (!isOpenLoginType){
+            return ResultUtil.result(SysConf.ERROR, "后台未开启该登录方式!");
+        }
         log.info("进入render:" + source);
         AuthRequest authRequest = getAuthRequest(source);
         String token = AuthStateUtils.createState();
@@ -132,7 +134,7 @@ public class AuthRestApi {
      * oauth平台中配置的授权回调地址，以本项目为例，在创建gitee授权应用时的回调地址应为：http://127.0.0.1:8603/oauth/callback/gitee
      */
     @RequestMapping("/callback/{source}")
-    public void login(@PathVariable("source") String source, AuthCallback callback, HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
+    public void login(@PathVariable("source") String source, AuthCallback callback, HttpServletResponse httpServletResponse) throws IOException {
         log.info("进入callback：" + source + " callback params：" + JSONObject.toJSONString(callback));
         AuthRequest authRequest = getAuthRequest(source);
         AuthResponse response = authRequest.login(callback);
@@ -218,36 +220,27 @@ public class AuthRestApi {
         } else {
             user.setLoginCount(user.getLoginCount() + 1);
         }
-
         // 获取浏览器，IP来源，以及操作系统
         user = userService.serRequestInfo(user);
-
         // 暂时将token也存入到user表中，为了以后方便更新redis中的内容
         user.setValidCode(accessToken);
-
         if (exist) {
             user.updateById();
         } else {
-
             user.setUuid(data.get(SysConf.UUID).toString());
             user.setSource(data.get(SysConf.SOURCE).toString());
-
             String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
             user.setUserName(userName);
-
             // 如果昵称为空，那么直接设置用户名
             if (StringUtils.isEmpty(user.getNickName())) {
                 user.setNickName(userName);
             }
-
             // 默认密码
             user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
             user.insert();
         }
-
         // 过滤密码
         user.setPassWord("");
-
         if (user != null) {
             //将从数据库查询的数据缓存到redis中
             stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);

@@ -11,6 +11,7 @@ import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.utils.RabbitMqUtil;
 import com.moxi.mogublog.xo.service.UserService;
+import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
@@ -29,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -48,13 +50,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LoginRestApi {
 
-
     @Autowired
-    RabbitMqUtil rabbitMqUtil;
+    private RabbitMqUtil rabbitMqUtil;
     @Autowired
-    PictureFeignClient pictureFeignClient;
+    private WebConfigService webConfigService;
+    @Resource
+    private PictureFeignClient pictureFeignClient;
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
     @Autowired
     private UserService userService;
     @Autowired
@@ -66,6 +69,11 @@ public class LoginRestApi {
     @PostMapping("/login")
     public String login(@Validated({GetOne.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
+        Boolean isOpenLoginType = webConfigService.isOpenLoginType(RedisConf.PASSWORD);
+        if (!isOpenLoginType){
+            return ResultUtil.result(SysConf.ERROR, "后台未开启该登录方式!");
+        }
+
         String userName = userVO.getUserName();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userName).or().eq(SQLConf.EMAIL, userName));

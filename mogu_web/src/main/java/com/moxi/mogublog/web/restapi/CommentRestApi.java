@@ -433,7 +433,6 @@ public class CommentRestApi {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put(SysConf.COMMENT_LIST, commentList);
         resultMap.put(SysConf.REPLY_LIST, replyList);
-
         return ResultUtil.result(SysConf.SUCCESS, resultMap);
     }
 
@@ -451,7 +450,6 @@ public class CommentRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
-
         QueryWrapper<Comment> queryWrappe = new QueryWrapper<>();
         queryWrappe.eq(SQLConf.USER_UID, userUid);
         queryWrappe.eq(SQLConf.TYPE, ECommentType.PRAISE);
@@ -462,7 +460,6 @@ public class CommentRestApi {
         page.setSize(pageSize);
         IPage<Comment> pageList = commentService.page(page, queryWrappe);
         List<Comment> praiseList = pageList.getRecords();
-
         List<String> blogUids = new ArrayList<>();
         praiseList.forEach(item -> {
             blogUids.add(item.getBlogUid());
@@ -482,9 +479,7 @@ public class CommentRestApi {
                 item.setBlog(blogMap.get(item.getBlogUid()));
             }
         });
-
         pageList.setRecords(praiseList);
-
         return ResultUtil.result(SysConf.SUCCESS, pageList);
     }
 
@@ -494,11 +489,9 @@ public class CommentRestApi {
     public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
         HttpServletRequest request = RequestHolder.getRequest();
-
         if (request.getAttribute(SysConf.USER_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.INVALID_TOKEN);
         }
-
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
@@ -514,11 +507,8 @@ public class CommentRestApi {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.BLOG_NO_OPEN_COMMENTS);
             }
         }
-
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
-
         User user = userService.getById(userUid);
-
         // 判断字数是否超过限制
         if (commentVO.getContent().length() > SysConf.ONE_ZERO_TWO_FOUR) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_CAN_NOT_MORE_THAN_1024);

@@ -188,24 +188,23 @@
         let webConfigData = this.$store.state.app.webConfigData
         if(webConfigData.loginTypeList != undefined) {
           let loginTypeList = JSON.parse(webConfigData.loginTypeList)
-          console.log(loginTypeList.indexOf("2"))
           for(let a=0; a<loginTypeList.length; a++) {
             switch (loginTypeList[a]) {
               case "1": {
                 this.loginType.password = false
-              };break;
+              } break;
               case "2": {
                 this.loginType.gitee = false
-              };break;
+              } break;
               case "3": {
                 this.loginType.github = false
-              };break;
+              } break;
               case "4": {
                 this.loginType.qq = false
-              };break;
+              } break;
               case "5": {
                 this.loginType.wechat = false
-              };break;
+              } break;
               default: {
                 console.log("登录方式设置有误！！")
               }

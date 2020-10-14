@@ -17,14 +17,14 @@ public interface WebConfigService extends SuperService<WebConfig> {
      *
      * @return
      */
-    public WebConfig getWebConfig();
+    WebConfig getWebConfig();
 
     /**
      * 通过显示列表获取配置
      *
      * @return
      */
-    public WebConfig getWebConfigByShowList();
+    WebConfig getWebConfigByShowList();
 
     /**
      * 修改网站配置
@@ -32,5 +32,12 @@ public interface WebConfigService extends SuperService<WebConfig> {
      * @param webConfigVO
      * @return
      */
-    public String editWebConfig(WebConfigVO webConfigVO);
+    String editWebConfig(WebConfigVO webConfigVO);
+
+    /**
+     * 是否开启该登录方式【账号密码、码云、Github、QQ、微信】
+     * @param loginType
+     * @return
+     */
+    Boolean isOpenLoginType(String loginType);
 }

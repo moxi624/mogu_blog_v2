@@ -163,5 +163,15 @@ public class BaseRedisConf {
      */
     public final static String BLOG_CONTRIBUTE_COUNT = "BLOG_CONTRIBUTE_COUNT";
 
+    /**
+     * 登录方式
+     */
+    public final static String LOGIN_TYPE = "LOGIN_TYPE";
+    public final static String GITEE = "GITEE";
+    public final static String GITHUB = "GITHUB";
+    public final static String QQ = "QQ";
+    public final static String PASSWORD = "PASSWORD";
+    public final static String WECHAT = "WECHAT";
+
 
 }

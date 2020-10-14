@@ -16,17 +16,17 @@ import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.WebConfigVO;
 import com.moxi.mougblog.base.enums.EAccountType;
+import com.moxi.mougblog.base.enums.ELoginType;
 import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -47,7 +47,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
     @Autowired
     private WebConfigService webConfigService;
 
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @Autowired
@@ -185,65 +185,74 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
     public String editWebConfig(WebConfigVO webConfigVO) {
         if (StringUtils.isEmpty(webConfigVO.getUid())) {
             WebConfig webConfig = new WebConfig();
-            webConfig.setLogo(webConfigVO.getLogo());
-            webConfig.setName(webConfigVO.getName());
-            webConfig.setTitle(webConfigVO.getTitle());
-            webConfig.setSummary(webConfigVO.getSummary());
-            webConfig.setKeyword(webConfigVO.getKeyword());
-            webConfig.setAuthor(webConfigVO.getAuthor());
-            webConfig.setRecordNum(webConfigVO.getRecordNum());
-            webConfig.setAliPay(webConfigVO.getAliPay());
-            webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-            webConfig.setOpenComment(webConfigVO.getOpenComment());
-            webConfig.setOpenAdmiration(webConfigVO.getOpenAdmiration());
-            // 设置移动端功能
-            webConfig.setOpenMobileAdmiration(webConfigVO.getOpenMobileAdmiration());
-            webConfig.setOpenMobileComment(webConfigVO.getOpenMobileComment());
-
-            // 设置关注我们
-            webConfig.setEmail(webConfigVO.getEmail());
-            webConfig.setQqNumber(webConfigVO.getQqNumber());
-            webConfig.setQqGroup(webConfigVO.getQqGroup());
-            webConfig.setGithub(webConfigVO.getGithub());
-            webConfig.setGitee(webConfigVO.getGitee());
-            webConfig.setWeChat(webConfigVO.getWeChat());
-            webConfig.setShowList(webConfigVO.getShowList());
-            webConfig.setLoginTypeList(webConfigVO.getLoginTypeList());
-            webConfig.setUpdateTime(new Date());
+            // 设置网站配置【使用Spring工具类提供的深拷贝】
+            BeanUtils.copyProperties(webConfigVO, webConfig, SysConf.STATUS);
             webConfigService.save(webConfig);
+
         } else {
             WebConfig webConfig = webConfigService.getById(webConfigVO.getUid());
-            webConfig.setLogo(webConfigVO.getLogo());
-            webConfig.setName(webConfigVO.getName());
-            webConfig.setTitle(webConfigVO.getTitle());
-            webConfig.setSummary(webConfigVO.getSummary());
-            webConfig.setKeyword(webConfigVO.getKeyword());
-            webConfig.setAuthor(webConfigVO.getAuthor());
-            webConfig.setRecordNum(webConfigVO.getRecordNum());
-            webConfig.setAliPay(webConfigVO.getAliPay());
-            webConfig.setWeixinPay(webConfigVO.getWeixinPay());
-            webConfig.setOpenComment(webConfigVO.getOpenComment());
-            webConfig.setOpenAdmiration(webConfigVO.getOpenAdmiration());
-            // 设置移动端功能
-            webConfig.setOpenMobileAdmiration(webConfigVO.getOpenMobileAdmiration());
-            webConfig.setOpenMobileComment(webConfigVO.getOpenMobileComment());
-
-            // 设置关注我们
-            webConfig.setEmail(webConfigVO.getEmail());
-            webConfig.setQqNumber(webConfigVO.getQqNumber());
-            webConfig.setQqGroup(webConfigVO.getQqGroup());
-            webConfig.setGithub(webConfigVO.getGithub());
-            webConfig.setGitee(webConfigVO.getGitee());
-            webConfig.setWeChat(webConfigVO.getWeChat());
-            webConfig.setShowList(webConfigVO.getShowList());
-            webConfig.setLoginTypeList(webConfigVO.getLoginTypeList());
+            // 更新网站配置【使用Spring工具类提供的深拷贝】
+            BeanUtils.copyProperties(webConfigVO, webConfig, SysConf.STATUS, SysConf.UID);
             webConfig.setUpdateTime(new Date());
             webConfigService.updateById(webConfig);
         }
 
         // 修改配置后，清空Redis中的 WEB_CONFIG
         redisUtil.delete(RedisConf.WEB_CONFIG);
+        // 同时清空Redis中的登录方式
+        Set<String> keySet = redisUtil.keys(RedisConf.LOGIN_TYPE + Constants.SYMBOL_STAR);
+        redisUtil.delete(keySet);
 
         return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+    }
+
+    @Override
+    public Boolean isOpenLoginType(String loginType) {
+        String loginTypeJson = redisUtil.get(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + loginType);
+        // 判断redis中是否包含该登录记录
+        if(StringUtils.isNotEmpty(loginTypeJson)) {
+            // 如果Redis中有内容，表示开启该登录方式
+            return true;
+        }else if(loginTypeJson!= null && loginTypeJson.length() == 0) {
+            // 如果内容为空串，表示没有开启该登录方式
+            return false;
+        }
+
+        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        WebConfig webConfig = webConfigService.getOne(queryWrapper);
+        if (webConfig == null) {
+            throw new QueryException(ErrorCode.SYSTEM_CONFIG_IS_NOT_EXIST, MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
+        }
+        // 过滤一些不需要显示的用户账号信息
+        String loginTypeListJson = webConfig.getLoginTypeList();
+        // 判断哪些联系方式需要显示出来
+        List<String> loginTypeList = JsonUtils.jsonToList(loginTypeListJson, String.class);
+        for (String item : loginTypeList) {
+            if (ELoginType.PASSWORD.getCode().equals(item)) {
+                redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + RedisConf.PASSWORD, ELoginType.PASSWORD.getName());
+            }
+            if (ELoginType.GITEE.getCode().equals(item)) {
+                redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + RedisConf.GITEE, ELoginType.GITEE.getName());
+            }
+            if (ELoginType.GITHUB.getCode().equals(item)) {
+                redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + RedisConf.GITHUB, ELoginType.GITHUB.getName());
+            }
+            if (ELoginType.QQ.getCode().equals(item)) {
+                redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + RedisConf.QQ, ELoginType.QQ.getName());
+            }
+            if (ELoginType.WECHAT.getCode().equals(item)) {
+                redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + RedisConf.WECHAT, ELoginType.WECHAT.getName());
+            }
+        }
+        // 再次判断该登录方式是否开启
+        loginTypeJson = redisUtil.get(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + loginType);
+        if(StringUtils.isNotEmpty(loginTypeJson)) {
+            return true;
+        } else {
+            // 设置一个为空的字符串【防止缓存穿透】
+            redisUtil.set(RedisConf.LOGIN_TYPE + Constants.SYMBOL_COLON + loginType, "");
+            return false;
+        }
     }
 }
