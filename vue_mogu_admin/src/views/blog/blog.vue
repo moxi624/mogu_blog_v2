@@ -373,7 +373,7 @@
     </el-dialog>
 
     <CheckPhoto
-      v-if="photoVisible"
+      v-if="!isFirstPhotoVisible"
       @choose_data="getChooseData"
       @cancelModel="cancelModel"
       :photoVisible="photoVisible"
@@ -382,7 +382,7 @@
       :limit="1"
     ></CheckPhoto>
 
-    <SubjectSelect v-if="subjectVisible" :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
+    <SubjectSelect v-if="!isFirstSubjectVisible" :subjectVisible="subjectVisible" @cancelModel="cancelSubjectSelect" @selectData="getSelectData"></SubjectSelect>
   </div>
 </template>
 
@@ -429,6 +429,7 @@ export default {
         sortName: "admin",
         token: getToken()
       },
+
       pictureList: [], // 上传的图片列表
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除
@@ -453,11 +454,13 @@ export default {
       title: "增加博客",
       dialogFormVisible: false, //控制弹出框
       subjectVisible: false, // 是否显示专题
+      isFirstSubjectVisible: true, // 专题选择器是否首次显示【用于懒加载】
       formLabelWidth: "120px",
       lineLabelWidth: "120px", //一行的间隔数
       maxLineLabelWidth: "100px",
       isEditForm: false,
       photoVisible: false, //控制图片选择器的显示
+      isFirstPhotoVisible: true, // 图片选择器是否首次显示【用于懒加载】
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
@@ -715,6 +718,7 @@ export default {
       this.photoList = [];
       this.fileIds = "";
       this.photoVisible = true;
+      this.isFirstPhotoVisible = false
     },
     submitStr: function(str, index) {
       if (str.length > index) {
@@ -729,6 +733,7 @@ export default {
         return;
       }
       this.subjectVisible = true;
+      this.isFirstSubjectVisible = false
     },
     getSelectData(subjectUid) {
       this.cancelSubjectSelect()
