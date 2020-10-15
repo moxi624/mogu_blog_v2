@@ -203,7 +203,7 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
         Set<String> keySet = redisUtil.keys(RedisConf.LOGIN_TYPE + Constants.SYMBOL_STAR);
         redisUtil.delete(keySet);
 
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override

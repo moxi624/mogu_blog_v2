@@ -290,15 +290,9 @@ export default {
       params.push(key)
       cleanRedisByKey(params).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
-          this.$message({
-            type: "success",
-            message: response.data
-          })
+          this.$commonUtil.message.success(response.message)
         } else {
-          this.$message({
-            type: "error",
-            message: response.data
-          })
+          this.$commonUtil.message.error(response.message)
         }
       })
     },
@@ -310,15 +304,9 @@ export default {
           editSystemConfig(this.form).then(res => {
             console.log(res);
             if (res.code = "success") {
-              this.$message({
-                type: "success",
-                message: res.data
-              });
+              this.$commonUtil.message.success(res.message)
             } else {
-              this.$message({
-                type: "warning",
-                message: res.data
-              });
+              this.$commonUtil.message.error(res.message)
             }
           });
         }

@@ -49,7 +49,7 @@ public class SysDictDataRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取字典数据列表");
-        return ResultUtil.result(SysConf.SUCCESS, sysDictDataService.getPageList(sysDictDataVO));
+        return ResultUtil.successWithData(sysDictDataService.getPageList(sysDictDataVO));
     }
 
     @AvoidRepeatableCommit

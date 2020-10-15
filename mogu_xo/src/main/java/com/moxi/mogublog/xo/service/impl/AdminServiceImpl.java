@@ -328,7 +328,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String editMe(AdminVO adminVO) {
         String adminUid = RequestHolder.getAdminUid();
-        if (StringUtils.isNotBlank(adminUid)) {
+        if (StringUtils.isEmpty(adminUid)) {
             return ResultUtil.errorWithMessage(MessageConf.INVALID_TOKEN);
         }
         Admin admin = new Admin();

@@ -353,11 +353,8 @@ export default {
     },
     getWebConfigFun: function() {
       getWebConfig().then(response => {
-        console.log("得到的配置", response)
         if (response.code == this.$ECode.SUCCESS) {
-
           let data = response.data;
-
           if (data.showList) {
             let showList = JSON.parse(data.showList)
             let loginTypeList = JSON.parse(data.loginTypeList)
@@ -409,13 +406,13 @@ export default {
         if ((response.code = "success")) {
           this.$notify({
             title: "成功",
-            message: response.data,
+            message: response.message,
             type: "success"
           });
         } else {
           this.$notify.error({
             title: "警告",
-            message: response.data
+            message: response.message
           });
         }
         this.getWebConfigFun();
@@ -436,16 +433,12 @@ export default {
           this.form = {};
           this.form = tempForm;
         }
-        this.$message({
-          type: 'success',
-          message: "上传成功"
-        })
+        this.$commonUtil.message.success("上传成功")
       }
       this.loadingInstance.close();
     },
 
     fileSuccess_weixin: function(response, file, fileList) {
-
       if (response.code == this.$ECode.SUCCESS) {
         let fileList = response.data;
         if (fileList.length > 0) {
@@ -455,10 +448,7 @@ export default {
           this.form = {};
           this.form = tempForm;
         }
-        this.$message({
-          type: 'success',
-          message: "上传成功"
-        })
+        this.$commonUtil.message.success("上传成功")
       }
       this.loadingInstance.close();
     }

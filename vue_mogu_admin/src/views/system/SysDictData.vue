@@ -341,28 +341,22 @@
             let deleteList = []
             deleteList.push(sysDictData)
             deleteBatchSysDictData(deleteList).then(response => {
-              console.log(response);
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              that.sysDictDataList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                that.sysDictDataList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消删除")
           });
       },
       handleDeleteBatch: function (row) {
         var that = this;
         if (that.multipleSelection.length <= 0) {
-          this.$message({
-            type: "error",
-            message: "请先选中需要删除的内容！"
-          });
+          this.$commonUtil.message.error("请先选中需要删除的内容")
           return;
         }
         this.$confirm("此操作将把选中字典数据删除, 是否继续?", "提示", {
@@ -372,18 +366,16 @@
         })
           .then(() => {
             deleteBatchSysDictData(that.multipleSelection).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              that.sysDictDataList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                that.sysDictDataList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消删除")
           });
       },
       handleCurrentChange: function (val) {
@@ -403,33 +395,21 @@
               editSysDictData(this.form).then(response => {
                 console.log(response);
                 if (response.code == this.$ECode.SUCCESS) {
-                  this.$message({
-                    type: "success",
-                    message: response.data
-                  });
+                  this.$commonUtil.message.success(response.message)
                   this.dialogFormVisible = false;
                   this.sysDictDataList();
                 } else {
-                  this.$message({
-                    type: "success",
-                    message: response.data
-                  });
+                  this.$commonUtil.message.error(response.message)
                 }
               });
             } else {
               addSysDictData(this.form).then(response => {
                 if (response.code == this.$ECode.SUCCESS) {
-                  this.$message({
-                    type: "success",
-                    message: response.data
-                  });
+                  this.$commonUtil.message.success(response.message)
                   this.dialogFormVisible = false;
                   this.sysDictDataList();
                 } else {
-                  this.$message({
-                    type: "error",
-                    message: response.data
-                  });
+                  this.$commonUtil.message.error(response.message)
                 }
               });
             }

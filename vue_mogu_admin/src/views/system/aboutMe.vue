@@ -215,7 +215,6 @@ export default {
     getMeInfo: function() {
       var getMeParams = new URLSearchParams();
       getMe(getMeParams).then(response => {
-        console.log("得到的用户列表", response)
         if (response.code == this.$ECode.SUCCESS) {
           this.form = response.data;
           this.fileIds = this.form.avatar;
@@ -232,9 +231,7 @@ export default {
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          if (response.data) {
-            this.systemConfig = response.data;
-          }
+          this.systemConfig = response.data;
         }
       });
     },
@@ -245,7 +242,6 @@ export default {
       var params = {};
       params.dictType = 'sys_user_sex';
       getListByDictType(params).then(response => {
-        console.log('得到的字典', response)
         if (response.code == this.$ECode.SUCCESS) {
           this.genderDictList = response.data.list;
         }
@@ -280,7 +276,7 @@ export default {
               console.log(response);
               this.$notify({
                 title: "成功",
-                message: "保存成功！",
+                message: response.message,
                 type: "success"
               });
             });
@@ -296,7 +292,7 @@ export default {
             console.log(response);
             this.$notify({
               title: "成功",
-              message: "保存成功！",
+              message: response.message,
               type: "success"
             });
           });
@@ -330,14 +326,14 @@ export default {
                   if (response.code == this.$ECode.SUCCESS) {
                     this.$notify({
                       title: "成功",
-                      message: response.data,
+                      message: response.message,
                       type: "success"
                     });
                     this.cancel(type);
                   } else {
                     this.$notify.error({
                       title: "警告",
-                      message: response.data
+                      message: response.message
                     });
                   }
                 });

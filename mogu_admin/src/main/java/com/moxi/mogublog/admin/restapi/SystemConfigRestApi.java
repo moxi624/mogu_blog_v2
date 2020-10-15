@@ -34,7 +34,7 @@ public class SystemConfigRestApi {
     @ApiOperation(value = "获取系统配置", notes = "获取系统配置")
     @GetMapping("/getSystemConfig")
     public String getSystemConfig() {
-        return ResultUtil.result(SysConf.SUCCESS, systemConfigService.getConfig());
+        return ResultUtil.successWithData(systemConfigService.getConfig());
     }
 
     @AuthorityVerify

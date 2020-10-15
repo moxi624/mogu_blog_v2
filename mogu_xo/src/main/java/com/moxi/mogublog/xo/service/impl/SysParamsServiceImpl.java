@@ -99,7 +99,7 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
         queryWrapper.last(SysConf.LIMIT_ONE);
         SysParams temp = sysParamsService.getOne(queryWrapper);
         if (temp != null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
         SysParams sysParams = new SysParams();
         sysParams.setParamsName(sysParamsVO.getParamsName());
@@ -109,7 +109,7 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
         sysParams.setRemark(sysParamsVO.getRemark());
         sysParams.setSort(sysParamsVO.getSort());
         sysParams.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
             queryWrapper.last(SysConf.LIMIT_ONE);
             SysParams temp = sysParamsService.getOne(queryWrapper);
             if (temp != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
         sysParams.setParamsName(sysParamsVO.getParamsName());
@@ -136,7 +136,7 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
         sysParams.updateById();
         // 清空Redis中存在的配置
         redisUtil.delete(RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + sysParamsVO.getParamsKey());
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -156,9 +156,9 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
             sysParamsService.updateBatchById(sysParamsList);
             // 清空Redis中的配置
             redisUtil.delete(redisKeys);
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 }

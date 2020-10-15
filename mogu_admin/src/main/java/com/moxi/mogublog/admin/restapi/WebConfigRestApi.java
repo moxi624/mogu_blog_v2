@@ -35,7 +35,7 @@ public class WebConfigRestApi {
     @ApiOperation(value = "获取网站配置", notes = "获取网站配置")
     @GetMapping("/getWebConfig")
     public String getWebConfig() {
-        return ResultUtil.result(SysConf.SUCCESS, webConfigService.getWebConfig());
+        return ResultUtil.successWithData(webConfigService.getWebConfig());
     }
 
     @AuthorityVerify

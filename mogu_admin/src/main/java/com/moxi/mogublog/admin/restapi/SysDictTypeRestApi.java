@@ -50,7 +50,7 @@ public class SysDictTypeRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取字典类型列表");
-        return ResultUtil.result(SysConf.SUCCESS, sysDictTypeService.getPageList(sysDictTypeVO));
+        return ResultUtil.successWithData(sysDictTypeService.getPageList(sysDictTypeVO));
     }
 
     @AvoidRepeatableCommit

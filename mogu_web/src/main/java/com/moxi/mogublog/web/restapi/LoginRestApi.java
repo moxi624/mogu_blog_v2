@@ -73,7 +73,6 @@ public class LoginRestApi {
         if (!isOpenLoginType){
             return ResultUtil.result(SysConf.ERROR, "后台未开启该登录方式!");
         }
-
         String userName = userVO.getUserName();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userName).or().eq(SQLConf.EMAIL, userName));
@@ -82,11 +81,9 @@ public class LoginRestApi {
         if (user == null || EStatus.DISABLED == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户不存在");
         }
-
         if (EStatus.FREEZE == user.getStatus()) {
             return ResultUtil.result(SysConf.ERROR, "用户账号未激活");
         }
-
         if (StringUtils.isNotEmpty(user.getPassWord()) && user.getPassWord().equals(MD5Utils.string2MD5(userVO.getPassWord()))) {
             // 更新登录信息
             HttpServletRequest request = RequestHolder.getRequest();
@@ -107,7 +104,6 @@ public class LoginRestApi {
             }
             // 生成token
             String token = StringUtils.getUUID();
-
             // 过滤密码
             user.setPassWord("");
             //将从数据库查询的数据缓存到redis中
@@ -123,6 +119,11 @@ public class LoginRestApi {
     @PostMapping("/register")
     public String register(@Validated({Insert.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
+        // 判断是否开启登录方式
+        Boolean isOpenLoginType = webConfigService.isOpenLoginType(RedisConf.PASSWORD);
+        if (!isOpenLoginType){
+            return ResultUtil.result(SysConf.ERROR, "后台未开启注册功能!");
+        }
         if (userVO.getUserName().length() < Constants.NUM_FIVE || userVO.getUserName().length() >= Constants.NUM_TWENTY || userVO.getPassWord().length() < Constants.NUM_FIVE || userVO.getPassWord().length() >= Constants.NUM_TWENTY) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }

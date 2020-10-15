@@ -110,6 +110,5 @@ public class AdminVO extends BaseVO<AdminVO> {
     /**
      * 最大网盘容量
      */
-    @LongNotNull(groups = {Update.class})
     private Long maxStorageSize;
 }

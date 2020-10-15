@@ -26,14 +26,10 @@ public class MailListener {
     @RabbitListener(queues = "mogu.email")
     public void sendMail(Map<String, String> map) {
         if (map != null) {
-            try {
-                sendMailUtils.sendEmail(
-                        map.get("receiver"),
-                        map.get("text")
-                );
-            } catch (MessagingException e) {
-                log.error("发送邮件失败！");
-            }
+            sendMailUtils.sendEmail(
+                    map.get("receiver"),
+                    map.get("text")
+            );
         }
     }
 }

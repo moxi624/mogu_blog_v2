@@ -20,6 +20,7 @@ import com.moxi.mougblog.base.enums.EPublish;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,24 +30,20 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * <p>
  * 字典数据 服务实现类
- * </p>
  *
  * @author 陌溪
- * @since 2020年2月15日21:09:15
+ * @date 2020年2月15日21:09:15
  */
 @Service
 public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, SysDictData> implements SysDictDataService {
 
     @Autowired
-    SysDictDataService sysDictDataService;
-
+    private SysDictDataService sysDictDataService;
     @Autowired
-    SysDictTypeService sysDictTypeService;
-
+    private SysDictTypeService sysDictTypeService;
     @Autowired
-    RedisUtil redisUtil;
+    private RedisUtil redisUtil;
 
     @Override
     public IPage<SysDictData> getPageList(SysDictDataVO sysDictDataVO) {
@@ -78,7 +75,6 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         dictTypeList.forEach(item -> {
             dictTypeMap.put(item.getUid(), item);
         });
-
         sysDictDataList.forEach(item -> {
             item.setSysDictType(dictTypeMap.get(item.getDictTypeUid()));
         });
@@ -98,22 +94,14 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         queryWrapper.last(SysConf.LIMIT_ONE);
         SysDictData temp = sysDictDataService.getOne(queryWrapper);
         if (temp != null) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
         SysDictData sysDictData = new SysDictData();
-        sysDictData.setDictLabel(sysDictDataVO.getDictLabel());
-        sysDictData.setDictTypeUid(sysDictDataVO.getDictTypeUid());
-        sysDictData.setDictValue(sysDictDataVO.getDictValue());
-        sysDictData.setIsDefault(sysDictDataVO.getIsDefault());
-        sysDictData.setCssClass(sysDictDataVO.getCssClass());
-        sysDictData.setListClass(sysDictDataVO.getListClass());
-        sysDictData.setRemark(sysDictDataVO.getRemark());
-        sysDictData.setIsPublish(sysDictDataVO.getIsPublish());
-        sysDictData.setSort(sysDictDataVO.getSort());
+        // 插入字典数据，忽略状态位【使用Spring工具类提供的深拷贝，避免出现大量模板代码】
+        BeanUtils.copyProperties(sysDictDataVO, sysDictData, SysConf.STATUS);
         sysDictData.setCreateByUid(adminUid);
-        sysDictData.setUpdateByUid(adminUid);
         sysDictData.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -130,20 +118,11 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
             queryWrapper.last(SysConf.LIMIT_ONE);
             SysDictData temp = sysDictDataService.getOne(queryWrapper);
             if (temp != null) {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
-
-        sysDictData.setDictLabel(sysDictDataVO.getDictLabel());
-        sysDictData.setDictTypeUid(sysDictDataVO.getDictTypeUid());
-        sysDictData.setDictValue(sysDictDataVO.getDictValue());
-        sysDictData.setIsDefault(sysDictDataVO.getIsDefault());
-        sysDictData.setCssClass(sysDictDataVO.getCssClass());
-        sysDictData.setListClass(sysDictDataVO.getListClass());
-        sysDictData.setRemark(sysDictDataVO.getRemark());
-        sysDictData.setSort(sysDictDataVO.getSort());
-        sysDictData.setIsPublish(sysDictDataVO.getIsPublish());
-        sysDictData.setCreateByUid(adminUid);
+        // 更新数据字典【使用Spring工具类提供的深拷贝，避免出现大量模板代码】
+        BeanUtils.copyProperties(sysDictDataVO, sysDictData, SysConf.STATUS, SysConf.UID);
         sysDictData.setUpdateByUid(adminUid);
         sysDictData.setUpdateTime(new Date());
         sysDictData.updateById();
@@ -151,7 +130,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         // 获取Redis中特定前缀
         Set<String> keys = redisUtil.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         redisUtil.delete(keys);
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -159,31 +138,26 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         HttpServletRequest request = RequestHolder.getRequest();
         String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
         if (sysDictDataVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         sysDictDataVOList.forEach(item -> {
             uids.add(item.getUid());
         });
-
         Collection<SysDictData> sysDictDataList = sysDictDataService.listByIds(uids);
-
         sysDictDataList.forEach(item -> {
             item.setStatus(EStatus.DISABLED);
             item.setUpdateTime(new Date());
             item.setUpdateByUid(adminUid);
         });
-
         Boolean save = sysDictDataService.updateBatchById(sysDictDataList);
-
         // 获取Redis中特定前缀
         Set<String> keys = redisUtil.keys(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + "*");
         redisUtil.delete(keys);
-
         if (save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 
@@ -234,31 +208,25 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         dictTypeList.forEach(item -> {
             //从Redis中获取内容
             String jsonResult = redisUtil.get(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item);
-
             //判断redis中是否有字典
             if (StringUtils.isNotEmpty(jsonResult)) {
-
                 Map<String, Object> tempMap = JsonUtils.jsonToMap(jsonResult);
                 map.put(item, tempMap);
-
             } else {
                 // 如果redis中没有该字典，那么从数据库中查询
                 tempTypeList.add(item);
             }
         });
-
         // 表示数据全部从redis中获取到了，直接返回即可
         if (tempTypeList.size() <= 0) {
             return map;
         }
-
         // 查询 dict_type 在 tempTypeList中的
         QueryWrapper<SysDictType> queryWrapper = new QueryWrapper<>();
         queryWrapper.in(SQLConf.DICT_TYPE, tempTypeList);
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
         List<SysDictType> sysDictTypeList = sysDictTypeService.list(queryWrapper);
-
         sysDictTypeList.forEach(item -> {
             QueryWrapper<SysDictData> sysDictDataQueryWrapper = new QueryWrapper<>();
             sysDictDataQueryWrapper.eq(SQLConf.IS_PUBLISH, EPublish.PUBLISH);
@@ -266,7 +234,6 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
             sysDictDataQueryWrapper.eq(SQLConf.DICT_TYPE_UID, item.getUid());
             sysDictDataQueryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
             List<SysDictData> list = sysDictDataService.list(sysDictDataQueryWrapper);
-
             String defaultValue = null;
             for (SysDictData sysDictData : list) {
                 // 获取默认值
@@ -275,13 +242,10 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
                     break;
                 }
             }
-
             Map<String, Object> result = new HashMap<>();
             result.put(SysConf.DEFAULT_VALUE, defaultValue);
             result.put(SysConf.LIST, list);
-
             map.put(item.getDictType(), result);
-
             redisUtil.setEx(SysConf.REDIS_DICT_TYPE + SysConf.REDIS_SEGMENTATION + item.getDictType(), JsonUtils.objectToJson(result).toString(), 1, TimeUnit.DAYS);
         });
         return map;

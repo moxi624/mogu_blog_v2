@@ -44,7 +44,7 @@ public class SystemRestApi {
     @ApiOperation(value = "获取我的信息", notes = "获取我的信息")
     @GetMapping("/getMe")
     public String getMe() {
-        return ResultUtil.result(SysConf.SUCCESS, adminService.getMe());
+        return ResultUtil.successWithData(adminService.getMe());
     }
 
     @AuthorityVerify

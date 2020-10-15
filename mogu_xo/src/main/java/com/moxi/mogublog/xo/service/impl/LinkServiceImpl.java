@@ -38,7 +38,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
     private LinkMapper linkMapper;
     @Autowired
     private LinkService linkService;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private WebUtil webUtil;
@@ -92,7 +92,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
             //获取图片
             if (StringUtils.isNotEmpty(item.getFileUid())) {
                 List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getFileUid(), Constants.SYMBOL_COMMA);
-                List<String> pictureListTemp = new ArrayList<String>();
+                List<String> pictureListTemp = new ArrayList<>();
 
                 pictureUidsTemp.forEach(picture -> {
                     pictureListTemp.add(pictureMap.get(picture));
@@ -118,7 +118,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.setStatus(EStatus.ENABLE);
         link.setUpdateTime(new Date());
         link.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.setFileUid(linkVO.getFileUid());
         link.setUpdateTime(new Date());
         link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         link.setStatus(EStatus.DISABLED);
         link.setUpdateTime(new Date());
         link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
@@ -158,22 +158,22 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         List<Link> list = pageList.getRecords();
         Link maxSort = list.get(0);
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(link.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.OPERATION_FAIL);
         }
         Integer sortCount = maxSort.getSort() + 1;
         link.setSort(sortCount);
         link.setUpdateTime(new Date());
         link.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
     public String addLinkCount(String uid) {
         if (StringUtils.isEmpty(uid)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         Link link = linkService.getById(uid);
         if (link != null) {
@@ -181,8 +181,8 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
             link.setClickCount(count);
             link.updateById();
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 }

@@ -47,7 +47,7 @@ public class LinkRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取友链列表");
-        return ResultUtil.result(SysConf.SUCCESS, linkService.getPageList(linkVO));
+        return ResultUtil.successWithData(linkService.getPageList(linkVO));
     }
 
     @AvoidRepeatableCommit

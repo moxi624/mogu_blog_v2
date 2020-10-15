@@ -49,7 +49,7 @@ public class SysParamsRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         log.info("获取参数配置列表");
-        return ResultUtil.result(SysConf.SUCCESS, sysParamsService.getPageList(SysParamsVO));
+        return ResultUtil.successWithData(sysParamsService.getPageList(SysParamsVO));
     }
 
     @AvoidRepeatableCommit

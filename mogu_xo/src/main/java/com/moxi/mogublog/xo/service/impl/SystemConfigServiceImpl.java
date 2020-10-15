@@ -67,26 +67,26 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
                 redisUtil.delete(keys);
             }
         });
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 
     @Override
     public String editSystemConfig(SystemConfigVO systemConfigVO) {
         // 图片必须选择上传到一个区域
         if (EOpenStatus.CLOSE.equals(systemConfigVO.getUploadLocal()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadQiNiu())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PICTURE_MUST_BE_SELECT_AREA);
+            return ResultUtil.errorWithMessage(MessageConf.PICTURE_MUST_BE_SELECT_AREA);
         }
         // 图片显示优先级为本地优先，必须开启图片上传本地
         if (EOpenStatus.CLOSE.equals(systemConfigVO.getPicturePriority()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadLocal())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.MUST_BE_OPEN_LOCAL_UPLOAD);
+            return ResultUtil.errorWithMessage(MessageConf.MUST_BE_OPEN_LOCAL_UPLOAD);
         }
         // 图片显示优先级为七牛云优先，必须开启图片上传七牛云
         if (EOpenStatus.OPEN.equals(systemConfigVO.getPicturePriority()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadQiNiu())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.MUST_BE_OPEN_QI_NIU_UPLOAD);
+            return ResultUtil.errorWithMessage(MessageConf.MUST_BE_OPEN_QI_NIU_UPLOAD);
         }
         // 开启Email邮件通知时，必须保证Email字段不为空
         if (EOpenStatus.OPEN.equals(systemConfigVO.getStartEmailNotification()) && StringUtils.isEmpty(systemConfigVO.getEmail())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.MUST_BE_SET_EMAIL);
+            return ResultUtil.errorWithMessage(MessageConf.MUST_BE_SET_EMAIL);
         }
         if (StringUtils.isEmpty(systemConfigVO.getUid())) {
             SystemConfig systemConfig = new SystemConfig();
@@ -99,10 +99,8 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             BeanUtils.copyProperties(systemConfigVO, systemConfig, SysConf.STATUS, SysConf.UID);
             systemConfig.updateById();
         }
-
         // 更新系统配置成功后，需要删除Redis中的系统配置
         redisUtil.delete(RedisConf.SYSTEM_CONFIG);
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 }
