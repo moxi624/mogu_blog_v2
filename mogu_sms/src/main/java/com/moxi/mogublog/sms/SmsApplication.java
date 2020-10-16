@@ -18,9 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.commons.config.feign",
         "com.moxi.mogublog.commons.fallback",
-        "com.moxi.mogublog.sms.config",
-        "com.moxi.mogublog.sms.listener",
-        "com.moxi.mogublog.sms.util",
+        "com.moxi.mogublog.sms",
 })
 public class SmsApplication {
 

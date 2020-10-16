@@ -24,11 +24,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
         "com.moxi.mogublog.commons.config.feign",
         "com.moxi.mogublog.commons.handler",
         "com.moxi.mogublog.utils",
-        "com.moxi.mogublog.search.config",
-        "com.moxi.mogublog.search.mapper",
-        "com.moxi.mogublog.search.repository",
-        "com.moxi.mogublog.search.restapi",
-        "com.moxi.mogublog.search.service"
+        "com.moxi.mogublog.search"
 })
 public class SearchApplication {
     public static void main(String[] args) {

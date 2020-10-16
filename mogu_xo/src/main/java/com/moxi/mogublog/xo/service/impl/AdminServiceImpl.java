@@ -23,6 +23,7 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -332,17 +333,9 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
             return ResultUtil.errorWithMessage(MessageConf.INVALID_TOKEN);
         }
         Admin admin = new Admin();
-        admin.setUid(adminUid);
-        admin.setAvatar(adminVO.getAvatar());
-        admin.setNickName(adminVO.getNickName());
-        admin.setGender(adminVO.getGender());
-        admin.setEmail(adminVO.getEmail());
-        admin.setQqNumber(adminVO.getQqNumber());
-        admin.setGithub(adminVO.getGithub());
-        admin.setGitee(adminVO.getGitee());
-        admin.setOccupation(adminVO.getOccupation());
-        admin.setSummary(adminVO.getSummary());
-        admin.setPersonResume(adminVO.getPersonResume());
+        // 【使用Spring工具类提供的深拷贝，减少大量模板代码】
+        BeanUtils.copyProperties(adminVO, admin, SysConf.STATUS);
+        admin.setUpdateTime(new Date());
         admin.updateById();
         return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }

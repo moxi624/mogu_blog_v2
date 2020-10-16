@@ -27,10 +27,7 @@ import java.util.TimeZone;
         "com.moxi.mogublog.commons.config",
         "com.moxi.mogublog.commons.fallback",
         "com.moxi.mogublog.utils",
-        "com.moxi.mogublog.admin.annotion",
-        "com.moxi.mogublog.admin.security",
-        "com.moxi.mogublog.admin.config",
-        "com.moxi.mogublog.admin.restapi",
+        "com.moxi.mogublog.admin",
         "com.moxi.mogublog.xo.utils",
         "com.moxi.mogublog.xo.service"
 })

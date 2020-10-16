@@ -21,11 +21,8 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
         "com.moxi.mogublog.commons.config.feign",
         "com.moxi.mogublog.commons.handler",
         "com.moxi.mogublog.commons.config.redis",
-        "com.moxi.mogublog.picture.config",
         "com.moxi.mogublog.utils",
-        "com.moxi.mogublog.picture.util",
-        "com.moxi.mogublog.picture.restapi",
-        "com.moxi.mogublog.picture.service"})
+        "com.moxi.mogublog.picture"})
 public class PictureApplication {
 
     public static void main(String[] args) {

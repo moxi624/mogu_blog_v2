@@ -21,13 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {
-        "com.moxi.mogublog.spider.pipeline",
-        "com.moxi.mogublog.spider.config",
-        "com.moxi.mogublog.spider.task",
-        "com.moxi.mogublog.spider.task",
-        "com.moxi.mogublog.spider.processer",
-        "com.moxi.mogublog.spider.restapi",
-        "com.moxi.mogublog.spider.service"})
+        "com.moxi.mogublog.spider"})
 public class SpiderApplication {
 
     public static void main(String[] args) {

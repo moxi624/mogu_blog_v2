@@ -29,12 +29,7 @@ import java.util.TimeZone;
         "com.moxi.mogublog.commons.fallback",
         "com.moxi.mogublog.utils",
         "com.moxi.mogublog.xo.utils",
-        "com.moxi.mogublog.web.utils",
-        "com.moxi.mogublog.web.log",
-        "com.moxi.mogublog.web.requestLimit",
-        "com.moxi.mogublog.web.config",
-        "com.moxi.mogublog.web.restapi",
-        "com.moxi.mogublog.web.controller",
+        "com.moxi.mogublog.web",
         "com.moxi.mogublog.xo.service"})
 public class WebApplication {
 
