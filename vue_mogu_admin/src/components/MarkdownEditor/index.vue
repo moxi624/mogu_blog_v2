@@ -115,7 +115,9 @@
       initData: function () {
         var that = this
         this.$nextTick(() => {
-          that.vditor.setValue("")
+          if(that.vditor.vditor.lute) {
+            that.vditor.setValue("")
+          }
         });
       }
     }

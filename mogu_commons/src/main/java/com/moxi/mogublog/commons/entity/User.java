@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.Date;
  * @since 2018-09-04
  */
 @Data
+@ToString
 @TableName("t_user")
 public class User extends SuperEntity<User> {
 

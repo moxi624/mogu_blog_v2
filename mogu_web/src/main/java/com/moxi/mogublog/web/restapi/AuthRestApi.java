@@ -229,7 +229,7 @@ public class AuthRestApi {
         } else {
             user.setUuid(data.get(SysConf.UUID).toString());
             user.setSource(data.get(SysConf.SOURCE).toString());
-            String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
+            String userName = PROJECT_NAME_EN.concat(Constants.SYMBOL_UNDERLINE).concat(user.getSource()).concat(Constants.SYMBOL_UNDERLINE).concat(user.getUuid());
             user.setUserName(userName);
             // 如果昵称为空，那么直接设置用户名
             if (StringUtils.isEmpty(user.getNickName())) {
@@ -237,6 +237,8 @@ public class AuthRestApi {
             }
             // 默认密码
             user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+            // 设置是否开启评论邮件通知【关闭】
+            user.setStartEmailNotification(EOpenStatus.CLOSE_STATUS);
             user.insert();
         }
         // 过滤密码
@@ -330,7 +332,6 @@ public class AuthRestApi {
         if (resultMap != null) {
             String sessionKey = resultMap.get("session_key").toString();
             String userInfo = UniappUtils.decryptData(encryptDataB64, sessionKey, ivB64);
-            log.info("解析加密数据");
             log.info(userInfo);
             Map<String, Object> userInfoMap = JsonUtils.jsonToMap(userInfo);
 
@@ -418,14 +419,12 @@ public class AuthRestApi {
                 }
                 // 默认密码
                 user.setPassWord(MD5Utils.string2MD5(DEFAULE_PWD));
+                // 设置是否开启评论邮件通知【关闭】
                 user.insert();
-                log.info("向数据库插入一条新的用户信息");
-                log.info(JsonUtils.objectToJson(user));
+                log.info("插入用户信息: {}", user);
             }
-
-            // 过滤密码
+            // 过滤密码【因需要传递到前台，数据脱敏】
             user.setPassWord("");
-
             if (user != null) {
                 //将从数据库查询的数据缓存到redis中
                 stringRedisTemplate.opsForValue().set(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + accessToken, JsonUtils.objectToJson(user), userTokenSurvivalTime, TimeUnit.HOURS);
@@ -490,11 +489,7 @@ public class AuthRestApi {
 
     /**
      * 获取关于我的信息
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年11月6日下午8:57:48
      */
-
     @ApiOperation(value = "编辑用户信息", notes = "编辑用户信息")
     @PostMapping("/editUser")
     public String editUser(HttpServletRequest request, @RequestBody UserVO userVO) {
@@ -504,6 +499,10 @@ public class AuthRestApi {
         String userUid = request.getAttribute(SysConf.USER_UID).toString();
         String token = request.getAttribute(SysConf.TOKEN).toString();
         User user = userService.getById(userUid);
+        if (user == null) {
+            return ResultUtil.result(SysConf.ERROR, "编辑失败, 未找到该用户!");
+        }
+        log.info("获取到的用户: {}", user);
         user.setNickName(userVO.getNickName());
         user.setAvatar(userVO.getAvatar());
         user.setBirthday(userVO.getBirthday());

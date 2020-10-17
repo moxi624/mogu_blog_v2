@@ -836,8 +836,8 @@ export default {
         that.form = this.getFormObject();
 
         that.$nextTick(() => {
-          //DOM现在更新了
-          that.$refs.editor.initData(); //设置富文本内容
+          //初始化内容
+          that.$refs.editor.initData();
         });
 
         that.tagValue = [];
