@@ -452,18 +452,16 @@
             var params = {};
             params.uid = row.uid;
             deleteUser(params).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              that.userList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                that.userList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消删除")
           });
       },
       handleUpdatePassword: function (row) {
@@ -477,18 +475,16 @@
             var params = {};
             params.uid = row.uid;
             resetUserPassword(params).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              that.userList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                that.userList();
+              } else {
+                this.$commonUtil.message.success(response.message)
+              }
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消重置")
           });
       },
       handleCurrentChange: function (val) {
@@ -505,7 +501,7 @@
                 if (response.code == this.$ECode.SUCCESS) {
                   this.$notify({
                     title: "成功",
-                    message: "保存成功！",
+                    message: response.message,
                     type: "success"
                   });
                   this.dialogFormVisible = false
@@ -513,7 +509,7 @@
                 } else {
                   this.$notify.error({
                     title: "失败",
-                    message: response.data
+                    message: response.message
                   });
                 }
               });
@@ -522,7 +518,7 @@
                 if (response.code == this.$ECode.SUCCESS) {
                   this.$notify({
                     title: "成功",
-                    message: "保存成功！",
+                    message: response.message,
                     type: "success"
                   });
                   this.dialogFormVisible = false
@@ -530,7 +526,7 @@
                 } else {
                   this.$notify.error({
                     title: "失败",
-                    message: response.data
+                    message: response.message
                   });
                 }
               });

@@ -63,9 +63,9 @@ public class HandlerExceptionResolver implements org.springframework.web.servlet
             // 自定义更新操作相关的异常
             errorCode = ((UpdateException) exception).getCode();
             message = exception.getMessage();
-        } else if (exception instanceof AddException) {
+        } else if (exception instanceof InsertException) {
             // 自定义新增操作相关的异常
-            errorCode = ((AddException) exception).getCode();
+            errorCode = ((InsertException) exception).getCode();
             message = exception.getMessage();
         } else if (exception instanceof DeleteException) {
             // 自定义删除操作相关的异常

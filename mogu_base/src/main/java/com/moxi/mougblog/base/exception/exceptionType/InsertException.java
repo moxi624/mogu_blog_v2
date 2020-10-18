@@ -11,39 +11,39 @@ import java.io.Serializable;
  * @author 陌溪
  * @date 2020年9月9日16:41:19
  */
-public class AddException extends RuntimeException implements Serializable {
+public class InsertException extends RuntimeException implements Serializable {
 
     /**
      * 异常状态码
      */
     private String code;
 
-    public AddException() {
+    public InsertException() {
         super(BaseMessageConf.INSERT_DEFAULT_ERROR);
         this.code = ErrorCode.INSERT_DEFAULT_ERROR;
     }
 
-    public AddException(String message, Throwable cause) {
+    public InsertException(String message, Throwable cause) {
         super(message, cause);
         this.code = ErrorCode.INSERT_DEFAULT_ERROR;
     }
 
-    public AddException(String code, String message, Throwable cause) {
+    public InsertException(String code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;
     }
 
-    public AddException(String message) {
+    public InsertException(String message) {
         super(message);
         this.code = ErrorCode.INSERT_DEFAULT_ERROR;
     }
 
-    public AddException(String code, String message) {
+    public InsertException(String code, String message) {
         super(message);
         this.code = code;
     }
 
-    public AddException(Throwable cause) {
+    public InsertException(Throwable cause) {
         super(cause);
     }
 

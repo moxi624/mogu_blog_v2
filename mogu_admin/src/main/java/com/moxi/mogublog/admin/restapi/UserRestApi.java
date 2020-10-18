@@ -45,8 +45,8 @@ public class UserRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        log.info("获取用户列表");
-        return ResultUtil.result(SysConf.SUCCESS, userService.getPageList(userVO));
+        log.info("获取用户列表: {}", userVO);
+        return ResultUtil.successWithData(userService.getPageList(userVO));
     }
 
     @AuthorityVerify
@@ -57,6 +57,7 @@ public class UserRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("新增用户: {}", userVO);
         return userService.addUser(userVO);
     }
 
@@ -65,9 +66,9 @@ public class UserRestApi {
     @ApiOperation(value = "编辑用户", notes = "编辑用户", response = String.class)
     @PostMapping("/edit")
     public String edit(@Validated({Update.class}) @RequestBody UserVO userVO, BindingResult result) {
-
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑用户: {}", userVO);
         return userService.editUser(userVO);
     }
 
@@ -79,6 +80,7 @@ public class UserRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("删除用户: {}", userVO);
         return userService.deleteUser(userVO);
     }
 
@@ -90,6 +92,7 @@ public class UserRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("重置用户密码: {}", userVO);
         return userService.resetUserPassword(userVO);
     }
 }

@@ -16,8 +16,11 @@ import com.moxi.mogublog.xo.service.UserService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.UserVO;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.InsertException;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.Constants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +50,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private SysParamsService sysParamsService;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @Override
@@ -61,8 +65,8 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
                 exist = true;
             }
         } else {
-            System.out.println("未获取到uuid或source");
-            return null;
+            log.error("未获取到uuid或source");
+            throw new InsertException(ErrorCode.INSERT_DEFAULT_ERROR, MessageConf.INSERT_DEFAULT_ERROR);
         }
 
         if (data.get(SysConf.EMAIL) != null) {
@@ -80,12 +84,13 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         if (exist) {
             user.updateById();
         } else {
-            /*初始化*/
             user.setUuid(data.get(SysConf.UUID).toString());
             user.setSource(data.get(SysConf.SOURCE).toString());
             user.setUserName("mg".concat(user.getSource()).concat(user.getUuid()));
-            Integer randNum = (int) (Math.random() * (999999) + 1);//产生(0,999999]之间的随机数
-            String workPassWord = String.format("%06d", randNum);//进行六位数补全
+            //产生(0,999999]之间的随机数
+            Integer randNum = (int) (Math.random() * (999999) + 1);
+            //进行六位数补全
+            String workPassWord = String.format("%06d", randNum);
             user.setPassWord(workPassWord);
             user.insert();
         }
@@ -97,7 +102,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseSQLConf.UUID, uuid).eq(BaseSQLConf.SOURCE, source);
         return userService.getOne(queryWrapper);
-
     }
 
     @Override
@@ -118,7 +122,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setOs(os);
         user.setBrowser(browser);
         user.setLastLoginTime(new Date());
-
         //从Redis中获取IP来源
         String jsonResult = stringRedisTemplate.opsForValue().get(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip);
         if (StringUtils.isEmpty(jsonResult)) {
@@ -139,7 +142,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         if (ids == null || ids.size() == 0) {
             return userList;
         }
-
         Collection<User> userCollection = userService.listByIds(ids);
         userCollection.forEach(item -> {
             userList.add(item);
@@ -191,8 +193,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         });
 
         for (User item : list) {
-
-
             //获取图片
             if (StringUtils.isNotEmpty(item.getAvatar())) {
                 List<String> pictureUidsTemp = StringUtils.changeStringToString(item.getAvatar(), SysConf.FILE_SEGMENTATION);
@@ -220,7 +220,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setPassWord(MD5Utils.string2MD5(defaultPassword));
         user.setSource("MOGU");
         user.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setCommentStatus(userVO.getCommentStatus());
         user.setUpdateTime(new Date());
         user.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -249,7 +249,7 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setStatus(EStatus.DISABLED);
         user.setUpdateTime(new Date());
         user.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
@@ -259,6 +259,6 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         user.setPassWord(MD5Utils.string2MD5(defaultPassword));
         user.setUpdateTime(new Date());
         user.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 }

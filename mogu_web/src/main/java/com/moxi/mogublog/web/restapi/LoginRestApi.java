@@ -133,6 +133,7 @@ public class LoginRestApi {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.and(wrapper -> wrapper.eq(SQLConf.USER_NAME, userVO.getUserName()).or().eq(SQLConf.EMAIL, userVO.getEmail()));
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
+        queryWrapper.last(SysConf.LIMIT_ONE);
         User user = userService.getOne(queryWrapper);
         if (user != null) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.ENTITY_EXIST);
