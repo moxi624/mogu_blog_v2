@@ -3,6 +3,8 @@ package com.moxi.mogublog.picture.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.FileSort;
+import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
@@ -14,6 +16,9 @@ import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.InsertException;
+import com.moxi.mougblog.base.global.Constants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.entity.ContentType;
@@ -31,11 +36,9 @@ import java.net.URLConnection;
 import java.util.*;
 
 /**
- * <p>
  * 七牛云实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2020年1月20日20:05:45
  */
 @Service
@@ -52,6 +55,8 @@ public class QiniuServiceImpl implements QiniuService {
     //获取上传路径
     @Value(value = "${file.upload.path}")
     private String path;
+    @Autowired
+    QiniuUtil qiniuUtil;
     /**
      * 获取基本路径
      */
@@ -118,14 +123,11 @@ public class QiniuServiceImpl implements QiniuService {
         if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, "未读取到token");
         }
-
         String[] params = token.split("\\?url=");
-
         // 七牛云配置
         Map<String, String> qiNiuConfig = new HashMap<>();
-
         // 从Redis中获取七牛云配置文件
-        Map<String, String> resultMap = feignUtil.getQiNiuConfig(token);
+        Map<String, String> resultMap = feignUtil.getSystemConfigMap(token);
 
         String uploadQiNiu = resultMap.get(SysConf.UPLOAD_QI_NIU);
         String uploadLocal = resultMap.get(SysConf.UPLOAD_LOCAL);
@@ -367,46 +369,10 @@ public class QiniuServiceImpl implements QiniuService {
 
     @Override
     public Object fileUpload(HttpServletRequest request) {
-
         String token = request.getParameter(SysConf.TOKEN);
-
         // 从Redis中获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
-
-        // 七牛云配置
-        Map<String, String> qiNiuConfig = new HashMap<>();
-
-        if (qiNiuConfig == null) {
-            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
-        } else {
-            String uploadQiNiu = qiNiuResultMap.get(SysConf.UPLOAD_QI_NIU);
-            String uploadLocal = qiNiuResultMap.get(SysConf.UPLOAD_LOCAL);
-            String localPictureBaseUrl = qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL);
-            String qiNiuPictureBaseUrl = qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL);
-            String qiNiuAccessKey = qiNiuResultMap.get(SysConf.QI_NIU_ACCESS_KEY);
-            String qiNiuSecretKey = qiNiuResultMap.get(SysConf.QI_NIU_SECRET_KEY);
-            String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
-            String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
-
-            if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
-                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
-                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
-            }
-
-            if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
-                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
-            }
-
-            qiNiuConfig.put(SysConf.QI_NIU_ACCESS_KEY, qiNiuAccessKey);
-            qiNiuConfig.put(SysConf.QI_NIU_SECRET_KEY, qiNiuSecretKey);
-            qiNiuConfig.put(SysConf.QI_NIU_BUCKET, qiNiuBucket);
-            qiNiuConfig.put(SysConf.QI_NIU_AREA, qiNiuArea);
-            qiNiuConfig.put(SysConf.UPLOAD_QI_NIU, uploadQiNiu);
-            qiNiuConfig.put(SysConf.UPLOAD_LOCAL, uploadLocal);
-            qiNiuConfig.put(SysConf.PICTURE_PRIORITY, qiNiuResultMap.get(SysConf.PICTURE_PRIORITY));
-            qiNiuConfig.put(SysConf.LOCAL_PICTURE_BASE_URL, qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL));
-            qiNiuConfig.put(SysConf.QI_NIU_PICTURE_BASE_URL, qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL));
-        }
+        Map<String, String> qiNiuResultMap = feignUtil.getSystemConfigMap(token);
+        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuResultMap);
 
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
@@ -449,7 +415,7 @@ public class QiniuServiceImpl implements QiniuService {
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
-                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
+                String result = fileService.batchUploadFile(request, fileData, systemConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
                 if (SysConf.SUCCESS.equals(code)) {
@@ -459,21 +425,15 @@ public class QiniuServiceImpl implements QiniuService {
                         String fileName = picture.get(SysConf.PIC_NAME).toString();
                         map.put(SysConf.UPLOADED, 1);
                         map.put(SysConf.FILE_NAME, fileName);
-
                         // 设置显示方式
-                        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
-
-                            String qiNiuPictureBaseUrl = qiNiuConfig.get(SysConf.QI_NIU_PICTURE_BASE_URL);
+                        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                            String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
                             String qiNiuUrl = qiNiuPictureBaseUrl + picture.get(SysConf.QI_NIU_URL).toString();
-
                             map.put(SysConf.URL, qiNiuUrl);
                         } else {
-
-                            String localPictureBaseUrl = qiNiuConfig.get(SysConf.LOCAL_PICTURE_BASE_URL);
-
+                            String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
                             // 设置图片服务根域名
                             String url = localPictureBaseUrl + picture.get(SysConf.PIC_URL).toString();
-
                             map.put(SysConf.URL, url);
                         }
                     }
@@ -491,46 +451,10 @@ public class QiniuServiceImpl implements QiniuService {
 
     @Override
     public Object imgUpload(HttpServletRequest request) {
-
         String token = request.getParameter(SysConf.TOKEN);
-
         // 从Redis中获取七牛云配置文件
-        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(token);
-
-        // 七牛云配置
-        Map<String, String> qiNiuConfig = new HashMap<>();
-
-        if (qiNiuConfig == null) {
-            return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
-        } else {
-            String uploadQiNiu = qiNiuResultMap.get(SysConf.UPLOAD_QI_NIU);
-            String uploadLocal = qiNiuResultMap.get(SysConf.UPLOAD_LOCAL);
-            String localPictureBaseUrl = qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL);
-            String qiNiuPictureBaseUrl = qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL);
-            String qiNiuAccessKey = qiNiuResultMap.get(SysConf.QI_NIU_ACCESS_KEY);
-            String qiNiuSecretKey = qiNiuResultMap.get(SysConf.QI_NIU_SECRET_KEY);
-            String qiNiuBucket = qiNiuResultMap.get(SysConf.QI_NIU_BUCKET);
-            String qiNiuArea = qiNiuResultMap.get(SysConf.QI_NIU_AREA);
-
-            if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
-                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
-                return ResultUtil.result(SysConf.ERROR, "请先配置七牛云");
-            }
-
-            if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
-                return ResultUtil.result(SysConf.ERROR, "请先配置本地图片域名");
-            }
-
-            qiNiuConfig.put(SysConf.QI_NIU_ACCESS_KEY, qiNiuAccessKey);
-            qiNiuConfig.put(SysConf.QI_NIU_SECRET_KEY, qiNiuSecretKey);
-            qiNiuConfig.put(SysConf.QI_NIU_BUCKET, qiNiuBucket);
-            qiNiuConfig.put(SysConf.QI_NIU_AREA, qiNiuArea);
-            qiNiuConfig.put(SysConf.UPLOAD_QI_NIU, uploadQiNiu);
-            qiNiuConfig.put(SysConf.UPLOAD_LOCAL, uploadLocal);
-            qiNiuConfig.put(SysConf.PICTURE_PRIORITY, qiNiuResultMap.get(SysConf.PICTURE_PRIORITY));
-            qiNiuConfig.put(SysConf.LOCAL_PICTURE_BASE_URL, qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL));
-            qiNiuConfig.put(SysConf.QI_NIU_PICTURE_BASE_URL, qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL));
-        }
+        Map<String, String> qiNiuResultMap = feignUtil.getSystemConfigMap(token);
+        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuResultMap);
 
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> errorMap = new HashMap<>();
@@ -545,13 +469,10 @@ public class QiniuServiceImpl implements QiniuService {
         while (iter.hasNext()) {
             MultipartFile file = multiRequest.getFile(iter.next());
             if (file != null) {
-
                 //获取旧名称
                 String oldName = file.getOriginalFilename();
-
                 //获取扩展名
                 String expandedName = FileUtils.getPicExpandedName(oldName);
-
                 //判断是否是图片
                 if (!af.isPic(expandedName)) {
                     map.put(SysConf.UPLOADED, 0);
@@ -576,7 +497,7 @@ public class QiniuServiceImpl implements QiniuService {
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
-                String result = fileService.uploadImgs(basePath, request, fileData, qiNiuConfig);
+                String result = fileService.batchUploadFile(request, fileData, systemConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
                 if (SysConf.SUCCESS.equals(code)) {
@@ -588,23 +509,16 @@ public class QiniuServiceImpl implements QiniuService {
                         map.put(SysConf.FILE_NAME, fileName);
 
                         // 设置显示方式
-                        if ("1".equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
-
-                            String qiNiuPictureBaseUrl = qiNiuConfig.get(SysConf.QI_NIU_PICTURE_BASE_URL);
+                        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                            String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
                             String qiNiuUrl = picture.get(SysConf.QI_NIU_URL).toString();
-
                             map.put(SysConf.URL, qiNiuPictureBaseUrl + qiNiuUrl);
                         } else {
-
-                            String localPictureBaseUrl = qiNiuConfig.get(SysConf.LOCAL_PICTURE_BASE_URL);
-
+                            String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
                             // 设置图片服务根域名
-
                             String url = localPictureBaseUrl + picture.get(SysConf.PIC_URL).toString();
-
                             map.put(SysConf.URL, url);
                         }
-
                     }
                     return map;
                 } else {
@@ -613,9 +527,120 @@ public class QiniuServiceImpl implements QiniuService {
                     map.put(SysConf.ERROR, errorMap);
                     return map;
                 }
-
             }
         }
         return null;
+    }
+
+    @Override
+    public List<String> batchUploadFile(List<MultipartFile> multipartFileList) throws IOException {
+        List<String> urlList = new ArrayList<>();
+        for (MultipartFile multipartFile: multipartFileList) {
+            urlList.add(this.uploadSingleFile(multipartFile));
+        }
+        return urlList;
+    }
+
+    @Override
+    public String uploadFile(MultipartFile multipartFile) throws IOException {
+        return this.uploadSingleFile(multipartFile);
+    }
+
+    @Override
+    public String uploadPictureByUrl(String itemUrl, SystemConfig systemConfig) {
+        java.io.File dest = null;
+        // 将图片上传到本地服务器中以及七牛云中
+        BufferedOutputStream out = null;
+        FileOutputStream os = null;
+        // 输入流
+        InputStream inputStream = null;
+        //获取新文件名 【默认为jpg】
+        String newFileName = System.currentTimeMillis() + ".jpg";
+        try {
+            // 构造URL
+            URL url = new URL(itemUrl);
+            // 打开连接
+            URLConnection con = url.openConnection();
+            // 设置用户代理
+            con.setRequestProperty("User-agent", "	Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0");
+            // 设置10秒
+            con.setConnectTimeout(10000);
+            con.setReadTimeout(10000);
+            // 当获取的相片无法正常显示的时候，需要给一个默认图片
+            inputStream = con.getInputStream();
+            // 1K的数据缓冲
+            byte[] bs = new byte[1024];
+            // 读取到的数据长度
+            int len;
+            String tempFiles = "temp/" + newFileName;
+            dest = new java.io.File(tempFiles);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            os = new FileOutputStream(dest, true);
+            // 开始读取
+            while ((len = inputStream.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+            FileInputStream fileInputStream = new FileInputStream(dest);
+            MultipartFile fileData = new MockMultipartFile(dest.getName(), dest.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+            out = new BufferedOutputStream(new FileOutputStream(dest));
+            out.write(fileData.getBytes());
+            QiniuUtil qn = new QiniuUtil();
+            // TODO 不关闭流，小图片就无法显示？
+            out.flush();
+            out.close();
+            return qn.uploadQiniu(dest, systemConfig);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new InsertException(ErrorCode.SYSTEM_CONFIG_NOT_EXIST, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
+        } finally {
+            if (dest != null && dest.getParentFile().exists()) {
+                dest.delete();
+            }
+        }
+    }
+
+    /**
+     * 七牛云服务图片上传【上传到七牛云中】
+     * @return
+     */
+    private String uploadSingleFile(MultipartFile multipartFile) throws IOException {
+        BufferedOutputStream out = null;
+        java.io.File dest = null;
+        String url = "";
+        try {
+            HttpServletRequest request = RequestHolder.getRequest();
+            String token = request.getParameter(SysConf.TOKEN);
+            // 从Redis中获取七牛云配置文件
+            SystemConfig systemConfig = feignUtil.getSystemConfig(token);
+            String oldName = multipartFile.getOriginalFilename();
+            //获取扩展名，默认是jpg
+            String picExpandedName = FileUtils.getPicExpandedName(oldName);
+            //获取新文件名
+            String newFileName = System.currentTimeMillis() + Constants.SYMBOL_POINT + picExpandedName;
+
+            // 创建一个临时目录文件
+            String tempFiles = path + "/temp/" + newFileName;
+            dest = new java.io.File(tempFiles);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+
+            out = new BufferedOutputStream(new FileOutputStream(dest));
+            out.write(multipartFile.getBytes());
+            url = qiniuUtil.uploadQiniu(dest, systemConfig);
+        } catch (Exception e) {
+            e.getStackTrace();
+            log.error("文件上传七牛云失败: {}", e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+            if (dest != null && dest.getParentFile().exists()) {
+                dest.delete();
+            }
+        }
+        return url;
     }
 }

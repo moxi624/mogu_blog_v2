@@ -24,6 +24,8 @@ public class ErrorCode {
     public static final String PLEASE_CONFIGURE_SYSTEM_PARAMS = "00106";
     public static final String PLEASE_SET_QI_NIU = "00107";
     public static final String PLEASE_SET_LOCAL = "00108";
+    public static final String PLEASE_SET_MINIO = "00109";
+    public static final String SYSTEM_CONFIG_NOT_EXIST = "00110";
 
 
     //=========================================

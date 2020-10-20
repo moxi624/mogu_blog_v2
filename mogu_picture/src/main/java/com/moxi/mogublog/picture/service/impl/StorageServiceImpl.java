@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.commons.entity.Storage;
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
@@ -12,8 +13,8 @@ import com.moxi.mogublog.picture.mapper.StorageMapper;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
+import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
-import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
@@ -56,6 +57,8 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     private FileService fileService;
     @Autowired
     private QiniuUtil qiniuUtil;
+    @Autowired
+    private FeignUtil feignUtil;
 
     @Override
     public String initStorageSize(String adminUid, Long maxStorageSize) {
@@ -112,6 +115,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     public String uploadFile(NetworkDisk networkDisk, List<MultipartFile> fileDatas) {
         HttpServletRequest request = RequestHolder.getRequest();
         Map<String, String> qiNiuConfig = qiniuUtil.getQiNiuConfig();
+        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuConfig);
         if (qiNiuConfig == null) {
             throw new QueryException(ErrorCode.SYSTEM_CONFIG_IS_NOT_EXIST, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
         }
@@ -137,7 +141,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         }
 
         // 上传文件
-        String result = fileService.uploadImgs(path, request, fileDatas, qiNiuConfig);
+        String result = fileService.batchUploadFile(request, fileDatas, systemConfig);
         List<File> fileList = WebUtils.getAllList(result, File.class);
         List<NetworkDisk> networkDiskList = new ArrayList<>();
 

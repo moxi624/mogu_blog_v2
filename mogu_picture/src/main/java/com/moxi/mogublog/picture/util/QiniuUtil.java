@@ -1,6 +1,7 @@
 package com.moxi.mogublog.picture.util;
 
 import com.google.gson.Gson;
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.utils.StringUtils;
@@ -52,7 +53,7 @@ public class QiniuUtil {
     public String uploadQiniu(File localFilePath, Map<String, String> qiNiuConfig) throws QiniuException {
 
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = setQiNiuArea(qiNiuConfig);
+        Configuration cfg = setQiNiuArea(qiNiuConfig.get(SysConf.QI_NIU_AREA));
         //生成上传凭证，然后准备上传
         String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
         String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
@@ -70,6 +71,32 @@ public class QiniuUtil {
     }
 
     /**
+     * 七牛云上传图片
+     *
+     * @param localFilePath
+     * @return
+     */
+    public String uploadQiniu(File localFilePath, SystemConfig qiNiuConfig) throws QiniuException {
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = setQiNiuArea(qiNiuConfig.getQiNiuArea());
+        //生成上传凭证，然后准备上传
+        String accessKey = qiNiuConfig.getQiNiuAccessKey();
+        String secretKey = qiNiuConfig.getQiNiuSecretKey();
+        String bucket = qiNiuConfig.getQiNiuBucket();
+        //...其他参数参考类注释
+        UploadManager uploadManager = new UploadManager(cfg);
+        String key = StringUtils.getUUID();
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        Response response = uploadManager.put(localFilePath, key, upToken);
+        //解析上传成功的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+        log.info("{七牛图片上传key: " + putRet.key + ",七牛图片上传hash: " + putRet.hash + "}");
+        return putRet.key;
+    }
+
+
+    /**
      * 删除七牛云文件
      *
      * @param fileName
@@ -78,7 +105,7 @@ public class QiniuUtil {
      */
     public int deleteFile(String fileName, Map<String, String> qiNiuConfig) {
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = setQiNiuArea(qiNiuConfig);
+        Configuration cfg = setQiNiuArea(qiNiuConfig.get(SysConf.QI_NIU_AREA));
         //获取上传凭证
         String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
         String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
@@ -106,7 +133,7 @@ public class QiniuUtil {
      */
     public Boolean deleteFileList(List<String> fileNameList, Map<String, String> qiNiuConfig) {
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = setQiNiuArea(qiNiuConfig);
+        Configuration cfg = setQiNiuArea(qiNiuConfig.get(SysConf.QI_NIU_AREA));
         //获取上传凭证
         String accessKey = qiNiuConfig.get(SysConf.QI_NIU_ACCESS_KEY);
         String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
@@ -131,13 +158,10 @@ public class QiniuUtil {
     /**
      * 设置七牛云上传区域（内部方法）
      *
-     * @param qiNiuConfig
+     * @param area
      * @return
      */
-    private Configuration setQiNiuArea(Map<String, String> qiNiuConfig) {
-        //生成上传凭证，然后准备上传
-        String area = qiNiuConfig.get("qiNiuArea");
-
+    private Configuration setQiNiuArea(String area) {
         //构造一个带指定Zone对象的配置类
         Configuration cfg = null;
 
@@ -188,15 +212,15 @@ public class QiniuUtil {
         // 判断是否是web端发送过来的请求【后端发送过来的token长度为32】
         if (SysConf.WEB.equals(platform) || paramsToken.length() == Constants.THIRTY_TWO) {
             // 如果是调用web端获取配置的接口
-            qiNiuResultMap = feignUtil.getQiNiuConfigByWebToken(paramsToken);
+            qiNiuResultMap = feignUtil.getSystemConfigByWebToken(paramsToken);
         } else {
             // 调用admin端获取配置接口
             if (token != null) {
                 // 判断是否是后台过来的请求
-                qiNiuResultMap = feignUtil.getQiNiuConfig(token.toString());
+                qiNiuResultMap = feignUtil.getSystemConfigMap(token.toString());
             } else {
                 // 判断是否是通过params参数传递过来的
-                qiNiuResultMap = feignUtil.getQiNiuConfig(paramsToken);
+                qiNiuResultMap = feignUtil.getSystemConfigMap(paramsToken);
             }
         }
 

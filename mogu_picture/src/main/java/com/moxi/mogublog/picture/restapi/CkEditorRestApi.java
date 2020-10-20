@@ -51,8 +51,8 @@ public class CkEditorRestApi {
      */
     @ApiOperation(value = "图像中的图片上传", notes = "图像中的图片上传")
     @RequestMapping(value = "/imgUpload", method = RequestMethod.POST)
-    public Object imgUpload(HttpServletRequest request) throws IOException {
-        return qiniuService.imgUpload(request);
+    public Object imgUpload(HttpServletRequest request){
+        return fileService.ckeditorUploadFile(request);
     }
 
     /**
@@ -63,7 +63,7 @@ public class CkEditorRestApi {
      */
     @ApiOperation(value = "复制的图片上传", notes = "复制的图片上传")
     @RequestMapping(value = "/imgUploadByUrl", method = RequestMethod.POST)
-    public synchronized Object imgUploadByUrl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public synchronized Object imgUploadByUrl() {
         return qiniuService.uploadImgByUrl();
     }
 

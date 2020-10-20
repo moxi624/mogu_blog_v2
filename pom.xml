@@ -48,6 +48,7 @@
         <oshi.version>3.9.1</oshi.version>
         <freemarker.version>2.3.28</freemarker.version>
         <jaxb.version>2.3.0</jaxb.version>
+        <minio.version>7.1.4</minio.version>
     </properties>
 
 

@@ -67,6 +67,19 @@ public class JsonUtils {
         return null;
     }
 
+    /**
+     * 将Object类型的map转换成String类型
+     * @param map
+     * @return
+     */
+    public static Map<String, String> mapToMap(Map<String, Object> map) {
+        Map<String, String> returnMap = new HashMap<>();
+        for (String key : map.keySet()) {
+            returnMap.put(key, String.valueOf(map.get(key)));
+        }
+        return returnMap;
+    }
+
 
     /**
      * 把json字符串转化为对象

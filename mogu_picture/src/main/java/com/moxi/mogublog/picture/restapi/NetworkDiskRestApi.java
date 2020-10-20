@@ -97,7 +97,7 @@ public class NetworkDiskRestApi {
     @RequestMapping(value = "/batchDeleteFile", method = RequestMethod.POST)
     public String batchDeleteFile(@RequestBody List<NetworkDiskVO> networkDiskVOList) {
         RequestHolder.checkLogin();
-        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(RequestHolder.getAdminToken());
+        Map<String, String> qiNiuConfig = feignUtil.getSystemConfigMap(RequestHolder.getAdminToken());
         for (NetworkDiskVO networkDiskVO : networkDiskVOList) {
             networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         }
@@ -113,7 +113,7 @@ public class NetworkDiskRestApi {
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST)
     public String deleteFile(@RequestBody NetworkDiskVO networkDiskVO) {
         RequestHolder.checkLogin();
-        Map<String, String> qiNiuConfig = feignUtil.getQiNiuConfig(RequestHolder.getAdminToken());
+        Map<String, String> qiNiuConfig = feignUtil.getSystemConfigMap(RequestHolder.getAdminToken());
         networkDiskService.deleteFile(networkDiskVO, qiNiuConfig);
         return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }

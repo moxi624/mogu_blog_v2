@@ -21,6 +21,7 @@ public class BaseMessageConf {
     public static final String ENTITY_NOT_EXIST = "该实体不存在";
     public static final String SYSTEM_CONFIG_NOT_EXIST = "系统配置有误";
     public static final String PLEASE_SET_QI_NIU = "请先配置七牛云";
+    public static final String PLEASE_SET_MINIO = "请先配置Minio文件上传服务";
     public static final String PLEASE_SET_LOCAL = "请先配置本地图片域名";
     public static final String PICTURE_UID_IS_NULL = "图片UID不能为空";
 

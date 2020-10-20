@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * CKEditor编辑器上传工具类
  * @ClassName: ImageUploadUtil
  * @Description: 图片上传工具类，包括ckeditor操作
  */

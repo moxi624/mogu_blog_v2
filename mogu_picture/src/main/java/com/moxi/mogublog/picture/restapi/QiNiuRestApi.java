@@ -30,11 +30,9 @@ import java.util.Map;
 
 
 /**
- * <p>
  * 七牛图片上传RestApi
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2019年11月26日16:15:29
  */
 @RestController

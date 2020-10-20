@@ -108,4 +108,14 @@ public class ResultUtil {
     public static String errorWithMessage(String message) {
         return resultWithMessage(ERROR, message);
     }
+
+    /**
+     * 返回失败的结果【只携带数据】
+     *
+     * @param data
+     * @return
+     */
+    public static String errorWithData(Object data) {
+        return resultWithData(ERROR, data);
+    }
 }

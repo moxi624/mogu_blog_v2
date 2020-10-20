@@ -43,6 +43,6 @@ public class FileVO extends BaseVO<FileVO> {
     /**
      * 系统配置
      */
-    private Map<String, Object> systemConfig;
+    private Map<String, String> systemConfig;
 
 }

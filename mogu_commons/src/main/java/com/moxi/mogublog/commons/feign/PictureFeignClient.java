@@ -35,7 +35,7 @@ public interface PictureFeignClient {
      * @param fileVO
      * @return
      */
-    @RequestMapping(value = "/file/uploadPicsByUrl2", method = RequestMethod.POST)
+    @RequestMapping(value = "/file/uploadPicsByUrl", method = RequestMethod.POST)
     String uploadPicsByUrl(FileVO fileVO);
 
 

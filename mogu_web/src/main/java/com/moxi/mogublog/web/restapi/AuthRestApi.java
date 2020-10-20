@@ -268,7 +268,7 @@ public class AuthRestApi {
         fileVO.setUserUid(SysConf.DEFAULT_UID);
         fileVO.setProjectName(SysConf.BLOG);
         fileVO.setSortName(SysConf.ADMIN);
-        fileVO.setSystemConfig(systemConfigMap);
+        fileVO.setSystemConfig(JsonUtils.mapToMap(systemConfigMap));
         List<String> urlList = new ArrayList<>();
         if (data.get(SysConf.AVATAR) != null) {
             urlList.add(data.get(SysConf.AVATAR).toString());

@@ -85,7 +85,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attribute.getRequest();
         // 获取配置文件
-        Map<String, String> qiNiuResultMap = feignUtil.getQiNiuConfig(request.getAttribute(SysConf.TOKEN).toString());
+        Map<String, String> qiNiuResultMap = feignUtil.getSystemConfigMap(request.getAttribute(SysConf.TOKEN).toString());
         String picturePriority = qiNiuResultMap.get(SysConf.PICTURE_PRIORITY);
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
