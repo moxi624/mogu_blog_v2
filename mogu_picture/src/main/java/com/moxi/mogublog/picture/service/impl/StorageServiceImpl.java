@@ -89,7 +89,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
             log.error("未分配存储空间，重新初始化网盘空间！");
             return initStorageSize(adminUid, maxStorageSize);
         } else {
-            if(maxStorageSize < storage.getStorageSize()) {
+            if (maxStorageSize < storage.getStorageSize()) {
                 return ResultUtil.errorWithMessage("网盘容量不能小于当前已用空间");
             }
             storage.setMaxStorageSize(maxStorageSize);
@@ -128,10 +128,10 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
         }
 
         Storage storage = getStorageByAdmin();
-        if(storage != null) {
+        if (storage != null) {
             storageSize = storage.getStorageSize() + newStorageSize;
             // 判断上传的文件是否超过了剩余空间
-            if(storage.getMaxStorageSize() < storageSize) {
+            if (storage.getMaxStorageSize() < storageSize) {
                 throw new UpdateException(ErrorCode.UPDATE_DEFAULT_ERROR, "上传失败，您可用的空间已经不足！");
             } else {
                 storage.setStorageSize(storageSize);

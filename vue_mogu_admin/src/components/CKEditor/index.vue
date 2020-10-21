@@ -18,9 +18,9 @@ export default {
         width: '100%',
         toolbar: 'toolbar_Full',
         codeSnippet_theme: 'zenburn',
-        filebrowserImageUploadUrl: process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken(),
-        filebrowserUploadUrl: process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken(),
-        pasteUploadFileApi: process.env.PICTURE_API + '/ckeditor/imgUploadByUrl?token=' + getToken(),
+        filebrowserImageUploadUrl: process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken(),
+        filebrowserUploadUrl: process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken(),
+        pasteUploadFileApi: process.env.PICTURE_API + '/file/ckeditorUploadCopyFile?token=' + getToken(),
       });
 
     this.editor = CKEDITOR.instances.editor;

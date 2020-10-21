@@ -61,11 +61,11 @@
         </dependency>
 
         <!-- 引入minio依赖，用于-->
-<!--        <dependency>-->
-<!--            <groupId>io.minio</groupId>-->
-<!--            <artifactId>minio</artifactId>-->
-<!--            <version>${minio.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.minio</groupId>-->
+        <!--            <artifactId>minio</artifactId>-->
+        <!--            <version>${minio.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.qiniu</groupId>

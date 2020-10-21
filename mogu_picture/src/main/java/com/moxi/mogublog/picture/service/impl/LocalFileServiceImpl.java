@@ -1,35 +1,20 @@
 package com.moxi.mogublog.picture.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.FileSort;
-import com.moxi.mogublog.picture.global.MessageConf;
-import com.moxi.mogublog.picture.global.SQLConf;
-import com.moxi.mogublog.picture.global.SysConf;
-import com.moxi.mogublog.picture.mapper.FileMapper;
-import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.service.LocalFileService;
-import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.DateUtils;
 import com.moxi.mogublog.utils.FileUtils;
-import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mougblog.base.enums.EOpenStatus;
-import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.InsertException;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.global.ErrorCode;
-import com.moxi.mougblog.base.holder.RequestHolder;
-import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
-import com.moxi.mougblog.base.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,9 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 本地文件系统实现类【通过IO流存储到本地】
@@ -51,19 +34,18 @@ import java.util.Map;
 @Service
 public class LocalFileServiceImpl implements LocalFileService {
 
+    @Autowired
+    FileSortService fileSortService;
     /**
      * 本地图片上传路径
      */
     @Value(value = "${file.upload.path}")
     private String path;
 
-    @Autowired
-    FileSortService fileSortService;
-
     @Override
     public List<String> batchUploadFile(List<MultipartFile> multipartFileList, FileSort fileSort) throws IOException {
         List<String> urlList = new ArrayList<>();
-        for (MultipartFile multipartFile: multipartFileList) {
+        for (MultipartFile multipartFile : multipartFileList) {
             urlList.add(this.uploadSingleFile(multipartFile, fileSort));
         }
         return urlList;
@@ -146,6 +128,7 @@ public class LocalFileServiceImpl implements LocalFileService {
 
     /**
      * 本地文件服务图片上传【上传到本地硬盘】
+     *
      * @return
      */
     private String uploadSingleFile(MultipartFile multipartFile, FileSort fileSort) throws IOException {
@@ -180,6 +163,4 @@ public class LocalFileServiceImpl implements LocalFileService {
         multipartFile.transferTo(saveFile);
         return picurl;
     }
-
-
 }

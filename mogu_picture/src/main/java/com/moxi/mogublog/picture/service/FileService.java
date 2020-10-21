@@ -4,11 +4,12 @@ import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mougblog.base.service.SuperService;
 import com.moxi.mougblog.base.vo.FileVO;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文件服务类
@@ -19,7 +20,23 @@ import java.util.Map;
 public interface FileService extends SuperService<File> {
 
     /**
+     * 截图上传
+     * @param multipartFileList
+     * @return
+     */
+    public String cropperPicture(List<MultipartFile> multipartFileList);
+
+    /**
+     * 通过fileIds获取图片信息
+     * @param fileIds
+     * @param code
+     * @return
+     */
+    public String getPicture(String fileIds, String code);
+
+    /**
      * 批量文件上传
+     *
      * @param request
      * @param multipartFileList
      * @param systemConfig
@@ -29,6 +46,7 @@ public interface FileService extends SuperService<File> {
 
     /**
      * 通过URL上传图片
+     *
      * @param fileVO
      * @return
      */
@@ -36,14 +54,22 @@ public interface FileService extends SuperService<File> {
 
     /**
      * CKeditor图像中的图片上传
+     * @param request
      * @return
      */
     Object ckeditorUploadFile(HttpServletRequest request);
+
     /**
      * CKeditor上传 复制的图片
+     *
      * @return
      */
-    String ckeditorUploadCopyFile();
+    Object ckeditorUploadCopyFile();
 
-
+    /**
+     * 工具栏 “插入\编辑超链接”的文件上传
+     *
+     * @return
+     */
+    Object ckeditorUploadToolFile(HttpServletRequest request);
 }

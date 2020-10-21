@@ -1,12 +1,10 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.commons.entity.Storage;
 import com.moxi.mougblog.base.service.SuperService;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -45,6 +43,7 @@ public interface StorageService extends SuperService<Storage> {
 
     /**
      * 上传文件
+     *
      * @param networkDisk
      * @param fileList
      */

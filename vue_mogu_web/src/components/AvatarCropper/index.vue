@@ -770,20 +770,6 @@ export default {
         createImgUrl
       } = this
 
-      // const fmData = new FormData()
-      // fmData.append(
-      //   field,
-      //   data2blob(createImgUrl, mime),
-      //   field + '.' + imgFormat
-      // )
-      //
-      // // 添加其他参数
-      // if (typeof params === 'object' && params) {
-      //   Object.keys(params).forEach(k => {
-      //     fmData.append(k, params[k])
-      //   })
-      // }
-
       //将图片上传服务器中
       let formParams = new FormData();
       formParams.append("file", data2blob(createImgUrl, mime))

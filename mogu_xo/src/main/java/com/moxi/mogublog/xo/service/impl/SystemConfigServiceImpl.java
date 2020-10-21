@@ -10,6 +10,7 @@ import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.SystemConfigMapper;
+import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mogublog.xo.vo.SystemConfigVO;
 import com.moxi.mougblog.base.enums.EOpenStatus;
@@ -37,7 +38,8 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
 
     @Autowired
     private SystemConfigService systemConfigService;
-
+    @Autowired
+    private BlogService blogService;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -95,9 +97,16 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
             systemConfig.insert();
         } else {
             SystemConfig systemConfig = systemConfigService.getById(systemConfigVO.getUid());
+
+            // 判断是否更新了图片显示优先级【如果更新了，需要请求Redis中的博客，否者将导致图片无法正常显示】
+            if(systemConfigVO.getPicturePriority() != systemConfig.getPicturePriority()) {
+                blogService.deleteRedisByBlog();
+            }
+
             // 设置七牛云、邮箱、系统配置相关属性【使用Spring工具类提供的深拷贝】
             BeanUtils.copyProperties(systemConfigVO, systemConfig, SysConf.STATUS, SysConf.UID);
             systemConfig.updateById();
+
         }
         // 更新系统配置成功后，需要删除Redis中的系统配置
         redisUtil.delete(RedisConf.SYSTEM_CONFIG);

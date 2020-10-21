@@ -1,15 +1,12 @@
 package com.moxi.mogublog.picture.restapi;
 
-import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.commons.entity.Storage;
-import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.WebUtils;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -21,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 存储控制类
@@ -89,7 +85,7 @@ public class StorageRestApi {
         RequestHolder.checkLogin();
         // 获取文件
         List<MultipartFile> fileDatas = FileUtils.getMultipartFileList(request);
-        return  storageService.uploadFile(networkDisk, fileDatas);
+        return storageService.uploadFile(networkDisk, fileDatas);
     }
 
     /**

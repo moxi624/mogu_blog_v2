@@ -7,7 +7,6 @@ import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.RedisConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.exception.exceptionType.QueryException;
@@ -17,7 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -73,7 +75,79 @@ public class FeignUtil {
     }
 
     /**
-     * 通过Token获取系统配置
+     * 获取系统配置，不论是Admin端还是Web端
+     *
+     * @return
+     */
+    public SystemConfig getSystemConfig() {
+        ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attribute.getRequest();
+        // 后台携带的token
+        Object token = request.getAttribute(SysConf.TOKEN);
+        // 参数中携带的token
+        String paramsToken = request.getParameter(SysConf.TOKEN);
+        // 获取平台【web：门户，admin：管理端】
+        String platform = request.getParameter(SysConf.PLATFORM);
+        Map<String, String> systemConfigMap = new HashMap<>();
+        // 判断是否是web端发送过来的请求【后端发送过来的token长度为32】
+        if (SysConf.WEB.equals(platform) || paramsToken.length() == Constants.THIRTY_TWO) {
+            // 如果是调用web端获取配置的接口
+            systemConfigMap = this.getSystemConfigByWebToken(paramsToken);
+        } else {
+            // 调用admin端获取配置接口
+            if (token != null) {
+                // 判断是否是后台过来的请求
+                systemConfigMap = this.getSystemConfigMap(token.toString());
+            } else {
+                // 判断是否是通过params参数传递过来的
+                systemConfigMap = this.getSystemConfigMap(paramsToken);
+            }
+        }
+
+        if (systemConfigMap == null) {
+            log.error(MessageConf.PLEASE_SET_QI_NIU);
+            throw new QueryException(ErrorCode.PLEASE_SET_QI_NIU, MessageConf.PLEASE_SET_QI_NIU);
+        }
+
+
+        SystemConfig systemConfig = new SystemConfig();
+        if (systemConfigMap == null) {
+            throw new QueryException(ErrorCode.SYSTEM_CONFIG_NOT_EXIST, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
+        } else {
+            String uploadQiNiu = systemConfigMap.get(SysConf.UPLOAD_QI_NIU);
+            String uploadLocal = systemConfigMap.get(SysConf.UPLOAD_LOCAL);
+            String localPictureBaseUrl = systemConfigMap.get(SysConf.LOCAL_PICTURE_BASE_URL);
+            String qiNiuPictureBaseUrl = systemConfigMap.get(SysConf.QI_NIU_PICTURE_BASE_URL);
+            String qiNiuAccessKey = systemConfigMap.get(SysConf.QI_NIU_ACCESS_KEY);
+            String qiNiuSecretKey = systemConfigMap.get(SysConf.QI_NIU_SECRET_KEY);
+            String qiNiuBucket = systemConfigMap.get(SysConf.QI_NIU_BUCKET);
+            String qiNiuArea = systemConfigMap.get(SysConf.QI_NIU_AREA);
+
+            if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
+                    || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
+                throw new QueryException(ErrorCode.PLEASE_SET_QI_NIU, MessageConf.PLEASE_SET_QI_NIU);
+            }
+
+            if (EOpenStatus.OPEN.equals(uploadLocal) && StringUtils.isEmpty(localPictureBaseUrl)) {
+                throw new QueryException(ErrorCode.PLEASE_SET_LOCAL, MessageConf.PLEASE_SET_QI_NIU);
+            }
+            systemConfig.setQiNiuAccessKey(qiNiuAccessKey);
+            systemConfig.setQiNiuSecretKey(qiNiuSecretKey);
+            systemConfig.setQiNiuBucket(qiNiuBucket);
+            systemConfig.setQiNiuArea(qiNiuArea);
+            systemConfig.setUploadQiNiu(uploadQiNiu);
+            systemConfig.setUploadLocal(uploadLocal);
+            systemConfig.setPicturePriority(systemConfigMap.get(SysConf.PICTURE_PRIORITY));
+            systemConfig.setLocalPictureBaseUrl(systemConfigMap.get(SysConf.LOCAL_PICTURE_BASE_URL));
+            systemConfig.setQiNiuPictureBaseUrl(systemConfigMap.get(SysConf.QI_NIU_PICTURE_BASE_URL));
+
+        }
+        return systemConfig;
+    }
+
+    /**
+     * 通过Token获取系统配置 【传入AdminToken】
+     *
      * @param token
      * @return
      */
@@ -116,6 +190,7 @@ public class FeignUtil {
 
     /**
      * 从Map中获取系统配置
+     *
      * @param systemConfigMap
      * @return
      */
@@ -132,7 +207,7 @@ public class FeignUtil {
             String qiNiuSecretKey = systemConfigMap.get(SysConf.QI_NIU_SECRET_KEY);
             String qiNiuBucket = systemConfigMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = systemConfigMap.get(SysConf.QI_NIU_AREA);
-            String picturePriority =  systemConfigMap.get(SysConf.PICTURE_PRIORITY);
+            String picturePriority = systemConfigMap.get(SysConf.PICTURE_PRIORITY);
 
             if (EOpenStatus.OPEN.equals(uploadQiNiu) && (StringUtils.isEmpty(qiNiuPictureBaseUrl) || StringUtils.isEmpty(qiNiuAccessKey)
                     || StringUtils.isEmpty(qiNiuSecretKey) || StringUtils.isEmpty(qiNiuBucket) || StringUtils.isEmpty(qiNiuArea))) {
@@ -156,10 +231,8 @@ public class FeignUtil {
     }
 
 
-
-
     /**
-     * 通过Web端的token获取系统配置文件
+     * 通过Web端的token获取系统配置文件 【传入Admin端的token】
      *
      * @param token
      * @return

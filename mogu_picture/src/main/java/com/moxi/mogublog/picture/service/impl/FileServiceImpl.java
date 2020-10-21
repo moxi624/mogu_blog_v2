@@ -3,7 +3,6 @@ package com.moxi.mogublog.picture.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.FileSort;
-import com.moxi.mogublog.commons.entity.PictureSort;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
@@ -16,7 +15,10 @@ import com.moxi.mogublog.picture.service.QiniuService;
 import com.moxi.mogublog.picture.util.AboutFileUtil;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
-import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.FileUtils;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.InsertException;
@@ -26,22 +28,17 @@ import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import com.moxi.mougblog.base.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 /**
- * 文件服务实现类【包含本地文件服务、七牛云文件服务、Minio文件服务】
+ * 文件服务实现类【上传需调用本地文件服务、七牛云文件服务、Minio文件服务】
  *
  * @author 陌溪
  * @since 2018-09-17
@@ -60,8 +57,71 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     FeignUtil feignUtil;
     @Autowired
     private FileService fileService;
-    @Value(value = "${file.upload.path}")
-    private String path;
+
+    @Override
+    public String cropperPicture(List<MultipartFile> multipartFileList) {
+        HttpServletRequest request = RequestHolder.getRequest();
+        // 获取系统配置文件
+        SystemConfig systemConfig  = feignUtil.getSystemConfig();
+        String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+        String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+        String result = fileService.batchUploadFile(request, multipartFileList, systemConfig);
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
+        if (SysConf.SUCCESS.equals(picMap.get(SysConf.CODE))) {
+            List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
+            if (picData.size() > 0) {
+                for (int i = 0; i < picData.size(); i++) {
+                    Map<String, Object> item = new HashMap<>();
+                    item.put(SysConf.UID, picData.get(i).get(SysConf.UID));
+                    if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                        item.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
+                    } else {
+                        item.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
+                    }
+                    listMap.add(item);
+                }
+            }
+        }
+        return ResultUtil.result(SysConf.SUCCESS, listMap);
+    }
+
+    @Override
+    public String getPicture(String fileIds, String code) {
+        if (StringUtils.isEmpty(code)) {
+            code = Constants.SYMBOL_COMMA;
+        }
+        if (StringUtils.isEmpty(fileIds)) {
+            log.error(MessageConf.PICTURE_UID_IS_NULL);
+            return ResultUtil.result(SysConf.ERROR, MessageConf.PICTURE_UID_IS_NULL);
+        } else {
+            List<Map<String, Object>> list = new ArrayList<>();
+            List<String> changeStringToString = StringUtils.changeStringToString(fileIds, code);
+            QueryWrapper<com.moxi.mogublog.commons.entity.File> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in(SQLConf.UID, changeStringToString);
+            List<com.moxi.mogublog.commons.entity.File> fileList = fileService.list(queryWrapper);
+            if (fileList.size() > 0) {
+                for (com.moxi.mogublog.commons.entity.File file : fileList) {
+                    if (file != null) {
+                        Map<String, Object> remap = new HashMap<>();
+                        // 获取七牛云地址
+                        remap.put(SysConf.QI_NIU_URL, file.getQiNiuUrl());
+                        // 获取本地地址
+                        remap.put(SysConf.URL, file.getPicUrl());
+                        // 后缀名，也就是类型
+                        remap.put(SysConf.EXPANDED_NAME, file.getPicExpandedName());
+                        remap.put(SysConf.FILE_OLD_NAME, file.getFileOldName());
+                        //名称
+                        remap.put(SysConf.NAME, file.getPicName());
+                        remap.put(SysConf.UID, file.getUid());
+                        remap.put(SQLConf.FILE_OLD_NAME, file.getFileOldName());
+                        list.add(remap);
+                    }
+                }
+            }
+            return ResultUtil.result(SysConf.SUCCESS, list);
+        }
+    }
 
     @Override
     public String batchUploadFile(HttpServletRequest request, List<MultipartFile> filedatas, SystemConfig systemConfig) {
@@ -293,6 +353,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
 
                 List<MultipartFile> fileData = new ArrayList<>();
                 fileData.add(file);
+                // 批量上传图片
                 String result = fileService.batchUploadFile(request, fileData, systemConfig);
                 Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
                 String code = resultMap.get(SysConf.CODE).toString();
@@ -326,7 +387,206 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     }
 
     @Override
-    public String ckeditorUploadCopyFile() {
+    public Object ckeditorUploadCopyFile() {
+        HttpServletRequest request = RequestHolder.getRequest();
+        // 从参数中获取token【该方法用于ckeditor复制图片上传，所以会携带token在参数中】
+        String token = request.getParameter(SysConf.TOKEN);
+        if (StringUtils.isEmpty(token)) {
+            throw new InsertException(ErrorCode.INSERT_DEFAULT_ERROR, "未读取到携带token");
+        }
+        String[] params = token.split("\\?url=");
+        // 从Redis中获取系统配置文件
+        Map<String, String> qiNiuConfig = new HashMap<>();
+        Map<String, String> resultMap = feignUtil.getSystemConfigMap(params[0]);
+        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(resultMap);
+
+        String userUid = "uid00000000000000000000000000000000";
+        String adminUid = "uid00000000000000000000000000000000";
+        String projectName = "blog";
+        String sortName = "admin";
+
+        // 需要上传的URL
+        String itemUrl = params[1];
+
+        // 判断需要上传的域名和本机图片域名是否一致
+        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+            // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
+            if (StringUtils.isNotEmpty(systemConfig.getQiNiuPictureBaseUrl()) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(systemConfig.getQiNiuPictureBaseUrl()) > -1) {
+                Map<String, Object> result = new HashMap<>();
+                result.put(SysConf.UPLOADED, 1);
+                result.put(SysConf.FILE_NAME, itemUrl);
+                result.put(SysConf.URL, itemUrl);
+                return result;
+            }
+        } else {
+            // 表示优先显示本地服务器
+            // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
+            if (StringUtils.isNotEmpty(systemConfig.getLocalPictureBaseUrl()) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(systemConfig.getLocalPictureBaseUrl()) > -1) {
+                Map<String, Object> result = new HashMap<>();
+                result.put(SysConf.UPLOADED, 1);
+                result.put(SysConf.FILE_NAME, itemUrl);
+                result.put(SysConf.URL, itemUrl);
+                return result;
+            }
+        }
+
+        //projectName现在默认base
+        if (StringUtils.isEmpty(projectName)) {
+            projectName = "base";
+        }
+
+        // TODO 这里可以检测用户上传，如果不是网站的用户或会员就不能调用
+        if (StringUtils.isEmpty(userUid) && StringUtils.isEmpty(adminUid)) {
+            return ResultUtil.result(SysConf.ERROR, "请先注册");
+        }
+
+        QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.SORT_NAME, sortName);
+        queryWrapper.eq(SQLConf.PROJECT_NAME, projectName);
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        List<FileSort> fileSorts = fileSortService.list(queryWrapper);
+
+        FileSort fileSort = null;
+        if (fileSorts.size() > 0) {
+            fileSort = fileSorts.get(0);
+        } else {
+            return ResultUtil.result(SysConf.ERROR, "文件不被允许上传");
+        }
+
+        String sortUrl = fileSort.getUrl();
+
+        //判断url是否为空，如果为空，使用默认
+        if (StringUtils.isEmpty(sortUrl)) {
+            sortUrl = "base/common/";
+        } else {
+            sortUrl = fileSort.getUrl();
+        }
+
+        //获取新文件名(默认为jpg)
+        String newFileName = System.currentTimeMillis() + ".jpg";
+
+        //文件相对路径
+        String localUrl = "";
+        String qiNiuUrl = "";
+
+        // 上传到本地服务器【判断是否能够上传至本地】
+        if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal())) {
+            localUrl = localFileService.uploadPictureByUrl(itemUrl, fileSort);
+        }
+
+        // 上传七牛云 【判断是否能够上传七牛云】
+        if (EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu())) {
+            qiNiuUrl = qiniuService.uploadPictureByUrl(itemUrl, systemConfig);
+        }
+
+        File file = new File();
+        file.setCreateTime(new Date(System.currentTimeMillis()));
+        file.setFileSortUid(fileSort.getUid());
+        file.setFileOldName(itemUrl);
+        file.setFileSize(0L);
+        file.setPicExpandedName(SysConf.JPG);
+        file.setPicName(newFileName);
+        // 设置本地图片
+        file.setPicUrl(systemConfig.getLocalPictureBaseUrl() + localUrl);
+
+        // 设置七牛云图片
+        file.setQiNiuUrl(systemConfig.getQiNiuPictureBaseUrl() + qiNiuUrl);
+        file.setStatus(EStatus.ENABLE);
+        file.setUserUid(userUid);
+        file.setAdminUid(adminUid);
+        fileService.save(file);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put(SysConf.UPLOADED, 1);
+        result.put(SysConf.FILE_NAME, newFileName);
+        // 设置显示方式
+        if (EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+            result.put(SysConf.URL, systemConfig.getQiNiuPictureBaseUrl() + qiNiuUrl);
+        } else {
+            // 设置图片服务根域名
+            String url = systemConfig.getLocalPictureBaseUrl() + localUrl;
+            result.put(SysConf.URL, url);
+        }
+        return result;
+    }
+
+    @Override
+    public Object ckeditorUploadToolFile(HttpServletRequest request) {
+        String token = request.getParameter(SysConf.TOKEN);
+        // 从Redis中获取系统配置【需要传入token】
+        Map<String, String> qiNiuResultMap = feignUtil.getSystemConfigMap(token);
+        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuResultMap);
+
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> errorMap = new HashMap<>();
+        //引用自己设计的一个工具类
+        AboutFileUtil af = new AboutFileUtil();
+        // 转换成多部分request
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+        // 取得request中的所有文件名
+        Iterator<String> iter = multiRequest.getFileNames();
+        while (iter.hasNext()) {
+            MultipartFile file = multiRequest.getFile(iter.next());
+            if (file != null) {
+
+                // 获取旧名称
+                String oldName = file.getOriginalFilename();
+                // 获取扩展名
+                String expandedName = FileUtils.getPicExpandedName(oldName);
+                // 判断是否安全文件
+                if (!af.isSafe(expandedName)) {
+                    map.put(SysConf.UPLOADED, 0);
+                    errorMap.put(SysConf.MESSAGE, "请上传正确格式的文件");
+                    map.put(SysConf.ERROR, errorMap);
+                    return map;
+                }
+
+                //对文件大小进行限制
+                if (file.getSize() > (50 * 1024 * 1024)) {
+                    map.put(SysConf.UPLOADED, 0);
+                    errorMap.put(SysConf.MESSAGE, "文件大小不能超过50M");
+                    map.put(SysConf.ERROR, errorMap);
+                    return map;
+                }
+                // 设置图片上传服务必要的信息
+                request.setAttribute(SysConf.USER_UID, SysConf.DEFAULT_UID);
+                request.setAttribute(SysConf.ADMIN_UID, SysConf.DEFAULT_UID);
+                request.setAttribute(SysConf.PROJECT_NAME, SysConf.BLOG);
+                request.setAttribute(SysConf.SORT_NAME, SysConf.ADMIN);
+
+                List<MultipartFile> fileData = new ArrayList<>();
+                fileData.add(file);
+                String result = fileService.batchUploadFile(request, fileData, systemConfig);
+                Map<String, Object> resultMap = JsonUtils.jsonToMap(result);
+                String code = resultMap.get(SysConf.CODE).toString();
+                if (SysConf.SUCCESS.equals(code)) {
+                    List<HashMap<String, Object>> resultList = (List<HashMap<String, Object>>) resultMap.get(SysConf.DATA);
+                    if (resultList.size() > 0) {
+                        Map<String, Object> picture = resultList.get(0);
+                        String fileName = picture.get(SysConf.PIC_NAME).toString();
+                        map.put(SysConf.UPLOADED, 1);
+                        map.put(SysConf.FILE_NAME, fileName);
+                        // 设置显示方式
+                        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                            String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+                            String qiNiuUrl = qiNiuPictureBaseUrl + picture.get(SysConf.QI_NIU_URL).toString();
+                            map.put(SysConf.URL, qiNiuUrl);
+                        } else {
+                            String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+                            // 设置图片服务根域名
+                            String url = localPictureBaseUrl + picture.get(SysConf.PIC_URL).toString();
+                            map.put(SysConf.URL, url);
+                        }
+                    }
+                    return map;
+                } else {
+                    map.put(SysConf.UPLOADED, 0);
+                    errorMap.put(SysConf.MESSAGE, "上传失败");
+                    map.put(SysConf.ERROR, errorMap);
+                    return map;
+                }
+            }
+        }
         return null;
     }
 }
