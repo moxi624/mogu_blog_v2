@@ -26,13 +26,6 @@
             <version>${dyuproject.version}</version>
         </dependency>
 
-        <!--用于File转MultipartFile-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>${spring.mock.version}</version>
-        </dependency>
-
         <!-- 格式化对象，方便输出日志 -->
         <dependency>
             <groupId>com.alibaba</groupId>

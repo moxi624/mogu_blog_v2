@@ -5,7 +5,6 @@ import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.MinioUtil;
-import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 文件上传接口 【总的文件接口，需要调用本地文件、七牛云、Minio上传服务】

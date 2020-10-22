@@ -1,8 +1,13 @@
 package com.moxi.mogublog.picture.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -136,6 +141,33 @@ public class MoGuFileUtil {
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * 将File转换成MultipartFile
+     *
+     * @param file
+     * @return
+     */
+    public static MultipartFile fileToMultipartFile(File file) {
+        InputStream inputStream = null;
+        MultipartFile multipartFile = null;
+        try {
+            inputStream = new FileInputStream(file);
+            multipartFile = new MockMultipartFile(file.getName(), inputStream);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ioException) {
+                    log.error(ioException.getMessage());
+                }
+            }
+        }
+        return multipartFile;
     }
 
     public static void main(String[] args) {

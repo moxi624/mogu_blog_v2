@@ -60,6 +60,13 @@
             <artifactId>httpcore</artifactId>
         </dependency>
 
+        <!--用于File转MultipartFile-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>${spring.mock.version}</version>
+        </dependency>
+
         <!-- 引入minio依赖，用于文件上传服务-->
         <dependency>
             <groupId>io.minio</groupId>

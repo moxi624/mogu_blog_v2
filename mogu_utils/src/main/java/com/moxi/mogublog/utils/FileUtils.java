@@ -13,16 +13,13 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -200,31 +197,6 @@ public class FileUtils {
             log.error("解析MultipartRequest错误", ex);
         }
         return files;
-    }
-
-    /**
-     * 将File转换成MultipartFile
-     * @param file
-     * @return
-     */
-    public static MultipartFile fileToMultipartFile(File file) {
-        InputStream inputStream = null;
-        MultipartFile multipartFile = null;
-        try {
-            inputStream = new FileInputStream(file);
-            multipartFile = new MockMultipartFile(file.getName(), inputStream);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        } finally {
-            if(inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException ioException) {
-                    log.error(ioException.getMessage());
-                }
-            }
-        }
-        return multipartFile;
     }
 
     public static void main(String[] args) {

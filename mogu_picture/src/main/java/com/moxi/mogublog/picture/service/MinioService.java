@@ -1,6 +1,5 @@
 package com.moxi.mogublog.picture.service;
 
-import com.moxi.mogublog.commons.entity.SystemConfig;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
