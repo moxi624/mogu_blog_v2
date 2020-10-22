@@ -100,6 +100,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         // 插入字典数据，忽略状态位【使用Spring工具类提供的深拷贝，避免出现大量模板代码】
         BeanUtils.copyProperties(sysDictDataVO, sysDictData, SysConf.STATUS);
         sysDictData.setCreateByUid(adminUid);
+        sysDictData.setUpdateByUid(adminUid);
         sysDictData.insert();
         return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
@@ -125,6 +126,7 @@ public class SysDictDataServiceImpl extends SuperServiceImpl<SysDictDataMapper, 
         BeanUtils.copyProperties(sysDictDataVO, sysDictData, SysConf.STATUS, SysConf.UID);
         sysDictData.setUpdateByUid(adminUid);
         sysDictData.setUpdateTime(new Date());
+        sysDictData.setUpdateByUid(adminUid);
         sysDictData.updateById();
 
         // 获取Redis中特定前缀

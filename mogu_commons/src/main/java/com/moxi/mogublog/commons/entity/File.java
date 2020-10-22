@@ -51,4 +51,9 @@ public class File extends SuperEntity<File> {
      * 七牛云Url
      */
     private String qiNiuUrl;
+
+    /**
+     * Minio文件URL
+     */
+    private String minioUrl;
 }

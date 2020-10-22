@@ -28,6 +28,7 @@ public class Constants {
     public final static String SYMBOL_LEFT_BRACKET = "{";
     public final static String SYMBOL_RIGHT_BRACKET = "}";
     public final static String SYMBOL_RIGHT_EQUAL = "=";
+    public final static String SYMBOL_LEFT_OBLIQUE_LINE = "/";
 
     /**
      * 文件名后缀

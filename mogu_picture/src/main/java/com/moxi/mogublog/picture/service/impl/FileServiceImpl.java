@@ -8,17 +8,14 @@ import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.mapper.FileMapper;
-import com.moxi.mogublog.picture.service.FileService;
-import com.moxi.mogublog.picture.service.FileSortService;
-import com.moxi.mogublog.picture.service.LocalFileService;
-import com.moxi.mogublog.picture.service.QiniuService;
+import com.moxi.mogublog.picture.service.*;
 import com.moxi.mogublog.picture.util.AboutFileUtil;
 import com.moxi.mogublog.picture.util.FeignUtil;
-import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.InsertException;
@@ -29,7 +26,6 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import com.moxi.mougblog.base.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -54,6 +50,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     @Autowired
     QiniuService qiniuService;
     @Autowired
+    MinioService minioService;
+    @Autowired
     FeignUtil feignUtil;
     @Autowired
     private FileService fileService;
@@ -62,9 +60,10 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
     public String cropperPicture(List<MultipartFile> multipartFileList) {
         HttpServletRequest request = RequestHolder.getRequest();
         // 获取系统配置文件
-        SystemConfig systemConfig  = feignUtil.getSystemConfig();
+        SystemConfig systemConfig = feignUtil.getSystemConfig();
         String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
         String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
+        String minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         String result = fileService.batchUploadFile(request, multipartFileList, systemConfig);
         List<Map<String, Object>> listMap = new ArrayList<>();
         Map<String, Object> picMap = (Map<String, Object>) JsonUtils.jsonToObject(result, Map.class);
@@ -74,8 +73,10 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 for (int i = 0; i < picData.size(); i++) {
                     Map<String, Object> item = new HashMap<>();
                     item.put(SysConf.UID, picData.get(i).get(SysConf.UID));
-                    if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                    if (EFilePriority.QI_NIU.equals(systemConfig.getPicturePriority())) {
                         item.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
+                    } else if (EFilePriority.MINIO.equals(systemConfig.getPicturePriority())){
+                        item.put(SysConf.URL, minioPictureBaseUrl + picData.get(i).get(SysConf.MINIO_URL));
                     } else {
                         item.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.PIC_URL));
                     }
@@ -106,6 +107,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         Map<String, Object> remap = new HashMap<>();
                         // 获取七牛云地址
                         remap.put(SysConf.QI_NIU_URL, file.getQiNiuUrl());
+                        // 获取Minio对象存储地址
+                        remap.put(SysConf.MINIO_URL, file.getMinioUrl());
                         // 获取本地地址
                         remap.put(SysConf.URL, file.getPicUrl());
                         // 后缀名，也就是类型
@@ -128,6 +131,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
 
         String uploadQiNiu = systemConfig.getUploadQiNiu();
         String uploadLocal = systemConfig.getUploadLocal();
+        String uploadMinio = systemConfig.getUploadMinio();
 
         // 判断来源
         String source = request.getParameter(SysConf.SOURCE);
@@ -203,11 +207,17 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 String newFileName = System.currentTimeMillis() + Constants.SYMBOL_POINT + picExpandedName;
                 String localUrl = "";
                 String qiNiuUrl = "";
+                String minioUrl = "";
                 try {
                     MultipartFile tempFileData = filedata;
                     // 上传七牛云，判断是否能够上传七牛云
                     if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
                         qiNiuUrl = qiniuService.uploadFile(tempFileData);
+                    }
+
+                    // 判断是否能够上传Minio文件服务器
+                    if (EOpenStatus.OPEN.equals(uploadMinio)) {
+                        minioUrl = minioService.uploadFile(tempFileData);
                     }
 
                     // 判断是否能够上传至本地
@@ -232,6 +242,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);
                 file.setQiNiuUrl(qiNiuUrl);
+                file.setMinioUrl(minioUrl);
                 file.insert();
                 lists.add(file);
             }
@@ -278,9 +289,14 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 // 将图片上传到本地服务器中以及七牛云中
                 String picurl = "";
                 String qiNiuUrl = "";
+                String minioUrl = "";
                 // 判断是否能够上传至本地
                 if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal())) {
                     picurl = localFileService.uploadPictureByUrl(itemUrl, fileSort);
+                }
+                // 上传七牛云，判断是否能够上传七牛云
+                if (EOpenStatus.OPEN.equals(systemConfig.getUploadMinio())) {
+                    minioUrl = minioService.uploadPictureByUrl(itemUrl);
                 }
                 // 上传七牛云，判断是否能够上传七牛云
                 if (EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu())) {
@@ -295,6 +311,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 file.setPicName(newFileName);
                 file.setPicUrl(picurl);
                 file.setQiNiuUrl(qiNiuUrl);
+                file.setMinioUrl(minioUrl);
                 file.setStatus(EStatus.ENABLE);
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);
@@ -365,10 +382,14 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         map.put(SysConf.UPLOADED, 1);
                         map.put(SysConf.FILE_NAME, fileName);
                         // 设置显示方式
-                        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                        if (EFilePriority.QI_NIU.equals(systemConfig.getPicturePriority())) {
                             String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
                             String qiNiuUrl = picture.get(SysConf.QI_NIU_URL).toString();
                             map.put(SysConf.URL, qiNiuPictureBaseUrl + qiNiuUrl);
+                        } else if(EFilePriority.MINIO.equals(systemConfig.getPicturePriority())) {
+                            String minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
+                            String url = minioPictureBaseUrl + picture.get(SysConf.MINIO_URL).toString();
+                            map.put(SysConf.URL, url);
                         } else {
                             String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
                             // 设置图片服务根域名
@@ -409,9 +430,19 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         String itemUrl = params[1];
 
         // 判断需要上传的域名和本机图片域名是否一致
-        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+        if (EFilePriority.QI_NIU.equals(systemConfig.getPicturePriority())) {
             // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
             if (StringUtils.isNotEmpty(systemConfig.getQiNiuPictureBaseUrl()) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(systemConfig.getQiNiuPictureBaseUrl()) > -1) {
+                Map<String, Object> result = new HashMap<>();
+                result.put(SysConf.UPLOADED, 1);
+                result.put(SysConf.FILE_NAME, itemUrl);
+                result.put(SysConf.URL, itemUrl);
+                return result;
+            }
+        } else if (EFilePriority.MINIO.equals(systemConfig.getPicturePriority())){
+            // 表示优先显示Minio对象存储
+            // 判断需要上传的域名和本机图片域名是否一致，如果一致，那么就不需要重新上传，而是直接返回
+            if (StringUtils.isNotEmpty(systemConfig.getMinioPictureBaseUrl()) && StringUtils.isNotEmpty(itemUrl) && itemUrl.indexOf(systemConfig.getMinioPictureBaseUrl()) > -1) {
                 Map<String, Object> result = new HashMap<>();
                 result.put(SysConf.UPLOADED, 1);
                 result.put(SysConf.FILE_NAME, itemUrl);
@@ -465,13 +496,19 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         //获取新文件名(默认为jpg)
         String newFileName = System.currentTimeMillis() + ".jpg";
 
-        //文件相对路径
+        //文件url访问地址
         String localUrl = "";
         String qiNiuUrl = "";
+        String minioUrl = "";
 
         // 上传到本地服务器【判断是否能够上传至本地】
         if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal())) {
             localUrl = localFileService.uploadPictureByUrl(itemUrl, fileSort);
+        }
+
+        // 上传七牛云 【判断是否能够上传七牛云】
+        if (EOpenStatus.OPEN.equals(systemConfig.getUploadMinio())) {
+            minioUrl = minioService.uploadPictureByUrl(itemUrl);
         }
 
         // 上传七牛云 【判断是否能够上传七牛云】
@@ -488,7 +525,8 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         file.setPicName(newFileName);
         // 设置本地图片
         file.setPicUrl(systemConfig.getLocalPictureBaseUrl() + localUrl);
-
+        // 设置minio图片
+        file.setMinioUrl(systemConfig.getMinioPictureBaseUrl() + minioUrl);
         // 设置七牛云图片
         file.setQiNiuUrl(systemConfig.getQiNiuPictureBaseUrl() + qiNiuUrl);
         file.setStatus(EStatus.ENABLE);
@@ -500,12 +538,12 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         result.put(SysConf.UPLOADED, 1);
         result.put(SysConf.FILE_NAME, newFileName);
         // 设置显示方式
-        if (EOpenStatus.OPEN.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+        if (EFilePriority.QI_NIU.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
             result.put(SysConf.URL, systemConfig.getQiNiuPictureBaseUrl() + qiNiuUrl);
+        } else if(EFilePriority.MINIO.equals(qiNiuConfig.get(SysConf.PICTURE_PRIORITY))) {
+            result.put(SysConf.URL, systemConfig.getMinioPictureBaseUrl() + localUrl);
         } else {
-            // 设置图片服务根域名
-            String url = systemConfig.getLocalPictureBaseUrl() + localUrl;
-            result.put(SysConf.URL, url);
+            result.put(SysConf.URL, systemConfig.getLocalPictureBaseUrl() + localUrl);
         }
         return result;
     }
@@ -567,10 +605,15 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                         map.put(SysConf.UPLOADED, 1);
                         map.put(SysConf.FILE_NAME, fileName);
                         // 设置显示方式
-                        if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                        if (EFilePriority.QI_NIU.equals(systemConfig.getPicturePriority())) {
                             String qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
                             String qiNiuUrl = qiNiuPictureBaseUrl + picture.get(SysConf.QI_NIU_URL).toString();
                             map.put(SysConf.URL, qiNiuUrl);
+                        } else if(EFilePriority.MINIO.equals(systemConfig.getPicturePriority())) {
+                            String minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
+                            // 设置图片服务根域名
+                            String url = minioPictureBaseUrl + picture.get(SysConf.MINIO_URL).toString();
+                            map.put(SysConf.URL, url);
                         } else {
                             String localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
                             // 设置图片服务根域名

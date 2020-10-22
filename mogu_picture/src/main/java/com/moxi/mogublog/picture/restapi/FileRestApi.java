@@ -1,35 +1,23 @@
 package com.moxi.mogublog.picture.restapi;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
-import com.moxi.mogublog.picture.global.MessageConf;
-import com.moxi.mogublog.picture.global.SQLConf;
-import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.FileService;
-import com.moxi.mogublog.picture.service.FileSortService;
 import com.moxi.mogublog.picture.util.FeignUtil;
+import com.moxi.mogublog.picture.util.MinioUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
-import com.moxi.mougblog.base.enums.EOpenStatus;
-import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.GetList;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +34,9 @@ import java.util.Map;
 public class FileRestApi {
 
     @Autowired
-    private FileService fileService;
+    MinioUtil minioUtil;
     @Autowired
-    private QiniuUtil qiniuUtil;
+    private FileService fileService;
     @Autowired
     private FeignUtil feignUtil;
 
@@ -94,9 +82,8 @@ public class FileRestApi {
     })
     @PostMapping("/pictures")
     public synchronized Object uploadPics(HttpServletRequest request, List<MultipartFile> filedatas) {
-        // 获取七牛云配置文件
-        Map<String, String> qiNiuConfig = qiniuUtil.getQiNiuConfig();
-        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuConfig);
+        // 获取系统配置文件
+        SystemConfig systemConfig = feignUtil.getSystemConfig();
         return fileService.batchUploadFile(request, filedatas, systemConfig);
     }
 

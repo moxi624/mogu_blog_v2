@@ -60,12 +60,12 @@
             <artifactId>httpcore</artifactId>
         </dependency>
 
-        <!-- 引入minio依赖，用于-->
-        <!--        <dependency>-->
-        <!--            <groupId>io.minio</groupId>-->
-        <!--            <artifactId>minio</artifactId>-->
-        <!--            <version>${minio.version}</version>-->
-        <!--        </dependency>-->
+        <!-- 引入minio依赖，用于文件上传服务-->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.qiniu</groupId>

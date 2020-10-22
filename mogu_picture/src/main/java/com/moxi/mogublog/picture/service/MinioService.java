@@ -1,23 +1,43 @@
 package com.moxi.mogublog.picture.service;
 
+import com.moxi.mogublog.commons.entity.SystemConfig;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Minio文件上传服务类
+ * 本地对象存储服务 Minio文件上传服务类
  *
  * @author 陌溪
- * @since 2020年10月19日11:12:14
+ * @date 2020年10月19日11:12:14
  */
 public interface MinioService {
 
     /**
      * 多文件上传
      *
-     * @param file
+     * @param multipartFileList
+     * @return
+     * @throws IOException
+     */
+    List<String> batchUploadFile(List<MultipartFile> multipartFileList);
+
+    /**
+     * 文件上传
+     *
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
+    String uploadFile(MultipartFile multipartFile);
+
+    /**
+     * 通过URL上传图片
+     *
+     * @param url
+     * @param systemConfig
      * @return
      */
-    Map<String, List<String>> uploadFile(MultipartFile[] file);
+    String uploadPictureByUrl(String url);
 }

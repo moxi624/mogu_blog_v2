@@ -114,19 +114,16 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
     @Override
     public String uploadFile(NetworkDisk networkDisk, List<MultipartFile> fileDatas) {
         HttpServletRequest request = RequestHolder.getRequest();
-        Map<String, String> qiNiuConfig = qiniuUtil.getQiNiuConfig();
-        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(qiNiuConfig);
-        if (qiNiuConfig == null) {
+        SystemConfig systemConfig = feignUtil.getSystemConfig();
+        if (systemConfig == null) {
             throw new QueryException(ErrorCode.SYSTEM_CONFIG_IS_NOT_EXIST, MessageConf.SYSTEM_CONFIG_NOT_EXIST);
         }
-
         // 计算文件大小
         Long newStorageSize = 0L;
         Long storageSize = 0L;
         for (MultipartFile fileData : fileDatas) {
             newStorageSize += fileData.getSize();
         }
-
         Storage storage = getStorageByAdmin();
         if (storage != null) {
             storageSize = storage.getStorageSize() + newStorageSize;

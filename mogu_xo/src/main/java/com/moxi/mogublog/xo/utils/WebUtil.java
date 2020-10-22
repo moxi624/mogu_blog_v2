@@ -10,6 +10,7 @@ import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.global.SQLConf;
 import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.service.SystemConfigService;
+import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.QueryException;
@@ -50,6 +51,7 @@ public class WebUtil {
         String picturePriority = "";
         String localPictureBaseUrl = "";
         String qiNiuPictureBaseUrl = "";
+        String minioPictureBaseUrl = "";
         // 从Redis中获取系统配置
         String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
         if (StringUtils.isEmpty(systemConfigJson)) {
@@ -65,11 +67,13 @@ public class WebUtil {
             picturePriority = systemConfig.getPicturePriority();
             localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
             qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+            minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         } else {
             SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
             picturePriority = systemConfig.getPicturePriority();
             localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
             qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+            minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         }
 
         List<String> picUrls = new ArrayList<>();
@@ -79,8 +83,11 @@ public class WebUtil {
                 List<Map<String, Object>> picData = (List<Map<String, Object>>) picMap.get(SysConf.DATA);
                 if (picData.size() > 0) {
                     for (int i = 0; i < picData.size(); i++) {
-                        if ("1".equals(picturePriority)) {
+                        // 判断文件显示优先级【需要显示存储在哪里的图片】
+                        if (EFilePriority.QI_NIU.equals(picturePriority)) {
                             picUrls.add(qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
+                        } else if (EFilePriority.MINIO.equals(picturePriority)){
+                            picUrls.add(minioPictureBaseUrl + picData.get(i).get(SysConf.MINIO_URL));
                         } else {
                             picUrls.add(localPictureBaseUrl + picData.get(i).get(SysConf.URL));
                         }
@@ -106,6 +113,7 @@ public class WebUtil {
         String picturePriority = "";
         String localPictureBaseUrl = "";
         String qiNiuPictureBaseUrl = "";
+        String minioPictureBaseUrl = "";
         // 从Redis中获取系统配置
         String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
         if (StringUtils.isEmpty(systemConfigJson)) {
@@ -121,11 +129,13 @@ public class WebUtil {
             picturePriority = systemConfig.getPicturePriority();
             localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
             qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+            minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         } else {
             SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
             picturePriority = systemConfig.getPicturePriority();
             localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
             qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();
+            minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         }
 
         List<Map<String, Object>> resultList = new ArrayList<>();
@@ -138,12 +148,15 @@ public class WebUtil {
                     if (StringUtils.isEmpty(picData.get(i).get(SysConf.URL)) || StringUtils.isEmpty(picData.get(i).get(SysConf.UID))) {
                         continue;
                     }
-                    // 图片优先显示 七牛云 or 本地
-                    if (EOpenStatus.OPEN.equals(picturePriority)) {
+                    // 判断文件显示优先级【需要显示存储在哪里的图片】
+                    if (EFilePriority.QI_NIU.equals(picturePriority)) {
                         map.put(SysConf.URL, qiNiuPictureBaseUrl + picData.get(i).get(SysConf.QI_NIU_URL));
+                    } else if (EFilePriority.MINIO.equals(picturePriority)){
+                        map.put(SysConf.URL, minioPictureBaseUrl + picData.get(i).get(SysConf.MINIO_URL));
                     } else {
                         map.put(SysConf.URL, localPictureBaseUrl + picData.get(i).get(SysConf.URL));
                     }
+
                     map.put(SysConf.UID, picData.get(i).get(SysConf.UID));
                     resultList.add(map);
                 }

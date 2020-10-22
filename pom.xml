@@ -49,6 +49,7 @@
         <freemarker.version>2.3.28</freemarker.version>
         <jaxb.version>2.3.0</jaxb.version>
         <minio.version>7.1.4</minio.version>
+        <spring.mock.version>2.0.8</spring.mock.version>
     </properties>
 
 

@@ -1,11 +1,38 @@
 <template>
   <div class="app-container">
-    <el-tabs type="border-card">
-      <el-tab-pane v-permission="'/systemConfig/getSystemConfig'">
-        <span slot="label">
-          <i class="el-icon-date"></i> 图片配置
-        </span>
+    <el-tabs type="border-card" v-model="activeName">
+      <el-tab-pane name="one" v-permission="'/systemConfig/getSystemConfig'">
+        <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
+        <el-form style="margin-left: 20px;" label-position="left"   label-width="130px" >
 
+          <aside>
+            通过开关选择博客编辑时的文本编辑器，以及文件显示方式<br/>
+          </aside>
+
+          <el-form-item label="图片显示优先级">
+            <el-radio v-for="item in picturePriorityDictList" :key="item.uid" v-model="form.picturePriority" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item label="文本编辑器">
+            <el-radio v-for="item in editorModalDictList" :key="item.uid" v-model="form.editorModel" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
+          <el-form-item label="网站消息邮件通知">
+            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
+          </el-form-item>
+
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane name="three" v-permission="'/systemConfig/getSystemConfig'">
+        <span slot="label">
+          <i class="el-icon-date"></i> 本地文件存储
+        </span>
         <el-form
           style="margin-left: 20px;"
           label-position="left"
@@ -16,14 +43,42 @@
         >
 
           <aside>
-            图片配置主要用于配置网站的图片信息<br/>
+            使用IO流将文件存储本地磁盘中<br/>
           </aside>
 
-          <el-form-item label="本地图片域名" prop="localPictureBaseUrl">
+          <el-form-item label="本地文件域名" prop="localPictureBaseUrl">
             <el-input v-model="form.localPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="七牛云图片域名" prop="qiNiuPictureBaseUrl">
+          <el-form-item label="文件上传本地">
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadLocal" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
+          </el-form-item>
+
+        </el-form>
+      </el-tab-pane>
+
+      <el-tab-pane name="four"  v-permission="'/systemConfig/getSystemConfig'">
+        <span slot="label">
+          <i class="el-icon-date"></i> 七牛云对象存储
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="120px"
+          :rules="rules"
+          ref="form"
+        >
+          <aside>
+            使用 <a href="http://www.moguit.cn/#/info?blogUid=735ed389c4ad1efd321fed9ac58e646b">七牛云</a> 构建对象存储服务<br/>
+          </aside>
+
+          <el-form-item label="七牛云文件域名" prop="qiNiuPictureBaseUrl">
             <el-input v-model="form.qiNiuPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
@@ -48,19 +103,10 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="图片上传七牛云">
+          <el-form-item label="文件上传七牛云">
             <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadQiNiu" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
-          <el-form-item label="图片上传本地">
-            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadLocal" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
-          </el-form-item>
-
-
-          <el-form-item label="图片显示优先级">
-            <el-radio v-for="item in picturePriorityDictList" :key="item.uid" v-model="form.picturePriority" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
-          </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
@@ -68,31 +114,56 @@
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="two" v-permission="'/systemConfig/getSystemConfig'">
-        <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
-        <el-form style="margin-left: 20px;" label-position="left"   label-width="100px" >
+      <el-tab-pane name="five" v-permission="'/systemConfig/getSystemConfig'">
+        <span slot="label">
+          <i class="el-icon-date"></i> Minio对象存储
+        </span>
+
+        <el-form
+          style="margin-left: 20px;"
+          label-position="left"
+          :model="form"
+          label-width="120px"
+          :rules="rules"
+          ref="form"
+        >
 
           <aside>
-            通过开关选择博客编辑时的文本编辑器<br/>
+            使用 <a href="http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f">Minio</a> 构建本地对象存储服务<br/>
           </aside>
 
-          <el-form-item label="文本编辑器">
-            <el-radio v-for="item in editorModalDictList" :key="item.uid" v-model="form.editorModel" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          <el-form-item label="Minio访问域名" prop="localPictureBaseUrl">
+            <el-input v-model="form.minioPictureBaseUrl" auto-complete="new-password" style="width: 400px"></el-input>
           </el-form-item>
 
-          <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
-          <el-form-item label="消息邮件通知">
-            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          <el-form-item label="Minio连接地址" prop="qiNiuPictureBaseUrl">
+            <el-input v-model="form.minioEndPoint" auto-complete="new-password" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Minio公钥">
+            <el-input v-model="form.minioAccessKey" auto-complete="new-password" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Minio私钥">
+            <el-input type="password" v-model="form.minioSecretKey" auto-complete="new-password" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Minio上传空间">
+            <el-input  v-model="form.minioBucket" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <el-form-item label="文件上传Minio">
+            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="form.uploadMinio" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-permission="'/systemConfig/editSystemConfig'">保 存</el-button>
           </el-form-item>
-
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="three" v-permission="'/systemConfig/getSystemConfig'">
+
+      <el-tab-pane name="six" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 邮箱配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="80px" >
 
@@ -127,7 +198,7 @@
         </el-form>
       </el-tab-pane>
 
-      <el-tab-pane name="four" v-permission="'/systemConfig/cleanRedisByKey'">
+      <el-tab-pane name="seven" v-permission="'/systemConfig/cleanRedisByKey'">
         <span slot="label"><i class="el-icon-edit"></i> Redis管理</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="120px" >
 
@@ -225,6 +296,7 @@ export default {
       form: {
 
       },
+      activeName: "one",
       areaDictList: [], //存储区域字典
       yesNoDictList: [], //是否字典
       openDictList: [], // 开启关闭字典
@@ -285,7 +357,6 @@ export default {
       });
     },
     cleanRedis: function(key) {
-      console.log(key)
       let params = []
       params.push(key)
       cleanRedisByKey(params).then(response => {
@@ -303,7 +374,7 @@ export default {
         } else {
           editSystemConfig(this.form).then(res => {
             console.log(res);
-            if (res.code = "success") {
+            if (res.code = this.$ECode.SUCCESS) {
               this.$commonUtil.message.success(res.message)
             } else {
               this.$commonUtil.message.error(res.message)

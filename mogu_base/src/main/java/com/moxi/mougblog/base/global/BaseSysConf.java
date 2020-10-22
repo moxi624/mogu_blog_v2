@@ -24,6 +24,7 @@ public class BaseSysConf {
     public final static String UPLOADED = "uploaded";
     public final static String QI_NIU_URL = "qiNiuUrl";
     public final static String PIC_URL = "picUrl";
+    public final static String MINIO_URL = "minioUrl";
     public final static String URL = "url";
     public final static String MESSAGE = "message";
     public final static String EXPANDED_NAME = "expandedName";
@@ -139,12 +140,20 @@ public class BaseSysConf {
     // SystemConfig相关
     public final static String UPLOAD_QI_NIU = "uploadQiNiu";
     public final static String UPLOAD_LOCAL = "uploadLocal";
+    public final static String UPLOAD_MINIO = "uploadMinio";
     public final static String LOCAL_PICTURE_BASE_URL = "localPictureBaseUrl";
     public final static String QI_NIU_PICTURE_BASE_URL = "qiNiuPictureBaseUrl";
+    public final static String MINIO_PICTURE_BASE_URL = "minioPictureBaseUrl";
     public final static String QI_NIU_ACCESS_KEY = "qiNiuAccessKey";
     public final static String QI_NIU_SECRET_KEY = "qiNiuSecretKey";
     public final static String QI_NIU_BUCKET = "qiNiuBucket";
     public final static String QI_NIU_AREA = "qiNiuArea";
+
+    public final static String MINIO_END_POINT = "minioEndPoint";
+    public final static String MINIO_ACCESS_KEY = "minioAccessKey";
+    public final static String MINIO_SECRET_KEY = "minioSecretKey";
+    public final static String MINIO_BUCKET = "minioBucket";
+
     public final static String PICTURE_PRIORITY = "picturePriority";
     public final static String PICTURE = "picture";
     public final static String PICTURE_TOKEN = "pictureToken";

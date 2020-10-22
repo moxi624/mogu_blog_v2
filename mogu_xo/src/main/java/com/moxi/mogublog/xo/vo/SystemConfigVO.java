@@ -6,11 +6,9 @@ import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
 
 /**
- * <p>
  * 网站配置VO
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018年11月11日14:54:12
  */
 @Data
@@ -103,4 +101,35 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
      * 主题颜色
      */
     private String themeColor;
+
+    /**
+     * 文件是否上传Minio (0:否， 1：是)
+     */
+    private String uploadMinio;
+
+    /**
+     * Minio远程连接地址
+     */
+    private String minioEndPoint;
+
+    /**
+     * Minio公钥
+     */
+    private String minioAccessKey;
+
+    /**
+     * Minio私钥
+     */
+    private String minioSecretKey;
+
+    /**
+     * Minio桶
+     */
+    private String minioBucket;
+
+    /**
+     * Minio服务器文件域名前缀： http://minio.moguit.cn
+     */
+    private String minioPictureBaseUrl;
+
 }

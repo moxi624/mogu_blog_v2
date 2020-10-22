@@ -3,10 +3,8 @@ package com.moxi.mogublog.picture.service;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 七牛云服务类

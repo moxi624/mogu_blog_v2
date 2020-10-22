@@ -538,6 +538,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Override
     public IPage<Blog> getPageList(BlogVO blogVO) {
         QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        // 构建搜索条件
         if (StringUtils.isNotEmpty(blogVO.getKeyword()) && !StringUtils.isEmpty(blogVO.getKeyword().trim())) {
             queryWrapper.like(SQLConf.TITLE, blogVO.getKeyword().trim());
         }

@@ -4,11 +4,9 @@ import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mougblog.base.service.SuperService;
 import com.moxi.mougblog.base.vo.FileVO;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -21,6 +19,7 @@ public interface FileService extends SuperService<File> {
 
     /**
      * 截图上传
+     *
      * @param multipartFileList
      * @return
      */
@@ -28,6 +27,7 @@ public interface FileService extends SuperService<File> {
 
     /**
      * 通过fileIds获取图片信息
+     *
      * @param fileIds
      * @param code
      * @return
@@ -54,6 +54,7 @@ public interface FileService extends SuperService<File> {
 
     /**
      * CKeditor图像中的图片上传
+     *
      * @param request
      * @return
      */
