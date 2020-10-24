@@ -90,7 +90,7 @@ public class FeignUtil {
         String platform = request.getParameter(SysConf.PLATFORM);
         Map<String, String> systemConfigMap = new HashMap<>();
         // 判断是否是web端发送过来的请求【后端发送过来的token长度为32】
-        if (SysConf.WEB.equals(platform) || paramsToken.length() == Constants.THIRTY_TWO) {
+        if (SysConf.WEB.equals(platform) || (paramsToken != null && paramsToken.length() == Constants.THIRTY_TWO )) {
             // 如果是调用web端获取配置的接口
             systemConfigMap = this.getSystemConfigByWebToken(paramsToken);
         } else {

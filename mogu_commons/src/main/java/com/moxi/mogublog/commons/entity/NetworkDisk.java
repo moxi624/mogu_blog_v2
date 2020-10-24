@@ -59,6 +59,11 @@ public class NetworkDisk extends SuperEntity<NetworkDisk> {
     private String qiNiuUrl;
 
     /**
+     * Minio对象存储URL
+     */
+    private String minioUrl;
+
+    /**
      * 以下字段不存入数据库
      */
 

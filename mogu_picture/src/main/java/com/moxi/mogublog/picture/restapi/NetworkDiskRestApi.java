@@ -8,6 +8,7 @@ import com.moxi.mogublog.picture.global.SysConf;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
+import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.upload.FileOperation;
 import com.moxi.mogublog.utils.upload.FileUtil;
@@ -16,11 +17,10 @@ import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.*;
 

@@ -1,11 +1,13 @@
 package com.moxi.mogublog.picture.util;
 
 import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mougblog.base.global.Constants;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,6 +54,47 @@ public class MinioUtil {
             urlList.add(this.uploadSingleFile(file));
         }
         return ResultUtil.successWithData(urlList);
+    }
+
+    /**
+     * 删除单个文件
+     * @param fileName
+     * @return
+     */
+    public String deleteFile(String fileName) {
+        try {
+            // 获取系统配置
+            SystemConfig systemConfig = feignUtil.getSystemConfig();
+            MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
+            // Remove object.
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(systemConfig.getMinioBucket()).object(fileName).build());
+        } catch (Exception e) {
+            log.error("删除Minio中的文件失败 fileName: {}, 错误消息: {}", fileName, e.getMessage());
+            return ResultUtil.errorWithData(MessageConf.DELETE_DEFAULT_ERROR);
+        }
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
+    }
+
+    /**
+     * 批量删除文件
+     * @param fileNameList
+     * @return
+     */
+    public String deleteBatchFile(List<String> fileNameList) {
+        // 获取系统配置
+        SystemConfig systemConfig = feignUtil.getSystemConfig();
+        MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
+        try {
+            for (String fileName: fileNameList) {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder().bucket(systemConfig.getMinioBucket()).object(fileName).build());
+            }
+        } catch (Exception e) {
+            log.error("批量删除文件失败, 错误消息: {}", e.getMessage());
+            return ResultUtil.errorWithData(MessageConf.DELETE_DEFAULT_ERROR);
+        }
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     /**

@@ -9,11 +9,13 @@ import com.moxi.mogublog.picture.mapper.NetworkDiskMapper;
 import com.moxi.mogublog.picture.service.NetworkDiskService;
 import com.moxi.mogublog.picture.service.StorageService;
 import com.moxi.mogublog.picture.util.FeignUtil;
+import com.moxi.mogublog.picture.util.MinioUtil;
 import com.moxi.mogublog.picture.util.MoGuFileUtil;
 import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.picture.vo.NetworkDiskVO;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.upload.FileUtil;
+import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -34,7 +36,7 @@ import java.util.Map;
  * 文件服务实现类
  * </p>
  *
- * @author xuzhixiang
+ * @author
  * @since 2018-09-17
  */
 @Slf4j
@@ -49,6 +51,8 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
     private FeignUtil feignUtil;
     @Autowired
     private QiniuUtil qiniuUtil;
+    @Autowired
+    private MinioUtil minioUtil;
     @Value(value = "${file.upload.path}")
     private String UPLOAD_PATH;
 
@@ -104,8 +108,10 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         }
         List<NetworkDisk> list = networkDiskService.list(queryWrapper);
         list.forEach(item -> {
-            if (EOpenStatus.OPEN.equals(picturePriority)) {
+            if (EFilePriority.QI_NIU.equals(picturePriority)) {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL) + item.getQiNiuUrl());
+            } else if (EFilePriority.MINIO.equals(picturePriority)){
+                item.setFileUrl(qiNiuResultMap.get(SysConf.MINIO_PICTURE_BASE_URL) + item.getMinioUrl());
             } else {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL) + item.getLocalUrl());
             }
@@ -132,6 +138,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         NetworkDisk networkDisk = networkDiskService.getById(uid);
         String uploadLocal = qiNiuConfig.get(SysConf.UPLOAD_LOCAL);
         String uploadQiNiu = qiNiuConfig.get(SysConf.UPLOAD_QI_NIU);
+        String uploadMinio = qiNiuConfig.get(SysConf.UPLOAD_MINIO);
 
         // 修改为删除状态
         networkDisk.setStatus(EStatus.DISABLED);
@@ -174,6 +181,15 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
                         });
                         qiniuUtil.deleteFileList(fileList, qiNiuConfig);
                     }
+
+                    // 删除Minio中的文件
+                    if (EOpenStatus.OPEN.equals(uploadMinio)) {
+                        List<String> fileList = new ArrayList<>();
+                        list.forEach(item -> {
+                            fileList.add(item.getMinioUrl());
+                        });
+                        minioUtil.deleteBatchFile(fileList);
+                    }
                 }
             }
         } else {
@@ -187,6 +203,18 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             if (EOpenStatus.OPEN.equals(uploadQiNiu)) {
                 String qiNiuUrl = networkDisk.getQiNiuUrl();
                 qiniuUtil.deleteFile(qiNiuUrl, qiNiuConfig);
+            }
+
+            // 删除Minio中的文件
+            if (EOpenStatus.OPEN.equals(uploadMinio)) {
+                String minioUrl = networkDisk.getMinioUrl();
+                if(StringUtils.isNotEmpty(minioUrl)) {
+                    String [] minUrlArray = minioUrl.split("/");
+                    // 找到文件名
+                    minioUtil.deleteFile(minUrlArray[minUrlArray.length-1]);
+                } else {
+                    log.error("删除的文件不存在Minio文件地址");
+                }
             }
 
             Storage storage = storageService.getStorageByAdmin();

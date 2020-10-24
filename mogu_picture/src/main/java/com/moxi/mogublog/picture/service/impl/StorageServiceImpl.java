@@ -147,6 +147,7 @@ public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage>
             saveNetworkDisk.setFilePath(networkDisk.getFilePath());
             saveNetworkDisk.setQiNiuUrl(file.getQiNiuUrl());
             saveNetworkDisk.setLocalUrl(file.getPicUrl());
+            saveNetworkDisk.setMinioUrl(file.getMinioUrl());
             saveNetworkDisk.setFileSize(file.getFileSize());
             saveNetworkDisk.setFileName(file.getPicName());
             saveNetworkDisk.setExtendName(file.getPicExpandedName());

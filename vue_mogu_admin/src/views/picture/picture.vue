@@ -3,7 +3,7 @@
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;">
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/picture/add'">添加</el-button>
-      <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-s-promotion">返回分类</el-button>
+<!--      <el-button class="filter-item" type="primary" @click="handleReturn" icon="el-icon-s-promotion">返回分类</el-button>-->
       <el-button class= "button" type="primary"  @click="checkAll()" icon="el-icon-refresh">{{chooseTitle}}</el-button>
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/picture/delete'">删除选中</el-button>
       <el-button class="filter-item" type="success" @click="setCover" icon="el-icon-video-camera-solid" v-permission="'/picture/setCover'">设为封面</el-button>
@@ -38,7 +38,6 @@
           :lg="6"
           :xl="4"
         >
-
           <el-card
             :body-style="{ padding: '0px', textAlign: 'center' }"
             shadow="always"
@@ -169,7 +168,6 @@ export default {
       checkedPicture: {}, // 单选的图片
       pictureCropperVisible: false, // 裁剪图片框是否显示
       dialogPictureVisible: false,
-      tableData: [],
       uploadPictureHost: null,
       fileList: [],
       pictureSortUid: undefined, // 当前选中的图片分类uid
@@ -185,6 +183,7 @@ export default {
         picName: null,
         pictureSortUid: null
       },
+      tableData: [], //显示的图片列表
       count: 0, //计数器，用于记录上传次数
       loading: true,
       currentPage: 1,
@@ -288,6 +287,7 @@ export default {
             that.currentPage = response.data.current
             that.total = response.data.total
             Vue.set(that.pictureSorts, index, newObject);
+            that.tableData = response.data.records
           }
         } else {
           this.$message({ type: "error", message: response.data });
@@ -298,7 +298,7 @@ export default {
       var that = this
       var pictureSort = this.pictureSort;
       var params = {}
-      params.pictureSortUid = pictureSort.uid
+      params.pictureSortUid = this.pictureSortUid
       params.currentPage = val
       params.pageSize = that.pageSize
       getPictureList(params).then(function(response) {
@@ -314,10 +314,7 @@ export default {
           that.pageSize = response.data.size
           that.currentPage = response.data.current
           that.total = response.data.total
-          console.log("设置前", that.pictureSorts)
-          console.log("设置前的分类", pictureSort)
           Vue.set(that.pictureSorts, that.activeName, newObject);
-          console.log("设置后", that.pictureSorts)
         } else {
           this.$message({ type: "error", message: response.data });
         }
@@ -354,6 +351,7 @@ export default {
       } else {
         this.pictureUids.push(data.uid);
       }
+      console.log("选择列表", this.pictureUids)
     },
     checkAll: function() {
       //如果是全选
@@ -369,6 +367,8 @@ export default {
         this.isCheckedAll = true;
         this.chooseTitle = "取消全选";
       }
+
+      console.log("选择列表", this.pictureUids)
     },
     handleDelete: function(picture) {
       this.pictureUids = [picture.uid]
@@ -382,7 +382,6 @@ export default {
         });
         return;
       }
-
       this.$confirm("是否删除选中图片？, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -401,6 +400,7 @@ export default {
               this.pictureUids = []
               this.checkedPicture = []
               this.handleCurrentChange(this.currentPage);
+              this.chooseTitle = "全选";
             }
           });
         })

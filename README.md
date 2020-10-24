@@ -18,6 +18,12 @@
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 
+## 投票
+
+码云的开源项目评选活动开始喽~ 欢迎各位小伙伴动动手指，给蘑菇博客项目投上宝贵的一票，感谢大家的支持~
+投票地址：https://www.oschina.net/p/mogublog
+活动地址：https://www.oschina.net/project/top_cn_2020
+
 ##  前言
 
 虽然我知道很多人来到这里，都是pull 或者dowonload了一下代码，就把项目关闭了。突然有一天想起了看看蘑菇博客这个项目有没有更新，然后继续执行以下操作：
@@ -354,6 +360,7 @@
 - [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [x] 富文本编辑器和Markdown编辑器任意切换
 - [x] 使用ELK搭建蘑菇博客日志收集功能
+- [ ] 使用Minio [搭建对象存储服务](http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f)
 - [ ] 增加定时任务模块
 - [ ] 增加代码生成器
 - [ ] 完善网盘管理

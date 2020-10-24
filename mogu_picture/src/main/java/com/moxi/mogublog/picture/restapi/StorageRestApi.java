@@ -32,10 +32,6 @@ public class StorageRestApi {
 
     @Value(value = "${file.upload.path}")
     String path;
-    @Autowired
-    private QiniuUtil qiniuUtil;
-    @Resource
-    private FileService fileService;
     @Resource
     private StorageService storageService;
 
