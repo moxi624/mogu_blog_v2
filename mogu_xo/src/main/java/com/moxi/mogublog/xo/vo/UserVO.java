@@ -21,11 +21,12 @@ import java.util.Date;
  */
 @Data
 public class UserVO extends BaseVO<UserVO> {
+
     /**
      * 用户名
      */
     @NotBlank(groups = {Insert.class, GetOne.class})
-    @Range(groups = {Insert.class, Update.class}, min = 5, max = 10)
+    @Range(groups = {Insert.class, Update.class}, min = 5, max = 30)
     private String userName;
 
     /**
