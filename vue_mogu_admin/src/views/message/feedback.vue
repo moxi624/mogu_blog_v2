@@ -201,18 +201,12 @@
         })
           .then(() => {
             deleteBatchFeedback(that.multipleSelection).then(response => {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
               that.feedbackList();
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.info("已取消删除")
           });
       },
       goUserInfo: function(user) {
@@ -239,10 +233,12 @@
         params.pageSize = this.pageSize;
 
         getFeedbackList(params).then(response => {
-          this.tableData = response.data.records;
-          this.currentPage = response.data.current;
-          this.pageSize = response.data.size;
-          this.total = response.data.total;
+          if(response.code == this.$ECode.SUCCESS) {
+            this.tableData = response.data.records;
+            this.currentPage = response.data.current;
+            this.pageSize = response.data.size;
+            this.total = response.data.total;
+          }
         });
       },
       getFormObject: function() {
@@ -260,7 +256,7 @@
         var dictTypeList = ['sys_feedback_status']
         getListByDictTypeList(dictTypeList).then(response => {
           if (response.code == this.$ECode.SUCCESS) {
-            var dictMap = response.data;
+            let dictMap = response.data;
             this.feedbackStatusDictList = dictMap.sys_feedback_status.list
           }
         });
@@ -272,7 +268,6 @@
         title: "编辑反馈";
         this.dialogFormVisible = true;
         this.isEditForm = true;
-        console.log(row);
         this.form = row;
       },
       handleDelete: function(row) {
@@ -288,19 +283,12 @@
             feedback.uid = row.uid
             params.push(feedback);
             deleteBatchFeedback(params).then(response => {
-              console.log(response);
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
               that.feedbackList();
             });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
-            });
+            this.$commonUtil.message.info("已取消删除")
           });
       },
       handleCurrentChange: function(val) {
@@ -316,17 +304,11 @@
           editFeedback(this.form).then(response => {
             console.log(response);
             if (response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
               this.dialogFormVisible = false;
               this.linkList();
             } else {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         }

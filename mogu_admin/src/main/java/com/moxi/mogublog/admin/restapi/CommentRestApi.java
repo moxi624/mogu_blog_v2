@@ -45,41 +45,45 @@ public class CommentRestApi {
     @AuthorityVerify
     @ApiOperation(value = "获取评论列表", notes = "获取评论列表", response = String.class)
     @PostMapping(value = "/getList")
-    public String getList(HttpServletRequest request, @Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String getList(@Validated({GetList.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, commentService.getPageList(commentVO));
+        log.info("获取评论列表: {}", commentVO);
+        return ResultUtil.successWithData(commentService.getPageList(commentVO));
     }
 
     @AvoidRepeatableCommit
     @AuthorityVerify
     @ApiOperation(value = "增加评论", notes = "增加评论", response = String.class)
     @PostMapping("/add")
-    public String add(HttpServletRequest request, @Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String add(@Validated({Insert.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("新增评论: {}", commentVO);
         return commentService.addComment(commentVO);
     }
 
     @AuthorityVerify
     @ApiOperation(value = "编辑评论", notes = "编辑评论", response = String.class)
     @PostMapping("/edit")
-    public String edit(HttpServletRequest request, @Validated({Update.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String edit(@Validated({Update.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑评论: {}", commentVO);
         return commentService.editComment(commentVO);
     }
 
     @AuthorityVerify
     @ApiOperation(value = "删除评论", notes = "删除评论", response = String.class)
     @PostMapping("/delete")
-    public String delete(HttpServletRequest request, @Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
+    public String delete(@Validated({Delete.class}) @RequestBody CommentVO commentVO, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("删除评论: {}", commentVO);
         return commentService.deleteComment(commentVO);
     }
 
@@ -87,7 +91,7 @@ public class CommentRestApi {
     @OperationLogger(value = "删除选中评论")
     @ApiOperation(value = "删除选中评论", notes = "删除选中评论", response = String.class)
     @PostMapping("/deleteBatch")
-    public String deleteBatch(HttpServletRequest request, @Validated({Delete.class}) @RequestBody List<CommentVO> commentVoList, BindingResult result) {
+    public String deleteBatch(@Validated({Delete.class}) @RequestBody List<CommentVO> commentVoList, BindingResult result) {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);

@@ -5,6 +5,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * <p>
@@ -14,6 +15,7 @@ import lombok.Data;
  * @author xuzhixiang
  * @since 2020年3月16日08:35:18
  */
+@ToString
 @Data
 public class FeedbackVO extends BaseVO<FeedbackVO> {
 

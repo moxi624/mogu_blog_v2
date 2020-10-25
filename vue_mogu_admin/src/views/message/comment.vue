@@ -250,20 +250,14 @@ export default {
       console.log("点击了回复");
     },
     handleDelete: function(row) {
-			var that = this;
 			let params = {}
 			params.uid = row.uid
 			deleteComment(params).then(response=> {
-          console.log(response);
-          this.$message({
-            type: "success",
-            message: response.data
-          });
-					that.commentList();
+          this.$commonUtil.message.success(response.message)
+          this.commentList();
 			})
     },
     handleDeleteBatch: function() {
-      var that = this;
       var that = this;
       if(that.multipleSelection.length <= 0 ) {
         this.$message({
@@ -279,23 +273,15 @@ export default {
       })
         .then(() => {
           deleteBatchComment(that.multipleSelection).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            this.$commonUtil.message(response.message)
             that.commentList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {
-      console.log("点击了换页");
       this.currentPage = val;
       this.commentList();
     },

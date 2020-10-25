@@ -158,7 +158,7 @@ export default {
           this.fileList = res.data
           this.loading = false
         } else {
-          this.$message.error(res.errorMessage)
+          this.$message.error(res.message)
         }
       })
     },

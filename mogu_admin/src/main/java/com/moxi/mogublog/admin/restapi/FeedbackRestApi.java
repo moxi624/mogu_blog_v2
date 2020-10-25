@@ -46,6 +46,7 @@ public class FeedbackRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("获取反馈列表: {}", feedbackVO);
         return ResultUtil.result(SysConf.SUCCESS, feedbackService.getPageList(feedbackVO));
     }
 
@@ -57,6 +58,7 @@ public class FeedbackRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑反馈: {}", feedbackVO);
         return feedbackService.addFeedback(feedbackVO);
     }
 
@@ -68,6 +70,7 @@ public class FeedbackRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("批量删除反馈: {}", feedbackVOList);
         return feedbackService.deleteBatchFeedback(feedbackVOList);
     }
 

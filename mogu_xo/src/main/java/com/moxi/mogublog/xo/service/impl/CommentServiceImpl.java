@@ -29,32 +29,25 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * <p>
  * 评论表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-08
  */
 @Service
 public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment> implements CommentService {
 
     @Resource
-    CommentMapper commentMapper;
-
+    private CommentMapper commentMapper;
     @Autowired
-    WebUtil webUtil;
-
+    private WebUtil webUtil;
     @Autowired
-    CommentService commentService;
-
+    private CommentService commentService;
     @Autowired
-    UserService userService;
-
+    private UserService userService;
     @Autowired
-    BlogService blogService;
-
-    @Autowired
+    private BlogService blogService;
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @Override
@@ -204,7 +197,7 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
         comment.setStatus(EStatus.ENABLE);
         comment.setUpdateTime(new Date());
         comment.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -219,7 +212,7 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
         comment.setStatus(EStatus.ENABLE);
         comment.setUpdateTime(new Date());
         comment.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -228,13 +221,13 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
         comment.setStatus(EStatus.DISABLED);
         comment.setUpdateTime(new Date());
         comment.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
     public String deleteBatchComment(List<CommentVO> commentVOList) {
         if (commentVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         commentVOList.forEach(item -> {
@@ -246,10 +239,8 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
             item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
         });
-
         commentService.updateBatchById(commentList);
-
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
 }
