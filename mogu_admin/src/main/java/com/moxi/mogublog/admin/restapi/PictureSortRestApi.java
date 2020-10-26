@@ -46,6 +46,7 @@ public class PictureSortRestApi {
     public String getList(@Validated({GetList.class}) @RequestBody PictureSortVO pictureSortVO, BindingResult result) {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("获取图片分类列表: {}", pictureSortVO);
         return ResultUtil.result(SysConf.SUCCESS, pictureSortService.getPageList(pictureSortVO));
     }
 
@@ -57,6 +58,7 @@ public class PictureSortRestApi {
     public String add(@Validated({Insert.class}) @RequestBody PictureSortVO pictureSortVO, BindingResult result) {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("增加图片分类: {}", pictureSortVO);
         return pictureSortService.addPictureSort(pictureSortVO);
     }
 
@@ -68,6 +70,7 @@ public class PictureSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑图片分类: {}", pictureSortVO);
         return pictureSortService.editPictureSort(pictureSortVO);
     }
 
@@ -78,6 +81,7 @@ public class PictureSortRestApi {
     public String delete(@Validated({Delete.class}) @RequestBody PictureSortVO pictureSortVO, BindingResult result) {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("删除图片分类: {}", pictureSortVO);
         return pictureSortService.deletePictureSort(pictureSortVO);
     }
 
@@ -88,6 +92,7 @@ public class PictureSortRestApi {
     public String stick(@Validated({Delete.class}) @RequestBody PictureSortVO pictureSortVO, BindingResult result) {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("置顶图片分类: {}", pictureSortVO);
         return pictureSortService.stickPictureSort(pictureSortVO);
     }
 
@@ -98,7 +103,8 @@ public class PictureSortRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         PictureSort pictureSort = pictureSortService.getById(pictureSortVO.getUid());
-        return ResultUtil.result(SysConf.SUCCESS, pictureSort);
+        log.info("通过Uid获取分类: {}", pictureSort);
+        return ResultUtil.successWithData(pictureSort);
     }
 }
 

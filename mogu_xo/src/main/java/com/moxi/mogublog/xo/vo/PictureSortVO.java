@@ -5,13 +5,15 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 相册分类实体类
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @date 2018年9月17日16:10:38
  */
+@ToString
 @Data
 public class PictureSortVO extends BaseVO<PictureSortVO> {
 

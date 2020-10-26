@@ -113,9 +113,9 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
             }
             pictureService.saveBatch(pictureList);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.INSERT_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.INSERT_FAIL);
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
         picture.setPictureSortUid(pictureVO.getPictureSortUid());
         picture.setUpdateTime(new Date());
         picture.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
         // 图片删除的时候，是携带多个id拼接而成的
         String uidStr = pictureVO.getUid();
         if (StringUtils.isEmpty(uidStr)) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = StringUtils.changeStringToString(pictureVO.getUid(), SysConf.FILE_SEGMENTATION);
         for (String item : uids) {
@@ -161,7 +161,7 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
             picture.setUpdateTime(new Date());
             picture.updateById();
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
@@ -174,12 +174,12 @@ public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture>
                 picture.setUpdateTime(new Date());
                 pictureSort.updateById();
             } else {
-                return ResultUtil.result(SysConf.ERROR, MessageConf.THE_PICTURE_NOT_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.THE_PICTURE_NOT_EXIST);
             }
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.THE_PICTURE_SORT_NOT_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.THE_PICTURE_SORT_NOT_EXIST);
         }
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override

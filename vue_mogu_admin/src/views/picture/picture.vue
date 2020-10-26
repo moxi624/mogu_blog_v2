@@ -290,7 +290,7 @@ export default {
             that.tableData = response.data.records
           }
         } else {
-          this.$message({ type: "error", message: response.data });
+          this.$commonUtil.message.error(response.message)
         }
       });
     },
@@ -316,7 +316,7 @@ export default {
           that.total = response.data.total
           Vue.set(that.pictureSorts, that.activeName, newObject);
         } else {
-          this.$message({ type: "error", message: response.data });
+          this.$commonUtil.message.error(response.message)
         }
       });
     },
@@ -376,10 +376,7 @@ export default {
     },
     handleDeleteBatch: function() {
       if (this.pictureUids.length <= 0) {
-        this.$message({
-          type: "error",
-          message: "请先选中图片！"
-        });
+        this.$commonUtil.message.error("请先选中图片！")
         return;
       }
       this.$confirm("是否删除选中图片？, 是否继续?", "提示", {
@@ -392,10 +389,7 @@ export default {
           params.uid = this.pictureUids.join(","); //将数组变成,组成
           deletePicture(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
               // 清空选中的列表
               this.pictureUids = []
               this.checkedPicture = []
@@ -405,18 +399,12 @@ export default {
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     setCover: function() {
       if (this.pictureUids.length != 1) {
-        this.$message({
-          type: "error",
-          message: "选择一张图片设为封面图！"
-        });
+        this.$commonUtil.message.error("选择一张图片设为封面图")
         return;
       }
 
@@ -430,18 +418,12 @@ export default {
           params.uid = this.pictureUids[0]
           params.pictureSortUid = this.pictureSortUid
           setCover(params).then(response => {
-            this.$message({
-              type: "success",
-              message: response.data
-            });
+            this.$commonUtil.message.success(response.message)
             this.pictureUids = [];
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
+          this.$commonUtil.message.info("已取消")
         });
 
     },
@@ -464,10 +446,7 @@ export default {
       params.pictureSortUid = checkedPicture.pictureSortUid
       editPicture(params).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          this.$message({
-            type: "success",
-            message: response.data
-          });
+          this.$commonUtil.message.success(response.message)
           this.handleCurrentChange(this.currentPage);
         } else {
           this.$commonUtil.message.error(response.message)
@@ -515,16 +494,10 @@ export default {
         if(this.count % fileList.length == 0) {
           addPicture(this.pictureUploadList).then(res => {
             if (res.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: res.data
-              });
+              this.$commonUtil.message.success(res.message)
               this.handleCurrentChange(this.currentPage);
             } else {
-              this.$message({
-                type: "error",
-                message: res.data
-              });
+              this.$commonUtil.message.error(res.message)
             }
             this.$refs.upload.clearFiles();
             this.fileUids = "";
@@ -532,10 +505,7 @@ export default {
           });
         }
       } else {
-        this.$message({
-          type: "error",
-          message: response.data
-        });
+        this.$commonUtil.message.error(response.message)
       }
     }
   }

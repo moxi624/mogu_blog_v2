@@ -292,23 +292,14 @@ export default {
           stickPictureSort(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.pictureSortList();
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消置顶"
-          });
+          this.$commonUtil.message.info("已取消置顶")
         });
     },
     handleDelete: function(row) {
@@ -322,24 +313,15 @@ export default {
           params.uid = row.uid
           deletePictureSort(params).then(response => {
             if(response.code == this.$ECode.SUCCESS) {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             this.pictureSortList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     submitForm: function() {
@@ -349,11 +331,7 @@ export default {
         } else {
           if (this.isEditForm) {
             editPictureSort(this.form).then(response => {
-              console.log(response);
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+              this.$commonUtil.message.success(response.message)
               this.dialogFormVisible = false;
               this.pictureSortList();
             });

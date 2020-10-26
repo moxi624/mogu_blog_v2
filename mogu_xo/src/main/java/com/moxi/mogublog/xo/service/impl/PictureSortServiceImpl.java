@@ -21,30 +21,26 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * <p>
  * 图片分类表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 @Service
 public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, PictureSort> implements PictureSortService {
 
     @Autowired
-    WebUtil webUtil;
-
+    private WebUtil webUtil;
     @Autowired
-    PictureSortService pictureSortService;
-
+    private PictureSortService pictureSortService;
     @Autowired
-    PictureService pictureService;
-
-    @Autowired
-    PictureFeignClient pictureFeignClient;
+    private PictureService pictureService;
+    @Resource
+    private PictureFeignClient pictureFeignClient;
 
     @Override
     public IPage<PictureSort> getPageList(PictureSortVO pictureSortVO) {
@@ -107,7 +103,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         pictureSort.setIsShow(pictureSortVO.getIsShow());
         pictureSort.setUpdateTime(new Date());
         pictureSort.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -120,7 +116,7 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         pictureSort.setIsShow(pictureSortVO.getIsShow());
         pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
@@ -131,14 +127,14 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         pictureQueryWrapper.eq(SQLConf.PICTURE_SORT_UID, pictureSortVO.getUid());
         Integer pictureCount = pictureService.count(pictureQueryWrapper);
         if (pictureCount > 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PICTURE_UNDER_THIS_SORT);
+            return ResultUtil.errorWithMessage(MessageConf.PICTURE_UNDER_THIS_SORT);
         }
 
         PictureSort pictureSort = pictureSortService.getById(pictureSortVO.getUid());
         pictureSort.setStatus(EStatus.DISABLED);
         pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 
     @Override
@@ -154,15 +150,15 @@ public class PictureSortServiceImpl extends SuperServiceImpl<PictureSortMapper, 
         List<PictureSort> list = pageList.getRecords();
         PictureSort maxSort = list.get(0);
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(pictureSort.getUid())) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.THIS_SORT_IS_TOP);
+            return ResultUtil.errorWithMessage(MessageConf.THIS_SORT_IS_TOP);
         }
         Integer sortCount = maxSort.getSort() + 1;
         pictureSort.setSort(sortCount);
         pictureSort.setUpdateTime(new Date());
         pictureSort.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 }
