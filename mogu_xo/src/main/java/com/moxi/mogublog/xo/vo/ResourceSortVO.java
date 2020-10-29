@@ -5,6 +5,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * ResourceSortVO
@@ -12,6 +13,7 @@ import lombok.Data;
  * @author: 陌溪
  * @create: 2020年1月9日19:09:00
  */
+@ToString
 @Data
 public class ResourceSortVO extends BaseVO<ResourceSortVO> {
 

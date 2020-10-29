@@ -21,30 +21,29 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * <p>
  * 学习视频表 服务实现类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-04
+ * @author 陌溪
+ * @date 2018-09-04
  */
 @Service
 public class StudyVideoServiceImpl extends SuperServiceImpl<StudyVideoMapper, StudyVideo> implements StudyVideoService {
 
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Autowired
-    StudyVideoService studyVideoService;
+    private StudyVideoService studyVideoService;
 
     @Autowired
-    ResourceSortService resourceSortService;
+    private ResourceSortService resourceSortService;
 
-    @Autowired
-    PictureFeignClient pictureFeignClient;
+    @Resource
+    private PictureFeignClient pictureFeignClient;
 
     @Override
     public IPage<StudyVideo> getPageList(StudyVideoVO studyVideoVO) {
@@ -69,12 +68,10 @@ public class StudyVideoServiceImpl extends SuperServiceImpl<StudyVideoMapper, St
         });
         String pictureResult = null;
         Map<String, String> pictureMap = new HashMap<>();
-
         if (fileUids != null) {
             pictureResult = this.pictureFeignClient.getPicture(fileUids.toString(), SysConf.FILE_SEGMENTATION);
         }
         List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
-
         picList.forEach(item -> {
             pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
@@ -111,7 +108,7 @@ public class StudyVideoServiceImpl extends SuperServiceImpl<StudyVideoMapper, St
         studyVideo.setClickCount(SysConf.ZERO);
         studyVideo.setUpdateTime(new Date());
         studyVideo.insert();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -125,22 +122,19 @@ public class StudyVideoServiceImpl extends SuperServiceImpl<StudyVideoMapper, St
         studyVideo.setResourceSortUid(studyVideoVO.getResourceSortUid());
         studyVideo.setUpdateTime(new Date());
         studyVideo.updateById();
-        return ResultUtil.result(SysConf.SUCCESS, MessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchStudyVideo(List<StudyVideoVO> studyVideoVOList) {
         if (studyVideoVOList.size() <= 0) {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
-
         studyVideoVOList.forEach(item -> {
             uids.add(item.getUid());
         });
-
         Collection<StudyVideo> blogSortList = studyVideoService.listByIds(uids);
-
         blogSortList.forEach(item -> {
             item.setUpdateTime(new Date());
             item.setStatus(EStatus.DISABLED);
@@ -149,9 +143,9 @@ public class StudyVideoServiceImpl extends SuperServiceImpl<StudyVideoMapper, St
         Boolean save = studyVideoService.updateBatchById(blogSortList);
 
         if (save) {
-            return ResultUtil.result(SysConf.SUCCESS, MessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(SysConf.ERROR, MessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 }

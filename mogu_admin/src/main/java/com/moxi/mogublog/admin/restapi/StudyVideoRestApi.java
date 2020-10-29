@@ -41,12 +41,7 @@ import java.util.List;
 public class StudyVideoRestApi {
 
     @Autowired
-    WebUtil webUtil;
-
-    @Autowired
-    StudyVideoService studyVideoService;
-    @Autowired
-    ResourceSortService resourceSortService;
+    private StudyVideoService studyVideoService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取学习视频列表", notes = "获取学习视频列表", response = String.class)
@@ -55,7 +50,8 @@ public class StudyVideoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, studyVideoService.getPageList(studyVideoVO));
+        log.info("获取学习视频列表: {}", studyVideoVO);
+        return ResultUtil.successWithData(studyVideoService.getPageList(studyVideoVO));
     }
 
     @AvoidRepeatableCommit
@@ -67,6 +63,7 @@ public class StudyVideoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("增加学习视频: {}", studyVideoVO);
         return studyVideoService.addStudyVideo(studyVideoVO);
     }
 
@@ -78,6 +75,7 @@ public class StudyVideoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑学习视频: {}", studyVideoVO);
         return studyVideoService.editStudyVideo(studyVideoVO);
     }
 
@@ -89,6 +87,7 @@ public class StudyVideoRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("删除学习视频: {}", studyVideoVOList);
         return studyVideoService.deleteBatchStudyVideo(studyVideoVOList);
     }
 

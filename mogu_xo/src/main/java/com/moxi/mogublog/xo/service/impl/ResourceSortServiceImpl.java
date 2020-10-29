@@ -8,13 +8,14 @@ import com.moxi.mogublog.commons.entity.StudyVideo;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.xo.global.MessageConf;
+import com.moxi.mogublog.xo.global.SysConf;
 import com.moxi.mogublog.xo.mapper.ResourceSortMapper;
 import com.moxi.mogublog.xo.service.ResourceSortService;
 import com.moxi.mogublog.xo.service.StudyVideoService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.ResourceSortVO;
 import com.moxi.mougblog.base.enums.EStatus;
-import com.moxi.mougblog.base.global.BaseMessageConf;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.global.BaseSysConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
@@ -24,27 +25,25 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * <p>
  * 资源分类表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 @Service
 public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper, ResourceSort> implements ResourceSortService {
 
     @Resource
-    ResourceSortService resourceSortService;
+    private ResourceSortService resourceSortService;
 
     @Resource
-    StudyVideoService studyVideoService;
+    private StudyVideoService studyVideoService;
 
     @Resource
-    PictureFeignClient pictureFeignClient;
+    private PictureFeignClient pictureFeignClient;
 
     @Resource
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Override
     public IPage<ResourceSort> getPageList(ResourceSortVO resourceSortVO) {
@@ -52,7 +51,6 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         if (StringUtils.isNotEmpty(resourceSortVO.getKeyword()) && !StringUtils.isEmpty(resourceSortVO.getKeyword().trim())) {
             queryWrapper.like(BaseSQLConf.SORT_NAME, resourceSortVO.getKeyword().trim());
         }
-
         Page<ResourceSort> page = new Page<>();
         page.setCurrent(resourceSortVO.getCurrentPage());
         page.setSize(resourceSortVO.getPageSize());
@@ -76,7 +74,7 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         List<Map<String, Object>> picList = webUtil.getPictureMap(pictureResult);
 
         picList.forEach(item -> {
-            pictureMap.put(item.get("uid").toString(), item.get("url").toString());
+            pictureMap.put(item.get(SysConf.UID).toString(), item.get(SysConf.URL).toString());
         });
 
         for (ResourceSort item : list) {
@@ -104,7 +102,7 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
         ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
         if (tempSort != null) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.ENTITY_EXIST);
+            return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
         }
 
         ResourceSort resourceSort = new ResourceSort();
@@ -114,7 +112,7 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         resourceSort.setSort(resourceSortVO.getSort());
         resourceSort.setStatus(EStatus.ENABLE);
         resourceSort.insert();
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.INSERT_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.INSERT_SUCCESS);
     }
 
     @Override
@@ -130,7 +128,7 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
             queryWrapper.eq(BaseSQLConf.STATUS, EStatus.ENABLE);
             ResourceSort tempSort = resourceSortService.getOne(queryWrapper);
             if (tempSort != null) {
-                return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.ENTITY_EXIST);
+                return ResultUtil.errorWithMessage(MessageConf.ENTITY_EXIST);
             }
         }
 
@@ -140,13 +138,13 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         resourceSort.setSort(resourceSortVO.getSort());
         resourceSort.setUpdateTime(new Date());
         resourceSort.updateById();
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.UPDATE_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
 
     @Override
     public String deleteBatchResourceSort(List<ResourceSortVO> resourceSortVOList) {
         if (resourceSortVOList.size() <= 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         List<String> uids = new ArrayList<>();
         resourceSortVOList.forEach(item -> {
@@ -159,9 +157,8 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         studyVideoQueryWrapper.in(BaseSQLConf.RESOURCE_SORT_UID, uids);
         Integer count = studyVideoService.count(studyVideoQueryWrapper);
         if (count > 0) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.RESOURCE_UNDER_THIS_SORT);
+            return ResultUtil.errorWithMessage(MessageConf.RESOURCE_UNDER_THIS_SORT);
         }
-
         Collection<ResourceSort> resourceSortList = resourceSortService.listByIds(uids);
 
         resourceSortList.forEach(item -> {
@@ -172,9 +169,9 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         Boolean save = resourceSortService.updateBatchById(resourceSortList);
 
         if (save) {
-            return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.DELETE_SUCCESS);
+            return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
         } else {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.DELETE_FAIL);
+            return ResultUtil.errorWithMessage(MessageConf.DELETE_FAIL);
         }
     }
 
@@ -193,10 +190,10 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         ResourceSort maxSort = list.get(0);
 
         if (StringUtils.isEmpty(maxSort.getUid())) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.PARAM_INCORRECT);
+            return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
         if (maxSort.getUid().equals(resourceSort.getUid())) {
-            return ResultUtil.result(BaseSysConf.ERROR, BaseMessageConf.THIS_SORT_IS_TOP);
+            return ResultUtil.errorWithMessage(MessageConf.THIS_SORT_IS_TOP);
         }
 
         Integer sortCount = maxSort.getSort() + 1;
@@ -205,6 +202,6 @@ public class ResourceSortServiceImpl extends SuperServiceImpl<ResourceSortMapper
         resourceSort.setUpdateTime(new Date());
         resourceSort.updateById();
 
-        return ResultUtil.result(BaseSysConf.SUCCESS, BaseMessageConf.OPERATION_SUCCESS);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 }

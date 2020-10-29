@@ -328,31 +328,22 @@ export default {
           var params = [];
           params.push(row);
           deleteBatchStudyVideo(params).then(response => {
-            console.log(response);
-            if (response.code == "success") {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+            if(response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
               this.studyVideoList();
+            } else {
+              this.$commonUtil.message.error(response.message)
             }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleDeleteBatch: function() {
       var that = this;
-      var that = this;
       if(that.multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要删除的内容！"
-        });
+        this.$commonUtil.message.error("请先选中需要删除的内容")
         return;
       }
       this.$confirm("此操作将把选中的视频删除, 是否继续?", "提示", {
@@ -362,19 +353,16 @@ export default {
       })
         .then(() => {
           deleteBatchStudyVideo(that.multipleSelection).then(response => {
-            console.log(response);
-            this.$message({
-              type: "success",
-              message: response.data
-            });
-            that.studyVideoList();
+            if(response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
+              this.studyVideoList();
+            } else {
+              this.$commonUtil.message.success(response.message)
+            }
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     submitForm: function() {
@@ -385,31 +373,23 @@ export default {
           this.form.content = this.$refs.ckeditor.getData(); //获取CKEditor中的内容
           if (this.isEditForm) {
             editStudyVideo(this.form).then(response => {
-              console.log(response);
-              this.$message({
-                type: "success",
-                message: response.data
-              });
-              this.dialogFormVisible = false;
-              this.studyVideoList();
+              if(response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                this.dialogFormVisible = false;
+                this.studyVideoList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
             });
           } else {
             addStudyVideo(this.form).then(response => {
-              console.log(response);
-              if (response.code == "success") {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+              if (response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                this.dialogFormVisible = false;
+                this.studyVideoList();
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
-
-              this.dialogFormVisible = false;
-              this.studyVideoList();
             });
           }
         }

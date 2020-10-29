@@ -338,15 +338,9 @@ export default {
           } else {
             addPictureSort(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
-                this.$message({
-                  type: "success",
-                  message: response.data
-                });
+                this.$commonUtil.message.success(response.message)
               } else {
-                this.$message({
-                  type: "error",
-                  message: response.data
-                });
+                this.$commonUtil.message.error(response.message)
               }
               this.dialogFormVisible = false;
               this.pictureSortList();

@@ -47,7 +47,8 @@ public class ResourceSortRestApi {
     public String getList(@Validated({GetList.class}) @RequestBody ResourceSortVO resourceSortVO, BindingResult result) {
 
         ThrowableUtils.checkParamArgument(result);
-        return ResultUtil.result(SysConf.SUCCESS, resourceSortService.getPageList(resourceSortVO));
+        log.info("获取资源分类列表:{}", resourceSortVO);
+        return ResultUtil.successWithData(resourceSortService.getPageList(resourceSortVO));
     }
 
     @AvoidRepeatableCommit
@@ -59,6 +60,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("增加资源分类:{}", resourceSortVO);
         return resourceSortService.addResourceSort(resourceSortVO);
     }
 
@@ -70,6 +72,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("编辑资源分类:{}", resourceSortVO);
         return resourceSortService.editResourceSort(resourceSortVO);
     }
 
@@ -81,7 +84,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
-
+        log.info("批量删除资源分类:{}", resourceSortVOList);
         return resourceSortService.deleteBatchResourceSort(resourceSortVOList);
     }
 
@@ -93,6 +96,7 @@ public class ResourceSortRestApi {
 
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
+        log.info("置顶分类:{}", resourceSortVO);
         return resourceSortService.stickResourceSort(resourceSortVO);
     }
 }

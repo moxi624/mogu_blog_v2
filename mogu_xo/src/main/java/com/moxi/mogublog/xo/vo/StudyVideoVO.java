@@ -5,6 +5,7 @@ import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.validator.group.Update;
 import com.moxi.mougblog.base.vo.BaseVO;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * StudyVideoVO
@@ -12,6 +13,7 @@ import lombok.Data;
  * @author: 陌溪
  * @create: 2020年1月10日22:30:29
  */
+@ToString
 @Data
 public class StudyVideoVO extends BaseVO<StudyVideoVO> {
 
