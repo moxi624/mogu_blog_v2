@@ -127,18 +127,6 @@
       strSubstring(str, count) {
         return this.$commonUtil.splitStr(str, count)
       },
-      getSubjectList() {
-        var params = {};
-        params.subjectUid = this.subjectUid;
-        params.pageSize = 10;
-        params.currentPage = 1;
-        getSubjectItemList(params).then(response => {
-          if(response.code == this.$ECode.SUCCESS) {
-            this.list = response.data.records
-            this.total = response.total
-          }
-        })
-      },
       handleDelete: function(row) {
         this.$confirm("此操作将把博客移除该专辑, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -155,7 +143,7 @@
               } else {
                 this.$commonUtil.message.error(response.message)
               }
-              this.getSubjectList();
+              this.getList();
             });
           })
           .catch(() => {
