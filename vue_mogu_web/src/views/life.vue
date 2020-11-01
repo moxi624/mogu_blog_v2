@@ -1,3 +1,4 @@
+<!--
 <template>
 <html>
 
@@ -7,7 +8,7 @@
 <div class="pagebg sh"></div>
 <div class="container">
   <h1 class="t_nav"><span>慢生活，不是懒惰，放慢速度不是拖延时间，而是让我们在生活中寻找到平衡。</span><a href="/" class="n1">网站首页</a><a href="/" class="n2">慢生活</a></h1>
-  <!--blogsbox begin-->
+  &lt;!&ndash;blogsbox begin&ndash;&gt;
   <div class="blogsbox">
     <div class="blogs" data-scroll-reveal="enter bottom over 1s" >
       <h3 class="blogtitle"><a href="/" target="_blank">别让这些闹心的套路，毁了你的网页设计!</a></h3>
@@ -280,7 +281,7 @@
     <div class="pagelist"><a title="Total record">&nbsp;<b>45</b> </a>&nbsp;&nbsp;&nbsp;<b>1</b>&nbsp;<a href="/download/index_2.html">2</a>&nbsp;<a href="/download/index_2.html">下一页</a>&nbsp;<a href="/download/index_2.html">尾页</a></div>
 
   </div>
-  <!--blogsbox end-->
+  &lt;!&ndash;blogsbox end&ndash;&gt;
   <div class="sidebar">
     <div class="zhuanti">
       <h2 class="hometitle">特别推荐</h2>
@@ -382,8 +383,9 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+&lt;!&ndash; Add "scoped" attribute to limit CSS to this component only &ndash;&gt;
 <style>
 
 
 </style>
+-->
