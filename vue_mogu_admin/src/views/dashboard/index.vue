@@ -104,6 +104,18 @@
       <line-chart v-if="showLineChart" :chart-data="lineChartData"></line-chart>
     </el-row>
 
+    <el-dialog
+      title="通知"
+      :visible.sync="notificationDialogVisible"
+      v-if="systemConfig.openDashboardNotification == 1"
+      width="50%"
+      :closeOnClickModal="false"
+      :closeOnPressEscape="false"
+      :before-close="closeNotificationDialogVisible"
+      center>
+      <span v-html="systemConfig.dashboardNotification"></span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -122,6 +134,8 @@ import TodoList from "@/components/TodoList";
 import BarChart from "@/components/BarChart";
 import LineChart from "@/components/LineChart";
 import CalendarChart from "@/components/CalendarChart";
+import { getSystemConfig} from "@/api/systemConfig";
+import { mapMutations } from "vuex";
 
 export default {
   name: "dashboard",
@@ -150,10 +164,13 @@ export default {
       blogCountByBlogSort: [],
       tagNameArray: [],
       blogSortNameArray: [],
-      lineChartData: {}
+      lineChartData: {},
+      systemConfig: {}, // 系统配置
+      notificationDialogVisible: this.$store.state.app.openNotificationDialogVisible
     };
   },
   created() {
+    this.getSystemConfigData();
     init().then(response => {
       if (response.code == this.$ECode.SUCCESS) {
         this.blogTotal = response.data.blogCount;
@@ -192,28 +209,38 @@ export default {
     getBlogCountByBlogSort().then(response => {
       if (response.code == this.$ECode.SUCCESS) {
         this.blogCountByBlogSort = response.data;
-
-        var blogSortList = this.blogCountByBlogSort;
-
+        let blogSortList = this.blogCountByBlogSort;
         for (var a = 0; a < this.blogCountByBlogSort.length; a++) {
           this.blogSortNameArray.push(blogSortList[a].name);
         }
-
         this.showPieBlogSortChart = true;
       }
     });
   },
   methods: {
+    //拿到vuex中的写的两个方法
+    ...mapMutations(["setOpenNotification"]),
+    closeNotificationDialogVisible(done) {
+      this.setOpenNotification(false);
+      done();
+    },
+    getSystemConfigData: function () {
+      getSystemConfig().then(response => {
+        if (response.code == this.$ECode.SUCCESS) {
+          console.log("获取系统配置", response.data)
+          this.systemConfig = response.data;
+        }
+      });
+    },
     clickBlogTagPie: function(index) {
-      var tag = this.blogCountByTag[index];
+      let tag = this.blogCountByTag[index];
       this.$router.push({
         path: "/blog/blog",
         query: { tag: tag }
       });
     },
     clickBlogSortPie: function(index) {
-      var blogSort = this.blogCountByBlogSort[index];
-
+      let blogSort = this.blogCountByBlogSort[index];
       this.$router.push({
         path: "/blog/blog",
         query: { blogSort: blogSort }

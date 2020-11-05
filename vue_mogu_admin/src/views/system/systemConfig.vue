@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-tabs type="border-card" v-model="activeName">
+    <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
       <el-tab-pane name="one" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
         <el-form style="margin-left: 20px;" label-position="left"   label-width="130px" >
@@ -20,6 +20,11 @@
           <!--当有新的反馈，友链申请时进行通知，首先需要在系统管理处设置接收通知的邮箱 -->
           <el-form-item label="网站消息邮件通知">
             <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.startEmailNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <!-- 仪表盘弹框通知，在用户登录后台的时候会出现，可以手动关闭 -->
+          <el-form-item label="仪表盘弹框通知">
+            <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openDashboardNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item>
@@ -282,6 +287,17 @@
         </el-form>
       </el-tab-pane>
 
+      <el-tab-pane label="仪表盘通知" name="third">
+        <span slot="label"><i class="el-icon-edit"></i> 仪表盘通知</span>
+        <div class="editor-container">
+          <CKEditor ref="editor" v-if="form.editorModel == '0'" :content="form.dashboardNotification" :height="500"></CKEditor>
+          <MarkdownEditor ref="editor" v-if="form.editorModel == '1'" :height="660"></MarkdownEditor>
+        </div>
+        <div style="margin-top: 5px; margin-left: 10px;" >
+          <el-button type="primary" @click="submitForm()" v-permission="'/system/editMe'">保 存</el-button>
+        </div>
+      </el-tab-pane>
+
     </el-tabs>
 
   </div>
@@ -290,6 +306,10 @@
 <script>
 import { getSystemConfig, editSystemConfig, cleanRedisByKey } from "@/api/systemConfig";
 import {getListByDictTypeList} from "@/api/sysDictData"
+
+import CKEditor from "@/components/CKEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
+
 export default {
   data() {
     return {
@@ -320,7 +340,8 @@ export default {
 
   },
   components: {
-
+    CKEditor,
+    MarkdownEditor
   },
   created() {
     // 获取字典
@@ -347,6 +368,12 @@ export default {
         }
       });
     },
+    handleClick(tab, event) {
+      //设置富文本内容
+      if (this.form.personResume) {
+        this.$refs.editor.setData(this.form.dashboardNotification);
+      }
+    },
     getSystemConfigList: function() {
       getSystemConfig().then(response => {
         if (response.code == this.$ECode.SUCCESS) {
@@ -372,8 +399,9 @@ export default {
         if(!valid) {
           console.log("校验出错");
         } else {
+          //获取文本编辑器中的内容
+          this.form.dashboardNotification = this.$refs.editor.getData();
           editSystemConfig(this.form).then(res => {
-            console.log(res);
             if (res.code = this.$ECode.SUCCESS) {
               this.$commonUtil.message.success(res.message)
             } else {

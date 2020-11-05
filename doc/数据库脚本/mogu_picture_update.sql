@@ -45,5 +45,7 @@ alter table t_storage add max_storage_size bigint default 0 null comment '最大
 */
 ALTER TABLE  t_file ADD minio_url varchar(255) default NULL COMMENT "Minio文件URL";
 
+ALTER TABLE  t_network_disk ADD minio_url varchar(255) default NULL COMMENT "Minio文件URL";
+
 
 

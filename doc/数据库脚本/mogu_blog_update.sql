@@ -262,3 +262,11 @@ ALTER TABLE  t_system_config ADD minio_Secret_key varchar(255) default NULL COMM
 ALTER TABLE  t_system_config ADD minio_bucket varchar(255) default NULL COMMENT "Minio桶";
 ALTER TABLE  t_system_config ADD upload_minio TINYINT(1) NOT NULL DEFAULT 0 COMMENT "图片是否上传Minio (0:否， 1：是)";
 ALTER TABLE  t_system_config ADD minio_picture_base_url varchar(255) default NULL COMMENT "Minio服务器文件域名前缀";
+
+
+/*
+	系统配置表 增加仪表盘弹框
+	@date 2020年11月5日21:47:48
+*/
+ALTER TABLE  t_system_config ADD open_dashboard_notification TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启仪表盘通知(0:否， 1:是)";
+ALTER TABLE  t_system_config ADD dashboard_notification longtext NULL COMMENT "仪表盘通知【用于首次登录弹框】";

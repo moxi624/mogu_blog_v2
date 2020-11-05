@@ -150,4 +150,15 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
      */
     private String themeColor;
 
+    /**
+     * 仪表盘通知【首次进入时弹出】
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String dashboardNotification;
+
+    /**
+     * 是否开启仪表盘通知【0 关闭，1 开启】
+     */
+    private String openDashboardNotification;
+
 }

@@ -14,6 +14,7 @@ import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.QueryException;
+import com.moxi.mougblog.base.global.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,6 +71,9 @@ public class WebUtil {
             minioPictureBaseUrl = systemConfig.getMinioPictureBaseUrl();
         } else {
             SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
+            if(systemConfig == null) {
+                throw new QueryException(ErrorCode.QUERY_DEFAULT_ERROR, "系统配置转换错误，请检查系统配置，或者清空Redis后重试！");
+            }
             picturePriority = systemConfig.getPicturePriority();
             localPictureBaseUrl = systemConfig.getLocalPictureBaseUrl();
             qiNiuPictureBaseUrl = systemConfig.getQiNiuPictureBaseUrl();

@@ -132,4 +132,14 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
      */
     private String minioPictureBaseUrl;
 
+    /**
+     * 仪表盘通知【首次进入时弹出】
+     */
+    private String dashboardNotification;
+
+    /**
+     * 是否开启仪表盘通知【0 关闭，1 开启】
+     */
+    private String openDashboardNotification;
+
 }
