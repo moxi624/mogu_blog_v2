@@ -33,7 +33,7 @@
 
 但是我还是非常希望各位小伙伴能够 **多多star支持**，您的**点赞**就是我维护的动力！
 
-项目已有较详细的 <a href="##项目搭建">项目搭建文档</a> ，同时包括了Window、Linux以及Docker环境下蘑菇博客的搭建。在使用过程中遇到问题时，首先认真阅读 <a href="##项目搭建">项目搭建文档</a> ，同时 [FAQ文档](./doc/FAQ) 还收集了小伙伴咨询的问题，可以提前阅读~
+项目已有较详细的  [项目搭建文档](http://moxi159753.gitee.io/mogu_blog_doc) ，同时包括了Window、Linux以及Docker环境下蘑菇博客的搭建。在使用过程中遇到问题时，首先认真阅读 [项目搭建文档](http://moxi159753.gitee.io/mogu_blog_doc) ，同时 [FAQ文档](./doc/FAQ) 还收集了小伙伴咨询的问题，可以提前阅读~
 
 【提问前】可以先 [百度](https://www.baidu.com/) 或者 [Google](https://www.google.com/) 进行解决，有的问题通过搜索引擎很快就能得到解决
 

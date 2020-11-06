@@ -370,7 +370,7 @@ export default {
     },
     handleClick(tab, event) {
       //设置富文本内容
-      if (this.form.personResume) {
+      if (this.form.dashboardNotification) {
         this.$refs.editor.setData(this.form.dashboardNotification);
       }
     },
