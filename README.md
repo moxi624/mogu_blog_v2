@@ -414,6 +414,9 @@
 - [侧边栏菜单的实现](https://www.bilibili.com/video/BV1tT4y1A7tn)
 - [汉堡菜单实现](https://www.bilibili.com/video/BV1z5411b7ih)
 - [面包屑导航](https://www.bilibili.com/video/BV1LZ4y1N7pk)
+- [导航条右侧菜单](https://www.bilibili.com/video/BV1sa4y1j7Tb)
+- [仪表盘首页(上)](https://www.bilibili.com/video/BV13y4y1r7x6)
+- [仪表盘首页(中)](https://www.bilibili.com/video/BV1xK4y1E7TA)
 - .....
 
 ## 移动端截图
