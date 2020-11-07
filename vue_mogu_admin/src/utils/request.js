@@ -55,19 +55,15 @@ service.interceptors.response.use(
      * code为非success和error是抛错 可结合自己业务进行修改
      */
     const res = response.data
-
     // 请求数减1
     requestNum --;
-
     if (loading == null || requestNum <= 0) {
       loading.close()
     }
-
     if (res.code === 'success' || res.code === 'error' || res.success) {
       // 请求完毕
       return response.data
     } else {
-
       // 出错了直接关闭loading
       requestNum = 0
       loading.close();
