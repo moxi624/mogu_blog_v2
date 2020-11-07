@@ -702,6 +702,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setLevel(blogVO.getLevel());
         blog.setIsOriginal(blogVO.getIsOriginal());
         blog.setIsPublish(blogVO.getIsPublish());
+        blog.setType(blogVO.getType());
+        blog.setOutsideLink(blogVO.getOutsideLink());
         blog.setStatus(EStatus.ENABLE);
         blog.setOpenComment(blogVO.getOpenComment());
         Boolean isSave = blogService.save(blog);
@@ -753,6 +755,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         blog.setIsPublish(blogVO.getIsPublish());
         blog.setOpenComment(blogVO.getOpenComment());
         blog.setUpdateTime(new Date());
+        blog.setType(blogVO.getType());
+        blog.setOutsideLink(blogVO.getOutsideLink());
         blog.setStatus(EStatus.ENABLE);
 
         Boolean isSave = blog.updateById();
@@ -789,6 +793,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 blog.setIsOriginal(blogVO.getIsOriginal());
                 blog.setIsPublish(blogVO.getIsPublish());
                 blog.setSort(blogVO.getSort());
+                blog.setType(blogVO.getType());
+                blog.setOutsideLink(blogVO.getOutsideLink());
                 blog.setStatus(EStatus.ENABLE);
             }
         });
@@ -996,6 +1002,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             blog.setIsOriginal(EOriginal.ORIGINAL);
             blog.setIsPublish(EPublish.NO_PUBLISH);
             blog.setOpenComment(EOpenStatus.OPEN);
+            blog.setType(Constants.STR_ZERO);
             blogList.add(blog);
             count++;
         }

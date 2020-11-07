@@ -82,6 +82,18 @@ public class BlogVO extends BaseVO<BlogVO> {
      */
     @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer level;
+
+    /**
+     * 类型【0 博客， 1：推广】
+     */
+    @NotBlank(groups = {Insert.class, Update.class})
+    private String type;
+
+    /**
+     * 外链【如果是推广，那么将跳转到外链】
+     */
+    private String outsideLink;
+
     /**
      * 标签,一篇博客对应多个标签
      */

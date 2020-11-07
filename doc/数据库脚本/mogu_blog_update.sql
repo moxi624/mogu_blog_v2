@@ -270,3 +270,11 @@ ALTER TABLE  t_system_config ADD minio_picture_base_url varchar(255) default NUL
 */
 ALTER TABLE  t_system_config ADD open_dashboard_notification TINYINT(1) NOT NULL DEFAULT 0 COMMENT "是否开启仪表盘通知(0:否， 1:是)";
 ALTER TABLE  t_system_config ADD dashboard_notification longtext NULL COMMENT "仪表盘通知【用于首次登录弹框】";
+
+
+/*
+	博客表 增加外链
+	@date 2020年11月7日10:49:29
+*/
+ALTER TABLE  t_blog ADD type TINYINT(1) NOT NULL DEFAULT 0 COMMENT "类型【0 博客， 1：推广】";
+ALTER TABLE  t_blog ADD outside_link varchar(1024) NULL COMMENT "外链【如果是推广，那么将跳转到外链】";

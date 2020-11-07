@@ -110,6 +110,16 @@ public class Blog extends SuperEntity<Blog> {
      */
     private String openComment;
 
+    /**
+     * 文章类型【0 博客， 1：推广】
+     */
+    private String type;
+
+    /**
+     * 外链【如果是推广，那么将跳转到外链】
+     */
+    private String outsideLink;
+
 
     // 以下字段不存入数据库，封装为了方便使用
 

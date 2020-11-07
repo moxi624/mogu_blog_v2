@@ -2,14 +2,14 @@
     <div class="tuijian" v-if="fourthData.length > 0">
       <h2 class="hometitle">推荐文章</h2>
       <ul class="tjpic" v-if="fourthData[0]">
-        <i><img v-if="fourthData[0].photoList" style="cursor:pointer"  @click="goToInfo(fourthData[0].uid)" :src="fourthData[0].photoList[0]"></i>
-        <p><a href="javascript:void(0);" @click="goToInfo(fourthData[0].uid)">{{fourthData[0].title}}</a></p>
+        <i><img v-if="fourthData[0].photoList" style="cursor:pointer"  @click="goToInfo(fourthData[0])" :src="fourthData[0].photoList[0]"></i>
+        <p><a href="javascript:void(0);" @click="goToInfo(fourthData[0])">{{fourthData[0].title}}</a></p>
       </ul>
 
       <ul class="sidenews">
         <li v-for="(item, index) in fourthData" v-if="index != 0" :key="item.uid">
-          <i><img style="cursor:pointer" v-if="item.photoList" @click="goToInfo(fourthData[0].uid)" :src="item.photoList[0]"></i>
-          <p><a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a></p>
+          <i><img style="cursor:pointer" v-if="item.photoList" @click="goToInfo(fourthData[0])" :src="item.photoList[0]"></i>
+          <p><a href="javascript:void(0);" @click="goToInfo(item)">{{item.title}}</a></p>
           <span>{{item.createTime}}</span>
         </li>
       </ul>
@@ -38,11 +38,18 @@ export default {
       });
     },
     methods: {
-      //跳转到文章详情
-	    goToInfo(uid) {
-        let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
-        window.open(routeData.href, '_blank');
-	    }
+      //跳转到文章详情【或推广链接】
+      goToInfo(blog) {
+        if(blog.type == "0") {
+          let routeData = this.$router.resolve({
+            path: "/info",
+            query: {blogUid: blog.uid}
+          });
+          window.open(routeData.href, '_blank');
+        } else if(blog.type == "1") {
+          window.open(blog.outsideLink, '_blank');
+        }
+      },
     },
 
 }

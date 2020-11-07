@@ -2,8 +2,8 @@
   <div class="zhuanti" v-if="thirdData.length > 0">
     <h2 class="hometitle">特别推荐</h2>
     <ul>
-      <li  v-for="item in thirdData" :key="item.uid"> <i><img v-if="item.photoList" :src="item.photoList[0]"></i>
-        <p>{{splitStr(item.title, 30)}}<span><a href="javascript:void(0);" @click="goToInfo(item.uid)">阅读</a></span> </p>
+      <li  v-for="item in thirdData" :key="item.uid" style="cursor: pointer" @click="goToInfo(item)"> <i><img v-if="item.photoList" :src="item.photoList[0]"></i>
+        <p @click="goToInfo(item)" style="cursor: pointer">{{splitStr(item.title, 30)}}<span><a href="javascript:void(0);">阅读</a></span> </p>
       </li>
     </ul>
   </div>
@@ -32,12 +32,18 @@ export default {
       });
     },
     methods: {
-      //跳转到文章详情
-	    goToInfo(uid) {
-        let routeData = this.$router.resolve({ path: "/info", query: { blogUid: uid } });
-        window.open(routeData.href, '_blank');
-
-	    },
+      //跳转到文章详情【或推广链接】
+      goToInfo(blog) {
+        if(blog.type == "0") {
+          let routeData = this.$router.resolve({
+            path: "/info",
+            query: {blogUid: blog.uid}
+          });
+          window.open(routeData.href, '_blank');
+        } else if(blog.type == "1") {
+          window.open(blog.outsideLink, '_blank');
+        }
+      },
       splitStr(str, flagCount) {
         return this.$commonUtil.splitStr(str, flagCount)
       }

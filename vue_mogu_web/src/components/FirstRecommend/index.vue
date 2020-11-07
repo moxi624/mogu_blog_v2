@@ -7,8 +7,8 @@
               v-if="list.photoList"
               :src="list.photoList[0]"
               :alt="list.title"
-              @click="goToInfo(list.uid)">
-            <div class="carousel-title" @click="goToInfo(list.uid)">
+              @click="goToInfo(list)">
+            <div class="carousel-title" @click="goToInfo(list)">
               <span>{{list.title}}</span>
             </div>
       </el-carousel-item>
@@ -40,14 +40,18 @@ export default {
     });
   },
   methods: {
-    //跳转到文章详情
-    goToInfo(uid) {
-      let routeData = this.$router.resolve({
-        path: "/info",
-        query: { blogUid: uid }
-      });
-      window.open(routeData.href, '_blank');
-    }
+    //跳转到文章详情【或推广链接】
+    goToInfo(blog) {
+      if(blog.type == "0") {
+        let routeData = this.$router.resolve({
+          path: "/info",
+          query: {blogUid: blog.uid}
+        });
+        window.open(routeData.href, '_blank');
+      } else if(blog.type == "1") {
+        window.open(blog.outsideLink, '_blank');
+      }
+    },
   }
 };
 </script>

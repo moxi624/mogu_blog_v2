@@ -42,7 +42,7 @@ import java.util.List;
 public class BlogRestApi {
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取博客列表", notes = "获取博客列表", response = String.class)

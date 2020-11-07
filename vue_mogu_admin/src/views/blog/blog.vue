@@ -206,36 +206,43 @@
       fullscreen
     >
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="标题图" :label-width="formLabelWidth">
-          <div class="imgBody" v-if="form.photoList">
-            <i
-              class="el-icon-error inputClass"
-              v-show="icon"
-              @click="deletePhoto()"
-              @mouseover="icon = true"
-            ></i>
-            <img
-              @mouseover="icon = true"
-              @mouseout="icon = false"
-              v-bind:src="form.photoList[0]"
-              style="display:inline; width: 195px;height: 105px;"
-            >
-          </div>
-          <div v-else class="uploadImgBody" @click="checkPhoto">
-            <i class="el-icon-plus avatar-uploader-icon"></i>
-          </div>
-        </el-form-item>
-
-        <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
-          <el-input v-model="form.title" auto-complete="off" @input="contentChange"></el-input>
-        </el-form-item>
-
-        <el-form-item label="简介" :label-width="formLabelWidth">
-          <el-input v-model="form.summary" auto-complete="off" @input="contentChange"></el-input>
-        </el-form-item>
 
         <el-row>
-          <el-col :span="4.5">
+          <el-col :span="16">
+            <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
+              <el-input v-model="form.title" auto-complete="off" @input="contentChange"></el-input>
+            </el-form-item>
+
+            <el-form-item label="简介" :label-width="formLabelWidth">
+              <el-input v-model="form.summary" auto-complete="off" @input="contentChange"></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="标题图" :label-width="formLabelWidth">
+              <div class="imgBody" v-if="form.photoList">
+                <i
+                  class="el-icon-error inputClass"
+                  v-show="icon"
+                  @click="deletePhoto()"
+                  @mouseover="icon = true"
+                ></i>
+                <img
+                  @mouseover="icon = true"
+                  @mouseout="icon = false"
+                  v-bind:src="form.photoList[0]"
+                  style="display:inline; width: 195px;height: 105px;"
+                >
+              </div>
+              <div v-else class="uploadImgBody" @click="checkPhoto">
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="6.5">
             <el-form-item label="分类" :label-width="formLabelWidth" prop="blogSortUid">
               <el-select
                 v-model="form.blogSortUid"
@@ -253,7 +260,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="4.5">
+          <el-col :span="6.5">
             <el-form-item label="标签" label-width="80px">
               <el-select
                 v-model="tagValue"
@@ -273,9 +280,9 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="4.5">
+          <el-col :span="6.5">
             <el-form-item label="推荐等级" :label-width="maxLineLabelWidth" prop="level">
-              <el-select v-model="form.level" size="small" placeholder="请选择" style="width:100px">
+              <el-select v-model="form.level" size="small" placeholder="请选择" style="width:210px">
                 <el-option
                   v-for="item in blogLevelDictList"
                   :key="item.uid"
@@ -283,6 +290,29 @@
                   :value="parseInt(item.dictValue)"
                 ></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+        <el-row>
+          <el-col :span="6.5">
+            <el-form-item label="是否原创" :label-width="formLabelWidth" prop="isOriginal">
+              <el-radio-group v-model="form.isOriginal" size="small">
+                <el-radio v-for="item in blogOriginalDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6.5">
+            <el-form-item label="文章类型" :label-width="formLabelWidth" prop="openComment">
+              <el-radio v-for="item in blogTypeDictList" :key="item.uid" v-model="form.type" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6.5">
+            <el-form-item label="文章评论" :label-width="formLabelWidth" prop="openComment">
+              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
             </el-form-item>
           </el-col>
 
@@ -293,21 +323,6 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-
-          <el-col :span="4">
-            <el-form-item label="是否原创" :label-width="formLabelWidth" prop="isOriginal">
-              <el-radio-group v-model="form.isOriginal" size="small">
-                <el-radio v-for="item in blogOriginalDictList" :key="item.uid" :label="item.dictValue" border>{{item.dictLabel}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="4.5">
-            <el-form-item label="网站评论" :label-width="formLabelWidth" prop="openComment">
-              <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openComment" :label="item.dictValue" border size="small">{{item.dictLabel}}</el-radio>
-            </el-form-item>
-          </el-col>
-
         </el-row>
 
         <el-form-item label="作者" :label-width="formLabelWidth" v-if="form.isOriginal==0" prop="author">
@@ -318,8 +333,12 @@
           <el-input v-model="form.articlesPart" auto-complete="off"></el-input>
         </el-form-item>
 
+        <el-form-item label="外链" :label-width="formLabelWidth" v-if="form.type == 1" prop="outsideLink">
+          <el-input v-model="form.outsideLink" auto-complete="off"></el-input>
+        </el-form-item>
+
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
-          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="320"></CKEditor>
+          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="330"></CKEditor>
           <MarkdownEditor v-if="systemConfig.editorModel == '1'" :content="form.content" ref="editor" :height="465"></MarkdownEditor>
         </el-form-item>
       </el-form>
@@ -471,10 +490,12 @@ export default {
       blogPublishDictList: [], //是否字典
       blogLevelDictList: [], //博客推荐等级字典
       openDictList: [], // 是否启动字典
+      blogTypeDictList:[], // 文章类型字典
       blogOriginalDefault: null, //博客原创默认值
       blogLevelDefault: null, //博客等级默认值
       blogPublishDefault: null, //博客发布默认值
       openDefault: null, // 是否开启评论默认值
+      blogTypeDefault: null, // 文章类型默认值
       fileList: [],
       localUploadVisible: false,
       systemConfig: {}, // 系统配置
@@ -516,7 +537,11 @@ export default {
         ],
         content: [
           {required: true, message: '内容不能为空', trigger: 'blur'}
-        ]
+        ],
+        outsideLink: [
+          {required: true, message: '外链地址不能为空', trigger: 'blur'},
+          {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+        ],
       }
     };
   },
@@ -602,35 +627,31 @@ export default {
      */
     getDictList: function () {
 
-      var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status', 'sys_normal_disable']
+      var dictTypeList =  ['sys_recommend_level', 'sys_original_status', 'sys_publish_status', 'sys_normal_disable', 'sys_blog_type']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-
           var dictMap = response.data;
-
           this.blogOriginalDictList = dictMap.sys_original_status.list
-
           this.blogPublishDictList = dictMap.sys_publish_status.list
-
           this.blogLevelDictList = dictMap.sys_recommend_level.list
-
           this.openDictList = dictMap.sys_normal_disable.list
+          this.blogTypeDictList = dictMap.sys_blog_type.list
 
           if(dictMap.sys_original_status.defaultValue) {
             this.blogOriginalDefault = dictMap.sys_original_status.defaultValue;
           }
-
           if(dictMap.sys_publish_status.defaultValue) {
             this.blogPublishDefault = dictMap.sys_publish_status.defaultValue;
           }
-
           if(dictMap.sys_recommend_level.defaultValue) {
             this.blogLevelDefault = dictMap.sys_recommend_level.defaultValue;
           }
-
           if(dictMap.sys_normal_disable.defaultValue) {
             this.openDefault = dictMap.sys_normal_disable.defaultValue;
+          }
+          if(dictMap.sys_blog_type.defaultValue) {
+            this.blogTypeDefault = dictMap.sys_blog_type.defaultValue;
           }
 
         }
@@ -646,6 +667,7 @@ export default {
         fileUid: null,
         isOriginal: this.blogOriginalDefault, //是否原创
         isPublish: this.blogOriginalDefault, //是否发布
+        type: this.blogTypeDefault, // 文章类型
         author: null, //作者
         level: parseInt(this.blogLevelDefault), //推荐等级，默认是正常
         openComment: this.openDefault, // 是否启动

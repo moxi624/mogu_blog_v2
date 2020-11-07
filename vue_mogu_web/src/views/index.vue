@@ -7,7 +7,7 @@
 
       <!-- 二级推荐 -->
       <div class="toppic">
-        <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item.uid)">
+        <li v-for="item in secondData" :key="item.uid" @click="goToInfo(item)">
           <a href="javascript:void(0);">
             <i>
               <img v-if="item.photoList" :src="item.photoList[0]">
@@ -29,11 +29,11 @@
         data-scroll-reveal="enter bottom over 1s"
       >
         <h3 class="blogtitle">
-          <a href="javascript:void(0);" @click="goToInfo(item.uid)">{{item.title}}</a>
+          <a href="javascript:void(0);" @click="goToInfo(item)">{{item.title}}</a>
         </h3>
 
         <span class="blogpic">
-          <a href="javascript:void(0);" @click="goToInfo(item.uid)" title>
+          <a href="javascript:void(0);" @click="goToInfo(item)" title>
             <img v-if="item.photoList" :src="item.photoList[0]" alt>
           </a>
         </span>
@@ -184,7 +184,6 @@
       // });
     },
     created() {
-
       var secondParams = new URLSearchParams();
       secondParams.append("level", 2);
       // 是否排序
@@ -194,26 +193,26 @@
           this.secondData = response.data.records;
         }
       });
-
       // 获取最新博客
       this.newBlogList();
-
       var params = new URLSearchParams();
       params.append("pageName", "INDEX");
         recorderVisitPage(params).then(response => {
       });
     },
     methods: {
-      //跳转到文章详情
-      goToInfo(uid) {
-
-        let routeData = this.$router.resolve({
-          path: "/info",
-          query: {blogUid: uid}
-        });
-        window.open(routeData.href, '_blank');
+      //跳转到文章详情【或推广链接】
+      goToInfo(blog) {
+        if(blog.type == "0") {
+          let routeData = this.$router.resolve({
+            path: "/info",
+            query: {blogUid: blog.uid}
+          });
+          window.open(routeData.href, '_blank');
+        } else if(blog.type == "1") {
+          window.open(blog.outsideLink, '_blank');
+        }
       },
-
       //跳转到搜索详情页
       goToList(uid) {
         let routeData = this.$router.push({
