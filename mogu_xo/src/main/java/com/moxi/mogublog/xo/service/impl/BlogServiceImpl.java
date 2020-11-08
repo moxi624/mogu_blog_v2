@@ -557,12 +557,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (!StringUtils.isEmpty(blogVO.getIsOriginal())) {
             queryWrapper.eq(SQLConf.IS_ORIGINAL, blogVO.getIsOriginal());
         }
+        if(!StringUtils.isEmpty(blogVO.getType())) {
+            queryWrapper.eq(SQLConf.TYPE, blogVO.getType());
+        }
 
         //分页
         Page<Blog> page = new Page<>();
         page.setCurrent(blogVO.getCurrentPage());
         page.setSize(blogVO.getPageSize());
-
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 
         // 是否启动排序字段

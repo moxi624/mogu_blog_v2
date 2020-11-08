@@ -121,7 +121,7 @@
   import Link from "../components/Link";
   import {getBlogByLevel, getNewBlog, recorderVisitPage} from "../api/index";
   import { Loading } from 'element-ui';
-
+  import {getBlogByUid} from "../api/blogContent";
   export default {
     name: "index",
     components: {
@@ -155,33 +155,7 @@
     },
     mounted() {
       // 注册scroll事件并监听
-      var that = this;
-      that.loading = false;
-      // window.addEventListener("scroll", function() {
-      //   let scrollTop = document.documentElement.scrollTop; //当前的的位置
-      //   let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-      //   console.log(scrollTop);
-      //   if (scrollTop >= 0.6 * scrollHeight && !that.isEnd && !that.loading) {
-      //     that.loading = true;
-      //     that.currentPage = that.currentPage + 1;
-      //     var params = new URLSearchParams();
-      //     params.append("currentPage", that.currentPage);
-      //     params.append("pageSize", that.pageSize);
-      //     getNewBlog(params).then(response => {
-      //       if (response.code == this.$ECode.SUCCESS && response.data.records.length > 0) {
-      //         that.isEnd = false;
-      //         var newData = that.newBlogData.concat(response.data.records);
-      //         that.newBlogData = newData;
-      //         that.total = response.data.total;
-      //         that.pageSize = response.data.size;
-      //         that.currentPage = response.data.current;
-      //       } else {
-      //         that.isEnd = true;
-      //       }
-      //       that.loading = false;
-      //     });
-      //   }
-      // });
+      this.loading = false;
     },
     created() {
       var secondParams = new URLSearchParams();
@@ -210,6 +184,11 @@
           });
           window.open(routeData.href, '_blank');
         } else if(blog.type == "1") {
+          var params = new URLSearchParams();
+          params.append("uid", blog.uid);
+          getBlogByUid(params).then(response => {
+            // 记录一下用户点击日志
+          });
           window.open(blog.outsideLink, '_blank');
         }
       },

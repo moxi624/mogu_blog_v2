@@ -18,6 +18,7 @@
 
 <script>
 import { getBlogByLevel } from "../../api/index";
+import {getBlogByUid} from "../../api/blogContent";
 export default {
   name: 'FourthRecommend',
     data() {
@@ -47,6 +48,11 @@ export default {
           });
           window.open(routeData.href, '_blank');
         } else if(blog.type == "1") {
+          var params = new URLSearchParams();
+          params.append("uid", blog.uid);
+          getBlogByUid(params).then(response => {
+            // 记录一下用户点击日志
+          });
           window.open(blog.outsideLink, '_blank');
         }
       },

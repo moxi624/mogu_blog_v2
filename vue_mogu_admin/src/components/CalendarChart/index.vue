@@ -117,7 +117,6 @@
                       }
                       return size;
                     }
-
                   },
                   itemStyle: {
                     normal: {
@@ -128,11 +127,8 @@
                 }
               ]
             };
-
             chart.setOption(option);
-
           }
-
         });
       }
     }

@@ -2,88 +2,122 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container" style="margin: 10px 0 10px 0;" v-permission="'/blog/getList'">
-      <el-input
-        clearable
-        class="filter-item"
-        style="width: 150px;"
-        v-model="keyword"
-        placeholder="请输入博客名"
-        @keyup.enter.native="handleFind"
-      ></el-input>
 
-      <el-select
-        v-model="sortKeyword"
-        style="width: 140px"
-        filterable
-        clearable
-        remote
-        reserve-keyword
-        placeholder="请输入分类名"
-        :remote-method="sortRemoteMethod"
-        @keyup.enter.native="handleFind"
-        :loading="loading"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.uid"
-          :label="item.sortName"
-          :value="item.uid"
-        ></el-option>
-      </el-select>
+      <el-form :inline="true" v-show="showSearch" label-width="68px" style="margin-bottom: 8px;">
+        <el-input
+          clearable
+          class="filter-item"
+          style="width: 150px;"
+          v-model="queryParams.keyword"
+          placeholder="请输入博客名"
+          @keyup.enter.native="handleFind"
+        ></el-input>
 
-      <el-select
-        v-model="tagKeyword"
-        filterable
-        clearable
-        remote
-        reserve-keyword
-        placeholder="请输入标签名"
-        :remote-method="tagRemoteMethod"
-        :loading="loading"
-        @keyup.enter.native="handleFind"
-        style="width:140px"
-      >
-        <el-option
-          v-for="item in tagOptions"
-          :key="item.uid"
-          :label="item.content"
-          :value="item.uid"
-        ></el-option>
-      </el-select>
+        <el-select
+          v-model="queryParams.sortKeyword"
+          style="width: 140px"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入分类名"
+          :remote-method="sortRemoteMethod"
+          @keyup.enter.native="handleFind"
+          :loading="loading"
+        >
+          <el-option
+            v-for="item in sortOptions"
+            :key="item.uid"
+            :label="item.sortName"
+            :value="item.uid"
+          ></el-option>
+        </el-select>
 
-      <el-select v-model="levelKeyword" clearable placeholder="推荐等级" style="width:110px">
-        <el-option
-          v-for="item in blogLevelDictList"
-          :key="item.uid"
-          :label="item.dictLabel"
-          :value="item.dictValue"
-        ></el-option>
-      </el-select>
+        <el-select
+          v-model="queryParams.tagKeyword"
+          filterable
+          clearable
+          remote
+          reserve-keyword
+          placeholder="请输入标签名"
+          :remote-method="tagRemoteMethod"
+          :loading="loading"
+          @keyup.enter.native="handleFind"
+          style="width:140px"
+        >
+          <el-option
+            v-for="item in tagOptions"
+            :key="item.uid"
+            :label="item.content"
+            :value="item.uid"
+          ></el-option>
+        </el-select>
 
-      <el-select v-model="publishKeyword" clearable placeholder="是否发布" style="width:110px">
-        <el-option
-          v-for="item in blogPublishDictList"
-          :key="item.uid"
-          :label="item.dictLabel"
-          :value="item.dictValue"
-        ></el-option>
-      </el-select>
+        <el-select v-model="queryParams.levelKeyword" clearable placeholder="推荐等级" style="width:110px">
+          <el-option
+            v-for="item in blogLevelDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
 
-      <el-select v-model="originalKeyword" clearable placeholder="是否原创" style="width:110px">
-        <el-option
-          v-for="item in blogOriginalDictList"
-          :key="item.uid"
-          :label="item.dictLabel"
-          :value="item.dictValue"
-        ></el-option>
-      </el-select>
+        <el-select v-model="queryParams.publishKeyword" clearable placeholder="是否发布" style="width:110px">
+          <el-option
+            v-for="item in blogPublishDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/blog/getList'">查找</el-button>
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/blog/add'">添加博客</el-button>
-      <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on" v-permission="'/blog/uploadLocalBlog'">本地上传</el-button>
-      <el-button class="filter-item" type="warning" @click="handleDownload" icon="el-icon-s-flag"  v-permission="'/blog/downloadBatch'">导出选中</el-button>
-      <el-button class="filter-item" type="info" @click="handleSubject" icon="el-icon-folder-opened"  v-permission="'/blog/downloadBatch'">添加专题</el-button>
-      <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
+        <el-select v-model="queryParams.originalKeyword" clearable placeholder="是否原创" style="width:110px">
+          <el-option
+            v-for="item in blogOriginalDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
+
+        <el-select v-model="queryParams.typeKeyword" clearable placeholder="文章类型" style="width:110px">
+          <el-option
+            v-for="item in blogTypeDictList"
+            :key="item.uid"
+            :label="item.dictLabel"
+            :value="item.dictValue"
+          ></el-option>
+        </el-select>
+
+        <el-button style="margin-left: 10px;" class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/blog/getList'">查找</el-button>
+
+      </el-form>
+
+
+      <el-row :gutter="10" style="margin-bottom: 8px;">
+        <el-col :span="1.5">
+          <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/blog/add'">添加博客</el-button>
+        </el-col>
+
+        <el-col :span="1.5">
+          <el-button class="filter-item" type="warning" @click="handleUpload" icon="el-icon-star-on" v-permission="'/blog/uploadLocalBlog'">本地上传</el-button>
+        </el-col>
+
+        <el-col :span="1.5">
+          <el-button class="filter-item" type="warning" @click="handleDownload" icon="el-icon-s-flag"  v-permission="'/blog/downloadBatch'">导出选中</el-button>
+        </el-col>
+
+        <el-col :span="1.5">
+          <el-button class="filter-item" type="info" @click="handleSubject" icon="el-icon-folder-opened"  v-permission="'/blog/downloadBatch'">添加专题</el-button>
+        </el-col>
+
+        <el-col :span="1.5">
+          <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/blog/deleteBatch'">删除选中</el-button>
+        </el-col>
+
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="resetBlogList"></right-toolbar>
+      </el-row>
+
     </div>
 
     <el-table :data="tableData" ref="articleTable" style="width: 100%" @selection-change="handleSelectionChange">
@@ -448,7 +482,16 @@ export default {
         sortName: "admin",
         token: getToken()
       },
-
+      queryParams:{
+        keyword: "",
+        tagKeyword: "", //标签搜索
+        sortKeyword: "", //分类搜索
+        levelKeyword: "", //等级搜索
+        publishKeyword: "", // 发布 搜索
+        originalKeyword: "", // 原创 搜索
+        typeKeyword: "", // 文章类型
+      }, // 搜索条件
+      showSearch: null, // 显示搜索条件
       pictureList: [], // 上传的图片列表
       BLOG_WEB_URL: process.env.BLOG_WEB_URL,
       multipleSelection: [], //多选，用于批量删除
@@ -461,12 +504,6 @@ export default {
       tagData: [], //标签数据
       tagValue: [], //保存选中标签id(编辑时)
       blogSortData: [],
-      keyword: "",
-      tagKeyword: "", //标签搜索
-      sortKeyword: "", //分类搜索
-      levelKeyword: "", //等级搜索
-      publishKeyword: "", // 发布 搜索
-      originalKeyword: "", // 原创 搜索
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
@@ -558,6 +595,9 @@ export default {
       this.sortKeyword = tempBlogSort.blogSortUid;
     }
 
+    // 判断是否需要展开条件查询
+    this.getShowSearch()
+
     // 获取系统配置
     this.getSystemConfigList()
 
@@ -583,6 +623,15 @@ export default {
     closeLoading() {
         this.uploadLoading.close()
     },
+    // 判断是否需要展开条件查询
+    getShowSearch: function () {
+      let showSearch = getCookie("showSearch")
+      if(showSearch == "false"){ //此时的hasAuth是true
+        this.showSearch = false
+      } else {
+        this.showSearch = true
+      }
+    },
     tagList: function() {
       var tagParams = {};
       tagParams.pageSize = 100;
@@ -603,14 +652,19 @@ export default {
         }
       });
     },
+    resetBlogList: function (){
+      this.queryParams = {}
+      this.blogList();
+    },
     blogList: function() {
       var params = {};
-      params.keyword = this.keyword;
-      params.blogSortUid = this.sortKeyword;
-      params.tagUid = this.tagKeyword;
-      params.levelKeyword = this.levelKeyword;
-      params.isPublish = this.publishKeyword;
-      params.isOriginal = this.originalKeyword;
+      params.keyword = this.queryParams.keyword;
+      params.blogSortUid = this.queryParams.sortKeyword;
+      params.tagUid = this.queryParams.tagKeyword;
+      params.levelKeyword = this.queryParams.levelKeyword;
+      params.isPublish = this.queryParams.publishKeyword;
+      params.isOriginal = this.queryParams.originalKeyword;
+      params.type = this.queryParams.typeKeyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getBlogList(params).then(response => {

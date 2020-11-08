@@ -7,8 +7,10 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 // import 'element-ui/lib/theme-chalk/index.css'
 // import locale from 'element-ui/lib/locale/lang/en'
 
+// 全局样式
+import '@/styles/index.scss'
+// 引入全局工具类
 import prototype from './utils/prototype'
-import '@/styles/index.scss' // global css
 
 import App from './App'
 import router from './router'
@@ -18,6 +20,11 @@ import '@/permission' // permission control
 
 // 引入自定义指令
 import './directive'
+
+//自定义表格工具扩展
+import RightToolbar from "@/components/RightToolbar"
+// 全局组件挂载
+Vue.component('RightToolbar', RightToolbar)
 
 // 添加粒子特效
 import VueParticles from 'vue-particles'
