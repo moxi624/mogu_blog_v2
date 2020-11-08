@@ -104,6 +104,7 @@
       <line-chart v-if="showLineChart" :chart-data="lineChartData"></line-chart>
     </el-row>
 
+    <!--仪表盘弹框通知-->
     <el-dialog
       title="通知"
       :visible.sync="notificationDialogVisible"
