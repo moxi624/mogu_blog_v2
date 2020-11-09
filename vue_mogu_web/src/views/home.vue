@@ -132,7 +132,7 @@
           <el-form-item label="用户头像" :label-width="labelWidth">
 
             <div class="imgBody" v-if="userInfo.photoUrl">
-              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('user')" @mouseover="icon = true"></i>
               <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl" />
             </div>
 
@@ -383,7 +383,7 @@
 
           <el-form-item label="网站图标">
             <div class="imgBody" v-if="blogLink.photoList">
-              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
+              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('link')" @mouseover="icon = true"></i>
               <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]" />
             </div>
 
@@ -758,10 +758,21 @@
         }
 
       },
-      deletePhoto: function() {
-        this.userInfo.photoUrl = null;
-        this.userInfo.avatar = "";
-        this.icon = false;
+      deletePhoto: function(type) {
+        switch (type) {
+          case "user": {
+            this.userInfo.photoUrl = null;
+            this.userInfo.avatar = "";
+            this.icon = false;
+          } break;
+
+          case "link": {
+            this.blogLink.photoList = null;
+            this.icon = false;
+          } break;
+
+        }
+
       },
       close() {
         this.imagecropperShow = false

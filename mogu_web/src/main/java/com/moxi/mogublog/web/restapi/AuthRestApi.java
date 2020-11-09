@@ -96,7 +96,10 @@ public class AuthRestApi {
     private String moguWebUrl;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
-    @Value(value = "${PROJECT_NAME_EN}")
+    /**
+     * 网站英文名
+     */
+    @Value(value = "${data.web.project_name_en}")
     private String PROJECT_NAME_EN;
     @Value(value = "${DEFAULE_PWD}")
     private String DEFAULE_PWD;

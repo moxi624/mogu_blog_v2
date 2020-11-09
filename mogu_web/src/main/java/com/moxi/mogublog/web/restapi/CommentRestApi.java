@@ -57,11 +57,9 @@ import java.util.concurrent.TimeUnit;
 public class CommentRestApi {
 
     @Autowired
-    RedisUtil redisUtil;
+    private RedisUtil redisUtil;
     @Autowired
-    WebUtil webUtil;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private WebUtil webUtil;
     @Autowired
     private WebConfigService webConfigService;
     @Autowired
@@ -78,10 +76,6 @@ public class CommentRestApi {
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private CommentReportService commentReportService;
-    @Value(value = "${data.web.url}")
-    private String dataWebUrl;
-    @Value(value = "${PROJECT_NAME_EN}")
-    private String projectName;
     @Value(value = "${BLOG.USER_TOKEN_SURVIVAL_TIME}")
     private Long userTokenSurvivalTime;
     @Value(value = "${data.website.url}")

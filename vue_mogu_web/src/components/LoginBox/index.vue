@@ -74,19 +74,19 @@
         </el-form-item>
 
         <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="registerForm.nickName" :disabled="loginType.password"></el-input>
+          <el-input v-model="registerForm.nickName" placeholder="昵称长度在1~20之间" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="registerForm.password" :disabled="loginType.password"></el-input>
+          <el-input type="password" v-model="registerForm.password" placeholder="密码长度在5~20之间" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="重复密码" prop="password2">
-          <el-input type="password" v-model="registerForm.password2" :disabled="loginType.password"></el-input>
+          <el-input type="password" v-model="registerForm.password2" placeholder="请再次输入密码" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="registerForm.email" :disabled="loginType.password"></el-input>
+          <el-input v-model="registerForm.email" placeholder="请输入正确的邮箱进行注册认证" :disabled="loginType.password"></el-input>
         </el-form-item>
 
         <el-row class="btn">
@@ -144,6 +144,11 @@
           userName: [
             {required: true, message: '请输入用户名', trigger: 'blur'},
             { min: 5, message: "用户名长度大于等于 5 个字符", trigger: "blur" },
+            { max: 20, message: "用户名长度不能大于 20 个字符", trigger: "blur" }
+          ],
+          nickName: [
+            {required: true, message: '请输入昵称', trigger: 'blur'},
+            { min: 1, message: "用户名长度大于等于 1 个字符", trigger: "blur" },
             { max: 20, message: "用户名长度不能大于 20 个字符", trigger: "blur" }
           ],
           password: [

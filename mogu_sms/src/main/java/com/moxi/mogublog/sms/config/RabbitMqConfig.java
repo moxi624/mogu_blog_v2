@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * RabbitMQ配置文件
+ * RabbitMQ配置文件【可用于自动生成队列和交换机】
  */
 @Configuration
 public class RabbitMqConfig {
@@ -95,7 +95,6 @@ public class RabbitMqConfig {
     public Binding BINDING_QUEUE_INFORM_SMS(@Qualifier(MOGU_SMS) Queue queue, @Qualifier(EXCHANGE_DIRECT) Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY_SMS).noargs();
     }
-
 
     @Bean
     public MessageConverter messageConverter() {

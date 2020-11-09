@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-
 /**
- * 邮件Util
+ * 邮件发送工具类
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2018年10月20日下午3:18:25
  */
 @Slf4j

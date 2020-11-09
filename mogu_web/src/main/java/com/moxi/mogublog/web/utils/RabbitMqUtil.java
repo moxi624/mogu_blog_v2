@@ -27,10 +27,24 @@ public class RabbitMqUtil {
     private RabbitTemplate rabbitTemplate;
     @Value(value = "${data.web.url}")
     private String dataWebUrl;
-    @Value(value = "${PROJECT_NAME_EN}")
-    private String projectName;
     @Value(value = "${data.website.url}")
     private String dataWebsiteUrl;
+
+    /**
+     * 网站英文名
+     */
+    @Value(value = "${data.web.project_name_en}")
+    private String PROJECT_NAME_EN;
+    /**
+     * 网站中文名
+     */
+    @Value(value = "${data.web.project_name}")
+    private String PROJECT_NAME;
+    /**
+     * 网站LOGO
+     */
+    @Value(value = "${data.web.logo}")
+    private String LOGO;
 
     /**
      * 发送邮件
@@ -60,7 +74,7 @@ public class RabbitMqUtil {
         String content =
                 "<html>\r\n" +
                         " <head>\r\n" +
-                        "  <title> " + projectName + "</title>\r\n" +
+                        "  <title> " + PROJECT_NAME + "</title>\r\n" +
                         " </head>\r\n" +
                         " <body>\r\n" +
                         "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
@@ -72,7 +86,7 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -89,7 +103,7 @@ public class RabbitMqUtil {
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + PROJECT_NAME_EN + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -111,7 +125,7 @@ public class RabbitMqUtil {
         String content =
                 "<html>\r\n" +
                         " <head>\r\n" +
-                        "  <title> " + projectName + "</title>\r\n" +
+                        "  <title> " + PROJECT_NAME + "</title>\r\n" +
                         " </head>\r\n" +
                         " <body>\r\n" +
                         "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
@@ -123,11 +137,11 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "蘑菇博客邮件提醒\r\n" +
+                        PROJECT_NAME + "邮件提醒\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
@@ -135,7 +149,7 @@ public class RabbitMqUtil {
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + PROJECT_NAME_EN + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -157,7 +171,7 @@ public class RabbitMqUtil {
         String text =
                 "<html>\r\n" +
                         " <head>\r\n" +
-                        "  <title> mogublog </title>\r\n" +
+                        "  <title>" + PROJECT_NAME + "</title>\r\n" +
                         " </head>\r\n" +
                         " <body>\r\n" +
                         "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
@@ -169,22 +183,22 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "蘑菇博客账号激活\r\n" +
+                        PROJECT_NAME + "账号激活\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您注册蘑菇博客账号，请点击下方链接进行账号激活</p>\r\n" +
+                        "<p>欢迎您注册"+ PROJECT_NAME +"账号，请点击下方链接进行账号激活</p>\r\n" +
                         "<p>地址：" + "<a href=\"" + dataWebUrl + "/login/activeUser/" + token + "\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + PROJECT_NAME_EN + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -206,7 +220,7 @@ public class RabbitMqUtil {
         String text =
                 "<html>\r\n" +
                         " <head>\r\n" +
-                        "  <title> mogublog </title>\r\n" +
+                        "  <title>"+ PROJECT_NAME +"</title>\r\n" +
                         " </head>\r\n" +
                         " <body>\r\n" +
                         "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
@@ -218,22 +232,22 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"http://image.moguit.cn/favicon.png\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
-                        "蘑菇博客邮箱绑定\r\n" +
+                        PROJECT_NAME + "邮箱绑定\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您给蘑菇博客账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
+                        "<p>欢迎您给"+ PROJECT_NAME +"账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
                         "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/" + token + "/" + user.getValidCode() + "\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
                         "<div class=\"footer\">\r\n" +
-                        "<a href=\" " + dataWebsiteUrl + "\">@" + projectName + "</a>\n" +
+                        "<a href=\" " + dataWebsiteUrl + "\">@" + PROJECT_NAME_EN + "</a>\n" +
                         "<div class=\"pull-right\"></div>\r\n" +
                         "</div>\r\n" +
                         "</div>\r\n" +
@@ -241,7 +255,7 @@ public class RabbitMqUtil {
                         "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
                         " </body>\r\n" +
                         "</html>";
-
+        System.out.println(text);
         sendEmail(user.getEmail(), text);
     }
 
