@@ -69,19 +69,17 @@ public class LoginRestApi {
 
     @Value(value = "${isRememberMeExpiresSecond}")
     private int isRememberMeExpiresSecond;
-
     @Autowired
     private RedisUtil redisUtil;
-
     @Autowired
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping("/login")
     public String login(HttpServletRequest request,
-                        @ApiParam(name = "username", value = "用户名或邮箱或手机号", required = false) @RequestParam(name = "username", required = false) String username,
-                        @ApiParam(name = "password", value = "密码", required = false) @RequestParam(name = "password", required = false) String password,
-                        @ApiParam(name = "isRememberMe", value = "是否记住账号密码", required = false) @RequestParam(name = "isRememberMe", required = false) Boolean isRememberMe) {
+                        @ApiParam(name = "username", value = "用户名或邮箱或手机号") @RequestParam(name = "username", required = false) String username,
+                        @ApiParam(name = "password", value = "密码") @RequestParam(name = "password", required = false) String password,
+                        @ApiParam(name = "isRememberMe", value = "是否记住账号密码") @RequestParam(name = "isRememberMe", required = false, defaultValue = "false") Boolean isRememberMe) {
 
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return ResultUtil.result(SysConf.ERROR, "账号或密码不能为空");

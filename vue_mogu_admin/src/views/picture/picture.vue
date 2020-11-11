@@ -314,6 +314,7 @@ export default {
           that.pageSize = response.data.size
           that.currentPage = response.data.current
           that.total = response.data.total
+          that.tableData = response.data.records
           Vue.set(that.pictureSorts, that.activeName, newObject);
         } else {
           this.$commonUtil.message.error(response.message)
@@ -361,6 +362,7 @@ export default {
         this.chooseTitle = "全选";
       } else {
         this.pictureUids = [];
+        console.log("tableData", this.tableData)
         this.tableData.forEach(function(picture) {
           this.pictureUids.push(picture.uid);
         }, this);
@@ -395,6 +397,7 @@ export default {
               this.checkedPicture = []
               this.handleCurrentChange(this.currentPage);
               this.chooseTitle = "全选";
+              this.isCheckedAll = false;
             }
           });
         })
