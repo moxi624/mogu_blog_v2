@@ -372,15 +372,15 @@
         </el-form-item>
 
         <el-form-item label="内容" :label-width="formLabelWidth" prop="content">
-          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="330"></CKEditor>
+          <CKEditor v-if="systemConfig.editorModel == '0'" ref="editor" :content="form.content" @contentChange="contentChange" :height="360"></CKEditor>
           <MarkdownEditor v-if="systemConfig.editorModel == '1'" :content="form.content" ref="editor" :height="465"></MarkdownEditor>
         </el-form-item>
-      </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-      </div>
+        <el-form-item style="float: right; margin-right: 20px;">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
     <el-dialog
@@ -1174,6 +1174,7 @@ export default {
 };
 </script>
 <style scoped>
+
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
