@@ -79,6 +79,8 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         List<OnlineAdmin> onlineAdminList = new ArrayList<>();
         for (String item : onlineAdminSubList) {
             OnlineAdmin onlineAdmin = JsonUtils.jsonToPojo(item, OnlineAdmin.class);
+            // 数据脱敏【移除用户的token令牌】
+            onlineAdmin.setToken("");
             onlineAdminList.add(onlineAdmin);
         }
         Page<OnlineAdmin> page = new Page<>();
@@ -138,7 +140,8 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         String ip = IpUtils.getIpAddr(request);
         OnlineAdmin onlineAdmin = new OnlineAdmin();
         onlineAdmin.setAdminUid(admin.getUid());
-        onlineAdmin.setTokenId(admin.getValidCode());
+        onlineAdmin.setTokenId(admin.getTokenUid());
+        onlineAdmin.setToken(admin.getValidCode());
         onlineAdmin.setOs(os);
         onlineAdmin.setBrowser(browser);
         onlineAdmin.setIpaddr(ip);
@@ -157,7 +160,10 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         } else {
             onlineAdmin.setLoginLocation(jsonResult);
         }
+        // 将登录的管理员存储到在线用户表
         redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + admin.getValidCode(), JsonUtils.objectToJson(onlineAdmin), expirationSecond, TimeUnit.SECONDS);
+        // 在维护一张表，用于 uuid - token 互相转换
+        redisUtil.setEx(RedisConf.LOGIN_UUID_KEY + RedisConf.SEGMENTATION + admin.getTokenUid(), admin.getValidCode(), expirationSecond, TimeUnit.SECONDS);
     }
 
     @Override
@@ -396,10 +402,21 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     }
 
     @Override
-    public String forceLogout(List<String> tokenList) {
-        if (tokenList == null || tokenList.size() == 0) {
+    public String forceLogout(List<String> tokenUidList) {
+        if (tokenUidList == null || tokenUidList.size() == 0) {
             return ResultUtil.errorWithMessage(MessageConf.PARAM_INCORRECT);
         }
+
+        // 从Redis中通过TokenUid获取到用户的真实token
+        List<String> tokenList = new ArrayList<>();
+        tokenUidList.forEach(item -> {
+            String token = redisUtil.get(RedisConf.LOGIN_UUID_KEY + RedisConf.SEGMENTATION + item);
+            if(StringUtils.isNotEmpty(token)) {
+                tokenList.add(token);
+            }
+        });
+
+        // 根据token删除Redis中的在线用户
         List<String> keyList = new ArrayList<>();
         String keyPrefix = RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION;
         for (String token : tokenList) {

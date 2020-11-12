@@ -106,13 +106,22 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     // 生成新的token，发送到客户端
                     CookieUtils.setCookie("Admin-Token", newToken, expiresSecond.intValue());
                     OnlineAdmin newOnlineAdmin = JsonUtils.jsonToPojo(onlineAdmin, OnlineAdmin.class);
-                    newOnlineAdmin.setTokenId(newToken);
+                    // 获取旧的TokenUid
+                    String oldTokenUid = newOnlineAdmin.getTokenId();
+                    // 随机生成一个TokenUid，用于换取Token令牌
+                    String tokenUid = StringUtils.getUUID();
+                    newOnlineAdmin.setTokenId(tokenUid);
+                    newOnlineAdmin.setToken(newToken);
                     newOnlineAdmin.setExpireTime(DateUtils.getDateStr(new Date(), expiresSecond));
                     newOnlineAdmin.setLoginTime(DateUtils.getNowTime());
-                    // 移除原来的旧Token
+                    // 移除原来的旧Token和TokenUid
                     redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + authHeader);
+                    redisUtil.delete(RedisConf.LOGIN_UUID_KEY + Constants.SYMBOL_COLON + oldTokenUid);
+
                     // 将新的Token存入Redis中
                     redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + newToken, JsonUtils.objectToJson(newOnlineAdmin), expiresSecond, TimeUnit.SECONDS);
+                    // 维护 uuid - token 互相转换的Redis集合【主要用于在线用户管理】
+                    redisUtil.setEx(RedisConf.LOGIN_UUID_KEY + Constants.SYMBOL_COLON + tokenUid, newToken, expiresSecond, TimeUnit.SECONDS);
                 }
             } else {
                 chain.doFilter(request, response);

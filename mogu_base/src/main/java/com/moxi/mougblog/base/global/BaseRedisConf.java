@@ -104,6 +104,11 @@ public class BaseRedisConf {
     public final static String LOGIN_TOKEN_KEY = "LOGIN_TOKEN_KEY";
 
     /**
+     * 登录的UUID
+     */
+    public final static String LOGIN_UUID_KEY = "LOGIN_UUID_KEY";
+
+    /**
      * 用户提交无效评论的次数
      */
     public final static String USER_PUBLISH_SPAM_COMMENT_COUNT = "USER_PUBLISH_SPAM_COMMENT_COUNT";

@@ -250,12 +250,22 @@ export default {
       console.log("点击了回复");
     },
     handleDelete: function(row) {
-			let params = {}
-			params.uid = row.uid
-			deleteComment(params).then(response=> {
-          this.$commonUtil.message.success(response.message)
-          this.commentList();
-			})
+      this.$confirm("此操作将把该评论删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = {}
+          params.uid = row.uid
+          deleteComment(params).then(response=> {
+            this.$commonUtil.message.success(response.message)
+            this.commentList();
+          })
+        })
+        .catch(() => {
+          this.$commonUtil.info("已取消删除")
+        });
     },
     handleDeleteBatch: function() {
       var that = this;

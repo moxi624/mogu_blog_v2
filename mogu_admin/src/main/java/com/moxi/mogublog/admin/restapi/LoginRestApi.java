@@ -9,6 +9,7 @@ import com.moxi.mogublog.commons.config.jwt.Audience;
 import com.moxi.mogublog.commons.config.jwt.JwtTokenUtil;
 import com.moxi.mogublog.commons.entity.Admin;
 import com.moxi.mogublog.commons.entity.CategoryMenu;
+import com.moxi.mogublog.commons.entity.OnlineAdmin;
 import com.moxi.mogublog.commons.entity.Role;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
@@ -30,12 +31,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 登录管理 RestApi(为了更好地使用security放行把登录管理放在AuthRestApi中)
+ * 登录管理 RestApi【为了更好地使用security放行把登录管理放在AuthRestApi中】
  *
  * @author limbo
  * @date 2018-10-14
@@ -71,7 +73,7 @@ public class LoginRestApi {
     private int isRememberMeExpiresSecond;
     @Autowired
     private RedisUtil redisUtil;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
@@ -146,6 +148,8 @@ public class LoginRestApi {
         admin.updateById();
         // 设置token到validCode，用于记录登录用户
         admin.setValidCode(token);
+        // 设置tokenUid，【主要用于换取token令牌，防止token直接暴露到在线用户管理中】
+        admin.setTokenUid(StringUtils.getUUID());
         admin.setRole(roles.get(0));
         // 添加在线用户到Redis中【设置过期时间】
         adminService.addOnlineAdmin(admin, expiration);
@@ -263,6 +267,15 @@ public class LoginRestApi {
         if (StringUtils.isEmpty(token)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
         } else {
+            // 获取在线用户信息
+            String adminJson = redisUtil.get(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
+            if (StringUtils.isNotEmpty(adminJson)) {
+                OnlineAdmin onlineAdmin = JsonUtils.jsonToPojo(adminJson, OnlineAdmin.class);
+                String tokenUid = onlineAdmin.getTokenId();
+                // 移除Redis中的TokenUid
+                redisUtil.delete(RedisConf.LOGIN_UUID_KEY + RedisConf.SEGMENTATION + tokenUid);
+            }
+            // 移除Redis中的用户
             redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
         }

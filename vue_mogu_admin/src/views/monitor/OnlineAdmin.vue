@@ -62,7 +62,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="230">
+      <el-table-column label="操作" fixed="right" min-width="100">
         <template slot-scope="scope">
           <el-button @click="handleDelete(scope.row)" type="danger" size="small" v-permission="'/admin/forceLogout'">强踢</el-button>
         </template>
@@ -96,7 +96,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加标签",
+      title: "增加用户",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -115,10 +115,12 @@ export default {
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
       getOnlineAdminList(params).then(response => {
-        this.tableData = response.data.records;
-        this.currentPage = response.data.current;
-        this.pageSize = response.data.size;
-        this.total = response.data.total;
+        if(response.code == this.$ECode.SUCCESS) {
+          this.tableData = response.data.records;
+          this.currentPage = response.data.current;
+          this.pageSize = response.data.size;
+          this.total = response.data.total;
+        }
       });
     },
     handleFind: function() {
@@ -136,39 +138,27 @@ export default {
           var params = [];
           params.push(row.tokenId);
           forceLogout(params).then(response => {
-            if(response.code == "success") {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+            if(response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             that.onlineAdminList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleDeleteBatch: function() {
-      let tokenList = []
+      let tokenUidList = []
       let multipleSelection = this.multipleSelection;
       if(multipleSelection.length <= 0 ) {
-        this.$message({
-          type: "error",
-          message: "请先选中需要踢出的用户！"
-        });
+        this.$commonUtil.message.error("请先选中需要踢出的用户!")
         return;
       } else {
         for(let a=0; a< multipleSelection.length; a++) {
-          tokenList.push(multipleSelection[a].tokenId)
+          tokenUidList.push(multipleSelection[a].tokenId)
         }
       }
       this.$confirm("此操作将把选中的用户踢出, 是否继续?", "提示", {
@@ -177,26 +167,17 @@ export default {
         type: "warning"
       })
         .then(() => {
-          forceLogout(tokenList).then(response => {
-            if(response.code == "success") {
-              this.$message({
-                type: "success",
-                message: response.data
-              });
+          forceLogout(tokenUidList).then(response => {
+            if(response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
             } else {
-              this.$message({
-                type: "error",
-                message: response.data
-              });
+              this.$commonUtil.message.error(response.message)
             }
             this.onlineAdminList();
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+          this.$commonUtil.message.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {

@@ -96,8 +96,8 @@ public class AdminRestApi {
     @OperationLogger(value = "强退用户")
     @ApiOperation(value = "强退用户", notes = "强退用户", response = String.class)
     @PostMapping(value = "/forceLogout")
-    public String forceLogout(@ApiParam(name = "tokenList", value = "tokenList", required = false) @RequestBody List<String> tokenList) {
-        return adminService.forceLogout(tokenList);
+    public String forceLogout(@ApiParam(name = "tokenUidList", value = "tokenList", required = false) @RequestBody List<String> tokenUidList) {
+        return adminService.forceLogout(tokenUidList);
     }
 }
 
