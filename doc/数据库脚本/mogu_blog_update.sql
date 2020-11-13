@@ -278,3 +278,10 @@ ALTER TABLE  t_system_config ADD dashboard_notification longtext NULL COMMENT "�
 */
 ALTER TABLE  t_blog ADD type TINYINT(1) NOT NULL DEFAULT 0 COMMENT "类型【0 博客， 1：推广】";
 ALTER TABLE  t_blog ADD outside_link varchar(1024) NULL COMMENT "外链【如果是推广，那么将跳转到外链】";
+
+
+/*
+	博客表 增加oid字段  【可能会插入失败，需要自己手动添加！！自增id】
+	@date 2020年11月13日10:11:09
+*/
+alter table t_blog add oid int auto_increment comment '唯一oid';

@@ -71,7 +71,7 @@
 >
 > 【演示后端】：http://demoadmin.moguit.cn/
 >
-> 【演示账号】：mogu2018   mogu2018
+> 【演示账号】：mogu2018   mogu2018【演示环境只开放查询权限和部分操作权限】
 >
 > 【QQ小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支下的uniapp_mogu_web文件夹）
 

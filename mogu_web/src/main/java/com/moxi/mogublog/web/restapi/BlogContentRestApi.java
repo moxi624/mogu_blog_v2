@@ -1,6 +1,7 @@
 package com.moxi.mogublog.web.restapi;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
@@ -33,17 +34,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>
  * 文章详情 RestApi
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-04
+ * @author 陌溪
+ * @date 2018-09-04
  */
 @RestController
 @RequestMapping("/content")
@@ -54,32 +54,35 @@ public class BlogContentRestApi {
     private WebUtil webUtil;
     @Autowired
     private BlogService blogService;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
     @Autowired
-    private WebVisitService webVisitService;
-    @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Value(value = "${BLOG.ORIGINAL_TEMPLATE}")
     private String ORIGINAL_TEMPLATE;
-
     @Value(value = "${BLOG.REPRINTED_TEMPLATE}")
     private String REPRINTED_TEMPLATE;
 
     @BussinessLog(value = "点击博客", behavior = EBehavior.BLOG_CONTNET)
     @ApiOperation(value = "通过Uid获取博客内容", notes = "通过Uid获取博客内容")
     @GetMapping("/getBlogByUid")
-    public String getBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid) {
+    public String getBlogByUid(@ApiParam(name = "uid", value = "博客UID", required = false) @RequestParam(name = "uid", required = false) String uid,
+                               @ApiParam(name = "oid", value = "博客OID", required = false) @RequestParam(name = "oid", required = false, defaultValue = "0") Integer oid) {
 
         HttpServletRequest request = RequestHolder.getRequest();
         String ip = IpUtils.getIpAddr(request);
-
-        if (StringUtils.isEmpty(uid)) {
+        if (StringUtils.isEmpty(uid) && oid == 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
-
-        Blog blog = blogService.getById(uid);
+        Blog blog = null;
+        if(StringUtils.isNotEmpty(uid)) {
+            blog = blogService.getById(uid);
+        } else {
+            QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(SysConf.OID, oid);
+            queryWrapper.last(SysConf.LIMIT_ONE);
+            blog = blogService.getOne(queryWrapper);
+        }
 
         if (blog == null || blog.getStatus() == EStatus.DISABLED || EPublish.NO_PUBLISH.equals(blog.getIsPublish())) {
             return ResultUtil.result(ECode.ERROR, MessageConf.BLOG_IS_DELETE);
@@ -98,7 +101,7 @@ public class BlogContentRestApi {
         setPhotoListByBlog(blog);
 
         //从Redis取出数据，判断该用户是否点击过
-        String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + uid);
+        String jsonResult = stringRedisTemplate.opsForValue().get("BLOG_CLICK:" + ip + "#" + blog.getUid());
 
         if (StringUtils.isEmpty(jsonResult)) {
 
@@ -108,7 +111,7 @@ public class BlogContentRestApi {
             blog.updateById();
 
             //将该用户点击记录存储到redis中, 24小时后过期
-            stringRedisTemplate.opsForValue().set(RedisConf.BLOG_CLICK + Constants.SYMBOL_COLON + ip + Constants.SYMBOL_WELL + uid, blog.getClickCount().toString(),
+            stringRedisTemplate.opsForValue().set(RedisConf.BLOG_CLICK + Constants.SYMBOL_COLON + ip + Constants.SYMBOL_WELL + blog.getUid(), blog.getClickCount().toString(),
                     24, TimeUnit.HOURS);
         }
         return ResultUtil.result(SysConf.SUCCESS, blog);
@@ -144,8 +147,7 @@ public class BlogContentRestApi {
 
     @ApiOperation(value = "根据BlogUid获取相关的博客", notes = "根据BlogUid获取相关的博客")
     @GetMapping("/getSameBlogByBlogUid")
-    public String getSameBlogByBlogUid(HttpServletRequest request,
-                                       @ApiParam(name = "blogUid", value = "博客标签UID", required = true) @RequestParam(name = "blogUid", required = true) String blogUid) {
+    public String getSameBlogByBlogUid(@ApiParam(name = "blogUid", value = "博客标签UID", required = true) @RequestParam(name = "blogUid", required = true) String blogUid) {
         if (StringUtils.isEmpty(blogUid)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }

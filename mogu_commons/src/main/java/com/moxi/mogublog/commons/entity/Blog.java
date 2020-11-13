@@ -1,26 +1,27 @@
 package com.moxi.mogublog.commons.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
 
 import java.util.List;
 
 /**
- * <p>
  * 博客表
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 @Data
 @TableName("t_blog")
 public class Blog extends SuperEntity<Blog> {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 唯一oid【自动递增】
+     */
+    private Integer oid;
 
     /**
      * 博客标题

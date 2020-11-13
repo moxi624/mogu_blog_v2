@@ -3,13 +3,14 @@ package com.moxi.mougblog.base.global;
 /**
  * 常量的基类
  *
- * @author xuzhixiang
- * @date 2017年9月25日00:06:54
+ * @author 陌溪
+ * @date 2018年9月25日00:06:54
  */
 public class BaseSysConf {
 
     public final static String DEFAULT_UID = "uid00000000000000000000000000000";
     public final static String LIMIT_ONE = "LIMIT 1";
+    public final static String OID = "oid";
 
     // picture相关
     public final static String USER_UID = "userUid";

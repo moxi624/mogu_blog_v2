@@ -106,7 +106,7 @@
 </template>
 
 <script>
-    import {getLink, getWebConfig} from "../api/index";
+    import {getWebConfig} from "../api/index";
     import { getBlogByUid, getSameBlogByBlogUid } from "../api/blogContent";
     import CommentList from "../components/CommentList";
     import CommentBox from "../components/CommentBox";
@@ -155,11 +155,11 @@
                 toInfo: {},
                 userInfo: {},
                 blogUid: null, //传递过来的博客uid
+                blogOid: 0, // 传递过来的博客oid
                 blogData: {
                   blogSort: {}
                 },
                 sameBlogData: [], //相关文章
-                linkData: [], //友情链接
                 dialogPictureVisible: false,
                 dialogImageUrl: "",
                 openComment: "0", // 开启评论
@@ -206,10 +206,20 @@
         mounted () {
           var that = this;
           var params = new URLSearchParams();
-          params.append("uid", this.blogUid);
+          if(this.blogUid) {
+            params.append("uid", this.blogUid);
+          }
+          if(this.blogOid) {
+            params.append("oid", this.blogOid)
+          }
           getBlogByUid(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
               this.blogData = response.data;
+              this.blogUid = response.data.uid
+              this.blogOid = response.data.oid
+              this.commentInfo.blogUid = response.data.uid;
+              this.getSameBlog()
+              this.getCommentDataList();
             }
             setTimeout(()=>{
               that.blogContent = response.data.content
@@ -237,9 +247,7 @@
               // console.log("显示顶部栏", winScrollHeight)
               that.showSideCatalog = false
             }
-
             after = winScrollHeight;
-
             //还有30像素的时候,就查询
             if(docHeight == winHeight + winScrollHeight){
               if(that.comments.length >= that.total) {
@@ -277,10 +285,7 @@
                 text: "正在努力加载中~"
             });
             this.blogUid = this.$route.query.blogUid;
-            this.commentInfo.blogUid = this.$route.query.blogUid;
-            this.getLinkList()
-            this.getSameBlog()
-            this.getCommentDataList();
+            this.blogOid = this.$route.query.blogOid;
             this.setCommentAndAdmiration()
             // 屏幕大于950px的时候，显示侧边栏
             this.showSidebar = document.body.clientWidth > 950
@@ -291,11 +296,6 @@
             handleCurrentChange: function(val) {
                 this.currentPage = val;
                 this.getCommentDataList();
-            },
-            getLinkList() {
-              getLink().then(response => {
-                this.linkData = response.data.records;
-              });
             },
             getSameBlog() {
               var blogParams = new URLSearchParams();

@@ -177,7 +177,7 @@ export default {
           if(entity.type == "0") {
             let routeData = this.$router.resolve({
               path: "/info",
-              query: { blogUid: entity.uid }
+              query: { blogOid: entity.oid }
             });
             window.open(routeData.href, "_blank");
           } else if(entity.type == "1") {
