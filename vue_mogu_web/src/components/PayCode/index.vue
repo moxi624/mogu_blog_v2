@@ -99,10 +99,22 @@ export default {
     },
     //博客点赞
     praiseBlog: function(uid) {
+      // 判断用户是否登录
+      let isLogin = this.$store.state.user.isLogin
+      if(!isLogin) {
+        this.$notify.error({
+          title: '警告',
+          message: '登录后才可以评论哦~',
+          offset: 100
+        });
+        // 未登录，自动弹出登录框
+        this.setLoginMessage(Math.random())
+        return;
+      }
+
       var params = new URLSearchParams();
       params.append("uid", uid);
       praiseBlogByUid(params).then(response => {
-        console.log(response);
         if (response.code == this.$ECode.SUCCESS) {
           this.$notify({
             title: '成功',
@@ -114,11 +126,9 @@ export default {
         } else {
           this.$notify.error({
             title: '错误',
-            message: response.data,
+            message: response.message,
             offset: 100
           });
-          // 未登录，自动弹出登录框
-          this.setLoginMessage(Math.random())
         }
       });
     },
