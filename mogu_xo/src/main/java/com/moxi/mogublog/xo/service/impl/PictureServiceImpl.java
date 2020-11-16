@@ -24,32 +24,31 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * <p>
  * 图片表 服务实现类
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 @Service
 public class PictureServiceImpl extends SuperServiceImpl<PictureMapper, Picture> implements PictureService {
 
     @Autowired
-    WebUtil webUtil;
+    private WebUtil webUtil;
 
     @Autowired
-    PictureService pictureService;
+    private PictureService pictureService;
 
     @Autowired
-    BlogService blogService;
+    private BlogService blogService;
 
     @Autowired
-    PictureSortService pictureSortService;
+    private PictureSortService pictureSortService;
 
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @Autowired

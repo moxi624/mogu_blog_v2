@@ -149,7 +149,7 @@ public class WebUtil {
             if (picData.size() > 0) {
                 for (int i = 0; i < picData.size(); i++) {
                     Map<String, Object> map = new HashMap<>();
-                    if (StringUtils.isEmpty(picData.get(i).get(SysConf.URL)) || StringUtils.isEmpty(picData.get(i).get(SysConf.UID))) {
+                    if (StringUtils.isEmpty(picData.get(i).get(SysConf.UID))) {
                         continue;
                     }
                     // 判断文件显示优先级【需要显示存储在哪里的图片】

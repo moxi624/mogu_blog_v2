@@ -18,12 +18,6 @@
 <img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
 
 
-## 投票
-
-码云的开源项目评选活动开始喽~ 欢迎各位小伙伴动动手指，给蘑菇博客项目投上宝贵的一票，感谢大家的支持~
-投票地址：https://www.oschina.net/p/mogublog
-活动地址：https://www.oschina.net/project/top_cn_2020
-
 ##  前言
 
 虽然我知道很多人来到这里，都是pull 或者dowonload了一下代码，就把项目关闭了。突然有一天想起了看看蘑菇博客这个项目有没有更新，然后继续执行以下操作：
@@ -71,7 +65,7 @@
 >
 > 【演示后端】：http://demoadmin.moguit.cn/
 >
-> 【演示账号】：mogu2018   mogu2018【演示环境只开放查询权限和部分操作权限】
+> 【演示账号】：mogu2018   mogu2018【演示环境开放全部查询权限和部分操作权限】
 >
 > 【QQ小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支下的uniapp_mogu_web文件夹）
 
@@ -80,6 +74,7 @@
 ## 项目中初始用户和密码
 
 - **后台登录**：用户：admin，密码：mogu2018
+- 前台登录：用户：mogu2018，密码：mogu2018
 - **Mysql**：用户：root，密码：mogu2018
 - **Redis**：密码：mogu2018
 - **远程SSH初始密码**：用户：root，密码：mogu2018
