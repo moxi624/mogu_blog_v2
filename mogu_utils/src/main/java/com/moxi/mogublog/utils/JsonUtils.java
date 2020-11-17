@@ -81,6 +81,29 @@ public class JsonUtils {
         return returnMap;
     }
 
+    /**
+     * 任意类型转换成Map
+     * @return
+     */
+    public static Map<String, String> object2Map(Object obj) {
+        Map<String, String> hashMap = new HashMap();
+        try {
+            Class c = obj.getClass();
+            Method m[] = c.getDeclaredMethods();
+            for (int i = 0; i < m.length; i++) {
+                if (m[i].getName().indexOf("get")==0) {
+                    // 得到Map的key
+                    String suffixKey = m[i].getName().substring(4);
+                    String prefixKey = m[i].getName().substring(3,4).toLowerCase();
+                    hashMap.put(prefixKey + suffixKey, String.valueOf(m[i].invoke(obj, new Object[0])));
+                }
+            }
+        } catch (Throwable e) {
+            log.error(e.getMessage());
+        }
+        return hashMap;
+    }
+
 
     /**
      * 把json字符串转化为对象
