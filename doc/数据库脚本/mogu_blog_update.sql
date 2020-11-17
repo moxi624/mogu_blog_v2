@@ -281,7 +281,7 @@ ALTER TABLE  t_blog ADD outside_link varchar(1024) NULL COMMENT "外链【如果
 
 
 /*
-	博客表 增加oid字段  【可能会插入失败，需要自己手动添加！！自增id】
+	博客表 增加oid字段
 	@date 2020年11月13日10:11:09
 */
-alter table t_blog add oid int auto_increment comment '唯一oid';
+alter table t_blog add oid int auto_increment UNIQUE comment '唯一oid';

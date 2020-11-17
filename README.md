@@ -142,7 +142,7 @@
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统。
 - mogu_admin: 提供admin端API接口服务；
 - mogu_web：提供web端API接口服务；
-- mogu_eureka： 服务发现和注册
+- mogu_eureka： 服务发现和注册【注: Nacos分支没有该目录，用Nacos作为服务发现组件】
 - mogu_picture： 图片服务，用于图片上传和下载；
 - mogu_sms：消息服务，用于更新ElasticSearch、Solr索引、邮件和短信发送
 - mogu_monitor：监控服务，集成SpringBootAdmin用于管理和监控SpringBoot应用程序
