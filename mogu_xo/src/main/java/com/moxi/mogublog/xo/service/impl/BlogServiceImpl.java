@@ -61,8 +61,6 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
     @Autowired
     private BlogSortService blogSortService;
     @Autowired
-    private LinkService linkService;
-    @Autowired
     private RedisUtil redisUtil;
     @Resource
     private TagMapper tagMapper;

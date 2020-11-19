@@ -24,21 +24,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * <p>
  * 反馈表 服务实现类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-08
+ * @author 陌溪
+ * @date 2018-09-08
  */
 @Service
 public class FeedbackServiceImpl extends SuperServiceImpl<FeedbackMapper, Feedback> implements FeedbackService {
 
     @Autowired
-    FeedbackService feedbackService;
-
+    private FeedbackService feedbackService;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public IPage<Feedback> getPageList(FeedbackVO feedbackVO) {

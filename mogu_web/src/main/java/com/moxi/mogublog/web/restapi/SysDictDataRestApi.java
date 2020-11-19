@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>
  * 字典数据查询 RestApi
- * </p>
  *
  * @author 陌溪
  * @since 2020年3月11日10:37:13
@@ -43,6 +41,5 @@ public class SysDictDataRestApi {
         log.info("根据字典类型数组获取字典数据");
         return ResultUtil.result(SysConf.SUCCESS, sysDictDataService.getListByDictTypeList(dictTypeList));
     }
-
 }
 

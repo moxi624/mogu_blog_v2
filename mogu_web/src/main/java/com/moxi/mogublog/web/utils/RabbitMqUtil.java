@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @date 2020年4月29日11:56:10
  */
 @Slf4j
+@RefreshScope
 @Component
 public class RabbitMqUtil {
 

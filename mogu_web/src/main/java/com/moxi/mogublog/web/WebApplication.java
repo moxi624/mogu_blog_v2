@@ -21,7 +21,6 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableOpenApi
 @EnableDiscoveryClient
-// 开启异步
 @EnableAsync
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {

@@ -23,7 +23,9 @@ import java.util.UUID;
  */
 public class CKImageUploadUtil {
 
-    //获取基本路径
+    /**
+     * 获取基本路径
+     */
     @Value(value = "${file.upload.path}")
     private static String basePath;
 

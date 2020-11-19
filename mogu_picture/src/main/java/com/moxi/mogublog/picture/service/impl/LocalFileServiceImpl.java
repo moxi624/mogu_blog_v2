@@ -12,6 +12,7 @@ import com.moxi.mougblog.base.global.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ import java.util.List;
  * @since 2020年10月19日16:58:38
  */
 @Slf4j
+@RefreshScope
 @Service
 public class LocalFileServiceImpl implements LocalFileService {
 

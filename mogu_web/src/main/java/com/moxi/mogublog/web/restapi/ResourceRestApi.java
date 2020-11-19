@@ -25,13 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
  * 学习教程 RestApi
  *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2018年10月21日上午11:04:11
  */
 @RestController
@@ -45,7 +46,7 @@ public class ResourceRestApi {
     private ResourceSortService resourceSortService;
     @Autowired
     private StudyVideoService studyVideoService;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
 
     @ApiOperation(value = "通过分类来获取视频", notes = "通过Uid获取博客内容")

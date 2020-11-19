@@ -75,7 +75,7 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
     @Override
     public String editSystemConfig(SystemConfigVO systemConfigVO) {
         // 图片必须选择上传到一个区域
-        if (EOpenStatus.CLOSE.equals(systemConfigVO.getUploadLocal()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadQiNiu())) {
+        if (EOpenStatus.CLOSE.equals(systemConfigVO.getUploadLocal()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadQiNiu()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadMinio())) {
             return ResultUtil.errorWithMessage(MessageConf.PICTURE_MUST_BE_SELECT_AREA);
         }
         // 图片显示优先级为本地优先，必须开启图片上传本地
@@ -86,6 +86,12 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         if (EOpenStatus.OPEN.equals(systemConfigVO.getPicturePriority()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadQiNiu())) {
             return ResultUtil.errorWithMessage(MessageConf.MUST_BE_OPEN_QI_NIU_UPLOAD);
         }
+
+        // 图片显示优先级为Minio优先，必须开启图片上传Minio
+        if (EOpenStatus.OPEN.equals(systemConfigVO.getPicturePriority()) && EOpenStatus.CLOSE.equals(systemConfigVO.getUploadMinio())) {
+            return ResultUtil.errorWithMessage(MessageConf.MUST_BE_OPEN_MINIO_UPLOAD);
+        }
+
         // 开启Email邮件通知时，必须保证Email字段不为空
         if (EOpenStatus.OPEN.equals(systemConfigVO.getStartEmailNotification()) && StringUtils.isEmpty(systemConfigVO.getEmail())) {
             return ResultUtil.errorWithMessage(MessageConf.MUST_BE_SET_EMAIL);

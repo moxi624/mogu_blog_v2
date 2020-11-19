@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 专题表 RestApi
- * </p>
  *
  * @author 陌溪
  * @since 2020年8月24日10:37:39

@@ -20,14 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-
-
 /**
- * <p>
  * 首页 RestApi
- * </p>
  *
- * @author xuzhixiang
+ * @author 陌溪
  * @since 2018-09-04
  */
 @RestController

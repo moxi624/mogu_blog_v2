@@ -19,18 +19,16 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * <p>
  * 操作日志 服务实现类
- * </p>
  *
  * @author limbo
- * @since 2018-09-30
+ * @date 2018-09-30
  */
 @Service
 public class ExceptionLogServiceImpl extends SuperServiceImpl<ExceptionLogMapper, ExceptionLog> implements ExceptionLogService {
 
     @Autowired
-    ExceptionLogService exceptionLogService;
+    private ExceptionLogService exceptionLogService;
 
     @Override
     public IPage<ExceptionLog> getPageList(ExceptionLogVO exceptionLogVO) {

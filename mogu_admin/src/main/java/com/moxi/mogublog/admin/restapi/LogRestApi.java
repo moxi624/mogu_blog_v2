@@ -34,10 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogRestApi {
 
     @Autowired
-    SysLogService sysLogService;
-
+    private SysLogService sysLogService;
     @Autowired
-    ExceptionLogService exceptionLogService;
+    private ExceptionLogService exceptionLogService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取操作日志列表", notes = "获取操作日志列表", response = String.class)

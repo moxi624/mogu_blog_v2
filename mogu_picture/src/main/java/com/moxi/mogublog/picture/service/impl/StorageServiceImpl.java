@@ -27,6 +27,7 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,22 +41,19 @@ import java.util.List;
  * 文件服务实现类
  *
  * @author 陌溪
- * @since 2018-09-17
+ * @date 2018-09-17
  */
 @Slf4j
+@RefreshScope
 @Service
 public class StorageServiceImpl extends SuperServiceImpl<StorageMapper, Storage> implements StorageService {
 
-    @Value(value = "${file.upload.path}")
-    String path;
     @Autowired
-    NetworkDiskService networkDiskService;
+    private NetworkDiskService networkDiskService;
     @Autowired
-    StorageService storageService;
+    private StorageService storageService;
     @Resource
     private FileService fileService;
-    @Autowired
-    private QiniuUtil qiniuUtil;
     @Autowired
     private FeignUtil feignUtil;
 

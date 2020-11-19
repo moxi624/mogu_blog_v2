@@ -32,7 +32,7 @@ import java.util.*;
  * 评论表 服务实现类
  *
  * @author 陌溪
- * @since 2018-09-08
+ * @date 2018-09-08
  */
 @Service
 public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment> implements CommentService {

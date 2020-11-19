@@ -32,16 +32,13 @@ import java.util.Map;
 public class IndexRestApi {
 
     @Autowired
-    BlogService blogService;
-
+    private BlogService blogService;
     @Autowired
-    CommentService commentService;
-
+    private CommentService commentService;
     @Autowired
-    WebVisitService webVisitService;
-
+    private WebVisitService webVisitService;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @ApiOperation(value = "首页初始化数据", notes = "首页初始化数据", response = String.class)
     @RequestMapping(value = "/init", method = RequestMethod.GET)

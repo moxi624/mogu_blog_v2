@@ -39,7 +39,7 @@ import java.util.List;
 public class SysDictDataRestApi {
 
     @Autowired
-    SysDictDataService sysDictDataService;
+    private SysDictDataService sysDictDataService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取字典数据列表", notes = "获取字典数据列表", response = String.class)

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -29,24 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "SQL搜索相关接口", tags = {"SQL搜索相关接口"})
 @Slf4j
 public class SearchRestApi {
-
-    @Autowired
-    WebUtil webUtil;
-
-    @Autowired
-    TagService tagService;
-
-    @Autowired
-    BlogSortService blogSortService;
-
     @Autowired
     private BlogService blogService;
-
-    @Autowired
-    private PictureFeignClient pictureFeignClient;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 使用SQL语句搜索博客，如需使用Solr或者ElasticSearch 需要启动 mogu-search

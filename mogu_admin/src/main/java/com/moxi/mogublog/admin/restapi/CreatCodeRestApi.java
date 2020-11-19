@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ import java.util.Map;
  * @since 2018-10-22
  */
 @RestController
+@RefreshScope
 @RequestMapping("/creatCode")
 @Api(value = "生成验证码相关接口", tags = {"生成验证码相关接口"})
 @Slf4j
@@ -35,16 +37,12 @@ public class CreatCodeRestApi {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
     @Value(value = "${templateCode}")
     private String templateCode;
-
     @Value(value = "${signName}")
     private String signName;
-
     @Value(value = "${moguBlog.email}")
     private String moguBlogEmail;
 

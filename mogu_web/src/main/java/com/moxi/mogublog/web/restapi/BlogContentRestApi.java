@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2018-09-04
  */
 @RestController
+@RefreshScope
 @RequestMapping("/content")
 @Api(value = "文章详情相关接口", tags = {"文章详情相关接口"})
 @Slf4j

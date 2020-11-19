@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CategoryMenuRestApi {
 
-
     @Autowired
     CategoryMenuService categoryMenuService;
 

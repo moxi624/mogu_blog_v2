@@ -33,10 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 public class TagRestApi {
 
     @Autowired
-    BlogService blogService;
-
+    private BlogService blogService;
     @Autowired
-    TagService tagService;
+    private TagService tagService;
 
     /**
      * 获取标签的信息

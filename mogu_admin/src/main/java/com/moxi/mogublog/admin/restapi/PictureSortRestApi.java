@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PictureSortRestApi {
 
     @Autowired
-    PictureSortService pictureSortService;
+    private PictureSortService pictureSortService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取图片分类列表", notes = "获取图片分类列表", response = String.class)

@@ -62,6 +62,7 @@ public class BaseMessageConf {
     public final static String PICTURE_MUST_BE_SELECT_AREA = "图片必须选择上传到一个区域";
     public final static String MUST_BE_OPEN_LOCAL_UPLOAD = "图片显示优先级为本地优先，必须开启图片上传本地";
     public final static String MUST_BE_OPEN_QI_NIU_UPLOAD = "图片显示优先级为七牛云优先，必须开启图片上传七牛云";
+    public final static String MUST_BE_OPEN_MINIO_UPLOAD = "图片显示优先级为Minio对象存储，必须开启图片上传Minio对象存储";
 
     public final static String MUST_BE_SET_EMAIL = "开启邮件通知，必须设置邮箱地址";
 

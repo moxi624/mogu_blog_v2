@@ -22,6 +22,7 @@ import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -32,14 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>
  * 文件服务实现类
- * </p>
  *
  * @author
  * @since 2018-09-17
  */
 @Slf4j
+@RefreshScope
 @Service
 public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, NetworkDisk> implements NetworkDiskService {
 

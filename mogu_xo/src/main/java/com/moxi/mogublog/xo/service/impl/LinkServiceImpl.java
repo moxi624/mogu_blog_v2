@@ -29,7 +29,7 @@ import java.util.*;
  * 友链表 服务实现类
  *
  * @author 陌溪
- * @since 2018-09-08
+ * @date 2018-09-08
  */
 @Service
 public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implements LinkService {

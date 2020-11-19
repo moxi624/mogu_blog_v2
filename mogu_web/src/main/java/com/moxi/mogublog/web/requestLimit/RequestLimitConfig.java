@@ -2,6 +2,7 @@ package com.moxi.mogublog.web.requestLimit;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
  * @author: 陌溪
  * @create: 2020-03-06-18:58
  */
+@RefreshScope
 @ConfigurationProperties(prefix = "request-limit")
 @Component
 @Data

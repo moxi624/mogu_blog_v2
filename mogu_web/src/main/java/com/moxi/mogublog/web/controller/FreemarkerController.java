@@ -21,6 +21,7 @@ import freemarker.template.TemplateException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ import java.util.*;
  * @create: 2020-03-04-11:23
  */
 @RequestMapping("freemarker")
+@RefreshScope
 @Controller
 public class FreemarkerController {
 

@@ -39,7 +39,7 @@ import java.util.List;
 public class ResourceSortRestApi {
 
     @Autowired
-    ResourceSortService resourceSortService;
+    private ResourceSortService resourceSortService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取资源分类列表", notes = "获取资源分类列表", response = String.class)

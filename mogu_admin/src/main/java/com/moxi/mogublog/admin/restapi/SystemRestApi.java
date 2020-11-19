@@ -31,14 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class SystemRestApi {
 
     @Autowired
-    AdminService adminService;
-
-    /**
-     * 获取关于我的信息
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年11月6日下午8:57:48
-     */
+    private AdminService adminService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取我的信息", notes = "获取我的信息")

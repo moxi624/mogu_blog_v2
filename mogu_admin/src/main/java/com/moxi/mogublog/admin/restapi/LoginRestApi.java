@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2018-10-14
  */
 @RestController
+@RefreshScope
 @RequestMapping("/auth")
 @Api(value = "登录相关接口", tags = {"登录相关接口"})
 @Slf4j
@@ -50,25 +52,18 @@ public class LoginRestApi {
 
     @Autowired
     private WebUtil webUtil;
-
     @Autowired
     private AdminService adminService;
-
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
     @Autowired
     private CategoryMenuService categoryMenuService;
-
     @Autowired
     private Audience audience;
-
     @Value(value = "${tokenHead}")
     private String tokenHead;
-
     @Value(value = "${isRememberMeExpiresSecond}")
     private int isRememberMeExpiresSecond;
     @Autowired

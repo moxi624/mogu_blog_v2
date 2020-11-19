@@ -20,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
  * 用户访问表 RestApi
- * </p>
  *
- * @author xzx19950624@qq.com
- * @since 2019年5月17日08:38:09
+ * @author 陌溪
+ * @date 2019年5月17日08:38:09
  */
 @Api(value = "用户访问相关接口", tags = {"用户访问相关接口"})
 @RestController
@@ -35,18 +33,6 @@ public class WebVisitRestApi {
 
     @Autowired
     private WebVisitService webVisitService;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private BlogSortService blogSortService;
-
-    @Autowired
-    private BlogService blogService;
-
-    @Autowired
-    private LinkService linkService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取用户访问列表", notes = "获取用户访问列表")

@@ -39,7 +39,7 @@ import java.util.List;
 public class SysParamsRestApi {
 
     @Autowired
-    SysParamsService sysParamsService;
+    private SysParamsService sysParamsService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取参数配置列表", notes = "获取参数配置列表", response = String.class)

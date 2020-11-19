@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 归档 RestApi
- *
- * @author xzx19950624@qq.com
+ * @author 陌溪
  * @date 2019年10月24日15:29:35
  */
 @RestController
@@ -31,11 +30,7 @@ public class SortRestApi {
 
     /**
      * 获取归档的信息
-     *
-     * @author xzx19950624@qq.com
-     * @date 2018年11月6日下午8:57:48
      */
-
     @ApiOperation(value = "归档", notes = "归档")
     @GetMapping("/getSortList")
     public String getSortList() {

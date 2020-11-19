@@ -36,10 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +53,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020年1月11日16:11:55
  */
 @RestController
+@RefreshScope
 @RequestMapping("/web/comment")
 @Api(value = "评论相关接口", tags = {"评论相关接口"})
 @Slf4j
@@ -72,7 +75,7 @@ public class CommentRestApi {
     private CommentService commentService;
     @Autowired
     private UserService userService;
-    @Autowired
+    @Resource
     private PictureFeignClient pictureFeignClient;
     @Autowired
     private CommentReportService commentReportService;

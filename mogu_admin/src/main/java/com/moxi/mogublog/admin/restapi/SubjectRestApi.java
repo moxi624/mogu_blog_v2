@@ -38,7 +38,7 @@ import java.util.List;
 public class SubjectRestApi {
 
     @Autowired
-    SubjectService subjectService;
+    private SubjectService subjectService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取专题列表", notes = "获取专题列表", response = String.class)

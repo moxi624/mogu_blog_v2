@@ -41,6 +41,7 @@ import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -60,6 +61,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020年10月11日10:25:58
  */
 @RestController
+@RefreshScope
 @RequestMapping("/oauth")
 @Api(value = "第三方登录相关接口", tags = {"第三方登录相关接口"})
 @Slf4j

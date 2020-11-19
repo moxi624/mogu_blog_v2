@@ -40,7 +40,7 @@ import java.util.List;
 public class SysDictTypeRestApi {
 
     @Autowired
-    SysDictTypeService sysDictTypeService;
+    private SysDictTypeService sysDictTypeService;
 
     @AuthorityVerify
     @ApiOperation(value = "获取字典类型列表", notes = "获取字典类型列表", response = String.class)
