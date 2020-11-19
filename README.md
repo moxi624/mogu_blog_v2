@@ -9,7 +9,7 @@
    蘑菇博客，一个基于微服务架构的前后端分离博客系统
 </p>
 <p align="center">
-<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
+<a target="_blank" href="https://gitee.com/moxi159753/mogu_blog_v2">
     	<img src="https://img.shields.io/hexpm/l/plug.svg" ></img>
 		<img src="https://img.shields.io/badge/JDK-1.8+-green.svg" ></img>
         <img src="https://img.shields.io/badge/springboot-2.2.2.RELEASE-green" ></img>
