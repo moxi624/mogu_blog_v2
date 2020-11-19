@@ -14,9 +14,13 @@
 		<img src="https://img.shields.io/badge/JDK-1.8+-green.svg" ></img>
         <img src="https://img.shields.io/badge/springboot-2.2.2.RELEASE-green" ></img>
 <img src="https://img.shields.io/badge/SpringCloud-Hoxton.RELEASE-brightgreen" ></img><img src="https://img.shields.io/badge/vue-2.5.17-green" ></img>
-<img src="https://img.shields.io/badge/swagger-2.6.1-green" ></img>
-<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img></a></p>
+<img src="https://img.shields.io/badge/swagger-3.0.0-brightgreen" ></img>
+<img src="https://img.shields.io/badge/mybatis--plus-3.1.2-green" ></img>
+<img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/star.svg?theme=dark" ></img>
+<img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/fork.svg?theme=dark" ></img>
+</a></p>
 
+[项目介绍](#项目介绍)|[站点演示](#站点演示)|[项目特点](#项目特点)|[技术架构](#技术选型)|[项目目录](#项目目录)|[项目文档](#项目文档) |[快速开始](#快速开始)|[未来计划](#未来计划) |[项目截图](#移动端截图)
 
 ##  前言
 
@@ -137,7 +141,7 @@
 - Gitee地址：https://gitee.com/moxi159753/mogu_blog_v2
 - Github地址：https://github.com/moxi624/mogu_blog_v2
 
-## 目录介绍
+## 项目目录
 
 - MoguBlog 是一款基于最新技术开发的多人在线、简洁的博客系统。
 - mogu_admin: 提供admin端API接口服务；
@@ -177,7 +181,7 @@
 |   Swagger-UI   |       文档生产工具        | [ https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui) |
 |     Kibana     |     分析和可视化平台      |               https://www.elastic.co/cn/kibana               |
 | Elasticsearch  |         搜索引擎          | [ https://github.com/elastic/elasticsearch](https://github.com/elastic/elasticsearch) |
-|                |     轻量型数据采集器      |               https://www.elastic.co/cn/beats/               |
+|     Beats      |     轻量型数据采集器      |               https://www.elastic.co/cn/beats/               |
 |    Logstash    | 用于接收Beats的数据并处理 |              https://www.elastic.co/cn/logstash              |
 |      Solr      |         搜索引擎          |                http://lucene.apache.org/solr/                |
 |    RabbitMQ    |         消息队列          |   [ https://www.rabbitmq.com/](https://www.rabbitmq.com/)    |
@@ -225,7 +229,7 @@
 |       showdown        | 用Javascript编写的Markdown 到Html转换器 |            https://github.com/showdownjs/showdown            |
 |       turndown        | 用JavaScript编写的HTML到Markdown转换器  |           https://github.com/domchristie/turndown            |
 
-## 项目搭建
+## 快速开始
 
 ### Windows环境下搭建蘑菇博客
 
@@ -339,7 +343,7 @@
 | :---------------------------------------------------: | :----------------------------------------------------: |
 | <img src="./doc/images/qq/qqGroup.png" width="200" /> | <img src="./doc/images/qq/qqGroup2.png" width="200" /> |
 
-## 将来要做的事
+## 未来计划
 
 - [x] 集成Github Actions，完成蘑菇博客持续集成服务
 - [x] 门户网站增加登录页面
