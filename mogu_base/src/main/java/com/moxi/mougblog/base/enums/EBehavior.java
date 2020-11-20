@@ -27,12 +27,12 @@ public enum EBehavior {
     BLOG_SEARCH("点击搜索", "blog_search"),
     STUDY_VIDEO("点击学习视频", "study_video"),
     VISIT_PAGE("访问页面", "visit_page"),
+    VISIT_CLASSIFY("点击博客分类", "visit_classify"),
     VISIT_SORT("点击归档", "visit_sort"),
     BLOG_AUTHOR("点击作者", "blog_author"),
     PUBLISH_COMMENT("发表评论", "publish_comment"),
     DELETE_COMMENT("删除评论", "delete_comment"),
     REPORT_COMMENT("举报评论", "report_comment"),
-    VISIT_CLASSIFY("点击博客分类页面", "visit_classify"),
     VISIT_TAG("点击博客标签页面", "visit_tag");
 
     private String content;
@@ -76,7 +76,7 @@ public enum EBehavior {
                 }
             }
             break;
-            case BLOG_TAG: {
+            case BLOG_TAG: case VISIT_TAG:{
                 // 判断是否点击博客标签
                 if (nameAndArgsMap.get(BaseSysConf.TAG_UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.TAG_UID).toString();
@@ -108,6 +108,9 @@ public enum EBehavior {
                 // 判断是否博客详情
                 if (nameAndArgsMap.get(BaseSysConf.UID) != null) {
                     moduleUid = nameAndArgsMap.get(BaseSysConf.UID).toString();
+                } else if(nameAndArgsMap.get(BaseSysConf.OID) != null) {
+                    // 当收到的是oid的时候，存储到otherData处
+                    otherData = nameAndArgsMap.get(BaseSysConf.OID).toString();
                 }
             }
             break;

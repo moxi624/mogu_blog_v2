@@ -24,6 +24,7 @@ public final class SQLConf extends BaseSQLConf {
     public final static String PICTURE_SORT_UID = "picture_sort_uid";
     public final static String SORT_NAME = "sort_name";
     public final static String UID = "uid";
+    public final static String OID = "oid";
     public final static String ADMINUID = "admin_uid";
     public final static String ROLEUID = "role_uid";
     public final static String PERMISSIONUID = "permission_uid";

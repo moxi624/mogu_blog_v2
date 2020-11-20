@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * 用户访问记录表 服务实现类
  *
  * @author 陌溪
- * @since 2018-09-08
+ * @date 2018-09-08
  */
 @Service
 public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVisit> implements WebVisitService {
@@ -187,28 +187,42 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 
         List<WebVisit> list = pageList.getRecords();
         List<String> blogUids = new ArrayList<>();
+        List<String> blogOids = new ArrayList<>();
         List<String> tagUids = new ArrayList<>();
         List<String> sortUids = new ArrayList<>();
         List<String> linkUids = new ArrayList<>();
 
         list.forEach(item -> {
             if (item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior())) {
-                blogUids.add(item.getModuleUid());
-            } else if (item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior())) {
+                // 从日志中提取出oid和uid
+                if(StringUtils.isNotEmpty(item.getModuleUid())) {
+                    blogUids.add(item.getModuleUid());
+                }else if(StringUtils.isNotEmpty(item.getOtherData())) {
+                    blogOids.add(item.getOtherData());
+                }
+            } else if (item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior()) || item.getBehavior().equals(EBehavior.VISIT_CLASSIFY.getBehavior())) {
                 sortUids.add(item.getModuleUid());
-            } else if (item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior())) {
+            } else if (item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior()) || item.getBehavior().equals(EBehavior.VISIT_TAG.getBehavior()) ) {
                 tagUids.add(item.getModuleUid());
             } else if (item.getBehavior().equals(EBehavior.FRIENDSHIP_LINK.getBehavior())) {
                 linkUids.add(item.getModuleUid());
             }
         });
         Collection<Blog> blogList = new ArrayList<>();
+        Collection<Blog> blogListByOid = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Link> linkList = new ArrayList<>();
 
+
         if (blogUids.size() > 0) {
             blogList = blogService.listByIds(blogUids);
+        }
+
+        if (blogOids.size() > 0) {
+            QueryWrapper<Blog> blogQueryWrapper = new QueryWrapper<>();
+            blogQueryWrapper.in(SQLConf.OID, blogOids);
+            blogListByOid = blogService.list(blogQueryWrapper);
         }
 
         if (tagUids.size() > 0) {
@@ -228,12 +242,17 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
             contentMap.put(item.getUid(), item.getTitle());
         });
 
+        blogListByOid.forEach(item -> {
+            contentMap.put(item.getOid() + "", item.getTitle());
+        });
+
+
         tagList.forEach(item -> {
             contentMap.put(item.getUid(), item.getContent());
         });
 
         sortList.forEach(item -> {
-            contentMap.put(item.getUid(), item.getContent());
+            contentMap.put(item.getUid(), item.getSortName());
         });
 
         linkList.forEach(item -> {
@@ -253,13 +272,17 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
             if (item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior()) ||
+                    item.getBehavior().equals(EBehavior.VISIT_TAG.getBehavior()) ||
+                    item.getBehavior().equals(EBehavior.VISIT_CLASSIFY.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.FRIENDSHIP_LINK.getBehavior())) {
 
                 //从map中获取到对应的名称
                 if (StringUtils.isNotEmpty(item.getModuleUid())) {
                     item.setContent(contentMap.get(item.getModuleUid()));
+                } else {
+                    // 从otherData中获取博客oid
+                    item.setContent(contentMap.get(item.getOtherData()));
                 }
-
             } else {
                 item.setContent(item.getOtherData());
             }
