@@ -88,16 +88,15 @@ export default {
 
     //加载数据
     var that = this;
-    let index = 0;
     //先加载分类
     if (!that.havePictureSorts) {
       var params = {};
-      // TODO 全部把分类加载出来，如果图片很多的话，不能这么做
+      // TODO 全部把分类加载出来，如果分类很多的话，不能这么做
       params.pageSize = 500
       params.currentPage = 1;
       params.isShow = 1;
       getPictureSortList(params).then(function(response) {
-        if (response.code == "success") {
+        if (response.code == that.$ECode.SUCCESS) {
           var pictureSorts = response.data.records;
           that.pictureSorts = pictureSorts;
           //默认初始化第一个
@@ -110,7 +109,7 @@ export default {
             params.pageSize = 24;
             params.currentPage = 1;
             getPictureList(params).then(function(response) {
-              if (response.code == "success") {
+              if (response.code == that.$ECode.SUCCESS) {
                 var newObject = {
                   pictureSortUid: pictureSortUid,
                   name: name,
@@ -176,14 +175,14 @@ export default {
       var pictureSortParams = {};
       pictureSortParams.uid = pictureSortUid
       getPictureSortByUid(pictureSortParams).then(function(sortResponse) {
-        if (sortResponse.code == "success") {
+        if (sortResponse.code == that.$ECode.SUCCESS) {
           var pictureSort = sortResponse.data;
           var params = {}
           params.pictureSortUid = pictureSortUid
           params.currentPage = val
           params.pageSize = 24
           getPictureList(params).then(function(response) {
-            if (response.code == "success") {
+            if (response.code == that.$ECode.SUCCESS) {
               var newObject = {
                 pictureSortUid: pictureSortUid,
                 name: pictureSort.name,
@@ -228,7 +227,7 @@ export default {
             params.pageSize = 24
             params.currentPage = 1;
             getPictureList(params).then(function(response) {
-              if (response.code == "success") {
+              if (response.code == that.$ECode.SUCCESS) {
                 var newObject = {
                   pictureSortUid: pictureSortUid,
                   name: name,
@@ -263,8 +262,7 @@ export default {
       params.isShow = 1;
       params.keyword = this.keyword
       getPictureSortList(params).then(function(response) {
-        if (response.code == "success") {
-          //成功
+        if (response.code == that.$ECode.SUCCESS) {
           var pictureSorts = response.data.records;
           that.pictureSorts = pictureSorts;
           if (pictureSorts.length <= 0) {
@@ -273,7 +271,6 @@ export default {
               message: "没有搜索到任何信息！"
             });
           }
-
           var pictureSortUid = pictureSorts[0].uid;
           var name = pictureSorts[0].name;
           var pictureParams = {};
@@ -281,7 +278,7 @@ export default {
           pictureParams.pageSize = 24
           pictureParams.currentPage = 1;
           getPictureList(pictureParams).then(function(response) {
-            if (response.code == this.$ECode.SUCCESS) {
+            if (response.code == that.$ECode.SUCCESS) {
               var newObject = {
                 pictureSortUid: pictureSortUid,
                 name: name,
@@ -311,7 +308,7 @@ export default {
       params.pictureSortUid = pictureSortUid;
       params.pageSize = 24;
       getPictureList(params).then(function(response) {
-        if (response.code == "success") {
+        if (response.code == that.$ECode.SUCCESS) {
           if (response.data.records.length > 0) {
             var newObject = {
               pictureSortUid: pictureSortUid,

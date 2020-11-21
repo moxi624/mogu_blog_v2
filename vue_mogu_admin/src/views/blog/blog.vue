@@ -586,13 +586,14 @@ export default {
     //从dashboard传递过来的 tagUid 以及 blogSortUid
     let tempTag = this.$route.query.tag;
     let tempBlogSort = this.$route.query.blogSort;
+
     if(tempTag != undefined) {
       this.tagRemoteMethod(tempTag.name);
-      this.tagKeyword = tempTag.tagUid;
+      this.queryParams.tagKeyword = tempTag.tagUid;
     }
     if(tempBlogSort != undefined) {
       this.sortRemoteMethod(tempBlogSort.name);
-      this.sortKeyword = tempBlogSort.blogSortUid;
+      this.queryParams.sortKeyword = tempBlogSort.blogSortUid;
     }
 
     // 判断是否需要展开条件查询
