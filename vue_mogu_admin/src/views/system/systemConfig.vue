@@ -395,6 +395,7 @@ export default {
       })
     },
     submitForm: function() {
+      console.log("开始提交表单")
       this.$refs.form.validate((valid) => {
         if(!valid) {
           console.log("校验出错");
@@ -402,7 +403,7 @@ export default {
           //获取文本编辑器中的内容
           this.form.dashboardNotification = this.$refs.editor.getData();
           editSystemConfig(this.form).then(res => {
-            if (res.code = this.$ECode.SUCCESS) {
+            if (res.code == this.$ECode.SUCCESS) {
               this.$commonUtil.message.success(res.message)
             } else {
               this.$commonUtil.message.error(res.message)

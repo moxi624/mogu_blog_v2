@@ -74,7 +74,7 @@
             <a
               href="javascript:void(0);"
               @click="goToInfo(item.uid)"
-              title="item.title"
+              :title="item.title"
             >{{subText(item.title, 18)}}</a>
           </li>
         </ul>
