@@ -32,7 +32,8 @@ module.exports = {
      */
 
     // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-source-map',
+    // devtool: 'cheap-source-map',
+    devtool: 'source-map',
 
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
