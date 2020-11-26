@@ -25,16 +25,18 @@ public class BlogVO extends BaseVO<BlogVO> {
      */
     @NotBlank(groups = {Insert.class, Update.class})
     private String title;
+
     /**
      * 博客简介
      */
-
     private String summary;
+
     /**
      * 博客内容
      */
     @NotBlank(groups = {Insert.class, Update.class})
     private String content;
+
     /**
      * 标签uid
      */
