@@ -79,11 +79,12 @@ jobs:
 
           echo '=====镜像构建结束====='
 
-        # 登录到 dockerhub，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
-      - name: Login into DockerHub
-        run: |
-          echo "${{ secrets.secrets }}" | docker login -u moxi --password-stdin
-          echo '=====成功登录DockerHub====='
+      # 登录到 dockerhub，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER_NAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Push Docker Image
         run: |
