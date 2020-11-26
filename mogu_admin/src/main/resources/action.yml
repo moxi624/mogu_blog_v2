@@ -96,28 +96,33 @@ jobs:
 
         # 登录到 dockerhub，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
       - name: Login into DockerHub
-        run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login -u moxi --password-stdin
+        run: echo "${{ secrets.secrets }}" | docker login -u moxi --password-stdin
 
       - name: Push Docker Image
         run: |
-          # 拼接镜像 id，这个镜像 id 就是在使用 docker 镜像时 pull 后面的名字。
-          IMAGE_ID=moxi/$IMAGE_NAME
+          echo '=====开始上传镜像====='
+          echo '=====开始上传mogu_admin====='
+          docker push moxi/mogu_admin
 
-          # 将所有的大写字母转为小写
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          echo '=====开始上传mogu_gateway====='
+          docker push moxi/mogu_gateway
 
-          # 从 GitHub.ref 中取出版本
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          echo '=====开始上传mogu_monitor====='
+          docker push moxi/mogu_monitor
 
-          # 从 tag 名字中替换 v 字符
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo '=====开始上传mogu_picture====='
+          docker push moxi/mogu_picture
 
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          echo '=====开始上传mogu_search====='
+          docker push moxi/mogu_search
 
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          # 设置镜像 id 和版本号
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          # 进行 push
-          docker push $IMAGE_ID:$VERSION
+          echo '=====开始上传mogu_sms====='
+          docker push moxi/mogu_sms
+
+          echo '=====开始上传mogu_spider====='
+          docker push moxi/mogu_spider
+
+          echo '=====开始上传mogu_web====='
+          docker push moxi/mogu_web
+
+          echo '=====镜像上传结束====='
