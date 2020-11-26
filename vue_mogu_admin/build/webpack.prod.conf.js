@@ -11,12 +11,12 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const getEnv = require('./getEnv')
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-const env = require('../config/prod.env')
 
 // For NamedChunksPlugin
 const seen = new Set()
@@ -40,7 +40,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': `window._env_`
     }),
     // extract css into its own file
     new MiniCssExtractPlugin({
@@ -56,6 +56,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       inject: true,
       favicon: resolve('favicon.ico'),
       title: '蘑菇云后台管理系统',
+      env: getEnv(),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -96,7 +97,23 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
-      }
+      },
+      {
+        from: path.resolve(__dirname,'../.env'),
+        to: './'
+      },
+      {
+        from: path.resolve(__dirname, '../env.sh'),
+        to: './'
+      },
+      {
+        from: path.resolve(__dirname, '../.default.env'),
+        to: './'
+      },
+      {
+        from: path.resolve(__dirname, '../env-config.js'),
+        to: './'
+      },
     ])
   ],
   optimization: {
