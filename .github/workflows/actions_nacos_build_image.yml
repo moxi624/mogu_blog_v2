@@ -103,53 +103,53 @@ jobs:
           echo '=====开始构建镜像====='
           echo '=====开始构建vue_mogu_admin====='
           cd vue_mogu_admin
-          docker build -t moxi/vue_mogu_admin .
+          docker build -t registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_admin .
           cd ..
 
           cd vue_mogu_web
-          docker build -t moxi/vue_mogu_web .
+          docker build -t registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_web .
           cd ..
 
           echo '=====镜像构建结束====='
 
-      # 登录到 dockerhub，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER_NAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      # 登录到 阿里云镜像服务，使用 GitHub secrets 传入账号密码，密码被加密存储在 GitHub 服务器
+      - name: Login to Aliyun
+        run: |
+          echo "=====开始登录阿里云镜像服务====="
+          echo ${{ secrets.ALIYUN_PASSWORD }} > docker login --username=${{ secrets.ALIYUN_USER_NAME }} registry.cn-shenzhen.aliyuncs.com
+          echo "=====登录阿里云镜像服务成功====="
 
       - name: Push Docker Image
         run: |
           echo '=====开始上传镜像====='
           echo '=====开始上传mogu_admin====='
-          docker push moxi/mogu_admin
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_admin
 
           echo '=====开始上传mogu_gateway====='
-          docker push moxi/mogu_gateway
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_gateway
 
           echo '=====开始上传mogu_monitor====='
-          docker push moxi/mogu_monitor
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_monitor
 
           echo '=====开始上传mogu_picture====='
-          docker push moxi/mogu_picture
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_picture
 
           echo '=====开始上传mogu_search====='
-          docker push moxi/mogu_search
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_search
 
           echo '=====开始上传mogu_sms====='
-          docker push moxi/mogu_sms
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_sms
 
           echo '=====开始上传mogu_spider====='
-          docker push moxi/mogu_spider
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_spider
 
           echo '=====开始上传mogu_web====='
-          docker push moxi/mogu_web
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_web
 
           echo '=====开始上传vue_mogu_admin====='
-          docker push moxi/vue_mogu_admin
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_admin
 
           echo '=====开始上传vue_mogu_web====='
-          docker push moxi/vue_mogu_web
+          docker push registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_web
 
           echo '=====镜像上传结束====='
