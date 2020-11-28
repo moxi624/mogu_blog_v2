@@ -19,7 +19,6 @@
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/star.svg?theme=dark" ></img>
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/fork.svg?theme=dark" ></img>
 </a></p>
-
 [项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划) | [项目截图](#移动端截图)
 
 ##  前言
@@ -234,6 +233,10 @@
 ### Windows环境下搭建蘑菇博客
 
 参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在window下搭建蘑菇博客的开发环境
+
+### DockerCompose一键部署蘑菇博客(Nacos版)
+
+参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在Linux服务器中，通过执行脚本，一键完成蘑菇博客项目的部署，【推荐小伙伴使用此方式~】。
 
 ### Docker搭建蘑菇博客（Eureka分支）
 

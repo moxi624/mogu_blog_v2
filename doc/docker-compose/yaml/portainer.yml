@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  portainer:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/portainer
+    container_name: portainer
+    ports:
+      - 9000:9000
+      - 8000:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../data/portainer_data/data:/data
+      - ../data/portainer_data/public:/public

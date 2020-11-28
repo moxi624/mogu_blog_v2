@@ -1,0 +1,21 @@
+version: '3.1'
+services:
+  rabbitmq:
+    restart: always
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/rabbitmq
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      TZ: Asia/Shanghai
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: mogu2018
+    volumes:
+      - ../data/rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - mogu
+      
+networks:
+  mogu:
+    external: true

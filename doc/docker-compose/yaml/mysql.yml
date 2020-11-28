@@ -1,0 +1,24 @@
+version: '3.1'
+services:
+  mysql:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mysql
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mogu2018
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    ports:
+      - 3306:3306
+    volumes:
+      - ../data/mysql_data:/var/lib/mysql
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - mogu
+networks:
+  mogu:
+    external: true

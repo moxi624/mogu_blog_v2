@@ -1,0 +1,19 @@
+version: '3'
+services:
+  #授权服务
+  mogu_sms:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_sms:latest
+    container_name: mogu_sms
+    restart: always
+    ports:
+      - 8604:8604
+    networks:
+      - mogu
+    environment:
+      - COMPOSE_PROJECT_NAME=mogu_sms
+    volumes:
+      - ../log/:/logs/
+      - ../config/mogu_sms/:/config/
+networks:
+  mogu:
+    external: true

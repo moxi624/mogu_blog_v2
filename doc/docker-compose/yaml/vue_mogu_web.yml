@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #授权服务
+  vue_mogu_web:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_web:latest
+    container_name: vue_mogu_web
+    restart: always
+    ports:
+      - 9527:80
+    networks:
+      - mogu
+    env_file:
+      - ../config/vue_mogu_web.env
+    environment:
+      - COMPOSE_PROJECT_NAME=vue_mogu_web
+networks:
+  mogu:
+    external: true

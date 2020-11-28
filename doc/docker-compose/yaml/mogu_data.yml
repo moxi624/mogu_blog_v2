@@ -1,0 +1,17 @@
+version: '3'
+services:
+  #授权服务
+  mogu_data:
+    image: registry.cn-shenzhen.aliyuncs.com/mogu-zh/nginx:latest
+    container_name: mogu_data
+    restart: always
+    ports:
+      - 8600:80
+    networks:
+      - mogu
+    volumes:
+      - ../data/mogu_data/:/home/mogu_blog/mogu_data/
+      - ../config/mogu_data.conf:/etc/nginx/conf.d/default.conf
+networks:
+  mogu:
+    external: true

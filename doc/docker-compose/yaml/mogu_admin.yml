@@ -1,0 +1,19 @@
+version: '3'
+services:
+  #授权服务
+  mogu_admin:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_admin:latest
+    container_name: mogu_admin
+    restart: always
+    ports:
+      - 8601:8601
+    networks:
+      - mogu
+    environment:
+      - COMPOSE_PROJECT_NAME=mogu_admin
+    volumes:
+      - ../log/:/logs/
+      - ../config/mogu_admin/:/config/
+networks:
+  mogu:
+    external: true

@@ -1,0 +1,20 @@
+version: '3'
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: "always"
+    ports:
+      - "9090:9000"
+    environment:
+      - "MINIO_ACCESS_KEY=mogu2018"
+      - "MINIO_SECRET_KEY=mogu2018"
+    command: server /data
+    volumes:
+      - ../data/minio_data:/data
+    networks:
+      - mogu    
+
+networks:
+  mogu:
+    external: true

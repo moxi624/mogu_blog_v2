@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #授权服务
+  mogu_mointor:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_monitor:latest
+    container_name: mogu_monitor
+    restart: always
+    ports:
+      - 8606:8606
+    networks:
+      - mogu
+    environment:
+      - COMPOSE_PROJECT_NAME=mogu_monitor
+    volumes:
+      - ../log/:/logs/
+networks:
+  mogu:
+    external: true

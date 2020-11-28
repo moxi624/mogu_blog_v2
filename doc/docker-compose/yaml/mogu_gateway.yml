@@ -1,0 +1,18 @@
+version: '3'
+services:
+  #授权服务
+  mogu_gateway:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_gateway:latest
+    container_name: mogu_gateway
+    restart: always
+    ports:
+      - 8607:8607
+    networks:
+      - mogu
+    environment:
+      - COMPOSE_PROJECT_NAME=mogu_gateway
+    volumes:
+    - ../log/:/logs/
+networks:
+  mogu:
+    external: true

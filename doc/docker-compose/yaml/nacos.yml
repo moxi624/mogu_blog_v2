@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  nacos:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/nacos-server
+    container_name: nacos
+    env_file:
+      - ./nacos/nacos-msyql.env
+    volumes:
+      - ../log/nacos/:/home/nacos/logs
+      - ./nacos/custom.properties:/home/nacos/init.d/custom.properties
+    ports:
+      - "8848:8848"
+      - "9555:9555"
+    restart: always
+    networks:
+      - mogu
+      
+networks:
+  mogu:
+    external: true

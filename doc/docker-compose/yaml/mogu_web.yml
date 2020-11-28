@@ -1,0 +1,19 @@
+version: '3'
+services:
+  #授权服务
+  mogu_web:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_web:latest
+    container_name: mogu_web
+    restart: always
+    ports:
+      - 8603:8603
+    networks:
+      - mogu
+    environment:
+      - COMPOSE_PROJECT_NAME=mogu_web
+    volumes:
+      - ../log/:/logs/
+      - ../config/mogu_web/:/config/
+networks:
+  mogu:
+    external: true
