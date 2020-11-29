@@ -19,7 +19,7 @@
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/star.svg?theme=dark" ></img>
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/fork.svg?theme=dark" ></img>
 </a></p>
-[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划) | [项目截图](#移动端截图)
+[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划) | [项目截图](#移动端截图) | [学习笔记](https://gitee.com/moxi159753/LearningNotes)
 
 ##  前言
 
@@ -200,6 +200,8 @@
 | Flexmark-java  |     Markdown转换Html      |            https://github.com/vsch/flexmark-java             |
 |   Ip2region    |     离线IP地址定位库      |          https://github.com/lionsoul2014/ip2region           |
 |     Minio      |     本地对象存储服务      |                       https://min.io/                        |
+| Docker Compose |      Docker容器编排       |               https://docs.docker.com/compose/               |
+|   Portainer    |     Docker可视化管理      |            https://github.com/portainer/portainer            |
 
 ### 前端技术
 
@@ -236,7 +238,7 @@
 
 ### DockerCompose一键部署蘑菇博客(Nacos版)
 
-参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在Linux服务器中，通过执行脚本，一键完成蘑菇博客项目的部署，【推荐小伙伴使用此方式~】。
+参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在Linux服务器中，通过执行脚本，一键完成蘑菇博客项目的部署【推荐小伙伴使用此方式~】
 
 ### Docker搭建蘑菇博客（Eureka分支）
 
@@ -366,8 +368,10 @@
 - [x] 使用Sentinel做服务限流和熔断
 - [x] 增加蘑菇博客小程序项目 uniapp_mogu_web，基于[ColorUI](https://github.com/weilanwl/ColorUI) 和 [Uniapp](https://uniapp.dcloud.io/)
 - [x] 富文本编辑器和Markdown编辑器任意切换
-- [x] 使用ELK搭建蘑菇博客日志收集功能
+- [x] 使用ELK搭建[蘑菇博客日志收集功能](http://www.moguit.cn/#/info?blogUid=fd9ab58588d93ef792ec72a359a09f6c)
 - [x] 使用Minio [搭建对象存储服务](http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f)
+- [x] 使用DockerCompose完成 [博客一键部署](http://www.moguit.cn/#/info?blogOid=565)
+- [x] 使用Portainer对Docker镜像可视化管理
 - [ ] 增加定时任务模块
 - [ ] 增加代码生成器
 - [ ] 完善网盘管理
