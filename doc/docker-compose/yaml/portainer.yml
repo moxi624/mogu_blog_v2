@@ -10,3 +10,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../data/portainer_data/data:/data
       - ../data/portainer_data/public:/public
+    mem_limit: 256m #内存限制  

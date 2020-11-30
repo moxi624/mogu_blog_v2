@@ -19,7 +19,7 @@
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/star.svg?theme=dark" ></img>
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/fork.svg?theme=dark" ></img>
 </a></p>
-[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划) | [项目截图](#移动端截图) | [学习笔记](https://gitee.com/moxi159753/LearningNotes)
+[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划)  | [视频教程](#视频教程)| [项目截图](#移动端截图)
 
 ##  前言
 
@@ -38,7 +38,7 @@
 
 【提问前】可以提前阅读 [如何向开源社区提问题](http://www.moguit.cn/#/info?blogUid=b0f76c94a81fa3b815f8e39e4dc889f8)
 
-【提问】推荐使用 [Gitee issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 进行提问，因为issue解决后能够保留解决记录，帮助其它小伙伴闭坑。其次可以使用 Gitee留言板 ，或者在 <a href="##关注&交流">QQ群 </a> 进行提问。群里提问注意提问的时间，把遇到问题的详细过程都描述清楚，最好配上图文信息，这样能更快的解决问题。
+【提问】推荐使用 [Gitee issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 进行提问，因为issue解决后能够保留解决记录，帮助其它小伙伴避坑。其次可以使用 Gitee留言板 ，或者在 <a href="##关注&交流">QQ群 </a> 进行提问。群里提问注意提问的时间，把遇到问题的详细过程都描述清楚，最好配上图文信息，这样能有利于更高效的解决问题。
 
 ## 后期维护
 
@@ -126,6 +126,7 @@
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
 - 支持多种文本编辑器，Markdown编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
 - 采用ElasticStack【ElasticSearch+Beats+Kibana+Logstash】[搭建蘑菇博客日志收集](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86)
+- 采用Docker Compose完成容器编排，Portainer实现容器可视化，支持[一键部署线上环境](http://www.moguit.cn/#/info?blogOid=565)
 
 ## 项目文档
 
@@ -425,6 +426,9 @@
 - [导航条右侧菜单](https://www.bilibili.com/video/BV1sa4y1j7Tb)
 - [仪表盘首页(上)](https://www.bilibili.com/video/BV13y4y1r7x6)
 - [仪表盘首页(中)](https://www.bilibili.com/video/BV1xK4y1E7TA)
+- [TagsView组件](https://www.bilibili.com/video/BV1nK4y1j7uN)
+- [Maven工程介绍](https://www.bilibili.com/video/BV1g54y1k7Gb)
+- [如何搭建Eureka Server](https://www.bilibili.com/video/BV1va411w7rU)
 - .....
 
 ## 移动端截图
