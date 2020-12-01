@@ -7,9 +7,10 @@
           class="filter-item"
           style="width: 200px;"
           v-model="keyword"
+          @change="handleFind"
           placeholder="请输入分类名称"
         ></el-input>
-        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind">查找</el-button>
+        <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" >查找</el-button>
         <el-button class="filter-item" type="primary" @click="handleRest" icon="el-icon-refresh">重置</el-button>
       </div>
 
@@ -250,10 +251,7 @@ export default {
     handleFind: function() {
       var that = this;
       if (this.keyword == "") {
-        that.$message({
-          type: "error",
-          message: "分类名称不能为空!"
-        });
+        this.handleRest()
         return;
       }
       var params = {};
