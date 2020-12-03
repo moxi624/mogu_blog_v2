@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+  filebeat:
+    image: elastic/filebeat:7.9.3
+    container_name: filebeat
+    restart: always
+    networks:
+      - mogu
+    volumes:
+     - ../config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+     - ../log/filebeat/:/opt/
+networks:
+  mogu:
+    external: true

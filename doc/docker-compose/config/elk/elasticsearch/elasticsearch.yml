@@ -1,0 +1,4 @@
+node.name: elk
+path.repo: /var/backups
+network.host: 0.0.0.0
+cluster.initial_master_nodes: ["elk"]

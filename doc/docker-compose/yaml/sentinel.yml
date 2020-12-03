@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+  sentinel:
+    image: bladex/sentinel-dashboard
+    restart: always
+    container_name: sentinel
+    ports:
+      - 8070:8858
+    networks:
+      - mogu
+
+networks:
+  mogu:
+    external: true

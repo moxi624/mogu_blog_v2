@@ -1,0 +1,111 @@
+# ============================== Filebeat inputs ===============================
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-web/*.log
+    fields:
+      docType: mogu_web-log
+      project: mogu_web
+      from: mogu_web
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-admin/*.log
+    fields:
+      docType: mogu_admin-log
+      project: mogu_admin
+      from: mogu_admin
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-sms/*.log
+    fields:
+      docType: mogu_sms-log
+      project: mogu_sms
+      from: mogu_sms
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-picture/*.log
+    fields:
+      docType: mogu_picture-log
+      project: mogu_picture
+      from: mogu_picture
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-gateway/*.log
+    fields:
+      docType: mogu_gateway-log
+      project: mogu_gateway
+      from: mogu_gateway
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-monitor/*.log
+    fields:
+      docType: mogu_monitor-log
+      project: mogu_monitor
+      from: mogu_monitor
+    fields_under_root: true
+  - type: log
+    enabled: true
+    paths:
+      - /opt/mogu-nginx/*.log
+    fields:
+      docType: mogu_nginx-log
+      project: mogu_nginx
+      from: mogu_nginx
+    fields_under_root: true
+
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+  # Period on which files under path should be checked for changes
+  #reload.period: 10s
+
+# ======================= Elasticsearch template setting =======================
+
+setup.template.settings:
+  index.number_of_shards: 1
+  #index.codec: best_compression
+  #_source.enabled: false
+
+# =================================== Kibana ===================================
+
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+
+# ---------------------------- Elasticsearch Output ----------------------------
+# output.elasticsearch:
+# Array of hosts to connect to.
+# hosts: ["192.168.163.128:9200"]
+# bulk_max_size: 2048
+
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["elk:5044"]
+  bulk_max_size: 2048
+
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~

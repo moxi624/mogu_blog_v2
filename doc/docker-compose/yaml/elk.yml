@@ -1,0 +1,38 @@
+version: '3'
+services:
+  elk:
+    image: sebp/elk:793
+    container_name: elk
+    restart: "always"
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+      - "9300:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+    volumes:
+      - ../config/elk/elasticsearch/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml
+      - ../data/elasticsearch_data/data:/var/lib/elasticsearch
+      - ../data/elasticsearch_data/plugins:/opt/elasticsearch/plugins
+      - ../log/elasticsearch/log:/var/log/elasticsearch
+      - ../log/logstash/log:/var/log/logstash
+      - ../data/logstash/patterns:/opt/logstash/patterns
+      - ../config/elk/logstash/conf:/etc/logstash/conf.d
+      - ../config/elk/kibana/kibana.yml:/opt/kibana/config/kibana.yml
+    networks:
+      - mogu
+
+  filebeat:
+    image: elastic/filebeat:7.9.3
+    container_name: filebeat
+    restart: always
+    networks:
+      - mogu
+    volumes:
+     - ../config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+     - ../log/filebeat/:/opt/
+     
+networks:
+  mogu:
+    external: true

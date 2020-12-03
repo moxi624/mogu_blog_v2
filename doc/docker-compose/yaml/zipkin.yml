@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mysql
+      - MYSQL_DB=zipkin
+      - MYSQL_USER=root
+      - MYSQL_PASS=mogu2018
+      - MYSQL_HOST=mysql
+      - MYSQL_TCP_PORT=3306
+    ports:
+      - 9411:9411
+    networks:
+      - mogu
+
+networks:
+  mogu:
+    external: true
