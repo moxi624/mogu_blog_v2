@@ -187,7 +187,7 @@ public class BlogContentRestApi {
             blog.setCopyright(ORIGINAL_TEMPLATE);
         } else {
             String reprintedTemplate = REPRINTED_TEMPLATE;
-            String[] variable = {blog.getArticlesPart(), blog.getAuthor()};
+            String[] variable = {blog.getArticlesPart(), blog.getArticlesPart(), blog.getAuthor()};
             String str = String.format(reprintedTemplate, variable);
             blog.setCopyright(str);
         }

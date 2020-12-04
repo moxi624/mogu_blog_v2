@@ -54,7 +54,9 @@
         </div>
         <div class="news_about">
           <strong>版权</strong>
-          {{blogData.copyright}}
+          <span v-html="blogData.copyright">
+            {{blogData.copyright}}
+          </span>
         </div>
         <div
           class="news_con ck-content"
