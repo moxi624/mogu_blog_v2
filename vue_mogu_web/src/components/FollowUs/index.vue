@@ -1,5 +1,5 @@
 <template>
-    <div class="guanzhu" id="follow-us" ref="follow">
+    <div class="guanzhu" id="follow-us" ref="follow" v-if="isShow">
       <h2 class="hometitle">关注我们 么么哒！</h2>
       <ul>
         <!-- <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>蘑菇博客</a></li>         -->
@@ -23,13 +23,12 @@ export default {
   data() {
     return {
       contact: {},
-      mailto: ""
+      mailto: "",
+      isShow: false
     };
   },
   created() {
-
     this.getContactData()
-
   },
   methods: {
     //拿到vuex中的写的方法
@@ -39,13 +38,26 @@ export default {
       let webConfigData = this.$store.state.app.webConfigData;
       if(webConfigData.createTime) {
         this.contact = webConfigData;
+
+        let showList = this.contact.showList
+        if(showList.length > 2) {
+          this.isShow = true;
+        }
+
         this.mailto = "mailto:" + this.contact.email;
       } else {
         getWebConfig().then(response => {
           if (response.code == this.$ECode.SUCCESS) {
             this.contact = response.data;
+            console.log(response.data.showList)
+            let showList = response.data.showList
+            if(showList.length > 2) {
+              this.isShow = true;
+            }
+
             this.mailto = "mailto:" + this.contact.email;
             this.setWebConfigData(response.data)
+
           }
         });
       }
