@@ -18,6 +18,7 @@ public class BaseMessageConf {
     public static final String DELETE_FAIL = "删除失败";
 
     public static final String ENTITY_EXIST = "该实体已存在";
+    public static final String USER_OR_EMAIL_EXIST = "用户名或邮箱已被注册";
     public static final String ENTITY_NOT_EXIST = "该实体不存在";
     public static final String SYSTEM_CONFIG_NOT_EXIST = "系统配置有误";
     public static final String PLEASE_SET_QI_NIU = "请先配置七牛云";
