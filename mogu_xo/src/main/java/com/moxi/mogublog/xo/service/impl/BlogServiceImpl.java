@@ -685,7 +685,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
             Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
             if (admin != null) {
-                blog.setAuthor(admin.getNickName());
+                if(StringUtils.isNotEmpty(admin.getNickName())) {
+                    blog.setAuthor(admin.getNickName());
+                } else {
+                    blog.setAuthor(admin.getUserName());
+                }
                 blog.setAdminUid(admin.getUid());
             }
             blog.setArticlesPart(projectName);
@@ -736,7 +740,11 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
         blog.setAdminUid(admin.getUid());
         if (EOriginal.ORIGINAL.equals(blogVO.getIsOriginal())) {
-            blog.setAuthor(admin.getNickName());
+            if(StringUtils.isNotEmpty(admin.getNickName())) {
+                blog.setAuthor(admin.getNickName());
+            } else {
+                blog.setAuthor(admin.getUserName());
+            }
             String projectName = sysParamsService.getSysParamsValueByKey(SysConf.PROJECT_NAME_);
             blog.setArticlesPart(projectName);
         } else {

@@ -2,15 +2,12 @@ package com.moxi.mogublog.picture.restapi;
 
 import com.moxi.mogublog.commons.entity.NetworkDisk;
 import com.moxi.mogublog.commons.entity.Storage;
-import com.moxi.mogublog.picture.service.FileService;
 import com.moxi.mogublog.picture.service.StorageService;
-import com.moxi.mogublog.picture.util.QiniuUtil;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

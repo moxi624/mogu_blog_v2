@@ -52,7 +52,7 @@ public class BlogProcesser implements PageProcessor {
             page.putField("title", title);
             page.putField("content", content);
         } else {
-			//跳过爬取
+            //跳过爬取
             page.setSkip(true);
         }
 

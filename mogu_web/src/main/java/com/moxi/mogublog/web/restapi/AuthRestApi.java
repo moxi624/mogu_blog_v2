@@ -21,7 +21,10 @@ import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.FeedbackVO;
 import com.moxi.mogublog.xo.vo.LinkVO;
 import com.moxi.mogublog.xo.vo.UserVO;
-import com.moxi.mougblog.base.enums.*;
+import com.moxi.mougblog.base.enums.EGender;
+import com.moxi.mougblog.base.enums.ELinkStatus;
+import com.moxi.mougblog.base.enums.EOpenStatus;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.Insert;
@@ -57,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 第三方登录认证
+ *
  * @author 陌溪
  * @date 2020年10月11日10:25:58
  */
@@ -122,7 +126,7 @@ public class AuthRestApi {
     public String renderAuth(String source) {
         // 将传递过来的转换成大写
         Boolean isOpenLoginType = webConfigService.isOpenLoginType(source.toUpperCase());
-        if (!isOpenLoginType){
+        if (!isOpenLoginType) {
             return ResultUtil.result(SysConf.ERROR, "后台未开启该登录方式!");
         }
         log.info("进入render:" + source);

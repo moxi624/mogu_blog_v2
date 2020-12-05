@@ -45,7 +45,7 @@ public class HighlightResultHelper implements SearchResultMapper {
             }
         }
         return new AggregatedPageImpl<T>(results, pageable, response.getHits().getTotalHits(), response
-        .getAggregations(), response.getScrollId());
+                .getAggregations(), response.getScrollId());
     }
 
 

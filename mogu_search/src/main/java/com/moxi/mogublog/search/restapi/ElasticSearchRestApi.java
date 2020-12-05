@@ -48,9 +48,9 @@ public class ElasticSearchRestApi {
     public String searchBlog(HttpServletRequest request,
                              @RequestParam(required = false) String keywords,
                              @RequestParam(name = "currentPage", required = false, defaultValue = "1") Integer
-                             currentPage,
+                                     currentPage,
                              @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer
-                             pageSize) {
+                                     pageSize) {
 
         if (StringUtils.isEmpty(keywords)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);

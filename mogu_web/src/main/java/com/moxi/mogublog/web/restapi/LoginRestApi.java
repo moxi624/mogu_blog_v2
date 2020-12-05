@@ -73,7 +73,7 @@ public class LoginRestApi {
     public String login(@Validated({GetOne.class}) @RequestBody UserVO userVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
         Boolean isOpenLoginType = webConfigService.isOpenLoginType(RedisConf.PASSWORD);
-        if (!isOpenLoginType){
+        if (!isOpenLoginType) {
             return ResultUtil.result(SysConf.ERROR, "后台未开启该登录方式!");
         }
         String userName = userVO.getUserName();
@@ -124,7 +124,7 @@ public class LoginRestApi {
         ThrowableUtils.checkParamArgument(result);
         // 判断是否开启登录方式
         Boolean isOpenLoginType = webConfigService.isOpenLoginType(RedisConf.PASSWORD);
-        if (!isOpenLoginType){
+        if (!isOpenLoginType) {
             return ResultUtil.result(SysConf.ERROR, "后台未开启注册功能!");
         }
         if (userVO.getUserName().length() < Constants.NUM_FIVE || userVO.getUserName().length() >= Constants.NUM_TWENTY || userVO.getPassWord().length() < Constants.NUM_FIVE || userVO.getPassWord().length() >= Constants.NUM_TWENTY) {
@@ -190,7 +190,7 @@ public class LoginRestApi {
         queryWrapper.ne(SQLConf.UID, user.getUid());
         queryWrapper.ne(SQLConf.STATUS, EStatus.ENABLE);
         List<User> userList = userService.list(queryWrapper);
-        if(userList.size() > 0) {
+        if (userList.size() > 0) {
             List<String> uidList = new ArrayList<>();
             userList.forEach(item -> {
                 uidList.add(item.getUid());

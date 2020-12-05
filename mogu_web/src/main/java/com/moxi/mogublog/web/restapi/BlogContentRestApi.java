@@ -14,7 +14,6 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.service.BlogService;
-import com.moxi.mogublog.xo.service.WebVisitService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.EPublish;
@@ -77,7 +76,7 @@ public class BlogContentRestApi {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
         }
         Blog blog = null;
-        if(StringUtils.isNotEmpty(uid)) {
+        if (StringUtils.isNotEmpty(uid)) {
             blog = blogService.getById(uid);
         } else {
             QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();

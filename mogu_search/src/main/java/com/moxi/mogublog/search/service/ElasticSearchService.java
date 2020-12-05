@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * ElasticSearch实现类
+ *
  * @author 陌溪
  * @date 2020/9/15 15:19
  */
@@ -96,7 +97,7 @@ public class ElasticSearchService {
         highlightFields.add(summaryField);
 
         HighlightBuilder.Field[] highlightFieldsAry = highlightFields.toArray(new HighlightBuilder
-        .Field[highlightFields.size()]);
+                .Field[highlightFields.size()]);
         //创建查询构造器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
 
@@ -114,7 +115,7 @@ public class ElasticSearchService {
 
         //查询
         AggregatedPage<ESBlogIndex> result = elasticsearchTemplate.queryForPage(queryBuilder.build(), ESBlogIndex
-        .class, highlightResultHelper);
+                .class, highlightResultHelper);
 
         //解析结果
         long total = result.getTotalElements();

@@ -42,7 +42,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label width="200" align="center">
+              <el-table-column label width="250" align="center">
                 <template slot-scope="scope_child">
                   <span>{{ scope_child.row.url }}</span>
                 </template>
@@ -108,7 +108,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="路由" width="200" align="center">
+      <el-table-column label="路由" width="250" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
@@ -448,7 +448,6 @@ export default {
               if (response.code == this.$ECode.SUCCESS) {
                 this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
-                this.menuList();
               } else {
                 this.$commonUtil.message.error(response.message)
               }

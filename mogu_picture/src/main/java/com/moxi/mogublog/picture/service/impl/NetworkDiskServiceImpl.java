@@ -110,7 +110,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         list.forEach(item -> {
             if (EFilePriority.QI_NIU.equals(picturePriority)) {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.QI_NIU_PICTURE_BASE_URL) + item.getQiNiuUrl());
-            } else if (EFilePriority.MINIO.equals(picturePriority)){
+            } else if (EFilePriority.MINIO.equals(picturePriority)) {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.MINIO_PICTURE_BASE_URL) + item.getMinioUrl());
             } else {
                 item.setFileUrl(qiNiuResultMap.get(SysConf.LOCAL_PICTURE_BASE_URL) + item.getLocalUrl());
@@ -208,10 +208,10 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
             // 删除Minio中的文件
             if (EOpenStatus.OPEN.equals(uploadMinio)) {
                 String minioUrl = networkDisk.getMinioUrl();
-                if(StringUtils.isNotEmpty(minioUrl)) {
-                    String [] minUrlArray = minioUrl.split("/");
+                if (StringUtils.isNotEmpty(minioUrl)) {
+                    String[] minUrlArray = minioUrl.split("/");
                     // 找到文件名
-                    minioUtil.deleteFile(minUrlArray[minUrlArray.length-1]);
+                    minioUtil.deleteFile(minUrlArray[minUrlArray.length - 1]);
                 } else {
                     log.error("删除的文件不存在Minio文件地址");
                 }

@@ -18,7 +18,7 @@ export function searchBlog (params) {
  */
 // export function searchBlog (params) {
 //   return request({
-//     url: process.env.ELASTICSEARCH + '/search/elasticSearchBlog',
+//     url: process.env.SEARCH_API + '/search/elasticSearchBlog',
 //     method: 'get',
 //     params
 //   })
@@ -30,7 +30,7 @@ export function searchBlog (params) {
  */
 // export function searchBlog (params) {
 //   return request({
-//     url: process.env.ELASTICSEARCH + '/search/solrSearchBlog',
+//     url: process.env.SEARCH_API + '/search/solrSearchBlog',
 //     method: 'get',
 //     params
 //   })

@@ -88,7 +88,7 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO + "\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -139,7 +139,7 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO + "\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -185,7 +185,7 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO + "\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -194,7 +194,7 @@ public class RabbitMqUtil {
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您注册"+ PROJECT_NAME +"账号，请点击下方链接进行账号激活</p>\r\n" +
+                        "<p>欢迎您注册" + PROJECT_NAME + "账号，请点击下方链接进行账号激活</p>\r\n" +
                         "<p>地址：" + "<a href=\"" + dataWebUrl + "/login/activeUser/" + token + "\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +
@@ -222,7 +222,7 @@ public class RabbitMqUtil {
         String text =
                 "<html>\r\n" +
                         " <head>\r\n" +
-                        "  <title>"+ PROJECT_NAME +"</title>\r\n" +
+                        "  <title>" + PROJECT_NAME + "</title>\r\n" +
                         " </head>\r\n" +
                         " <body>\r\n" +
                         "  <div id=\"contentDiv\" onmouseover=\"getTop().stopPropagation(event);\" onclick=\"getTop().preSwapLink(event, 'spam', 'ZC1222-PrLAp4T0Z7Z7UUMYzqLkb8a');\" style=\"position:relative;font-size:14px;height:auto;padding:15px 15px 10px 15px;z-index:1;zoom:1;line-height:1.7;\" class=\"body\">    \r\n" +
@@ -234,7 +234,7 @@ public class RabbitMqUtil {
                         "<div class=\"email-body\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"container\">\r\n" +
                         "<div class=\"logo\">\r\n" +
-                        "<img src=\"" + LOGO +"\",height=\"100\" width=\"100\">\r\n" +
+                        "<img src=\"" + LOGO + "\",height=\"100\" width=\"100\">\r\n" +
                         "</div>\r\n" +
                         "<div class=\"panel\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
                         "<div class=\"panel-header\" style=\"background-color: rgb(246, 244, 236);\">\r\n" +
@@ -243,7 +243,7 @@ public class RabbitMqUtil {
                         "</div>\r\n" +
                         "<div class=\"panel-body\">\r\n" +
                         "<p>您好 <a href=\"mailto:" + user.getEmail() + "\" rel=\"noopener\" target=\"_blank\">" + user.getNickName() + "<wbr></a>！</p>\r\n" +
-                        "<p>欢迎您给"+ PROJECT_NAME +"账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
+                        "<p>欢迎您给" + PROJECT_NAME + "账号绑定邮箱，请点击下方链接进行绑定</p>\r\n" +
                         "<p>地址：" + "<a href=\"" + dataWebUrl + "/oauth/bindUserEmail/" + token + "/" + user.getValidCode() + "\">点击这里</a>" + "</p>\r\n" +
                         "\r\n" +
                         "</div>\r\n" +

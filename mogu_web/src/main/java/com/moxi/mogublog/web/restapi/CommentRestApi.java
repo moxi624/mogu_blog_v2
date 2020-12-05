@@ -33,7 +33,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -690,7 +689,7 @@ public class CommentRestApi {
 
         // 判断删除的是一级评论还是子评论
         String firstCommentUid = "";
-        if(StringUtils.isNotEmpty(comment.getFirstCommentUid())) {
+        if (StringUtils.isNotEmpty(comment.getFirstCommentUid())) {
             // 删除的是子评论
             firstCommentUid = comment.getFirstCommentUid();
         } else {
@@ -706,7 +705,7 @@ public class CommentRestApi {
         List<Comment> resultList = new ArrayList<>();
         this.getToCommentList(comment, toCommentList, resultList);
         // 将所有的子评论也删除
-        if(resultList.size() > 0) {
+        if (resultList.size() > 0) {
             resultList.forEach(item -> {
                 item.setStatus(EStatus.DISABLED);
                 item.setUpdateTime(new Date());
@@ -767,9 +766,10 @@ public class CommentRestApi {
 
     /**
      * 获取某条评论下的所有子评论
+     *
      * @return
      */
-    private void getToCommentList(Comment comment, List<Comment> commentList, List<Comment> resultList){
+    private void getToCommentList(Comment comment, List<Comment> commentList, List<Comment> resultList) {
         if (comment == null) {
             return;
         }

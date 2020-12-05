@@ -58,6 +58,7 @@ public class MinioUtil {
 
     /**
      * 删除单个文件
+     *
      * @param fileName
      * @return
      */
@@ -78,6 +79,7 @@ public class MinioUtil {
 
     /**
      * 批量删除文件
+     *
      * @param fileNameList
      * @return
      */
@@ -86,7 +88,7 @@ public class MinioUtil {
         SystemConfig systemConfig = feignUtil.getSystemConfig();
         MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
         try {
-            for (String fileName: fileNameList) {
+            for (String fileName : fileNameList) {
                 minioClient.removeObject(
                         RemoveObjectArgs.builder().bucket(systemConfig.getMinioBucket()).object(fileName).build());
             }
