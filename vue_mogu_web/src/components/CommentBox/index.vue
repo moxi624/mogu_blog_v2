@@ -173,7 +173,7 @@
     width: 650px;
     height: 135px;
     position: absolute;
-    z-index: 999;
+    z-index: 99;
     left: 50px;
     top: 10px;
   }
