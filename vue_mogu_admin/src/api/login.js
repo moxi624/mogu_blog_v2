@@ -29,3 +29,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getWebSiteName() {
+  return request({
+    url: process.env.ADMIN_API + '/auth/getWebSiteName',
+    method: 'get'
+  })
+}

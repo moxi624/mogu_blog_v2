@@ -20,6 +20,12 @@ public interface WebConfigService extends SuperService<WebConfig> {
     WebConfig getWebConfig();
 
     /**
+     * 获取网站名称
+     * @return
+     */
+    String getWebSiteName();
+
+    /**
      * 通过显示列表获取配置
      *
      * @return

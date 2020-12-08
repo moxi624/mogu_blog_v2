@@ -26,7 +26,7 @@
 	      </template>
 	    </el-table-column>
 
-      <el-table-column label="IP" width="120" align="center">
+      <el-table-column label="IP" width="150" align="center">
 	      <template slot-scope="scope">
 	        <span>{{ scope.row.ip }}</span>
 	      </template>

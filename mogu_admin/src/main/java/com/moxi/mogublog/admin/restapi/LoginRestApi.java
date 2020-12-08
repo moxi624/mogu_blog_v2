@@ -7,15 +7,13 @@ import com.moxi.mogublog.admin.global.SQLConf;
 import com.moxi.mogublog.admin.global.SysConf;
 import com.moxi.mogublog.commons.config.jwt.Audience;
 import com.moxi.mogublog.commons.config.jwt.JwtTokenUtil;
-import com.moxi.mogublog.commons.entity.Admin;
-import com.moxi.mogublog.commons.entity.CategoryMenu;
-import com.moxi.mogublog.commons.entity.OnlineAdmin;
-import com.moxi.mogublog.commons.entity.Role;
+import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.CategoryMenuService;
 import com.moxi.mogublog.xo.service.RoleService;
+import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
 import com.moxi.mougblog.base.global.Constants;
@@ -70,6 +68,8 @@ public class LoginRestApi {
     private RedisUtil redisUtil;
     @Resource
     private PictureFeignClient pictureFeignClient;
+    @Autowired
+    private WebConfigService webConfigService;
 
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @PostMapping("/login")
@@ -252,6 +252,13 @@ public class LoginRestApi {
         map.put(SysConf.BUTTON_LIST, buttonList);
         return ResultUtil.result(SysConf.SUCCESS, map);
     }
+
+    @ApiOperation(value = "获取网站名称", notes = "获取网站名称", response = String.class)
+    @GetMapping(value = "/getWebSiteName")
+    public String getWebSiteName() {
+        return ResultUtil.successWithData(webConfigService.getWebSiteName());
+    }
+
 
     @ApiOperation(value = "退出登录", notes = "退出登录", response = String.class)
     @PostMapping(value = "/logout")

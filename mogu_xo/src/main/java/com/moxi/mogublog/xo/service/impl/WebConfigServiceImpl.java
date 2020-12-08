@@ -83,6 +83,17 @@ public class WebConfigServiceImpl extends SuperServiceImpl<WebConfigMapper, WebC
     }
 
     @Override
+    public String getWebSiteName() {
+        QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.last(SysConf.LIMIT_ONE);
+        WebConfig webConfig = webConfigService.getOne(queryWrapper);
+        if (StringUtils.isNotEmpty(webConfig.getName())) {
+            return webConfig.getName();
+        }
+        return "";
+    }
+
+    @Override
     public WebConfig getWebConfigByShowList() {
         //从Redis中获取IP来源
         String webConfigResult = redisUtil.get(RedisConf.WEB_CONFIG);
