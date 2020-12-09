@@ -98,13 +98,11 @@
 
 最低配置：1核2G `需要开启虚拟内存`
 
-推荐配置：2核4G 【双十一特惠】
+推荐配置：2核4G 【双十二特惠】
 
-> 【阿里云】双十一拼团 2核4G3M 664元/3年（强烈推荐） [点我进入](http://a.aliyun.com/f1.l0DRK)
+> 【阿里云】云服务器双12狂欢特惠，1核2G 5M轻量级应用服务器114元/年【博主使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) 
 >
-> 【阿里云】云服务器双11狂欢特惠，1核2G 最低仅需84.97元/年  [点我传送](https://www.aliyun.com/1111/home?userCode=w7aungxw)
->
-> 【腾讯云】双十一活动2核4G 100G盘700元/3年（老用户重新用微信QQ注册即可） [点我进入](https://curl.qcloud.com/8Nfp3pRy)
+> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元（老用户重新用微信QQ注册即可） [点我进入](https://curl.qcloud.com/zry6xub9)
 
 ## 项目特点
 

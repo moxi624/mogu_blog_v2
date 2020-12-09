@@ -32,4 +32,12 @@ export function deleteBatchSubjectItem(params) {
   })
 }
 
+export function sortByCreateTime(params) {
+  return request({
+    url: process.env.ADMIN_API + '/subjectItem/sortByCreateTime',
+    method: 'post',
+    data: params
+  })
+}
+
 

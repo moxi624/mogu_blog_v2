@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Blog;
+import com.moxi.mogublog.commons.entity.BlogSort;
+import com.moxi.mogublog.commons.entity.Collect;
 import com.moxi.mogublog.commons.entity.SubjectItem;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -184,5 +187,44 @@ public class SubjectItemServiceImpl extends SuperServiceImpl<SubjectItemMapper, 
         queryWrapper.in(SQLConf.BLOG_UID, blogUid);
         subjectItemService.remove(queryWrapper);
         return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
+    }
+
+    @Override
+    public String sortByCreateTime(String subjectUid, Boolean isDesc) {
+        QueryWrapper<SubjectItem> queryWrapper = new QueryWrapper();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.SUBJECT_UID, subjectUid);
+        // 查询出所有的专题列表
+        List<SubjectItem> subjectItemList = subjectItemService.list(queryWrapper);
+        // 获取专题中的博客uid
+        List<String> blogUidList = new ArrayList<>();
+        subjectItemList.forEach(item -> {
+            blogUidList.add(item.getBlogUid());
+        });
+        if(blogUidList.size() == 0) {
+            return ResultUtil.errorWithMessage(MessageConf.UPDATE_FAIL);
+        }
+        Collection<Blog> blogList = blogService.listByIds(blogUidList);
+        List<Blog> tempBlogList = new ArrayList<>();
+        // 升序排列或降序排列
+        if(isDesc) {
+            tempBlogList = blogList.stream().sorted(Comparator.comparing(Blog::getCreateTime).reversed()).collect(Collectors.toList());
+        } else {
+            tempBlogList = blogList.stream().sorted(Comparator.comparing(Blog::getCreateTime)).collect(Collectors.toList());
+        }
+
+        // 设置初始化最大的sort值
+        int maxSort = tempBlogList.size();
+        Map<String, Integer> subjectItemSortMap = new HashMap<>();
+        for (Blog item : tempBlogList) {
+            subjectItemSortMap.put(item.getUid(), maxSort--);
+        }
+
+        // 设置更新后的排序值
+        for (SubjectItem item : subjectItemList) {
+            item.setSort(subjectItemSortMap.get(item.getBlogUid()));
+        }
+        subjectItemService.updateBatchById(subjectItemList);
+        return ResultUtil.successWithMessage(MessageConf.OPERATION_SUCCESS);
     }
 }

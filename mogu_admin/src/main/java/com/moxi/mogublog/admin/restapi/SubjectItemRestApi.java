@@ -11,14 +11,12 @@ import com.moxi.mougblog.base.exception.ThrowableUtils;
 import com.moxi.mougblog.base.validator.group.GetList;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -74,6 +72,16 @@ public class SubjectItemRestApi {
         // 参数校验
         ThrowableUtils.checkParamArgument(result);
         return subjectItemService.deleteBatchSubjectItem(subjectItemVOList);
+    }
+
+    @AuthorityVerify
+    @OperationLogger(value = "通过创建时间排序专题列表")
+    @ApiOperation(value = "通过创建时间排序专题列表", notes = "通过创建时间排序专题列表", response = String.class)
+    @PostMapping("/sortByCreateTime")
+    public String sortByCreateTime(@ApiParam(name = "subjectUid", value = "专题uid") @RequestParam(name = "subjectUid", required = true) String subjectUid,
+            @ApiParam(name = "isDesc", value = "是否从大到小排列") @RequestParam(name = "isDesc", required = false, defaultValue = "false") Boolean isDesc) {
+        log.info("通过点击量排序博客分类");
+        return subjectItemService.sortByCreateTime(subjectUid, isDesc);
     }
 }
 

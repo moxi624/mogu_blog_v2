@@ -1,5 +1,22 @@
 <template>
   <div class="app-container">
+    <!-- 查询和其他操作 -->
+    <div class="filter-container" style="margin: 10px 0 10px 0;" v-permission="'/subjectItem/sortByCreateTime'">
+      <el-button
+        class="filter-item"
+        type="info"
+        @click="handleSortByCreateTime(true)"
+        icon="el-icon-document"
+      >按创建时间倒排</el-button>
+
+      <el-button
+        class="filter-item"
+        type="info"
+        @click="handleSortByCreateTime(false)"
+        icon="el-icon-document"
+      >按创建时间正排</el-button>
+    </div>
+
     <aside>
       在博客管理添加专题元素，通过拖拽实现专题内列表的排序
     </aside>
@@ -56,6 +73,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="排序" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag type="warning">{{ scope.row.sort }}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column width="100px" label="操作" align="center">
         <template slot-scope="{row}">
           <el-button @click="handleDelete(row)" type="danger" size="small" v-permission="'/subjectItem/delete'">删除</el-button>
@@ -72,7 +95,7 @@
 </template>
 
 <script>
-  import { getSubjectItemList, editSubjectItem, deleteBatchSubjectItem } from '@/api/subjectItem'
+  import { getSubjectItemList, editSubjectItem, deleteBatchSubjectItem, sortByCreateTime} from '@/api/subjectItem'
   import Sortable from 'sortablejs'
   export default {
     name: 'DragTable',
@@ -108,6 +131,40 @@
       this.getList()
     },
     methods: {
+      // 根据创建时间对专题进行排序
+      handleSortByCreateTime: function(isDesc) {
+
+        if(this.list.length == 0) {
+          this.$commonUtil.message.error("没有专题元素，无法进行排序")
+          return
+        }
+
+        this.$confirm(
+          "此操作将根据博客创建时间对所有的专题元素进行升序&降序排列, 是否继续?",
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        )
+          .then(() => {
+            let params = new URLSearchParams()
+            params.append('subjectUid', this.subjectUid)
+            params.append('isDesc', isDesc)
+            sortByCreateTime(params).then(response => {
+              if (response.code == this.$ECode.SUCCESS) {
+                this.$commonUtil.message.success(response.message)
+                this.getList();
+              } else {
+                this.$commonUtil.message.error(response.message)
+              }
+            });
+          })
+          .catch(() => {
+            this.$commonUtil.message.info("已取消批量排序")
+          });
+      },
       getList() {
         // TODO 这里暂时没有做成分页而是全部显示，考虑到分页后不太好拖拽
         var params = {};
