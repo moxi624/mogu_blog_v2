@@ -50,8 +50,10 @@ public class ElasticSearchService {
         //构建blog对象
         ESBlogIndex blog = new ESBlogIndex();
         blog.setId(eblog.getUid());
+        blog.setOid(eblog.getOid());
         blog.setUid(eblog.getUid());
         blog.setTitle(eblog.getTitle());
+        blog.setType(eblog.getType());
         blog.setSummary(eblog.getSummary());
         blog.setAll(all);
 
@@ -82,7 +84,6 @@ public class ElasticSearchService {
         } else {
             blog.setPhotoUrl("");
         }
-
         return blog;
     }
 

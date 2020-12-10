@@ -44,7 +44,11 @@
 //        return map;
 //    }
 //
-//    //初始化索引
+//    /**
+//     * 初始化索引
+//     * @param collection
+//     * @param blogList
+//     */
 //    public void initIndex(String collection, List<Blog> blogList) {
 //        List<SolrIndex> solrIndexs = new ArrayList<>();
 //        for (Blog blog : blogList) {
@@ -57,6 +61,8 @@
 //                solrIndex.setPhotoUrl("");
 //            }
 //            solrIndex.setId(blog.getUid());
+//            solrIndex.setOid(blog.getOid());
+//            solrIndex.setType(blog.getType());
 //            solrIndex.setTitle(blog.getTitle());
 //            solrIndex.setSummary(blog.getSummary());
 //            solrIndex.setBlogContent(blog.getContent());
@@ -90,7 +96,11 @@
 //        solrTemplate.commit(collection);
 //    }
 //
-//    //添加索引
+//    /**
+//     * 添加索引
+//     * @param collection
+//     * @param blog
+//     */
 //    public void addIndex(String collection, Blog blog) {
 //
 //        SolrIndex solrIndex = new SolrIndex();
@@ -101,6 +111,8 @@
 //            solrIndex.setPhotoUrl("");
 //        }
 //        solrIndex.setId(blog.getUid());
+//        solrIndex.setOid(blog.getOid());
+//        solrIndex.setType(blog.getType());
 //        solrIndex.setTitle(blog.getTitle());
 //        solrIndex.setSummary(blog.getSummary());
 //        solrIndex.setBlogContent(blog.getContent());
@@ -125,16 +137,18 @@
 //        log.info("添加Solr索引成功");
 //    }
 //
-//    //更新索引
+//    /**
+//     * 更新索引
+//     * @param collection
+//     * @param blog
+//     */
 //    public void updateIndex(String collection, Blog blog) {
 //
 //        Optional<SolrIndex> solrIndex = solrTemplate.getById(collection, blog.getUid(), SolrIndex.class);
 //
 //        //为空表示原来修改发布状态位的时候，删除掉了索引，需要重新添加
 //        if (solrIndex.isPresent()) {
-//
 //            addIndex(collection, blog);
-//
 //        } else {
 //            //将图片存放索引中
 //            if (blog.getPhotoList() != null && blog.getPhotoList().size() > 0) {
@@ -142,6 +156,8 @@
 //            } else {
 //                solrIndex.get().setPhotoUrl("");
 //            }
+//            solrIndex.get().setOid(blog.getOid());
+//            solrIndex.get().setType(blog.getType());
 //            solrIndex.get().setId(blog.getUid());
 //            solrIndex.get().setTitle(blog.getTitle());
 //            solrIndex.get().setSummary(blog.getSummary());
@@ -166,84 +182,44 @@
 //
 //    }
 //
+//    /**
+//     * 删除索引
+//     * @param collection
+//     * @param uid
+//     */
 //    public void deleteIndex(String collection, String uid) {
 //        solrTemplate.deleteByIds(collection, uid);
 //        solrTemplate.commit(collection);
 //    }
 //
+//    /**
+//     * 批量删除索引
+//     * @param collection
+//     * @param ids
+//     */
 //    public void deleteBatchIndex(String collection, List<String> ids) {
 //        solrTemplate.deleteByIds(collection, ids);
 //        solrTemplate.commit(collection);
 //    }
 //
+//    /**
+//     * 批量删除全部索引
+//     * @param collection
+//     */
 //    public void deleteAllIndex(String collection) {
 //        SimpleQuery query = new SimpleQuery("*:*");
 //        solrTemplate.delete(collection, query);
 //        solrTemplate.commit(collection);
 //    }
 //
-////    private Map<String, Object> searchList(String collection, String keywords, Integer currentPage, Integer
-////    pageSize) {
-////        try {
-////            HttpSolrClient solrClient = new HttpSolrClient.Builder("http://127.0.0.1:8080/solr/collection1").build();
-////            SolrQuery query = new SolrQuery();
-////            query.set("q", keywords);
-////            //过滤器query.setFilterQueries("pprice:[1 TO 100]");也可以用addFiterQuries设置多过滤条件
-////            //query.set("fq","pprice:[1 TO 100]");
-////
-////            //排序  query.setSort("pprice",ORDER.desc);  addSort
-////            //query.set("sort","pprice desc,id asc");
-////
-////            // 设置查询到的文档返回的域对象
-//////            query.set("fl","id,pname,pprice");
-////
-////            //分页
-////            query.set("start", currentPage);
-////            query.set("rows", pageSize);
-////
-////            //6.高亮
-////            query.set("hl", true);
-////            //设置高亮域(设置的域必须在查询条件中存在)
-////            query.set("h1.fl", "blog_title", "blog_summary");
-////            //前缀
-////            query.set("hl.simple.pre", "<span style = 'color:red'>");
-////            //后缀
-////            query.set("hl.simple.post", "</span>");
-////
-////            QueryResponse response = solrClient.query(query);
-////            SolrDocumentList results = response.getResults();
-////            //k是id,内部的map的key是域名,其value是高亮的值集合
-////            Map<String, Map<String, List<String>>> highlighting = response.getHighlighting();
-////            for (SolrDocument document : results) {
-////                List<String> list = null;
-////                if (highlighting.get(document.get("id")) != null) {
-////                    list = highlighting.get(document.get("id")).get("blog_title");
-////                } else {
-////                    System.out.println("无法获取高亮map");
-////                }
-////                if (list != null && list.size() > 0) {
-////                    System.out.println("高亮显示的内容:----" + list.get(0));
-////                } else {
-////                    System.out.println("高亮显示的内容为空!!!");
-////                }
-////            }
-////            Map<String, Object> map = new HashMap<>();
-////            // 返回总记录数
-////            map.put(SysConf.TOTAL, results.size());
-////            // 返回总页数
-////            map.put(SysConf.TOTAL_PAGE, results.size());
-////            // 返回当前页大小
-////            map.put(SysConf.PAGE_SIZE, pageSize);
-////            // 返回当前页
-////            map.put(SysConf.CURRENT_PAGE, currentPage);
-////            map.put(SysConf.BLOG_LIST, results.size());
-////            return map;
-////        } catch (Exception e) {
-////            log.error(e.getMessage());
-////        }
-////        return null;
-////    }
-//
+//    /**
+//     * 查询列表
+//     * @param collection
+//     * @param keywords
+//     * @param currentPage
+//     * @param pageSize
+//     * @return
+//     */
 //    private Map<String, Object> searchList(String collection, String keywords, Integer currentPage, Integer pageSize) {
 //        Map<String, Object> map = new HashMap<>();
 //        HighlightQuery query = new SimpleHighlightQuery();

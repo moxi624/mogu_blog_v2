@@ -355,6 +355,18 @@ export const constantRouterMap = [
         component: () => import('@/views/monitor/ServerMonitor'),
         meta: { title: '服务器监控', icon: 'exception' }
       },
+      {
+        path: 'Solr',
+        name: 'Solr',
+        component: () => import('@/views/monitor/Solr'),
+        meta: { title: 'Solr', icon: 'index' }
+      },
+      {
+        path: 'ElasticSearch',
+        name: 'ElasticSearch',
+        component: () => import('@/views/monitor/ElasticSearch'),
+        meta: { title: 'ElasticSearch', icon: 'exception' }
+      },
     ]
   },
 

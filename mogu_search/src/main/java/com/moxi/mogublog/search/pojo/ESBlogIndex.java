@@ -20,6 +20,10 @@ public class ESBlogIndex {
 
     private String uid;
 
+    private Integer oid;
+
+    private String type;
+
     private String title;
 
     private String summary;

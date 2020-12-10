@@ -732,7 +732,7 @@ export default {
     },
     // 跳转到该博客详情
     onClick: function(row) {
-      window.open( this.BLOG_WEB_URL + "/#/info?blogUid=" + row.uid);
+      window.open( this.BLOG_WEB_URL + "/#/info?blogOid=" + row.oid);
     },
     //标签远程搜索函数
     tagRemoteMethod: function(query) {

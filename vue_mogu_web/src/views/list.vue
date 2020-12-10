@@ -19,12 +19,12 @@
           <h3 class="blogtitle">
             <a
               href="javascript:void(0);"
-              @click="goToInfo(item.id?item.id:item.uid)"
+              @click="goToInfo(item)"
               v-html="item.title"
             >{{item.title}}</a>
           </h3>
           <span class="blogpic">
-            <a href="javascript:void(0);" @click="goToInfo(item.id?item.id:item.uid)" title>
+            <a href="javascript:void(0);" @click="goToInfo(item)" title>
               <img v-if="item.photoUrl" :src="item.photoUrl" alt="">
             </a>
           </span>
@@ -101,6 +101,7 @@ import {
   searchBlogBySort,
   searchBlogByAuthor
 } from "../api/search";
+import {getBlogByUid} from "../api/blogContent";
 
 export default {
   name: "list",
@@ -167,12 +168,21 @@ export default {
   },
   methods: {
     //跳转到文章详情
-    goToInfo(uid) {
-      let routeData = this.$router.resolve({
-        path: "/info",
-        query: { blogUid: uid }
-      });
-      window.open(routeData.href, '_blank');
+    goToInfo(blog) {
+      if(blog.type == "0") {
+        let routeData = this.$router.resolve({
+          path: "/info",
+          query: {blogOid: blog.oid}
+        });
+        window.open(routeData.href, '_blank');
+      } else if(blog.type == "1") {
+        var params = new URLSearchParams();
+        params.append("uid", blog.uid);
+        getBlogByUid(params).then(response => {
+          // 记录一下用户点击日志
+        });
+        window.open(blog.outsideLink, '_blank');
+      }
     },
     //点击了分类
     goToList(uid) {
