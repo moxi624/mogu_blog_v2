@@ -34,6 +34,7 @@ jobs:
         mv -f ./mogu_prod_configuration/dev_nacos/mogu_sms/bootstrap.yml ./mogu_sms/src/main/resources/bootstrap.yml
         mv -f ./mogu_prod_configuration/dev_nacos/mogu_web/bootstrap.yml ./mogu_web/src/main/resources/bootstrap.yml
         mv -f ./mogu_prod_configuration/dev_nacos/mogu_search/bootstrap.yml ./mogu_search/src/main/resources/bootstrap.yml
+        mv -f ./mogu_prod_configuration/dev_nacos/mogu_gateway/bootstrap.yml ./mogu_gateway/src/main/resources/bootstrap.yml
         mv -f ./mogu_prod_configuration/dev_nacos/vue_mogu_admin/.env ./vue_mogu_admin/.env
         mv -f ./mogu_prod_configuration/dev_nacos/vue_mogu_web/.env ./vue_mogu_web/.env
     - name: Build Java jar
@@ -61,6 +62,7 @@ jobs:
         mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
         mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
         mv ./mogu_search/target/mogu_search-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_search-0.0.1-SNAPSHOT.jar
+        mv ./mogu_gateway/target/mogu_search-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_gateway-0.0.1-SNAPSHOT.jar
         mv ./vue_mogu_web/dist ./transfer_files/web_dist
         mv ./vue_mogu_admin/dist ./transfer_files/admin_dist
         tar -zcvf  transfer_files.tar.gz transfer_files/
@@ -83,6 +85,19 @@ jobs:
         script: |
           cd /home
           tar -zxvf /home/transfer_files.tar.gz
+
+          echo "################# mogu_gateway moving #################"
+
+          if [ -f "/home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar.bak" ];then
+            echo "mogu_gateway.jar.bak exists and is being deleted"
+            rm -f /home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar.bak
+          fi
+          if [ -f "/home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar" ];then
+            echo "mogu_gateway.jar exists and is being backup"
+            mv /home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar.bak
+          fi
+          mv /home/transfer_files/mogu_gateway-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_gateway/mogu_gateway-0.0.1-SNAPSHOT.jar
+
 
           echo "################# mogu_admin moving #################"
 
@@ -178,6 +193,18 @@ jobs:
           rm -rf /home/transfer_files.tar.gz
           echo "################# rm transfer_files #################"
           rm -rf /home/transfer_files
+
+    - name: Start mogu_gateway
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
+        username: ${{ secrets.DOCKER_ID }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        port: ${{ secrets.DOCKER_PORT }}
+        script: |
+          cd /home/mogu_blog/mogu_gateway/
+          ./shutdown.sh
+          ./startup.sh
 
     - name: Start mogu_picture
       uses: appleboy/ssh-action@master
