@@ -1,0 +1,74 @@
+server:
+  port: 8607
+
+spring:
+  application:
+    name: mogu-gateway
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: prod
+      config:
+        server-addr: nacos:8848
+        file-extension: yaml
+        #指定分组
+        group: prod
+        #指定命名空间
+        namespace: prod
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - OPTIONS
+      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略
+      discovery:
+        locator:
+          enabled: true
+      # 配置路由规则
+      routes:
+        # 采用自定义路由 ID（有固定用法，不同的 id 有不同的功能，详见：https://cloud.spring.io/spring-cloud-gateway/2.0.x/single/spring-cloud-gateway.html#gateway-route-filters）
+        - id: mogu_admin
+          # 采用 LoadBalanceClient 方式请求，以 lb:// 开头，后面的是注册在 Nacos 上的服务名
+          uri: lb://mogu-admin
+          # Predicate 翻译过来是“谓词”的意思，必须，主要作用是匹配用户的请求，有很多种用法
+          predicates:
+            # 路径匹配，以 api 开头，直接配置是不生效的，看 filters 配置
+            - Path=/mogu-admin/**
+          filters:
+            # 前缀过滤，默认配置下，我们的请求路径是 http://localhost:8888/business-oauth2/** 这时会路由到指定的服务
+            # 此处配置去掉 1 个路径前缀，再配置上面的 Path=/api/**，就能按照 http://localhost:8888/api/** 的方式访问了
+            - StripPrefix=1
+        - id: mogu_web
+          uri: lb://mogu-web
+          predicates:
+            - Path=/mogu-web/**
+          filters:
+            - StripPrefix=1
+        - id: mogu_search
+          uri: lb://mogu-search
+          predicates:
+            - Path=/mogu-search/**
+          filters:
+            - StripPrefix=1
+        - id: mogu_picture
+          uri: lb://mogu-picture
+          predicates:
+            - Path=/mogu-picture/**
+          filters:
+            - StripPrefix=1
+        - id: mogu_monitor
+          uri: lb://mogu-monitor
+          predicates:
+            - Path=/mogu-monitor/**
+          filters:
+            - StripPrefix=1

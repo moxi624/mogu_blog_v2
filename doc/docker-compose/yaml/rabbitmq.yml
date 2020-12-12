@@ -12,7 +12,7 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: mogu2018
     volumes:
-      - ../data/rabbitmq_data:/var/lib/rabbitmq
+      - ../data/rabbitmq_data:/var/lib/rabbitmq/mnesia
     networks:
       - mogu
       

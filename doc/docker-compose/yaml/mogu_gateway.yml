@@ -13,6 +13,7 @@ services:
       - COMPOSE_PROJECT_NAME=mogu_gateway
     volumes:
     - ../log/:/logs/
+    - ../config/mogu_gateway/:/config/
 networks:
   mogu:
     external: true

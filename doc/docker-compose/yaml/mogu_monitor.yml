@@ -13,6 +13,7 @@ services:
       - COMPOSE_PROJECT_NAME=mogu_monitor
     volumes:
       - ../log/:/logs/
+      - ../config/mogu_monitor/:/config/
 networks:
   mogu:
     external: true

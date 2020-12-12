@@ -19,7 +19,7 @@
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/star.svg?theme=dark" ></img>
 <img src="https://gitee.com/moxi159753/mogu_blog_v2/badge/fork.svg?theme=dark" ></img>
 </a></p>
-[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划)  | [视频教程](#视频教程)| [项目截图](#移动端截图) | [学习笔记](https://gitee.com/moxi159753/LearningNotes)
+[项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [未来计划](#未来计划)  | [视频教程](#视频教程)| [项目截图](#移动端截图) 
 
 ##  前言
 
@@ -91,7 +91,7 @@
 
 蘑菇博客使用了一些监控的Spring Cloud组件，但是并不一定都需要部署，必须启动的服务包含
 
-`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
+`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-gateway`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
@@ -371,8 +371,9 @@
 - [x] 使用Minio [搭建对象存储服务](http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f)
 - [x] 使用DockerCompose完成 [博客一键部署](http://www.moguit.cn/#/info?blogOid=565)
 - [x] 使用Portainer对Docker镜像可视化管理
+- [ ] 增加K8S部署蘑菇博客教程
+- [ ] 增加大屏数据展示页面
 - [ ] 增加定时任务模块
-- [ ] 增加代码生成器
 - [ ] 完善网盘管理
 - [ ] 增加更新记录
 - [ ] 完善爬虫模块

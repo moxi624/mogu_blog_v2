@@ -154,3 +154,14 @@ jobs:
           docker push registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_web
 
           echo '=====镜像上传结束====='
+
+      - name: Update New Docker Image And Restart Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
+          username: ${{ secrets.DOCKER_ID }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          port: ${{ secrets.DOCKER_PORT }}
+          script: |
+            cd /root/docker-compose/bin
+            ./update.sh

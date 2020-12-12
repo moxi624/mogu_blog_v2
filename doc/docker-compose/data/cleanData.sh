@@ -19,6 +19,15 @@ rm -rf ./rabbitmq_data/*
 echo '=====开始清空redis数据====='
 rm -rf ./redis_data/*
 
+echo '=====开始清空redis数据====='
+rm -rf ./elasticsearch_data/*
+
+echo '=====开始清空logstash数据====='
+rm -rf ./logstash/*
+
+echo '=====开始清空log日志====='
+rm -rf ../log/*
+
 echo '=============================='
 echo '=====所有数据已经被清空======='
 echo '=============================='

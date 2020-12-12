@@ -11,6 +11,10 @@
 
       <div class="right-menu">
 
+        <el-tooltip content="门户页面" effect="dark" placement="bottom">
+          <Website id="website" class="right-menu-item" />
+        </el-tooltip>
+
         <el-tooltip content="Gitee源码" effect="dark" placement="bottom">
           <MoGuGit id="mogu-git" class="right-menu-item" />
         </el-tooltip>
@@ -75,6 +79,7 @@ import Screenfull from "@/components/Screenfull";
 import ThemePicker from "@/components/ThemePicker";
 import MoGuGit from '@/components/MoGu/Git'
 import MoGuDoc from '@/components/MoGu/Doc'
+import Website from '@/components/MoGu/Website'
 
 export default {
   components: {
@@ -83,7 +88,8 @@ export default {
     Hamburger,
     ThemePicker,
     MoGuGit,
-    MoGuDoc
+    MoGuDoc,
+    Website
   },
   data() {
     return {

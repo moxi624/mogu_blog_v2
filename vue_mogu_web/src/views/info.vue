@@ -205,6 +205,11 @@
             Link,
             Sticky
         },
+      watch: {
+        $route(to, from) {
+          location.reload()
+        }
+      },
         mounted () {
           var that = this;
           var params = new URLSearchParams();

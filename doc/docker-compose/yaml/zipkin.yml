@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   zipkin:
-    image: openzipkin/zipkin
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/zipkin
     container_name: zipkin
     environment:
       - STORAGE_TYPE=mysql

@@ -4,7 +4,7 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-web/*.log
+      - ../../../log/mogu-web/*.log
     fields:
       docType: mogu_web-log
       project: mogu_web
@@ -13,7 +13,7 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-admin/*.log
+      - ../../../log/mogu-admin/*.log
     fields:
       docType: mogu_admin-log
       project: mogu_admin
@@ -22,7 +22,7 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-sms/*.log
+      - ../../../log/mogu-sms/*.log
     fields:
       docType: mogu_sms-log
       project: mogu_sms
@@ -31,7 +31,7 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-picture/*.log
+      - ../../../log/mogu-picture/*.log
     fields:
       docType: mogu_picture-log
       project: mogu_picture
@@ -40,7 +40,7 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-gateway/*.log
+      - ../../../log/mogu-gateway/*.log
     fields:
       docType: mogu_gateway-log
       project: mogu_gateway
@@ -49,21 +49,13 @@ filebeat.inputs:
   - type: log
     enabled: true
     paths:
-      - /opt/mogu-monitor/*.log
+      - ../../../log/mogu-monitor/*.log
     fields:
       docType: mogu_monitor-log
       project: mogu_monitor
       from: mogu_monitor
     fields_under_root: true
-  - type: log
-    enabled: true
-    paths:
-      - /opt/mogu-nginx/*.log
-    fields:
-      docType: mogu_nginx-log
-      project: mogu_nginx
-      from: mogu_nginx
-    fields_under_root: true
+
 
 # ============================== Filebeat modules ==============================
 

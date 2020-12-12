@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon icon-class="question" style="height: 2.5em;font-size: 18px;cursor: pointer" @click.native="goto"/>
+    <svg-icon icon-class="doc" style="height: 2.5em;font-size: 18px;cursor: pointer" @click.native="goto"/>
   </div>
 </template>
 

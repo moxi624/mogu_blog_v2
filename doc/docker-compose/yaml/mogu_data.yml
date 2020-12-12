@@ -2,11 +2,12 @@ version: '3'
 services:
   #授权服务
   mogu_data:
-    image: registry.cn-shenzhen.aliyuncs.com/mogu-zh/nginx:latest
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/nginx
     container_name: mogu_data
     restart: always
     ports:
-      - 8600:80
+      - 80:80  
+      - 8600:8600
     networks:
       - mogu
     volumes:
