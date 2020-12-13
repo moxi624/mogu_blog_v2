@@ -24,6 +24,9 @@ echo '=========================='
 echo '=====结束后台服务运行====='
 echo '=========================='
 
+echo '=====结束运行mogu_gateway====='
+docker-compose -f ../yaml/mogu_gateway.yml down
+
 echo '=====结束运行mogu_admin====='
 docker-compose -f ../yaml/mogu_admin.yml down
 

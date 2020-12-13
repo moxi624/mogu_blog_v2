@@ -2,7 +2,7 @@
 	<view>
 
 		<!-- <cu-custom bgColor="bg-gradual-blue" :isBack="true" style="height: 45px;"><block slot="backText">返回</block><block slot="content">{{blogData.title}}</block></cu-custom> -->
-		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" :title="blogData.title"></nav-bar>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" :title="cutText(blogData.title, 24)"></nav-bar>
 
 		<scroll-view scroll-y class="DrawerPage page" @scrolltolower="loadData">
 			<view class="cf">
@@ -179,13 +179,29 @@
 					}
 				})
 			},
-
+			// 切割字符串【按单双字节计算】
 			cutText(text, count) {
-				if (text.length < count) {
+				if (text.length <= (count/2)) {
 					return text
-				} else {
-					return text.substring(0, count) + ".."
 				}
+				var len = 0;
+				var result = "";
+				var flag = 0;
+				for (var i=0; i<text.length; i++) {
+					if(len > count) {
+						break
+					}
+					var c = text.charCodeAt(i);
+					console.log(c.toString())
+					//单字节加1
+					if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+					  len++;
+					} else {
+					  len+=2;
+					}
+					flag++;
+				}
+				return text.substring(0, flag) + "..";
 			},
 			commentList() {
 				var that = this

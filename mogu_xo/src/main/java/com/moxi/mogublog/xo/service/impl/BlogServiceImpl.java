@@ -146,13 +146,14 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
     @Override
     public List<Blog> setTagAndSortAndPictureByBlogList(List<Blog> list) {
-        final StringBuffer fileUids = new StringBuffer();
+
         List<String> sortUids = new ArrayList<>();
         List<String> tagUids = new ArrayList<>();
+        Set<String> fileUidSet = new HashSet<>();
 
         list.forEach(item -> {
             if (StringUtils.isNotEmpty(item.getFileUid())) {
-                fileUids.append(item.getFileUid() + ",");
+                fileUidSet.add(item.getFileUid());
             }
             if (StringUtils.isNotEmpty(item.getBlogSortUid())) {
                 sortUids.add(item.getBlogSortUid());
@@ -167,11 +168,32 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 }
             }
         });
+
         String pictureList = null;
-        if (fileUids != null) {
-            pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+        StringBuffer fileUids = new StringBuffer();
+        List<Map<String, Object>> picList = new ArrayList<>();
+        // feign分页查询图片数据
+        if(fileUidSet.size() > 0) {
+            int count = 1;
+            for(String fileUid: fileUidSet) {
+                fileUids.append(fileUid + ",");
+                System.out.println(count%10);
+                if(count%10 == 0) {
+                    pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+                    List<Map<String, Object>> tempPicList = webUtil.getPictureMap(pictureList);
+                    picList.addAll(tempPicList);
+                    fileUids = new StringBuffer();
+                }
+                count ++;
+            }
+            // 判断是否存在图片需要获取
+            if(fileUids.length() > 32) {
+                pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+                List<Map<String, Object>> tempPicList = webUtil.getPictureMap(pictureList);
+                picList.addAll(tempPicList);
+            }
         }
-        List<Map<String, Object>> picList = webUtil.getPictureMap(pictureList);
+
         Collection<BlogSort> sortList = new ArrayList<>();
         Collection<Tag> tagList = new ArrayList<>();
         if (sortUids.size() > 0) {
@@ -1583,6 +1605,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         //因为首页并不需要显示内容，所以需要排除掉内容字段
         queryWrapper.select(Blog.class, i -> !i.getProperty().equals(SQLConf.CONTENT));
         List<Blog> list = blogService.list(queryWrapper);
+
         //给博客增加标签、分类、图片
         list = blogService.setTagAndSortAndPictureByBlogList(list);
 

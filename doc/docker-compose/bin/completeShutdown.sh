@@ -52,6 +52,9 @@ docker-compose -f ../yaml/mogu_search.yml down
 echo '=====结束运行mogu_monitor====='
 docker-compose -f ../yaml/mogu_monitor.yml down
 
+echo '=====结束运行mogu_gateway====='
+docker-compose -f ../yaml/mogu_gateway.yml down
+
 echo '=========================='
 echo '=====结束前台服务运行====='
 echo '=========================='

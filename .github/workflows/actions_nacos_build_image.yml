@@ -161,7 +161,7 @@ jobs:
           host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
           username: ${{ secrets.DOCKER_ID }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          port: ${{ secrets.DOCKER_PORT }}
+          port: 22
           script: |
             cd /root/docker-compose/bin
             ./update.sh

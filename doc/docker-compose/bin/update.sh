@@ -26,5 +26,8 @@ docker pull registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_admin
 echo '=====开始更新vue_mogu_web====='
 docker pull registry.cn-shenzhen.aliyuncs.com/mogublog/vue_mogu_web
 
+echo '=====删除docker标签为none的镜像====='
+docker images | grep none | awk '{print $3}' | xargs docker rmi
+
 echo '=====开始运行的一键部署脚本====='
 sh kernStartup.sh

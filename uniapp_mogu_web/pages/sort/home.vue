@@ -160,6 +160,9 @@
 	}
 	.cu-list.menu-avatar>.cu-item .content {
 		width: calc(100% - 52px - 33px - 35px);
+		position: absolute;
+		left: 158upx;
+		
 	}
 	.fixed {
 		position: fixed;
