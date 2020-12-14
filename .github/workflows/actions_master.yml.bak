@@ -1,0 +1,220 @@
+#name: mogu_master CI/CD/master
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - uses: actions/checkout@master
+#      with:
+#        ref: master
+#    - uses: actions/setup-java@v1
+#      with:
+#        java-version: 1.8
+#    - name: Set SSH Environment
+#      run: |
+#        mkdir -p ~/.ssh/
+#        echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+#        echo "${{ secrets.ID_RSA_PUB }}" > ~/.ssh/id_rsa.pub
+#        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+#        chmod 600 ~/.ssh/id_rsa
+#        chmod 700 ~/.ssh && chmod 700 ~/.ssh/*
+#        ls -l ~/.ssh/
+#    - name: Download config file and replace
+#      run: |
+#        git clone git@github.com:moxi624/mogu_prod_configuration.git
+#        mv -f ./mogu_prod_configuration/config/vue_mogu_admin/prod.env.js ./vue_mogu_admin/config/prod.env.js
+#        mv -f ./mogu_prod_configuration/config/vue_mogu_web/prod.env.js ./vue_mogu_web/config/prod.env.js
+#    - name: Build Java jar
+#      run: |
+#        mvn clean install
+#    - name: Use Node.js 12.x
+#      uses: actions/setup-node@v1
+#      with:
+#        node-version: 12.x
+#    - name: Build vue_mogu_admin and vue_mogu_web
+#      run: |
+#        cd ./vue_mogu_admin
+#        npm install
+#        npm run build
+#        cd ..
+#        cd ./vue_mogu_web
+#        npm install
+#        npm run build
+#        cd ..
+#    - name: Move files and compress
+#      run: |
+#        mkdir -p transfer_files
+#        mv ./mogu_admin/target/mogu_admin-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar
+#        mv ./mogu_sms/target/mogu_sms-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar
+#        mv ./mogu_picture/target/mogu_picture-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar
+#        mv ./mogu_web/target/mogu_web-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_web-0.0.1-SNAPSHOT.jar
+#        mv ./mogu_search/target/mogu_search-0.0.1-SNAPSHOT.jar ./transfer_files/mogu_search-0.0.1-SNAPSHOT.jar
+#        mv ./vue_mogu_web/dist ./transfer_files/web_dist
+#        mv ./vue_mogu_admin/dist ./transfer_files/admin_dist
+#        tar -zcvf  transfer_files.tar.gz transfer_files/
+#    - name: Scp file to aliyun
+#      uses: appleboy/scp-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        source: "transfer_files.tar.gz"
+#        target: "/home"
+#    - name: Distribution and backup
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        script: |
+#          cd /home
+#          tar -zxvf /home/transfer_files.tar.gz
+#
+#          echo "################# mogu_admin moving #################"
+#
+#          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak" ];then
+#            echo "mogu_admin.jar.bak exists and is being deleted"
+#            rm -f /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+#            echo "mogu_admin.jar exists and is being backup"
+#            mv /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          mv /home/transfer_files/mogu_admin-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar
+#
+#
+#          echo "################# mogu_sms moving #################"
+#
+#          if [ -f "/home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak" ];then
+#            echo "mogu_sms.jar.bak exists and is being deleted"
+#            rm -f /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          if [ -f "/home/mogu_blog/mogu_admin/mogu_admin-0.0.1-SNAPSHOT.jar" ];then
+#            echo "mogu_sms.jar exists and is being backup"
+#            mv /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          mv /home/transfer_files/mogu_sms-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_sms/mogu_sms-0.0.1-SNAPSHOT.jar
+#
+#          echo "################# mogu_picture moving #################"
+#
+#          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak" ];then
+#            echo "mogu_picture.jar.bak exists and is being deleted"
+#            rm -f /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          if [ -f "/home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar" ];then
+#            echo "mogu_picture.jar exists and is being backup"
+#            mv /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          mv /home/transfer_files/mogu_picture-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_picture/mogu_picture-0.0.1-SNAPSHOT.jar
+#
+#
+#          echo "################# mogu_web moving #################"
+#
+#          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak" ];then
+#            echo "mogu_web.jar.bak exists and is being deleted"
+#            rm -f /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          if [ -f "/home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar" ];then
+#            echo "mogu_web.jar exists and is being backup"
+#            mv /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          mv /home/transfer_files/mogu_web-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_web/mogu_web-0.0.1-SNAPSHOT.jar
+#
+#          echo "################# mogu_search moving #################"
+#
+#          if [ -f "/home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak" ];then
+#            echo "mogu_search.jar.bak exists and is being deleted"
+#            rm -f /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          if [ -f "/home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar" ];then
+#            echo "mogu_search.jar exists and is being backup"
+#            mv /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar.bak
+#          fi
+#          mv /home/transfer_files/mogu_search-0.0.1-SNAPSHOT.jar /home/mogu_blog/mogu_search/mogu_search-0.0.1-SNAPSHOT.jar
+#
+#
+#          echo "################# vue_mogu_web moving #################"
+#
+#          if [ -d "/home/mogu_blog/vue_mogu_web/dist.bak/" ];then
+#            echo "vue_mogu_web dist.bak exists and is being deleted"
+#            cd /home/mogu_blog/vue_mogu_web
+#            rm -rf dist.bak/
+#          fi
+#          if [ -d "/home/mogu_blog/vue_mogu_web/dist/" ];then
+#            echo "vue_mogu_web dist exists and is being backup"
+#            mv /home/mogu_blog/vue_mogu_web/dist /home/mogu_blog/vue_mogu_web/dist.bak
+#          fi
+#          mv /home/transfer_files/web_dist /home/mogu_blog/vue_mogu_web/dist
+#
+#
+#          echo "################# vue_mogu_admin moving #################"
+#
+#          if [ -d "/home/mogu_blog/vue_mogu_admin/dist.bak/" ];then
+#            echo "vue_mogu_admin dist.bak exists and is being deleted"
+#            cd /home/mogu_blog/vue_mogu_admin
+#            rm -rf dist.bak/
+#          fi
+#          if [ -d "/home/mogu_blog/vue_mogu_admin/dist/" ];then
+#            echo "vue_mogu_admin dist exists and is being backup"
+#            mv /home/mogu_blog/vue_mogu_admin/dist /home/mogu_blog/vue_mogu_admin/dist.bak
+#          fi
+#          mv /home/transfer_files/admin_dist /home/mogu_blog/vue_mogu_admin/dist
+#
+#          echo "################# rm transfer_files.tar.gz #################"
+#          rm -rf /home/transfer_files.tar.gz
+#          echo "################# rm transfer_files #################"
+#          rm -rf /home/transfer_files
+#
+#    - name: Start mogu_picture
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        script: |
+#          cd /home/mogu_blog/mogu_picture/
+#          ./shutdown.sh
+#          ./startup.sh
+#    - name: Start mogu_admin
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        script: |
+#          cd /home/mogu_blog/mogu_admin/
+#          ./shutdown.sh
+#          ./startup.sh
+#    - name: Start mogu_sms
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        script: |
+#          cd /home/mogu_blog/mogu_sms/
+#          ./shutdown.sh
+#          ./startup.sh
+#    - name: Start mogu_web
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.DOCKER_IP }}
+#        username: ${{ secrets.DOCKER_ID }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#        port: ${{ secrets.DOCKER_PORT }}
+#        script: |
+#          cd /home/mogu_blog/mogu_web/
+#          ./shutdown.sh
+#          ./startup.sh

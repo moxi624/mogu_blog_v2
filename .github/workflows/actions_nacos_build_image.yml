@@ -155,13 +155,13 @@ jobs:
 
           echo '=====镜像上传结束====='
 
-      - name: Update New Docker Image And Restart Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
-          username: ${{ secrets.DOCKER_ID }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          port: 22
-          script: |
-            cd /root/docker-compose/bin
-            ./update.sh
+#      - name: Update New Docker Image And Restart Server
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.DOCKER_IP_DEV_NACOS }}
+#          username: ${{ secrets.DOCKER_ID }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#          port: 22
+#          script: |
+#            cd /root/docker-compose/bin
+#            ./update.sh
