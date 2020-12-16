@@ -100,8 +100,7 @@ const FUNCTIONS = {
         var language = (className.match(/language-(\S+)/) || [null, ''])[1]
         return (
           '\n\n' + options.fence + language + '\n' +
-          node.firstChild.textContent +
-          '\n' + options.fence + '\n\n'
+          node.firstChild.textContent +options.fence
         )
       }
     })
