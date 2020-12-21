@@ -131,6 +131,5 @@ public class FileRestApi {
     public Object ckeditorUploadToolFile(HttpServletRequest request) {
         return fileService.ckeditorUploadToolFile(request);
     }
-
 }
 

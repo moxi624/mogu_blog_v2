@@ -46,10 +46,12 @@
           counter: '999999',
           typewriterMode: true,
           mode: 'wysiwyg',
+          comment: true,
           preview: {
             delay: 100,
             show: !this.isMobile
           },
+          theme: "classic",
           outline: true,
           upload: {
             max: 5 * 1024 * 1024,

@@ -1,5 +1,5 @@
 {
-    "name" : "蘑菇博客",
+    "name" : "陌溪教你学编程",
     "appid" : "__UNI__CFAB3C1",
     "description" : "蘑菇博客 - 专注于技术分享的博客平台",
     "versionName" : "蘑菇博客V0.1",
@@ -56,7 +56,7 @@
     "quickapp" : {},
     /* 快应用特有相关 */
     "mp-weixin" : {
-        "appid" : "wxa24be4a3d53e77c9",
+        "appid" : "wx9b12b3c32bc8fee0",
         "setting" : {
             "urlCheck" : false,
             "es6" : true

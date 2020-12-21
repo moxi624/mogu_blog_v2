@@ -316,6 +316,7 @@ export default {
       form: {
 
       },
+      index: "0", // 当前激活页
       activeName: "one",
       areaDictList: [], //存储区域字典
       yesNoDictList: [], //是否字典
@@ -369,6 +370,7 @@ export default {
       });
     },
     handleClick(tab, event) {
+      this.index = tab.index
       //设置富文本内容
       if (this.form.dashboardNotification) {
         this.$refs.editor.setData(this.form.dashboardNotification);
@@ -400,8 +402,10 @@ export default {
         if(!valid) {
           console.log("校验出错");
         } else {
-          //获取文本编辑器中的内容
-          this.form.dashboardNotification = this.$refs.editor.getData();
+          //获取文本编辑器中的内容【只有在切换到仪表盘通知的时候，才需要获取】
+          if(this.index == "6") {
+            this.form.dashboardNotification = this.$refs.editor.getData();
+          }
           editSystemConfig(this.form).then(res => {
             if (res.code == this.$ECode.SUCCESS) {
               this.$commonUtil.message.success(res.message)
