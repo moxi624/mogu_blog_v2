@@ -62,7 +62,7 @@
     "jest-serializer-vue": "^0.3.0",
     "jquery": "^3.3.1",
     "nightwatch": "^0.9.12",
-    "node-notifier": "^5.1.2",
+    "node-notifier": "^8.0.1",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
