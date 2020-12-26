@@ -385,4 +385,17 @@
   .commentList .rightBottom .b1 {
     margin-left: 10px;
   }
+
+  @media only screen and (min-width: 300px) and (max-width: 767px) {
+    .commentList .left {
+      display: inline-block;
+      width: 30px;
+      height: 100%;
+    }
+    .commentList .right {
+      display: inline-block;
+      width: calc(100% - 35px);
+      margin-left: 5px;
+    }
+  }
 </style>

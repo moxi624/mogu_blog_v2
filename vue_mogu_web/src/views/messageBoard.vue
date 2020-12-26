@@ -1,25 +1,25 @@
-
 <template>
-  <div class="page">
-    <div class="pagebg ab"></div>
+  <div>
+    <div class="pagebg sorts"></div>
     <div class="container">
       <h1 class="t_nav">
         <span>每个人都有自己故事，只是演绎的方式不同。</span>
         <a href="/" class="n1">网站首页</a>
-        <a href="/" class="n2">留言</a>
+        <a href="javascript:void(0);" class="n2">留言</a>
       </h1>
 
-        <CommentBox
-          :userInfo="userInfo"
-          :commentInfo="commentInfo"
-          @submit-box="submitBox"
-          :showCancel="showCancel"
-        ></CommentBox>
+      <CommentBox
+        :userInfo="userInfo"
+        :commentInfo="commentInfo"
+        @submit-box="submitBox"
+        :showCancel="showCancel"
+      ></CommentBox>
 
       <div class="message_infos">
         <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
         <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
       </div>
+
     </div>
   </div>
 </template>

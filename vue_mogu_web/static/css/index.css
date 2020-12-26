@@ -491,6 +491,7 @@ h1.t_nav span { display: none }
 .news_pl {
   overflow: scroll;
 }
+.newsview { padding: 0 1px }
 .news_infos {
   width: 100%;
 }

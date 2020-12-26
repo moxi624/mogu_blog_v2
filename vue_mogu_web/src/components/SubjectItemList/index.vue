@@ -4,6 +4,7 @@
     :visible.sync="drawer"
     @close="beforeClose"
     direction="ltr"
+    :size="drawerSize"
     :with-header="false">
 
     <div class="block" style="margin:10px;">
@@ -88,10 +89,20 @@
           currentPage: 1,
           total: 0,
           loading: true,
+          drawerSize: "30%"
         };
       },
       created() {
         // this.getList()
+      },
+      mounted() {
+        // 获取宽高
+        window.onresize = () => {
+          return (() => {
+            this.resizeWin();
+          })();
+        };
+        this.resizeWin();
       },
       methods: {
         getList() {
@@ -111,6 +122,20 @@
             this.loading = false
           })
         },
+        resizeWin() {
+          //当前window 宽
+          let centerWidth = document.documentElement.scrollWidth;
+          if (centerWidth > 1300) {
+              this.drawerSize = "30%"
+          } else if(centerWidth > 1000) {
+            this.drawerSize = "50%"
+          } else if(centerWidth > 600) {
+            this.drawerSize = "60%"
+          } else {
+            this.drawerSize = "95%"
+          }
+          console.log("当前的宽度", centerWidth);
+        },
         load() {
           // console.log("加载")
           // this.currentPage = this.currentPage + 1
@@ -122,7 +147,6 @@
         },
         //跳转到文章详情
         goToInfo(uid) {
-          console.log("传递过来的uid", uid)
           let routeData = this.$router.resolve({
             path: "/info",
             query: {blogUid: uid}
@@ -148,7 +172,7 @@
     }
 </script>
 
-<style scoped>
+<style>
 
   .blogsbox {
     width: 100%;
