@@ -7,5 +7,7 @@ ${AnsiColor.GREEN}
  |_| |_| |_|\___/ \__, |\__,_| |_.__/|_|\___/ \__, |
                    __/ |                       __/ |
                   |___/                       |___/
+${AnsiColor.YELLOW}
+Gitee: https://gitee.com/moxi159753/mogu_blog_v2
+Github: https://github.com/moxi624/mogu_blog_v2
 ${AnsiColor.BRIGHT_BLACK}
-Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

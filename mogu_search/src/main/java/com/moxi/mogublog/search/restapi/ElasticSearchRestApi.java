@@ -114,6 +114,7 @@ public class ElasticSearchRestApi {
 
             List<ESBlogIndex> esBlogIndexList = blogList.stream()
                     .map(searchService::buidBlog).collect(Collectors.toList());
+
             //存入索引库
             blogRepository.saveAll(esBlogIndexList);
             // 翻页
