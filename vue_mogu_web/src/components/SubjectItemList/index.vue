@@ -172,7 +172,7 @@
     }
 </script>
 
-<style>
+<style scoped>
 
   .blogsbox {
     width: 100%;
