@@ -124,7 +124,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    max-height: 300px;
+    overflow-x: scroll;
   }
+  
   .todo-list li {
     position: relative;
     font-size: 24px;
