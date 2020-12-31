@@ -2,6 +2,7 @@ package com.moxi.mogublog.xo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
@@ -16,7 +17,9 @@ import com.moxi.mogublog.xo.vo.SystemConfigVO;
 import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.QueryException;
 import com.moxi.mougblog.base.global.Constants;
+import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -46,12 +50,28 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
 
     @Override
     public SystemConfig getConfig() {
-        QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.last(SysConf.LIMIT_ONE);
-        SystemConfig SystemConfig = systemConfigService.getOne(queryWrapper);
-        return SystemConfig;
+        // 从Redis中获取系统配置
+        String systemConfigJson = redisUtil.get(RedisConf.SYSTEM_CONFIG);
+        if(StringUtils.isEmpty(systemConfigJson)) {
+            QueryWrapper<SystemConfig> queryWrapper = new QueryWrapper<>();
+            queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+            queryWrapper.last(SysConf.LIMIT_ONE);
+            SystemConfig systemConfig = systemConfigService.getOne(queryWrapper);
+            if (systemConfig == null) {
+                throw new QueryException(MessageConf.SYSTEM_CONFIG_IS_NOT_EXIST);
+            } else {
+                // 将系统配置存入Redis中【设置过期时间24小时】
+                redisUtil.setEx(RedisConf.SYSTEM_CONFIG, JsonUtils.objectToJson(systemConfig), 24, TimeUnit.HOURS);
+            }
+            return systemConfig;
+        } else {
+            SystemConfig systemConfig = JsonUtils.jsonToPojo(systemConfigJson, SystemConfig.class);
+            if(systemConfig == null) {
+                throw new QueryException(ErrorCode.QUERY_DEFAULT_ERROR, "系统配置转换错误，请检查系统配置，或者清空Redis后重试！");
+            }
+            return systemConfig;
+        }
     }
 
     @Override

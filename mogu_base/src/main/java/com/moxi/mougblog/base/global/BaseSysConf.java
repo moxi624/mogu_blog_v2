@@ -12,7 +12,9 @@ public class BaseSysConf {
     public final static String LIMIT_ONE = "LIMIT 1";
     public final static String OID = "oid";
 
-    // picture相关
+    /**
+     * picture相关
+     */
     public final static String USER_UID = "userUid";
     public final static String BLOG = "blog";
     public final static String USER_NAME = "userName";
@@ -53,10 +55,7 @@ public class BaseSysConf {
     public final static String PLATFORM = "platform";
     public final static String ACCESS_TOKEN = "accessToken";
 
-    // 不能评论
     public final static String CAN_NOT_COMMENT = "0";
-
-
     public final static String CODE = "code";
     public final static String DATA = "data";
     public final static String UID = "uid";
@@ -103,24 +102,38 @@ public class BaseSysConf {
     public final static String EXCHANGE_DIRECT = "exchange.direct";
     public final static String MOGU_BLOG = "mogu.blog";
 
-    // redis相关
+    /**
+     * redis相关
+     */
     public final static String BLOG_SORT_BY_MONTH = "BLOG_SORT_BY_MONTH";
-    // redis分割符
+    /**
+     * redis分割符
+      */
     public final static String REDIS_SEGMENTATION = ":";
     public final static String EQUAL_TO = "=";
-    // 月份集合
+    /**
+     * 月份集合
+     */
     public final static String MONTH_SET = "MONTH_SET";
-    // 博客等级
+    /**
+     * 博客等级
+     */
     public final static String BLOG_LEVEL = "BLOG_LEVEL";
 
 
-    // 字典类型
+    /**
+     * 字典类型
+     */
     public final static String REDIS_DICT_TYPE = "REDIS_DICT_TYPE";
 
-    // 文件分割符
+    /**
+     * 文件分割符
+     */
     public final static String FILE_SEGMENTATION = ",";
 
-    // 系统全局是否标识
+    /**
+     * 系统全局是否标识
+     */
     public static final int YES = 1;
     public static final int NO = 0;
 
@@ -139,7 +152,9 @@ public class BaseSysConf {
     public static final int TWO_TWO_FIVE = 225;
     public static final int ONE_ZERO_TWO_FOUR = 1024;
 
-    // SystemConfig相关
+    /**
+     * SystemConfig相关
+     */
     public final static String UPLOAD_QI_NIU = "uploadQiNiu";
     public final static String UPLOAD_LOCAL = "uploadLocal";
     public final static String UPLOAD_MINIO = "uploadMinio";
@@ -162,7 +177,9 @@ public class BaseSysConf {
     public final static String LIST = "list";
     public final static String JPG = "jpg";
 
-    // AOP相关
+    /**
+     * AOP相关
+     */
     public static final String AUTHOR = "author";
     public static final String BLOG_SORT_UID = "blogSortUid";
     public static final String TAG_UID = "tagUid";
@@ -174,7 +191,9 @@ public class BaseSysConf {
     public static final String CONTENT = "content";
     public static final String TARGET = "target";
 
-    // 参数配置相关
+    /**
+     * 参数配置相关
+     */
     public static final String SYS_DEFAULT_PASSWORD = "SYS_DEFAULT_PASSWORD";
     public static final String BLOG_NEW_COUNT = "BLOG_NEW_COUNT";
     public static final String BLOG_FIRST_COUNT = "BLOG_FIRST_COUNT";

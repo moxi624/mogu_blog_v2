@@ -2,6 +2,8 @@ package com.moxi.mougblog.base.validator;
 
 /**
  * 错误消息模板
+ * @author 陌溪
+ * @date 2020年12月31日21:31:58
  */
 public interface Messages {
     /**

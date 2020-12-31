@@ -369,8 +369,6 @@ export default {
         this.isCheckedAll = true;
         this.chooseTitle = "取消全选";
       }
-
-      console.log("选择列表", this.pictureUids)
     },
     handleDelete: function(picture) {
       this.pictureUids = [picture.uid]

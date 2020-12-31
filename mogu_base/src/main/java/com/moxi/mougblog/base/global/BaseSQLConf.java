@@ -35,7 +35,9 @@ public class BaseSQLConf {
     public final static String PARAMS_VALUE = "params_value";
     public final static String PARAMS_TYPE = "params_type";
 
-    //user表
+    /**
+     * user表
+     */
     public static final String USERNAME = "user_name";
     public static final String USEREMAIL = "email";
     public static final String SOURCE = "source";
@@ -49,7 +51,9 @@ public class BaseSQLConf {
     public static final String TAG_UID = "tag_uid";
     public static final String AVATAR = "avatar";
 
-    // SystemConfig相关
+    /**
+     * SystemConfig相关
+     */
     public final static String UPLOAD_QI_NIU = "upload_qi_niu";
     public final static String UPLOAD_LOCAL = "upload_local";
     public final static String LOCAL_PICTURE_BASE_URL = "local_picture_base_url";
@@ -60,17 +64,25 @@ public class BaseSQLConf {
     public final static String QI_NIU_AREA = "qi_niu_area";
     public final static String PICTURE_PRIORITY = "picture_priority";
 
-    // web_visit表
+    /**
+     * web_visit表
+     */
     public final static String IP = "ip";
 
-    // t_comment表
+    /**
+     * t_comment表
+     */
     public final static String TYPE = "type";
 
-    // t_subject表
+    /**
+     * t_subject表
+     */
     public final static String SUBJECT_NAME = "subject_name";
     public final static String SUBJECT_UID = "subject_uid";
 
-    // t_picture
+    /**
+     * t_picture表
+     */
     public final static String FILE_OLD_NAME = "file_old_name";
     public final static String FILE_PATH = "file_path";
     public final static String FILE_NAME = "file_name";

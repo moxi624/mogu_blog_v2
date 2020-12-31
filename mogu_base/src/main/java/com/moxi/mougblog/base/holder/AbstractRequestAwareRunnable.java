@@ -32,5 +32,8 @@ public abstract class AbstractRequestAwareRunnable implements Runnable {
         }
     }
 
+    /**
+     * 启动
+     */
     protected abstract void onRun();
 }

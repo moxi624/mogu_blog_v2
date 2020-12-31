@@ -187,8 +187,8 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                 count ++;
             }
             // 判断是否存在图片需要获取
-            if(fileUids.length() > 32) {
-                pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), ",");
+            if(fileUids.length() > Constants.NUM_32) {
+                pictureList = this.pictureFeignClient.getPicture(fileUids.toString(), Constants.SYMBOL_COMMA);
                 List<Map<String, Object>> tempPicList = webUtil.getPictureMap(pictureList);
                 picList.addAll(tempPicList);
             }

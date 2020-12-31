@@ -228,7 +228,6 @@ export default {
     getSystemConfigData: function () {
       getSystemConfig().then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          console.log("获取系统配置", response.data)
           this.systemConfig = response.data;
         }
       });

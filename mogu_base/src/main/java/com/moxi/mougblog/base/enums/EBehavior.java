@@ -58,7 +58,9 @@ public enum EBehavior {
         return null;
     }
 
-    public static Map<String, String> getModuleAndOtherData(EBehavior behavior, Map<String, Object> nameAndArgsMap, String bussinessName) {
+    public static Map<String, String> getModuleAndOtherData(EBehavior behavior,
+                                                            Map<String, Object> nameAndArgsMap,
+                                                            String bussinessName) {
         String otherData = "";
         String moduleUid = "";
         switch (behavior) {

@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import systemConfig from "../../views/system/systemConfig";
 
 const app = {
   state: {
@@ -29,7 +30,7 @@ const app = {
     },
     setOpenNotification: (state, openNotificationDialogVisible) => {
       state.openNotificationDialogVisible = openNotificationDialogVisible
-    }
+    },
   },
   actions: {
     ToggleSideBar: ({ commit }) => {

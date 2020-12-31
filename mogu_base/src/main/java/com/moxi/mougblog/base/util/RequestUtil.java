@@ -1,6 +1,7 @@
 package com.moxi.mougblog.base.util;
 
 import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class RequestUtil {
     public static Map<String, String[]> getParametersMap() {
         HttpServletRequest request = RequestHolder.getRequest();
         if (null == request) {
-            return new HashMap<>();
+            return new HashMap<>(Constants.NUM_ONE);
         }
         return request.getParameterMap();
     }

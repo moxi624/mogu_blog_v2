@@ -17,7 +17,6 @@ public final class SysConf extends BaseSysConf {
     public final static String AVATAR = "avatar";
     public final static String PASS_WORD = "passWord";
 
-    //统计
     public final static String BLOG_COUNT = "blogCount";
     public final static String USER_COUNT = "userCount";
     public final static String COMMENT_COUNT = "commentCount";

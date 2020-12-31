@@ -3,6 +3,7 @@ package com.moxi.mogublog.admin.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.moxi.mougblog.base.global.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -80,8 +81,13 @@ public class DruidConfig {
     @Value("{spring.datasource.connectionProperties}")
     private String connectionProperties;
 
-    @Bean // 声明其为Bean实例
-    @Primary // 在同样的DataSource中，首先使用被标注的DataSource
+    /**
+     * 声明其为Bean实例
+     * 在同样的DataSource中，首先使用被标注的DataSource
+     * @return
+     */
+    @Bean
+    @Primary
     public DataSource dataSource() {
         DruidDataSource datasource = new DruidDataSource();
 
@@ -119,7 +125,7 @@ public class DruidConfig {
     @Bean
     public ServletRegistrationBean statViewServlet() {
         ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
-        Map<String, String> initParams = new HashMap<>();
+        Map<String, String> initParams = new HashMap<>(Constants.NUM_TWO);
 
         initParams.put("loginUsername", "admin");
         initParams.put("loginPassword", "123456");
@@ -130,20 +136,19 @@ public class DruidConfig {
         return bean;
     }
 
-
-    //2、配置一个web监控的filter
+    /**
+     * 配置一个web监控的filter
+     * @return
+     */
     @Bean
     public FilterRegistrationBean webStatFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new WebStatFilter());
 
-        Map<String, String> initParams = new HashMap<>();
+        Map<String, String> initParams = new HashMap<>(Constants.NUM_ONE);
         initParams.put("exclusions", "*.vue,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*");
-
         bean.setInitParameters(initParams);
-
         bean.setUrlPatterns(Arrays.asList("/*"));
-
         return bean;
     }
 }

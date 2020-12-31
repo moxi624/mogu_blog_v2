@@ -38,7 +38,6 @@ public class ThrowableUtils {
                         sb.append(error.getField()).append(" ").append(defMsg);
                     } else {
                         sb.append(error.getField()).append(" ").append(defMsg);
-                        // sb.append(error.getField()).append(" ").append(defMsg).append(":").append(rejectedValue);
                     }
                 }
             } else {

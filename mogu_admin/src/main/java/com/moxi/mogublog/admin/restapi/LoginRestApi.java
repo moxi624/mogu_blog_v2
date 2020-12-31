@@ -132,7 +132,7 @@ public class LoginRestApi {
                 expiration * 1000,
                 audience.getBase64Secret());
         String token = tokenHead + jwtToken;
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>(Constants.NUM_ONE);
         result.put(SysConf.TOKEN, token);
 
         //进行登录相关操作
@@ -156,7 +156,7 @@ public class LoginRestApi {
     public String info(HttpServletRequest request,
                        @ApiParam(name = "token", value = "token令牌", required = false) @RequestParam(name = "token", required = false) String token) {
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(Constants.NUM_THREE);
         if (request.getAttribute(SysConf.ADMIN_UID) == null) {
             return ResultUtil.result(SysConf.ERROR, "token用户过期");
         }
@@ -184,7 +184,6 @@ public class LoginRestApi {
     @GetMapping(value = "/getMenu")
     public String getMenu(HttpServletRequest request) {
 
-        Map<String, Object> map = new HashMap<>();
         Collection<CategoryMenu> categoryMenuList = new ArrayList<>();
         Admin admin = adminService.getById(request.getAttribute(SysConf.ADMIN_UID).toString());
 
@@ -246,6 +245,7 @@ public class LoginRestApi {
         List<CategoryMenu> list = new ArrayList<>(parentCategoryMenuList);
 
         //对parent进行排序
+        Map<String, Object> map = new HashMap<>(Constants.NUM_THREE);
         Collections.sort(list);
         map.put(SysConf.PARENT_LIST, list);
         map.put(SysConf.SON_LIST, childCategoryMenuList);

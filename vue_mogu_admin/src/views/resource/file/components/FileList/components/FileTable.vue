@@ -147,9 +147,10 @@
               >解压缩</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-
         </template>
+
       </el-table-column>
+
     </el-table>
 
     <!-- 添加或修改对话框 -->

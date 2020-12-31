@@ -1,6 +1,6 @@
 <template>
   <div class="breadcrumb-wrapper">
-    <div class="title">当前位置：</div>
+    <div class="networkTitle">当前位置：</div>
     <el-breadcrumb v-if="filetype" separator="/">
       <el-breadcrumb-item>全部{{filetypeMap[filetype]}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -78,7 +78,7 @@ export default {
   height 30px
   line-height 30px
   display flex
-  .title, >>> .el-breadcrumb
+  .networkTitle, >>> .el-breadcrumb
     height 30px
     line-height 30px
 </style>
