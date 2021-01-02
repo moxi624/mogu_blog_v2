@@ -2,7 +2,7 @@
   <div>
     <div class="commentBox">
     <span class="left" v-if="isShowAvatar">
-      <img v-if="isShowAvatar" :src="getUserPhoto" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"/>
+      <img v-if="isShowAvatar" :src="getUserPhoto" onerror="onerror=null;src=defaultAvatar"/>
     </span>
 
     <span class="right">
@@ -59,6 +59,7 @@
         count: 1024,
         isShowEmojiPanel: false, // 是否显示表情面板
         isShowAvatar: true, // 是否显示头像
+        defaultAvatar: this.$SysConf.defaultAvatar
       }
     },
     computed: {

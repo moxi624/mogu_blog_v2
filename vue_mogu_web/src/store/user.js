@@ -15,7 +15,7 @@ const app = {
         if(state.userInfo.photoUrl) {
           return state.userInfo.photoUrl
         } else {
-          return "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif";
+          return "https://gitee.com/moxi159753/wx_picture/raw/master/picture/favicon.png";
         }
       } else {
         return "../../static/images/defaultAvatar.png"

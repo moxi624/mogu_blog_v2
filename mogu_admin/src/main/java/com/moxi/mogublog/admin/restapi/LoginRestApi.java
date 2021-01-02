@@ -169,7 +169,7 @@ public class LoginRestApi {
             if (list.size() > 0) {
                 map.put(SysConf.AVATAR, list.get(0));
             } else {
-                map.put(SysConf.AVATAR, "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+                map.put(SysConf.AVATAR, "https://gitee.com/moxi159753/wx_picture/raw/master/picture/favicon.png");
             }
         }
 

@@ -241,11 +241,11 @@
 
 ### Docker搭建蘑菇博客（Eureka分支）
 
-参考 [使用Docker快速搭建蘑菇博客](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，能够快速在Linux服务器中，搭建好博客系统  
+参考 [使用Docker快速搭建蘑菇博客(Eureka分支)](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
 
 ### Docker搭建蘑菇博客（Nacos分支）
 
-参考 [使用Docker快速搭建蘑菇博客（Nacos分支）](http://moguit.cn/#/info?blogUid=8100dcb585fff77e3fa25eed50e3708e)，能够快速在Linux服务器中，搭建好博客系统  
+参考 [使用Docker快速搭建蘑菇博客(Nacos分支)](http://moguit.cn/#/info?blogUid=8100dcb585fff77e3fa25eed50e3708e)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
 
 ### 蘑菇博客部署到云服务器
 

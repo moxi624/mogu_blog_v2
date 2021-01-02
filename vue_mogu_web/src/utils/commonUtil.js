@@ -13,6 +13,13 @@ const ECode = {
   ERROR: "error",
 }
 
+/**
+ * 全局配置文件
+ */
+const SysConf = {
+  defaultAvatar: "https://gitee.com/moxi159753/wx_picture/raw/master/picture/favicon.png", // 默认头像
+}
+
 /** **********************************************************/
 
 /**
@@ -145,5 +152,6 @@ const FUNCTIONS = {
 
 export default {
   ECode,
+  SysConf,
   FUNCTIONS
 }

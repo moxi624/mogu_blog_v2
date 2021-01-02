@@ -48,7 +48,7 @@
       <el-table-column align="center" label="头像" width="120">
         <template slot-scope="scope">
           <img
-            :src="scope.row.photoUrl ? scope.row.photoUrl:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" onerror="onerror=null;src='https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
+            :src="scope.row.photoUrl ? scope.row.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar"
             style="width: 100px;height: 100px;"
           >
         </template>
@@ -322,6 +322,7 @@
         commentStatusDictList: [], //评论状态字典
         genderDictList: [], //评论状态字典
         userTagDictList: [], // 用户标签列表
+        defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
         rules: {
           userName: [
             {required: true, message: '用户名不能为空', trigger: 'blur'},
