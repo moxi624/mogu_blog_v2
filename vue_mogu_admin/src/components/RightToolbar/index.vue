@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import {getCookie, setCookie} from "../../utils/cookieUtils"
+import {setCookie} from "../../utils/cookieUtils"
 export default {
   name: "RightToolbar",
   data() {
@@ -23,9 +23,6 @@ export default {
       type: Boolean,
       // default: true,
     },
-  },
-  created() {
-    console.log("得到状态2", this.showSearch)
   },
   methods: {
     //搜索

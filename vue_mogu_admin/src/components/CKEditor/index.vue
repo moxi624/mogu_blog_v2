@@ -10,7 +10,7 @@ import CKEDITOR from 'CKEDITOR';
 export default {
   props: ["content", "height"],
   mounted() {
-    var that = this;
+    let that = this;
     // 配置ckeditor插件
     CKEDITOR.plugins.addExternal( 'codesnippet', '/static/ckeditor/plugins/codesnippet/', 'plugin.js' );
     CKEDITOR.plugins.addExternal( 'panelbutton', '/static/ckeditor/plugins/panelbutton/', 'plugin.js' );
@@ -41,7 +41,6 @@ export default {
         toolbar: 'toolbar_Full',
         codeSnippet_theme: 'zenburn',
         customConfig: '/static/ckeditor/config.js',
-
         filebrowserImageUploadUrl: process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken(),
         filebrowserUploadUrl: process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken(),
         pasteUploadFileApi: process.env.PICTURE_API + '/file/ckeditorUploadCopyFile?token=' + getToken(),

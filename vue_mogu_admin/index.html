@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>蘑菇云后台管理系统</title>
+  <title>蘑菇博客后台管理系统</title>
   <script id='env'><%= htmlWebpackPlugin.options.env %></script>
 
   <style>
@@ -223,6 +223,23 @@
 
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.10/vue.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/index.js"></script>
+
+  <!-- 引入 CKeditor-->
+<!--  <script src='static/ckeditor/ckeditor.js' type="text/javascript"></script>-->
+  <script src="https://cdn.bootcdn.net/ajax/libs/ckeditor/4.15.1/ckeditor.js"></script>
+<!--  <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>-->
+
+  <!--引入showdown, markdown-html转换组件的CDN加速-->
+  <!--github: https://github.com/showdownjs/showdown -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+
+  <!--引入shuodown, html-markdown转换组件的CDN加速-->
+  <!--github: https://github.com/domchristie/turndown -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
+
+  <!-- ⚠️生产环境请指定版本号，如 https://cdn.jsdelivr.net/npm/vditor@x.x.x/dist... -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vditor/dist/index.min.js" defer></script>
 </head>
 
 <body>
@@ -235,20 +252,4 @@
     </div>
   </div>
 </body>
-
-<!-- 引入 CKeditor-->
-<!--<script src='static/ckeditor/ckeditor.js' type="text/javascript"></script>-->
-<script src="https://cdn.bootcdn.net/ajax/libs/ckeditor/4.15.1/ckeditor.min.js"></script>
-
-<!--引入showdown, markdown-html转换组件的CDN加速-->
-<!--github: https://github.com/showdownjs/showdown -->
-<script src="https://cdn.bootcdn.net/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-
-<!--引入shuodown, html-markdown转换组件的CDN加速-->
-<!--github: https://github.com/domchristie/turndown -->
-<script src="https://cdn.bootcdn.net/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
-
-<!-- ⚠️生产环境请指定版本号，如 https://cdn.jsdelivr.net/npm/vditor@x.x.x/dist... -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor/dist/index.css" />
-<script src="https://cdn.jsdelivr.net/npm/vditor/dist/index.min.js" defer></script>
 </html>
