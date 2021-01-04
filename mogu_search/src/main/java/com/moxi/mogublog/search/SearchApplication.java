@@ -2,6 +2,8 @@ package com.moxi.mogublog.search;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -12,14 +14,15 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
  * @author 陌溪
  * @date 2020年1月10日21:08:23
  */
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, RedisAutoConfiguration.class,
+        RedisRepositoriesAutoConfiguration.class})
 @EnableOpenApi
 @EnableDiscoveryClient
 @EnableFeignClients("com.moxi.mogublog.commons.feign")
 @ComponentScan(basePackages = {
         "com.moxi.mogublog.commons.config.feign",
         "com.moxi.mogublog.commons.handler",
-        "com.moxi.mogublog.utils",
+//        "com.moxi.mogublog.utils",
         "com.moxi.mogublog.search"
 })
 public class SearchApplication {
