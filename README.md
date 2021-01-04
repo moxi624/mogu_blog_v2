@@ -95,7 +95,7 @@
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
-最低配置：1核2G `需要开启虚拟内存`
+最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】
 
 推荐配置：2核4G 【双十二特惠】
 
@@ -231,13 +231,17 @@
 
 ## 快速开始
 
+### [推荐] Windows+VMware一键搭建蘑菇博客本地开发环境
+
+参考 [Windows+VMware一键搭建蘑菇博客本地开发环境](http://www.moguit.cn/#/info?blogOid=583)，快速在 **Windows** 平台搭建蘑菇博客开发环境
+
 ### Windows环境下搭建蘑菇博客
 
 参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在 **Windows**下搭建蘑菇博客的开发环境
 
-### DockerCompose一键部署蘑菇博客(Nacos版)
+### [推荐] DockerCompose一键部署蘑菇博客(Nacos版)
 
-参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在 **Linux** 服务器中，通过执行脚本，一键完成蘑菇博客项目的部署【推荐小伙伴使用此方式~】
+参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在 **Linux** 服务器中，一键完成蘑菇博客项目的部署
 
 ### Docker搭建蘑菇博客（Eureka分支）
 

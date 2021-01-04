@@ -1,0 +1,26 @@
+server:
+  port: 8601
+spring:
+  application:
+    name: mogu-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: prod
+      config:
+        server-addr: nacos:8848
+        #文件后缀
+        file-extension: yaml
+        #指定分组
+        group: prod
+        #指定命名空间
+        namespace: prod
+
+    # 配置Sentinel流控
+    sentinel:
+      transport:
+        #配置Sentinel dashboard地址
+        dashboard: sentinel:8070
+        #默认8719端口,如果被占用会向上扫描。
+        port: 8719

@@ -1,0 +1,18 @@
+server:
+  port: 8608
+
+spring:
+  application:
+    name: mogu-spider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+        namespace: prod
+      config:
+        server-addr: nacos:8848
+        file-extension: yaml
+        #指定分组
+        group: prod
+        #指定命名空间
+        namespace: prod
