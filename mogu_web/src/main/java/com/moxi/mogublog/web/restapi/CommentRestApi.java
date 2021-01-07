@@ -496,7 +496,7 @@ public class CommentRestApi {
         if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getOpenComment())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
         }
-        // 判断博客是否开启评论功能
+        // 判断该博客是否开启评论功能
         if (StringUtils.isNotEmpty(commentVO.getBlogUid())) {
             Blog blog = blogService.getById(commentVO.getBlogUid());
             if (SysConf.CAN_NOT_COMMENT.equals(blog.getOpenComment())) {
@@ -521,8 +521,9 @@ public class CommentRestApi {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
             }
         }
-        String content = commentVO.getContent();
+
         // 判断是否垃圾评论
+        String content = commentVO.getContent();
         if (StringUtils.isCommentSpam(content)) {
             if (StringUtils.isEmpty(jsonResult)) {
                 Integer count = 0;
@@ -546,7 +547,6 @@ public class CommentRestApi {
                     map.put(SysConf.NICKNAME, user.getNickName());
                     map.put(SysConf.TO_NICKNAME, toUser.getNickName());
                     map.put(SysConf.USER_UID, toUser.getUid());
-
                     // 获取评论跳转的链接
                     String commentSource = toComment.getSource();
                     String url = new String();
@@ -591,13 +591,15 @@ public class CommentRestApi {
                 comment.setFirstCommentUid(toComment.getUid());
             }
         } else {
-            // 当该评论是一级评论的时候，说明是对博客详情、留言板、关于我
+            // 当该评论是一级评论的时候，说明是对 博客详情、留言板、关于我
             // 判断是否开启邮件通知
             SystemConfig systemConfig = systemConfigService.getConfig();
             if (systemConfig != null && EOpenStatus.OPEN.equals(systemConfig.getStartEmailNotification())) {
                 if (StringUtils.isNotEmpty(systemConfig.getEmail())) {
                     log.info("发送评论邮件通知");
-                    String commentContent = "网站收到新的评论: " + commentVO.getContent();
+                    String sourceName = ECommentSource.valueOf(commentVO.getSource()).getName();
+                    String linkText = "<a href=\" " + getUrlByCommentSource(commentVO) + "\">" + sourceName + "</a>\n";
+                    String commentContent = linkText + "收到新的评论: " + commentVO.getContent();
                     rabbitMqUtil.sendSimpleEmail(systemConfig.getEmail(), commentContent);
                 } else {
                     log.error("网站没有配置通知接收的邮箱地址！");
@@ -781,6 +783,35 @@ public class CommentRestApi {
                 getToCommentList(item, commentList, resultList);
             }
         }
+    }
+
+    /**
+     * 通过评论类型跳转到对应的页面
+     * @param commentVO
+     * @return
+     */
+    private String getUrlByCommentSource(CommentVO commentVO) {
+        String linkUrl = new String();
+        String commentSource = commentVO.getSource();
+        switch (commentSource) {
+            case "ABOUT": {
+                linkUrl = dataWebsiteUrl + "about";
+            }
+            break;
+            case "BLOG_INFO": {
+                linkUrl = dataWebsiteUrl + "info?blogUid=" + commentVO.getBlogUid();
+            }
+            break;
+            case "MESSAGE_BOARD": {
+                linkUrl = dataWebsiteUrl + "messageBoard";
+            }
+            break;
+            default: {
+                linkUrl = dataWebsiteUrl;
+                log.error("跳转到其它链接");
+            }
+        }
+        return linkUrl;
     }
 
 }
