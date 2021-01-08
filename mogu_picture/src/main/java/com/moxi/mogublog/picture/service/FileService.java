@@ -2,11 +2,13 @@ package com.moxi.mogublog.picture.service;
 
 import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.SystemConfig;
+import com.moxi.mogublog.picture.form.SearchPictureForm;
 import com.moxi.mougblog.base.service.SuperService;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +53,16 @@ public interface FileService extends SuperService<File> {
      * @return
      */
     String uploadPictureByUrl(FileVO fileVO);
+
+    /**
+     * 通过url 上传图片
+     *
+     * @param searchKey
+     * @param systemConfig
+     * @param imageUrls
+     * @return
+     */
+    Object uploadPictureByUrl(SearchPictureForm searchKey, ArrayList<String> imageUrls);
 
     /**
      * CKeditor图像中的图片上传

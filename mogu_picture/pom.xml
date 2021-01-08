@@ -126,6 +126,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+              <!-- <dependency>-->
+            <!-- <groupId>us.codecraft</groupId>-->
+            <!-- <artifactId>webmagic-core</artifactId>-->
+            <!-- <version>0.7.3</version>-->
+       <!--  </dependency>-->
 
     </dependencies>
 
