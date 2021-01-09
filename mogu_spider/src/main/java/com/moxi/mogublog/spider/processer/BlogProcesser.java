@@ -7,15 +7,18 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.util.List;
 
+/**
+ * 爬取的博客页面处理
+ *
+ * @author 陌溪
+ * @date 2021年1月8日16:47:34
+ */
 @Component
 public class BlogProcesser implements PageProcessor {
-
 
     /**
      * 处理我们需要的页面
      */
-
-
     @Override
     public void process(Page page) {
         List<String> list = page.getHtml().regex("https://blog.csdn.net/[a-zA-Z0-9_]+/article/details/[0-9]{9}").all();

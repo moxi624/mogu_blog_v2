@@ -285,3 +285,14 @@ ALTER TABLE  t_blog ADD outside_link varchar(1024) NULL COMMENT "外链【如果
 	@date 2020年11月13日10:11:09
 */
 alter table t_blog add oid int auto_increment UNIQUE comment '唯一oid';
+
+
+/*
+	菜单表 增加新的数据
+	@date 2021年1月9日16:58:36
+*/
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('9bbe311a4ccb087560e6e2c6d40cf271','图片爬取','2','用于标题图片的爬取','7668dabe69473f59d1516d84cb99d583','/spider/pictureSpider','el-icon-picture-outline','0','1','2021-01-08 22:08:16','2021-01-08 22:08:16','1','0','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('7668dabe69473f59d1516d84cb99d583','爬虫管理','1','爬虫管理',NULL,'/spider','el-icon-search','0','1','2021-01-08 22:07:12','2021-01-08 22:07:12','1','0','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('5bf9bd28d387ef923f2c5d11ec01fbbd','按创建时间排序','3','按创建时间排序','7cb1a6b7462832bf831a18a28eea94cd','/subjectItem/sortByCreateTime',NULL,'0','1','2020-12-08 20:38:10','2020-12-08 20:38:10','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('af0e753d3ea0adf5cd8cf1dd55f162c2','接口聚合','2','聚合所有模块的接口','baace3dc03d34c54b81761dce8243814','http://localhost:8607/doc.html','el-icon-ice-cream-round','5','1','2020-12-05 15:42:51','2020-12-05 15:42:51','1','0','1');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('065cda845549289b2afcd0129d87c2c0','新增用户','3','新增用户','fb4237a353d0418ab42c748b7c1d64c6','/user/add',NULL,'0','1','2020-09-29 20:40:09','2020-09-29 20:40:30','1','1','0');

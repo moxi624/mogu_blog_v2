@@ -7,12 +7,10 @@ import com.moxi.mougblog.base.entity.SuperEntity;
 import lombok.Data;
 
 /**
- * <p>
  * 文件实体类
- * </p>
  *
- * @author xuzhixiang
- * @since 2018-09-17
+ * @author 陌溪
+ * @since 2021年1月8日19:46:41
  */
 @TableName("t_blog_spider")
 @Data

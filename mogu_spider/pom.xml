@@ -23,7 +23,7 @@
     <dependencies>
 
         <dependency>
-            <artifactId>mogu_base</artifactId>
+            <artifactId>mogu_commons</artifactId>
             <groupId>com.moxi</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -31,13 +31,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <!-- 如果在使用自带tomcat请注释下面，如果使用第三方tomcat不要注释下面 -->
-            <!--  <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions> -->
         </dependency>
 
         <dependency>
@@ -50,36 +43,18 @@
             <artifactId>httpcore</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet.api.version}</version>
-        </dependency>
-
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${swagger.starter.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.ui.version}</version>
-        </dependency>
-
-        <!-- 添加Eureka相关依赖 -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>-->
-        <!--        </dependency>-->
 
         <!-- 添加Nacos相关依赖-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

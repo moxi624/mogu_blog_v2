@@ -45,4 +45,9 @@ public class FileVO extends BaseVO<FileVO> {
      */
     private Map<String, String> systemConfig;
 
+    /**
+     * 上传图片时携带的token令牌
+     */
+    private String token;
+
 }

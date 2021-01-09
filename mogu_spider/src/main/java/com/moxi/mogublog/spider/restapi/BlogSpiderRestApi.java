@@ -14,16 +14,14 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 
 /**
- * <p>
  * 博客爬取RestApi
- * </p>
  *
  * @author 陌溪
- * @since 2020年2月8日11:02:09
+ * @date 2020年2月8日11:02:09
  */
 @RestController
 @RequestMapping("/spider")
-@Api(value = "博客爬取RestApi", tags = {"BlogSpiderRestApi"})
+@Api(value = "博客爬取RestApi", tags = {"博客爬取相关接口"})
 @Slf4j
 public class BlogSpiderRestApi {
 

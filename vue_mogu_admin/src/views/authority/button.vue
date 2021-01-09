@@ -11,7 +11,7 @@
         clearable></el-cascader>
 
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFind" v-permission="'/categoryMenu/getList'">查找</el-button>
-      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/categoryMenu/add'">添加按钮</el-button>
+      <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/categoryMenu/add'">添加接口</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -181,8 +181,8 @@
     <!-- 添加或修改对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="按钮名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" placeholder="请输入按钮名称" auto-complete="off"></el-input>
+        <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" placeholder="请输入接口名称" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
@@ -202,7 +202,7 @@
           </el-select>
         </el-form-item>
 
-        <!-- 用于按钮 -->
+        <!-- 用于接口 -->
         <el-form-item
           v-if="form.menuType == 1"
           label="父菜单名"
@@ -216,8 +216,8 @@
             clearable></el-cascader>
         </el-form-item>
 
-        <el-form-item label="按钮介绍" :label-width="formLabelWidth" prop="summary">
-          <el-input v-model="form.summary" placeholder="请输入按钮简介" auto-complete="off"></el-input>
+        <el-form-item label="接口介绍" :label-width="formLabelWidth" prop="summary">
+          <el-input v-model="form.summary" placeholder="请输入接口简介" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="图标" :label-width="formLabelWidth" prop="icon" v-if="form.menuType == 0">
@@ -268,7 +268,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0, //总数量
-      title: "增加按钮",
+      title: "增加接口",
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
@@ -408,7 +408,7 @@ export default {
       this.buttonList();
     },
     handleAdd: function() {
-      this.title = "增加按钮"
+      this.title = "增加接口"
       this.dialogFormVisible = true;
       this.form = this.getFormObject();
       this.isEditForm = false;
@@ -421,11 +421,11 @@ export default {
       parentUid.push(parentRow.parentUid)
       parentUid.push(parentRow.uid)
       this.buttonParentUid = parentUid
-      this.title = "编辑按钮"
+      this.title = "编辑接口"
       this.form = row;
     },
     handleStick: function(row) {
-      this.$confirm("此操作将会把该按钮放到首位, 是否继续?", "提示", {
+      this.$confirm("此操作将会把该接口放到首位, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -448,7 +448,7 @@ export default {
     },
     handleDelete: function(row) {
       var that = this;
-      this.$confirm("此操作将把按钮删除, 是否继续?", "提示", {
+      this.$confirm("此操作将把接口删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -475,7 +475,7 @@ export default {
         if(!valid) {
           console.log("校验失败")
         } else {
-          // 如果菜单类型是 按钮，那么设置菜单等级为 3
+          // 如果菜单类型是 接口，那么设置菜单等级为 3
           let menuType = this.form.menuType
           if(menuType == 1) {
             this.form.menuLevel = 3

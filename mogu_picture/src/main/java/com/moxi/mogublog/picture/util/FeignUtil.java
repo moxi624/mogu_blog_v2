@@ -109,7 +109,6 @@ public class FeignUtil {
             throw new QueryException(ErrorCode.PLEASE_SET_QI_NIU, MessageConf.PLEASE_SET_QI_NIU);
         }
 
-
         SystemConfig systemConfig = new SystemConfig();
         if (systemConfigMap == null) {
             throw new QueryException(ErrorCode.SYSTEM_CONFIG_NOT_EXIST, MessageConf.SYSTEM_CONFIG_NOT_EXIST);

@@ -255,8 +255,16 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
 
     @Override
     public String uploadPictureByUrl(FileVO fileVO) {
-        Map<String, String> resultMap = fileVO.getSystemConfig();
-        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(resultMap);
+        // 获取配置文件
+        SystemConfig systemConfig;
+        if(fileVO.getSystemConfig() != null) {
+            Map<String, String> resultMap = fileVO.getSystemConfig();
+            systemConfig = feignUtil.getSystemConfigByMap(resultMap);
+        } else {
+            // 从Redis中获取七牛云配置文件
+            systemConfig = feignUtil.getSystemConfig();
+        }
+
         String userUid = fileVO.getUserUid();
         String adminUid = fileVO.getAdminUid();
         String projectName = fileVO.getProjectName();
@@ -316,70 +324,6 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
                 file.setStatus(EStatus.ENABLE);
                 file.setUserUid(userUid);
                 file.setAdminUid(adminUid);
-                fileService.save(file);
-                lists.add(file);
-            }
-            //保存成功返回数据
-            return ResultUtil.result(SysConf.SUCCESS, lists);
-        }
-        return ResultUtil.result(SysConf.ERROR, "请上传图片");
-    }
-
-    @Override
-    public Object uploadPictureByUrl(SearchPictureForm fileVO, ArrayList<String> urlList) {
-        Map<String, String> resultMap = fileVO.getSystemConfig();
-        SystemConfig systemConfig = feignUtil.getSystemConfigByMap(resultMap);
-        String userUid = fileVO.getUserUid();
-        String adminUid = fileVO.getAdminUid();
-        String projectName = fileVO.getProjectName();
-        String sortName = fileVO.getSortName();
-        //projectName现在默认base
-        QueryWrapper<FileSort> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(SQLConf.SORT_NAME, sortName);
-        queryWrapper.eq(SQLConf.PROJECT_NAME, projectName);
-        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        List<FileSort> fileSorts = fileSortService.list(queryWrapper);
-        FileSort fileSort = null;
-        if (fileSorts.size() > 0) {
-            fileSort = fileSorts.get(0);
-        } else {
-            throw new InsertException(ErrorCode.INSERT_DEFAULT_ERROR, "文件不被允许上传, 请填写文件分类信息");
-        }
-        List<com.moxi.mogublog.commons.entity.File> lists = new ArrayList<>();
-        //文件上传
-        if (urlList != null && urlList.size() > 0) {
-            for (String itemUrl : urlList) {
-                //获取新文件名(默认为jpg)
-                String newFileName = System.currentTimeMillis() + ".jpg";
-                // 将图片上传到本地服务器中以及七牛云中
-                String picurl = "";
-                String qiNiuUrl = "";
-                String minioUrl = "";
-                // 判断是否能够上传至本地
-                if (EOpenStatus.OPEN.equals(systemConfig.getUploadLocal())) {
-                    picurl = localFileService.uploadPictureByUrl(itemUrl, fileSort);
-                }
-                // 上传七牛云，判断是否能够上传七牛云
-                if (EOpenStatus.OPEN.equals(systemConfig.getUploadMinio())) {
-                    minioUrl = minioService.uploadPictureByUrl(itemUrl);
-                }
-                // 上传七牛云，判断是否能够上传七牛云
-                if (EOpenStatus.OPEN.equals(systemConfig.getUploadQiNiu())) {
-                    qiNiuUrl = qiniuService.uploadPictureByUrl(itemUrl, systemConfig);
-                }
-                com.moxi.mogublog.commons.entity.File file = new com.moxi.mogublog.commons.entity.File();
-                file.setCreateTime(new Date(System.currentTimeMillis()));
-                file.setFileSortUid(fileSort.getUid());
-                file.setFileOldName(itemUrl);
-                file.setFileSize(0L);
-                file.setPicExpandedName("jpg");
-                file.setPicName(newFileName);
-                file.setPicUrl(picurl);
-                file.setQiNiuUrl(qiNiuUrl);
-                file.setMinioUrl(minioUrl);
-                file.setStatus(EStatus.ENABLE);
-                file.setUserUid("");
-                file.setAdminUid("");
                 fileService.save(file);
                 lists.add(file);
             }

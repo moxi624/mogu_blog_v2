@@ -10,6 +10,7 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
@@ -25,7 +26,11 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class PictureProcesser implements PageProcessor {
+
+    // 获取img标签正则
+    private static final String IMGURL_REG = "<img.*?src=.*?photos.*?/>";
 
     @Override
     public void process(Page page) {
@@ -101,8 +106,7 @@ public class PictureProcesser implements PageProcessor {
         return sb.toString();
     }
 
-    // 获取img标签正则
-    private static final String IMGURL_REG = "<img.*?src=.*?photos.*?/>";
+
 
     //获取ImageUrl地址
     private static List<String> getImageUrl(String html) {

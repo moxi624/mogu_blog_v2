@@ -55,16 +55,6 @@ public interface FileService extends SuperService<File> {
     String uploadPictureByUrl(FileVO fileVO);
 
     /**
-     * 通过url 上传图片
-     *
-     * @param searchKey
-     * @param systemConfig
-     * @param imageUrls
-     * @return
-     */
-    Object uploadPictureByUrl(SearchPictureForm searchKey, ArrayList<String> imageUrls);
-
-    /**
      * CKeditor图像中的图片上传
      *
      * @param request

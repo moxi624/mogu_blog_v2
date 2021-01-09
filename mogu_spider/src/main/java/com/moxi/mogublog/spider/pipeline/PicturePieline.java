@@ -1,9 +1,8 @@
-package com.moxi.mogublog.picture.spider;
+package com.moxi.mogublog.spider.pipeline;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
-import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
@@ -17,23 +16,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 图片传输管道
+ *
+ * @author 陌溪
+ * @date 2021年1月8日16:41:32
+ */
 @Component
 public class PicturePieline implements Pipeline {
-
-    @Override
-    public void process(ResultItems resultItems, Task task) {
-        //获取图片参数
-        String imgSrc = resultItems.get("imgSrc");
-        //获取关键词
-        String searchKey = resultItems.get("searchKey");
-        List imgSrcs = JSON.parseObject(imgSrc, List.class);
-        if (CollectionUtil.isEmpty(imgSrcs)) {
-            return;
-        }
-        //下载图片并上传到七牛云
-        List localFileUrl = Download(imgSrcs);
-
-    }
 
     //下载图片
     private static List<String> Download(List<String> listImgSrc) {
@@ -44,7 +34,7 @@ public class PicturePieline implements Pipeline {
             for (String url : listImgSrc) {
                 //开始时间
                 Date begindate2 = new Date();
-                String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
+                String imageName = url.substring(url.lastIndexOf("/") + 1);
                 URL uri = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
                 conn.setConnectTimeout(50000);
@@ -78,5 +68,20 @@ public class PicturePieline implements Pipeline {
             System.out.println(e.getMessage());
         }
         return localFile;
+    }
+
+    @Override
+    public void process(ResultItems resultItems, Task task) {
+        //获取图片参数
+        String imgSrc = resultItems.get("imgSrc");
+        //获取关键词
+        String searchKey = resultItems.get("searchKey");
+        List imgSrcs = JSON.parseObject(imgSrc, List.class);
+        if (CollectionUtil.isEmpty(imgSrcs)) {
+            return;
+        }
+        //下载图片并上传到七牛云
+        List localFileUrl = Download(imgSrcs);
+
     }
 }

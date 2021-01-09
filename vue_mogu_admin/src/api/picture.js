@@ -39,3 +39,16 @@ export function setCover(params) {
     data: params
   })
 }
+
+/**
+ * 提交URL到 mogu-picture
+ * @param params
+ * @returns {*}
+ */
+export function uploadPicsByUrl(params) {
+  return request({
+    url: process.env.PICTURE_API + '/file/uploadPicsByUrl',
+    method: 'post',
+    data: params
+  })
+}

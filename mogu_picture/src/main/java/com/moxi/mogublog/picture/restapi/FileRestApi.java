@@ -48,10 +48,6 @@ public class FileRestApi {
     private FeignUtil feignUtil;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private PicturePieline picturePieline;
-    @Autowired
-    private PictureProcesser pictureProcesser;
 
     @ApiOperation(value = "截图上传", notes = "截图上传")
     @RequestMapping(value = "/cropperPicture", method = RequestMethod.POST)
@@ -101,7 +97,7 @@ public class FileRestApi {
     }
 
     /**
-     * 通过URL将图片上传到自己服务器中【用于Github和Gitee的头像上传】
+     * 通过URL将图片上传到自己服务器中【主要用于Github和Gitee的头像上传】
      *
      * @param fileVO
      * @param result
@@ -119,7 +115,7 @@ public class FileRestApi {
      *
      * @return
      */
-    @ApiOperation(value = "图像中的图片上传", notes = "图像中的图片上传")
+    @ApiOperation(value = "Ckeditor图像中的图片上传", notes = "Ckeditor图像中的图片上传")
     @RequestMapping(value = "/ckeditorUploadFile", method = RequestMethod.POST)
     public Object ckeditorUploadFile(HttpServletRequest request) {
         return fileService.ckeditorUploadFile(request);
@@ -145,110 +141,6 @@ public class FileRestApi {
     @RequestMapping(value = "/ckeditorUploadToolFile", method = RequestMethod.POST)
     public Object ckeditorUploadToolFile(HttpServletRequest request) {
         return fileService.ckeditorUploadToolFile(request);
-    }
-
-    private Spider spider;
-
-    /**
-     * 通过爬虫爬取关键词上传图片到自己服务器中
-     *
-     * @return
-     */
-//    @ApiOperation(value = "通过爬虫爬取关键词上传图片", notes = "通过爬虫上传图片")
-//    @PostMapping("/spiderPics")
-//    public Object spiderPics(@RequestBody SearchPictureForm form) {
-//        //开启蜘蛛爬取内容
-//        String[] urls = new String[form.getCount()];
-//        String searchUrl = "https://foter.com/search/instant/?q=" + form.getSearchKey();
-//        urls[0] = searchUrl;
-//        for (int i = 1; i < form.getCount(); i++) {
-//            int pageIndex = i + 1;
-//            urls[i] = searchUrl + "&page=" + pageIndex;
-//        }
-//        spider = Spider.create(pictureProcesser)
-//                .addUrl(urls)
-//                .addPipeline(picturePieline)
-//                .setScheduler(new QueueScheduler())
-//                .thread(10);
-//
-//        spider.start();
-//        return "开始爬取";
-//    }
-    @ApiOperation(value = "通过爬虫爬取关键词上传图片", notes = "通过爬虫上传图片")
-    @PostMapping("/spiderPics")
-    public Object spiderPics(@RequestBody SearchPictureForm form) {
-        //开启蜘蛛爬取内容
-        String[] urls = new String[form.getCount()];
-        String searchUrl = "https://foter.com/search/instant/?q=" + form.getSearchKey();
-        urls[0] = searchUrl;
-        ArrayList<String> imageUrls = new ArrayList<>();
-        for (int i = 1; i < form.getCount(); i++) {
-            int pageIndex = i + 1;
-            urls[i] = searchUrl + "&page=" + pageIndex;
-        }
-        for (String url : urls) {
-            String html = null;
-            try {
-                html = getHtml(url);
-            } catch (Exception e) {
-                continue;
-            }
-            List<String> imageUrl = getImageUrl(html);
-            imageUrls.addAll(imageUrl);
-        }
-        fileService.uploadPictureByUrl(form, imageUrls);
-        return "";
-//        spider = Spider.create(pictureProcesser)
-//                .addUrl(urls)
-//                .addPipeline(picturePieline)
-//                .setScheduler(new QueueScheduler())
-//                .thread(10);
-//
-//        spider.start();
-//        return "开始爬取";
-    }
-
-    /**
-     * 解析html
-     *
-     * @param url
-     * @return
-     * @throws Exception
-     */
-    private static String getHtml(String url) throws Exception {
-        URL url1 = new URL(url);//使用java.net.URL
-        HttpURLConnection connection = (HttpURLConnection) url1.
-                openConnection();
-        connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-        InputStream in = connection.getInputStream();//获取输入流
-        InputStreamReader isr = new InputStreamReader(in);//流的包装
-        BufferedReader br = new BufferedReader(isr);
-
-        String line;
-        StringBuffer sb = new StringBuffer();
-        while ((line = br.readLine()) != null) {//整行读取
-            sb.append(line, 0, line.length());//添加到StringBuffer中
-            sb.append('\n');//添加换行符
-        }
-        //关闭各种流，先声明的后关闭
-        br.close();
-        isr.close();
-        in.close();
-        return sb.toString();
-    }
-
-    // 获取img标签正则
-    private static final String IMGURL_REG = "<img.*?src=.*?photos.*?/>";
-
-    //获取ImageUrl地址
-    private static List<String> getImageUrl(String html) {
-        Pattern compile = Pattern.compile(IMGURL_REG);
-        Matcher matcher = compile.matcher(html);
-        List<String> listimgurl = new ArrayList<String>();
-        while (matcher.find()) {
-            listimgurl.add(matcher.group());
-        }
-        return listimgurl;
     }
 }
 

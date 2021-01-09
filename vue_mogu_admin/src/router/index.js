@@ -177,6 +177,22 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/spider',
+    component: Layout,
+    redirect: '/spider/pictureSpider',
+    name: '爬虫管理',
+    meta: { title: '爬虫管理', icon: 'message1' },
+    children: [
+      {
+        path: 'pictureSpider',
+        name: '图片爬取',
+        component: () => import('@/views/spider/pictureSpider'),
+        meta: { title: '图片爬取', icon: 'table' }
+      }
+    ]
+  },
+
+  {
     path: '/picture',
     component: Layout,
     redirect: '/picture/pictureSort',
