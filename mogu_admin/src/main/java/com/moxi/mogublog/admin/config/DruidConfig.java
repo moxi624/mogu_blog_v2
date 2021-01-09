@@ -84,6 +84,7 @@ public class DruidConfig {
     /**
      * 声明其为Bean实例
      * 在同样的DataSource中，首先使用被标注的DataSource
+     *
      * @return
      */
     @Bean
@@ -138,6 +139,7 @@ public class DruidConfig {
 
     /**
      * 配置一个web监控的filter
+     *
      * @return
      */
     @Bean

@@ -1,11 +1,9 @@
 package com.moxi.mogublog.spider.restapi;
 
-
 import com.moxi.mogublog.spider.entity.PictureSpider;
 import com.moxi.mogublog.spider.pipeline.PicturePieline;
 import com.moxi.mogublog.spider.processer.PictureProcesser;
 import com.moxi.mogublog.utils.ResultUtil;
-import com.sun.deploy.net.URLEncoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +38,9 @@ public class PictureSpiderRestApi {
     public String spiderPicture(@RequestBody PictureSpider pictureSpider) throws UnsupportedEncodingException {
         String searchUrl;
         if (pictureSpider.getCurrentPage() > 1) {
-            String keyword = URLEncoder.encode(pictureSpider.getKeyword(), "UTF-8");
-            searchUrl = "https://foter.com/search/instant/?q=" + keyword + "&page=" + pictureSpider.getCurrentPage();
+            searchUrl = "https://foter.com/search/instant/?q=" + pictureSpider.getKeyword() + "&page=" + pictureSpider.getCurrentPage();
         } else {
-            searchUrl = "https://foter.com/search/instant/?q=" + URLEncoder.encode(pictureSpider.getKeyword(), "UTF-8");
+            searchUrl = "https://foter.com/search/instant/?q=" + pictureSpider.getKeyword();
         }
         String html = pictureProcesser.getHtml(searchUrl);
         List<String> imageUrlList = pictureProcesser.getImageUrl(html);

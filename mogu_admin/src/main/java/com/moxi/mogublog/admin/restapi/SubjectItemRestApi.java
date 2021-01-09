@@ -79,7 +79,7 @@ public class SubjectItemRestApi {
     @ApiOperation(value = "通过创建时间排序专题列表", notes = "通过创建时间排序专题列表", response = String.class)
     @PostMapping("/sortByCreateTime")
     public String sortByCreateTime(@ApiParam(name = "subjectUid", value = "专题uid") @RequestParam(name = "subjectUid", required = true) String subjectUid,
-            @ApiParam(name = "isDesc", value = "是否从大到小排列") @RequestParam(name = "isDesc", required = false, defaultValue = "false") Boolean isDesc) {
+                                   @ApiParam(name = "isDesc", value = "是否从大到小排列") @RequestParam(name = "isDesc", required = false, defaultValue = "false") Boolean isDesc) {
         log.info("通过点击量排序博客分类");
         return subjectItemService.sortByCreateTime(subjectUid, isDesc);
     }
