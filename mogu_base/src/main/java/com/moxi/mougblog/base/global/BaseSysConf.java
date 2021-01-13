@@ -175,7 +175,7 @@ public class BaseSysConf {
     public final static String PICTURE = "picture";
     public final static String PICTURE_TOKEN = "pictureToken";
     public final static String LIST = "list";
-    public final static String JPG = "jpg";
+
 
     /**
      * AOP相关

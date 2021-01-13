@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.FileSort;
 import com.moxi.mogublog.commons.entity.SystemConfig;
-import com.moxi.mogublog.picture.form.SearchPictureForm;
 import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.picture.global.SQLConf;
 import com.moxi.mogublog.picture.global.SysConf;
@@ -530,7 +529,7 @@ public class FileServiceImpl extends SuperServiceImpl<FileMapper, File> implemen
         file.setFileSortUid(fileSort.getUid());
         file.setFileOldName(itemUrl);
         file.setFileSize(0L);
-        file.setPicExpandedName(SysConf.JPG);
+        file.setPicExpandedName(Constants.FILE_SUFFIX_JPG);
         file.setPicName(newFileName);
         // 设置本地图片
         file.setPicUrl(systemConfig.getLocalPictureBaseUrl() + localUrl);

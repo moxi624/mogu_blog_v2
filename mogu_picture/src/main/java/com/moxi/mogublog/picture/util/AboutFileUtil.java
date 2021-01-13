@@ -14,11 +14,25 @@ import java.io.*;
 @Slf4j
 public class AboutFileUtil {
 
-    public static final String[] IMG_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp"};
+    public static final String[] IMG_FILE = {
+            Constants.FILE_SUFFIX_BMP,
+            Constants.FILE_SUFFIX_JPG,
+            Constants.FILE_SUFFIX_PNG,
+            Constants.FILE_SUFFIX_TIF,
+            Constants.FILE_SUFFIX_GIF,
+            Constants.FILE_SUFFIX_JPEG,
+            Constants.FILE_SUFFIX_WEBP};
     public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java"};
     public static final String[] VIDEO_FILE = {"avi", "mp4", "mpg", "mov", "swf"};
     public static final String[] MUSIC_FILE = {"wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"};
-    public static final String[] ALL_FILE = {"bmp", "jpg", "png", "tif", "gif", "jpeg", "webp",
+    public static final String[] ALL_FILE ={
+            Constants.FILE_SUFFIX_BMP,
+            Constants.FILE_SUFFIX_JPG,
+            Constants.FILE_SUFFIX_PNG,
+            Constants.FILE_SUFFIX_TIF,
+            Constants.FILE_SUFFIX_GIF,
+            Constants.FILE_SUFFIX_JPEG,
+            Constants.FILE_SUFFIX_WEBP,
             "doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java",
             "avi", "mp4", "mpg", "mov", "swf",
             "wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"
