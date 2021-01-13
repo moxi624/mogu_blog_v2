@@ -33,6 +33,9 @@ public class Constants {
     /**
      * 文件名后缀
      */
+    public final static String FILE_SUFFIX_WEBP="webp";
+    public final static String FILE_SUFFIX_TIF="tif";
+    public final static String FILE_SUFFIX_BMP="bmp";
     public final static String FILE_SUFFIX_PPT = "ppt";
     public final static String FILE_SUFFIX_XLS = "xls";
     public final static String FILE_SUFFIX_PDF = "pdf";
