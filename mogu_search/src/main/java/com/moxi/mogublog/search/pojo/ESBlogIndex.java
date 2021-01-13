@@ -43,4 +43,6 @@ public class ESBlogIndex {
     private List<String> tagUidList;
 
     private List<String> tagNameList;
+
+
 }
