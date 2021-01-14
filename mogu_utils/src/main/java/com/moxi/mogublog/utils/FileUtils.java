@@ -164,6 +164,20 @@ public class FileUtils {
     }
 
     /**
+     * 根据OriginalFilename获取FileName【去除文件后缀】
+     * @param originalFilename
+     * @return
+     */
+    public static String getFileName(String originalFilename) {
+        String fileName = "";
+        if (StringUtils.isNotBlank(originalFilename) &&
+                StringUtils.contains(originalFilename, ".")) {
+            fileName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+        }
+        return fileName;
+    }
+
+    /**
      * 从Request中获取文件
      *
      * @return

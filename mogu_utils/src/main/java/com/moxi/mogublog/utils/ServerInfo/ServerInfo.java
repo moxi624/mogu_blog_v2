@@ -156,8 +156,8 @@ public class ServerInfo {
 
         cpu.setCpuNum(processor.getLogicalProcessorCount());
         cpu.setTotal(Arith.round(Arith.mul(totalCpu, 100), 2));
-        cpu.setSys(Arith.round(Arith.mul(user / totalCpu, 100), 2));
-        cpu.setUsed(Arith.round(Arith.mul(cSys / totalCpu, 100), 2));
+        cpu.setSys(Arith.round(Arith.mul(cSys / totalCpu, 100), 2));
+        cpu.setUsed(Arith.round(Arith.mul( user/ totalCpu, 100), 2));
         cpu.setWait(Arith.round(Arith.mul(iowait / totalCpu, 100), 2));
         cpu.setFree(Arith.round(Arith.mul(idle / totalCpu, 100), 2));
     }
