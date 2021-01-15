@@ -27,6 +27,7 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "screenfull": "^3.3.3",
+    "showdown-katex": "^0.8.0",
     "sortablejs": "^1.10.2",
     "style-loader": "^1.2.1",
     "stylus": "^0.54.8",
