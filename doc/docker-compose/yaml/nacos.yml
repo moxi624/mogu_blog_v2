@@ -4,7 +4,7 @@ services:
     image: registry.cn-shenzhen.aliyuncs.com/mogublog/nacos-server
     container_name: nacos
     env_file:
-      - ./nacos/nacos-msyql.env
+      - ./nacos/nacos-config.env
     volumes:
       - ../log/nacos/:/home/nacos/logs
       - ./nacos/custom.properties:/home/nacos/init.d/custom.properties

@@ -51,6 +51,8 @@
         <minio.version>7.1.4</minio.version>
         <spring.mock.version>2.0.8</spring.mock.version>
         <knife4j.version>3.0.2</knife4j.version>
+        <spring-cloud-alibaba.version>2.2.4.RELEASE</spring-cloud-alibaba.version>
+        <sentinel.version>2.1.0.RELEASE</sentinel.version>
     </properties>
 
 
@@ -83,7 +85,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.1.0.RELEASE</version>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
