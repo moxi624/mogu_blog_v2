@@ -2,6 +2,7 @@ package com.moxi.mogublog.picture.util;
 
 import com.moxi.mougblog.base.global.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.*;
 
@@ -22,21 +23,56 @@ public class AboutFileUtil {
             Constants.FILE_SUFFIX_GIF,
             Constants.FILE_SUFFIX_JPEG,
             Constants.FILE_SUFFIX_WEBP};
-    public static final String[] DOC_FILE = {"doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java"};
-    public static final String[] VIDEO_FILE = {"avi", "mp4", "mpg", "mov", "swf"};
-    public static final String[] MUSIC_FILE = {"wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"};
-    public static final String[] ALL_FILE ={
-            Constants.FILE_SUFFIX_BMP,
-            Constants.FILE_SUFFIX_JPG,
-            Constants.FILE_SUFFIX_PNG,
-            Constants.FILE_SUFFIX_TIF,
-            Constants.FILE_SUFFIX_GIF,
-            Constants.FILE_SUFFIX_JPEG,
-            Constants.FILE_SUFFIX_WEBP,
-            "doc", "docx", "txt", "hlp", "wps", "rtf", "html", "pdf", "md", "sql", "css", "js", "vue", "java",
-            "avi", "mp4", "mpg", "mov", "swf",
-            "wav", "aif", "au", "mp3", "ram", "wma", "mmf", "amr", "aac", "flac"
-    };
+    public static final String[] DOC_FILE = {
+            Constants.FILE_SUFFIX_DOC,
+            Constants.FILE_SUFFIX_DOCX,
+            Constants.FILE_SUFFIX_TXT,
+            Constants.FILE_SUFFIX_HLP,
+            Constants.FILE_SUFFIX_WPS,
+            Constants.FILE_SUFFIX_RTF,
+            Constants.FILE_SUFFIX_XLS,
+            Constants.FILE_SUFFIX_XLSX,
+            Constants.FILE_SUFFIX_PPT,
+            Constants.FILE_SUFFIX_PPTX,
+            Constants.FILE_SUFFIX_JAVA,
+            Constants.FILE_SUFFIX_HTML,
+            Constants.FILE_SUFFIX_PDF,
+            Constants.FILE_SUFFIX_MD,
+            Constants.FILE_SUFFIX_SQL,
+            Constants.FILE_SUFFIX_CSS,
+            Constants.FILE_SUFFIX_JS,
+            Constants.FILE_SUFFIX_VUE,
+            Constants.FILE_SUFFIX_JAVA};
+    public static final String[] VIDEO_FILE = {
+            Constants.FILE_SUFFIX_AVI,
+            Constants.FILE_SUFFIX_MP4,
+            Constants.FILE_SUFFIX_MPG,
+            Constants.FILE_SUFFIX_MOV,
+            Constants.FILE_SUFFIX_SWF,
+            Constants.FILE_SUFFIX_3GP,
+            Constants.FILE_SUFFIX_RM,
+            Constants.FILE_SUFFIX_RMVB,
+            Constants.FILE_SUFFIX_WMV,
+            Constants.FILE_SUFFIX_MKV};
+    public static final String[] MUSIC_FILE = {
+            Constants.FILE_SUFFIX_WAV,
+            Constants.FILE_SUFFIX_AIF,
+            Constants.FILE_SUFFIX_AU,
+            Constants.FILE_SUFFIX_MP3,
+            Constants.FILE_SUFFIX_RAM,
+            Constants.FILE_SUFFIX_WMA,
+            Constants.FILE_SUFFIX_MMF,
+            Constants.FILE_SUFFIX_AMR,
+            Constants.FILE_SUFFIX_AAC,
+            Constants.FILE_SUFFIX_FLAC};
+    public static String[] ALL_FILE =new String[1];
+
+    static {
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,IMG_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,DOC_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,VIDEO_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,MUSIC_FILE);
+    }
 
     /**
      * 判断一个文件是否存在，不存在就创建它 Method execute,只能建最后面那个目录
