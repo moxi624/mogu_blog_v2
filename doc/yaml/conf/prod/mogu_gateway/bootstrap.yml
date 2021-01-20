@@ -66,6 +66,12 @@ spring:
             - Path=/mogu-picture/**
           filters:
             - StripPrefix=1
+        - id: mogu_spider
+          uri: lb://mogu-spider
+          predicates:
+            - Path=/mogu-spider/**
+          filters:
+            - StripPrefix=1
         - id: mogu_monitor
           uri: lb://mogu-monitor
           predicates:

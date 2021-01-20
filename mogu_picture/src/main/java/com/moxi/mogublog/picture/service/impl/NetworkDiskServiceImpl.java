@@ -18,6 +18,7 @@ import com.moxi.mogublog.utils.upload.FileUtil;
 import com.moxi.mougblog.base.enums.EFilePriority;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.UpdateException;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,6 +245,11 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
 
         if ("null".equals(networkDiskVO.getExtendName())) {
             extendName = null;
+        }
+        // 判断移动的路径是否相同【拼接出原始目录】
+        String fileOldPath = oldFilePath + fileOldName + "/";
+        if(fileOldPath.equals(newFilePath)) {
+            throw new UpdateException("不能选择自己");
         }
         //移动根目录
         QueryWrapper<NetworkDisk> queryWrapper = new QueryWrapper<>();

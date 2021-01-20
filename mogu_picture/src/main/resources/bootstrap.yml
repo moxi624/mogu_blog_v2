@@ -6,6 +6,9 @@ spring:
     name: mogu-picture
   cloud:
     nacos:
+      username: nacos
+      password: nacos
+
       discovery:
         server-addr: localhost:8848
         namespace: dev
@@ -36,6 +39,9 @@ spring:
             group-id: DEFAULT_GROUP
             data-type: json
             rule-type: flow
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}
+
         degrade:
           nacos:
             server-addr: ${spring.cloud.nacos.discovery.server-addr}
@@ -43,3 +49,5 @@ spring:
             group-id: DEFAULT_GROUP
             data-type: json
             rule-type: degrade
+            username: ${spring.cloud.nacos.username}
+            password: ${spring.cloud.nacos.password}

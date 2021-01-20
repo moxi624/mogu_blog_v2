@@ -110,7 +110,7 @@ public class Constants {
     public final static int NUM_TEN = 10;
     public final static int NUM_ELEVEN = 11;
     public final static int NUM_TWENTY = 20;
-    public final static int NUM_32 = 20;
+    public final static int NUM_32 = 32;
     public final static int NUM_1024 = 1024;
     public final static int NUM_5000 = 5000;
 

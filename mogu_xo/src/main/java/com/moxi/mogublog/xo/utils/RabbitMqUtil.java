@@ -1,4 +1,4 @@
-package com.moxi.mogublog.web.utils;
+package com.moxi.mogublog.xo.utils;
 
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.xo.global.SysConf;
