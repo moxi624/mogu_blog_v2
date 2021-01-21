@@ -175,8 +175,8 @@ public class Uploader {
      * @return
      */
     private String getSaveFilePath(String path) {
-        SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd");
-        path = File.separator + path + File.separator + formater.format(new Date());
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        path = File.separator + path + File.separator + format.format(new Date());
         File dir = new File(PathUtil.getStaticPath() + path);
         LOG.error(PathUtil.getStaticPath() + path);
         if (!dir.exists()) {
