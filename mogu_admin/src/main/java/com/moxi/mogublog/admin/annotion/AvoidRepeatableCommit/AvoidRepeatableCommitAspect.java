@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 重复提交aop
+ * 避免接口重复提交AOP
  *
  * @author: 陌溪
  * @create: 2020-04-23-12:12

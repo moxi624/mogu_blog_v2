@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 避免重复提交
+ * 自定义注解 避免接口重复提交
  *
  * @author Administrator
  * @date 2020年4月23日12:12:04

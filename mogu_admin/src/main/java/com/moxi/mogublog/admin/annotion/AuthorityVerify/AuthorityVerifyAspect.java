@@ -79,7 +79,6 @@ public class AuthorityVerifyAspect {
         // 管理员能够访问的路径
         String visitUrlStr = redisUtil.get(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + adminUid);
 
-//        List<String> urlList = new ArrayList<>();
         LinkedTreeMap<String, String> visitMap = new LinkedTreeMap<>();
 
         if (StringUtils.isNotEmpty(visitUrlStr)) {
