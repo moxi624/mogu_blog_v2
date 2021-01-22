@@ -6,6 +6,8 @@ spring:
     name: mogu-sms
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       discovery:
         server-addr: nacos:8848
         namespace: prod

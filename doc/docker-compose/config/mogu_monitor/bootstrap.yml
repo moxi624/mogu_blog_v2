@@ -6,6 +6,9 @@ spring:
     name: mogu-monitor
   cloud:
     nacos:
+      username: nacos
+      password: nacos
+
       discovery:
         server-addr: nacos:8848
         namespace: prod

@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  solr:
+    image: tomcat:9.0
+    restart: always
+    container_name: solr
+    ports:
+      - 8080:8080
+    volumes:
+      - ../data/solr_data/solr:/usr/local/tomcat/webapps/solr
+    networks:
+      - mogu
+
+networks:
+  mogu:
+    external: true

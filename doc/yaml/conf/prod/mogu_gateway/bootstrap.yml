@@ -8,9 +8,14 @@ spring:
     allow-bean-definition-overriding: true
   cloud:
     nacos:
+      username: nacos
+      password: nacos
+
       discovery:
         server-addr: nacos:8848
         namespace: prod
+        username: nacos
+        password: nacos
       config:
         server-addr: nacos:8848
         file-extension: yaml
@@ -64,12 +69,6 @@ spring:
           uri: lb://mogu-picture
           predicates:
             - Path=/mogu-picture/**
-          filters:
-            - StripPrefix=1
-        - id: mogu_spider
-          uri: lb://mogu-spider
-          predicates:
-            - Path=/mogu-spider/**
           filters:
             - StripPrefix=1
         - id: mogu_monitor

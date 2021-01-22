@@ -8,6 +8,8 @@ spring:
     allow-bean-definition-overriding: true
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       discovery:
         server-addr: localhost:8848
         namespace: dev
@@ -18,8 +20,10 @@ spring:
         group: dev
         #指定命名空间
         namespace: dev
+
     gateway:
       globalcors:
+        # gateway 跨域设置
         cors-configurations:
           '[/**]':
             allowedOrigins: "*"
