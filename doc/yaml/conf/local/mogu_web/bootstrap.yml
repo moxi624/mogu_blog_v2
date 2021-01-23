@@ -12,8 +12,6 @@ spring:
       discovery:
         server-addr: localhost:8848
         namespace: dev
-        username: nacos
-        password: nacos
       config:
         server-addr: localhost:8848
         file-extension: yaml
