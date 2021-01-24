@@ -30,7 +30,7 @@ export default {
       params.append("uid", item.uid);
       addLinkCount(params).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
-          window.location.href = item.url;
+          window.open(item.url, "_blank")
         }
       })
 

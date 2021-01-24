@@ -284,12 +284,16 @@ export default {
       })
         .then(() => {
           deleteBatchComment(that.multipleSelection).then(response => {
-            this.$commonUtil.message(response.message)
+            if(response.code == that.$ECode.SUCCESS) {
+              that.$commonUtil.message.success(response.message)
+            } else {
+              that.$commonUtil.message.error(response.message)
+            }
             that.commentList();
           });
         })
         .catch(() => {
-          this.$commonUtil.info("已取消删除")
+          that.$commonUtil.info("已取消删除")
         });
     },
     handleCurrentChange: function(val) {

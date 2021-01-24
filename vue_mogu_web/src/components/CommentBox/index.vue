@@ -177,7 +177,6 @@
           // 是否显示头像框
           this.isShowAvatar = false
         }
-        console.log("当前的宽度", centerWidth, this.isShowAvatar);
       },
     },
   };
@@ -277,7 +276,7 @@
     .commentBox .right {
       display: inline-block;
       margin: 5px 2px 0 0;
-      width: 100%;
+      width: 99%;
       height: 100%;
     }
 

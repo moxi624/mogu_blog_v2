@@ -134,7 +134,6 @@
           } else {
             this.drawerSize = "95%"
           }
-          console.log("当前的宽度", centerWidth);
         },
         load() {
           // console.log("加载")

@@ -263,7 +263,7 @@
               }
               let params = {};
               params.source = that.commentInfo.source;
-              params.blogUid = this.commentInfo.blogUid;
+              params.blogUid = that.commentInfo.blogUid;
               params.currentPage = that.currentPage + 1
               params.pageSize = that.pageSize;
               getCommentList(params).then(response => {
