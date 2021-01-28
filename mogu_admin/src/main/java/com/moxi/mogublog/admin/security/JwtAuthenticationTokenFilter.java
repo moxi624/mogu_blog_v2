@@ -117,6 +117,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     // 移除原来的旧Token和TokenUid
                     redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + authHeader);
                     redisUtil.delete(RedisConf.LOGIN_UUID_KEY + Constants.SYMBOL_COLON + oldTokenUid);
+                    // 将新token赋值，用于后续使用
+                    authHeader = newToken;
 
                     // 将新的Token存入Redis中
                     redisUtil.setEx(RedisConf.LOGIN_TOKEN_KEY + Constants.SYMBOL_COLON + newToken, JsonUtils.objectToJson(newOnlineAdmin), expiresSecond, TimeUnit.SECONDS);
