@@ -65,13 +65,13 @@ public class AboutFileUtil {
             Constants.FILE_SUFFIX_AMR,
             Constants.FILE_SUFFIX_AAC,
             Constants.FILE_SUFFIX_FLAC};
-    public static String[] ALL_FILE =new String[1];
+    public static String[] ALL_FILE = new String[1];
 
     static {
-        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,IMG_FILE);
-        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,DOC_FILE);
-        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,VIDEO_FILE);
-        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE,MUSIC_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE, IMG_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE, DOC_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE, VIDEO_FILE);
+        ALL_FILE = (String[]) ArrayUtils.addAll(ALL_FILE, MUSIC_FILE);
     }
 
     /**

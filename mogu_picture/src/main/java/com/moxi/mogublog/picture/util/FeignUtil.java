@@ -250,6 +250,7 @@ public class FeignUtil {
             String qiNiuBucket = systemConfigMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = systemConfigMap.get(SysConf.QI_NIU_AREA);
             String picturePriority = systemConfigMap.get(SysConf.PICTURE_PRIORITY);
+            String contentPicturePriority = systemConfigMap.get(SysConf.CONTENT_PICTURE_PRIORITY);
 
             String minioEndPoint = systemConfigMap.get(SysConf.MINIO_END_POINT);
             String minioAccessKey = systemConfigMap.get(SysConf.MINIO_ACCESS_KEY);
@@ -280,6 +281,7 @@ public class FeignUtil {
             systemConfig.setUploadQiNiu(uploadQiNiu);
             systemConfig.setUploadLocal(uploadLocal);
             systemConfig.setPicturePriority(picturePriority);
+            systemConfig.setContentPicturePriority(contentPicturePriority);
             systemConfig.setLocalPictureBaseUrl(localPictureBaseUrl);
             systemConfig.setQiNiuPictureBaseUrl(qiNiuPictureBaseUrl);
 

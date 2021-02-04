@@ -15,7 +15,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, create_time, status, update_time, project_name, sort_name, url
+        uid
+        , create_time, status, update_time, project_name, sort_name, url
     </sql>
 
 </mapper>

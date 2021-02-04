@@ -31,28 +31,12 @@ public class PictureProcesser implements PageProcessor {
 
     // 获取img标签正则
     private static final String IMGURL_REG = "<img.*?src=.*?photos.*?/>";
-
-    @Override
-    public void process(Page page) {
-        int i = 50;
-        //page计数是从2开始的
-        //https://foter.com/search/instant/?q=cat&page=2
-        Html html = page.getHtml();
-        String url = page.getRequest().getUrl();
-        List<String> list = html.regex("<img.*?src=.*?photos.*?/>").all();
-        List<String> imageSrc = getImageSrc(list);
-        String jsonString = JSON.toJSONString(imageSrc);
-        if (CollectionUtil.isEmpty(imageSrc)) {
-            page.putField("imgSrc", jsonString);
-            page.putField("searchKey", findSearchKey(url));
-        } else {
-            //跳过爬取
-            page.setSkip(true);
-        }
-    }
+    // 获取src路径的正则
+    private static final String IMGSRC_REG = "/photos.*?\\?";
 
     /**
      * 查找输入的关键词
+     *
      * @param url
      * @return
      */
@@ -65,16 +49,11 @@ public class PictureProcesser implements PageProcessor {
         Matcher m = pattern.matcher(url);
         if (m.find()) {
             String group = m.group(0);
-            String replace = group.replace("?q=", "").replaceFirst("&.*","");
+            String replace = group.replace("?q=", "").replaceFirst("&.*", "");
             return replace;
         } else {
             return url;
         }
-    }
-
-    @Override
-    public Site getSite() {
-        return Site.me().setCharset("utf8").setRetryTimes(2).setSleepTime(2000).setTimeOut(4000);
     }
 
     /**
@@ -106,8 +85,6 @@ public class PictureProcesser implements PageProcessor {
         return sb.toString();
     }
 
-
-
     //获取ImageUrl地址
     private static List<String> getImageUrl(String html) {
         Pattern compile = Pattern.compile(IMGURL_REG);
@@ -118,9 +95,6 @@ public class PictureProcesser implements PageProcessor {
         }
         return listimgurl;
     }
-
-    // 获取src路径的正则
-    private static final String IMGSRC_REG = "/photos.*?\\?";
 
     //获取ImageSrc地址
     private static List<String> getImageSrc(List<String> listimageurl) {
@@ -134,7 +108,6 @@ public class PictureProcesser implements PageProcessor {
         return listImageSrc;
     }
 
-
     /**
      * 获取UUID，去掉了-
      *
@@ -143,24 +116,6 @@ public class PictureProcesser implements PageProcessor {
     public static String getUUID() {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         return uuid;
-    }
-
-    public String uploadQiniu(File localFilePath) throws QiniuException {
-        //构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(Zone.zone2());
-        //生成上传凭证，然后准备上传
-        String accessKey = "KPTcX6IBYXrR8wpE0VvcUXBu4XkC0XyhquFivGYe";
-        String secretKey = "bQcxUBc_c8evOPKZMxiJ2luHTROcRha3krWJmvR3";
-        String bucket = "mogublogforsjf";
-        //...其他参数参考类注释
-        UploadManager uploadManager = new UploadManager(cfg);
-        String key = getUUID();
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
-        Response response = uploadManager.put(localFilePath, key, upToken);
-        //解析上传成功的结果
-        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-        return putRet.key;
     }
 
     //下载图片
@@ -226,5 +181,47 @@ public class PictureProcesser implements PageProcessor {
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
         }
+    }
+
+    @Override
+    public void process(Page page) {
+        int i = 50;
+        //page计数是从2开始的
+        //https://foter.com/search/instant/?q=cat&page=2
+        Html html = page.getHtml();
+        String url = page.getRequest().getUrl();
+        List<String> list = html.regex("<img.*?src=.*?photos.*?/>").all();
+        List<String> imageSrc = getImageSrc(list);
+        String jsonString = JSON.toJSONString(imageSrc);
+        if (CollectionUtil.isEmpty(imageSrc)) {
+            page.putField("imgSrc", jsonString);
+            page.putField("searchKey", findSearchKey(url));
+        } else {
+            //跳过爬取
+            page.setSkip(true);
+        }
+    }
+
+    @Override
+    public Site getSite() {
+        return Site.me().setCharset("utf8").setRetryTimes(2).setSleepTime(2000).setTimeOut(4000);
+    }
+
+    public String uploadQiniu(File localFilePath) throws QiniuException {
+        //构造一个带指定Zone对象的配置类
+        Configuration cfg = new Configuration(Zone.zone2());
+        //生成上传凭证，然后准备上传
+        String accessKey = "KPTcX6IBYXrR8wpE0VvcUXBu4XkC0XyhquFivGYe";
+        String secretKey = "bQcxUBc_c8evOPKZMxiJ2luHTROcRha3krWJmvR3";
+        String bucket = "mogublogforsjf";
+        //...其他参数参考类注释
+        UploadManager uploadManager = new UploadManager(cfg);
+        String key = getUUID();
+        Auth auth = Auth.create(accessKey, secretKey);
+        String upToken = auth.uploadToken(bucket);
+        Response response = uploadManager.put(localFilePath, key, upToken);
+        //解析上传成功的结果
+        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+        return putRet.key;
     }
 }

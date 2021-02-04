@@ -3,7 +3,6 @@ package com.moxi.mogublog.picture.spider;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Component;
-import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
@@ -19,21 +18,6 @@ import java.util.List;
 
 @Component
 public class PicturePieline implements Pipeline {
-
-    @Override
-    public void process(ResultItems resultItems, Task task) {
-        //获取图片参数
-        String imgSrc = resultItems.get("imgSrc");
-        //获取关键词
-        String searchKey = resultItems.get("searchKey");
-        List imgSrcs = JSON.parseObject(imgSrc, List.class);
-        if (CollectionUtil.isEmpty(imgSrcs)) {
-            return;
-        }
-        //下载图片并上传到七牛云
-        List localFileUrl = Download(imgSrcs);
-
-    }
 
     //下载图片
     private static List<String> Download(List<String> listImgSrc) {
@@ -78,5 +62,20 @@ public class PicturePieline implements Pipeline {
             System.out.println(e.getMessage());
         }
         return localFile;
+    }
+
+    @Override
+    public void process(ResultItems resultItems, Task task) {
+        //获取图片参数
+        String imgSrc = resultItems.get("imgSrc");
+        //获取关键词
+        String searchKey = resultItems.get("searchKey");
+        List imgSrcs = JSON.parseObject(imgSrc, List.class);
+        if (CollectionUtil.isEmpty(imgSrcs)) {
+            return;
+        }
+        //下载图片并上传到七牛云
+        List localFileUrl = Download(imgSrcs);
+
     }
 }

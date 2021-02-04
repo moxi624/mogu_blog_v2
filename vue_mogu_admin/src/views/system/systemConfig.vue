@@ -3,14 +3,18 @@
     <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
       <el-tab-pane name="one" v-permission="'/systemConfig/getSystemConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 系统配置</span>
-        <el-form style="margin-left: 20px;" label-position="left"   label-width="130px" >
+        <el-form style="margin-left: 20px;" label-position="left"   label-width="140px" >
 
           <aside>
             通过开关选择博客编辑时的文本编辑器，以及文件显示方式<br/>
           </aside>
 
-          <el-form-item label="图片显示优先级">
+          <el-form-item label="封面图片显示优先级">
             <el-radio v-for="item in picturePriorityDictList" :key="item.uid" v-model="form.picturePriority" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <el-form-item label="详情图片显示优先级">
+            <el-radio v-for="item in picturePriorityDictList" :key="item.uid" v-model="form.contentPicturePriority" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item label="文本编辑器">

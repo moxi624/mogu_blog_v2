@@ -248,7 +248,7 @@ public class NetworkDiskServiceImpl extends SuperServiceImpl<NetworkDiskMapper, 
         }
         // 判断移动的路径是否相同【拼接出原始目录】
         String fileOldPath = oldFilePath + fileOldName + "/";
-        if(fileOldPath.equals(newFilePath)) {
+        if (fileOldPath.equals(newFilePath)) {
             throw new UpdateException("不能选择自己");
         }
         //移动根目录

@@ -2,10 +2,7 @@ package com.moxi.mogublog.picture.restapi;
 
 
 import com.moxi.mogublog.commons.entity.SystemConfig;
-import com.moxi.mogublog.picture.form.SearchPictureForm;
 import com.moxi.mogublog.picture.service.FileService;
-import com.moxi.mogublog.picture.spider.PicturePieline;
-import com.moxi.mogublog.picture.spider.PictureProcesser;
 import com.moxi.mogublog.picture.util.FeignUtil;
 import com.moxi.mogublog.picture.util.MinioUtil;
 import com.moxi.mougblog.base.validator.group.GetList;
@@ -17,18 +14,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import us.codecraft.webmagic.Spider;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 文件上传接口 【总的文件接口，需要调用本地文件、七牛云、Minio上传服务】

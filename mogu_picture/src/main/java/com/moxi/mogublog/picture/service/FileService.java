@@ -2,13 +2,11 @@ package com.moxi.mogublog.picture.service;
 
 import com.moxi.mogublog.commons.entity.File;
 import com.moxi.mogublog.commons.entity.SystemConfig;
-import com.moxi.mogublog.picture.form.SearchPictureForm;
 import com.moxi.mougblog.base.service.SuperService;
 import com.moxi.mougblog.base.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

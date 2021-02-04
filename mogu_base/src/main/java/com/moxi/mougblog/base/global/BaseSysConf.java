@@ -172,6 +172,7 @@ public class BaseSysConf {
     public final static String MINIO_BUCKET = "minioBucket";
 
     public final static String PICTURE_PRIORITY = "picturePriority";
+    public final static String CONTENT_PICTURE_PRIORITY = "contentPicturePriority";
     public final static String PICTURE = "picture";
     public final static String PICTURE_TOKEN = "pictureToken";
     public final static String LIST = "list";

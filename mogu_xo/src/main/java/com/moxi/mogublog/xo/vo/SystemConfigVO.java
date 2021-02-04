@@ -45,9 +45,14 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
     private String uploadLocal;
 
     /**
-     * 图片显示优先级（ 1 展示 七牛云,  0 本地）
+     * 标题图片显示优先级（ 1 展示 七牛云,  0 本地）
      */
     private String picturePriority;
+
+    /**
+     * 封面图片显示优先级（ 1 展示 七牛云,  0 本地）
+     */
+    private String contentPicturePriority;
 
     /**
      * 本地存储图片服务器，域名前缀：   http://localhost:8600

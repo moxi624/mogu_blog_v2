@@ -82,18 +82,23 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
     private String uploadMinio;
 
     /**
-     * 图片显示优先级（ 0:本地  1: 七牛云 2: Minio）
+     * 标题图片显示优先级（ 0:本地  1: 七牛云 2: Minio）
      */
     private String picturePriority;
 
     /**
-     * 本地存储图片服务器，域名前缀：   http://localhost:8600
+     * 博客详情图片显示优先级（ 0:本地  1: 七牛云 2: Minio）
+     */
+    private String contentPicturePriority;
+
+    /**
+     * 本地存储图片服务器，域名前缀:   http://localhost:8600
      */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String localPictureBaseUrl;
 
     /**
-     * 七牛云存储图片服务器，域名前缀： http://images.moguit.cn
+     * 七牛云存储图片服务器，域名前缀: http://images.moguit.cn
      */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String qiNiuPictureBaseUrl;

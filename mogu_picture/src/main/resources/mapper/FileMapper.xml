@@ -20,7 +20,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        uid, file_old_name, file_size, file_sort_id, pic_expanded_name, pic_name, pic_url, sys_user_id, user_id,
+        uid
+        , file_old_name, file_size, file_sort_id, pic_expanded_name, pic_name, pic_url, sys_user_id, user_id,
         createtime, updatetime, status
     </sql>
 
