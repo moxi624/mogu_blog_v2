@@ -30,7 +30,11 @@
       >引用量排序</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData"
+              style="width: 100%"
+              @selection-change="handleSelectionChange"
+              @sort-change="changeSort"
+              :default-sort="{prop: 'createTime', order: 'ascending'}">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
@@ -50,19 +54,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="点击数" width="100" align="center">
+      <el-table-column label="点击数" width="100" align="center" prop="clickCount" sortable="custom" :sort-by="['clickCount']">
         <template slot-scope="scope">
           <span>{{ scope.row.clickCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" width="100" align="center">
+      <el-table-column label="排序" width="100" align="center" prop="sort" sortable="custom" :sort-by="['sort']">
         <template slot-scope="scope">
           <el-tag type="warning">{{ scope.row.sort }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="创建时间" width="160" align="center" prop="createTime" sortable="custom" :sort-orders="['ascending', 'descending']">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -150,6 +154,8 @@ export default {
       dialogFormVisible: false, //控制弹出框
       formLabelWidth: "120px",
       isEditForm: false,
+      orderByDescColumn: "",
+      orderByAscColumn: "",
       form: {
         uid: null,
         content: "",
@@ -171,11 +177,26 @@ export default {
     this.blogSortList();
   },
   methods: {
+    // 从后台获取数据,重新排序
+    changeSort (val) {
+      console.log(val) // column: {…} order: "ascending" prop: "date"
+      // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
+      if(val.order == "ascending") {
+        this.orderByAscColumn = val.prop
+        this.orderByDescColumn = ""
+      } else {
+        this.orderByAscColumn = ""
+        this.orderByDescColumn = val.prop
+      }
+      this.blogSortList()
+    },
     blogSortList: function() {
       var params = {};
       params.keyword = this.keyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
+      params.orderByDescColumn = this.orderByDescColumn
+      params.orderByAscColumn = this.orderByAscColumn
       getBlogSortList(params).then(response => {
         this.tableData = response.data.records;
         this.currentPage = response.data.current;

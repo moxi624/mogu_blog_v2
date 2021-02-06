@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 对字符串转换的一些操作
@@ -19,6 +21,51 @@ public class StringUtils {
     private final static int NUM_32 = 32;
     //集群号
     private static int machineId = 1;
+    private static final Pattern CAMLE_PATTERN = Pattern.compile("_(\\w)");
+    private static final Pattern UNDER_LINE_PATTERN = Pattern.compile("[A-Z]");
+
+    /**
+     * 下划线转驼峰
+     * @param str
+     * @return
+     */
+    public static StringBuffer camel(StringBuffer str) {
+        //利用正则删除下划线，把下划线后一位改成大写
+        Matcher matcher = CAMLE_PATTERN.matcher(str);
+        StringBuffer sb = new StringBuffer(str);
+        if(matcher.find()) {
+            sb = new StringBuffer();
+            //将当前匹配子串替换为指定字符串，并且将替换后的子串以及其之前到上次匹配子串之后的字符串段添加到一个StringBuffer对象里。
+            //正则之前的字符和被替换的字符
+            matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
+            //把之后的也添加到StringBuffer对象里
+            matcher.appendTail(sb);
+        }else {
+            return sb;
+        }
+        return camel(sb);
+    }
+
+    /**
+     * 驼峰转下划线
+     * @param str
+     * @return
+     */
+    public static StringBuffer underLine(StringBuffer str) {
+        Matcher matcher = UNDER_LINE_PATTERN.matcher(str);
+        StringBuffer sb = new StringBuffer(str);
+        if(matcher.find()) {
+            sb = new StringBuffer();
+            //将当前匹配子串替换为指定字符串，并且将替换后的子串以及其之前到上次匹配子串之后的字符串段添加到一个StringBuffer对象里。
+            //正则之前的字符和被替换的字符
+            matcher.appendReplacement(sb,"_"+matcher.group(0).toLowerCase());
+            //把之后的也添加到StringBuffer对象里
+            matcher.appendTail(sb);
+        }else {
+            return sb;
+        }
+        return underLine(sb);
+    }
 
     /**
      * 把String 转换为 long
@@ -436,5 +483,9 @@ public class StringUtils {
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(underLine(new StringBuffer("dogId")));
     }
 }
