@@ -33,9 +33,13 @@ public class BlogSortVO extends BaseVO<BlogSortVO> {
 
 
     /**
-     * OrderBy排序字段（desc: 降序，asc: 升序）
+     * OrderBy排序字段（desc: 降序）
      */
     private String orderByDescColumn;
+
+    /**
+     * OrderBy排序字段（asc: 升序）
+     */
     private String orderByAscColumn;
 
     /**

@@ -120,7 +120,12 @@
 
     </div>
 
-    <el-table :data="tableData" ref="articleTable" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData"
+              ref="articleTable"
+              style="width: 100%"
+              @selection-change="handleSelectionChange"
+              @sort-change="changeSort"
+              :default-sort="{prop: 'createTime', order: 'descending'}">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60" align="center">
@@ -151,7 +156,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="是否原创" width="100" align="center">
+      <el-table-column label="是否原创" width="100" align="center" prop="isOriginal" sortable="custom" :sort-by="['isOriginal']">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isOriginal==1" type="success">原创</el-tag>
           <el-tag v-if="scope.row.isOriginal==0" type="info">转载</el-tag>
@@ -178,19 +183,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="推荐等级" width="100" align="center">
+      <el-table-column label="推荐等级" width="100" align="center" prop="level" sortable="custom" :sort-by="['level']">
         <template slot-scope="scope">
           <el-tag v-for="item in blogLevelDictList" :key="item.uid" v-if="scope.row.level == item.dictValue" :type="item.listClass">{{item.dictLabel}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="点击数" width="70" align="center">
+      <el-table-column label="点击数" width="90" align="center" prop="sort" sortable="custom" :sort-by="['clickCount']">
         <template slot-scope="scope">
           <span>{{ scope.row.clickCount }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="开启评论" width="100" align="center">
+      <el-table-column label="开启评论" width="100" align="center" prop="openComment" sortable="custom" :sort-by="['openComment']">
         <template slot-scope="scope">
           <template>
             <el-tag v-for="item in openDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.openComment == item.dictValue">{{item.dictLabel}}</el-tag>
@@ -198,7 +203,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="发布状态" width="100" align="center">
+      <el-table-column label="发布状态" width="100" align="center" prop="isPublish" sortable="custom" :sort-by="['isPublish']">
         <template slot-scope="scope">
           <template>
             <el-tag v-for="item in blogPublishDictList" :key="item.uid" :type="item.listClass" v-if="scope.row.isPublish == item.dictValue">{{item.dictLabel}}</el-tag>
@@ -206,7 +211,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="创建时间" width="160" align="center" prop="createTime" sortable="custom" :sort-orders="['ascending', 'descending']">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -536,6 +541,8 @@ export default {
       fileList: [],
       localUploadVisible: false,
       systemConfig: {}, // 系统配置
+      orderByDescColumn: "", // 降序字段
+      orderByAscColumn: "", // 升序字段
       form: {
         uid: null,
         title: null,
@@ -595,7 +602,6 @@ export default {
       this.sortRemoteMethod(tempBlogSort.name);
       this.queryParams.sortKeyword = tempBlogSort.blogSortUid;
     }
-
     // 判断是否需要展开条件查询
     this.getShowSearch()
 
@@ -607,14 +613,24 @@ export default {
 
     // 获取标签列表
     this.tagList()
-
     // 获取博客分类
     this.blogSortList()
-
     //获取博客列表
     this.blogList()
   },
   methods: {
+    // 从后台获取数据,重新排序
+    changeSort (val) {
+      // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
+      if(val.order == "ascending") {
+        this.orderByAscColumn = val.prop
+        this.orderByDescColumn = ""
+      } else {
+        this.orderByAscColumn = ""
+        this.orderByDescColumn = val.prop
+      }
+      this.blogList()
+    },
     openLoading() {
       this.uploadLoading = Loading.service({
         lock: true,
@@ -668,6 +684,8 @@ export default {
       params.type = this.queryParams.typeKeyword;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
+      params.orderByDescColumn = this.orderByDescColumn
+      params.orderByAscColumn = this.orderByAscColumn
       getBlogList(params).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;
