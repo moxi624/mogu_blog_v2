@@ -120,4 +120,15 @@ public class UserVO extends BaseVO<UserVO> {
     @TableField(exist = false)
     private String photoUrl;
 
+    /**
+     * OrderBy排序字段（desc: 降序）
+     */
+    private String orderByDescColumn;
+
+    /**
+     * OrderBy排序字段（asc: 升序）
+     */
+    private String orderByAscColumn;
+
+
 }

@@ -36,7 +36,10 @@
       <el-button class="filter-item" type="primary" @click="handleAdd" icon="el-icon-edit" v-permission="'/user/add'">添加用户</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData"
+              style="width: 100%"
+              @sort-change="changeSort"
+              :default-sort="{prop: 'createTime', order: 'descending'}">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column align="center" label="序号" width="60">
@@ -61,7 +64,7 @@
       </el-table-column>
 
 
-      <el-table-column align="center" label="账号来源" width="100">
+      <el-table-column align="center" label="账号来源" width="100" prop="source" sortable="custom" :sort-by="['source']">
         <template slot-scope="scope">
           <template>
             <el-tag :key="item.uid" :type="item.listClass" v-for="item in accountSourceDictList"
@@ -71,7 +74,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="评论状态" width="100">
+      <el-table-column align="center" label="评论状态" width="100" prop="commentStatus" sortable="custom" :sort-by="['commentStatus']">
         <template slot-scope="scope">
           <template>
             <el-tag :key="item.uid" :type="item.listClass" v-for="item in commentStatusDictList"
@@ -91,7 +94,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="登录次数" width="50">
+      <el-table-column align="center" label="登录次数" width="100" prop="loginCount" sortable="custom" :sort-by="['loginCount']">
         <template slot-scope="scope">
           <span>{{ scope.row.loginCount }}</span>
         </template>
@@ -115,7 +118,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="最后登录时间" width="160">
+      <el-table-column align="center" label="最后登录时间" width="160" prop="lastLoginTime" sortable="custom" :sort-by="['lastLoginTime']">
         <template slot-scope="scope">
           <span>{{ scope.row.lastLoginTime }}</span>
         </template>
@@ -130,6 +133,12 @@
       <el-table-column align="center" label="IP来源" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.ipSource }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="创建时间" width="160" align="center" prop="createTime" sortable="custom" :sort-by="['createTime']">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
@@ -323,6 +332,8 @@
         genderDictList: [], //评论状态字典
         userTagDictList: [], // 用户标签列表
         defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
+        orderByDescColumn: "", // 降序字段
+        orderByAscColumn: "", // 升序字段
         rules: {
           userName: [
             {required: true, message: '用户名不能为空', trigger: 'blur'},
@@ -368,6 +379,18 @@
       this.userList();
     },
     methods: {
+      // 从后台获取数据,重新排序
+      changeSort (val) {
+        // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
+        if(val.order == "ascending") {
+          this.orderByAscColumn = val.prop
+          this.orderByDescColumn = ""
+        } else {
+          this.orderByAscColumn = ""
+          this.orderByDescColumn = val.prop
+        }
+        this.userList()
+      },
       userList: function () {
         var params = {};
         params.keyword = this.keyword;
@@ -375,7 +398,8 @@
         params.source = this.accountSourceKeyword;
         params.currentPage = this.currentPage;
         params.pageSize = this.pageSize;
-
+        params.orderByDescColumn = this.orderByDescColumn
+        params.orderByAscColumn = this.orderByAscColumn
         getUserList(params).then(response => {
           console.log("getUserList", response);
           if (response.code == this.$ECode.SUCCESS) {

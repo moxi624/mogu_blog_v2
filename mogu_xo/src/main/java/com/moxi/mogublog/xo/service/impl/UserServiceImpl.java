@@ -162,13 +162,24 @@ public class UserServiceImpl extends SuperServiceImpl<UserMapper, User> implemen
         if (userVO.getCommentStatus() != null) {
             queryWrapper.eq(SQLConf.COMMENT_STATUS, userVO.getCommentStatus());
         }
+
+        if(StringUtils.isNotEmpty(userVO.getOrderByAscColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(userVO.getOrderByAscColumn())).toString();
+            queryWrapper.orderByAsc(column);
+        } else if(StringUtils.isNotEmpty(userVO.getOrderByDescColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(userVO.getOrderByDescColumn())).toString();
+            queryWrapper.orderByDesc(column);
+        } else {
+            queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+        }
+
         queryWrapper.select(User.class, i -> !i.getProperty().equals(SQLConf.PASS_WORD));
         Page<User> page = new Page<>();
         page.setCurrent(userVO.getCurrentPage());
         page.setSize(userVO.getPageSize());
         queryWrapper.ne(SQLConf.STATUS, EStatus.DISABLED);
-
-        queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
         IPage<User> pageList = userService.page(page, queryWrapper);
 
         List<User> list = pageList.getRecords();

@@ -53,4 +53,14 @@ public class SysDictTypeVO extends BaseVO<SysDictTypeVO> {
     @IntegerNotNull(groups = {Insert.class, Update.class})
     private Integer sort;
 
+    /**
+     * OrderBy排序字段（desc: 降序）
+     */
+    private String orderByDescColumn;
+
+    /**
+     * OrderBy排序字段（asc: 升序）
+     */
+    private String orderByAscColumn;
+
 }

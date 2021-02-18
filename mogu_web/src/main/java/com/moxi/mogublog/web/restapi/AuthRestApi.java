@@ -457,6 +457,13 @@ public class AuthRestApi {
         return authRequest.refresh(AuthToken.builder().refreshToken(token).build());
     }
 
+    @ApiOperation(value = "获取微信公众号登录二维码", notes = "获取微信公众号登录二维码")
+    @GetMapping("/getOrCodeTicket")
+    public String getOrCodeTicket() {
+        String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
+        return null;
+    }
+
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
     @GetMapping("/verify/{accessToken}")
     public String verifyUser(@PathVariable("accessToken") String accessToken) {

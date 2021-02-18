@@ -587,24 +587,23 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         page.setSize(blogVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
 
-        // 是否启动排序字段
-        if (blogVO.getUseSort() == 0) {
-            // 未使用，默认按时间倒序
-            queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
-        } else {
-            // 使用，默认按sort值大小倒序
-            queryWrapper.orderByDesc(SQLConf.SORT);
-        }
-
         if(StringUtils.isNotEmpty(blogVO.getOrderByAscColumn())) {
             // 将驼峰转换成下划线
             String column = StringUtils.underLine(new StringBuffer(blogVO.getOrderByAscColumn())).toString();
             queryWrapper.orderByAsc(column);
-        }
-        if(StringUtils.isNotEmpty(blogVO.getOrderByDescColumn())) {
+        }else if(StringUtils.isNotEmpty(blogVO.getOrderByDescColumn())) {
             // 将驼峰转换成下划线
             String column = StringUtils.underLine(new StringBuffer(blogVO.getOrderByDescColumn())).toString();
             queryWrapper.orderByDesc(column);
+        } else {
+            // 是否启动排序字段
+            if (blogVO.getUseSort() == 0) {
+                // 未使用，默认按时间倒序
+                queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
+            } else {
+                // 使用，默认按sort值大小倒序
+                queryWrapper.orderByDesc(SQLConf.SORT);
+            }
         }
 
         IPage<Blog> pageList = blogService.page(page, queryWrapper);
@@ -1224,7 +1223,7 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         List<Blog> list = pageList.getRecords();
         list = setBlog(list);
         pageList.setRecords(list);
-        // 将从数据库查询的数据缓存到redis中 [避免 list 中没有数据而保存至 redis 的情况]
+        // 将从数据库查询的数据缓存到redis中[避免list中没有数据而保存至redis的情况]
         if (list.size() > 0) {
             redisUtil.setEx(RedisConf.HOT_BLOG, JsonUtils.objectToJson(list), 1, TimeUnit.HOURS);
         }
@@ -1233,28 +1232,27 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
 
     @Override
     public IPage<Blog> getNewBlog(Long currentPage, Long pageSize) {
-//        // 只缓存第一页的内容
-//        if (currentPage == 1L) {
-//            //从Redis中获取内容
-//            String jsonResult = redisUtil.get(SysConf.NEW_BLOG);
-//
-//            //判断redis中是否有文章
-//            if (StringUtils.isNotEmpty(jsonResult)) {
-//                List list = JsonUtils.jsonArrayToArrayList(jsonResult);
-//                IPage pageList = new Page();
-//                pageList.setRecords(list);
-//                return pageList;
-//            }
-//        }
-        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
-        Page<Blog> page = new Page<>();
-        page.setCurrent(currentPage);
+
         String blogNewCount = sysParamsService.getSysParamsValueByKey(SysConf.BLOG_NEW_COUNT);
         if (StringUtils.isEmpty(blogNewCount)) {
             log.error(MessageConf.PLEASE_CONFIGURE_SYSTEM_PARAMS);
-        } else {
-            page.setSize(Long.valueOf(blogNewCount));
         }
+
+//        // 判断Redis中是否缓存了第一页的内容
+//        if (currentPage == 1L) {
+//            //从Redis中获取内容
+//            String jsonResult = redisUtil.get(RedisConf.NEW_BLOG);
+//            //判断redis中是否有文章
+//            if (StringUtils.isNotEmpty(jsonResult)) {
+//                IPage pageList = JsonUtils.jsonToPojo(jsonResult, Page.class);
+//                return pageList;
+//            }
+//        }
+
+        QueryWrapper<Blog> queryWrapper = new QueryWrapper<>();
+        Page<Blog> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(Long.valueOf(blogNewCount));
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         queryWrapper.eq(BaseSQLConf.IS_PUBLISH, EPublish.PUBLISH);
         queryWrapper.orderByDesc(SQLConf.CREATE_TIME);
@@ -1270,12 +1268,12 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         }
 
         list = setBlog(list);
-
-//        //将从最新博客缓存到redis中
-//        if (currentPage == 1L) {
-//            redisUtil.setEx(SysConf.NEW_BLOG, JsonUtils.objectToJson(list).toString(), 1, TimeUnit.HOURS);
-//        }
         pageList.setRecords(list);
+
+        //将从最新博客缓存到redis中
+//        if (currentPage == 1L) {
+//            redisUtil.setEx(RedisConf.NEW_BLOG, JsonUtils.objectToJson(pageList), 1, TimeUnit.HOURS);
+//        }
         return pageList;
     }
 

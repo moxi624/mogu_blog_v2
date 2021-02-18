@@ -47,7 +47,17 @@ public class TagServiceImpl extends SuperServiceImpl<TagMapper, Tag> implements 
         page.setCurrent(tagVO.getCurrentPage());
         page.setSize(tagVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
+        if(StringUtils.isNotEmpty(tagVO.getOrderByAscColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(tagVO.getOrderByAscColumn())).toString();
+            queryWrapper.orderByAsc(column);
+        } else if(StringUtils.isNotEmpty(tagVO.getOrderByDescColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(tagVO.getOrderByDescColumn())).toString();
+            queryWrapper.orderByDesc(column);
+        } else {
+            queryWrapper.orderByDesc(SQLConf.SORT);
+        }
         IPage<Tag> pageList = tagService.page(page, queryWrapper);
         return pageList;
     }

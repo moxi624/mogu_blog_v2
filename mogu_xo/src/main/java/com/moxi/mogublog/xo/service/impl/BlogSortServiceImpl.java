@@ -47,17 +47,17 @@ public class BlogSortServiceImpl extends SuperServiceImpl<BlogSortMapper, BlogSo
             // 将驼峰转换成下划线
             String column = StringUtils.underLine(new StringBuffer(blogSortVO.getOrderByAscColumn())).toString();
             queryWrapper.orderByAsc(column);
-        }
-        if(StringUtils.isNotEmpty(blogSortVO.getOrderByDescColumn())) {
+        }else if(StringUtils.isNotEmpty(blogSortVO.getOrderByDescColumn())) {
             // 将驼峰转换成下划线
             String column = StringUtils.underLine(new StringBuffer(blogSortVO.getOrderByDescColumn())).toString();
             queryWrapper.orderByDesc(column);
+        } else {
+            queryWrapper.orderByDesc(SQLConf.SORT);
         }
         Page<BlogSort> page = new Page<>();
         page.setCurrent(blogSortVO.getCurrentPage());
         page.setSize(blogSortVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<BlogSort> pageList = blogSortService.page(page, queryWrapper);
         return pageList;
     }

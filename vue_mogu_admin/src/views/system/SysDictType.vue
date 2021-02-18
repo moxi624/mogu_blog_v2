@@ -26,7 +26,11 @@
       <el-button class="filter-item" type="danger" @click="handleDeleteBatch" icon="el-icon-delete" v-permission="'/sysDictType/delete'">删除选中</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="tableData"
+              style="width: 100%"
+              @selection-change="handleSelectionChange"
+              @sort-change="changeSort"
+              :default-sort="{prop: 'sort', order: 'descending'}">
       <el-table-column type="selection"></el-table-column>
 
       <el-table-column label="序号" width="60" align="center">
@@ -53,20 +57,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="发布状态" width="100" align="center">
+      <el-table-column label="发布状态" width="100" align="center" prop="isPublish" sortable="custom" :sort-by="['isPublish']">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.isPublish == '1' ">上架</el-tag>
           <el-tag type="danger" v-else>下架</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" width="50" align="center">
+      <el-table-column label="排序" width="80" align="center" prop="sort" sortable="custom" :sort-orders="['ascending', 'descending']">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="160" align="center">
+      <el-table-column label="创建时间" width="160" align="center" prop="createTime" sortable="custom" :sort-by="['createTime']">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
@@ -159,6 +163,8 @@ export default {
       formLabelWidth: "120px",
       isEditForm: false,
       form: {},
+      orderByDescColumn: "", // 降序字段
+      orderByAscColumn: "", // 升序字段
       rules: {
         dictType: [
           {required: true, message: '字典类型不能为空', trigger: 'blur'},
@@ -182,12 +188,26 @@ export default {
     this.sysDictTypeList();
   },
   methods: {
+    // 字段排序
+    changeSort (val) {
+      // 根据当前排序重新获取后台数据,一般后台会需要一个排序的参数
+      if(val.order == "ascending") {
+        this.orderByAscColumn = val.prop
+        this.orderByDescColumn = ""
+      } else {
+        this.orderByAscColumn = ""
+        this.orderByDescColumn = val.prop
+      }
+      this.sysDictTypeList()
+    },
     sysDictTypeList: function() {
       var params = {};
       params.dictName = this.query.dictName;
       params.dictType = this.query.dictType;
       params.currentPage = this.currentPage;
       params.pageSize = this.pageSize;
+      params.orderByDescColumn = this.orderByDescColumn
+      params.orderByAscColumn = this.orderByAscColumn
       getSysDictTypeList(params).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
           this.tableData = response.data.records;

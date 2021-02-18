@@ -59,11 +59,22 @@ public class SysDictTypeServiceImpl extends SuperServiceImpl<SysDictTypeMapper, 
             queryWrapper.like(SQLConf.DICT_TYPE, sysDictTypeVO.getDictType().trim());
         }
 
+        if(StringUtils.isNotEmpty(sysDictTypeVO.getOrderByAscColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(sysDictTypeVO.getOrderByAscColumn())).toString();
+            queryWrapper.orderByAsc(column);
+        }else if(StringUtils.isNotEmpty(sysDictTypeVO.getOrderByDescColumn())) {
+            // 将驼峰转换成下划线
+            String column = StringUtils.underLine(new StringBuffer(sysDictTypeVO.getOrderByDescColumn())).toString();
+            queryWrapper.orderByDesc(column);
+        } else {
+            queryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
+        }
+
         Page<SysDictType> page = new Page<>();
         page.setCurrent(sysDictTypeVO.getCurrentPage());
         page.setSize(sysDictTypeVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT, SQLConf.CREATE_TIME);
         IPage<SysDictType> pageList = sysDictTypeService.page(page, queryWrapper);
         return pageList;
     }

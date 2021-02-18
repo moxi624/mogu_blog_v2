@@ -71,11 +71,19 @@ public class LinkServiceImpl extends SuperServiceImpl<LinkMapper, Link> implemen
         if (linkVO.getLinkStatus() != null) {
             queryWrapper.eq(SQLConf.LINK_STATUS, linkVO.getLinkStatus());
         }
+        if(StringUtils.isNotEmpty(linkVO.getOrderByAscColumn())) {
+            String column = StringUtils.underLine(new StringBuffer(linkVO.getOrderByAscColumn())).toString();
+            queryWrapper.orderByAsc(column);
+        }else if(StringUtils.isNotEmpty(linkVO.getOrderByDescColumn())) {
+            String column = StringUtils.underLine(new StringBuffer(linkVO.getOrderByDescColumn())).toString();
+            queryWrapper.orderByDesc(column);
+        } else {
+            queryWrapper.orderByDesc(SQLConf.SORT);
+        }
         Page<Link> page = new Page<>();
         page.setCurrent(linkVO.getCurrentPage());
         page.setSize(linkVO.getPageSize());
         queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-        queryWrapper.orderByDesc(SQLConf.SORT);
         IPage<Link> pageList = linkService.page(page, queryWrapper);
         List<Link> linkList = pageList.getRecords();
         final StringBuffer fileUids = new StringBuffer();
