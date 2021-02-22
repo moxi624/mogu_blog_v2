@@ -965,13 +965,13 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         Map<String, String> pictureMap = new HashMap<>();
         for (LinkedTreeMap<String, String> item : list) {
 
-            if (EFilePriority.QI_NIU.equals(systemConfig.getPicturePriority())) {
+            if (EFilePriority.QI_NIU.equals(systemConfig.getContentPicturePriority())) {
                 // 获取七牛云上的图片
                 pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.QI_NIU_URL));
-            } else if(EFilePriority.LOCAL.equals(systemConfig.getPicturePriority())) {
+            } else if(EFilePriority.LOCAL.equals(systemConfig.getContentPicturePriority())) {
                 // 获取本地的图片
                 pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.PIC_URL));
-            } else if(EFilePriority.MINIO.equals(systemConfig.getPicturePriority())) {
+            } else if(EFilePriority.MINIO.equals(systemConfig.getContentPicturePriority())) {
                 // 获取MINIO的图片
                 pictureMap.put(item.get(SysConf.FILE_OLD_NAME), item.get(SysConf.MINIO_URL));
             }

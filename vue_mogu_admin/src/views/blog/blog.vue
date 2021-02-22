@@ -994,6 +994,7 @@ export default {
               picture.fileOldName = pictureList[a].fileOldName
               picture.picUrl = pictureList[a].picUrl
               picture.qiNiuUrl = pictureList[a].qiNiuUrl
+              picture.minioUrl = pictureList[a].minioUrl
               list.push(picture)
             }
             this.pictureList = list
