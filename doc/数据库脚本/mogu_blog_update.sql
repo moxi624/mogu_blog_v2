@@ -303,3 +303,38 @@ insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_u
    @date 2020年4月19日16:01:34
 */
 ALTER TABLE t_system_config ADD content_picture_priority TINYINT(1) NOT NULL DEFAULT 0 COMMENT '博客详情图片显示优先级（ 0:本地  1: 七牛云 2: Minio）';
+
+
+/*
+   增加菜单导航栏
+   @date 2021年2月28日21:19:06
+*/
+CREATE TABLE `t_web_navbar` (
+  `uid` varchar(96) DEFAULT NULL,
+  `name` varchar(765) DEFAULT NULL,
+  `navbar_level` tinyint(1) DEFAULT NULL,
+  `summary` varchar(600) DEFAULT NULL,
+  `parent_uid` varchar(96) DEFAULT NULL,
+  `url` varchar(765) DEFAULT NULL,
+  `icon` varchar(150) DEFAULT NULL,
+  `is_show` tinyint(1) DEFAULT NULL,
+  `is_jump_external_url` tinyint(1) DEFAULT NULL,
+  `sort` int(11) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert  into `t_web_navbar`(`uid`,`name`,`navbar_level`,`summary`,`parent_uid`,`url`,`icon`,`is_show`,`is_jump_external_url`,`sort`,`status`,`create_time`,`update_time`) values ('e186d3225e1405a0ee73995347b1c239','首页',1,'首页',NULL,'/','el-icon-remove',1,0,7,1,'2021-02-23 13:17:30','2021-02-23 17:05:31'),('c3e10b3c8d576ed24387934d5d0c0b81','关于我',1,'关于我',NULL,'/about','el-icon-user',1,0,6,1,'2021-02-23 13:18:43','2021-02-23 18:06:14'),('55bca78a37694c5a72b2910adde12d96','归档',1,'归档',NULL,'/sort','el-icon-camera',1,0,5,1,'2021-02-23 13:19:11','2021-02-23 15:30:37'),('abe6c960aa65fba7f728480fd933807f','分类',1,'博客分类',NULL,'/classify','el-icon-folder-checked',1,0,4,1,'2021-02-23 13:19:38','2021-02-23 15:30:43'),('0de9cfa4227c80530e43c534712156f5','标签',1,'博客标签',NULL,'/tag','el-icon-headset',1,0,3,1,'2021-02-23 13:20:01','2021-02-23 15:30:47'),('40277498960cfc2fb428c1ee4429676c','专题',1,'博客专题',NULL,'/subject','el-icon-data-analysis',1,0,2,1,'2021-02-23 13:20:22','2021-02-23 15:30:50'),('0d8a13137502ed28649888cfea40ee80','留言板',1,'留言板',NULL,'/messageBoard','el-icon-money',1,0,1,1,'2021-02-23 13:20:47','2021-02-23 15:30:53'),('94d59134ab64aac6d7994c80c6698f8a','博客源码',1,'博客源码',NULL,'https://gitee.com/moxi159753/mogu_blog_v2','el-icon-zoom-in',1,1,0,1,'2021-02-23 18:07:24','2021-02-27 13:05:34'),('a26eb81119b47bb34f733c4c38432021','博客详情',1,'博客详情页',NULL,'/info','el-icon-user',0,0,0,1,'2021-02-23 18:40:54','2021-02-23 18:40:54'),('7fb0684401ff99073c64dc956a9cb28a','博客列表',1,'博客列表',NULL,'/list','el-icon-picture-outline-round',0,0,0,1,'2021-02-23 18:57:19','2021-02-23 18:57:19'),('25bdfd2a854ea4af1bf1adcd676a711b','学习笔记',2,'学习笔记','94d59134ab64aac6d7994c80c6698f8a','https://gitee.com/moxi159753/LearningNotes','el-icon-folder-opened',1,1,0,1,'2021-02-27 12:43:40','2021-02-27 12:43:40'),('51f9db7329ccd382255c01f4ef371108','博客源码',2,'蘑菇博客源码','94d59134ab64aac6d7994c80c6698f8a','https://gitee.com/moxi159753/mogu_blog_v2','el-icon-tickets',1,1,0,1,'2021-02-27 13:06:13','2021-02-27 13:06:13');
+
+/*
+   t_category_menu增加菜单导航栏相关数据
+   @date 2021年2月28日21:19:06
+*/
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('1dd262b88b63e8f6bd9a6ca72ed0622c','导航栏管理 删除','3','导航栏管理 删除','6275bc5189e2e595b621d744d68278af','/webNavbar/delete',NULL,'0','1','2021-02-23 13:02:12','2021-02-23 13:02:12','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('21a411858fc22b5feb4c44fcad00e529','导航栏管理 编辑','3','导航栏管理 编辑','6275bc5189e2e595b621d744d68278af','/webNavbar/edit',NULL,'0','1','2021-02-23 13:01:36','2021-02-23 13:01:36','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('aa6c5d513421aa50cac1ee9ec647d100','导航栏管理 新增','3','导航栏管理 新增','6275bc5189e2e595b621d744d68278af','/webNavbar/add',NULL,'0','1','2021-02-23 13:01:16','2021-02-23 13:01:16','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('ffe445828071ce87a851ad58100f1340','导航栏管理 分页查询','3','导航栏管理 分页查询','6275bc5189e2e595b621d744d68278af','/webNavbar/getList',NULL,'0','1','2021-02-23 13:00:52','2021-02-23 13:00:52','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('b7fc36f7efc9738bddc9b09fedeccf60','导航栏管理 查询全部','3','导航栏管理 查询全部','6275bc5189e2e595b621d744d68278af','/webNavbar/getAllList',NULL,'0','1','2021-02-23 13:00:24','2021-02-23 13:00:24','1','1','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('6275bc5189e2e595b621d744d68278af','导航栏管理','2','导航栏管理','4fe7725159ced4a238b816a4595109d1','/web/webNavbar','el-icon-c-scale-to-original','0','1','2021-02-22 18:26:13','2021-02-22 18:26:13','1','0','0');
+insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('4fe7725159ced4a238b816a4595109d1','门户管理','1','管理门户页面',NULL,'/web','el-icon-help','0','1','2021-02-22 18:25:34','2021-02-22 18:25:34','1','0','0');

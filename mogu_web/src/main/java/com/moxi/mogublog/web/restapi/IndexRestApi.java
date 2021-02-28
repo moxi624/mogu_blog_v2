@@ -8,16 +8,18 @@ import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.xo.service.*;
+import com.moxi.mogublog.xo.vo.WebNavbarVO;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.validator.group.GetOne;
+import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +45,8 @@ public class IndexRestApi {
     private SysParamsService sysParamsService;
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private WebNavbarService webNavbarService;
 
     @RequestLimit(amount = 200, time = 60000)
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
@@ -121,6 +125,13 @@ public class IndexRestApi {
     public String getWebConfig() {
         log.info("获取网站配置");
         return ResultUtil.result(SysConf.SUCCESS, webConfigService.getWebConfigByShowList());
+    }
+
+    @ApiOperation(value = "获取网站导航栏", notes = "获取网站导航栏")
+    @GetMapping("/getWebNavbar")
+    public String getWebNavbar() {
+        log.info("获取网站配置");
+        return ResultUtil.result(SysConf.SUCCESS, webNavbarService.getAllList());
     }
 
     @BussinessLog(value = "记录访问页面", behavior = EBehavior.VISIT_PAGE)

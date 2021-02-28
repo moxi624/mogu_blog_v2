@@ -16,7 +16,7 @@ import "@/assets/iconfont/iconfont.css";
 import '../static/css/ckeditor.css';
 import '../static/css/index.css';
 Vue.config.productionTip = false
-
+import './permission' // permission control
 
 import xss from 'xss'
 // 定义全局XSS解决方法

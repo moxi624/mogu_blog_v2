@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomeIndex from '@/views/home'
+import store from '../store'
 Vue.use(Router)
 
 export const constantRouterMap = [
@@ -34,13 +35,9 @@ const router = new Router({
 })
 
 // router.beforeEach((to, from, next) => {
-//   var reloaded = window.localStorage.getItem('reloaded') || '0'
-//   if (to.path === '/about') {
-//     window.localStorage.setItem('reloaded', reloaded)
-//   } else if (from.path === '/about') {
-//     var count = Number(reloaded) + 1
-//     window.localStorage.setItem('reloaded', count)
-//   }
+//   console.log("获取路径", to, from)
+//   console.log("------------")
+//   console.log(store.state.app.webNavbarList)
 //   next()
 // })
 

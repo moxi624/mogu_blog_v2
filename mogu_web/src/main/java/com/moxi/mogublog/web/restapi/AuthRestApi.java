@@ -11,6 +11,7 @@ import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
+import com.moxi.mogublog.utils.wechat.SignUtil;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
@@ -455,13 +456,6 @@ public class AuthRestApi {
     public Object refreshAuth(@PathVariable("source") String source, String token) {
         AuthRequest authRequest = getAuthRequest(source);
         return authRequest.refresh(AuthToken.builder().refreshToken(token).build());
-    }
-
-    @ApiOperation(value = "获取微信公众号登录二维码", notes = "获取微信公众号登录二维码")
-    @GetMapping("/getOrCodeTicket")
-    public String getOrCodeTicket() {
-        String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN";
-        return null;
     }
 
     @ApiOperation(value = "获取用户信息", notes = "获取用户信息")

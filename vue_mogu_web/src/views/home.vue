@@ -25,41 +25,69 @@
       </h2>
 
       <ul id="starlist" :style="showHead?'display: block':''">
-        <li>
-          <router-link to="/">
-            <a href="javascript:void(0);" :class="[saveTitle == '/' ? 'title' : '']">首页</a>
-          </router-link>
+
+        <li v-for="webNavbar in webNavbarList">
+
+          <!--判断是否有下拉菜单-->
+          <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
+            <el-dropdown  trigger="click">
+            <span class="el-dropdown-link" style="cursor:pointer; color:#bdbdbd;font-size: 16px;">
+              {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="childWebNavbar in webNavbar.childWebNavbar">
+                <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
+                  <a href="javascript:void(0);">{{ childWebNavbar.name }}</a>
+                </router-link>
+                <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url" target="_blank">{{ childWebNavbar.name }}</a>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          </span>
+          <!--没有有下拉菜单-->
+          <span v-else>
+            <router-link :to="webNavbar.url" v-if="webNavbar.isJumpExternalUrl == 0">
+            <a href="javascript:void(0);" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+            </router-link>
+            <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+          </span>
         </li>
 
-        <li>
-          <router-link to="/about">
-            <a href="javascript:void(0);" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>
-          </router-link>
-        </li>
+<!--        <li>-->
+<!--          <router-link to="/">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/' ? 'title' : '']">首页</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
-        <li>
-          <router-link to="/sort">
-            <a href="javascript:void(0);" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>
-          </router-link>
-        </li>
+<!--        <li>-->
+<!--          <router-link to="/about">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
-        <li>
-          <router-link to="/classify">
-            <a href="javascript:void(0);" :class="[saveTitle == '/classify' ? 'title' : '']">分类</a>
-          </router-link>
-        </li>
+<!--        <li>-->
+<!--          <router-link to="/sort">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
-        <li>
-          <router-link to="/tag">
-            <a href="javascript:void(0);" :class="[saveTitle == '/tag' ? 'title' : '']">标签</a>
-          </router-link>
-        </li>
+<!--        <li>-->
+<!--          <router-link to="/classify">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/classify' ? 'title' : '']">分类</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
-        <li>
-          <router-link to="/subject">
-            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>
-          </router-link>
-        </li>
+<!--        <li>-->
+<!--          <router-link to="/tag">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/tag' ? 'title' : '']">标签</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
+
+<!--        <li>-->
+<!--          <router-link to="/subject">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
 <!--        <li>-->
 <!--          <router-link to="/share">-->
@@ -73,11 +101,11 @@
 <!--          </router-link>-->
 <!--        </li>-->
 
-        <li v-if="openComment=='1'">
-          <router-link to="/messageBoard">
-            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>
-          </router-link>
-        </li>
+<!--        <li v-if="openComment=='1'">-->
+<!--          <router-link to="/messageBoard">-->
+<!--            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>-->
+<!--          </router-link>-->
+<!--        </li>-->
 
       </ul>
 
@@ -479,7 +507,7 @@
 
 <script>
   import AvatarCropper from '@/components/AvatarCropper'
-  import {getWebConfig} from "../api/index";
+  import {getWebConfig, getWebNavbar} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, editUser, updateUserPwd, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
   import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
@@ -512,11 +540,12 @@
         imagecropperShow: false,
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
+        webNavbarList: [],
         drawer: false,
         info: {},
         saveTitle: "",
         keyword: "",
-        showSearch: false, // 控制搜索框的弹出
+        showSearch: false, //控制搜索框的弹出
         showHead: false, //控制导航栏的弹出
         isCdTopVisible: false,
         isVisible: true, //控制web端导航的隐藏和显示
@@ -524,15 +553,15 @@
         showLogin: false, //显示登录框
         userInfo: { // 用户信息
         },
-        feedback: {}, // 反馈提交
-        blogLink: {}, // 友链申请
+        feedback: {}, //反馈提交
+        blogLink: {}, //友链申请
         icon: false, //控制删除图标的显示
         labelWidth: "100px",
         commentList: [], //我的评论
-        replyList: [], // 我的回复
-        praiseList: [], // 我的点赞
-        feedbackList: [], // 我的反馈
-        openComment: "0", // 是否开启评论
+        replyList: [], //我的回复
+        praiseList: [], //我的点赞
+        feedbackList: [], //我的反馈
+        openComment: "0", //是否开启评论
         defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
         rules: {
           qqNumber: [
@@ -582,13 +611,11 @@
       window.addEventListener("scroll", function () {
         let scrollTop = document.documentElement.scrollTop; //当前的的位置
         let scrollHeight = document.documentElement.scrollHeight; //最高的位置
-
         if (scrollTop > offset) {
           that.isCdTopVisible = true;
         } else {
           that.isCdTopVisible = false;
         }
-
         if (scrollTop > after) {
           that.isVisible = false;
         } else {
@@ -608,11 +635,12 @@
     },
     created() {
       // 字典查询
-      this.getDictList();
+      this.getDictList()
       this.getToken()
       this.getKeyword()
       this.getCurrentPageTitle()
       this.getWebConfigInfo()
+      this.getWebNavbarList()
     },
     methods: {
       //拿到vuex中的写的方法
@@ -638,6 +666,27 @@
           query: {blogUid: uid}
         });
         window.open(routeData.href, '_blank');
+      },
+
+      // 获取导航栏列表
+      getWebNavbarList() {
+        console.log("获取导航栏")
+        var params = {};
+        params.isShow = 1
+        getWebNavbar(params).then(response => {
+          if(response.code == this.$ECode.SUCCESS) {
+            console.log("获取到的导航栏列表", response)
+            let webNavbarList = response.data
+            let newWebNavbarList = []
+            for(let a=0; a<webNavbarList.length; a++) {
+              if(webNavbarList[a].isShow == 1) {
+                newWebNavbarList.push(webNavbarList[a])
+              }
+            }
+            this.webNavbarList = newWebNavbarList
+            setCookie("webNavbarList", JSON.stringify(webNavbarList), 1)
+          }
+        })
       },
 
       // 跳转到资源详情
@@ -700,6 +749,7 @@
           }
         })
       },
+
       // 标签选择
       handleClick(tab, event) {
         switch(tab.index) {
@@ -744,7 +794,6 @@
       cropSuccess(resData) {
         this.imagecropperShow = false
         this.imagecropperKey = this.imagecropperKey + 1
-        console.log("判断激活", this.activeName)
         // 判断当前激活的页面
         if(this.activeName == "0") {
           // 激活个人中心页面
@@ -756,8 +805,8 @@
           this.blogLink.photoList = photoList
           this.blogLink.fileUid = resData[0].uid
         }
-
       },
+
       deletePhoto: function(type) {
         switch (type) {
           case "user": {
@@ -770,10 +819,9 @@
             this.blogLink.photoList = null;
             this.icon = false;
           } break;
-
         }
-
       },
+
       close() {
         this.imagecropperShow = false
       },
@@ -822,12 +870,10 @@
                 });
               }
             })
-
-          }; break;
+          } break;
 
           case "feedback": {
             var feedback = this.feedback
-
             if(feedback.title == undefined || feedback.title == "" || feedback.content == undefined || feedback.content == "") {
               this.$message({
                 type: "error",
@@ -1047,20 +1093,16 @@
             this.drawer = true;
             // 获取评论列表
             this.getCommentList();
-
             // 获取点赞列表
             this.getPraiseList()
-
             // 获取反馈列表
             this.getFeedback()
-
-          };break;
+          } break;
         }
       },
       closeLoginBox: function () {
         this.showLogin = false;
       }
-
     }
   };
 </script>

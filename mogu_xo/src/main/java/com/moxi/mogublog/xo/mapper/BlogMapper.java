@@ -21,7 +21,7 @@ public interface BlogMapper extends SuperMapper<Blog> {
      *
      * @return
      */
-    @Select("SELECT tag_uid, COUNT(tag_uid) as count FROM  t_blog GROUP BY tag_uid")
+    @Select("SELECT tag_uid, COUNT(tag_uid) as count FROM  t_blog where status = 1 GROUP BY tag_uid")
     List<Map<String, Object>> getBlogCountByTag();
 
     /**

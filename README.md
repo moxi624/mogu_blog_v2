@@ -168,6 +168,8 @@
 
 ![image text](./doc/images/gitee/server.jpg)
 
+>  蘑菇博客系统架构图，使用 [Processon](https://www.processon.com/view/link/5f3b893a7d9c0806d41ec999) 在线绘制
+
 ### 后端技术
 
 |      技术      |           说明            |                             官网                             |

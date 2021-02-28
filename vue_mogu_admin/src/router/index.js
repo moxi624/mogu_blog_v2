@@ -387,6 +387,22 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/web',
+    component: Layout,
+    redirect: '/web/webNavbar',
+    name: '门户管理',
+    meta: { title: '门户管理', icon: 'user1' },
+    children: [
+      {
+        path: 'webNavbar',
+        name: '导航栏管理',
+        component: () => import('@/views/web/webNavbar'),
+        meta: { title: '导航栏管理', icon: 'table' }
+      }
+    ]
+  },
+
+  {
     path: '/test',
     component: Layout,
     redirect: '/test/markdown',

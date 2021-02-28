@@ -64,6 +64,14 @@ export function getWebConfig (params) {
   })
 }
 
+export function getWebNavbar (params) {
+  return request({
+    url: process.env.WEB_API + '/index/getWebNavbar',
+    method: 'get',
+    params
+  })
+}
+
 export function recorderVisitPage (params) {
   return request({
     url: process.env.WEB_API + '/index/recorderVisitPage',
