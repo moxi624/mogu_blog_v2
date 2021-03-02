@@ -491,7 +491,6 @@ public class CommentRestApi {
         QueryWrapper<WebConfig> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         WebConfig webConfig = webConfigService.getOne(queryWrapper);
-
         // 判断是否开启全局评论功能
         if (SysConf.CAN_NOT_COMMENT.equals(webConfig.getOpenComment())) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.NO_COMMENTS_OPEN);
@@ -521,7 +520,6 @@ public class CommentRestApi {
                 return ResultUtil.result(SysConf.ERROR, MessageConf.PLEASE_TRY_AGAIN_IN_AN_HOUR);
             }
         }
-
         // 判断是否垃圾评论
         String content = commentVO.getContent();
         if (StringUtils.isCommentSpam(content)) {
@@ -533,7 +531,6 @@ public class CommentRestApi {
             }
             return ResultUtil.result(SysConf.ERROR, MessageConf.COMMENT_IS_SPAM);
         }
-
         // 判断被评论的用户，是否开启了评论邮件提醒
         if (StringUtils.isNotEmpty(commentVO.getToUserUid())) {
             User toUser = userService.getById(commentVO.getToUserUid());

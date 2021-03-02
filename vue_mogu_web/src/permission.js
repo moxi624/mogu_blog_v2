@@ -4,7 +4,7 @@ import { constantRouterMap } from './router/index'
 import {getCookie} from "./utils/cookieUtils";
 
 const whiteList = ['/login'] // 不重定向白名单
-const whiteListActiveList = ['/', '/404', '/401']
+const whiteListActiveList = ['/', '/401', '/404', '/500']
 const allList = []
 
 router.beforeEach((to, from, next) => {

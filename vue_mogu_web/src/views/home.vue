@@ -109,7 +109,6 @@
 
       </ul>
 
-
       <div class="searchbox">
         <div id="search_bar" :class="(showSearch || keyword.length > 0)?'search_bar search_open':'search_bar'">
           <input
@@ -197,11 +196,11 @@
             <el-input v-model="userInfo.qqNumber" style="width: 100%"></el-input>
           </el-form-item>
 
-          <el-form-item label="职业" :label-width="labelWidth">
+          <el-form-item label="职业" :label-width="labelWidth" prop="occupation">
             <el-input v-model="userInfo.occupation" style="width: 100%"></el-input>
           </el-form-item>
 
-          <el-form-item label="简介" :label-width="labelWidth">
+          <el-form-item label="简介" :label-width="labelWidth" prop="summary">
             <el-input
               type="textarea"
               :autosize="{ minRows: 5, maxRows: 10}"
@@ -569,7 +568,10 @@
           ],
           email: [
             {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
-          ]
+          ],
+          summary: [
+            {min: 0, max: 200, message: '长度在0到200个字符'},
+          ],
         },
         linkRules: {
           title: [
@@ -586,7 +588,7 @@
           ],
           email: [
             {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
-          ]
+          ],
         },
         userInfoRules: {
           oldPwd: [

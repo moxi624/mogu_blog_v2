@@ -86,6 +86,7 @@ public class UserVO extends BaseVO<UserVO> {
     /**
      * 自我简介最多150字
      */
+    @Range(groups = {Insert.class, Update.class}, max = 200)
     private String summary;
 
 
