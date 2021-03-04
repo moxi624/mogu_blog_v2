@@ -31,7 +31,7 @@
           <!--判断是否有下拉菜单-->
           <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
             <el-dropdown  trigger="click">
-            <span class="el-dropdown-link" style="cursor:pointer; color:#bdbdbd;font-size: 16px;">
+            <span class="el-dropdown-link">
               {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
