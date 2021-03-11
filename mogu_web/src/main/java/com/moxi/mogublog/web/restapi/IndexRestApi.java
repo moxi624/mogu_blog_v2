@@ -1,15 +1,22 @@
 package com.moxi.mogublog.web.restapi;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.moxi.mogublog.commons.entity.Link;
+import com.moxi.mogublog.utils.JsonUtils;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.web.requestLimit.RequestLimit;
+import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.vo.WebNavbarVO;
 import com.moxi.mougblog.base.enums.EBehavior;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.GetOne;
 import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
@@ -22,6 +29,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 首页 RestApi
@@ -47,6 +56,8 @@ public class IndexRestApi {
     private BlogService blogService;
     @Autowired
     private WebNavbarService webNavbarService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @RequestLimit(amount = 200, time = 60000)
     @ApiOperation(value = "通过推荐等级获取博客列表", notes = "通过推荐等级获取博客列表")
@@ -109,6 +120,16 @@ public class IndexRestApi {
     @GetMapping("/getLink")
     public String getLink() {
         String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
+        // 从Redis中获取友情链接
+        String jsonResult = redisUtil.get(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount);
+        if(StringUtils.isNotEmpty(jsonResult)) {
+            List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
+            return ResultUtil.result(SysConf.SUCCESS, jsonResult2List);
+        }
+        List<Link> linkList = linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount));
+        if(linkList.size() > 0) {
+            redisUtil.setEx(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount ,JsonUtils.objectToJson(linkList), 1, TimeUnit.HOURS);
+        }
         return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount)));
     }
 
@@ -130,7 +151,7 @@ public class IndexRestApi {
     @ApiOperation(value = "获取网站导航栏", notes = "获取网站导航栏")
     @GetMapping("/getWebNavbar")
     public String getWebNavbar() {
-        log.info("获取网站配置");
+        log.info("获取网站导航栏");
         return ResultUtil.result(SysConf.SUCCESS, webNavbarService.getAllList());
     }
 

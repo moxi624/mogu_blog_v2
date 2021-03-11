@@ -29,48 +29,36 @@ public class SignUtil {
 
         // 将排序后的结果拼接成一个字符串.
         String content  = paramArr[0].concat(paramArr[1]).concat(paramArr[2]);
-
-        String ciphertext = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            // 对拼接后的字符串进行sha1加密.
-            byte[] digest = md.digest(content.toString().getBytes());
-            ciphertext = byteToStr(digest);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
+        // 进行sha-1加密
+        String ciphertext = encode(content);
         // 将sha1加密后的字符串与signature进行对比.
-        return ciphertext != null ? ciphertext.equals(signature.toUpperCase()) : false;
+        return ciphertext != null ? ciphertext.equals(signature) : false;
     }
 
-    /**
-     * 将字节数组转换为十六进制字符串.
-     * @param byteArray
-     * @return
-     */
-    private static String byteToStr(byte[] byteArray) {
-        String strDigest = "";
-        for (int i = 0; i < byteArray.length; i++) {
-            strDigest += byteToHexStr(byteArray[i]);
+    private static final char[] HEX = {'0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    private static String getFormattedText(byte[] bytes) {
+        int len = bytes.length;
+        StringBuilder buf = new StringBuilder(len * 2);
+        // 把密文转换成十六进制的字符串形式
+        for (int j = 0; j < len; j++) {
+            buf.append(HEX[(bytes[j] >> 4) & 0x0f]);
+            buf.append(HEX[bytes[j] & 0x0f]);
         }
-        return strDigest;
+        return buf.toString();
     }
 
-    /**
-     * 将字节转换为十六进制字符串.
-     * @param mByte
-     * @return
-     */
-    private static String byteToHexStr(byte mByte) {
-        char[] Digit = { '0', '1' , '2', '3', '4' , '5', '6', '7' , '8', '9', 'A' , 'B', 'C', 'D' , 'E', 'F'};
-        char[] tempArr = new char[2];
-        tempArr[0] = Digit[(mByte >>> 4) & 0X0F];
-        tempArr[1] = Digit[mByte & 0X0F];
-
-        String s = new String(tempArr);
-        return s;
+    public static String encode(String str) {
+        if (str == null) {
+            return null;
+        }
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+            messageDigest.update(str.getBytes());
+            return getFormattedText(messageDigest.digest());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
-
 }

@@ -16,6 +16,7 @@ import com.moxi.mogublog.xo.service.SysParamsService;
 import com.moxi.mogublog.xo.vo.SysParamsVO;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.exceptionType.QueryException;
+import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.global.ErrorCode;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,10 +150,14 @@ public class SysParamsServiceImpl extends SuperServiceImpl<SysParamsMapper, SysP
             Collection<SysParams> sysParamsList = sysParamsService.listByIds(sysParamsUidList);
             // 更新完成数据库后，还需要清空Redis中的缓存，因此需要存储键值
             List<String> redisKeys = new ArrayList<>();
-            sysParamsList.forEach(item -> {
+            for(SysParams item : sysParamsList) {
+                // 判断删除列表中是否含有系统内置参数
+                if(item.getParamsType() == Constants.NUM_ONE) {
+                    return ResultUtil.errorWithMessage("系统内置参数无法删除");
+                }
                 item.setStatus(EStatus.DISABLED);
                 redisKeys.add(RedisConf.SYSTEM_PARAMS + RedisConf.SEGMENTATION + item.getParamsKey());
-            });
+            }
             sysParamsService.updateBatchById(sysParamsList);
             // 清空Redis中的配置
             redisUtil.delete(redisKeys);

@@ -13,8 +13,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 微信公众号 RestApi
@@ -29,12 +32,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class WechatRestApi {
 
     @ApiOperation(value = "获取微信公众号状态", notes = "获取微信公众号状态")
-    @GetMapping()
-    public String wechatCheck(String signature, String timestamp, String echostr) {
-        if(SignUtil.checkSignature(signature, timestamp, echostr)) {
+    @GetMapping("/wechatCheck")
+    public String wechatCheck(HttpServletRequest request) {
+        System.out.println("我进来了");
+        String msgSignature = request.getParameter("signature");
+        String msgTimestamp = request.getParameter("timestamp");
+        String msgNonce = request.getParameter("nonce");
+        String echostr = request.getParameter("echostr");
+        if(SignUtil.checkSignature(msgSignature, msgTimestamp, msgNonce)) {
             return echostr;
         }
-        return "error";
+        return null;
+    }
+
+    @ApiOperation(value = "用户扫码后触发的事件", notes = "用户扫码后触发的事件")
+    @PostMapping("/wechatCheck")
+    public String index(HttpServletRequest request) {
+        System.out.println(request);
+        return "success";
     }
 
 

@@ -277,7 +277,11 @@ export default {
         .then(() => {
           let list = [row]
           deleteBatchSysParams(list).then(response => {
-            this.$commonUtil.message.success(response.message)
+            if(response.code == this.$ECode.SUCCESS) {
+              this.$commonUtil.message.success(response.message)
+            } else {
+              this.$commonUtil.message.error(response.message)
+            }
             that.sysParamsList();
           });
         })
