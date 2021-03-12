@@ -4,6 +4,7 @@ package com.moxi.mogublog.web.restapi;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Link;
+import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
@@ -113,7 +114,17 @@ public class IndexRestApi {
     @GetMapping("/getHotTag")
     public String getHotTag() {
         String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
-        return ResultUtil.result(SysConf.SUCCESS, tagService.getHotTag(Integer.valueOf(hotTagCount)));
+        // 从Redis中获取友情链接
+        String jsonResult = redisUtil.get(RedisConf.BLOG_TAG + Constants.SYMBOL_COLON + hotTagCount);
+        if(StringUtils.isNotEmpty(jsonResult)) {
+            List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
+            return ResultUtil.result(SysConf.SUCCESS, jsonResult2List);
+        }
+        List<Tag> tagList = tagService.getHotTag(Integer.valueOf(hotTagCount));
+        if(tagList.size() > 0) {
+            redisUtil.setEx(RedisConf.BLOG_TAG + Constants.SYMBOL_COLON + hotTagCount ,JsonUtils.objectToJson(tagList), 1, TimeUnit.HOURS);
+        }
+        return ResultUtil.result(SysConf.SUCCESS, tagList);
     }
 
     @ApiOperation(value = "获取友情链接", notes = "获取友情链接")
@@ -130,7 +141,7 @@ public class IndexRestApi {
         if(linkList.size() > 0) {
             redisUtil.setEx(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount ,JsonUtils.objectToJson(linkList), 1, TimeUnit.HOURS);
         }
-        return ResultUtil.result(SysConf.SUCCESS, linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount)));
+        return ResultUtil.result(SysConf.SUCCESS, linkList);
     }
 
     @BussinessLog(value = "点击友情链接", behavior = EBehavior.FRIENDSHIP_LINK)

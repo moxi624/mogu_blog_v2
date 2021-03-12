@@ -19,7 +19,7 @@ export default {
   created() {
     getHotTag().then(response => {
       if (response.code == this.$ECode.SUCCESS) {
-        this.hotTagData = response.data.records;
+        this.hotTagData = response.data;
       }
     });
   },

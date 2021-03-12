@@ -168,7 +168,9 @@ public class BaseRedisConf {
      */
     public final static String BLOG_CONTRIBUTE_COUNT = "BLOG_CONTRIBUTE_COUNT";
 
-    public final static String BLOG_LINK = "LINK_LINK";
+    public final static String BLOG_LINK = "BLOG_LINK";
+
+    public final static String BLOG_TAG = "BLOG_TAG";
 
     /**
      * 登录方式

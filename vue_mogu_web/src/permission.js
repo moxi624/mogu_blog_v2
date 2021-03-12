@@ -9,8 +9,6 @@ const allList = []
 
 router.beforeEach((to, from, next) => {
 
-  console.log("allList", constantRouterMap)
-
   if (allList.length === 0) {
     for (var a = 0; a < constantRouterMap.length; a++) {
       if (constantRouterMap[a].children) {
@@ -23,13 +21,10 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
-
-  console.log("allList", allList)
-
+ 
   // 向白名单中添加内容
-  // 从cookie中获取token
-  let webNavbarList = JSON.parse(getCookie("webNavbarList"))
-  console.log("转换后的json串", webNavbarList)
+  // 从cookie中获取可以访问的导航栏列表
+  let webNavbarList = JSON.parse(getCookie("webNavbarList"))  
   const activeList = []
   if (webNavbarList) {
     for (var c = 0; c < webNavbarList.length; c++) {

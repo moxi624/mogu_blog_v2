@@ -76,7 +76,7 @@ public interface TagService extends SuperService<Tag> {
      *
      * @return
      */
-    public IPage<Tag> getHotTag(Integer hotTagCount);
+    public List<Tag> getHotTag(Integer hotTagCount);
 
     /**
      * 获取一个排序最高的标签
