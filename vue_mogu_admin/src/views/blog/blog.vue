@@ -189,7 +189,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="点击数" width="90" align="center" prop="sort" sortable="custom" :sort-by="['clickCount']">
+      <el-table-column label="点击数" width="90" align="center" prop="clickCount" sortable="custom" :sort-by="['clickCount']">
         <template slot-scope="scope">
           <span>{{ scope.row.clickCount }}</span>
         </template>
