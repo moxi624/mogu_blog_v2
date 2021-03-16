@@ -24,8 +24,9 @@ public class RangValidator implements ConstraintValidator<Range, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+
         if (null == value || StringUtils.isBlank(value)) {
-            return false;
+            return min == 0;
         }
         return value.length() >= min && value.length() <= max;
     }

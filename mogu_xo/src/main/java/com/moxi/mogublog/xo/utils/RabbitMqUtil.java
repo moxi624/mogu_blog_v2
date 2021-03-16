@@ -56,6 +56,7 @@ public class RabbitMqUtil {
      */
     private void sendEmail(String email, String text) {
         Map<String, Object> result = new HashMap<>();
+        result.put(SysConf.SUBJECT, PROJECT_NAME);
         result.put(SysConf.RECEIVER, email);
         result.put(SysConf.TEXT, text);
         //发送到RabbitMq
@@ -113,7 +114,6 @@ public class RabbitMqUtil {
                         "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
                         " </body>\r\n" +
                         "</html>";
-
         sendEmail(email, content);
     }
 
@@ -208,7 +208,6 @@ public class RabbitMqUtil {
                         "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
                         " </body>\r\n" +
                         "</html>";
-
         sendEmail(user.getEmail(), text);
     }
 
@@ -257,7 +256,6 @@ public class RabbitMqUtil {
                         "<style type=\"text/css\">.qmbox style, .qmbox script, .qmbox head, .qmbox link, .qmbox meta {display: none !important;}</style></div></div><!-- --><style>#mailContentContainer .txt {height:auto;}</style>  </div>\r\n" +
                         " </body>\r\n" +
                         "</html>";
-        System.out.println(text);
         sendEmail(user.getEmail(), text);
     }
 

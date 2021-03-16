@@ -132,7 +132,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" fixed="right" min-width="230">
+      <el-table-column label="操作" fixed="right" min-width="270">
         <template slot-scope="scope">
           <el-button @click="handleStick(scope.row)" type="warning" size="small" v-permission="'/categoryMenu/stick'">置顶</el-button>
           <el-button @click="handleEdit(scope.row)" type="primary" size="small" v-permission="'/categoryMenu/edit'">编辑</el-button>
