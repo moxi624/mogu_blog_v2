@@ -16,13 +16,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class RequestLimitConfig {
+    /**
+     * 是否开启请求限制
+     */
+    private Boolean start;
 
     /**
      * 允许访问的数量
      */
-    public int amount;
+    private int amount;
+
     /**
      * 时间段
      */
-    public long time;
+    private long time;
 }

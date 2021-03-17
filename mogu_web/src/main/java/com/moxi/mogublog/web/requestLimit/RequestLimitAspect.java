@@ -12,7 +12,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,9 +39,6 @@ public class RequestLimitAspect {
     @Autowired
     private RequestLimitConfig requestLimitConfig;
 
-    @Value(value = "${request-limit.start}")
-    private Boolean start;
-
     @Pointcut(POINT)
     public void pointcut() {
 
@@ -55,7 +51,7 @@ public class RequestLimitAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
         // 判断是否开启了接口请求限制
-        if (start) {
+        if (requestLimitConfig.getStart()) {
             ServletRequestAttributes attribute = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
             HttpServletRequest request = attribute.getRequest();
