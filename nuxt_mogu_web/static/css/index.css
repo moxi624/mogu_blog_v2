@@ -22,7 +22,7 @@ header { position: fixed; top: 0; z-index: 99999 }
 .logo a { color: #00A7EB }
 nav { width: 1140px; margin: auto; position: relative }
 #mnavh { display: none; width: 30px; height: 40px; text-align: center; padding: 0 5px }
-#starlist { float: left; margin-left: 50px; overflow:hidden }
+#starlist { float: left; margin-left: 50px; overflow:hidden; }
 #starlist li { float: left;  display: block; font-size: 16px ; padding: 0 25px}
 .navicon { display: block; position: relative; width: 30px; height: 5px; background-color: #fff; margin-top: 20px }
 .navicon:before, .navicon:after { content: ''; display: block; width: 30px; height: 5px; position: absolute; background: #fff; -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform; -webkit-transition-duration: 300ms; transition-duration: 300ms; }
