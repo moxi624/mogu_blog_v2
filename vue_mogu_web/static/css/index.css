@@ -34,7 +34,7 @@ header { position: fixed; top: 0; z-index: 99999 }
 .logo a { color: #00A7EB }
 nav { width: 1140px; margin: auto; position: relative }
 #mnavh { display: none; width: 30px; height: 40px; text-align: center; padding: 0 5px }
-#starlist { float: left; margin-left: 50px; overflow:hidden; height: 60px; max-width: 1000px;  }
+#starlist { float: left; margin-left: 50px; overflow:hidden; max-width: 1000px;}
 #starlist li { float: left;  display: block; font-size: 16px ; padding: 0 25px}
 .navicon { display: block; position: relative; width: 30px; height: 5px; background-color: #fff; margin-top: 20px }
 .navicon:before, .navicon:after { content: ''; display: block; width: 30px; height: 5px; position: absolute; background: #fff; -webkit-transition-property: margin, -webkit-transform; transition-property: margin, -webkit-transform; transition-property: margin, transform; transition-property: margin, transform, -webkit-transform; -webkit-transition-duration: 300ms; transition-duration: 300ms; }
@@ -353,7 +353,6 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
 }
 
 .sortBox .article {
-    margin-left: 20px;
     float: left;
     width: 78%;
     height: 800px;
@@ -361,22 +360,19 @@ h1.t_nav { border-bottom: #bfbfbf 1px solid; font-size: 14px; font-weight: norma
     overflow-x: hidden;
     overflow-y: auto;
 }
-@media screen and (min-width: 1024px) and (max-width: 1199px) {
-header { width: 100%; margin: auto; }
-nav { width: 90% }
-#starlist li { padding: 0 15px; }
-article { width: 90%; }
-.fader { padding-top: 0; height: 360px }
-.imginfo { bottom: 15% }
-.toppic li i img { height: 170px; }
-#gd { width: 230px }
-.container { width: 90%; margin: 20px auto; }
+
+
+
+@media screen and (min-width: 1023px){
+  #starlist { height: 60px;}
 }
 
-@media screen and (min-width: 768px) and (max-width: 1023px) {
+
+
+@media screen and (min-width: 768px) and (max-width: 1119px) {
 header, .blogsbox { width: 100%; margin: auto; }
 nav { width: 100%; position: relative }
-#starlist { display: none; background: rgba(0,0,0,.5); width: 100%; margin-left: 0; }
+#starlist { height:0px; display: none; background: rgba(0,0,0,.5); width: 100%; margin-left: 0; }
 #starlist li { display: block; padding: 0 0 0 0; width: 60%; background: #fff; border-bottom: #f5f5f5 1px solid; }
 .sub { display: block; padding-left: 0; width: 100%; position: static; }
 #starlist .sub li { border-bottom: none; }
@@ -466,7 +462,6 @@ h1.t_nav span { display: none }
 }
 
 .sortBox .article {
-    margin-left: 20px;
     float: left;
     width: 50%;
     height: 800px;
@@ -551,9 +546,8 @@ footer p { padding: 0 30px }
 }
 
 .sortBox .article {
-    margin-left: 20px;
     float: left;
-    width: 60%;
+    width: 66%;
     height: 800px;
     overflow: scroll;
     overflow-x: hidden;

@@ -37,7 +37,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-for="childWebNavbar in webNavbar.childWebNavbar">
                 <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
-                  <a href="javascript:void(0);">{{ childWebNavbar.name }}</a>
+                  <a href="javascript:void(0);" @click="openHead">{{ childWebNavbar.name }}</a>
                 </router-link>
                 <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url" target="_blank">{{ childWebNavbar.name }}</a>
               </el-dropdown-item>
@@ -47,7 +47,7 @@
           <!--没有有下拉菜单-->
           <span v-else>
             <router-link :to="webNavbar.url" v-if="webNavbar.isJumpExternalUrl == 0">
-            <a href="javascript:void(0);" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+            <a href="javascript:void(0);" @click="openHead" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
             </router-link>
             <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
           </span>
