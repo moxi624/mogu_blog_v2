@@ -47,3 +47,20 @@ export function reportComment (params) {
     data: params
   })
 }
+
+export function getUserReceiveCommentCount (params) {
+  return request({
+    url: process.env.WEB_API + '/web/comment/getUserReceiveCommentCount',
+    method: 'get',
+    params
+  })
+}
+
+export function readUserReceiveCommentCount (params) {
+  return request({
+    url: process.env.WEB_API + '/web/comment/readUserReceiveCommentCount',
+    method: 'post',
+    params
+  })
+}
+

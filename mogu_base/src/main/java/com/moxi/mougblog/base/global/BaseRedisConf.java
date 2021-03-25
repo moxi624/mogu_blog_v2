@@ -173,6 +173,11 @@ public class BaseRedisConf {
     public final static String BLOG_TAG = "BLOG_TAG";
 
     /**
+     * 用户收到评论数
+     */
+    public final static String USER_RECEIVE_COMMENT_COUNT = "USER_RECEIVE_COMMENT_COUNT";
+
+    /**
      * 登录方式
      */
     public final static String LOGIN_TYPE = "LOGIN_TYPE";

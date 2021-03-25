@@ -617,6 +617,17 @@ public class CommentRestApi {
             }
         }
         comment.setUser(user);
+
+        // 如果是回复某人的评论，那么需要向该用户Redis收件箱中中写入一条记录
+        if(StringUtils.isNotEmpty(comment.getToUserUid())) {
+            String redisKey = RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + comment.getToUserUid();
+            String count = redisUtil.get(redisKey);
+            if(StringUtils.isNotEmpty(count)) {
+                redisUtil.incrBy(redisKey, Constants.NUM_ONE);
+            } else {
+                redisUtil.setEx(redisKey, Constants.STR_ONE, 7, TimeUnit.DAYS);
+            }
+        }
         return ResultUtil.result(SysConf.SUCCESS, comment);
     }
 
@@ -810,6 +821,38 @@ public class CommentRestApi {
         }
         return linkUrl;
     }
+
+    @ApiOperation(value = "获取用户收到的评论回复数", notes = "获取用户收到的评论回复数")
+    @GetMapping("/getUserReceiveCommentCount")
+    public String getUserReceiveCommentCount(HttpServletRequest request) {
+        log.info("获取用户收到的评论回复数");
+        // 判断用户是否登录
+        Integer commentCount = 0;
+        if(request.getAttribute(SysConf.USER_UID) != null) {
+            String userUid = request.getAttribute(SysConf.USER_UID).toString();
+            String redisKey = com.moxi.mogublog.xo.global.RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + userUid;
+            String count = redisUtil.get(redisKey);
+            if(StringUtils.isNotEmpty(count)) {
+                commentCount = Integer.valueOf(count);
+            }
+        }
+        return ResultUtil.successWithData(commentCount);
+    }
+
+    @ApiOperation(value = "阅读用户接收的评论数", notes = "阅读用户接收的评论数")
+    @PostMapping("/readUserReceiveCommentCount")
+    public String readUserReceiveCommentCount(HttpServletRequest request) {
+        log.info("阅读用户接收的评论数");
+        // 判断用户是否登录
+        Integer commentCount = 0;
+        if(request.getAttribute(SysConf.USER_UID) != null) {
+            String userUid = request.getAttribute(SysConf.USER_UID).toString();
+            String redisKey = RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + userUid;
+            redisUtil.delete(redisKey);
+        }
+        return ResultUtil.successWithMessage("阅读成功");
+    }
+
 
 }
 

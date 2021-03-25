@@ -21,10 +21,10 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
- 
+
   // 向白名单中添加内容
   // 从cookie中获取可以访问的导航栏列表
-  let webNavbarList = JSON.parse(getCookie("webNavbarList"))  
+  let webNavbarList = JSON.parse(getCookie("webNavbarList"))
   const activeList = []
   if (webNavbarList) {
     for (var c = 0; c < webNavbarList.length; c++) {

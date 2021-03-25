@@ -127,11 +127,14 @@
       </div>
 
       <el-dropdown @command="handleCommand" class="userInfoAvatar">
+
         <span class="el-dropdown-link" >
-          <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-          <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
-          <img v-if="isLogin&&userInfo.photoUrl==undefined"
-               :src="defaultAvatar">
+          <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+            <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
+            <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
+            <img v-if="isLogin&&userInfo.photoUrl==undefined"
+                 :src="defaultAvatar">
+          </el-badge>
         </span>
 
         <el-dropdown-menu slot="dropdown">
@@ -150,6 +153,7 @@
   <el-drawer
     :show-close="true"
     :visible.sync="drawer"
+    :size="drawerSize"
     :with-header="false">
 
       <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
@@ -251,7 +255,11 @@
       </el-tab-pane>
 
       <el-tab-pane label="我的回复" name="2">
-        <span slot="label"><i class="el-icon-s-promotion"></i> 我的回复</span>
+        <span slot="label">
+          <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+            <i class="el-icon-s-promotion"></i> 我的回复
+          </el-badge>
+        </span>
         <div style="width: 100%; height: 840px;overflow:auto">
           <el-timeline>
             <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)" placement="top">
@@ -395,14 +403,14 @@
             <el-collapse-item title="申请须知" name="1">
               <div>请确定贵站可以稳定运营</div>
               <div>原创博客优先，技术类博客优先</div>
-              <div>申请前请先添加下方蘑菇博客友链</div>
+              <div>申请前请先添加下方{{info.name}}友链</div>
               <div>欢迎各位小伙伴一起互换友链~</div>
             </el-collapse-item>
-            <el-collapse-item title="蘑菇博客" name="2">
-              <div>网站名称：蘑菇博客</div>
-              <div>网站LOGO：http://image.moguit.cn/favicon.png</div>
-              <div>网站简介：蘑菇博客 - 专注于技术分享的博客平台</div>
-              <div>网站地址：http://www.moguit.cn</div>
+            <el-collapse-item :title="info.name" name="2">
+              <div>网站名称：{{info.name}}</div>
+              <div>网站LOGO：<a :href="info.logoPhoto" target="_blank">点击查看</a></div>
+              <div>网站简介：{{info.title}}</div>
+              <div>网站地址：{{webSite}}</div>
             </el-collapse-item>
           </el-collapse>
 
@@ -509,7 +517,7 @@
   import {getWebConfig, getWebNavbar} from "../api/index";
   import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
   import {authVerify, editUser, updateUserPwd, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
-  import {getCommentListByUser, getPraiseListByUser} from "../api/comment";
+  import {getCommentListByUser, getPraiseListByUser, getUserReceiveCommentCount, readUserReceiveCommentCount} from "../api/comment";
   import LoginBox from "../components/LoginBox";
   import {getListByDictTypeList} from "@/api/sysDictData"
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -539,6 +547,7 @@
         imagecropperShow: false,
         imagecropperKey: 0,
         url: process.env.PICTURE_API + "/file/cropperPicture",
+        webSite: process.env.VUE_MOGU_WEB,
         webNavbarList: [],
         drawer: false,
         info: {},
@@ -562,6 +571,8 @@
         feedbackList: [], //我的反馈
         openComment: "0", //是否开启评论
         defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
+        drawerSize: "30%",
+        userReceiveCommentCount: 0, // 用户收到的评论数
         rules: {
           qqNumber: [
             {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
@@ -625,6 +636,13 @@
         }
         after = scrollTop;
       });
+
+      // 屏幕自适应
+      window.onresize = () => {
+        return (() => {
+          that.setSize()
+        })()
+      }
     },
     watch: {
       $route(to, from) {
@@ -643,6 +661,8 @@
       this.getCurrentPageTitle()
       this.getWebConfigInfo()
       this.getWebNavbarList()
+      this.setSize()
+      this.setUserReceiveCommentCount()
     },
     methods: {
       //拿到vuex中的写的方法
@@ -660,7 +680,24 @@
         }
         this.$router.push({path: "/list", query: {keyword: this.keyword}});
       },
-
+      setSize() {
+        // 屏幕大于950px的时候，显示侧边栏
+        let clientWidth = document.body.clientWidth
+        console.log("客户端宽度", clientWidth)
+        if(clientWidth > 1360) {
+          this.drawerSize = "30%";
+          this.showSearch = true
+        }else if(clientWidth < 1360 && clientWidth > 950) {
+          this.drawerSize = "50%";
+          this.showSearch = true
+        } else if(clientWidth < 950 && clientWidth > 650) {
+          this.drawerSize = "70%";
+          this.showSearch = false
+        } else {
+          this.drawerSize = "95%";
+          this.showSearch = false
+        }
+      },
       //跳转到文章详情
       goToInfo(uid) {
         let routeData = this.$router.resolve({
@@ -763,6 +800,17 @@
           }; break;
           case "2": {
             console.log("点击我的回复")
+            // 判断用户是否未读的回复
+            if(this.userReceiveCommentCount > 0) {
+             // 设置已阅读
+              readUserReceiveCommentCount().then(response => {
+                if(response.code == this.$ECode.SUCCESS) {
+                  // 阅读成功
+                  console.log(response.message)
+                  this.userReceiveCommentCount = 0
+                }
+              })
+            }
           }; break;
           case "3": {
             console.log("点击我的点赞")
@@ -983,6 +1031,14 @@
           this.setLoginState(this.isLogin);
         }
       },
+      setUserReceiveCommentCount: function () {
+        getUserReceiveCommentCount().then(response => {
+          console.log("获取用户收到的评论数", response)
+          if (response.code == this.$ECode.SUCCESS) {
+            this.userReceiveCommentCount = response.data
+          }
+        });
+      },
       getKeyword: function() {
         var tempValue = decodeURI(this.getUrlVars()["keyword"]);
         if (
@@ -1143,7 +1199,6 @@
     height: 35px;
     position: absolute;
     right: -77px;
-    top: 15px;
   }
 
   .userInfoAvatar img {
@@ -1157,13 +1212,13 @@
       width: 35px;
       height: 35px;
       position: absolute;
-      right: 0px;
-      top: 12px;
+      right: 10px;
+      top: 0px;
     }
 
     .searchbox {
       position: absolute;
-      right: 40px;
+      right: 50px;
       top: 0
     }
   }

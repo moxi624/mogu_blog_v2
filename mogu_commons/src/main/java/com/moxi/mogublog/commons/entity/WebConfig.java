@@ -153,6 +153,13 @@ public class WebConfig extends SuperEntity<WebConfig> {
     private List<String> photoList;
 
     /**
+     * Logo图片
+     */
+    @TableField(exist = false)
+    private String logoPhoto;
+
+
+    /**
      * 支付宝付款码
      */
     @TableField(exist = false)
