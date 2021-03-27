@@ -300,7 +300,6 @@ insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_u
 
 /*
    修改t_system_config 表，增加 contentPicturePriority 字段，博客详情图片显示
-   @date 2020年4月19日16:01:34
 */
 ALTER TABLE t_system_config ADD content_picture_priority TINYINT(1) NOT NULL DEFAULT 0 COMMENT '博客详情图片显示优先级（ 0:本地  1: 七牛云 2: Minio）';
 
