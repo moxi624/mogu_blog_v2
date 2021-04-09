@@ -147,4 +147,8 @@ public class SystemConfigVO extends BaseVO<SystemConfigVO> {
      */
     private String openDashboardNotification;
 
+    /**
+     * 是否开启用户邮件激活功能【0 关闭，1 开启】
+     */
+    private String openEmailActivate;
 }

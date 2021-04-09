@@ -337,3 +337,10 @@ insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_u
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('b7fc36f7efc9738bddc9b09fedeccf60','导航栏管理 查询全部','3','导航栏管理 查询全部','6275bc5189e2e595b621d744d68278af','/webNavbar/getAllList',NULL,'0','1','2021-02-23 13:00:24','2021-02-23 13:00:24','1','1','0');
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('6275bc5189e2e595b621d744d68278af','导航栏管理','2','导航栏管理','4fe7725159ced4a238b816a4595109d1','/web/webNavbar','el-icon-c-scale-to-original','0','1','2021-02-22 18:26:13','2021-02-22 18:26:13','1','0','0');
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('4fe7725159ced4a238b816a4595109d1','门户管理','1','管理门户页面',NULL,'/web','el-icon-help','0','1','2021-02-22 18:25:34','2021-02-22 18:25:34','1','0','0');
+
+
+/*
+   修改t_system_config 表，增加 openEmailActivate 字段，是否开启注册用户邮件激活功能【0 关闭，1 开启】
+   @date 2021年4月9日18:14:28
+*/
+ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否开启用户邮件激活功能【0 关闭，1 开启】';
