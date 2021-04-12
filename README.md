@@ -30,7 +30,6 @@
 <p align=center>
     <img src="./doc/images/qq/公众号2.jpg" width="500" />
 </p>
-
 项目已有较详细的  [项目搭建文档](http://moxi159753.gitee.io/mogu_blog_doc) ，同时包括了 **Windows**、**Linux** 以及 **Docker** 环境下蘑菇博客的搭建。在使用过程中遇到问题时，首先认真阅读**项目搭建文档** ，同时 [FAQ文档](http://www.moguit.cn/#/info?blogOid=288) 还收集了小伙伴咨询的问题，可以提前阅读~
 
 【提问前】可以先 [百度](https://www.baidu.com/) 或者 [Google](https://www.google.com/) 进行解决，有的问题通过**搜索引擎**很快就能得到解决
@@ -41,6 +40,12 @@
 
 【提问】推荐使用 [Gitee issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 进行提问，因为issue解决后能够保留解决记录，帮助其它小伙伴避坑。其次可以使用  <a href="##关注&交流">QQ群 </a>  或者 <a href="##前言">微信群 </a> 进行提问。群里提问注意提问的时间，把遇到**问题的详细过程都描述清楚**，最好**配上图文信息**，这样能有利于更高效的解决问题。
 
+##  内推
+
+目前字节跳动的 **广告系统** 和 **在线教育** 等方向拥有大量岗位需求，欢迎点击下方**内推链接**【内推码:PS33MAS】选择合适的岗位投递。小伙伴们使用**内推链接**投递后，可以通过 **公众号** 联系我跟进面试进度。
+
+春招&实习：[点我传送](https://job.toutiao.com/campus/m/position?category=&external_referral_code=PS33MAS&job_hot_flag=&keywords=&location=&project=&type=) 社会招聘：[点我传送](https://job.toutiao.com/experienced/m/?external_referral_code=PS33MAS)
+
 ## 后期维护
 
 项目后台目前有 **Eureka** 版本和 **Nacos** 版本，其中 **Eureka** 版本使用的是 **SpringCloud** 一些组件，**Nacos** 版本使用的是 **SpringCloudAlibaba** 的一些组件，例如 **Nacos**、**Sentinel** 等
@@ -48,14 +53,6 @@
 - **Eureka** 版本请切换至 **Eureka** 分支（**已停止维护**，将不再进行新功能的开发）
 - **Nacos** 版本请切换至 **Nacos** 分支（作为以后**长期维护**的分支）
 - **master** 分支为主分支，是基于 **Nacos** 分支的稳定版本
-
-## 蘑菇博客Go版本
-
-[**mogu-go-v2**](https://gitee.com/yanglei88/mogu-go-v2) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
-
-**mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
-
-参考[蘑菇博客Golang版安装指南](https://t.1yb.co/kQ4k)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
 
 ## 项目介绍
 
@@ -65,6 +62,14 @@
 - 现在挺多是SSM或者SSH的博客管理系统，想用 **SpringBoot** + **SpringCloud**  + **Vue** 的微服务架构进行尝试项目的构建，里面很多功能可能只是**为了满足自己的学习需求**而引入的，大家可以**根据自己服务器配置来选择启动的服务**，因此本博客也是一个非常好的 **SpringBoot**、**SpringCloud**以及 **Vue** 技术的入门学习项目。
 - 原来做过 **Vue** + **ElementUi** 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 - [蘑菇博客](http://moguit.cn/#/)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了 **JVM**、**JUC**、**Java**，**Spring**，**SpringCloud**，计算机网络，操作系统，数据结构，**Vue**、**Linux** 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes) 一下
+
+## 蘑菇博客Go版本
+
+[**mogu-go-v2**](https://gitee.com/yanglei88/mogu-go-v2) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
+
+**mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
+
+参考[蘑菇博客Golang版安装指南](https://t.1yb.co/kQ4k)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
 
 ## 站点演示
 
