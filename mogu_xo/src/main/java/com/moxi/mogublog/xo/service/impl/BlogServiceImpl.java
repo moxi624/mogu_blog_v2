@@ -999,10 +999,15 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
                         for (Map.Entry<String, String> map : pictureMap.entrySet()) {
                             // 查看Map中的图片是否在需要替换的key中
                             if (pictureUrl.indexOf(map.getKey()) > -1) {
-                                if (EOpenStatus.OPEN.equals(systemConfig.getPicturePriority())) {
+                                if (EFilePriority.QI_NIU.equals(systemConfig.getContentPicturePriority())) {
+                                    // 获取七牛云上的图片
                                     matchUrlMap.put(pictureUrl, systemConfig.getQiNiuPictureBaseUrl() + map.getValue());
-                                } else {
+                                } else if(EFilePriority.LOCAL.equals(systemConfig.getContentPicturePriority())) {
+                                    // 获取本地的图片
                                     matchUrlMap.put(pictureUrl, systemConfig.getLocalPictureBaseUrl() + map.getValue());
+                                } else if(EFilePriority.MINIO.equals(systemConfig.getContentPicturePriority())) {
+                                    // 获取MINIO的图片
+                                    matchUrlMap.put(pictureUrl, systemConfig.getMinioPictureBaseUrl() + map.getValue());
                                 }
                                 break;
                             }
