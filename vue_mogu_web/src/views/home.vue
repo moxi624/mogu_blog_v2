@@ -26,7 +26,7 @@
 
       <ul id="starlist" :style="showHead?'display: block':''">
 
-        <li v-for="webNavbar in webNavbarList">
+        <li v-for="webNavbar in webNavbarList" :key="webNavbar.uid">
 
           <!--判断是否有下拉菜单-->
           <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
