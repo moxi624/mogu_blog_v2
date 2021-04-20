@@ -38,6 +38,14 @@ export default {
         }
       });
     },
+    computed: {
+      //添加一个计算属性用于简单过滤掉数组中第一个数据
+      sideNews() {
+        return this.fourthData.filter(blog =>
+          this.fourthData.indexOf(blog) != 0
+        )
+      }
+    },
     methods: {
       //跳转到文章详情【或推广链接】
       goToInfo(blog) {
@@ -57,14 +65,7 @@ export default {
         }
       },
     },
-    computed: {
-    //添加一个计算属性用于简单过滤掉数组中第一个数据
-    sideNews() {
-      return this.fourthData.filter(blog =>
-        this.fourthData.indexOf(blog) != 0
-      )
-    }
-  },
+
 
 }
 </script>

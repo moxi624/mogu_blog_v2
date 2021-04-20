@@ -219,7 +219,7 @@ export default {
     });
   },
   methods: {
-    //拿到vuex中的写的两个方法
+    //拿到vuex中的方法
     ...mapMutations(["setOpenNotification"]),
     closeNotificationDialogVisible(done) {
       this.setOpenNotification(false);

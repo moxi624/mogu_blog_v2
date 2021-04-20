@@ -460,12 +460,8 @@ import CKEditor from "../../components/CKEditor";
 import MarkdownEditor from "../../components/MarkdownEditor";
 import SubjectSelect from "../../components/SubjectSelect";
 var querystring = require("querystring");
-import { mapGetters } from "vuex";
 import { Loading } from 'element-ui';
 export default {
-  computed: {
-    ...mapGetters(["name", "roles"])
-  },
   components: {
     CheckPhoto,
     CKEditor,
@@ -750,6 +746,10 @@ export default {
     },
     // 跳转到该博客详情
     onClick: function(row) {
+      if(row.isPublish == 0) {
+        this.$message.error("文章暂未发布，无法进行浏览")
+        return
+      }
       window.open( this.BLOG_WEB_URL + "/#/info?blogOid=" + row.oid);
     },
     //标签远程搜索函数
