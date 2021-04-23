@@ -298,6 +298,10 @@
         this.showLogin = true;
       },
       goRegister: function () {
+        this.registerForm.userName="";
+        this.registerForm.password="";
+        this.registerForm.password2="";
+        this.registerForm.email="";
         this.showLogin = false;
       },
       goAuth: function (source) {
