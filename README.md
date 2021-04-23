@@ -25,7 +25,7 @@
 
 ##  前言
 
-**陌溪** 是一个从三本院校一路摸滚翻爬上来的程序员。目前就职于 **字节跳动的Data广告部门**，是字节跳动全线产品的商业变现研发团队。这两天创建了一个 **微信公众号【陌溪教你学编程】**，未来将会在公众号上持续性的输出很多原创小知识以及学习资源，欢迎各位小伙伴关注我，和我一起共同学习，同时我也希望各位小伙伴能够给**蘑菇博客**项目**多多 Star支持**，您的**点赞**就是我维护的动力！
+[**陌溪**](https://gitee.com/moxi159753/LearningNotes/raw/master/doc/images/qq/添加陌溪.png) 是一个从三本院校一路摸滚翻爬上来的程序员。目前就职于字节跳动的Data广告部门，是字节跳动全线产品的商业变现研发团队。这两天创建了一个 **微信公众号【[陌溪教你学编程](https://gitee.com/moxi159753/LearningNotes/raw/master/doc/images/qq/公众号2.jpg)】**，未来将会在公众号上持续性的输出很多原创小知识以及学习资源，欢迎各位小伙伴关注我，和我一起共同学习，同时我也希望各位小伙伴能够给**蘑菇博客**项目多多 **Star** 支持，您的**点赞**就是我维护的动力！
 
 <p align=center>
     <img src="./doc/images/qq/公众号2.jpg" width="500" />
@@ -45,7 +45,7 @@
 
 目前字节跳动的 **广告系统** 和 **在线教育** 等方向拥有大量岗位需求，欢迎点击下方**内推链接**【内推码:PS33MAS】选择合适的岗位投递。小伙伴们使用**内推链接**投递后，可以通过 **公众号** 联系我跟进面试进度。
 
-春招&实习：[点我传送](https://job.toutiao.com/campus/m/position?category=&external_referral_code=PS33MAS&job_hot_flag=&keywords=&location=&project=&type=) 社会招聘：[点我传送](https://job.toutiao.com/experienced/m/?external_referral_code=PS33MAS)
+春招&实习：[点我传送](https://job.toutiao.com/campus/m/position?category=&external_referral_code=PS33MAS&job_hot_flag=&keywords=&location=&project=&type=)  ， 社会招聘：[点我传送](https://job.toutiao.com/experienced/m/?external_referral_code=PS33MAS)
 
 ## 后期维护
 
@@ -182,7 +182,7 @@
 
 ![image text](./doc/images/gitee/server.jpg)
 
->  蘑菇博客系统架构图，使用 [Processon](https://www.processon.com/view/link/5f3b893a7d9c0806d41ec999) 在线绘制
+>  蘑菇博客系统架构图，使用 [Processon](https://www.processon.com/i/5e380df1e4b05b335ffa81e9) 在线绘制
 
 ### 后端技术
 

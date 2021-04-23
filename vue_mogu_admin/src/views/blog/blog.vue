@@ -647,7 +647,7 @@ export default {
     },
     tagList: function() {
       var tagParams = {};
-      tagParams.pageSize = 100;
+      tagParams.pageSize = 500;
       tagParams.currentPage = 1;
       getTagList(tagParams).then(response => {
         this.tagData = response.data.records;
@@ -656,7 +656,7 @@ export default {
     },
     blogSortList: function() {
       var blogSortParams = {};
-      blogSortParams.pageSize = 100;
+      blogSortParams.pageSize = 500;
       blogSortParams.currentPage = 1;
       getBlogSortList(blogSortParams).then(response => {
         if(response.code == this.$ECode.SUCCESS) {
@@ -722,7 +722,6 @@ export default {
           if(dictMap.sys_blog_type.defaultValue) {
             this.blogTypeDefault = dictMap.sys_blog_type.defaultValue;
           }
-
         }
       });
     },
@@ -914,7 +913,6 @@ export default {
             }
           })
           .catch(() => {
-
             that.dialogFormVisible = true;
             that.form = that.getFormObject();
             that.$nextTick(() => {

@@ -63,7 +63,7 @@
               }
               let request = new XMLHttpRequest()
               // 图片上传路径
-              request.open('POST', process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken())
+              request.open('POST', process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken())
               request.onload = that.onloadCallback
               request.send(formData)
             }
@@ -102,11 +102,9 @@
         // return this.$commonUtil.markdownToHtml(text);
         console.log("获取转换后的文本", this.vditor.getHTML())
         // console.log("获取转换后的文本", this.$commonUtil.markdownToHtml(localStorage.getItem('vditorvditor')))
-
         return this.vditor.getHTML();
       },
       setData: function(data) {
-
         // console.log("将html转", this.vditor.html2md(data))
         var that = this;
         this.$nextTick(() => {
@@ -122,6 +120,7 @@
         this.$nextTick(() => {
           if(that.vditor.vditor.lute) {
             that.vditor.setValue("")
+            localStorage.setItem('vditorvditor', "")
           }
         });
       }
