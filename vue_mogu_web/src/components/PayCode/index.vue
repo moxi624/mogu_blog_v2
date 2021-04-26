@@ -122,7 +122,7 @@ export default {
             type: 'success',
             offset: 100
           });
-          this.praiseCount = response.data;
+          this.$emit('update:praiseCount',response.data);
         } else {
           this.$notify.error({
             title: '错误',
