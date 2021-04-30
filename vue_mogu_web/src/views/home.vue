@@ -120,7 +120,7 @@
             v-model="keyword"
             v-on:keyup.enter="search"
           >
-          <p class="search_ico" @click="clickSearchIco">
+          <p class="search_ico" @click="clickSearchIco" :style="(browserFlag == 1)?'':'top:17px'">
             <span></span>
           </p>
         </div>
@@ -573,6 +573,7 @@
         defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
         drawerSize: "30%",
         userReceiveCommentCount: 0, // 用户收到的评论数
+        browserFlag: 1, // 浏览器标志【默认Chrome】
         rules: {
           qqNumber: [
             {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
@@ -663,6 +664,8 @@
       this.getWebNavbarList()
       this.setSize()
       this.setUserReceiveCommentCount()
+      // 获取浏览器类型
+      this.getBrowser()
     },
     methods: {
       //拿到vuex中的写的方法
@@ -1160,7 +1163,21 @@
       },
       closeLoginBox: function () {
         this.showLogin = false;
-      }
+      },
+      // 获取浏览器类型
+      getBrowser() {
+        let sBrowser, sUsrAg = navigator.userAgent;
+        if (sUsrAg.indexOf("Firefox") > -1) {
+          sBrowser = "Mozilla Firefox";
+          this.browserFlag = 2;
+          // "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
+        } else if (sUsrAg.indexOf("Chrome") > -1) {
+          sBrowser = "Google Chrome or Chromium";
+          this.browserFlag = 1;
+          // "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/66.0.3359.181 Chrome/66.0.3359.181 Safari/537.36"
+        }
+
+      },
     }
   };
 </script>
@@ -1326,4 +1343,6 @@
     width: 240px;
     margin-bottom: 5px;
   }
+
+  .search_ico2 { width: 60px; height: 60px; display: block; position: absolute; right: 0; top: 15px; padding: 0; margin: 0; line-height: 60px; cursor: pointer; }
 </style>
