@@ -16,7 +16,6 @@
           </div>
 
           <div class="rightCenter" v-html="$xss(item.content, options)"></div>
-<!--          <div class="rightCenter" v-html="item.content"></div>-->
 
           <div class="rightBottom">
             <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>

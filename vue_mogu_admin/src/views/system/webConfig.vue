@@ -235,6 +235,7 @@
     </el-tabs>
 
     <CheckPhoto
+      v-if="!isFirstPhotoVisible"
       @choose_data="getChooseData"
       @cancelModel="cancelModel"
       :photoVisible="photoVisible"
@@ -279,6 +280,7 @@ export default {
       icon: false, //控制删除图标的显示
       otherData: {},
       openDictList: [], //字典
+      isFirstPhotoVisible: true, // 图片选择器是否首次显示【用于懒加载】
       rules: {
         qqNumber: [
           {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
@@ -316,16 +318,12 @@ export default {
     CheckPhoto
   },
   created() {
-
     // 获取配置
     this.getWebConfigFun();
-
     //图片上传地址
     this.uploadPictureHost = process.env.PICTURE_API + "/file/cropperPicture";
-
     // 查询字典
     this.getDictList()
-
     //其它数据
     this.otherData = {
       source: "picture",
@@ -335,7 +333,6 @@ export default {
       sortName: "admin",
       token: getToken()
     };
-
   },
   methods: {
     /**
@@ -395,6 +392,7 @@ export default {
       this.photoList = [];
       this.fileIds = "";
       this.photoVisible = true;
+      this.isFirstPhotoVisible = false
     },
     submitForm: function() {
 
