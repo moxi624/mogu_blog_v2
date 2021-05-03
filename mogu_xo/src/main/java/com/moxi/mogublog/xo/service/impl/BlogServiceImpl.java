@@ -860,16 +860,21 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
         //保存成功后，需要发送消息到solr 和 redis, 同时从专题管理Item中移除该博客
         if (save) {
             Map<String, Object> map = new HashMap<>();
+
             map.put(SysConf.COMMAND, SysConf.DELETE);
             map.put(SysConf.BLOG_UID, blog.getUid());
             map.put(SysConf.LEVEL, blog.getLevel());
             map.put(SysConf.CREATE_TIME, blog.getCreateTime());
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
+
             // 移除所有包含该博客的专题Item
             List<String> blogUidList = new ArrayList<>(Constants.NUM_ONE);
             blogUidList.add(blogVO.getUid());
             subjectItemService.deleteBatchSubjectItemByBlogUid(blogUidList);
+
+            // 移除该文章下所有评论
+            commentService.batchDeleteCommentByBlogUid(blogUidList);
         }
         return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
@@ -899,9 +904,10 @@ public class BlogServiceImpl extends SuperServiceImpl<BlogMapper, Blog> implemen
             map.put(SysConf.UID, uidSbf);
             //发送到RabbitMq
             rabbitTemplate.convertAndSend(SysConf.EXCHANGE_DIRECT, SysConf.MOGU_BLOG, map);
-
             // 移除所有包含该博客的专题Item
             subjectItemService.deleteBatchSubjectItemByBlogUid(uidList);
+            // 移除该文章下所有评论
+            commentService.batchDeleteCommentByBlogUid(uidList);
         }
         return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
