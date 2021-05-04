@@ -193,16 +193,11 @@ public class LoginRestApi {
         List<String> roleUid = new ArrayList<>();
         roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
-
         List<String> categoryMenuUids = new ArrayList<>();
-
         roleList.forEach(item -> {
             String caetgoryMenuUids = item.getCategoryMenuUids();
             String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
-            for (int a = 0; a < uids.length; a++) {
-                categoryMenuUids.add(uids[a]);
-            }
-
+            categoryMenuUids.addAll(Arrays.asList(uids));
         });
         categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
 
@@ -302,7 +297,7 @@ public class LoginRestApi {
             redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, String.valueOf(countTemp), 10, TimeUnit.MINUTES);
         } else {
             surplusCount = surplusCount - 1;
-            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, "1", 30, TimeUnit.MINUTES);
+            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, Constants.STR_ONE, 30, TimeUnit.MINUTES);
         }
         return surplusCount;
     }
