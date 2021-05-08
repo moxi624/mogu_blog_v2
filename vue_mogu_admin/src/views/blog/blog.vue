@@ -284,6 +284,7 @@
           <el-col :span="6.5">
             <el-form-item label="分类" :label-width="formLabelWidth" prop="blogSortUid">
               <el-select
+                @input="contentChange"
                 v-model="form.blogSortUid"
                 size="small"
                 placeholder="请选择"
@@ -300,8 +301,9 @@
           </el-col>
 
           <el-col :span="6.5">
-            <el-form-item label="标签" label-width="80px">
+            <el-form-item label="标签" label-width="80px" prop="tagUid">
               <el-select
+                @input="contentChange"
                 v-model="tagValue"
                 multiple
                 size="small"
@@ -558,6 +560,9 @@ export default {
         ],
         blogSortUid: [
           {required: true, message: '分类不能为空', trigger: 'blur'}
+        ],
+        tagUid: [
+          {required: true, message: '标签不能为空', trigger: 'blur'}
         ],
         level: [
           {required: true, message: '推荐等级不能为空', trigger: 'blur'},
@@ -897,12 +902,17 @@ export default {
             that.dialogFormVisible = true;
             that.tagValue = [];
             that.form = JSON.parse(window.LS.get("form"));
+
+            console.log("获取标签列表", that.form)
+
             var tagValue = that.form.tagUid.split(",");
             for (var a = 0; a < tagValue.length; a++) {
               if (tagValue[a] != null && tagValue[a] != "") {
                 that.tagValue.push(tagValue[a]);
               }
             }
+            console.log("获取标签列表", that.tagValue)
+
             if(that.form.uid) {
               that.title = "编辑博客";
               that.isEditForm = true;
@@ -1046,13 +1056,15 @@ export default {
     contentChange: function() {
       console.log("内容改变")
       var that = this;
-      if(this.changeCount > 1) {
+      if(that.changeCount > 1) {
         that.isChange = true;
         that.form.content = that.$refs.editor.getData(); //获取CKEditor中的内容
         that.form.tagUid = that.tagValue.join(",");
+        console.log("开始备份2", that.$refs.editor.getData())
+        console.log("开始备份2", that.tagValue)
+        console.log("开始备份3", that.form)
         // 将内容设置到 WebStorage中
         window.LS.set("form", JSON.stringify(that.form));
-
       }
       this.changeCount = this.changeCount + 1;
     },
@@ -1175,18 +1187,13 @@ export default {
       this.blogList();
     },
     submitForm: function() {
-      if(this.tagValue.length <= 0) {
-        this.$commonUtil.message.error("标签不能为空!")
-        return;
-      }
-
+      this.form.content = this.$refs.editor.getData(); //获取CKEditor中的内容
+      this.form.tagUid = this.tagValue.join(",");
       this.$refs.form.validate((valid) => {
         if(!valid) {
-
+          console.log("校验出错")
         } else {
-          this.form.content = this.$refs.editor.getData(); //获取CKEditor中的内容
-          this.form.tagUid = this.tagValue.join(",");
-          var params = formatData(this.form);
+          let params = formatData(this.form);
           if (this.isEditForm) {
             editBlog(this.form).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
