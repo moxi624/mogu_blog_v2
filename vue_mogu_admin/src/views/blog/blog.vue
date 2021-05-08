@@ -916,7 +916,7 @@ export default {
             that.form = that.getFormObject();
             that.$nextTick(() => {
               //DOM现在更新了
-              that.$refs.editor.setData(that.form.content); //设置富文本内容
+              that.$refs.editor.initData(); //设置富文本内容
             });
             that.tagValue = [];
             that.isEditForm = false;
@@ -932,7 +932,6 @@ export default {
         });
         that.tagValue = [];
         that.isEditForm = false;
-        // that.formBak();
       }
     },
     handleUpload: function() {
@@ -1045,6 +1044,7 @@ export default {
     },
     // 内容改变，触发监听
     contentChange: function() {
+      console.log("内容改变")
       var that = this;
       if(this.changeCount > 1) {
         that.isChange = true;

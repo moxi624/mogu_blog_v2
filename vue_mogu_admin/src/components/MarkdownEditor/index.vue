@@ -100,7 +100,6 @@
         // let text = localStorage.getItem('vditorvditor')
         // 返回的文本
         // return this.$commonUtil.markdownToHtml(text);
-        console.log("获取转换后的文本", this.vditor.getHTML())
         // console.log("获取转换后的文本", this.$commonUtil.markdownToHtml(localStorage.getItem('vditorvditor')))
         return this.vditor.getHTML();
       },
@@ -110,7 +109,6 @@
         this.$nextTick(() => {
           //DOM现在更新了
           let vditor = that.initVditor()
-          console.log("得到的html", data)
           let markdownText = that.$commonUtil.htmlToMarkdown(data)
           localStorage.setItem('vditorvditor', markdownText)
         });
