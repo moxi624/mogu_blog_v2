@@ -92,8 +92,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 // 异常的处理器，将执行未鉴权的处理方法
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // 基于token，所以不需要session【但禁用后，将导致UserDetailsService每次都会执行，无法缓存用户信息】
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 允许对于网站静态资源的无授权访问
@@ -123,6 +123,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 禁用缓存
         httpSecurity.headers().cacheControl();
+
     }
 }
 

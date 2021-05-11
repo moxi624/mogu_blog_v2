@@ -171,6 +171,25 @@ const FUNCTIONS = {
 
     link.click()
   },
+  deepClone(obj,hash=new WeakMap()){
+    if(obj==null) return obj;   //如果是null 或者undefined 我就不进行拷贝操作
+    if(obj instanceof Date) return new Date(obj);
+    if(obj instanceof RegExp) return new RegExp(obj);
+    //可能是对象 或者普通的值 如果是函数的话，是不需要深拷贝的  因为函数是用来调用的，不需要再拷贝一个新的函数
+    if(typeof obj!=='object') return obj;
+    // 是对象的话就要进行深拷贝 [] {} Object.prototype.toString.call(obj)==[object Array]?[]:{}
+    if(hash.get(obj)) return hash.get(obj);
+
+    let cloneObj=new obj.constructor;
+    hash.set(obj,cloneObj);
+    for(let key in obj){
+      if(obj.hasOwnProperty(key)){
+        //实现一个递归拷贝
+        cloneObj[key]= this.deepClone(obj[key],hash);
+      }
+    }
+    return cloneObj;
+  },
   /**
    * 通用提示信息
    * @type {{success: message.success, warning: message.warning, error: message.error, info: message.info}}
