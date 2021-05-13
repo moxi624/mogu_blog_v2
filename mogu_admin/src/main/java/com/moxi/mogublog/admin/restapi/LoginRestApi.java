@@ -19,6 +19,7 @@ import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -102,6 +103,8 @@ public class LoginRestApi {
         } else {
             queryWrapper.eq(SQLConf.USER_NAME, username);
         }
+        queryWrapper.last(SysConf.LIMIT_ONE);
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         Admin admin = adminService.getOne(queryWrapper);
         if (admin == null) {
             // 设置错误登录次数
