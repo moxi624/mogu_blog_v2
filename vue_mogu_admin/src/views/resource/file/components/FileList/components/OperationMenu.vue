@@ -222,7 +222,12 @@ export default {
     addFolder() {
       this.$prompt('请输入文件夹名称', '创建文件夹', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        cancelButtonText: '取消',
+        inputValidator: (value) => {
+          if(!value) {
+            return "请输入文件夹名称"
+          }
+        }
       })
         .then(({ value }) => {
           this.createFile(value)
