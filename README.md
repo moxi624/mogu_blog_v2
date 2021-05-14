@@ -80,7 +80,7 @@
 >
 > 【演示后端】：http://demoadmin.moguit.cn/
 >
-> 【演示账号】：[点击获取](https://gitee.com/moxi159753/LearningNotes/raw/master/doc/images/qq/获取演示环境账号.jpg)
+> 【演示账号】：[点击获取](https://gitee.com/moxi159753/mogu_blog_v2/raw/Nacos/doc/images/qq/%E8%8E%B7%E5%8F%96%E6%BC%94%E7%A4%BA%E7%8E%AF%E5%A2%83%E8%B4%A6%E5%8F%B7.jpg)
 >
 > 【小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支下的uniapp_mogu_web文件夹）
 
