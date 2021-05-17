@@ -716,6 +716,7 @@ CREATE TABLE `t_web_config` (
   `open_mobile_comment` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启移动端评论(0:否， 1:是)',
   `open_admiration` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启赞赏(0:否， 1:是)',
   `open_mobile_admiration` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启移动端赞赏(0:否， 1:是)',
+  `link_apply_template` varchar(2018) DEFAULT NULL COMMENT '友链申请模板, 添加友链申请模板格式',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

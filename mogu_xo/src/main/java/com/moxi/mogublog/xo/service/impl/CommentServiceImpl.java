@@ -169,8 +169,14 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
 //        });
 
         for (Comment item : commentList) {
-            ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
-            item.setSourceName(commentSource.getName());
+
+            try {
+                ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
+                item.setSourceName(commentSource.getName());
+            } catch (Exception e) {
+                log.error("ECommentSource 转换异常");
+            }
+
             if (StringUtils.isNotEmpty(item.getUserUid())) {
                 item.setUser(userMap.get(item.getUserUid()));
             }

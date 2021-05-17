@@ -344,3 +344,11 @@ insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_u
    @date 2021年4月9日18:14:28
 */
 ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否开启用户邮件激活功能【0 关闭，1 开启】';
+
+
+
+/*
+ 在t_web_config表，增加友链申请模板字段
+ @date 2021年5月17日11:05:59
+*/
+ALTER TABLE  t_web_config ADD link_apply_template VARCHAR(2018) COMMENT "友链申请模板,添加友链申请模板格式";

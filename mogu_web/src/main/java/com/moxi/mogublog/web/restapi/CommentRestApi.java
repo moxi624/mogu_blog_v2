@@ -416,7 +416,11 @@ public class CommentRestApi {
             }
             // 设置sourceName
             if (StringUtils.isNotEmpty(item.getSource())) {
-                item.setSourceName(ECommentSource.valueOf(item.getSource()).getName());
+                try {
+                    item.setSourceName(ECommentSource.valueOf(item.getSource()).getName());
+                } catch (Exception e) {
+                    log.error("ECommentSource转换异常");
+                }
             }
             if (requestUserUid.equals(item.getUserUid())) {
                 commentList.add(item);

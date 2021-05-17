@@ -320,7 +320,6 @@
             <div>或者加入我们的QQ群进行交流</div>
           </el-collapse-item>
         </el-collapse>
-
         <el-divider></el-divider>
 
         <div style="width: 100%; height: 450px;overflow:auto">
@@ -400,17 +399,8 @@
 
         <el-form label-position="left" :model="blogLink" label-width="100px" ref="blogLink" :rules="linkRules">
           <el-collapse v-model="activeNames">
-            <el-collapse-item title="申请须知" name="1">
-              <div>请确定贵站可以稳定运营</div>
-              <div>原创博客优先，技术类博客优先</div>
-              <div>申请前请先添加下方{{info.name}}友链</div>
-              <div>欢迎各位小伙伴一起互换友链~</div>
-            </el-collapse-item>
-            <el-collapse-item :title="info.name" name="2">
-              <div>网站名称：{{info.name}}</div>
-              <div>网站LOGO：<a :href="info.logoPhoto" target="_blank">点击查看</a></div>
-              <div>网站简介：{{info.title}}</div>
-              <div>网站地址：{{webSite}}</div>
+            <el-collapse-item title="友链申请需知" name="1">
+              <span v-html="info.linkApplyTemplate">{{info.linkApplyTemplate}}</span>
             </el-collapse-item>
           </el-collapse>
 
@@ -539,7 +529,7 @@
             span: ['class']
           }
         },
-        activeNames: ['1', '2'], //激活的折叠面板
+        activeNames: ['1'], //激活的折叠面板
         activeName: "0", // 激活的标签
         yesNoDictList: [], // 是否 字典列表
         genderDictList: [], //性别 字典列表

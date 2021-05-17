@@ -105,7 +105,7 @@
         <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
         <div class="editor-container">
           <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.personResume" :height="500"></CKEditor>
-          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'" :height="660"></MarkdownEditor>
+          <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'" :height="660" style="margin-top: 12px"></MarkdownEditor>
         </div>
         <div style="margin-top: 5px; margin-left: 10px;" >
           <el-button type="primary" @click="submitForm('personResume')" v-permission="'/system/editMe'">保 存</el-button>
