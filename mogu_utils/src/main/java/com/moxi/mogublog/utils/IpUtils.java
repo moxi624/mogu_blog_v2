@@ -481,7 +481,6 @@ public class IpUtils {
             log.error("Error: DbSearcher or DbConfig is null");
             return null;
         }
-
 		
         //查询算法
         //B-tree, B树搜索（更快）
