@@ -3,15 +3,9 @@ package com.moxi.mogublog.web.restapi;
 
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.wechat.SignUtil;
-import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.xo.service.AdminService;
-import com.moxi.mogublog.xo.service.WebConfigService;
-import com.moxi.mougblog.base.enums.EBehavior;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +33,7 @@ public class WechatRestApi {
         String msgTimestamp = request.getParameter("timestamp");
         String msgNonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
-        if(SignUtil.checkSignature(msgSignature, msgTimestamp, msgNonce)) {
+        if (SignUtil.checkSignature(msgSignature, msgTimestamp, msgNonce)) {
             return echostr;
         }
         return null;

@@ -20,13 +20,14 @@ import java.util.Map;
  * 启动后报：
  * 程序异常：org.springframework.web.util.NestedServletException: Handler dispatch failed; nested exception is java.lang.NoSuchMethodError: com.alibaba.csp.sentinel.transport.config.TransportConfig.getConsoleServer()Ljava/lang/String;
  * 健康检查报500错误
- *
+ * <p>
  * 问题分析
  * 查看’SentinelHealthIndicator’代码第47行
  * 查看sentinel1.8.0版本的TransportConfig的66行
  * Method由getConsoleServe()->getConsoleServerList()
  * 以上问题导致报上述BUG
  * 原文：https://www.freesion.com/article/87071247615/
+ *
  * @author: 陌溪
  * @create: 2021-05-07-18:44
  */
@@ -64,8 +65,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
             // with UNKNOWN.
             detailMap.put("dashboard",
                     new Status(Status.UNKNOWN.getCode(), "dashboard isn't configured"));
-        }
-        else {
+        } else {
             // If Dashboard is configured, send a heartbeat message to it and check the
             // result
             HeartbeatSender heartbeatSender = HeartbeatSenderProvider
@@ -73,8 +73,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
             boolean result = heartbeatSender.sendHeartbeat();
             if (result) {
                 detailMap.put("dashboard", Status.UP);
-            }
-            else {
+            } else {
                 // If failed to send heartbeat message, means that the Dashboard is DOWN
                 dashboardUp = false;
                 detailMap.put("dashboard", new Status(Status.DOWN.getCode(),
@@ -103,8 +102,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
             try {
                 dataSource.loadConfig();
                 dataSourceDetailMap.put(dataSourceBeanName, Status.UP);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // If one DataSource failed to loadConfig, means that the DataSource is
                 // DOWN
                 dataSourceUp = false;
@@ -116,8 +114,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
         // If Dashboard and DataSource are both OK, the health status is UP
         if (dashboardUp && dataSourceUp) {
             builder.up().withDetails(detailMap);
-        }
-        else {
+        } else {
             builder.down().withDetails(detailMap);
         }
     }

@@ -1,4 +1,4 @@
-package com.moxi.mogublog.web.log;
+package com.moxi.mogublog.web.annotion.log;
 
 import com.moxi.mogublog.commons.entity.WebVisit;
 import com.moxi.mogublog.utils.IpUtils;
@@ -8,13 +8,7 @@ import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
-import com.moxi.mougblog.base.holder.RequestHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,11 +21,6 @@ import java.util.concurrent.TimeUnit;
 public class SysLogHandle extends AbstractRequestAwareRunnable {
 
     /**
-     * Redis工具类对象
-     */
-    private RedisUtil redisUtil;
-
-    /**
      * 模块UID
      */
     String moduleUid;
@@ -39,6 +28,10 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
      * 其它数据
      */
     String otherData;
+    /**
+     * Redis工具类对象
+     */
+    private RedisUtil redisUtil;
     /**
      * 用户UID
      */
@@ -65,6 +58,7 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
 
     /**
      * 构造函数
+     *
      * @param userUid
      * @param ip
      * @param os
@@ -93,6 +87,7 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
      */
     @Override
     protected void onRun() {
+        System.out.println("============" + Thread.currentThread().getName());
         WebVisit webVisit = new WebVisit();
         webVisit.setIp(ip);
         //从Redis中获取IP来源

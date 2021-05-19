@@ -1,4 +1,4 @@
-package com.moxi.mogublog.web.requestLimit;
+package com.moxi.mogublog.web.annotion.requestLimit;
 
 import com.moxi.mogublog.utils.AspectUtil;
 import com.moxi.mogublog.utils.IpUtils;

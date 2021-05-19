@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.moxi.mogublog.admin.global.RedisConf;
 import com.moxi.mogublog.admin.global.SysConf;
+import com.moxi.mogublog.commons.config.security.SecurityUser;
 import com.moxi.mogublog.commons.entity.ExceptionLog;
 import com.moxi.mogublog.utils.*;
 import com.moxi.mougblog.base.global.Constants;
@@ -18,6 +19,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +44,7 @@ public class LoggerAspect {
     RedisUtil redisUtil;
 
     @Autowired
-    SysLogHandle sysLogHandle;
+    ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     /**
      * 开始时间
@@ -141,12 +144,18 @@ public class LoggerAspect {
 
         // 获取参数名称和值
         Map<String, Object> nameAndArgsMap = AopUtils.getFieldsName(point);
-
+        // 当前操作用户
+        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String paramsJson = JSONObject.toJSONString(nameAndArgsMap);
+        String type = request.getMethod();
+        String ip = IpUtils.getIpAddr(request);
+        String url = request.getRequestURI();
 
         // 异步存储日志
-        sysLogHandle.setSysLogHandle(paramsJson, point.getTarget().getClass().getName(), point.getSignature().getName(), bussinessName, startTime);
-
-        sysLogHandle.onRun();
+        threadPoolTaskExecutor.execute(
+                new SysLogHandle(ip, type, url, securityUser,
+                        paramsJson, point.getTarget().getClass().getName(),
+                        point.getSignature().getName(), bussinessName,
+                        startTime, redisUtil));
     }
 }

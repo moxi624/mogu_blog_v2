@@ -161,7 +161,7 @@ public class LoginRestApi {
         SystemConfig systemConfig = systemConfigService.getConfig();
         String openEmailActivate = systemConfig.getOpenEmailActivate();
         String resultMessage = "注册成功";
-        if(EOpenStatus.OPEN.equals(openEmailActivate)) {
+        if (EOpenStatus.OPEN.equals(openEmailActivate)) {
             user.setStatus(EStatus.FREEZE);
         } else {
             // 未开启注册用户邮件激活，直接设置成激活状态
@@ -170,7 +170,7 @@ public class LoginRestApi {
         user.insert();
 
         // 判断是否需要发送邮件通知
-        if(EOpenStatus.OPEN.equals(openEmailActivate)) {
+        if (EOpenStatus.OPEN.equals(openEmailActivate)) {
             // 生成随机激活的token
             String token = StringUtils.getUUID();
             // 过滤密码

@@ -1,4 +1,4 @@
-package com.moxi.mogublog.web.log;
+package com.moxi.mogublog.web.annotion.log;
 
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.enums.PlatformEnum;

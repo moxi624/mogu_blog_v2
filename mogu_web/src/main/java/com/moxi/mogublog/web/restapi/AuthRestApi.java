@@ -11,7 +11,6 @@ import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.commons.entity.User;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.*;
-import com.moxi.mogublog.utils.wechat.SignUtil;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;

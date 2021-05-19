@@ -1,34 +1,29 @@
 package com.moxi.mogublog.web.restapi;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.Link;
 import com.moxi.mogublog.commons.entity.Tag;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.annotion.log.BussinessLog;
+import com.moxi.mogublog.web.annotion.requestLimit.RequestLimit;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
-import com.moxi.mogublog.web.requestLimit.RequestLimit;
 import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.service.*;
-import com.moxi.mogublog.xo.vo.WebNavbarVO;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.global.Constants;
-import com.moxi.mougblog.base.holder.RequestHolder;
-import com.moxi.mougblog.base.validator.group.GetOne;
-import com.moxi.mougblog.base.validator.group.Insert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -117,13 +112,13 @@ public class IndexRestApi {
         String hotTagCount = sysParamsService.getSysParamsValueByKey(SysConf.HOT_TAG_COUNT);
         // 从Redis中获取友情链接
         String jsonResult = redisUtil.get(RedisConf.BLOG_TAG + Constants.SYMBOL_COLON + hotTagCount);
-        if(StringUtils.isNotEmpty(jsonResult)) {
+        if (StringUtils.isNotEmpty(jsonResult)) {
             List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
             return ResultUtil.result(SysConf.SUCCESS, jsonResult2List);
         }
         List<Tag> tagList = tagService.getHotTag(Integer.valueOf(hotTagCount));
-        if(tagList.size() > 0) {
-            redisUtil.setEx(RedisConf.BLOG_TAG + Constants.SYMBOL_COLON + hotTagCount ,JsonUtils.objectToJson(tagList), 1, TimeUnit.HOURS);
+        if (tagList.size() > 0) {
+            redisUtil.setEx(RedisConf.BLOG_TAG + Constants.SYMBOL_COLON + hotTagCount, JsonUtils.objectToJson(tagList), 1, TimeUnit.HOURS);
         }
         return ResultUtil.result(SysConf.SUCCESS, tagList);
     }
@@ -134,13 +129,13 @@ public class IndexRestApi {
         String friendlyLinkCount = sysParamsService.getSysParamsValueByKey(SysConf.FRIENDLY_LINK_COUNT);
         // 从Redis中获取友情链接
         String jsonResult = redisUtil.get(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount);
-        if(StringUtils.isNotEmpty(jsonResult)) {
+        if (StringUtils.isNotEmpty(jsonResult)) {
             List jsonResult2List = JsonUtils.jsonArrayToArrayList(jsonResult);
             return ResultUtil.result(SysConf.SUCCESS, jsonResult2List);
         }
         List<Link> linkList = linkService.getListByPageSize(Integer.valueOf(friendlyLinkCount));
-        if(linkList.size() > 0) {
-            redisUtil.setEx(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount ,JsonUtils.objectToJson(linkList), 1, TimeUnit.HOURS);
+        if (linkList.size() > 0) {
+            redisUtil.setEx(RedisConf.BLOG_LINK + Constants.SYMBOL_COLON + friendlyLinkCount, JsonUtils.objectToJson(linkList), 1, TimeUnit.HOURS);
         }
         return ResultUtil.result(SysConf.SUCCESS, linkList);
     }

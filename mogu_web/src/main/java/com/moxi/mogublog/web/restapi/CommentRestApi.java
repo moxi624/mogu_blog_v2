@@ -10,11 +10,11 @@ import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.annotion.log.BussinessLog;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
 import com.moxi.mogublog.web.global.SQLConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.service.*;
 import com.moxi.mogublog.xo.utils.RabbitMqUtil;
 import com.moxi.mogublog.xo.utils.WebUtil;
@@ -623,10 +623,10 @@ public class CommentRestApi {
         comment.setUser(user);
 
         // 如果是回复某人的评论，那么需要向该用户Redis收件箱中中写入一条记录
-        if(StringUtils.isNotEmpty(comment.getToUserUid())) {
+        if (StringUtils.isNotEmpty(comment.getToUserUid())) {
             String redisKey = RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + comment.getToUserUid();
             String count = redisUtil.get(redisKey);
-            if(StringUtils.isNotEmpty(count)) {
+            if (StringUtils.isNotEmpty(count)) {
                 redisUtil.incrBy(redisKey, Constants.NUM_ONE);
             } else {
                 redisUtil.setEx(redisKey, Constants.STR_ONE, 7, TimeUnit.DAYS);
@@ -799,6 +799,7 @@ public class CommentRestApi {
 
     /**
      * 通过评论类型跳转到对应的页面
+     *
      * @param commentVO
      * @return
      */
@@ -832,11 +833,11 @@ public class CommentRestApi {
         log.info("获取用户收到的评论回复数");
         // 判断用户是否登录
         Integer commentCount = 0;
-        if(request.getAttribute(SysConf.USER_UID) != null) {
+        if (request.getAttribute(SysConf.USER_UID) != null) {
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
             String redisKey = RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + userUid;
             String count = redisUtil.get(redisKey);
-            if(StringUtils.isNotEmpty(count)) {
+            if (StringUtils.isNotEmpty(count)) {
                 commentCount = Integer.valueOf(count);
             }
         }
@@ -848,7 +849,7 @@ public class CommentRestApi {
     public String readUserReceiveCommentCount(HttpServletRequest request) {
         log.info("阅读用户接收的评论数");
         // 判断用户是否登录
-        if(request.getAttribute(SysConf.USER_UID) != null) {
+        if (request.getAttribute(SysConf.USER_UID) != null) {
             String userUid = request.getAttribute(SysConf.USER_UID).toString();
             String redisKey = RedisConf.USER_RECEIVE_COMMENT_COUNT + Constants.SYMBOL_COLON + userUid;
             redisUtil.delete(redisKey);

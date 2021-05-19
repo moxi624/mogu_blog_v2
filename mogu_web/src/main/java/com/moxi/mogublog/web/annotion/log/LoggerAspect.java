@@ -1,4 +1,4 @@
-package com.moxi.mogublog.web.log;
+package com.moxi.mogublog.web.annotion.log;
 
 import com.moxi.mogublog.utils.AopUtils;
 import com.moxi.mogublog.utils.AspectUtil;
@@ -16,8 +16,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
