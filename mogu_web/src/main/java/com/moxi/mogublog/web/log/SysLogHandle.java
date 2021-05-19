@@ -11,6 +11,7 @@ import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -22,10 +23,10 @@ import java.util.concurrent.TimeUnit;
  * @author: 陌溪
  * @create: 2020-03-05-8:59
  */
-@Component("WebSysLogHandle")
+//@Component("WebSysLogHandle")
 public class SysLogHandle extends AbstractRequestAwareRunnable {
 
-    @Autowired
+    //@Autowired
     RedisUtil redisUtil;
     /**
      * 模块UID
@@ -43,6 +44,14 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
      * 用户行为
      */
     private String behavior;
+
+    public SysLogHandle(String userUid, String behavior, String moduleUid, String otherData, RedisUtil redisUtil) {
+        this.userUid = userUid;
+        this.behavior = behavior;
+        this.moduleUid = moduleUid;
+        this.otherData = otherData;
+        this.redisUtil = redisUtil;
+    }
 
     /**
      * 构造方法，用于初始化成员变量
