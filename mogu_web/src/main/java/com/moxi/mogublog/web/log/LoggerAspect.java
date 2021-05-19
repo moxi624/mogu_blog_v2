@@ -31,9 +31,6 @@ import java.util.Map;
 @Slf4j
 public class LoggerAspect {
 
-    /*@Autowired
-    SysLogHandle sysLogHandle;*/
-
     @Autowired
     ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
@@ -93,11 +90,17 @@ public class LoggerAspect {
             if (request.getAttribute(SysConf.USER_UID) != null) {
                 userUid = request.getAttribute(SysConf.USER_UID).toString();
             }
+
+            Map<String, String> map = IpUtils.getOsAndBrowserInfo(request);
+            String os = map.get(SysConf.OS);
+            String browser = map.get(SysConf.BROWSER);
+            String ip = IpUtils.getIpAddr(request);
             // 异步存储日志
             threadPoolTaskExecutor.execute(
-                    new SysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA), redisUtil));
-            /*sysLogHandle.setSysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA));
-            sysLogHandle.onRun();*/
+                    new SysLogHandle(userUid, ip, os, browser,
+                            behavior.getBehavior(),
+                            result.get(SysConf.MODULE_UID),
+                            result.get(SysConf.OTHER_DATA), redisUtil));
         }
     }
 }
