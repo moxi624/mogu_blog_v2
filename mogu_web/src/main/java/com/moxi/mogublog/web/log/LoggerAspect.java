@@ -3,6 +3,7 @@ package com.moxi.mogublog.web.log;
 import com.moxi.mogublog.utils.AopUtils;
 import com.moxi.mogublog.utils.AspectUtil;
 import com.moxi.mogublog.utils.IpUtils;
+import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.web.global.SysConf;
 import com.moxi.mougblog.base.enums.EBehavior;
 import com.moxi.mougblog.base.holder.RequestHolder;
@@ -13,7 +14,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -27,8 +31,14 @@ import java.util.Map;
 @Slf4j
 public class LoggerAspect {
 
+    /*@Autowired
+    SysLogHandle sysLogHandle;*/
+
     @Autowired
-    SysLogHandle sysLogHandle;
+    ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Autowired
+    RedisUtil redisUtil;
 
     @Pointcut(value = "@annotation(bussinessLog)")
     public void pointcut(BussinessLog bussinessLog) {
@@ -84,8 +94,10 @@ public class LoggerAspect {
                 userUid = request.getAttribute(SysConf.USER_UID).toString();
             }
             // 异步存储日志
-            sysLogHandle.setSysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA));
-            sysLogHandle.onRun();
+            threadPoolTaskExecutor.execute(
+                    new SysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA), redisUtil));
+            /*sysLogHandle.setSysLogHandle(userUid, behavior.getBehavior(), result.get(SysConf.MODULE_UID), result.get(SysConf.OTHER_DATA));
+            sysLogHandle.onRun();*/
         }
     }
 }
