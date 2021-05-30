@@ -435,7 +435,6 @@
     height: 190px;
     position: absolute;
     z-index: 999;
-    left: 35px;
     top: 10px;
   }
   .emoji-size-small {

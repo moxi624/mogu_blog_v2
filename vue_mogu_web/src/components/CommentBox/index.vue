@@ -13,12 +13,22 @@
     <div class="bottom">
       <el-button class="submit p2" type="primary"  @click="handleSubmit">发送评论</el-button>
       <el-button class="cancel p2" type="info" @click="handleCancle">取消评论</el-button>
-      <div class="emoji-panel-btn p2" @click="showEmojiPanel">
-        <img src="../../assets/img/face_logo.png" />
-      </div>
+
+      <el-popover
+        placement="top"
+        v-model="isShowEmojiPanel">
+        <emoji-panel class="emojiPanel" @emojiClick="appendEmoji"></emoji-panel>
+
+        <div class="emoji-panel-btn p2" @click="showEmojiPanel" slot="reference">
+          <img src="../../assets/img/face_logo.png" />
+        </div>
+
+      </el-popover>
+
+
+
       <span class="allow p2" v-if="isShowAvatar">还能输入{{count}}个字符</span>
 
-      <emoji-panel class="emojiPanel" @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
     </div>
   </div>
 
@@ -186,13 +196,18 @@
 <style>
   @import "../../assets/css/emoji.css";
 
+  .el-popover {
+    height: 135px;
+    width: 420px;
+  }
+
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
     border-radius: 5px;
     background-color: #ffffff;
-    width: 650px;
-    height: 135px;
+    width: 423px;
+    height: 145px;
     position: absolute;
     z-index: 99;
     top: 10px;
@@ -286,11 +301,18 @@
       border-radius: 5px;
       background-color: #ffffff;
       width: 300px;
-      height: 270px;
+      height: 220px;
       position: absolute;
       z-index: 99;
       top: 10px;
     }
+
+    .el-popover {
+      height: 220px;
+      width: 300px;
+    }
+
+
   }
 
 </style>
