@@ -388,7 +388,7 @@ export default {
             } else {
               this.$commonUtil.message.error(response.message)
             }
-            this.WebNavbarList();
+            this.WebNavbarAllList();
           });
         })
         .catch(() => {
