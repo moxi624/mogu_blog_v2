@@ -489,8 +489,9 @@ public class IpUtils {
         //Memory,加载内存（最快）
         //DbSearcher.MEMORY_ALGORITYM
         try {
-            DbConfig config = new DbConfig();
-            DbSearcher searcher = new DbSearcher(config, dbPath);
+            // 修改成静态加载
+//            DbConfig config = new DbConfig();
+//            DbSearcher searcher = new DbSearcher(config, dbPath);
 
             //define the method
             Method method = null;
