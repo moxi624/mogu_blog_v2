@@ -16,6 +16,7 @@ public class ResultUtil {
     final static String DATA = "data";
     final static String MESSAGE = "message";
     final static int NUM_TWO = 2;
+    final static int NUM_THREE = 3;
 
     /**
      * @param code success error
@@ -62,7 +63,7 @@ public class ResultUtil {
      * @return
      */
     public static String resultWithDataAndMessage(Object code, Object data, String message) {
-        Map<Object, Object> map = new HashMap<>(NUM_TWO);
+        Map<Object, Object> map = new HashMap<>(NUM_THREE);
         map.put(CODE, code);
         map.put(DATA, data);
         map.put(MESSAGE, message);
