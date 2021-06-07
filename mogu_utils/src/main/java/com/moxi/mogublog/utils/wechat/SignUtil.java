@@ -1,8 +1,17 @@
 package com.moxi.mogublog.utils.wechat;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * 请求校验工具
@@ -61,4 +70,26 @@ public class SignUtil {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * xml转map
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, String> xmlToMap(HttpServletRequest request) throws Exception {
+        Map<String, String> map = new HashMap<>();
+        SAXReader reader = new SAXReader();
+        InputStream ins = request.getInputStream();
+        Document doc = reader.read(ins);
+        Element root = doc.getRootElement();
+        List<Element> list = (List<Element>)root.elements();
+        for(Element e:list){
+            map.put(e.getName(), e.getText());
+        }
+        ins.close();
+        return map;
+    }
+
+
 }
