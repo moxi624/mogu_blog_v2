@@ -363,9 +363,9 @@
 
 为了方便小伙伴们沟通交流，我创建了QQ群 (**加群备注**：`蘑菇博客`) <a target="_blank" href="https://jq.qq.com/?_wv=1027&k=soh24RYi"><img border="0" src="./doc/images/qq/group.png" alt="蘑菇博客交流群" title="蘑菇博客交流群"></a>，目前项目还存在很多不足之处，欢迎各位老哥进群进行技术交流，为了防止广告进入，希望加群的时候能添加备注，谢谢~
 
-|         ~~QQ群（备注：`蘑菇博客`）【群满】~~          |            QQ群（备注：`蘑菇博客`）【推荐】            |
-| :---------------------------------------------------: | :----------------------------------------------------: |
-| <img src="./doc/images/qq/qqGroup.png" width="200" /> | <img src="./doc/images/qq/qqGroup2.png" width="200" /> |
+|         ~~QQ群（备注：`蘑菇博客`）【群满】~~          |            QQ群（备注：`蘑菇博客`）【推荐】            | QQ群（备注：`蘑菇博客`）                               |
+| :---------------------------------------------------: | :----------------------------------------------------: | ------------------------------------------------------ |
+| <img src="./doc/images/qq/qqGroup.png" width="200" /> | <img src="./doc/images/qq/qqGroup2.png" width="200" /> | <img src="./doc/images/qq/qqGroup3.png" width="200" /> |
 
 ## 未来计划
 
@@ -392,13 +392,13 @@
 - [x] 使用DockerCompose完成 [博客一键部署](http://www.moguit.cn/#/info?blogOid=565)
 - [x] 使用Portainer对Docker镜像可视化管理
 - [x] 适配门户页面的移动端布局
+- [x] 完善网盘管理
+- [x] 增加更新记录
+- [x] 完善爬虫模块
+- [x] 完善网关模块
 - [ ] 增加K8S部署蘑菇博客教程
 - [ ] 增加大屏数据展示页面
 - [ ] 增加定时任务模块
-- [ ] 完善网盘管理
-- [ ] 增加更新记录
-- [ ] 完善爬虫模块
-- [ ] 完善网关模块
 - [ ] 使用Freemark页面静态化技术对博客详情页静态化
 - [ ] 解决Nuxt_mogu_web中存在的问题，使博客能被搜索引擎收录
 - [ ] 让原创文章能够同步到多平台，如：CSDN，掘金，博客园等
@@ -422,33 +422,6 @@
 |                       微信                       |                      支付宝                       |
 | :----------------------------------------------: | :-----------------------------------------------: |
 | <img src="./doc/images/qq/wx.png" width="200" /> | <img src="./doc/images/qq/zfb.png" width="200" /> |
-
-## 视频教程
-
-特别感谢 [俺是程序狮](https://space.bilibili.com/277038643) 在B站上给蘑菇博客录制的视频教程，课程讲的非常细致，手把手带着开发博客系统，感兴趣的小伙伴可以去学习和支持一下~，注意：视频教程基于 **Eureka** 分支，仅供参考，搭建**以文档为主** ！
-
-- [项目介绍](https://www.bilibili.com/video/BV1Si4y1u7H4)
-- [结构介绍与本地Nginx本地图片服务器启动](https://www.bilibili.com/video/BV1AA411e7W5)
-- [mysql脚本准备](https://www.bilibili.com/video/BV1kv411v7ND)
-- [后台服务启动](https://www.bilibili.com/video/BV1Nv411i7wu)
-- [RabbitMQ启动](https://www.bilibili.com/video/BV1mD4y1U7GT)
-- [前端项目启动](https://www.bilibili.com/video/BV1B541187Ez)
-- [后台管理系统的前端工程结构介绍](https://www.bilibili.com/video/BV1D54y1U78F)
-- [后台管理系统登录页](https://www.bilibili.com/video/BV1854y127d6)
-- [后台管理系统登录页2](https://www.bilibili.com/video/BV1DD4y1d7Tx)
-- [登录页请求处理](https://www.bilibili.com/video/BV1aT4y1w7Ux)
-- [前端发起登录认证](https://www.bilibili.com/video/BV1Rp4y1Y7fj)
-- [vuerouter路由配置](https://www.bilibili.com/video/BV14A411n72S)
-- [侧边栏菜单的实现](https://www.bilibili.com/video/BV1tT4y1A7tn)
-- [汉堡菜单实现](https://www.bilibili.com/video/BV1z5411b7ih)
-- [面包屑导航](https://www.bilibili.com/video/BV1LZ4y1N7pk)
-- [导航条右侧菜单](https://www.bilibili.com/video/BV1sa4y1j7Tb)
-- [仪表盘首页(上)](https://www.bilibili.com/video/BV13y4y1r7x6)
-- [仪表盘首页(中)](https://www.bilibili.com/video/BV1xK4y1E7TA)
-- [TagsView组件](https://www.bilibili.com/video/BV1nK4y1j7uN)
-- [Maven工程介绍](https://www.bilibili.com/video/BV1g54y1k7Gb)
-- [如何搭建Eureka Server](https://www.bilibili.com/video/BV1va411w7rU)
-- .....
 
 ## 移动端截图
 
