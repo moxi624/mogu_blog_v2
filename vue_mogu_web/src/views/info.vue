@@ -225,6 +225,7 @@
               this.blogUid = response.data.uid
               this.blogOid = response.data.oid
               this.commentInfo.blogUid = response.data.uid;
+              document.title = response.data.title
               this.getSameBlog()
               this.getCommentDataList();
             }
