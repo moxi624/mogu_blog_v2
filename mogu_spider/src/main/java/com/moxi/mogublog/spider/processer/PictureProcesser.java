@@ -29,9 +29,9 @@ import java.util.regex.Pattern;
 public class PictureProcesser implements PageProcessor {
 
     // 获取img标签正则
-    private static final String IMGURL_REG = "<img.*?src=.*?photos.*?/>";
+    private static final String IMGURL_REG = "<(img|IMG)(.*?)>";
     // 获取src路径的正则
-    private static final String IMGSRC_REG = "/photos.*?\\?";
+    private static final String IMGSRC_REG = "(src|SRC)=\"(.*?)\"";
 
     /**
      * 查找输入的关键词
@@ -100,29 +100,9 @@ public class PictureProcesser implements PageProcessor {
         return localFile;
     }
 
-    private static void add(List<String> localFile) {
-//        for (String ss : localFile) {
-//            //构造一个带指定Zone对象的配置类
-//            Configuration cfg = new Configuration(Zone.zone2());
-//            //生成上传凭证，然后准备上传
-//            String accessKey = "KPTcX6IBYXrR8wpE0VvcUXBu4XkC0XyhquFivGYe";
-//            String secretKey = "bQcxUBc_c8evOPKZMxiJ2luHTROcRha3krWJmvR3";
-//            String bucket = "mogublogforsjf";
-//            //...其他参数参考类注释
-//            UploadManager uploadManager = new UploadManager(cfg);
-//            String key = getUUID();
-//            Auth auth = Auth.create(accessKey, secretKey);
-//            String upToken = auth.uploadToken(bucket);
-//            File localFilePath = new File(ss);
-//            Response response = uploadManager.put(localFilePath, key, upToken);
-//            //解析上传成功的结果
-//            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-//        }
-    }
-
     public static void main(String[] args) throws Exception {
         PictureProcesser pictureProcesser = new PictureProcesser();
-        String html = pictureProcesser.getHtml("https://foter.com/search/instant/?q=cat");
+        String html = pictureProcesser.getHtml("https://www.hippopx.com/zh/query?q=cat");
         List<String> imageUrl = pictureProcesser.getImageUrl(html);
         List<String> imageSrc = pictureProcesser.getImageSrc(imageUrl);
         System.out.println(JSON.toJSONString(imageSrc));
@@ -134,7 +114,7 @@ public class PictureProcesser implements PageProcessor {
         for (String image : listimageurl) {
             Matcher matcher = Pattern.compile(IMGSRC_REG).matcher(image);
             while (matcher.find()) {
-                listImageSrc.add("https://foter.com" + matcher.group().substring(0, matcher.group().length() - 1));
+                listImageSrc.add(matcher.group(2).trim());
             }
         }
         return listImageSrc;
@@ -226,28 +206,16 @@ public class PictureProcesser implements PageProcessor {
         Pattern compile = Pattern.compile(IMGURL_REG);
         Matcher matcher = compile.matcher(html);
         List<String> listimgurl = new ArrayList<>();
+        int temp = 0;
         while (matcher.find()) {
+            temp ++;
+            // 跳过第一张logo图片
+            if (temp == 1) {
+                continue;
+            }
             listimgurl.add(matcher.group());
         }
         return listimgurl;
     }
 
-    public String uploadQiniu(File localFilePath) {
-//        //构造一个带指定Zone对象的配置类
-//        Configuration cfg = new Configuration(Zone.zone2());
-//        //生成上传凭证，然后准备上传
-//        String accessKey = "KPTcX6IBYXrR8wpE0VvcUXBu4XkC0XyhquFivGYe";
-//        String secretKey = "bQcxUBc_c8evOPKZMxiJ2luHTROcRha3krWJmvR3";
-//        String bucket = "mogublogforsjf";
-//        //...其他参数参考类注释
-//        UploadManager uploadManager = new UploadManager(cfg);
-//        String key = StringUtils.getUUID();
-//        Auth auth = Auth.create(accessKey, secretKey);
-//        String upToken = auth.uploadToken(bucket);
-//        Response response = uploadManager.put(localFilePath, key, upToken);
-//        //解析上传成功的结果
-//        DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-//        return putRet.key;
-        return null;
-    }
 }

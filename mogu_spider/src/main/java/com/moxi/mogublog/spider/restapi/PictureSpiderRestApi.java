@@ -38,9 +38,9 @@ public class PictureSpiderRestApi {
     public String spiderPicture(@RequestBody PictureSpider pictureSpider) throws UnsupportedEncodingException {
         String searchUrl;
         if (pictureSpider.getCurrentPage() > 1) {
-            searchUrl = "https://foter.com/search/instant/?q=" + pictureSpider.getKeyword() + "&page=" + pictureSpider.getCurrentPage();
+            searchUrl = "https://www.hippopx.com/zh/query?q=" + pictureSpider.getKeyword() + "&page=" + pictureSpider.getCurrentPage();
         } else {
-            searchUrl = "https://foter.com/search/instant/?q=" + pictureSpider.getKeyword();
+            searchUrl = "https://www.hippopx.com/zh/query?q=" + pictureSpider.getKeyword();
         }
         String html = pictureProcesser.getHtml(searchUrl);
         List<String> imageUrlList = pictureProcesser.getImageUrl(html);
