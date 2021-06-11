@@ -486,7 +486,7 @@
 
   <footer>
     <p>
-      <a href="javasrcipt:void(0);" @click="goIndex()">Copyright &nbsp;{{info.name}}&nbsp;</a>
+      Copyright <a href="https://gitee.com/moxi159753/mogu_blog_v2" @click="goIndex()"> &nbsp;蘑菇博客&nbsp;</a>
       <a href="http://www.beian.gov.cn/portal/index.do">{{info.recordNum}}</a>
     </p>
   </footer>
