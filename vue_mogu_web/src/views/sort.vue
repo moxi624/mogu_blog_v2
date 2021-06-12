@@ -62,6 +62,7 @@
                     v-for="tagItem in item.tagList"
                     v-if="tagItem != null"
                     :key="tagItem.uid"
+                    style="margin-left: 3px;"
                     @click="goToList('tag', tagItem)"
                     type="warning"
                   >{{tagItem.content}}</el-tag>
