@@ -584,6 +584,9 @@
       // 获取浏览器类型
       this.getBrowser()
     },
+    head(){
+        return this.$seo(this.info.title,this.info.keyword,this.info.summary,[{}]);
+    },
     methods: {
       //拿到vuex中的写的方法
       ...mapMutations(['setWebConfigData']),

@@ -148,9 +148,6 @@ export default {
       FollowUs,
       Link,
     },
-    head(){
-        return this.$seo("哈哈首页","你猜猜","我是天才",[{}]);
-    },
     created(){
       var secondParams = new URLSearchParams();
       secondParams.append("level", 2);
