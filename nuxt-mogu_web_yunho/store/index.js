@@ -28,3 +28,9 @@ export const mutations={
     state.loginMessage = loginMessage
   },
 }
+
+export const getters = {
+  getWebConfigData(state){
+      return state.webConfigData;
+  }
+}

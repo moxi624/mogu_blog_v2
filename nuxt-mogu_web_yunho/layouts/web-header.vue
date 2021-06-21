@@ -576,16 +576,13 @@
       this.getDictList()
       this.getToken()
       this.getKeyword()
+      // this.getWebConfigInfo()
       this.getCurrentPageTitle()
-      this.getWebConfigInfo()
       this.getWebNavbarList()
       this.setSize()
       this.setUserReceiveCommentCount()
       // 获取浏览器类型
       this.getBrowser()
-    },
-    head(){
-        return this.$seo(this.info.title,this.info.keyword,this.info.summary,[{}]);
     },
     methods: {
       //拿到vuex中的写的方法
@@ -998,6 +995,7 @@
         */
       getWebConfigInfo: function() {
         let webConfigData = this.$store.state.webConfigData
+        console.log("webConfigData.createTime *****"+webConfigData.createTime);
         if(webConfigData.createTime) {
           this.contact = webConfigData;
           this.mailto = "mailto:" + this.contact.email;

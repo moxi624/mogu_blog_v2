@@ -108,7 +108,7 @@
 
 <script>
 import FirstRecommend from '../components/FirstRecommend.vue'
-import {getBlogByLevel, getNewBlog, recorderVisitPage} from "~/assets/scripts/index";
+import {getWebConfig,getBlogByLevel, getNewBlog, recorderVisitPage} from "~/assets/scripts/index";
 import {getBlogByUid} from "~/assets/scripts/blogContent";
 import { Loading } from 'element-ui';
 import ThirdRecommend from "../components/ThirdRecommend";
@@ -117,6 +117,8 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import Link from "../components/Link";
+import web from '~/assets/scripts/config/webconst'
+import {mapGetters,mapState,mapMutations} from 'vuex';
 export default {
     name: "index",
     data(){
@@ -166,7 +168,44 @@ export default {
         recorderVisitPage(params).then(response => {
       });
     },
-    methods:{
+   async fetch({$axios,store}){
+      console.log('run fetch');
+    /**
+     * 获取网站配置
+      */
+      let webConfigData = store.getters.getWebConfigData;
+      console.log("index ***webConfigData.createTime****"+webConfigData.createTime);
+      if(webConfigData && webConfigData.data && webConfigData.data.createTime) {
+        this.contact = webConfigData.data;
+        this.mailto = "mailto:" + this.contact.email;
+        this.openComment = webConfigData.data.openComment
+      } else {
+           let res = await $axios({
+                      url: web.WEB_API + '/index/getWebConfig',
+                      method: 'get'
+                    });
+    // console.log("读取到的首页资源：",res.data);
+    res.data && store.commit('setWebConfigData',{data:res.data});
+      console.log(store.getters.getWebConfigData.data.createTime);
+      console.log("store.getters.getWebConfigData.createTime**************"+store.getters.getWebConfigData.data.createTime);
+
+      //   getWebConfig().then(response => {
+      //     console.log("getWebConfig******"+response);
+      //     if (response.data.code == this.$ECode.SUCCESS) {
+      //       this.info = response.data.data;
+      //       // 存储在Vuex中
+      //       this.setWebConfigData(response.data.data)
+      //       this.openComment = this.info.openComment
+      // console.log("index ***webConfigData.createTime end****"+webConfigData.createTime);
+      //     }
+      //   });
+      }
+      console.log('run fetch  end');
+    },
+    methods:{    //获取跟模块的数据
+      ...mapGetters(['getWebConfigData']),
+      ...mapState(['webConfigData']),
+      ...mapMutations(['setWebConfigData']),
       //跳转到文章详情【或推广链接】
       goToInfo(blog) {
         if (process.client) {
