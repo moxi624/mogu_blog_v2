@@ -1,5 +1,5 @@
 <template>
-  <div class="banner">
+  <div class="banner" style="border:1px solid black">
     <el-carousel class="bannerBox" indicator-position="outside" >
       <el-carousel-item  v-for="(list,index) in slideList" :key="index">
             <img

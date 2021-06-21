@@ -1,0 +1,500 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20210621.151018.33264.0.001.json",
+    "dumpEventTime": "2021-06-21T15:10:18Z",
+    "dumpEventTimeStamp": "1624259418489",
+    "processId": 33264,
+    "cwd": "D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho",
+    "commandLine": [
+      "node",
+      "D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho\\node_modules\\.bin\\\\..\\nuxt\\bin\\nuxt.js"
+    ],
+    "nodejsVersion": "v12.10.0",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "win32",
+    "componentVersions": {
+      "node": "12.10.0",
+      "v8": "7.6.303.29-node.16",
+      "uv": "1.31.0",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.39.2",
+      "napi": "4",
+      "llhttp": "1.1.4",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1c",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019a",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "headersUrl": "https://nodejs.org/download/release/v12.10.0/node-v12.10.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.10.0/node-v12.10.0.tar.gz",
+      "libUrl": "https://nodejs.org/download/release/v12.10.0/win-x64/node.lib"
+    },
+    "osName": "Windows_NT",
+    "osRelease": "10.0.19042",
+    "osVersion": "Windows 10 Pro",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1162421,
+        "nice": 0,
+        "sys": 2339296,
+        "idle": 24223734,
+        "irq": 166406
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1069718,
+        "nice": 0,
+        "sys": 2063765,
+        "idle": 24591796,
+        "irq": 19312
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1503812,
+        "nice": 0,
+        "sys": 2922609,
+        "idle": 23298859,
+        "irq": 26734
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1282343,
+        "nice": 0,
+        "sys": 2390031,
+        "idle": 24052906,
+        "irq": 15171
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1337484,
+        "nice": 0,
+        "sys": 2269343,
+        "idle": 24118453,
+        "irq": 21375
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1120718,
+        "nice": 0,
+        "sys": 2235828,
+        "idle": 24368734,
+        "irq": 18953
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1397359,
+        "nice": 0,
+        "sys": 2840140,
+        "idle": 23487781,
+        "irq": 18109
+      },
+      {
+        "model": "11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz",
+        "speed": 2803,
+        "user": 1361484,
+        "nice": 0,
+        "sys": 3236375,
+        "idle": 23127406,
+        "irq": 36984
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "VirtualBox Host-Only Network",
+        "internal": false,
+        "mac": "0a:00:27:00:00:10",
+        "address": "fe80::e0cc:3a37:4e3a:3c14",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 16
+      },
+      {
+        "name": "VirtualBox Host-Only Network",
+        "internal": false,
+        "mac": "0a:00:27:00:00:10",
+        "address": "192.168.56.1",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "WLAN",
+        "internal": false,
+        "mac": "fc:44:82:c7:33:3c",
+        "address": "fe80::5156:5b47:f696:65fb",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 4
+      },
+      {
+        "name": "WLAN",
+        "internal": false,
+        "mac": "fc:44:82:c7:33:3c",
+        "address": "192.168.3.250",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "以太网 2",
+        "internal": false,
+        "mac": "00:ff:31:55:9c:45",
+        "address": "fe80::cbd:1ff:e9b:b536",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 6
+      },
+      {
+        "name": "以太网 2",
+        "internal": false,
+        "mac": "00:ff:31:55:9c:45",
+        "address": "196.168.203.75",
+        "netmask": "255.255.128.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "ZeroTier One [b6079f73c63a82ea]",
+        "internal": false,
+        "mac": "ea:41:65:8d:e5:a3",
+        "address": "fe80::1969:6f61:1cd2:ddd0",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 21
+      },
+      {
+        "name": "ZeroTier One [b6079f73c63a82ea]",
+        "internal": false,
+        "mac": "ea:41:65:8d:e5:a3",
+        "address": "172.23.7.7",
+        "netmask": "255.255.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      }
+    ],
+    "host": "Jason-Think"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x00007ff738a36eb9",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+10873"
+    },
+    {
+      "pc": "0x00007ff738a3b24c",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+28172"
+    },
+    {
+      "pc": "0x00007ff738a3a1f8",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+23992"
+    },
+    {
+      "pc": "0x00007ff738b263cb",
+      "symbol": "v8::base::CPU::has_sse+37563"
+    },
+    {
+      "pc": "0x00007ff73931976e",
+      "symbol": "v8::Isolate::ReportExternalAllocationLimitReached+94"
+    },
+    {
+      "pc": "0x00007ff739301711",
+      "symbol": "v8::SharedArrayBuffer::Externalize+833"
+    },
+    {
+      "pc": "0x00007ff7391cf1cc",
+      "symbol": "v8::internal::Heap::EphemeronKeyWriteBarrierFromCode+1436"
+    },
+    {
+      "pc": "0x00007ff7391d866f",
+      "symbol": "v8::internal::Heap::ProtectUnprotectedMemoryChunks+1279"
+    },
+    {
+      "pc": "0x00007ff7391d6b54",
+      "symbol": "v8::internal::Heap::PageFlagsAreConsistent+3204"
+    },
+    {
+      "pc": "0x00007ff7391cc7a3",
+      "symbol": "v8::internal::Heap::CollectGarbage+1235"
+    },
+    {
+      "pc": "0x00007ff7391cb044",
+      "symbol": "v8::internal::Heap::AddRetainedMap+2356"
+    },
+    {
+      "pc": "0x00007ff7391ea855",
+      "symbol": "v8::internal::Factory::NewFillerObject+53"
+    },
+    {
+      "pc": "0x00007ff738f594ed",
+      "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+3981"
+    },
+    {
+      "pc": "0x00007ff73973300d",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+575565"
+    },
+    {
+      "pc": "0x00007ff7396b1ebd",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+46845"
+    },
+    {
+      "pc": "0x000002937fcddb57",
+      "symbol": ""
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2158149632,
+    "totalCommittedMemory": 2158149632,
+    "usedMemory": 2141713240,
+    "availableMemory": 45391776,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 262144,
+        "capacity": 261832,
+        "used": 31432,
+        "available": 230400
+      },
+      "new_space": {
+        "memorySize": 3670016,
+        "committedMemory": 3670016,
+        "capacity": 1832824,
+        "used": 856448,
+        "available": 976376
+      },
+      "old_space": {
+        "memorySize": 2051649536,
+        "committedMemory": 2051649536,
+        "capacity": 2043487120,
+        "used": 2040800608,
+        "available": 2686512
+      },
+      "code_space": {
+        "memorySize": 2523136,
+        "committedMemory": 2523136,
+        "capacity": 2158976,
+        "used": 2158976,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 5771264,
+        "committedMemory": 5771264,
+        "capacity": 3892800,
+        "used": 3892800,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 93069312,
+        "committedMemory": 93069312,
+        "capacity": 92872656,
+        "used": 92872656,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 1204224,
+        "committedMemory": 1204224,
+        "capacity": 1100320,
+        "used": 1100320,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 1832824,
+        "used": 0,
+        "available": 1832824
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 104.203,
+    "kernelCpuSeconds": 7.984,
+    "cpuConsumptionPercent": 27.9768,
+    "maxRss": 2315059200,
+    "pageFaults": {
+      "IORequired": 969785,
+      "IONotRequired": 0
+    },
+    "fsActivity": {
+      "reads": 5667,
+      "writes": 80
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "": "C:=C:\\",
+    "": "D:=D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho",
+    "ALLUSERSPROFILE": "C:\\ProgramData",
+    "APPDATA": "C:\\Users\\Jason\\AppData\\Roaming",
+    "CHROME_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_22244_FUBQJXGWLEKGCVDH",
+    "CLASSPATH": ".;C:\\Program Files\\Java\\jdk1.8.0_201\\lib\\dt.jar;C:\\Program Files\\Java\\jdk1.8.0_201\\lib\\tools.jar;%JMETER_HOME%\\lib\\ext\\ApacheJMeter_core.jar;%JMETER_HOME%\\lib\\jorphan.jar;%JMETER_HOME%\\lib/logkit-2.0.jar; ",
+    "COLOR": "1",
+    "COLORTERM": "truecolor",
+    "CommonProgramFiles": "C:\\Program Files\\Common Files",
+    "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramW6432": "C:\\Program Files\\Common Files",
+    "COMPUTERNAME": "JASON-THINK",
+    "ComSpec": "C:\\Windows\\system32\\cmd.exe",
+    "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+    "EDITOR": "notepad.exe",
+    "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+    "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+    "GIT_ASKPASS": "d:\\Users\\Jason\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\extensions\\git\\dist\\askpass.sh",
+    "HOME": "C:\\Users\\Jason",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\Jason",
+    "INIT_CWD": "D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho",
+    "JAVA_HOME": "C:\\Program Files\\Java\\jdk1.8.0_201",
+    "LANG": "zh_CN.UTF-8",
+    "LOCALAPPDATA": "C:\\Users\\Jason\\AppData\\Local",
+    "LOGONSERVER": "\\\\JASON-THINK",
+    "NAMESRV_ADDR": "192.168.3.210:9876;",
+    "NODE": "C:\\Program Files\\nodejs\\node.exe",
+    "NODE_ENV": "development",
+    "NODE_EXE": "C:\\Program Files\\nodejs\\\\node.exe",
+    "NPM_CLI_JS": "C:\\Users\\Jason\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+    "npm_command": "run-script",
+    "npm_config_cache": "C:\\Users\\Jason\\AppData\\Local\\npm-cache",
+    "npm_config_globalconfig": "C:\\Users\\Jason\\AppData\\Roaming\\npm\\etc\\npmrc",
+    "npm_config_init_module": "C:\\Users\\Jason\\.npm-init.js",
+    "npm_config_metrics_registry": "https://registry.npmjs.org/",
+    "npm_config_node_gyp": "C:\\Users\\Jason\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js",
+    "npm_config_noproxy": "",
+    "npm_config_prefix": "C:\\Users\\Jason\\AppData\\Roaming\\npm",
+    "npm_config_userconfig": "C:\\Users\\Jason\\.npmrc",
+    "npm_config_user_agent": "npm/7.17.0 node/v12.10.0 win32 x64 workspaces/false",
+    "npm_execpath": "C:\\Users\\Jason\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+    "npm_lifecycle_event": "dev",
+    "npm_lifecycle_script": "nuxt",
+    "npm_node_execpath": "C:\\Program Files\\nodejs\\node.exe",
+    "npm_package_json": "D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho\\package.json",
+    "npm_package_name": "mogu_blog",
+    "npm_package_version": "1.0.0",
+    "NPM_PREFIX_NPM_CLI_JS": "C:\\Users\\Jason\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js",
+    "NUMBER_OF_PROCESSORS": "8",
+    "OneDrive": "C:\\Users\\Jason\\OneDrive",
+    "OneDriveConsumer": "C:\\Users\\Jason\\OneDrive",
+    "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined",
+    "OS": "Windows_NT",
+    "Path": "D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho\\node_modules\\.bin;D:\\my\\idea\\mogu_blog_v2\\node_modules\\.bin;D:\\my\\idea\\node_modules\\.bin;D:\\my\\node_modules\\.bin;D:\\node_modules\\.bin;C:\\Users\\Jason\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\@npmcli\\run-script\\lib\\node-gyp-bin;D:\\Program Files (x86)\\NetSarang\\Xftp 6\\;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;D:\\app\\client\\Jason\\product\\12.2.0\\client_1\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\Program Files\\Java\\jdk1.8.0_201\\bin;C:\\Program Files\\Java\\jdk1.8.0_201\\jre\\bin;C:\\my\\apache-maven-3.5.0-bin\\bin;C:\\Program Files\\nodejs\\;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\ZeroTier\\One\\;C:\\Program Files\\TortoiseSVN\\bin;D:\\HashiCorp\\Vagrant\\bin;D:\\360安全浏览器下载\\nssm-2.24\\win64;D:\\Program Files (x86)\\NetSarang\\Xshell 5;C:\\Program Files\\TortoiseGit\\bin;C:\\Users\\Jason\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Jason\\AppData\\Roaming\\npm;D:\\Users\\Jason\\AppData\\Local\\Programs\\Microsoft VS Code\\bin",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL",
+    "PROCESSOR_ARCHITECTURE": "AMD64",
+    "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "PROCESSOR_LEVEL": "6",
+    "PROCESSOR_REVISION": "8c01",
+    "ProgramData": "C:\\ProgramData",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramW6432": "C:\\Program Files",
+    "PROMPT": "$P$G",
+    "PSModulePath": "C:\\Users\\Jason\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules",
+    "PUBLIC": "C:\\Users\\Public",
+    "SESSIONNAME": "Console",
+    "SSO_CLIENT_DIRECTORY": "C:\\sso_client\\",
+    "SystemDrive": "C:",
+    "SystemRoot": "C:\\Windows",
+    "TEMP": "C:\\Users\\Jason\\AppData\\Local\\Temp",
+    "TERM_PROGRAM": "vscode",
+    "TERM_PROGRAM_VERSION": "1.57.0",
+    "TMP": "C:\\Users\\Jason\\AppData\\Local\\Temp",
+    "USERDOMAIN": "JASON-THINK",
+    "USERDOMAIN_ROAMINGPROFILE": "JASON-THINK",
+    "USERNAME": "Jason",
+    "USERPROFILE": "C:\\Users\\Jason",
+    "VBOX_MSI_INSTALL_PATH": "D:\\Program Files\\Oracle\\VirtualBox\\",
+    "VSCODE_GIT_ASKPASS_MAIN": "d:\\Users\\Jason\\AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\extensions\\git\\dist\\askpass-main.js",
+    "VSCODE_GIT_ASKPASS_NODE": "D:\\Users\\Jason\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+    "VSCODE_GIT_IPC_HANDLE": "\\\\.\\pipe\\vscode-git-ed41659b18-sock",
+    "VUE_ENV": "server",
+    "windir": "C:\\Windows",
+    "_applied": "true",
+    "_AXIOS_BASE_URL_": "http://localhost:3300/"
+  },
+  "sharedObjects": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\Windows\\SYSTEM32\\ntdll.dll",
+    "C:\\Windows\\System32\\KERNEL32.DLL",
+    "C:\\Windows\\System32\\KERNELBASE.dll",
+    "C:\\Windows\\System32\\WS2_32.dll",
+    "C:\\Windows\\System32\\RPCRT4.dll",
+    "C:\\Windows\\System32\\ADVAPI32.dll",
+    "C:\\Windows\\System32\\msvcrt.dll",
+    "C:\\Windows\\System32\\sechost.dll",
+    "C:\\Windows\\System32\\USER32.dll",
+    "C:\\Windows\\System32\\win32u.dll",
+    "C:\\Windows\\System32\\GDI32.dll",
+    "C:\\Windows\\System32\\gdi32full.dll",
+    "C:\\Windows\\System32\\msvcp_win.dll",
+    "C:\\Windows\\System32\\ucrtbase.dll",
+    "C:\\Windows\\System32\\PSAPI.DLL",
+    "C:\\Windows\\SYSTEM32\\dbghelp.dll",
+    "C:\\Windows\\System32\\CRYPT32.dll",
+    "C:\\Windows\\System32\\bcrypt.dll",
+    "C:\\Windows\\SYSTEM32\\USERENV.dll",
+    "C:\\Windows\\SYSTEM32\\WINMM.dll",
+    "C:\\Windows\\SYSTEM32\\IPHLPAPI.DLL",
+    "C:\\Windows\\System32\\IMM32.DLL",
+    "C:\\Windows\\SYSTEM32\\powrprof.dll",
+    "C:\\Windows\\SYSTEM32\\UMPDC.dll",
+    "C:\\Windows\\system32\\uxtheme.dll",
+    "C:\\Windows\\System32\\combase.dll",
+    "C:\\Windows\\system32\\mswsock.dll",
+    "C:\\Windows\\SYSTEM32\\kernel.appcore.dll",
+    "C:\\Windows\\System32\\bcryptprimitives.dll",
+    "C:\\Windows\\SYSTEM32\\CRYPTBASE.DLL",
+    "C:\\Windows\\System32\\NSI.dll",
+    "C:\\Windows\\SYSTEM32\\dhcpcsvc6.DLL",
+    "C:\\Windows\\SYSTEM32\\dhcpcsvc.DLL",
+    "C:\\Windows\\SYSTEM32\\DNSAPI.dll",
+    "C:\\Program Files (x86)\\Sangfor\\SSL\\ClientComponent\\SangforNspX64.dll",
+    "C:\\Windows\\System32\\ole32.dll",
+    "C:\\Windows\\System32\\OLEAUT32.dll",
+    "C:\\Windows\\System32\\SHLWAPI.dll",
+    "C:\\Windows\\system32\\napinsp.dll",
+    "C:\\Windows\\system32\\pnrpnsp.dll",
+    "C:\\Windows\\system32\\wshbth.dll",
+    "C:\\Windows\\system32\\NLAapi.dll",
+    "C:\\Windows\\System32\\winrnr.dll",
+    "\\\\?\\D:\\my\\idea\\mogu_blog_v2\\nuxt-mogu_web_yunho\\node_modules\\node-sass\\vendor\\win32-x64-72\\binding.node"
+  ]
+}

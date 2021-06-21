@@ -64,6 +64,6 @@
     "generate": "cross-env WEB_API=http://101.132.194.128:8080/mogu_web BASE_BLOG_API=http://101.132.194.128:10000 nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .eslintignore .",
     "precommit": "npm run lint",
-    "server":"live-server ./ --port=10000"
+    "server": "live-server ./ --port=10000"
   }
 }
