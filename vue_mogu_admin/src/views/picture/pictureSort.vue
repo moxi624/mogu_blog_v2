@@ -215,6 +215,7 @@ export default {
       });
     },
     handleFind: function() {
+      this.currentPage = 1
       this.pictureSortList();
     },
     handleManager: function(row) {

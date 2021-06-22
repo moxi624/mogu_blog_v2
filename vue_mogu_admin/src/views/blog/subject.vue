@@ -192,6 +192,7 @@ export default {
       });
     },
     handleFind: function() {
+      this.currentPage = 1
       this.subjectList();
     },
     getFormObject: function() {

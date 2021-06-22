@@ -883,6 +883,7 @@ export default {
       }
     },
     handleFind: function() {
+      this.currentPage = 1
       this.blogList();
     },
     handleAdd: function() {

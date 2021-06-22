@@ -359,6 +359,7 @@ export default {
       return formObject;
     },
     handleFind: function() {
+      this.currentPage = 1
       this.WebNavbarList();
     },
     handleAdd: function() {
