@@ -67,7 +67,7 @@
 
         <span class="el-dropdown-link" >
           <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
-            <img v-if="!isLogin" src="/static/images/defaultAvatar.png">
+            <img v-if="!isLogin" src="/images/defaultAvatar.png">
             <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
             <img v-if="isLogin&&userInfo.photoUrl==undefined"
                  :src="defaultAvatar">
@@ -486,7 +486,7 @@
         replyList: [], //我的回复
         praiseList: [], //我的点赞
         feedbackList: [], //我的反馈
-        openComment: "0", //是否开启评论
+        // openComment: "0", //是否开启评论
         defaultAvatar: this.$SysConf.defaultAvatar, // 默认头像
         drawerSize: "30%",
         userReceiveCommentCount: 0, // 用户收到的评论数
@@ -573,16 +573,18 @@
     },
     created() {
       // 字典查询
-      this.getDictList()
-      this.getToken()
-      this.getKeyword()
-      // this.getWebConfigInfo()
-      this.getCurrentPageTitle()
-      this.getWebNavbarList()
-      this.setSize()
-      this.setUserReceiveCommentCount()
-      // 获取浏览器类型
-      this.getBrowser()
+      if (process.client) {
+        this.getDictList()
+        this.getToken()
+        this.getKeyword()
+        // this.getWebConfigInfo()
+        this.getCurrentPageTitle()
+        this.getWebNavbarList()
+        this.setSize()
+        this.setUserReceiveCommentCount()
+        // 获取浏览器类型
+        this.getBrowser()
+      }
     },
     methods: {
       //拿到vuex中的写的方法
@@ -999,14 +1001,14 @@
         if(webConfigData.createTime) {
           this.contact = webConfigData;
           this.mailto = "mailto:" + this.contact.email;
-          this.openComment = webConfigData.openComment
+          // this.openComment = webConfigData.openComment
         } else {
           getWebConfig().then(response => {
             if (response.data.code == this.$ECode.SUCCESS) {
               this.info = response.data.data;
               // 存储在Vuex中
               this.setWebConfigData(response.data.data)
-              this.openComment = this.info.openComment
+              // this.openComment = this.info.openComment
             }
           });
         }

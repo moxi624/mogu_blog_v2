@@ -16,13 +16,13 @@ export default {
     ]
   },
   server: {
-    port: 3300, // default: 3000
+    port: 3000, // default: 3000
     host: '0.0.0.0' // default: localhost,
   },
   router:{
     //扩展路由
     extendRoutes(routes,resolve){
-      console.log(routes);
+      // console.log(routes);
       routes.push({
         name:'root',//路由别名
         path:'/index',
@@ -40,7 +40,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/mixins',
+    {
+      src:'~/plugins/mixins',ssr:true
+    },
     {
       src:'~/plugins/axios',
       ssr:true//开启服务端渲染
