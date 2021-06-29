@@ -1,0 +1,70 @@
+@mixin ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.side-catalog {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 100px);
+  &__title{
+    margin-bottom:5px;
+    font-size: 16px;
+    @include ellipsis;
+  }
+  &__list{
+    flex: 1;
+    overflow: hidden;
+    &>div{
+      position: relative;
+      width: 280px;
+    }
+    &-line{
+      position: absolute;
+      top: 0;
+      left: 22px;
+      bottom: 0;
+      width: 1px;
+      background-color: #ebedef;
+      opacity: .8;
+      z-index: -1;
+    }
+    &-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      line-height: 1.3;
+      padding: 6px 0px;
+      &:hover{
+        background-color: rgba(235, 237, 239, 0.7);
+      }
+      &--child{
+        padding: 4px;
+      }
+      &-icon {
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        width: 6px;
+        height: 6px;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        background: currentColor;
+        &--child{
+          width: 4px;
+          height: 4px;
+        }
+      }
+
+      &-title {
+        color: currentColor;
+        flex: 1;
+        padding-left:15px;
+        @include ellipsis;
+        &--level1{
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

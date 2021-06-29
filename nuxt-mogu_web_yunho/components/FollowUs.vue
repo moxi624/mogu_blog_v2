@@ -46,7 +46,7 @@ export default {
         getWebConfig().then(response => {
           if (response.data.code == this.$ECode.SUCCESS) {
             this.contact = response.data.data;
-            console.log(response.data.data.showList)
+            // console.log(response.data.data.showList)
             let showList = response.data.data.showList
             if(showList.length > 2) {
               this.isShow = true;

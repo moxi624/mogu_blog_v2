@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- 将包含客户端代码的组件设置为非SSR方式，否则nuxt编译不通过 -->
-    <no-ssr>
+    <client-only>
     <web-header></web-header>
-    </no-ssr>
+    </client-only>
     <Nuxt />
     <web-footer></web-footer>
   </div>

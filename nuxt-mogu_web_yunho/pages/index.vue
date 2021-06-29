@@ -117,7 +117,6 @@ import TagCloud from "../components/TagCloud";
 import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import Link from "../components/Link";
-import web from '~/assets/scripts/config/webconst'
 import {mapGetters,mapState,mapMutations} from 'vuex';
 export default {
     name: "index",
@@ -151,6 +150,8 @@ export default {
       Link,
     },
     created(){
+      if (process.client) {
+      console.log("index created run");
       var secondParams = new URLSearchParams();
       secondParams.append("level", 2);
       // 是否排序
@@ -162,44 +163,38 @@ export default {
       });
       
       // 获取最新博客
-      this.newBlogList();
+      // this.newBlogList();
       var params = new URLSearchParams();
       params.append("pageName", "INDEX");
         recorderVisitPage(params).then(response => {
       });
-    },
-   async fetch({$axios,store}){
-      console.log('run fetch');
-    /**
-     * 获取网站配置
-      */
-      let webConfigData = store.getters.getWebConfigData;
-      console.log("index ***webConfigData.createTime****"+webConfigData.createTime);
-      if(webConfigData && webConfigData.data && webConfigData.data.createTime) {
-        this.contact = webConfigData.data;
-        this.mailto = "mailto:" + this.contact.email;
-        this.openComment = webConfigData.data.openComment
-      } else {
-           let res = await $axios({
-                      url: web.WEB_API + '/index/getWebConfig',
-                      method: 'get'
-                    });
-    // console.log("读取到的首页资源：",res.data);
-    res.data && store.commit('setWebConfigData',{data:res.data});
-      console.log(store.getters.getWebConfigData.data.createTime);
-      console.log("store.getters.getWebConfigData.createTime**************"+store.getters.getWebConfigData.data.createTime);
-
-      //   getWebConfig().then(response => {
-      //     console.log("getWebConfig******"+response);
-      //     if (response.data.code == this.$ECode.SUCCESS) {
-      //       this.info = response.data.data;
-      //       // 存储在Vuex中
-      //       this.setWebConfigData(response.data.data)
-      //       this.openComment = this.info.openComment
-      // console.log("index ***webConfigData.createTime end****"+webConfigData.createTime);
-      //     }
-      //   });
       }
+    },
+    head(){
+      console.log("index head run");
+      // console.log(this.info.title);
+      let webConfigData =  this.$store.getters.getWebConfigData;
+      if(webConfigData && webConfigData.createTime){
+        return this.$seo("index test"+webConfigData.title,webConfigData.keyword,webConfigData.summary,[{}]);
+      }
+    },
+    async asyncData({app}){
+        var params = new URLSearchParams();
+        params.append("currentPage", 1);
+        params.append("pageSize", 15);
+        var res = await getNewBlog(params);
+        if (res.data.code == app.$ECode.SUCCESS) {
+            return {
+              newBlogData:res.data.data.records,
+              total:res.data.data.total,
+              pageSize:res.data.data.size,
+              currentPage: res.data.data.current
+            }
+        }
+    },
+   async fetch({$axios,$cookies,store}){
+      console.log('run fetch get all getStore');
+    
       console.log('run fetch  end');
     },
     methods:{    //获取跟模块的数据
@@ -228,27 +223,14 @@ export default {
 
       //最新博客列表
       newBlogList() {
-        var that = this;
-        that.loadingInstance = Loading.service({
-          lock: true,
-          text: '正在努力加载中……',
-          background: 'rgba(0, 0, 0, 0.7)'
-        })
+        // var that = this;
+        // that.loadingInstance = Loading.service({
+        //   lock: true,
+        //   text: '正在努力加载中……',
+        //   background: 'rgba(0, 0, 0, 0.7)'
+        // })
 
-        var params = new URLSearchParams();
-        params.append("currentPage", this.currentPage);
-        params.append("pageSize", this.pageSize);
-        getNewBlog(params).then(response => {
-          if (response.data.code == this.$ECode.SUCCESS) {
-            that.newBlogData = response.data.data.records;
-            that.total = response.data.data.total;
-            that.pageSize = response.data.data.size;
-            that.currentPage = response.data.data.current;
-          }
-          that.loadingInstance.close();
-        },function(err){
-          that.loadingInstance.close();
-        });
+        
       },
       loadContent: function () {
         var that = this;
