@@ -82,9 +82,6 @@ public class FeedbackServiceImpl extends SuperServiceImpl<FeedbackMapper, Feedba
     @Override
     public String addFeedback(FeedbackVO feedbackVO) {
         HttpServletRequest request = RequestHolder.getRequest();
-        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
-            ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
         Feedback feedback = feedbackService.getById(feedbackVO.getUid());
         feedback.setTitle(feedbackVO.getTitle());
         feedback.setContent(feedbackVO.getContent());
@@ -107,9 +104,6 @@ public class FeedbackServiceImpl extends SuperServiceImpl<FeedbackMapper, Feedba
     @Override
     public String deleteBatchFeedback(List<FeedbackVO> feedbackVOList) {
         HttpServletRequest request = RequestHolder.getRequest();
-        if (request.getAttribute(SysConf.ADMIN_UID) != null) {
-            ResultUtil.result(SysConf.ERROR, MessageConf.OPERATION_FAIL);
-        }
         final String adminUid = request.getAttribute(SysConf.ADMIN_UID).toString();
         if (feedbackVOList.size() <= 0) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.PARAM_INCORRECT);
