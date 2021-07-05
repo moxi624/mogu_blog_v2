@@ -3,7 +3,6 @@
     <div class="commentBox">
     <span class="left" v-if="isShowAvatar">
       <img v-if="isShowAvatar" :src="getUserPhoto" onerror="onerror=null;src=defaultAvatar"/>
-      <span>{{getUserPhoto}}</span>
     </span>
 
     <span class="right">

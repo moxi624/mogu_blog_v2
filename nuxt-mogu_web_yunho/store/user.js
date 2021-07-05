@@ -14,7 +14,7 @@ export const mutations = {
         state.isLogin = isLogin
       }
 }
-export const actions={
+export const getters={
     getUserPhoto(state){
         if(state.isLogin) {
             if(state.userInfo.photoUrl) {
@@ -23,7 +23,7 @@ export const actions={
                 return "https://gitee.com/moxi159753/wx_picture/raw/master/picture/favicon.png";
             }
         } else {
-            return "../../static/images/defaultAvatar.png"
+            return "/images/defaultAvatar.png"
         }
     }
 }

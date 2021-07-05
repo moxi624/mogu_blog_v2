@@ -781,7 +781,7 @@ export default {
       formParams.append("projectName", "blog")
       formParams.append("sortName", "admin")
 
-      console.log("传入的参数", formParams)
+      // console.log("传入的参数", formParams)
 
       // 监听进度回调
       // const uploadProgress = (event) => {

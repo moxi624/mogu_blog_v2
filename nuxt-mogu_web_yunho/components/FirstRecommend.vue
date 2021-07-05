@@ -36,7 +36,7 @@ export default {
     params.append("useSort", 1);
     getBlogByLevel(params).then(response => {
       // console.log(response.data);
-      console.log(response);
+      // console.log(response);
       if(response.data.code == this.$ECode.SUCCESS) {
         console.log("in");
         this.slideList = response.data.data.records;
