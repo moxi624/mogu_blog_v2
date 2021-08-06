@@ -285,7 +285,7 @@
 						this.praiseCount = res.data
 					} else {
 						uni.showToast({
-							title: res.data,
+							title: res.message,
 							icon: "none"
 						})
 					}
