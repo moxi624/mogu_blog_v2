@@ -41,7 +41,7 @@
 
 【提问】推荐使用 [Gitee issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 进行提问，因为issue解决后能够保留解决记录，帮助其它小伙伴避坑。其次可以使用  <a href="##关注&交流">QQ群 </a>  或者 <a href="##前言">微信群 </a> 进行提问。群里提问注意提问的时间，把遇到**问题的详细过程都描述清楚**，最好**配上图文信息**，这样能有利于更高效的解决问题。
 
-##  内推
+##  字节内推
 
 目前字节跳动拥有大量岗位需求，欢迎点击下方**内推链接**【内推码: **WYU3X8M**】选择合适的岗位投递。小伙伴们使用**内推链接**投递后，可以通过 **公众号** 联系我跟进面试进度。
 
@@ -74,7 +74,7 @@
 
 ## 站点演示
 
-首先特别感谢阿里云提供的 [学生“在家实践” 计划](https://developer.aliyun.com/adc/student/?spm=a2c6h.14062461.J_7747362070.1.5b6933e1X3rvHS)，免费提供的 **6** 个月的 **2核4G1M** 的服务器，所以就刚好以此用来做蘑菇博客的演示站点，同时我也在搭建的时候，顺便录制了一套视频：[利用阿里云免费服务器搭建个人博客](https://www.bilibili.com/video/BV1c5411b7EZ?t=17) ，感兴趣的小伙伴可以参考视频一起完成部署~
+首先特别感谢群里小伙伴 **@泪梦红尘** 对蘑菇博客提供服务器支持。所以就刚好以此用来做蘑菇博客的演示站点，同时我也在搭建的时候，顺便录制了一套视频：[20分钟部署一个微服务架构的博客系统](https://www.bilibili.com/video/BV13y4y1V7Us) ，感兴趣的小伙伴可以参考视频一起完成部署~
 
 > 【演示前端】：http://demoweb.moguit.cn/
 >
@@ -246,6 +246,14 @@
 |       turndown        | 用JavaScript编写的HTML到Markdown转换器  |           https://github.com/domchristie/turndown            |
 
 ## 快速开始
+
+## 【推荐】一条命令部署蘑菇博客
+
+在云服务器上执行下面命令，完成一条命令部署蘑菇博客，参考视频：[20分钟部署一个微服务架构的博客系统](https://www.bilibili.com/video/BV13y4y1V7Us)
+
+```bash
+wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && chmod +x moguInit.sh && sh moguInit.sh
+```
 
 ### [推荐] Windows+VMware一键搭建蘑菇博客本地开发环境
 
