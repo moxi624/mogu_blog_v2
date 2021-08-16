@@ -70,7 +70,7 @@
 
 **mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
 
-参考[蘑菇博客Golang版安装指南](https://t.1yb.co/kQ4k)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
+参考[蘑菇博客Golang版安装指南](http://moguit.cn/#/info?blogOid=593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
 
 ## 站点演示
 
@@ -82,7 +82,7 @@
 >
 > 【演示账号】：[点击获取](https://gitee.com/moxi159753/mogu_blog_v2/raw/Nacos/doc/images/qq/%E8%8E%B7%E5%8F%96%E6%BC%94%E7%A4%BA%E7%8E%AF%E5%A2%83%E8%B4%A6%E5%8F%B7.jpg)
 >
-> 【小程序】蘑菇博客的移动端版本，可以扫码体验（代码在Nacos分支下的uniapp_mogu_web文件夹）
+> 【小程序】蘑菇博客的移动端版本，可以扫码体验。参考 [蘑菇博客小程序部署](http://www.moguit.cn/#/info?blogOid=605) 文档，完成搭建。
 
 |                                                          |
 | :------------------------------------------------------: |
@@ -109,11 +109,11 @@
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
-最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】
+最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】【容易宕机】
 
-推荐配置：2核4G 【双十二特惠】
+推荐配置：2核4G 【[年中特惠](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)】
 
-> 【阿里云】云服务器双12狂欢特惠，1核2G 5M轻量级应用服务器114元/年【博主使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) 
+> 【阿里云】云服务器年中特惠，1核2G 5M轻量级应用服务器114元/年【博主使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) 
 >
 > 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元（老用户重新用微信QQ注册即可） [点我进入](https://curl.qcloud.com/zry6xub9)
 
@@ -305,9 +305,13 @@ wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && c
 
 参考[蘑菇博客Sentinel安装指南](http://www.moguit.cn/#/info?blogUid=7135efc7f536769efd0d0483c687ba07)，**Sentinel** 被称为分布式系统的流量防卫兵，相当于Hystrix
 
-### 蘑菇博客小程序发布
+### 蘑菇博客QQ小程序发布
 
 参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/#/info?blogUid=80d3eae77c16cea10e119b9f1a1da4c8)，完成蘑菇博客 **uniapp** 移动端的启动和发布
+
+## 蘑菇博客微信小程序发布
+
+参考[蘑菇博客微信小程序部署指南](http://www.moguit.cn/#/info?blogOid=605)，完成蘑菇博客 **uniapp** 移动端的启动和发布
 
 ### 蘑菇博客扩展新的功能和页面
 
