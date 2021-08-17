@@ -137,7 +137,7 @@
 - 采用 **Sentinel** 流量控制框架，通过配置再也不怕网站被爆破
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
 - 支持多种文本编辑器，**Markdown** 编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
-- 采用 **ElasticStack**【**ElasticSearch** + **Beats** + **Kibana** + **Logstash**】[搭建蘑菇博客日志收集](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86)
+- 采用 **ElasticStack**【**ElasticSearch** + **Beats** + **Kibana** + **Logstash**】[搭建蘑菇博客日志收集](http://moguit.cn/#/info?blogOid=436)
 - 采用 **Docker Compose** 完成容器编排，**Portainer** 实现容器可视化，支持[一键部署线上环境](http://www.moguit.cn/#/info?blogOid=565)
 
 ## 项目文档
@@ -249,11 +249,13 @@
 
 ### 【推荐】一条命令部署蘑菇博客
 
-在云服务器上执行下面命令，完成一条命令部署蘑菇博客，参考视频：[20分钟部署一个微服务架构的博客系统](https://www.bilibili.com/video/BV13y4y1V7Us)
+参考 [如何使用一条命令完成蘑菇博客部署](http://www.moguit.cn/#/info?blogOid=597)， 在云服务器上执行下面命令，完成一键部署蘑菇博客
 
 ```bash
 wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && chmod +x moguInit.sh && sh moguInit.sh
 ```
+
+Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统](https://www.bilibili.com/video/BV13y4y1V7Us)
 
 ### [推荐] Windows+VMware一键搭建蘑菇博客本地开发环境
 
@@ -277,21 +279,21 @@ wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && c
 
 【**推荐**】参考[IDEA发布蘑菇博客Docker镜像到云服务器(适用于DockerCompose部署)](http://moguit.cn/#/info?blogOid=588)，在你修改Nacos分支博客源码后，将重新制作镜像部署到云服务器，然后通过DockerCompose进行启动。
 
-参考[蘑菇博客如何部署到阿里云服务器(Eureka分支)](http://www.moguit.cn/#/info?blogUid=89defe3f4a3f317cba9aa0cdb9ff879e)，在你修改Eureka分支博客源码后将项目打包部署到云服务器
+参考[蘑菇博客如何部署到阿里云服务器(Eureka分支)](http://moguit.cn/#/info?blogOid=238)，在你修改Eureka分支博客源码后将项目打包部署到云服务器
 
-参考[蘑菇博客如何部署到阿里云服务器(Nacos分支)](http://www.moguit.cn/#/info?blogUid=ecde4ce178bdc1a241e9f9ddd9052013)，在你修改Nacos分支博客源码后将项目打包部署到云服务器
+参考[蘑菇博客如何部署到阿里云服务器(Nacos分支)](http://moguit.cn/#/info?blogOid=405)，在你修改Nacos分支博客源码后将项目打包部署到云服务器
 
 ### 使用Github Actions完成蘑菇博客持续集成
 
-参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/#/info?blogUid=0762bfb392c2cf0a94c8a7934fe46f8f) ，在你提交一个 **push** 请求后，通过 **Github Actions** 能够完成蘑菇博客自动化 编译、打包、部署等操作。
+参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/#/info?blogOid=13) ，在你提交一个 **push** 请求后，通过 **Github Actions** 能够完成蘑菇博客自动化 编译、打包、部署等操作。
 
 ### 切换搜索模式
 
-参考[蘑菇博客切换搜索模式](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，完成蘑菇博客的搜索引擎切换，目前支持 **Solr**、**ElasticSearch**、**SQL** 的方式
+参考[蘑菇博客切换搜索模式](http://moguit.cn/#/info?blogOid=119)，完成蘑菇博客的搜索引擎切换，目前支持 **Solr**、**ElasticSearch**、**SQL** 的方式
 
 ### 配置七牛云对象存储
 
-参考[蘑菇博客切换七牛云存储](http://moguit.cn/#/info?blogUid=735ed389c4ad1efd321fed9ac58e646b)，配置文件的七牛云对象存储，及本地文件存储
+参考[蘑菇博客切换七牛云存储](http://moguit.cn/#/info?blogOid=202)，配置文件的七牛云对象存储，及本地文件存储
 
 ### 使用Zipkin搭建蘑菇博客链路追踪
 
@@ -309,7 +311,7 @@ wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && c
 
 参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/#/info?blogUid=80d3eae77c16cea10e119b9f1a1da4c8)，完成蘑菇博客 **uniapp** 移动端的启动和发布
 
-## 蘑菇博客微信小程序发布
+### 【推荐】蘑菇博客微信小程序发布
 
 参考[蘑菇博客微信小程序部署指南](http://www.moguit.cn/#/info?blogOid=605)，完成蘑菇博客 **uniapp** 移动端的启动和发布
 
