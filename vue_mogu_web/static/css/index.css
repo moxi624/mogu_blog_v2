@@ -1,7 +1,7 @@
  @charset "gb2312";
  /* css */
 * { margin: 0; padding: 0 }
-body { font: 15px "Microsoft YaHei", Arial, Helvetica, sans-serif; color: #555; background-color: #f6f6f6; line-height: 1.5; }
+body { font: 15px "Microsoft YaHei", Arial, Helvetica, sans-serif; color: #555; background-color: #eee; line-height: 1.5; }
 img { border: 0; display: block }
 ul, li { list-style: none; }
 a { text-decoration: none; color: #555 }
@@ -29,7 +29,7 @@ header { position: fixed; top: 0; z-index: 99999 }
  .sidebar2 div {background: #FFF; -webkit-box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); -moz-box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); box-shadow: 0 2px 5px 0 rgba(146, 146, 146, .1); }
  .sidebar2 div:hover ::after { width: 70px; }
 
-.header-navigation { position: fixed; top: 0; width: 100%; height: 60px; line-height: 60px; background: hsla(0,0%,100%,.9); text-align: center; z-index: 2001; }
+.header-navigation { position: fixed; top: 0; width: 100%; height: 60px; line-height: 60px; background: hsla(0,0%,100%,.9); text-align: center; z-index: 99; }
 .logo { float: left; font-size: 22px; font-weight: bold }
 .logo a { color: #006cff }
 nav { width: 1140px; margin: auto; position: relative }
