@@ -103,7 +103,7 @@ export default {
 
 <style scoped>
 .share {
-  min-height: 550px;
+  min-height: 755px;
 }
 .resImg {
   width: 100%;

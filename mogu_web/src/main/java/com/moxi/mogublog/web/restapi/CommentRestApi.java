@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moxi.mogublog.commons.entity.*;
 import com.moxi.mogublog.commons.feign.PictureFeignClient;
-import com.moxi.mogublog.utils.JsonUtils;
-import com.moxi.mogublog.utils.RedisUtil;
-import com.moxi.mogublog.utils.ResultUtil;
-import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.utils.*;
 import com.moxi.mogublog.web.annotion.log.BussinessLog;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.RedisConf;
@@ -578,7 +575,9 @@ public class CommentRestApi {
         Comment comment = new Comment();
         comment.setSource(commentVO.getSource());
         comment.setBlogUid(commentVO.getBlogUid());
-        comment.setContent(commentVO.getContent());
+        // 将Markdown转换成html
+        String blogContent = FileUtils.markdownToHtml(commentVO.getContent());
+        comment.setContent(blogContent);
         comment.setToUserUid(commentVO.getToUserUid());
 
         // 当该评论不是一级评论时，需要设置一级评论UID字段

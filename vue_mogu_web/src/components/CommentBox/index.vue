@@ -6,7 +6,7 @@
     </span>
 
     <span class="right">
-      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @click="hideEmojiPanel" @input="vaildCount"></textarea>
+      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~ 【评论支持Markdown语法】" v-model="value" @click="hideEmojiPanel" @input="vaildCount"></textarea>
     </span>
 
     </div>
@@ -252,7 +252,7 @@
     color: #606266;
     padding:10px 5px 5px 10px;
     resize: none;
-    width: 95%;
+    width: 98%;
     height: 100%;
   }
   .bottom {
@@ -260,7 +260,7 @@
     width: 98%;
     height: 60px;
     line-height: 40px;
-    margin-top: 20px;
+    margin-top: 30px;
   }
   .bottom .p2 {
     float: right;

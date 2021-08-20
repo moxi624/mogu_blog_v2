@@ -239,7 +239,7 @@
                     <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
                   </div>
 
-                  <div class="rightCenter" v-html="$xss(comment.content, options)"></div>
+                  <div class="rightCenter ck-content" v-highlight v-html="$xss(comment.content, options)"></div>
                 </span>
                 </div>
               </el-card>
@@ -277,7 +277,7 @@
                         <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
                       </div>
 
-                      <div class="rightCenter" v-html="$xss(reply.content, options)">
+                      <div class="rightCenter ck-content" v-highlight v-html="$xss(reply.content, options)">
                       </div>
                   </span>
                 </div>
@@ -526,7 +526,14 @@
         options : {
           whiteList: {
             a: ['href', 'title', 'target'],
-            span: ['class']
+            span: ['class'],
+            h1: ['class'],
+            h2: ['class'],
+            h3: ['class'],
+            h4: ['class'],
+            pre: [],
+            code: ['class'],
+            p: ['class']
           }
         },
         activeNames: ['1'], //激活的折叠面板
@@ -1314,7 +1321,7 @@
   .commentList .rightCenter {
     margin-left: 20px;
     line-height: 30px;
-    height: 60px;
+    min-height: 60px;
   }
 
   .commentList .rightBottom el-link {

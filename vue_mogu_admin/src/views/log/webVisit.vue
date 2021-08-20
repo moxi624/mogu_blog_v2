@@ -58,7 +58,7 @@
 
       <el-table-column label="内容" width="200" align="center">
 	      <template slot-scope="scope">
-          <span v-html="$xss(scope.row.content, options)"></span>
+          <span  v-html="$xss(scope.row.content, options)"></span>
 	      </template>
 	    </el-table-column>
 
