@@ -60,7 +60,7 @@ public class ElasticSearchRestApi {
 
     @ApiOperation(value = "通过uids删除ElasticSearch博客索引", notes = "通过uids删除ElasticSearch博客索引", response = String.class)
     @PostMapping("/deleteElasticSearchByUids")
-    public String deleteElasticSearchByUids(@RequestParam(required = true) String uids) {
+    public String deleteElasticSearchByUids(@RequestParam(required = true, value = "uid") String uids) {
 
         List<String> uidList = StringUtils.changeStringToString(uids, SysConf.FILE_SEGMENTATION);
 

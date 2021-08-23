@@ -23,7 +23,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/deleteElasticSearchByUid")
-    public String deleteElasticSearchByUid(@RequestParam(required = true) String uid);
+    public String deleteElasticSearchByUid(@RequestParam(required = true, value = "uid") String uid);
 
     /**
      * 通过uids删除ElasticSearch博客索引
