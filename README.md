@@ -47,14 +47,6 @@
 
 提前批投递：[点我传送](https://jobs.toutiao.com/s/eGmrue1) ，社会招聘：[点我传送](https://job.toutiao.com/s/eGmBtNC)
 
-## 后期维护
-
-项目后台目前有 **Eureka** 版本和 **Nacos** 版本，其中 **Eureka** 版本使用的是 **SpringCloud** 一些组件，**Nacos** 版本使用的是 **SpringCloudAlibaba** 的一些组件，例如 **Nacos**、**Sentinel** 等
-
-- **Eureka** 版本请切换至 **Eureka** 分支（**已停止维护**，将不再进行新功能的开发）
-- **Nacos** 版本请切换至 **Nacos** 分支（作为以后**长期维护**的分支）
-- **master** 分支为主分支，是基于 **Nacos** 分支的稳定版本
-
 ## 项目介绍
 
 蘑菇博客( **MoguBlog** )，一个**基于微服务架构的前后端分离博客系统**。**Web** 端使用 **Vue** + **ElementUi** , 移动端使用 **uniapp** 和 **ColorUI**。后端使用 **SpringCloud** + **SpringBoot** + **Mybatis-plus**进行开发，使用 **Jwt** + **SpringSecurity** 做登录验证和权限校验，使用 **ElasticSearch** 和 **Solr** 作为全文检索服务，使用 **Github Actions**完成博客的持续集成，使用 **ElasticStack** 收集博客日志，文件支持**上传本地**、**七牛云** 和 **Minio**.
@@ -64,13 +56,23 @@
 - 原来做过 **Vue** + **ElementUi** 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
 - [蘑菇博客](http://moguit.cn/#/)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了 **JVM**、**JUC**、**Java**，**Spring**，**SpringCloud**，计算机网络，操作系统，数据结构，**Vue**、**Linux** 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes) 一下
 
-## 蘑菇博客Go版本
+## 运行配置
 
-[**mogu-go-v2**](https://gitee.com/yanglei88/mogu-go-v2) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
+蘑菇博客使用了一些监控的 **SpringCloud** 组件，但是并不一定都需要部署，必须启动的服务包含
 
-**mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
+`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-gateway`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
 
-参考[蘑菇博客Golang版安装指南](http://moguit.cn/#/info?blogOid=593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
+其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
+
+最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】【容易宕机】
+
+推荐配置：2核4G 【[狂欢特惠](http://curl.qcloud.com/zry6xub9)】
+
+最近，腾讯云和阿里云的优惠力度非常大，如果有需求的小伙伴，可以了解一下~
+
+> 【阿里云】云服务器狂欢特惠，**2核2G5M** 轻量级应用服务器 **60** 元/年【博主目前使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
+>
+> 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年**74**元/年【博主强烈推荐】 [点我进入](https://curl.qcloud.com/zry6xub9)
 
 ## 站点演示
 
@@ -88,6 +90,22 @@
 | :------------------------------------------------------: |
 | <img src="./doc/images/uniapp/wxCode.jpg" width="200" /> |
 
+## 后期维护
+
+项目后台目前有 **Eureka** 版本和 **Nacos** 版本，其中 **Eureka** 版本使用的是 **SpringCloud** 一些组件，**Nacos** 版本使用的是 **SpringCloudAlibaba** 的一些组件，例如 **Nacos**、**Sentinel** 等
+
+- **Eureka** 版本请切换至 **Eureka** 分支（**已停止维护**，将不再进行新功能的开发）
+- **Nacos** 版本请切换至 **Nacos** 分支（作为以后**长期维护**的分支）
+- **master** 分支为主分支，是基于 **Nacos** 分支的稳定版本
+
+## 蘑菇博客Go版本
+
+[**mogu-go-v2**](https://gitee.com/yanglei88/mogu-go-v2) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
+
+**mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
+
+参考[蘑菇博客Golang版安装指南](http://moguit.cn/#/info?blogOid=593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
+
 ## 项目中初始用户和密码
 
 - **后台登录**：用户：admin，密码：mogu2018
@@ -100,22 +118,6 @@
 - **Sentinel管理页面：** 用户：sentinel，密码：sentinel
 - **蘑菇博客监控页面**：用户：user，密码：password123
 - **Druid初始密码：** 用户：admin，密码：123456
-
-## 运行配置
-
-蘑菇博客使用了一些监控的 **SpringCloud** 组件，但是并不一定都需要部署，必须启动的服务包含
-
-`nacos`，`nginx`，`rabbitmq`， `redis`，`mysql`，`mogu-gateway`，`mogu-sms`，`mogu-picture`， `mogu-web`, `mogu-admin`
-
-其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
-
-最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】【容易宕机】
-
-推荐配置：2核4G 【[年中特惠](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)】
-
-> 【阿里云】云服务器年中特惠，1核2G 5M轻量级应用服务器114元/年【博主使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw) 
->
-> 【腾讯云】云产品限时秒杀，爆款1核2G云服务器，首年99元（老用户重新用微信QQ注册即可） [点我进入](https://curl.qcloud.com/zry6xub9)
 
 ## 项目特点
 
