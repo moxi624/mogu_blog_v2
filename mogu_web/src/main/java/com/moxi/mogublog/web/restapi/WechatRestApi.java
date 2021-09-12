@@ -18,7 +18,6 @@ import com.moxi.mougblog.base.enums.EGender;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
-import com.moxi.mougblog.base.util.RequestUtil;
 import com.moxi.mougblog.base.vo.FileVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +28,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -82,9 +84,9 @@ public class WechatRestApi {
         Map<String, String> map = SignUtil.xmlToMap(request);
         System.out.println(map);
         String event = map.get("Event");
-        if("SCAN".equals(event)) {
+        if ("SCAN".equals(event)) {
             System.out.println("扫码进来了，已经关注过");
-        } else if("subscribe".equals(event)) {
+        } else if ("subscribe".equals(event)) {
             System.out.println("订阅公众号");
         } else if ("subscribe".equals(event)) {
             System.out.println("取消订阅公众号");
@@ -97,7 +99,7 @@ public class WechatRestApi {
         String toUserName = map.get("ToUserName");
         String fromUserName = map.get("FromUserName");
 
-        String url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token="+accessToken+"&openid="+fromUserName;
+        String url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + fromUserName;
         String result = HttpRequest.get(url).execute().body();
         System.out.println(result);
 
@@ -218,7 +220,7 @@ public class WechatRestApi {
         String result = HttpRequest.post(requireAccessTokenUrl).execute().body();
         System.out.println(result);
         Map<String, Object> map = JsonUtils.jsonToMap(result);
-        if(map.get("access_token") != null) {
+        if (map.get("access_token") != null) {
             String accessToken = map.get("access_token").toString();
             // 获取到accessToken，存到redis
             redisUtil.setEx("WE_CHAT_ACCESS_TOKEN", accessToken, 1, TimeUnit.HOURS);
@@ -237,12 +239,11 @@ public class WechatRestApi {
     public String getUserLoginStatus(@RequestParam("ticket") String ticket) {
 
         String json = redisUtil.get(RedisConf.USER_TOKEN + Constants.SYMBOL_COLON + ticket);
-        if(StringUtils.isNotEmpty(json)) {
+        if (StringUtils.isNotEmpty(json)) {
             return ResultUtil.successWithData(JsonUtils.jsonToMap(json));
         }
         return ResultUtil.errorWithMessage("获取用户信息失败");
     }
-
 
 
     /**

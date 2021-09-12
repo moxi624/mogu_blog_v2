@@ -513,6 +513,7 @@
   // vuex中有mapState方法，相当于我们能够使用它的getset方法
   import {mapMutations} from 'vuex';
   import {timeAgo} from "../utils/webUtils";
+  import {getSearchModel} from "@/api/search";
 
   export default {
     name: "index",
@@ -536,6 +537,7 @@
             p: ['class']
           }
         },
+        searchModel: 0, //搜索模式 0:SQL搜索、1:ES搜索、2:Solr搜索
         activeNames: ['1'], //激活的折叠面板
         activeName: "0", // 激活的标签
         yesNoDictList: [], // 是否 字典列表
@@ -663,6 +665,7 @@
       this.setUserReceiveCommentCount()
       // 获取浏览器类型
       this.getBrowser()
+      this.getBlogSearchModel()
     },
     methods: {
       //拿到vuex中的写的方法
@@ -678,12 +681,19 @@
           });
           return;
         }
-        this.$router.push({path: "/list", query: {keyword: this.keyword}});
+        this.$router.push({path: "/list", query: {keyword: this.keyword, model: this.searchModel}});
+      },
+      getBlogSearchModel: function () {
+        getSearchModel().then(response => {
+          console.log("获取搜索模式", response)
+          if(response.code == this.$ECode.SUCCESS) {
+            this.searchModel = response.data
+          }
+        })
       },
       setSize() {
         // 屏幕大于950px的时候，显示侧边栏
         let clientWidth = document.body.clientWidth
-        console.log("客户端宽度", clientWidth)
         if(clientWidth > 1360) {
           this.drawerSize = "30%";
           this.showSearch = true
@@ -709,12 +719,10 @@
 
       // 获取导航栏列表
       getWebNavbarList() {
-        console.log("获取导航栏")
-        var params = {};
+        let params = {};
         params.isShow = 1
         getWebNavbar(params).then(response => {
           if(response.code == this.$ECode.SUCCESS) {
-            console.log("获取到的导航栏列表", response)
             let webNavbarList = response.data
             let newWebNavbarList = []
             for(let a=0; a<webNavbarList.length; a++) {
@@ -806,7 +814,6 @@
               readUserReceiveCommentCount().then(response => {
                 if(response.code == this.$ECode.SUCCESS) {
                   // 阅读成功
-                  console.log(response.message)
                   this.userReceiveCommentCount = 0
                 }
               })
@@ -1033,7 +1040,6 @@
       },
       setUserReceiveCommentCount: function () {
         getUserReceiveCommentCount().then(response => {
-          console.log("获取用户收到的评论数", response)
           if (response.code == this.$ECode.SUCCESS) {
             this.userReceiveCommentCount = response.data
           }

@@ -31,9 +31,24 @@
             <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openDashboardNotification" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
-          <!-- 仪表盘弹框通知，在用户登录后台的时候会出现，可以手动关闭 -->
+          <!-- 用于控制用户是否需要通过邮箱验证，完成认证-->
           <el-form-item label="注册用户邮件激活">
             <el-radio v-for="item in openDictList" :key="item.uid" v-model="form.openEmailActivate" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
+          </el-form-item>
+
+          <!-- 搜索模式-->
+          <el-form-item>
+            <template slot="label">
+              文章搜索模式
+              <el-popover
+                placement="top-start"
+                width="200"
+                trigger="hover"
+                content="用于控制门户搜索功能使用SQL方式，还是全文检索。开启全文检索需要启动mogu-search项目">
+                <i slot="reference" style="cursor: pointer;margin-left: 2px" class="el-icon-question"></i>
+              </el-popover>
+            </template>
+            <el-radio v-for="item in searchModelDictList" :key="item.uid" v-model="form.searchModel" :label="item.dictValue" border size="medium">{{item.dictLabel}}</el-radio>
           </el-form-item>
 
           <el-form-item>
@@ -332,6 +347,7 @@ export default {
       openDictList: [], // 开启关闭字典
       picturePriorityDictList: [], //图片显示优先级字典
       editorModalDictList: [], // 文本编辑器字典列表
+      searchModelDictList: [], // 搜索模式字典列表
       loadingInstance: null, // loading对象
       rules: {
         localPictureBaseUrl: [
@@ -365,16 +381,17 @@ export default {
      */
     getDictList: function () {
 
-      var dictTypeList =  ['sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable', 'sys_editor_modal']
+      var dictTypeList =  ['sys_search_model', 'sys_yes_no', 'sys_picture_priority', 'sys_storage_region', 'sys_normal_disable', 'sys_editor_modal']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
-          var dictMap = response.data;
+          let dictMap = response.data;
           this.areaDictList = dictMap.sys_storage_region.list
           this.yesNoDictList = dictMap.sys_yes_no.list
           this.openDictList = dictMap.sys_normal_disable.list
           this.picturePriorityDictList = dictMap.sys_picture_priority.list
           this.editorModalDictList = dictMap.sys_editor_modal.list
+          this.searchModelDictList = dictMap.sys_search_model.list
         }
       });
     },

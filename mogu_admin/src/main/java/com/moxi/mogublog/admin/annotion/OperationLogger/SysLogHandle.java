@@ -12,12 +12,7 @@ import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
-import com.moxi.mougblog.base.holder.RequestHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +73,7 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
 
     /**
      * 构造函数
+     *
      * @param ip
      * @param type
      * @param requestUrl
@@ -90,9 +86,9 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
      * @param redisUtil
      */
     public SysLogHandle(String ip, String type, String requestUrl, SecurityUser securityUser,
-                                String paramsJson, String classPath,
-                                String methodName, String operationName,
-                                Date startTime, RedisUtil redisUtil) {
+                        String paramsJson, String classPath,
+                        String methodName, String operationName,
+                        Date startTime, RedisUtil redisUtil) {
         this.ip = ip;
         this.type = type;
         this.requestUrl = requestUrl;

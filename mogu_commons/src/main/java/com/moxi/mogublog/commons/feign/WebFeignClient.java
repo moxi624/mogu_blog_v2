@@ -20,7 +20,14 @@ public interface WebFeignClient {
      * 获取系统配置信息
      */
     @RequestMapping(value = "/oauth/getSystemConfig", method = RequestMethod.GET)
-    public String getSystemConfig(@RequestParam("token") String token);
+    String getSystemConfig(@RequestParam("token") String token);
+
+    /**
+     * 获取搜索模式
+     * @return
+     */
+    @RequestMapping(value = "/search/getSearchModel", method = RequestMethod.GET)
+    String getSearchModel();
 
     @RequestMapping("/content/getBlogByUid")
     public String getBlogByUid(@RequestParam(name = "uid", required = false) String uid);
