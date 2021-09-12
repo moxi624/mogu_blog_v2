@@ -121,7 +121,6 @@ public class FeignUtil {
             String qiNiuSecretKey = systemConfigMap.get(SysConf.QI_NIU_SECRET_KEY);
             String qiNiuBucket = systemConfigMap.get(SysConf.QI_NIU_BUCKET);
             String qiNiuArea = systemConfigMap.get(SysConf.QI_NIU_AREA);
-
             String minioEndPoint = systemConfigMap.get(SysConf.MINIO_END_POINT);
             String minioAccessKey = systemConfigMap.get(SysConf.MINIO_ACCESS_KEY);
             String minioSecretKey = systemConfigMap.get(SysConf.MINIO_SECRET_KEY);
