@@ -254,7 +254,7 @@
 参考 [如何使用一条命令完成蘑菇博客部署](http://www.moguit.cn/#/info?blogOid=597)， 在云服务器上执行下面命令，完成一键部署蘑菇博客
 
 ```bash
-wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/moguInit.sh && chmod +x moguInit.sh && sh moguInit.sh
+wget http://oss.moguit.cn/script/moguInit.sh && chmod +x moguInit.sh && sh moguInit.sh
 ```
 
 Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统](https://www.bilibili.com/video/BV13y4y1V7Us)
