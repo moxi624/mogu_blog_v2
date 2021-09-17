@@ -100,9 +100,9 @@
 
 ## 蘑菇博客Go版本
 
-[**mogu-go-v2**](https://gitee.com/yanglei88/mogu-go-v2) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
+[**mogu_blog_go**](https://gitee.com/moxi159753/mogu_blog_go) 是根据**蘑菇博客**改编的一个 **Golang** 简化版分支，实现了蘑菇博客后台原有的大部分**基础功能**，同时前端代码和数据库基本没有变化，因此可以直接使用蘑菇博客原有的前端页面。
 
-**mogu-go-v2** 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
+[**mogu_blog_go**](https://gitee.com/moxi159753/mogu_blog_go) 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
 
 参考[蘑菇博客Golang版安装指南](http://moguit.cn/#/info?blogOid=593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
 
