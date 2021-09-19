@@ -662,7 +662,6 @@
       this.getWebConfigInfo()
       this.getWebNavbarList()
       this.setSize()
-      this.setUserReceiveCommentCount()
       // 获取浏览器类型
       this.getBrowser()
       this.getBlogSearchModel()
@@ -1027,6 +1026,8 @@
               this.isLogin = true;
               this.userInfo = response.data;
               this.setUserInfo(this.userInfo)
+              // 获取用户的评论数
+              this.setUserReceiveCommentCount()
             } else {
               this.isLogin = false;
               delCookie("token");

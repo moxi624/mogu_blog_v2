@@ -1,0 +1,16 @@
+version: '3'
+services:
+  #授权服务
+  mogu_blog_go:
+    image: registry.cn-shenzhen.aliyuncs.com/mogublog/mogu_blog_go:latest
+    container_name: mogu_blog_go
+    restart: always
+    ports:
+      - 8607:8607
+    networks:
+      - mogu
+    volumes:
+      - ../config/mogu_blog_go/app.conf:/go/src/mogu_blog_go/conf/app.conf
+networks:
+  mogu:
+    external: true
