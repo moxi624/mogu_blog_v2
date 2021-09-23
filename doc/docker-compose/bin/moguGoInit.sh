@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+echo "############当前操作系统版本##############"
+if ! type yum >/dev/null 2>&1; then
+        echo "【ERROR】目前脚本仅支持CentOS7.X系统"
+        exit 8
+else
+        osVersion=$(echo `cat /etc/redhat-release | sed -r 's/.* ([0-9]+)\..*/\1/'`)
+        if [[ "$osVersion" != "7" ]]; then
+             echo "【ERROR】目前脚本仅支持CentOS7.X系统"
+             exit 8
+        else
+             echo '版本校验成功' 
+        fi
+fi
 
 echo "############判断是否安装了docker##############"
 if ! type docker >/dev/null 2>&1; then
@@ -57,7 +70,7 @@ echo "############判断是否安装了docker-compose##############"
 if ! type docker-compose >/dev/null 2>&1; then
     echo 'docker-compose 未安装';
 	echo '开始安装docker-compose....';		
-	wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/docker-compose-Linux-x86_64
+	wget http://oss.moguit.cn/script/docker-compose-Linux-x86_64
 	mv docker-compose-Linux-x86_64  docker-compose
 	chmod +x docker-compose
 	mv docker-compose /usr/local/bin/
@@ -83,10 +96,11 @@ echo '创建docker网络';
 docker network create mogu
 
 echo '正在拉取一键部署脚本';
-wget https://mogublog-v2.oss-cn-guangzhou.aliyuncs.com/software/docker-compose.zip
+wget http://oss.moguit.cn/script/docker-compose.zip
 
 
 unzip docker-compose.zip
+rm -rf docker-compose.zip
 
 # 进入目录
 cd docker-compose
@@ -101,12 +115,12 @@ cd bin
 
 # 修改编码
 echo "修改编码...."
-dos2unix kernStartup.sh
-dos2unix kernShutdown.sh
+dos2unix moguGoStartup.sh
+dos2unix moguGoShutdown.sh
 dos2unix update.sh
 dos2unix wait-for-it.sh
 
 # 执行脚本
 python2 replaceIp.py
 
-sh kernStartup.sh
+sh moguGoStartup.sh

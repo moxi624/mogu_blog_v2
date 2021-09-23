@@ -11,6 +11,8 @@ docker-compose -f ../yaml/redis.yml down
 echo '=====开始关闭mogu_data====='
 docker-compose -f ../yaml/mogu_data.yml down
 
+echo '=====开始关闭minio====='
+docker-compose -f ../yaml/minio.yml down
 
 echo '======================'
 echo '=====开始关闭后台====='

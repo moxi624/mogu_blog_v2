@@ -13,6 +13,8 @@ docker-compose -f ../yaml/redis.yml up -d
 echo '=====开始部署mogu_data====='
 docker-compose -f ../yaml/mogu_data.yml up -d
 
+echo '=====开始部署minio====='
+docker-compose -f ../yaml/minio.yml up -d
 
 echo '======================'
 echo '=====开始运行后台====='
