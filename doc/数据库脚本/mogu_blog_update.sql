@@ -152,7 +152,7 @@ ALTER TABLE t_picture_sort ADD is_show TINYINT(1) NOT NULL DEFAULT 1 COMMENT '�
    修改t_web_config表，增加 start_email_notification，一级评论UID
    @date 2020年4月29日11:50:19
 */
-ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
+ALTER TABLE  t_web_config ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
 
 
 /*
