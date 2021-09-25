@@ -106,6 +106,8 @@ cd docker-compose
 # 添加执行权限
 chmod +x bin/kernStartup.sh
 chmod +x bin/kernShutdown.sh
+chmod +x bin/mouGoStartup.sh
+chmod +x bin/mouGoShutdown.sh
 chmod +x bin/update.sh
 chmod +x bin/wait-for-it.sh
 
@@ -116,6 +118,8 @@ cd bin
 echo "修改编码...."
 dos2unix kernStartup.sh
 dos2unix kernShutdown.sh
+dos2unix moguGoStartup.sh
+dos2unix moguGoShutdown.sh
 dos2unix update.sh
 dos2unix wait-for-it.sh
 

@@ -353,4 +353,22 @@ ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 
 */
 ALTER TABLE  t_web_config ADD link_apply_template VARCHAR(2018) COMMENT "友链申请模板,添加友链申请模板格式";
 
+
+/*
+   修改t_system_config 表，新增搜索模式【0 关闭，1 开启】
+   @date 2021年4月9日18:14:28
+*/
+ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否开启用户邮件激活功能【0 关闭，1 开启】';
+
+
+/*
+   修改t_system_config 表，增加 searchModel 字段，搜索模式【0:SQL搜索 、1：全文检索】
+   @date 2021年9月24日18:14:28
+*/
+ALTER TABLE t_system_config ADD search_model TINYINT(1) NOT NULL DEFAULT 0 COMMENT '搜索模式【0:SQL搜索 、1：ES搜索、2：Solr搜索】';
+INSERT INTO `t_sys_dict_type` (`uid`, `oid`, `dict_name`, `dict_type`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('f1929a18eac0a6dfa9007aa8024899a2','30','搜索模式','sys_search_model','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：SQL搜索、ES搜索、Solr搜索','1','2021-09-11 15:26:35','2021-09-11 15:26:35','1','0');
+
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('24f6c115ecfbb9c1818f9603990c8971','80','f1929a18eac0a6dfa9007aa8024899a2','Solr搜索','2',NULL,NULL,'0','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：Solr搜索','1','2021-09-11 16:18:17','2021-09-11 16:18:17','1','0');
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('bc9c1933052d66f8424b09a6869972d0','79','f1929a18eac0a6dfa9007aa8024899a2','ES搜素','1',NULL,NULL,'0','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：开启ElasticSearch全文检索','1','2021-09-11 15:27:36','2021-09-11 16:17:54','1','0');
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('c027f76096eb89ee6364b25f7b366388','78','f1929a18eac0a6dfa9007aa8024899a2','SQL搜索','0',NULL,NULL,'1','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：SQL搜索','1','2021-09-11 15:27:00','2021-09-11 15:27:00','1','0');
 ·
