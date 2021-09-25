@@ -149,7 +149,7 @@ ALTER TABLE t_comment ADD first_comment_uid VARCHAR(32) NULL COMMENT '一级评�
 ALTER TABLE t_picture_sort ADD is_show TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否显示，1：是，0，否';
 
 /*
-   修改t_web_config表，增加 start_email_notification，一级评论UID
+   修改t_web_config表，增加 start_email_notification
    @date 2020年4月29日11:50:19
 */
 ALTER TABLE  t_web_config ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
