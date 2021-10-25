@@ -70,7 +70,7 @@
 
 最近，腾讯云和阿里云的优惠力度非常大，如果有需求的小伙伴，可以了解一下~
 
-> 【阿里云】云服务器狂欢特惠，**2核2G5M** 轻量级应用服务器 **60** 元/年【博主目前使用】 [点我传送](https://www.aliyun.com/minisite/goods?userCode=w7aungxw)
+> 【阿里云】云服务器狂欢特惠，**2核2G5M** 轻量级应用服务器 **60** 元/年【博主目前使用】 [点我传送](https://www.aliyun.com/minisite/goods?taskPkg=1111ydsrwb&pkgSid=617&userCode=w7aungxw)
 >
 > 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年**74**元/年【博主强烈推荐】 [点我进入](https://curl.qcloud.com/zry6xub9)
 
