@@ -221,6 +221,7 @@
           }
           getBlogByUid(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
+              console.log("获取博客信息", response)
               this.blogData = response.data;
               this.blogUid = response.data.uid
               this.blogOid = response.data.oid
