@@ -14,6 +14,24 @@ else
         fi
 fi
 
+
+echo "############检查常用端口号是否被占用##############"
+mysqlPID=`/usr/sbin/lsof -i :3306|grep -v "PID" | awk '{print $2}'`
+if [ "$mysqlPID" != "" ];
+then
+   echo "【ERROR】MySQL的3306端口号已被占用"
+   exit 8
+fi
+
+redisPID=`/usr/sbin/lsof -i :6379|grep -v "PID" | awk '{print $2}'`
+if [ "$redisPID" != "" ];
+then
+   echo "【ERROR】Redis的6379端口号已被占用"
+   exit 8
+fi
+echo '端口号冲突校验成功' 
+
+
 echo "############判断是否安装了docker##############"
 if ! type docker >/dev/null 2>&1; then
 
@@ -100,6 +118,7 @@ wget http://oss.moguit.cn/script//docker-compose.zip
 
 
 unzip docker-compose.zip
+rm -rf docker-compose.zip
 
 # 进入目录
 cd docker-compose
