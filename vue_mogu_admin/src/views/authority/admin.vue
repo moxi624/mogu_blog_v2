@@ -406,7 +406,7 @@ export default {
           });
         })
         .catch(() => {
-          this.$commonUtil.message.info("已取消删除")
+          this.$commonUtil.message.info("已取消重置")
         });
     },
     //  计算文件大小
