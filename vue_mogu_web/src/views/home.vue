@@ -1,14 +1,5 @@
 <template>
-  <html>
-  <body>
-  <head>
-    <meta charset="utf-8">
-    <title>{{info.title}}</title>
-    <meta name="keywords" :content="info.keyword">
-    <meta name="description" :content="info.summary">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-
+  <dev>
   <header
     :class="isVisible?'header-navigation slideDown':'header-navigation slideUp'"
     id="header"
@@ -498,8 +489,7 @@
       :class="isCdTopVisible?'cd-top cd-is-visible':'cd-top'"
     >Top</a>
   </div>
-  </body>
-  </html>
+  </div>
 </template>
 
 <script>
@@ -615,6 +605,25 @@
             {min: 5, max: 20, message: '密码长度在5到20个字符'},
           ]
         }
+      };
+    },
+    metaInfo() {
+      return {
+        title: this.info.title,
+        meta: [
+          {
+            name: "keywords",
+            content: this.info.keyword,
+          },
+          {
+            name: "description",
+            content: this.info.summary,
+          },
+          {
+            property: "site_name",
+            content: this.info.name,
+          },
+        ],
       };
     },
     mounted() {
