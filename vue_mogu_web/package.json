@@ -14,7 +14,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.2",
     "element-ui": "^2.13.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
