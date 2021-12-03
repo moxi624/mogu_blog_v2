@@ -1,495 +1,497 @@
 <template>
-  <dev>
-  <header
-    :class="isVisible?'header-navigation slideDown':'header-navigation slideUp'"
-    id="header"
-  >
-    <nav>
-      <div class="logo">
-        <router-link to="/">
-          <a href="javascript:void(0);" v-if="info.name">{{info.name}}</a>
-        </router-link>
-      </div>
+  <div>
+    <header
+      :class="isVisible?'header-navigation slideDown':'header-navigation slideUp'"
+      id="header"
+    >
+      <nav>
+        <div class="logo">
+          <router-link to="/">
+            <a href="javascript:void(0);" v-if="info.name">{{info.name}}</a>
+          </router-link>
+        </div>
 
-      <h2 id="mnavh" @click="openHead" :class="showHead?'open':''">
-        <span class="navicon"></span>
-      </h2>
+        <h2 id="mnavh" @click="openHead" :class="showHead?'open':''">
+          <span class="navicon"></span>
+        </h2>
 
-      <ul id="starlist" :style="showHead?'display: block':''">
+        <ul id="starlist" :style="showHead?'display: block':''">
 
-        <li v-for="webNavbar in webNavbarList" :key="webNavbar.uid">
+          <li v-for="webNavbar in webNavbarList" :key="webNavbar.uid">
 
-          <!--判断是否有下拉菜单-->
-          <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
-            <el-dropdown  trigger="click">
-            <span class="el-dropdown-link">
-              {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+            <!--判断是否有下拉菜单-->
+            <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
+              <el-dropdown  trigger="click">
+              <span class="el-dropdown-link">
+                {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="childWebNavbar in webNavbar.childWebNavbar">
+                  <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
+                    <a href="javascript:void(0);" @click="openHead">{{ childWebNavbar.name }}</a>
+                  </router-link>
+                  <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url" target="_blank">{{ childWebNavbar.name }}</a>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="childWebNavbar in webNavbar.childWebNavbar">
-                <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
-                  <a href="javascript:void(0);" @click="openHead">{{ childWebNavbar.name }}</a>
-                </router-link>
-                <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url" target="_blank">{{ childWebNavbar.name }}</a>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          </span>
-          <!--没有有下拉菜单-->
-          <span v-else>
-            <router-link :to="webNavbar.url" v-if="webNavbar.isJumpExternalUrl == 0">
-            <a href="javascript:void(0);" @click="openHead" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
-            </router-link>
-            <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
-          </span>
-        </li>
+            <!--没有有下拉菜单-->
+            <span v-else>
+              <router-link :to="webNavbar.url" v-if="webNavbar.isJumpExternalUrl == 0">
+              <a href="javascript:void(0);" @click="openHead" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+              </router-link>
+              <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+            </span>
+          </li>
 
-<!--        <li>-->
-<!--          <router-link to="/">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/' ? 'title' : '']">首页</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/' ? 'title' : '']">首页</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/about">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/about">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/about' ? 'title' : '']">关于我</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/sort">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/sort">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/sort' ? 'title' : '']">归档</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/classify">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/classify' ? 'title' : '']">分类</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/classify">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/classify' ? 'title' : '']">分类</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/tag">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/tag' ? 'title' : '']">标签</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/tag">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/tag' ? 'title' : '']">标签</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/subject">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/subject">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/subject' ? 'title' : '']">专题</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/share">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/share">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/share' ? 'title' : '']">学习教程</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li>-->
-<!--          <router-link to="/time">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li>-->
+  <!--          <router-link to="/time">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/time' ? 'title' : '']">时间轴</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-<!--        <li v-if="openComment=='1'">-->
-<!--          <router-link to="/messageBoard">-->
-<!--            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>-->
-<!--          </router-link>-->
-<!--        </li>-->
+  <!--        <li v-if="openComment=='1'">-->
+  <!--          <router-link to="/messageBoard">-->
+  <!--            <a href="javascript:void(0);" :class="[saveTitle == '/messageBoard' ? 'title' : '']">留言板</a>-->
+  <!--          </router-link>-->
+  <!--        </li>-->
 
-      </ul>
+        </ul>
 
-      <div class="searchbox">
-        <div id="search_bar" :class="(showSearch || keyword.length > 0)?'search_bar search_open':'search_bar'">
-          <input
-            ref="searchInput"
-            class="input"
-            placeholder="想搜点什么呢.."
-            type="text"
-            name="keyboard"
-            v-model="keyword"
-            v-on:keyup.enter="search"
-          >
-          <p class="search_ico" @click="clickSearchIco" :style="(browserFlag == 1)?'':'top:17px'">
-            <span></span>
-          </p>
+        <div class="searchbox">
+          <div id="search_bar" :class="(showSearch || keyword.length > 0)?'search_bar search_open':'search_bar'">
+            <input
+              ref="searchInput"
+              class="input"
+              placeholder="想搜点什么呢.."
+              type="text"
+              name="keyboard"
+              v-model="keyword"
+              v-on:keyup.enter="search"
+            >
+            <p class="search_ico" @click="clickSearchIco" :style="(browserFlag == 1)?'':'top:17px'">
+              <span></span>
+            </p>
+          </div>
         </div>
-      </div>
 
-      <el-dropdown @command="handleCommand" class="userInfoAvatar">
+        <el-dropdown @command="handleCommand" class="userInfoAvatar">
 
-        <span class="el-dropdown-link" >
-          <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
-            <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-            <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
-            <img v-if="isLogin&&userInfo.photoUrl==undefined"
-                 :src="defaultAvatar">
-          </el-badge>
-        </span>
+          <span class="el-dropdown-link" >
+            <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+              <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
+              <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
+              <img v-if="isLogin&&userInfo.photoUrl==undefined"
+                   :src="defaultAvatar">
+            </el-badge>
+          </span>
 
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="login" v-show="!isLogin">登录</el-dropdown-item>
-          <el-dropdown-item command="goUserInfo" v-show="isLogin">个人中心</el-dropdown-item>
-          <el-dropdown-item command="logout" v-show="isLogin">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="login" v-show="!isLogin">登录</el-dropdown-item>
+            <el-dropdown-item command="goUserInfo" v-show="isLogin">个人中心</el-dropdown-item>
+            <el-dropdown-item command="logout" v-show="isLogin">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
 
-      </el-dropdown>
+        </el-dropdown>
 
 
-    </nav>
-  </header>
-  <LoginBox v-if="showLogin" @closeLoginBox="closeLoginBox"></LoginBox>
+      </nav>
+    </header>
 
-  <el-drawer
-    :show-close="true"
-    :visible.sync="drawer"
-    :size="drawerSize"
-    :with-header="false">
+    <LoginBox v-if="showLogin" @closeLoginBox="closeLoginBox"></LoginBox>
 
-      <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
-      <el-tab-pane label="个人中心" name="0">
-        <span slot="label"><i class="el-icon-user-solid"></i> 个人中心</span>
-        <el-form label-position="left" :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
-          <el-form-item label="用户头像" :label-width="labelWidth">
+    <el-drawer
+      :show-close="true"
+      :visible.sync="drawer"
+      :size="drawerSize"
+      :with-header="false">
 
-            <div class="imgBody" v-if="userInfo.photoUrl">
-              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('user')" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl" />
-            </div>
+        <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
+        <el-tab-pane label="个人中心" name="0">
+          <span slot="label"><i class="el-icon-user-solid"></i> 个人中心</span>
+          <el-form label-position="left" :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
+            <el-form-item label="用户头像" :label-width="labelWidth">
 
-            <div v-else class="uploadImgBody" @click="checkPhoto">
-              <i class="el-icon-plus avatar-uploader-icon"></i>
-            </div>
-          </el-form-item>
+              <div class="imgBody" v-if="userInfo.photoUrl">
+                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('user')" @mouseover="icon = true"></i>
+                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl" />
+              </div>
 
-          <el-form-item label="昵称" :label-width="labelWidth">
-            <el-input v-model="userInfo.nickName" style="width: 100%"></el-input>
-          </el-form-item>
+              <div v-else class="uploadImgBody" @click="checkPhoto">
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+            </el-form-item>
 
-          <el-form-item label="性别" :label-width="labelWidth">
-            <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
-          </el-form-item>
+            <el-form-item label="昵称" :label-width="labelWidth">
+              <el-input v-model="userInfo.nickName" style="width: 100%"></el-input>
+            </el-form-item>
 
-          <el-form-item label="生日" :label-width="labelWidth">
-            <el-date-picker
-              v-model="userInfo.birthday"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
+            <el-form-item label="性别" :label-width="labelWidth">
+              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+            </el-form-item>
 
-          <el-form-item label="评论邮件通知" :label-width="labelWidth">
-            <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification" :label="parseInt(item.dictValue)" border size="medium">{{item.dictLabel}}</el-radio>
-          </el-form-item>
+            <el-form-item label="生日" :label-width="labelWidth">
+              <el-date-picker
+                v-model="userInfo.birthday"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
 
-          <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
-            <el-input v-model="userInfo.email" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item label="评论邮件通知" :label-width="labelWidth">
+              <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification" :label="parseInt(item.dictValue)" border size="medium">{{item.dictLabel}}</el-radio>
+            </el-form-item>
 
-          <el-form-item label="QQ号" :label-width="labelWidth" prop="qqNumber">
-            <el-input v-model="userInfo.qqNumber" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
+              <el-input v-model="userInfo.email" style="width: 100%"></el-input>
+            </el-form-item>
 
-          <el-form-item label="职业" :label-width="labelWidth" prop="occupation">
-            <el-input v-model="userInfo.occupation" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item label="QQ号" :label-width="labelWidth" prop="qqNumber">
+              <el-input v-model="userInfo.qqNumber" style="width: 100%"></el-input>
+            </el-form-item>
 
-          <el-form-item label="简介" :label-width="labelWidth" prop="summary">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 5, maxRows: 10}"
-              placeholder="请输入内容"
-              style="width: 100%"
-              v-model="userInfo.summary">
-            </el-input>
-          </el-form-item>
+            <el-form-item label="职业" :label-width="labelWidth" prop="occupation">
+              <el-input v-model="userInfo.occupation" style="width: 100%"></el-input>
+            </el-form-item>
 
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('editUser')">保 存</el-button>
-          </el-form-item>
+            <el-form-item label="简介" :label-width="labelWidth" prop="summary">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 5, maxRows: 10}"
+                placeholder="请输入内容"
+                style="width: 100%"
+                v-model="userInfo.summary">
+              </el-input>
+            </el-form-item>
 
-        </el-form>
-      </el-tab-pane>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('editUser')">保 存</el-button>
+            </el-form-item>
 
-      <el-tab-pane label="我的评论" name="1">
-        <span slot="label"><i class="el-icon-message-solid"></i> 我的评论</span>
-        <div style="width: 100%; height: 840px;overflow:auto;">
-          <el-timeline>
-            <el-timeline-item v-for="comment in commentList" :key="comment.uid" :timestamp="timeAgo(comment.createTime)" placement="top">
-              <el-card>
-                <div class="commentList">
-                <span class="left p1">
-                  <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
-                  <img v-else :src="defaultAvatar" />
-                </span>
+          </el-form>
+        </el-tab-pane>
 
-                  <span class="right p1">
-                  <div class="rightTop">
-                    <el-link class="userName" :underline="false">{{comment.user.nickName}}</el-link>
-                    <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
-                  </div>
-
-                  <div class="rightCenter ck-content" v-highlight v-html="$xss(comment.content, options)"></div>
-                </span>
-                </div>
-              </el-card>
-            </el-timeline-item>
-
-            <el-timeline-item v-if="commentList.length == 0" placement="top">
-              <el-card>
-                <span style="font-size: 16px">空空如也~</span>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </el-tab-pane>
-
-      <el-tab-pane label="我的回复" name="2">
-        <span slot="label">
-          <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
-            <i class="el-icon-s-promotion"></i> 我的回复
-          </el-badge>
-        </span>
-        <div style="width: 100%; height: 840px;overflow:auto">
-          <el-timeline>
-            <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)" placement="top">
-              <el-card>
-                <div class="commentList">
+        <el-tab-pane label="我的评论" name="1">
+          <span slot="label"><i class="el-icon-message-solid"></i> 我的评论</span>
+          <div style="width: 100%; height: 840px;overflow:auto;">
+            <el-timeline>
+              <el-timeline-item v-for="comment in commentList" :key="comment.uid" :timestamp="timeAgo(comment.createTime)" placement="top">
+                <el-card>
+                  <div class="commentList">
                   <span class="left p1">
-                    <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
+                    <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
                     <img v-else :src="defaultAvatar" />
                   </span>
 
-                  <span class="right p1">
+                    <span class="right p1">
+                    <div class="rightTop">
+                      <el-link class="userName" :underline="false">{{comment.user.nickName}}</el-link>
+                      <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
+                    </div>
 
-                      <div class="rightTop">
-                        <el-link class="userName" :underline="false">{{reply.user.nickName}}</el-link>
-                        <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
-                      </div>
-
-                      <div class="rightCenter ck-content" v-highlight v-html="$xss(reply.content, options)">
-                      </div>
+                    <div class="rightCenter ck-content" v-highlight v-html="$xss(comment.content, options)"></div>
                   </span>
-                </div>
-              </el-card>
-            </el-timeline-item>
+                  </div>
+                </el-card>
+              </el-timeline-item>
 
-            <el-timeline-item v-if="replyList.length == 0" placement="top">
-              <el-card>
-                <span style="font-size: 16px">空空如也~</span>
-              </el-card>
-            </el-timeline-item>
+              <el-timeline-item v-if="commentList.length == 0" placement="top">
+                <el-card>
+                  <span style="font-size: 16px">空空如也~</span>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </el-tab-pane>
 
-          </el-timeline>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="我的点赞" name="3">
-        <span slot="label"><i class="el-icon-star-on"></i> 我的点赞</span>
-        <div style="width: 100%; height: 840px;overflow:auto">
-          <el-timeline>
-            <el-timeline-item v-for="praise in praiseList" :key="praise.uid" :timestamp="timeAgo(praise.createTime)" placement="top">
-              <el-card>
-                <span>点赞</span><el-tag type="warning" style="cursor: pointer" v-if="praise.blog" @click.native="goToInfo(praise.blog.uid)">{{praise.blog.title}}</el-tag>
-              </el-card>
-            </el-timeline-item>
+        <el-tab-pane label="我的回复" name="2">
+          <span slot="label">
+            <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+              <i class="el-icon-s-promotion"></i> 我的回复
+            </el-badge>
+          </span>
+          <div style="width: 100%; height: 840px;overflow:auto">
+            <el-timeline>
+              <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)" placement="top">
+                <el-card>
+                  <div class="commentList">
+                    <span class="left p1">
+                      <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
+                      <img v-else :src="defaultAvatar" />
+                    </span>
 
-            <el-timeline-item v-if="praiseList.length == 0" placement="top">
-              <el-card>
-                <span style="font-size: 16px">空空如也~</span>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="我的反馈" name="4">
-        <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
+                    <span class="right p1">
 
-        <el-collapse v-model="activeNames">
-          <el-collapse-item title="反馈须知" name="1">
-            <div>如果您对本站有什么想法，可以在这里进行反馈</div>
-            <div>或者加入我们的QQ群进行交流</div>
-          </el-collapse-item>
-        </el-collapse>
-        <el-divider></el-divider>
+                        <div class="rightTop">
+                          <el-link class="userName" :underline="false">{{reply.user.nickName}}</el-link>
+                          <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
+                        </div>
 
-        <div style="width: 100%; height: 450px;overflow:auto">
-          <el-timeline>
-            <el-timeline-item v-for="feedbackItem in feedbackList" :key="feedbackItem.uid" :timestamp="timeAgo(feedbackItem.createTime)" placement="top">
-              <el-card class="feedbackCard">
-                <div class="item">
-                  <span class="title">
-                    标题:
-                  </span>
-                  <span class="content">
-                    {{feedbackItem.title}}
-                  </span>
-                </div>
+                        <div class="rightCenter ck-content" v-highlight v-html="$xss(reply.content, options)">
+                        </div>
+                    </span>
+                  </div>
+                </el-card>
+              </el-timeline-item>
 
-                <div class="item">
-                  <span class="title">
-                    内容:
-                  </span>
-                  <span class="content">
-                    {{feedbackItem.content}}
-                  </span>
-                </div>
+              <el-timeline-item v-if="replyList.length == 0" placement="top">
+                <el-card>
+                  <span style="font-size: 16px">空空如也~</span>
+                </el-card>
+              </el-timeline-item>
 
-                <div class="item">
-                  <span class="title">
-                    反馈状态:
-                  </span>
-                  <span class="content">
-                    <el-tag v-for="item in feedbackDictList" :key="item.uid" :type="item.listClass" v-if="feedbackItem.feedbackStatus == item.dictValue">{{item.dictLabel}}</el-tag>
-                  </span>
-                </div>
+            </el-timeline>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="我的点赞" name="3">
+          <span slot="label"><i class="el-icon-star-on"></i> 我的点赞</span>
+          <div style="width: 100%; height: 840px;overflow:auto">
+            <el-timeline>
+              <el-timeline-item v-for="praise in praiseList" :key="praise.uid" :timestamp="timeAgo(praise.createTime)" placement="top">
+                <el-card>
+                  <span>点赞</span><el-tag type="warning" style="cursor: pointer" v-if="praise.blog" @click.native="goToInfo(praise.blog.uid)">{{praise.blog.title}}</el-tag>
+                </el-card>
+              </el-timeline-item>
 
-                <div class="item">
-                  <span class="title">
-                    回复:
-                  </span>
-                  <span class="content">
-                    {{feedbackItem.reply}}
-                  </span>
-                </div>
-              </el-card>
-            </el-timeline-item>
+              <el-timeline-item v-if="praiseList.length == 0" placement="top">
+                <el-card>
+                  <span style="font-size: 16px">空空如也~</span>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="我的反馈" name="4">
+          <span slot="label"><i class="el-icon-phone"></i> 我的反馈</span>
 
-            <el-timeline-item v-if="feedbackList.length == 0" placement="top">
-              <el-card>
-                <span style="font-size: 16px">空空如也~</span>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-
-        <el-divider></el-divider>
-
-        <el-form label-position="left" :model="userInfo" label-width="100px">
-          <el-form-item label="标题" :label-width="labelWidth">
-            <el-input v-model="feedback.title" style="width: 100%"></el-input>
-          </el-form-item>
-
-          <el-form-item label="内容" :label-width="labelWidth">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入反馈内容"
-              v-model="feedback.content">
-            </el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('feedback')">提 交</el-button>
-          </el-form-item>
-        </el-form>
-
-      </el-tab-pane>
-      <el-tab-pane label="申请友链" name="5">
-        <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
-
-        <el-form label-position="left" :model="blogLink" label-width="100px" ref="blogLink" :rules="linkRules">
           <el-collapse v-model="activeNames">
-            <el-collapse-item title="友链申请需知" name="1">
-              <span v-html="info.linkApplyTemplate">{{info.linkApplyTemplate}}</span>
+            <el-collapse-item title="反馈须知" name="1">
+              <div>如果您对本站有什么想法，可以在这里进行反馈</div>
+              <div>或者加入我们的QQ群进行交流</div>
             </el-collapse-item>
           </el-collapse>
+          <el-divider></el-divider>
+
+          <div style="width: 100%; height: 450px;overflow:auto">
+            <el-timeline>
+              <el-timeline-item v-for="feedbackItem in feedbackList" :key="feedbackItem.uid" :timestamp="timeAgo(feedbackItem.createTime)" placement="top">
+                <el-card class="feedbackCard">
+                  <div class="item">
+                    <span class="title">
+                      标题:
+                    </span>
+                    <span class="content">
+                      {{feedbackItem.title}}
+                    </span>
+                  </div>
+
+                  <div class="item">
+                    <span class="title">
+                      内容:
+                    </span>
+                    <span class="content">
+                      {{feedbackItem.content}}
+                    </span>
+                  </div>
+
+                  <div class="item">
+                    <span class="title">
+                      反馈状态:
+                    </span>
+                    <span class="content">
+                      <el-tag v-for="item in feedbackDictList" :key="item.uid" :type="item.listClass" v-if="feedbackItem.feedbackStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+                    </span>
+                  </div>
+
+                  <div class="item">
+                    <span class="title">
+                      回复:
+                    </span>
+                    <span class="content">
+                      {{feedbackItem.reply}}
+                    </span>
+                  </div>
+                </el-card>
+              </el-timeline-item>
+
+              <el-timeline-item v-if="feedbackList.length == 0" placement="top">
+                <el-card>
+                  <span style="font-size: 16px">空空如也~</span>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
 
           <el-divider></el-divider>
 
-          <el-form-item label="网站图标">
-            <div class="imgBody" v-if="blogLink.photoList">
-              <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('link')" @mouseover="icon = true"></i>
-              <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]" />
-            </div>
+          <el-form label-position="left" :model="userInfo" label-width="100px">
+            <el-form-item label="标题" :label-width="labelWidth">
+              <el-input v-model="feedback.title" style="width: 100%"></el-input>
+            </el-form-item>
 
-            <div v-else class="uploadImgBody" @click="checkPhoto">
-              <i class="el-icon-plus avatar-uploader-icon"></i>
-            </div>
-          </el-form-item>
+            <el-form-item label="内容" :label-width="labelWidth">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4}"
+                placeholder="请输入反馈内容"
+                v-model="feedback.content">
+              </el-input>
+            </el-form-item>
 
-          <el-form-item label="网站名称" :label-width="labelWidth" prop="title">
-            <el-input v-model="blogLink.title" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('feedback')">提 交</el-button>
+            </el-form-item>
+          </el-form>
 
-          <el-form-item label="网站简介" :label-width="labelWidth" prop="summary">
-            <el-input v-model="blogLink.summary" style="width: 100%"></el-input>
-          </el-form-item>
+        </el-tab-pane>
+        <el-tab-pane label="申请友链" name="5">
+          <span slot="label"><i class="el-icon-share"></i> 申请友链</span>
 
-          <el-form-item label="网站地址" :label-width="labelWidth" prop="url">
-            <el-input v-model="blogLink.url" style="width: 100%"></el-input>
-          </el-form-item>
+          <el-form label-position="left" :model="blogLink" label-width="100px" ref="blogLink" :rules="linkRules">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="友链申请需知" name="1">
+                <span v-html="info.linkApplyTemplate">{{info.linkApplyTemplate}}</span>
+              </el-collapse-item>
+            </el-collapse>
 
-          <el-form-item label="站长邮箱" :label-width="labelWidth" prop="email">
-            <el-input v-model="blogLink.email" placeholder="用于申请通过邮件通知" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-divider></el-divider>
 
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('replyBlogLink')">申 请</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="修改密码" name="6">
-        <span slot="label"><i class="el-icon-s-tools"></i> 修改密码</span>
-        <el-collapse v-model="activeNames">
-          <el-collapse-item title="修改密码须知" name="1">
-            <div>此修改密码功能仅适用于账号和密码登录</div>
-            <div>对于第三方登录的账号，无法进行密码修改</div>
-          </el-collapse-item>
-        </el-collapse>
-        <el-form ref="userInfoForm" label-position="left" :model="userInfo" label-width="100px" :rules="userInfoRules">
-          <el-form-item label="旧密码" :label-width="labelWidth" prop="oldPwd">
-            <el-input type="password" v-model="userInfo.oldPwd" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item label="网站图标">
+              <div class="imgBody" v-if="blogLink.photoList">
+                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('link')" @mouseover="icon = true"></i>
+                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]" />
+              </div>
 
-          <el-form-item label="新密码" :label-width="labelWidth" prop="newPwd">
-            <el-input type="password" v-model="userInfo.newPwd" style="width: 100%"></el-input>
-          </el-form-item>
+              <div v-else class="uploadImgBody" @click="checkPhoto">
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+            </el-form-item>
 
-          <el-form-item label="重复密码" :label-width="labelWidth" prop="newPwd2">
-            <el-input type="password" v-model="userInfo.newPwd2" style="width: 100%"></el-input>
-          </el-form-item>
+            <el-form-item label="网站名称" :label-width="labelWidth" prop="title">
+              <el-input v-model="blogLink.title" style="width: 100%"></el-input>
+            </el-form-item>
 
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('changePwd')">提 交</el-button>
-          </el-form-item>
-        </el-form>
+            <el-form-item label="网站简介" :label-width="labelWidth" prop="summary">
+              <el-input v-model="blogLink.summary" style="width: 100%"></el-input>
+            </el-form-item>
 
-      </el-tab-pane>
-    </el-tabs>
-  </el-drawer>
+            <el-form-item label="网站地址" :label-width="labelWidth" prop="url">
+              <el-input v-model="blogLink.url" style="width: 100%"></el-input>
+            </el-form-item>
 
-  <!--头像裁剪-->
-  <avatar-cropper
-    v-show="imagecropperShow"
-    :key="imagecropperKey"
-    :width="300"
-    :height="300"
-    :url="url"
-    lang-type="zh"
-    @close="close"
-    @crop-upload-success="cropSuccess"
-  />
+            <el-form-item label="站长邮箱" :label-width="labelWidth" prop="email">
+              <el-input v-model="blogLink.email" placeholder="用于申请通过邮件通知" style="width: 100%"></el-input>
+            </el-form-item>
 
-  <div>
-    <router-view/>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('replyBlogLink')">申 请</el-button>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="修改密码" name="6">
+          <span slot="label"><i class="el-icon-s-tools"></i> 修改密码</span>
+          <el-collapse v-model="activeNames">
+            <el-collapse-item title="修改密码须知" name="1">
+              <div>此修改密码功能仅适用于账号和密码登录</div>
+              <div>对于第三方登录的账号，无法进行密码修改</div>
+            </el-collapse-item>
+          </el-collapse>
+          <el-form ref="userInfoForm" label-position="left" :model="userInfo" label-width="100px" :rules="userInfoRules">
+            <el-form-item label="旧密码" :label-width="labelWidth" prop="oldPwd">
+              <el-input type="password" v-model="userInfo.oldPwd" style="width: 100%"></el-input>
+            </el-form-item>
+
+            <el-form-item label="新密码" :label-width="labelWidth" prop="newPwd">
+              <el-input type="password" v-model="userInfo.newPwd" style="width: 100%"></el-input>
+            </el-form-item>
+
+            <el-form-item label="重复密码" :label-width="labelWidth" prop="newPwd2">
+              <el-input type="password" v-model="userInfo.newPwd2" style="width: 100%"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('changePwd')">提 交</el-button>
+            </el-form-item>
+          </el-form>
+
+        </el-tab-pane>
+      </el-tabs>
+    </el-drawer>
+
+    <!--头像裁剪-->
+    <avatar-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      :url="url"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
+
+    <div>
+      <router-view/>
+    </div>
+
+    <footer>
+      <p>
+        Copyright <a href="https://gitee.com/moxi159753/mogu_blog_v2" @click="goIndex()"> &nbsp;蘑菇博客&nbsp;</a>
+        <a href="https://beian.miit.gov.cn/">{{info.recordNum}}</a>
+      </p>
+    </footer>
+
+    <div>
+      <a
+        href="javascript:void(0);"
+        @click="returnTop"
+        :class="isCdTopVisible?'cd-top cd-is-visible':'cd-top'"
+      >Top</a>
+    </div>
   </div>
 
-  <footer>
-    <p>
-      Copyright <a href="https://gitee.com/moxi159753/mogu_blog_v2" @click="goIndex()"> &nbsp;蘑菇博客&nbsp;</a>
-      <a href="https://beian.miit.gov.cn/">{{info.recordNum}}</a>
-    </p>
-  </footer>
-
-  <div>
-    <a
-      href="javascript:void(0);"
-      @click="returnTop"
-      :class="isCdTopVisible?'cd-top cd-is-visible':'cd-top'"
-    >Top</a>
-  </div>
-  </div>
 </template>
 
 <script>
@@ -610,10 +612,17 @@
     metaInfo() {
       return {
         title: this.info.title,
+        link: [
+          { rel: 'icon', href: this.info.logoPhoto }
+        ],
         meta: [
           {
             name: "keywords",
             content: this.info.keyword,
+          },
+          {
+            name: "content",
+            content: this.info.summary,
           },
           {
             name: "description",
