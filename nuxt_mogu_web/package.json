@@ -8,7 +8,7 @@
     "@koa/cors": "^2.2.1",
     "@nuxtjs/pwa": "^2.0.5",
     "Base64": "^1.0.1",
-    "axios": "^0.17.1",
+    "axios": "^0.21.2",
     "bootstrap-vue": "^2.0.0-rc.12",
     "cross-env": "^5.0.1",
     "element-ui": "^2.12.0",
