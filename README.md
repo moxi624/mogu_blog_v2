@@ -23,6 +23,14 @@
 
 [项目介绍](#项目介绍) | [站点演示](#站点演示) | [项目特点](#项目特点) | [技术架构](#技术选型) | [项目目录](#项目目录) | [项目文档](#项目文档)  | [快速开始](#快速开始) | [视频教程](#视频教程)| [项目截图](#移动端截图) | [更新记录](https://gitee.com/moxi159753/mogu_blog_v2/releases) | [笔记仓库](https://gitee.com/moxi159753/LearningNotes)
 
+## 投蘑菇一票
+
+码云开源项目评选开始啦，小伙伴们快动动手指，给蘑菇博客（搜索：MoguBlog ）投上自己宝贵的一票～，陌溪在这里感谢大家啦。投票地址：https://www.oschina.net/project/top_cn_2021?fr=zx1205
+
+![给蘑菇](./doc/images/gitee/mogu.png)
+
+
+
 ##  前言
 
 [**陌溪**](https://gitee.com/moxi159753/LearningNotes/raw/master/doc/images/qq/添加陌溪.png) 是一个从三本院校一路摸滚翻爬上来的程序员。目前就职于字节跳动的Data商业化广告部门，是字节跳动全线产品的商业变现研发团队。这两天创建了一个 **微信公众号【[陌溪教你学编程](https://gitee.com/moxi159753/LearningNotes/raw/master/doc/images/qq/公众号2.jpg)】**，未来将会在公众号上持续性的输出很多原创小知识以及学习资源，欢迎各位小伙伴关注我，和我一起共同学习，同时我也希望各位小伙伴能够给**蘑菇博客**项目多多 **Star** 支持，您的**点赞**就是我维护的动力！
