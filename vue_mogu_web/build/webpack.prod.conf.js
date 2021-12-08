@@ -67,7 +67,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ? 'index.html'
         : config.build.index,
       template: 'index.html',
-      favicon: resolve('favicon.ico'),
+      //favicon: resolve('favicon.ico'),
       inject: true,
       env: getEnv(),
       minify: {

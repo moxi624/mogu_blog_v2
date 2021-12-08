@@ -409,7 +409,7 @@ export default {
       this.fileIds = data.fileIds;
       var fileId = this.fileIds.replace(",", "");
       if (this.photoList.length >= 1) {
-        this.form.fileUid = fileId;
+        this.fileIds = fileId;
         this.form.photoList = this.photoList;
       }
     },
@@ -419,7 +419,6 @@ export default {
     },
     deletePhoto: function() {
       this.form.photoList = null;
-      this.form.fileUid = "";
       this.fileIds = "";
       this.icon = false;
     },
