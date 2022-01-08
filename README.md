@@ -72,7 +72,7 @@
 
 > 【阿里云】云服务器狂欢特惠，**2核2G5M** 轻量级应用服务器 **60 元/年** [点我传送](https://www.aliyun.com/minisite/goods?taskPkg=1111ydsrwb&pkgSid=617&recordId=953032&userCode=w7aungxw)
 >
-> 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年 **74元/年、222/3年**【**博主强烈推荐**】 [https://curl.qcloud.com/TYzPgyNC)
+> 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年 **74元/年、222/3年**【**博主强烈推荐**】[点我传送](https://curl.qcloud.com/TYzPgyNC)
 
 ## 站点演示
 
