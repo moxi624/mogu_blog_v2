@@ -66,13 +66,13 @@
 
 最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】【容易宕机】
 
-推荐配置：2核4G 【[狂欢特惠](https://curl.qcloud.com/TYzPgyNC)】【博主目前配置】
+推荐配置：2核4G 【[狂欢特惠](https://curl.qcloud.com/1g1AijyD)】【博主目前配置】
 
 最近，腾讯云和阿里云的优惠力度非常大，如果有需求的小伙伴，可以了解一下~
 
 > 【阿里云】云服务器狂欢特惠，**2核2G5M** 轻量级应用服务器 **60 元/年** [点我传送](https://www.aliyun.com/minisite/goods?taskPkg=1111ydsrwb&pkgSid=617&recordId=953032&userCode=w7aungxw)
 >
-> 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年 **74元/年、222/3年**【**博主强烈推荐**】[点我传送](https://curl.qcloud.com/TYzPgyNC)
+> 【腾讯云】云产品限时秒杀，爆款 **2核4G8M** 云服务器，首年 **74元/年、222/3年**【**博主强烈推荐**】[点我传送](https://curl.qcloud.com/1g1AijyD)
 
 ## 站点演示
 
