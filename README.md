@@ -31,13 +31,13 @@
     <img src="./doc/images/qq/公众号2.jpg" width="500" />
 </p>
 
-项目已有较详细的  [项目搭建文档](http://moxi159753.gitee.io/mogu_blog_doc) ，同时包括了 **Windows**、**Linux** 以及 **Docker** 环境下蘑菇博客的搭建。在使用过程中遇到问题时，首先认真阅读**项目搭建文档** ，同时 [FAQ文档](http://www.moguit.cn/#/info?blogOid=288) 还收集了小伙伴咨询的问题，可以提前阅读~
+项目已有较详细的  [项目搭建文档](http://moxi159753.gitee.io/mogu_blog_doc) ，同时包括了 **Windows**、**Linux** 以及 **Docker** 环境下蘑菇博客的搭建。在使用过程中遇到问题时，首先认真阅读**项目搭建文档** ，同时 [FAQ文档](http://www.moguit.cn/info/288) 还收集了小伙伴咨询的问题，可以提前阅读~
 
 【提问前】可以先 [百度](https://www.baidu.com/) 或者 [Google](https://www.google.com/) 进行解决，有的问题通过**搜索引擎**很快就能得到解决
 
-【提问前】可以首先看看 [issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 或者  [FAQ文档](http://www.moguit.cn/#/info?blogOid=288)，可能你的问题别人也遇到过
+【提问前】可以首先看看 [issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 或者  [FAQ文档](http://www.moguit.cn/info/288)，可能你的问题别人也遇到过
 
-【提问前】可以提前阅读 [如何向开源社区提问题](http://www.moguit.cn/#/info?blogUid=b0f76c94a81fa3b815f8e39e4dc889f8)
+【提问前】可以提前阅读 [如何向开源社区提问题](http://www.moguit.cn/info/311)
 
 【提问】推荐使用 [Gitee issue](https://gitee.com/moxi159753/mogu_blog_v2/issues) 进行提问，因为issue解决后能够保留解决记录，帮助其它小伙伴避坑。其次可以使用 [蘑菇社区](http://www.moguit.cn/#/question)， <a href="##关注&交流">QQ群 </a>  或者 <a href="##前言">微信群 </a> 进行提问。群里提问注意提问的时间，把遇到**问题的详细过程都描述清楚**，最好**配上图文信息**，这样能有利于更高效的解决问题。
 
@@ -54,7 +54,7 @@
 - 蘑菇博客大部分功能是我个人进行开发的，因能力有限，其中很多技术都是一边学习一边使用的，可以说蘑菇博客也是一个我用来熟悉技术的项目，所以很多地方可能考虑不周，故有能改正的地方，还请各位老哥能够指出~
 - 现在挺多是SSM或者SSH的博客管理系统，想用 **SpringBoot** + **SpringCloud**  + **Vue** 的微服务架构进行尝试项目的构建，里面很多功能可能只是**为了满足自己的学习需求**而引入的，大家可以**根据自己服务器配置来选择启动的服务**，因此本博客也是一个非常好的 **SpringBoot**、**SpringCloud**以及 **Vue** 技术的入门学习项目。
 - 原来做过 **Vue** + **ElementUi** 做过管理系统，所以现在打算做一套自己的、基于当前最新技术栈、前后端分离的微服务博客系统。
-- [蘑菇博客](http://moguit.cn/#/)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了 **JVM**、**JUC**、**Java**，**Spring**，**SpringCloud**，计算机网络，操作系统，数据结构，**Vue**、**Linux** 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes) 一下
+- [蘑菇博客](http://www.moguit.cn)中的一些文章，很多都来自我平时的学习笔记，目前托管在另一个仓库：[LearningNotes](https://gitee.com/moxi159753/LearningNotes)，里面涵盖了 **JVM**、**JUC**、**Java**，**Spring**，**SpringCloud**，计算机网络，操作系统，数据结构，**Vue**、**Linux** 等 ，感兴趣的小伙伴可以跳转该仓库 [Star支持](https://gitee.com/moxi159753/LearningNotes) 一下
 
 ## 运行配置
 
@@ -64,7 +64,7 @@
 
 其它的服务都可以不启动，也不影正常使用，可以根据自身服务器配置来启动
 
-最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/#/info?blogOid=96)】【容易宕机】
+最低配置：1核2G 【[需开启虚拟内存](http://moguit.cn/info/96)】【容易宕机】
 
 推荐配置：2核4G 【[狂欢特惠](https://curl.qcloud.com/1g1AijyD)】【博主目前配置】
 
@@ -84,7 +84,7 @@
 >
 > 【演示账号】：[点击获取](https://gitee.com/moxi159753/mogu_blog_v2/raw/Nacos/doc/images/qq/%E8%8E%B7%E5%8F%96%E6%BC%94%E7%A4%BA%E7%8E%AF%E5%A2%83%E8%B4%A6%E5%8F%B7.jpg)
 >
-> 【小程序】蘑菇博客的移动端版本，可以扫码体验。参考 [蘑菇博客小程序部署](http://www.moguit.cn/#/info?blogOid=605) 文档，以及Bilibili上 [20分钟部署博客小程序视频](https://www.bilibili.com/video/BV1sQ4y117nN) 完成小程序的搭建。
+> 【小程序】蘑菇博客的移动端版本，可以扫码体验。参考 [蘑菇博客小程序部署](http://www.moguit.cn/info/605) 文档，以及Bilibili上 [20分钟部署博客小程序视频](https://www.bilibili.com/video/BV1sQ4y117nN) 完成小程序的搭建。
 
 |                                                          |
 | :------------------------------------------------------: |
@@ -104,7 +104,7 @@
 
 [**mogu_blog_go**](https://gitee.com/moxi159753/mogu_blog_go) 目前采用的技术有：**beego**、**gorm**、**mysql**、**redis** 和 **nginx**。相比于蘑菇博客微服务版，**Golang**版蘑菇能够做到 **1C2G** 的服务器轻松运行，再也不怕网站第二天起来就宕机了~。
 
-参考[蘑菇博客Golang版安装指南](http://moguit.cn/#/info?blogOid=593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
+参考[蘑菇博客Golang版安装指南](http://moguit.cn/info/593)，快速在 **Windows** 平台搭建蘑菇博客Go版开发环境
 
 ## 项目中初始用户和密码
 
@@ -139,8 +139,8 @@
 - 采用 **Sentinel** 流量控制框架，通过配置再也不怕网站被爆破
 - 采用[uniapp](https://uniapp.dcloud.io/) 和[ColorUi](https://github.com/weilanwl/ColorUI) 完成蘑菇博客的移动端门户页面搭建
 - 支持多种文本编辑器，**Markdown** 编辑器([Vditor](https://github.com/Vanessa219/vditor))和富文本编辑器([CKEditor](https://github.com/ckeditor/ckeditor4))随心切换
-- 采用 **ElasticStack**【**ElasticSearch** + **Beats** + **Kibana** + **Logstash**】[搭建蘑菇博客日志收集](http://moguit.cn/#/info?blogOid=436)
-- 采用 **Docker Compose** 完成容器编排，**Portainer** 实现容器可视化，支持[一键部署线上环境](http://www.moguit.cn/#/info?blogOid=565)
+- 采用 **ElasticStack**【**ElasticSearch** + **Beats** + **Kibana** + **Logstash**】[搭建蘑菇博客日志收集](http://moguit.cn/info/436)
+- 采用 **Docker Compose** 完成容器编排，**Portainer** 实现容器可视化，支持[一键部署线上环境](http://www.moguit.cn/info/565)
 
 ## 项目文档
 
@@ -167,7 +167,7 @@
 - mogu_spider：爬虫服务`（目前还未完善）`
 - mogu_gateway：网关服务`（目前还未完善）`
 - mogu_zipkin：链路追踪服务，`目前使用java -jar的方式启动`
-- mogu_search：搜索服务，ElasticSearch和Solr作为全文检索工具，[支持可插拔配置](http://moguit.cn/#/info?blogUid=4042b4f4088e4e37e95d9fc75d97298b)，默认使用SQL搜索
+- mogu_search：搜索服务，ElasticSearch和Solr作为全文检索工具，[支持可插拔配置](http://www.moguit.cn/info/119)，默认使用SQL搜索
 - mogu_commons：公共模块，主要用于存放Entity实体类、Feign远程调用接口、以及公共config配置
 - mogu_utils: 是常用工具类；
 - mogu_xo: 是存放 VO、Service，Dao层的
@@ -251,7 +251,7 @@
 
 ### 【推荐】一条命令部署蘑菇博客
 
-参考 [如何使用一条命令完成蘑菇博客部署](http://www.moguit.cn/#/info?blogOid=597)， 在云服务器上执行下面命令，完成一键部署蘑菇博客
+参考 [如何使用一条命令完成蘑菇博客部署](http://www.moguit.cn/info/597)， 在云服务器上执行下面命令，完成一键部署蘑菇博客
 
 ```bash
 wget http://oss.moguit.cn/script/moguInit.sh && chmod +x moguInit.sh && sh moguInit.sh
@@ -261,69 +261,69 @@ Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统
 
 ### [推荐] Windows+VMware一键搭建蘑菇博客本地开发环境
 
-参考 [Windows+VMware一键搭建蘑菇博客本地开发环境](http://www.moguit.cn/#/info?blogOid=583)，快速在 **Windows** 平台搭建蘑菇博客开发环境，将中间件安装在 **VMware** 中。
+参考 [Windows+VMware一键搭建蘑菇博客本地开发环境](http://www.moguit.cn/info/583)，快速在 **Windows** 平台搭建蘑菇博客开发环境，将中间件安装在 **VMware** 中。
 
 ### Windows环境下搭建蘑菇博客
 
-参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/#/info?blogUid=082ca226cf2e4103b0ffa6e6c13d7b14)，能够在 **Windows**下搭建蘑菇博客的开发环境，同时将**所有组件**安装在**Windows** 环境中
+参考 [window环境下配置蘑菇博客环境](http://www.moguit.cn/info/14)，能够在 **Windows**下搭建蘑菇博客的开发环境，同时将**所有组件**安装在**Windows** 环境中
 
 ### [推荐] DockerCompose一键部署蘑菇博客(Nacos版)
 
-参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/#/info?blogOid=565) ，在 **Linux** 服务器中，一键完成蘑菇博客项目的部署
+参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/info/565) ，在 **Linux** 服务器中，一键完成蘑菇博客项目的部署
 
 ### Docker搭建蘑菇博客
 
-参考 [使用Docker快速搭建蘑菇博客(Eureka分支)](http://www.moguit.cn/#/info?blogUid=ab8377106a0d4b9f8d66131e4312c69e)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
+参考 [使用Docker快速搭建蘑菇博客(Eureka分支)](http://www.moguit.cn/info/299)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
 
-参考 [使用Docker快速搭建蘑菇博客(Nacos分支)](http://moguit.cn/#/info?blogUid=8100dcb585fff77e3fa25eed50e3708e)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
+参考 [使用Docker快速搭建蘑菇博客(Nacos分支)](http://www.moguit.cn/info/224)，快速在Linux服务器中搭建好博客运行环境，通过发布 **Jar** 包的方式完成部署
 
 ### 蘑菇博客部署到云服务器
 
-【**推荐**】参考[IDEA发布蘑菇博客Docker镜像到云服务器(适用于DockerCompose部署)](http://moguit.cn/#/info?blogOid=588)，在你修改Nacos分支博客源码后，将重新制作镜像部署到云服务器，然后通过DockerCompose进行启动。
+【**推荐**】参考[IDEA发布蘑菇博客Docker镜像到云服务器(适用于DockerCompose部署)](http://moguit.cn/info/588)，在你修改Nacos分支博客源码后，将重新制作镜像部署到云服务器，然后通过DockerCompose进行启动。
 
-参考[蘑菇博客如何部署到阿里云服务器(Eureka分支)](http://moguit.cn/#/info?blogOid=238)，在你修改Eureka分支博客源码后将项目打包部署到云服务器
+参考[蘑菇博客如何部署到阿里云服务器(Eureka分支)](http://moguit.cn/info/238)，在你修改Eureka分支博客源码后将项目打包部署到云服务器
 
-参考[蘑菇博客如何部署到阿里云服务器(Nacos分支)](http://moguit.cn/#/info?blogOid=405)，在你修改Nacos分支博客源码后将项目打包部署到云服务器
+参考[蘑菇博客如何部署到阿里云服务器(Nacos分支)](http://moguit.cn/info/405)，在你修改Nacos分支博客源码后将项目打包部署到云服务器
 
 ### 使用Github Actions完成蘑菇博客持续集成
 
-参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/#/info?blogOid=13) ，在你提交一个 **push** 请求后，通过 **Github Actions** 能够完成蘑菇博客自动化 编译、打包、部署等操作。
+参考 [使用Github Action完成蘑菇博客持续集成](http://moguit.cn/info/13) ，在你提交一个 **push** 请求后，通过 **Github Actions** 能够完成蘑菇博客自动化 编译、打包、部署等操作。
 
 ### 切换搜索模式
 
-参考[蘑菇博客切换搜索模式](http://moguit.cn/#/info?blogOid=119)，完成蘑菇博客的搜索引擎切换，目前支持 **Solr**、**ElasticSearch**、**SQL** 的方式
+参考[蘑菇博客切换搜索模式](http://moguit.cn/info/119)，完成蘑菇博客的搜索引擎切换，目前支持 **Solr**、**ElasticSearch**、**SQL** 的方式
 
 ### 配置七牛云对象存储
 
-参考[蘑菇博客切换七牛云存储](http://moguit.cn/#/info?blogOid=202)，配置文件的七牛云对象存储，及本地文件存储
+参考[蘑菇博客切换七牛云存储](http://moguit.cn/info/202)，配置文件的七牛云对象存储，及本地文件存储
 
 ### 使用Zipkin搭建蘑菇博客链路追踪
 
-参考[使用Zipkin搭建蘑菇博客链路追踪](http://moguit.cn/#/info?blogUid=35bd93cabc08611c7f74ce4564753ef9)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
+参考[使用Zipkin搭建蘑菇博客链路追踪](http://www.moguit.cn/info/95)，通过聚合各业务系统调用延迟数据，达到链路调用监控跟踪，快速定位其中延迟高的服务
 
 ### 使用Nacos搭建蘑菇博客服务注册和配置中心
 
-参考[蘑菇博客Nacos部署指南](http://www.moguit.cn/#/info?blogUid=8dc52bd61e36fa56cfc7699815375572)，搭建蘑菇博客的服务注册和配置中心
+参考[蘑菇博客Nacos部署指南](http://www.moguit.cn/info/248)，搭建蘑菇博客的服务注册和配置中心
 
 ### 使用Sentinel搭建蘑菇博客流量控制
 
-参考[蘑菇博客Sentinel安装指南](http://www.moguit.cn/#/info?blogUid=7135efc7f536769efd0d0483c687ba07)，**Sentinel** 被称为分布式系统的流量防卫兵，相当于Hystrix
+参考[蘑菇博客Sentinel安装指南](http://www.moguit.cn/info/198)，**Sentinel** 被称为分布式系统的流量防卫兵，相当于Hystrix
 
 ### 蘑菇博客QQ小程序发布
 
-参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/#/info?blogUid=80d3eae77c16cea10e119b9f1a1da4c8)，完成蘑菇博客 **uniapp** 移动端的启动和发布
+参考[蘑菇博客QQ小程序发布指南](http://www.moguit.cn/info/223)，完成蘑菇博客 **uniapp** 移动端的启动和发布
 
 ### 【推荐】蘑菇博客微信小程序发布
 
-参考[蘑菇博客微信小程序部署指南](http://www.moguit.cn/#/info?blogOid=605)，完成蘑菇博客 **uniapp** 移动端的启动和发布
+参考[蘑菇博客微信小程序部署指南](http://www.moguit.cn/info/605)，完成蘑菇博客 **uniapp** 移动端的启动和发布
 
 ### 蘑菇博客扩展新的功能和页面
 
-参考[蘑菇博客如何扩展新的功能和页面](http://moguit.cn/#/info?blogUid=4eb7694c58cf8205885b1e8565b1a94e)，在蘑菇博客现有架构基础上，开发自己需要的页面。
+参考[蘑菇博客如何扩展新的功能和页面](http://www.moguit.cn/info/141)，在蘑菇博客现有架构基础上，开发自己需要的页面。
 
 ###  使用ELK搭建蘑菇博客日志收集
 
-参考[搭建蘑菇博客日志收集](https://gitee.com/moxi159753/LearningNotes/tree/master/ElasticStack/6_%E4%BD%BF%E7%94%A8ELK%E6%90%AD%E5%BB%BA%E8%98%91%E8%8F%87%E5%8D%9A%E5%AE%A2%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86)，使用 **Docker** 快速搭建 **ELK** 环境用于蘑菇博客日志收集
+参考[搭建蘑菇博客日志收集](http://www.moguit.cn/info/436)，使用 **Docker** 快速搭建 **ELK** 环境用于蘑菇博客日志收集
 
 ## 环境搭建
 
@@ -405,7 +405,7 @@ Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统
 - [x] 富文本编辑器和Markdown编辑器任意切换
 - [x] 使用ELK搭建[蘑菇博客日志收集功能](http://www.moguit.cn/#/info?blogUid=fd9ab58588d93ef792ec72a359a09f6c)
 - [x] 使用Minio [搭建对象存储服务](http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f)
-- [x] 使用DockerCompose完成 [博客一键部署](http://www.moguit.cn/#/info?blogOid=565)
+- [x] 使用DockerCompose完成 [博客一键部署](http://www.moguit.cn/info/565)
 - [x] 使用Portainer对Docker镜像可视化管理
 - [x] 适配门户页面的移动端布局
 - [x] 完善网盘管理
