@@ -101,6 +101,7 @@
       <side-catalog
         :class="vueCategory"
         v-bind="catalogProps"
+        :htmlContent="blogContent"
       >
       </side-catalog>
     </div>
@@ -230,10 +231,8 @@
               this.getSameBlog()
               this.getCommentDataList();
             }
-            setTimeout(()=>{
-              that.blogContent = response.data.content
-              that.loadingInstance.close();
-            }, 200)
+            this.blogContent = response.data.content
+            this.loadingInstance.close();
           });
 
           var after = 0;

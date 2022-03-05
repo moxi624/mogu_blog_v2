@@ -26,7 +26,7 @@
                 {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="childWebNavbar in webNavbar.childWebNavbar">
+                <el-dropdown-item :key="childWebNavbar.uid" v-for="childWebNavbar in webNavbar.childWebNavbar">
                   <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
                     <a href="javascript:void(0);" @click="openHead">{{ childWebNavbar.name }}</a>
                   </router-link>
