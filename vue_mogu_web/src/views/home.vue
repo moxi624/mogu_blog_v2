@@ -1180,7 +1180,7 @@
     cursor: pointer;
   }
   .emoji-size-small {
-    // 表情大小
+    /* 表情大小 */
     zoom: 0.3;
   }
 </style>

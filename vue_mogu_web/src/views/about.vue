@@ -215,7 +215,7 @@
     vertical-align: middle;
   }
   .emoji-size-large {
-    zoom: 0.5; // emojipanel表情大小
+    zoom: 0.5; /* emojipanel表情大小 */
     margin: 5px;
   }
   .news_infos .newsview img {
