@@ -19,6 +19,7 @@ import com.moxi.mogublog.xo.service.RoleService;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mougblog.base.enums.EMenuType;
+import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -102,9 +104,12 @@ public class LoginRestApi {
         } else {
             queryWrapper.eq(SQLConf.USER_NAME, username);
         }
+        queryWrapper.last(SysConf.LIMIT_ONE);
+        queryWrapper.eq(SysConf.STATUS, EStatus.ENABLE);
         Admin admin = adminService.getOne(queryWrapper);
         if (admin == null) {
             // 设置错误登录次数
+            log.error("该管理员不存在");
             return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
         // 对密码进行加盐加密验证，采用SHA-256 + 随机盐【动态加盐】 + 密钥对密码进行加密
@@ -112,6 +117,7 @@ public class LoginRestApi {
         boolean isPassword = encoder.matches(password, admin.getPassWord());
         if (!isPassword) {
             //密码错误，返回提示
+            log.error("管理员密码错误");
             return ResultUtil.result(SysConf.ERROR, String.format(MessageConf.LOGIN_ERROR, setLoginCommit(request)));
         }
         List<String> roleUids = new ArrayList<>();
@@ -193,16 +199,11 @@ public class LoginRestApi {
         List<String> roleUid = new ArrayList<>();
         roleUid.add(admin.getRoleUid());
         Collection<Role> roleList = roleService.listByIds(roleUid);
-
         List<String> categoryMenuUids = new ArrayList<>();
-
         roleList.forEach(item -> {
             String caetgoryMenuUids = item.getCategoryMenuUids();
             String[] uids = caetgoryMenuUids.replace("[", "").replace("]", "").replace("\"", "").split(",");
-            for (int a = 0; a < uids.length; a++) {
-                categoryMenuUids.add(uids[a]);
-            }
-
+            categoryMenuUids.addAll(Arrays.asList(uids));
         });
         categoryMenuList = categoryMenuService.listByIds(categoryMenuUids);
 
@@ -282,13 +283,14 @@ public class LoginRestApi {
             }
             // 移除Redis中的用户
             redisUtil.delete(RedisConf.LOGIN_TOKEN_KEY + RedisConf.SEGMENTATION + token);
+            SecurityContextHolder.clearContext();
             return ResultUtil.result(SysConf.SUCCESS, MessageConf.OPERATION_SUCCESS);
         }
     }
 
     /**
      * 设置登录限制，返回剩余次数
-     * 密码错误五次，将会锁定10分钟
+     * 密码错误五次，将会锁定30分钟
      *
      * @param request
      */
@@ -299,10 +301,10 @@ public class LoginRestApi {
         if (StringUtils.isNotEmpty(count)) {
             Integer countTemp = Integer.valueOf(count) + 1;
             surplusCount = surplusCount - countTemp;
-            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, String.valueOf(countTemp), 10, TimeUnit.MINUTES);
+            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, String.valueOf(countTemp), 30, TimeUnit.MINUTES);
         } else {
             surplusCount = surplusCount - 1;
-            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, "1", 30, TimeUnit.MINUTES);
+            redisUtil.setEx(RedisConf.LOGIN_LIMIT + RedisConf.SEGMENTATION + ip, Constants.STR_ONE, 30, TimeUnit.MINUTES);
         }
         return surplusCount;
     }

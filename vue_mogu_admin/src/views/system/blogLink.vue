@@ -341,6 +341,7 @@ export default {
       this.icon = false;
     },
     handleFind: function() {
+      this.currentPage = 1
       this.linkList();
     },
     handleAdd: function() {

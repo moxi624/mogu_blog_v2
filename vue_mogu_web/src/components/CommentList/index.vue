@@ -15,8 +15,7 @@
             <span class="timeAgo" v-else>刚刚</span>
           </div>
 
-          <div class="rightCenter" v-html="$xss(item.content, options)"></div>
-<!--          <div class="rightCenter" v-html="item.content"></div>-->
+          <div class="rightCenter ck-content" v-highlight v-html="$xss(item.content, options)"></div>
 
           <div class="rightBottom">
             <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
@@ -53,7 +52,14 @@
         options : {
           whiteList: {
             a: ['href', 'title', 'target'],
-            span: ['class']
+            span: ['class'],
+            h1: ['class'],
+            h2: ['class'],
+            h3: ['class'],
+            h4: ['class'],
+            pre: [],
+            code: ['class'],
+            p: ['class']
           }
         },
         taggleStatue: true,
@@ -137,20 +143,19 @@
               this.updateCommentList(comments, commentData.toUid, commentData)
               console.log('得到的评论', comments)
               this.$store.commit("setCommentList", comments);
-
-              this.$notify({
-                title: '成功',
-                message: "评论成功",
-                type: 'success',
-                offset: 100
-              });
-            } else {
-              this.$notify.error({
-                title: '错误',
-                message: "评论失败",
-                type: 'success',
-                offset: 100
-              });
+                this.$notify({
+                  title: '成功',
+                  message: "评论成功",
+                  type: 'success',
+                  offset: 100
+                });
+            }  else {
+                this.$notify.error({
+                  title: '错误',
+                  message: response.data,
+                  type: 'success',
+                  offset: 100
+                });
             }
           }
         )

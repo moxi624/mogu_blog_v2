@@ -1,10 +1,7 @@
 package com.moxi.mogublog.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbSearcher;
-import org.lionsoul.ip2region.Util;
+import org.lionsoul.ip2region.*;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +25,25 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class IpUtils {
+
+	static String dbPath;
+    static DbConfig config;
+    static DbSearcher searcher;
+
+    static {
+        dbPath = createFtlFileByFtlArray() + "ip2region.db";
+        try {
+            config = new DbConfig();
+        } catch (DbMakerConfigException e) {
+            e.printStackTrace();
+        }
+        try {
+            searcher = new DbSearcher(config, dbPath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 获取当前网络ip
      *
@@ -194,8 +210,9 @@ public class IpUtils {
         }
 
         // 淘宝IP宕机，目前使用Ip2region：https://github.com/lionsoul2014/ip2region
-        log.info("返回的IP信息：{}", getCityInfo(ip));
-        return getCityInfo(ip);
+        String cityInfo = getCityInfo(ip);
+        log.info("返回的IP信息：{}", cityInfo);
+        return cityInfo;
 
         // TODO 淘宝接口目前已经宕机，因此暂时注释下面代码
 //        try {
@@ -453,12 +470,15 @@ public class IpUtils {
 
     public static String getCityInfo(String ip) {
 
-        String dbPath = createFtlFileByFtlArray() + "ip2region.db";
-        File file = new File(dbPath);
-        if (file.exists() == false) {
-            System.out.println("Error: Invalid ip2region.db file");
+        if (StringUtils.isEmpty(dbPath)) {
+            log.error("Error: Invalid ip2region.db file");
+            return null;
         }
-
+        if(config == null || searcher == null){
+            log.error("Error: DbSearcher or DbConfig is null");
+            return null;
+        }
+		
         //查询算法
         //B-tree, B树搜索（更快）
         int algorithm = DbSearcher.BTREE_ALGORITHM;
@@ -469,8 +489,9 @@ public class IpUtils {
         //Memory,加载内存（最快）
         //DbSearcher.MEMORY_ALGORITYM
         try {
-            DbConfig config = new DbConfig();
-            DbSearcher searcher = new DbSearcher(config, dbPath);
+            // 使用静态代码块，减少文件读取操作
+//            DbConfig config = new DbConfig();
+//            DbSearcher searcher = new DbSearcher(config, dbPath);
 
             //define the method
             Method method = null;

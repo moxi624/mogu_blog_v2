@@ -149,10 +149,10 @@ ALTER TABLE t_comment ADD first_comment_uid VARCHAR(32) NULL COMMENT '一级评�
 ALTER TABLE t_picture_sort ADD is_show TINYINT(1) NOT NULL DEFAULT 1 COMMENT '是否显示，1：是，0，否';
 
 /*
-   修改t_web_config表，增加 start_email_notification，一级评论UID
+   修改t_web_config表，增加 start_email_notification
    @date 2020年4月29日11:50:19
 */
-ALTER TABLE  t_user ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
+ALTER TABLE  t_web_config ADD start_email_notification tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启邮件通知 1:开启 0:关闭';
 
 
 /*
@@ -337,3 +337,38 @@ insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_u
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('b7fc36f7efc9738bddc9b09fedeccf60','导航栏管理 查询全部','3','导航栏管理 查询全部','6275bc5189e2e595b621d744d68278af','/webNavbar/getAllList',NULL,'0','1','2021-02-23 13:00:24','2021-02-23 13:00:24','1','1','0');
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('6275bc5189e2e595b621d744d68278af','导航栏管理','2','导航栏管理','4fe7725159ced4a238b816a4595109d1','/web/webNavbar','el-icon-c-scale-to-original','0','1','2021-02-22 18:26:13','2021-02-22 18:26:13','1','0','0');
 insert into `t_category_menu` (`uid`, `name`, `menu_level`, `summary`, `parent_uid`, `url`, `icon`, `sort`, `status`, `create_time`, `update_time`, `is_show`, `menu_type`, `is_jump_external_url`) values('4fe7725159ced4a238b816a4595109d1','门户管理','1','管理门户页面',NULL,'/web','el-icon-help','0','1','2021-02-22 18:25:34','2021-02-22 18:25:34','1','0','0');
+
+
+/*
+   修改t_system_config 表，增加 openEmailActivate 字段，是否开启注册用户邮件激活功能【0 关闭，1 开启】
+   @date 2021年4月9日18:14:28
+*/
+ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否开启用户邮件激活功能【0 关闭，1 开启】';
+
+
+
+/*
+ 在t_web_config表，增加友链申请模板字段
+ @date 2021年9月17日11:05:59
+*/
+ALTER TABLE  t_web_config ADD link_apply_template VARCHAR(2018) COMMENT "友链申请模板,添加友链申请模板格式";
+
+
+/*
+   修改t_system_config 表，新增搜索模式【0 关闭，1 开启】
+   @date 2021年4月9日18:14:28
+*/
+ALTER TABLE t_system_config ADD open_email_activate TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否开启用户邮件激活功能【0 关闭，1 开启】';
+
+
+/*
+   修改t_system_config 表，增加 searchModel 字段，搜索模式【0:SQL搜索 、1：全文检索】
+   @date 2021年9月24日18:14:28
+*/
+ALTER TABLE t_system_config ADD search_model TINYINT(1) NOT NULL DEFAULT 0 COMMENT '搜索模式【0:SQL搜索 、1：ES搜索、2：Solr搜索】';
+INSERT INTO `t_sys_dict_type` (`uid`, `oid`, `dict_name`, `dict_type`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('f1929a18eac0a6dfa9007aa8024899a2','30','搜索模式','sys_search_model','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：SQL搜索、ES搜索、Solr搜索','1','2021-09-11 15:26:35','2021-09-11 15:26:35','1','0');
+
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('24f6c115ecfbb9c1818f9603990c8971','80','f1929a18eac0a6dfa9007aa8024899a2','Solr搜索','2',NULL,NULL,'0','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：Solr搜索','1','2021-09-11 16:18:17','2021-09-11 16:18:17','1','0');
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('bc9c1933052d66f8424b09a6869972d0','79','f1929a18eac0a6dfa9007aa8024899a2','ES搜素','1',NULL,NULL,'0','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：开启ElasticSearch全文检索','1','2021-09-11 15:27:36','2021-09-11 16:17:54','1','0');
+INSERT INTO `t_sys_dict_data` (`uid`, `oid`, `dict_type_uid`, `dict_label`, `dict_value`, `css_class`, `list_class`, `is_default`, `create_by_uid`, `update_by_uid`, `remark`, `status`, `create_time`, `update_time`, `is_publish`, `sort`) VALUES('c027f76096eb89ee6364b25f7b366388','78','f1929a18eac0a6dfa9007aa8024899a2','SQL搜索','0',NULL,NULL,'1','1f01cd1d2f474743b241d74008b12333','1f01cd1d2f474743b241d74008b12333','搜索模式：SQL搜索','1','2021-09-11 15:27:00','2021-09-11 15:27:00','1','0');
+·

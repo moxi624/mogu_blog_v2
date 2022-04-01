@@ -123,3 +123,10 @@ export function getWechatOrCodeTicket(params) {
   })
 }
 
+export function getUserLoginStatus(params) {
+  return request({
+    url: process.env.WEB_API + '/wechat/getUserLoginStatus',
+    method: 'get',
+    params
+  })
+}

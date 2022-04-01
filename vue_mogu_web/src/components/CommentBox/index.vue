@@ -6,19 +6,29 @@
     </span>
 
     <span class="right">
-      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~" v-model="value" @click="hideEmojiPanel" @input="vaildCount"></textarea>
+      <textarea id="textpanel" class="textArea" placeholder="既然来了，那就留下些什么吧~ 【评论支持Markdown语法】" v-model="value" @click="hideEmojiPanel" @input="vaildCount"></textarea>
     </span>
 
     </div>
     <div class="bottom">
       <el-button class="submit p2" type="primary"  @click="handleSubmit">发送评论</el-button>
       <el-button class="cancel p2" type="info" @click="handleCancle">取消评论</el-button>
-      <div class="emoji-panel-btn p2" @click="showEmojiPanel">
-        <img src="../../assets/img/face_logo.png" />
-      </div>
+
+      <el-popover
+        placement="top"
+        v-model="isShowEmojiPanel">
+        <emoji-panel class="emojiPanel" @emojiClick="appendEmoji"></emoji-panel>
+
+        <div class="emoji-panel-btn p2" @click="showEmojiPanel" slot="reference">
+          <img src="../../assets/img/face_logo.png" />
+        </div>
+
+      </el-popover>
+
+
+
       <span class="allow p2" v-if="isShowAvatar">还能输入{{count}}个字符</span>
 
-      <emoji-panel class="emojiPanel" @emojiClick="appendEmoji" v-if="isShowEmojiPanel"></emoji-panel>
     </div>
   </div>
 
@@ -186,13 +196,18 @@
 <style>
   @import "../../assets/css/emoji.css";
 
+  .el-popover {
+    height: 135px;
+    width: 420px;
+  }
+
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
     border-radius: 5px;
     background-color: #ffffff;
-    width: 650px;
-    height: 135px;
+    width: 423px;
+    height: 145px;
     position: absolute;
     z-index: 99;
     top: 10px;
@@ -237,7 +252,7 @@
     color: #606266;
     padding:10px 5px 5px 10px;
     resize: none;
-    width: 95%;
+    width: 98%;
     height: 100%;
   }
   .bottom {
@@ -245,7 +260,7 @@
     width: 98%;
     height: 60px;
     line-height: 40px;
-    margin-top: 20px;
+    margin-top: 30px;
   }
   .bottom .p2 {
     float: right;
@@ -286,11 +301,17 @@
       border-radius: 5px;
       background-color: #ffffff;
       width: 300px;
-      height: 270px;
+      height: 220px;
       position: absolute;
       z-index: 99;
       top: 10px;
     }
+
+    .el-popover {
+      height: 220px;
+      width: 300px;
+    }
+
   }
 
 </style>

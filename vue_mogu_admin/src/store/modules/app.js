@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import systemConfig from "../../views/system/systemConfig";
 
 const app = {
   state: {
@@ -9,6 +8,7 @@ const app = {
     },
     device: 'desktop',
     openNotificationDialogVisible: true, // 仪表盘弹框通知
+    blogForm: {}, // 缓存博客表单信息
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -30,6 +30,9 @@ const app = {
     },
     setOpenNotification: (state, openNotificationDialogVisible) => {
       state.openNotificationDialogVisible = openNotificationDialogVisible
+    },
+    setBlogForm: (state, blogForm) => {
+      state.blogForm = blogForm
     },
   },
   actions: {

@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -282,28 +283,27 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     @Override
     public String editAdmin(AdminVO adminVO) {
         Admin admin = adminService.getById(adminVO.getUid());
-        if (admin != null) {
-            //判断修改的对象是否是admin，admin的用户名必须是admin
-            if (admin.getUserName().equals(SysConf.ADMIN) && !adminVO.getUserName().equals(SysConf.ADMIN)) {
-                return ResultUtil.errorWithMessage("超级管理员用户名必须为admin");
-            }
-            QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
-            queryWrapper.eq(SQLConf.USER_NAME, adminVO.getUserName());
-            List<Admin> adminList = adminService.list(queryWrapper);
-            if (adminList != null) {
-                for (Admin item : adminList) {
-                    if (item.getUid().equals(adminVO.getUid())) {
-                        continue;
-                    } else {
-                        return ResultUtil.errorWithMessage("修改失败，用户名存在");
-                    }
+        Assert.notNull(admin, MessageConf.PARAM_INCORRECT);
+        //判断修改的对象是否是admin，admin的用户名必须是admin
+        if (admin.getUserName().equals(SysConf.ADMIN) && !adminVO.getUserName().equals(SysConf.ADMIN)) {
+            return ResultUtil.errorWithMessage("超级管理员用户名必须为admin");
+        }
+        QueryWrapper<Admin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
+        queryWrapper.eq(SQLConf.USER_NAME, adminVO.getUserName());
+        List<Admin> adminList = adminService.list(queryWrapper);
+        if (adminList != null) {
+            for (Admin item : adminList) {
+                if (item.getUid().equals(adminVO.getUid())) {
+                    continue;
+                } else {
+                    return ResultUtil.errorWithMessage("修改失败，用户名存在");
                 }
             }
         }
 
         // 判断是否更改了RoleUid，更新redis中admin的URL访问路径
-        if (StringUtils.isNotEmpty(adminVO.getRoleUid()) && !admin.getRoleUid().equals(adminVO.getRoleUid())) {
+        if (StringUtils.isNotEmpty(adminVO.getRoleUid()) && !adminVO.getRoleUid().equals(admin.getRoleUid())) {
             redisUtil.delete(RedisConf.ADMIN_VISIT_MENU + RedisConf.SEGMENTATION + admin.getUid());
         }
         admin.setUserName(adminVO.getUserName());

@@ -2,11 +2,11 @@
   <div>
     <div class="pagebg classify"></div>
     <div class="container">
-      <h1 class="t_nav">
-        <span>不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span>
-        <a href="/" class="n1">网站首页</a>
-        <a href="javascript:void(0);" class="n2">分类</a>
-      </h1>
+<!--      <h1 class="t_nav">-->
+<!--        <span>不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span>-->
+<!--        <a href="/" class="n1">网站首页</a>-->
+<!--        <a href="javascript:void(0);" class="n2">分类</a>-->
+<!--      </h1>-->
 
       <div class="sortBox">
         <div class="time">
@@ -55,6 +55,7 @@
                     v-for="tagItem in item.tagList"
                     v-if="tagItem != null"
                     :key="tagItem.uid"
+                    style="margin-left: 3px;"
                     @click="goToList('tag', tagItem)"
                     type="warning"
                   >{{tagItem.content}}</el-tag>

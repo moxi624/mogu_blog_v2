@@ -158,7 +158,6 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
 
         // 设置关键字查询
         if (!StringUtils.isEmpty(webVisitVO.getKeyword()) && !StringUtils.isEmpty(webVisitVO.getKeyword().trim())) {
-
             String behavior = "";
             for (int a = 0; a < arr.length; a++) {
                 // 设置行为名称
@@ -193,11 +192,13 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
         List<String> linkUids = new ArrayList<>();
 
         list.forEach(item -> {
-            if (item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior())) {
+            // 当点击博客或者点赞博客时
+            if (item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior())
+                    || item.getBehavior().equals(EBehavior.BLOG_PRAISE.getBehavior())) {
                 // 从日志中提取出oid和uid
                 if(StringUtils.isNotEmpty(item.getModuleUid())) {
                     blogUids.add(item.getModuleUid());
-                }else if(StringUtils.isNotEmpty(item.getOtherData())) {
+                } else if(StringUtils.isNotEmpty(item.getOtherData())) {
                     blogOids.add(item.getOtherData());
                 }
             } else if (item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior()) || item.getBehavior().equals(EBehavior.VISIT_CLASSIFY.getBehavior())) {
@@ -246,7 +247,6 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
             contentMap.put(item.getOid() + "", item.getTitle());
         });
 
-
         tagList.forEach(item -> {
             contentMap.put(item.getUid(), item.getContent());
         });
@@ -270,6 +270,7 @@ public class WebVisitServiceImpl extends SuperServiceImpl<WebVisitMapper, WebVis
             }
 
             if (item.getBehavior().equals(EBehavior.BLOG_CONTNET.getBehavior()) ||
+                    item.getBehavior().equals(EBehavior.BLOG_PRAISE.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.BLOG_SORT.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.BLOG_TAG.getBehavior()) ||
                     item.getBehavior().equals(EBehavior.VISIT_TAG.getBehavior()) ||

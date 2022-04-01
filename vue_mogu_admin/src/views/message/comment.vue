@@ -91,7 +91,7 @@
 <!--          </template>-->
 <!--        </el-table-column>-->
 
-        <el-table-column label="内容" width="300" align="center">
+        <el-table-column label="内容" width="500" align="center">
           <template slot-scope="scope">
 <!--            <el-popover-->
 <!--              v-if="scope.row.content"-->
@@ -141,8 +141,15 @@ export default {
       // xss白名单配置
       options : {
         whiteList: {
-          a: ['href', 'title', 'target', 'style'],
-          span: ['class', 'style']
+          a: ['href', 'title', 'target'],
+          span: ['class'],
+          h1: ['class'],
+          h2: ['class'],
+          h3: ['class'],
+          h4: ['class'],
+          pre: [],
+          code: ['class'],
+          p: ['class']
         }
       },
       queryParams: {
@@ -245,6 +252,7 @@ export default {
       }
     },
 		handleFind: function() {
+      this.currentPage = 1
 			this.commentList();
 		},
     handleReply: function(row) {

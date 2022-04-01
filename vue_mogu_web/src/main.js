@@ -28,6 +28,9 @@ Object.defineProperty(Vue.prototype, '$xss', {
 import prototype from './utils/prototype'
 Vue.use(prototype)
 
+import MetaInfo from 'vue-meta'
+Vue.use(MetaInfo)
+
 Vue.directive('highlight', function (el) {
   let blocks = el.querySelectorAll('pre code');
   blocks.forEach((block) => {

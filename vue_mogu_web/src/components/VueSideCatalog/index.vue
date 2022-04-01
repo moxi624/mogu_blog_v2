@@ -98,6 +98,10 @@
         type: Boolean,
         default: false
       },
+      htmlContent: {
+        type: String,
+        default: '',
+      },
       container: {
         type: String,
         required: true
@@ -157,6 +161,26 @@
       },
       scrollToEle() {
         return this.innerScroll ? this.scrollElement : document.documentElement;
+      }
+    },
+    watch: {
+      //这样使用watch时有一个特点，就是当值第一次绑定的时候，不会执行监听函数，只有值发生改变才会执行。如果我们需要在最初绑定值的时候也执行函数，则就需要用到immediate属性。
+      // 比如当父组件向子组件动态传值时，子组件props首次获取到父组件传来的默认值时，也需要执行函数，此时就需要将immediate设为true
+      htmlContent: {
+        handler: function (val, oldVal) {
+          this.debounceIntoView = debounce(this.activeIntoView, 250);
+          this.throttleScroll = throttle(this.scrollHandle, 200);
+          this.setOffsetParent();
+          this.setTopList();
+          this.initActive();
+          this.scrollElement.addEventListener("scroll", this.throttleScroll);
+          if (!this.watch) return;
+          // 等待dom渲染完成之后监听
+          setTimeout(() => {
+            this.setWatcher();
+          }, 200);
+        },
+        immediate: true,
       }
     },
     async mounted() {

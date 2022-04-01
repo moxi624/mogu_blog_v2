@@ -9,9 +9,9 @@ import com.moxi.mogublog.commons.feign.PictureFeignClient;
 import com.moxi.mogublog.utils.IpUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.annotion.log.BussinessLog;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.global.RedisConf;
 import com.moxi.mogublog.xo.service.BlogService;
 import com.moxi.mogublog.xo.utils.WebUtil;
@@ -186,7 +186,7 @@ public class BlogContentRestApi {
             blog.setCopyright(ORIGINAL_TEMPLATE);
         } else {
             String reprintedTemplate = REPRINTED_TEMPLATE;
-            String[] variable = {blog.getArticlesPart(), blog.getArticlesPart(), blog.getAuthor()};
+            String[] variable = {blog.getArticlesPart(), blog.getAuthor()};
             String str = String.format(reprintedTemplate, variable);
             blog.setCopyright(str);
         }

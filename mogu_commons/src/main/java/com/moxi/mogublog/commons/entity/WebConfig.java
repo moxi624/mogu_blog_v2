@@ -78,6 +78,12 @@ public class WebConfig extends SuperEntity<WebConfig> {
     private String weixinPay;
 
     /**
+     * 友链申请模板
+     */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    private String linkApplyTemplate;
+
+    /**
      * 是否开启网页端评论(0:否， 1:是)
      */
     private String openComment;

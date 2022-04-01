@@ -112,7 +112,6 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
         childWrapper.eq(SQLConf.STATUS, EStatus.ENABLE);
         Collection<CategoryMenu> childList = categoryMenuService.list(childWrapper);
 
-
         //获取所有的二级菜单，去寻找他的子按钮
         List<String> secondMenuUids = new ArrayList<>();
         childList.forEach(item -> {
@@ -174,9 +173,7 @@ public class CategoryMenuServiceImpl extends SuperServiceImpl<CategoryMenuMapper
 
         // 给一级菜单设置二级菜单
         for (CategoryMenu parentItem : list) {
-
             List<CategoryMenu> tempList = new ArrayList<>();
-
             for (CategoryMenu item : childList) {
 
                 if (item.getParentUid().equals(parentItem.getUid())) {

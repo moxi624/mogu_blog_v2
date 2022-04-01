@@ -67,7 +67,7 @@
       </div>
 
       <!--付款码和点赞-->
-      <PayCode v-if="openAdmiration == '1'" :blogUid="blogUid" :praiseCount="blogData.collectCount"></PayCode>
+      <PayCode v-if="openAdmiration == '1'" :blogUid="blogUid" :praiseCount.sync="blogData.collectCount"></PayCode>
 
       <div class="otherlink" v-if="sameBlogData.length > 0">
         <h2>相关文章</h2>
@@ -101,6 +101,7 @@
       <side-catalog
         :class="vueCategory"
         v-bind="catalogProps"
+        :htmlContent="blogContent"
       >
       </side-catalog>
     </div>
@@ -221,17 +222,17 @@
           }
           getBlogByUid(params).then(response => {
             if (response.code == this.$ECode.SUCCESS) {
+              console.log("获取博客信息", response)
               this.blogData = response.data;
               this.blogUid = response.data.uid
               this.blogOid = response.data.oid
               this.commentInfo.blogUid = response.data.uid;
+              document.title = response.data.title
               this.getSameBlog()
               this.getCommentDataList();
             }
-            setTimeout(()=>{
-              that.blogContent = response.data.content
-              that.loadingInstance.close();
-            }, 200)
+            this.blogContent = response.data.content
+            this.loadingInstance.close();
           });
 
           var after = 0;
@@ -426,6 +427,11 @@
 </script>
 
 <style>
+  .newsview {
+    background-image: linear-gradient(90deg,rgba(50,0,0,.05) 3%,transparent 0),linear-gradient(1turn,rgba(50,0,0,.05) 3%,transparent 0);
+    background-size: 20px 20px;
+    background-position: 50%;
+  }
   .emoji-panel-wrap {
     box-sizing: border-box;
     border: 1px solid #cccccc;
@@ -435,7 +441,6 @@
     height: 190px;
     position: absolute;
     z-index: 999;
-    left: 35px;
     top: 10px;
   }
   .emoji-size-small {

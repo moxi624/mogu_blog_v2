@@ -20,6 +20,7 @@ import com.moxi.mogublog.xo.utils.WebUtil;
 import com.moxi.mogublog.xo.vo.CommentVO;
 import com.moxi.mougblog.base.enums.ECommentSource;
 import com.moxi.mougblog.base.enums.EStatus;
+import com.moxi.mougblog.base.exception.exceptionType.DeleteException;
 import com.moxi.mougblog.base.global.BaseSQLConf;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,8 +169,14 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
 //        });
 
         for (Comment item : commentList) {
-            ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
-            item.setSourceName(commentSource.getName());
+
+            try {
+                ECommentSource commentSource = ECommentSource.valueOf(item.getSource());
+                item.setSourceName(commentSource.getName());
+            } catch (Exception e) {
+                log.error("ECommentSource 转换异常");
+            }
+
             if (StringUtils.isNotEmpty(item.getUserUid())) {
                 item.setUser(userMap.get(item.getUserUid()));
             }
@@ -240,6 +247,23 @@ public class CommentServiceImpl extends SuperServiceImpl<CommentMapper, Comment>
             item.setStatus(EStatus.DISABLED);
         });
         commentService.updateBatchById(commentList);
+        return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
+    }
+
+    @Override
+    public String batchDeleteCommentByBlogUid(List<String> blogUidList) {
+        if(blogUidList.size() <= 0) {
+            throw new DeleteException();
+        }
+        QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(SQLConf.BLOG_UID, blogUidList);
+        List<Comment> commentList = commentService.list(queryWrapper);
+        if(commentList.size() > 0) {
+            commentList.forEach(item -> {
+                item.setStatus(EStatus.DISABLED);
+            });
+            commentService.updateBatchById(commentList);
+        }
         return ResultUtil.successWithMessage(MessageConf.DELETE_SUCCESS);
     }
 

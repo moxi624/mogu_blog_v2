@@ -359,6 +359,7 @@ export default {
       return formObject;
     },
     handleFind: function() {
+      this.currentPage = 1
       this.WebNavbarList();
     },
     handleAdd: function() {
@@ -388,7 +389,7 @@ export default {
             } else {
               this.$commonUtil.message.error(response.message)
             }
-            this.WebNavbarList();
+            this.WebNavbarAllList();
           });
         })
         .catch(() => {

@@ -36,4 +36,11 @@ public interface SystemConfigService extends SuperService<SystemConfig> {
      * @return
      */
     public String editSystemConfig(SystemConfigVO systemConfigVO);
+
+    /**
+     * 获取系统配置中的搜索模式
+     * @return
+     */
+    public String getSearchModel();
+
 }

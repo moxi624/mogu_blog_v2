@@ -14,6 +14,10 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  server: {
+    port: 21000, // default: 3000
+    host: '0.0.0.0' // default: localhost,
+  },
   css: [
     'highlight.js/styles/github.css',
     'element-ui/lib/theme-chalk/index.css',

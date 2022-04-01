@@ -12,12 +12,7 @@ import com.moxi.mogublog.utils.RedisUtil;
 import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.AbstractRequestAwareRunnable;
-import com.moxi.mougblog.base.holder.RequestHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -27,10 +22,11 @@ import java.util.concurrent.TimeUnit;
  * @author: 陌溪
  * @create: 2020-03-05-8:59
  */
-@Component
 public class SysLogHandle extends AbstractRequestAwareRunnable {
 
-    @Autowired
+    /**
+     * Redis工具列
+     */
     RedisUtil redisUtil;
 
     /**
@@ -59,29 +55,55 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
     private String operationName;
 
     /**
-     * set方法
+     * 请求IP
+     */
+    private String ip;
+
+    /**
+     * 请求类型
+     */
+    private String type;
+
+    /**
+     * 请求URL
+     */
+    private String requestUrl;
+
+    private SecurityUser securityUser;
+
+    /**
+     * 构造函数
      *
+     * @param ip
+     * @param type
+     * @param requestUrl
+     * @param securityUser
      * @param paramsJson
      * @param classPath
      * @param methodName
      * @param operationName
      * @param startTime
+     * @param redisUtil
      */
-    public void setSysLogHandle(String paramsJson, String classPath, String methodName, String operationName, Date startTime) {
+    public SysLogHandle(String ip, String type, String requestUrl, SecurityUser securityUser,
+                        String paramsJson, String classPath,
+                        String methodName, String operationName,
+                        Date startTime, RedisUtil redisUtil) {
+        this.ip = ip;
+        this.type = type;
+        this.requestUrl = requestUrl;
+        this.securityUser = securityUser;
         this.paramsJson = paramsJson;
         this.classPath = classPath;
         this.methodName = methodName;
         this.operationName = operationName;
         this.startTime = startTime;
+        this.redisUtil = redisUtil;
     }
 
     @Override
     protected void onRun() {
         SysLog sysLog = new SysLog();
-        HttpServletRequest request = RequestHolder.getRequest();
-        String ip = IpUtils.getIpAddr(request);
-        sysLog.setIp(ip);
-
         //从Redis中获取IP来源
         String jsonResult = redisUtil.get(RedisConf.IP_SOURCE + Constants.SYMBOL_COLON + ip);
         if (StringUtils.isEmpty(jsonResult)) {
@@ -104,13 +126,13 @@ public class SysLogHandle extends AbstractRequestAwareRunnable {
         sysLog.setMethod(methodName);
 
         //设置Request的请求方式 GET POST
-        sysLog.setType(request.getMethod());
-        sysLog.setUrl(request.getRequestURI());
+        sysLog.setType(type);
+        sysLog.setUrl(requestUrl);
 
         sysLog.setOperation(operationName);
         sysLog.setCreateTime(new Date());
         sysLog.setUpdateTime(new Date());
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         sysLog.setUserName(securityUser.getUsername());
         sysLog.setAdminUid(securityUser.getUid());
         sysLog.setParams(paramsJson);

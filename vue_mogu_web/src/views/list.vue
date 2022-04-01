@@ -97,6 +97,8 @@ import HotBlog from "../components/HotBlog";
 import FollowUs from "../components/FollowUs";
 import {
   searchBlog,
+  searchBlogByES,
+  searchBloBySolr,
   searchBlogByTag,
   searchBlogBySort,
   searchBlogByAuthor
@@ -107,6 +109,7 @@ export default {
   name: "list",
   data() {
     return {
+      searchModel: 0, //搜索模式 0:SQL搜索、1:ES搜索、2:Solr搜索
       blogData: [],
       keywords: "",
       currentPage: 1,
@@ -132,6 +135,10 @@ export default {
     this.tagUid = this.$route.query.tagUid;
     this.sortUid = this.$route.query.sortUid;
     this.author = this.$route.query.author;
+    let model = this.$route.query.model;
+    if(model) {
+      this.searchModel = model
+    }
 
     if (
       this.keywords == undefined &&
@@ -167,6 +174,7 @@ export default {
     }
   },
   methods: {
+
     //跳转到文章详情
     goToInfo(blog) {
       if(blog.type == "0") {
@@ -201,51 +209,62 @@ export default {
     },
     // 加载内容
     loadContent: function() {
-      var that = this;
-      that.currentPage = that.currentPage + 1;
-      that.search();
+      this.currentPage = this.currentPage + 1;
+      this.search();
+    },
+    convertSearchData: function (that, response) {
+      if (response.code == this.$ECode.SUCCESS) {
+        that.isEnd = false;
+        //获取总页数
+        that.totalPages = response.data.blogList.length;
+        that.total = response.data.total;
+        that.pageSize = response.data.pageSize;
+        that.currentPage = response.data.currentPage;
+        var blogData = response.data.blogList;
+
+        // 判断搜索的博客是否有内容
+        if(response.data.total <= 0) {
+          that.isEnd = true;
+          that.loading = false;
+          this.blogData = []
+          return;
+        }
+        //全部加载完毕
+        if (blogData.length < that.pageSize) {
+          that.isEnd = true;
+        }
+        blogData = that.searchBlogData.concat(blogData);
+        that.searchBlogData = blogData;
+        this.blogData = blogData;
+      } else {
+        that.isEnd = true;
+      }
+      that.loading = false;
     },
     search: function() {
-      var that = this;
-
+      let searchModel = this.searchModel
+      let that = this;
       that.loading = true;
-
       if (this.keywords != undefined) {
-        var params = new URLSearchParams();
+        let params = new URLSearchParams();
         params.append("currentPage", that.currentPage);
         params.append("pageSize", that.pageSize);
         params.append("keywords", that.keywords);
-        searchBlog(params).then(response => {
-          if (response.code == this.$ECode.SUCCESS) {
-            that.isEnd = false;
-            //获取总页数
-            that.totalPages = response.data.blogList.length;
-            that.total = response.data.total;
-            that.pageSize = response.data.pageSize;
-            that.currentPage = response.data.currentPage;
-            var blogData = response.data.blogList;
 
-            // 判断搜索的博客是否有内容
-            if(response.data.total <= 0) {
-              that.isEnd = true;
-              that.loading = false;
-              this.blogData = []
-              return;
-            }
-
-            //全部加载完毕
-            if (blogData.length < that.pageSize) {
-              that.isEnd = true;
-            }
-
-            blogData = that.searchBlogData.concat(blogData);
-            that.searchBlogData = blogData;
-            this.blogData = blogData;
-          } else {
-            that.isEnd = true;
-          }
-          that.loading = false;
-        });
+        if(searchModel == 0) {
+          searchBlog(params).then(response => {
+            that.convertSearchData(that, response)
+          });
+        }
+        else if(searchModel == 1) {
+          searchBlogByES(params).then(response => {
+            that.convertSearchData(that, response)
+          });
+        } else if(searchModel == 2) {
+          searchBlogByES(params).then(response => {
+            that.convertSearchData(that, response)
+          });
+        }
       } else if (this.tagUid != undefined) {
         var params = new URLSearchParams();
 

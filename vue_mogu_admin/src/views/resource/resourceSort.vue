@@ -177,7 +177,6 @@ export default {
   },
   methods: {
     resourceSortList: function() {
-
       var params = {};
       params.keyword = this.keyword;
       params.currentPage = this.currentPage;
@@ -191,7 +190,7 @@ export default {
       });
     },
     handleFind: function() {
-      console.log(this.keyword);
+      this.currentPage = 1
       this.resourceSortList();
     },
     getFormObject: function() {

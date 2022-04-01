@@ -273,7 +273,7 @@ export default {
           {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
         ],
         mobile: [
-          {required: false, pattern: /0?(13|14|15|18)[0-9]{9}/, message: '请输入正确的手机号码'}
+          {required: false, pattern: /0?(13|14|15|17|18)[0-9]{9}/, message: '请输入正确的手机号码'}
         ],
         qqNumber: [
           {pattern: /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'}
@@ -406,7 +406,7 @@ export default {
           });
         })
         .catch(() => {
-          this.$commonUtil.message.info("已取消删除")
+          this.$commonUtil.message.info("已取消重置")
         });
     },
     //  计算文件大小

@@ -2,11 +2,11 @@
   <div>
     <div class="pagebg sh"></div>
     <div class="container">
-      <h1 class="t_nav">
-        <span>好咖啡要和朋友一起品尝，好“资料”也要和同样喜欢它的人一起分享。</span>
-        <a href="/" class="n1">网站首页</a>
-        <a href="/" class="n2">专题</a>
-      </h1>
+<!--      <h1 class="t_nav">-->
+<!--        <span>好咖啡要和朋友一起品尝，好“资料”也要和同样喜欢它的人一起分享。</span>-->
+<!--        <a href="/" class="n1">网站首页</a>-->
+<!--        <a href="/" class="n2">专题</a>-->
+<!--      </h1>-->
 
       <div class="share">
         <ul>
@@ -14,7 +14,12 @@
             <div class="shareli" @click="showSubjectItemList(item.uid)">
               <a href="javascript:void(0);">
                 <i>
-                  <img class="resImg" :src="item.photoList[0]">
+                  <img v-if="item.photoList" class="resImg" :src="item.photoList[0]" lazy>
+                  <el-image class="resImg" v-else>
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline"></i>
+                    </div>
+                  </el-image>
                 </i>
                 <h2>
                   <b>{{item.summary}}</b>

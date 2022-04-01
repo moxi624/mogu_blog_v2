@@ -209,6 +209,7 @@ export default {
       return formObject;
     },
     handleFind: function() {
+      this.currentPage = 1
       this.tagList();
     },
     handleAdd: function() {

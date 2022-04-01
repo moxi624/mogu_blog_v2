@@ -17,8 +17,12 @@ docker-compose -f ../yaml/rabbitmq.yml down
 echo '=====结束运行redis====='
 docker-compose -f ../yaml/redis.yml down
 
-echo '=====开始部署mogu_data====='
+echo '=====结束运行mogu_data====='
 docker-compose -f ../yaml/mogu_data.yml down
+
+echo '=====结束运行minio====='
+docker-compose -f ../yaml/minio.yml down
+
 
 echo '=========================='
 echo '=====结束后台服务运行====='

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+cd "$(dirname "$0")" || exit
+
+echo '=====进入数据目录====='
+echo "$PWD"
+
 echo '=====开始清空博客中的数据====='
 echo '=====开始清空minio====='
 rm -rf ./minio_data/*
@@ -19,7 +24,7 @@ rm -rf ./rabbitmq_data/*
 echo '=====开始清空redis数据====='
 rm -rf ./redis_data/*
 
-echo '=====开始清空redis数据====='
+echo '=====开始清空elk数据====='
 rm -rf ./elasticsearch_data/*
 
 echo '=====开始清空logstash数据====='

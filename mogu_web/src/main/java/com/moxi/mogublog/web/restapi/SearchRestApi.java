@@ -2,10 +2,11 @@ package com.moxi.mogublog.web.restapi;
 
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mogublog.utils.StringUtils;
+import com.moxi.mogublog.web.annotion.log.BussinessLog;
 import com.moxi.mogublog.web.global.MessageConf;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.service.BlogService;
+import com.moxi.mogublog.xo.service.SystemConfigService;
 import com.moxi.mougblog.base.enums.EBehavior;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchRestApi {
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private SystemConfigService systemConfigService;
 
     /**
      * 使用SQL语句搜索博客，如需使用Solr或者ElasticSearch 需要启动 mogu-search
@@ -86,6 +89,12 @@ public class SearchRestApi {
             return ResultUtil.result(SysConf.ERROR, "作者不能为空");
         }
         return ResultUtil.result(SysConf.SUCCESS, blogService.searchBlogByAuthor(author, currentPage, pageSize));
+    }
+
+    @ApiOperation(value = "获取搜索模式", notes = "获取搜索模式", response = String.class)
+    @GetMapping(value = "/getSearchModel")
+    public String getSearchModel() {
+        return ResultUtil.successWithData(systemConfigService.getSearchModel());
     }
 
 }

@@ -127,11 +127,13 @@ public class Admin extends SuperEntity<Admin> {
     /**
      * github地址
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String github;
 
     /**
      * gitee地址
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String gitee;
 
     // 以下字段不存入数据库

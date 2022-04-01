@@ -1,10 +1,13 @@
 package com.moxi.mogublog.sms.listener;
 
 import com.moxi.mogublog.commons.feign.SearchFeignClient;
+import com.moxi.mogublog.commons.feign.WebFeignClient;
 import com.moxi.mogublog.sms.global.RedisConf;
 import com.moxi.mogublog.sms.global.SysConf;
 import com.moxi.mogublog.utils.JsonUtils;
 import com.moxi.mogublog.utils.RedisUtil;
+import com.moxi.mogublog.utils.SpringUtils;
+import com.moxi.mougblog.base.enums.ESearchModel;
 import com.moxi.mougblog.base.global.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -28,8 +31,9 @@ public class BlogListener {
 
     @Autowired
     private RedisUtil redisUtil;
-
     @Autowired
+    private WebFeignClient webFeignClient;
+
     private SearchFeignClient searchFeignClient;
 
     // TODO 在这里同时需要对Redis和Solr进行操作，同时利用MQ来保证数据一致性
@@ -51,70 +55,92 @@ public class BlogListener {
             redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_SORT);
             redisUtil.delete(RedisConf.DASHBOARD + Constants.SYMBOL_COLON + RedisConf.BLOG_COUNT_BY_TAG);
 
-            switch (comment) {
-                case SysConf.DELETE_BATCH: {
-
-                    log.info("mogu-sms处理批量删除博客");
-                    redisUtil.set(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON, "");
-                    redisUtil.set(RedisConf.MONTH_SET, "");
-
-                    // 删除ElasticSearch博客索引
-//                    searchFeignClient.deleteElasticSearchByUids(uid);
-
-                    // 删除Solr博客索引
-//                    searchFeignClient.deleteSolrIndexByUids(uid);
+            String searchModel = ESearchModel.SQL;
+            String resultStr = webFeignClient.getSearchModel();
+            Map<String, String> resultTempMap = (Map<String, String>) JsonUtils.jsonToMap(resultStr, String.class);
+            if (resultTempMap.get(SysConf.CODE) != null && SysConf.SUCCESS.equals(resultTempMap.get(SysConf.CODE).toString())) {
+                searchModel = resultTempMap.get(SysConf.DATA);
+            }
+            if (ESearchModel.ES.equals(searchModel) || ESearchModel.SOLR.equals(searchModel)) {
+                try {
+                    searchFeignClient = SpringUtils.getBean(SearchFeignClient.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                break;
-                case SysConf.EDIT_BATCH: {
+            }
 
-                    log.info("mogu-sms处理批量编辑博客");
-                    redisUtil.set(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON, "");
-                    redisUtil.set(RedisConf.MONTH_SET, "");
+            try {
+                switch (comment) {
+                    case SysConf.DELETE_BATCH: {
+                        log.info("mogu-sms处理批量删除博客");
+                        redisUtil.set(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON, "");
+                        redisUtil.set(RedisConf.MONTH_SET, "");
 
+                        if (ESearchModel.ES.equals(searchModel)) {
+                            // 删除ElasticSearch博客索引
+                            searchFeignClient.deleteElasticSearchByUids(uid);
+                        } else if (ESearchModel.SOLR.equals(searchModel)) {
+                            // 删除Solr索引
+                            searchFeignClient.deleteSolrIndexByUid(uid);
+                        }
+                    }
+                    break;
+
+                    case SysConf.EDIT_BATCH: {
+                        log.info("mogu-sms处理批量编辑博客");
+                        redisUtil.set(RedisConf.BLOG_SORT_BY_MONTH + Constants.SYMBOL_COLON, "");
+                        redisUtil.set(RedisConf.MONTH_SET, "");
+                    }
+                    break;
+
+                    case SysConf.ADD: {
+                        log.info("mogu-sms处理增加博客");
+                        updateSearch(map);
+                        if (ESearchModel.ES.equals(searchModel)) {
+                            // 增加ES索引
+                            searchFeignClient.addElasticSearchIndexByUid(uid);
+                        } else if (ESearchModel.SOLR.equals(searchModel)) {
+                            // 增加solr索引
+                            searchFeignClient.addSolrIndexByUid(uid);
+                        }
+                    }
+                    break;
+
+                    case SysConf.EDIT: {
+                        log.info("mogu-sms处理编辑博客");
+                        updateSearch(map);
+                        if (ESearchModel.ES.equals(searchModel)) {
+                            // 增加ES索引
+                            searchFeignClient.addElasticSearchIndexByUid(uid);
+                        } else if (ESearchModel.SOLR.equals(searchModel)) {
+                            // 增加solr索引
+                            searchFeignClient.updateSolrIndexByUid(uid);
+                        }
+                    }
+                    break;
+
+                    case SysConf.DELETE: {
+                        log.info("mogu-sms处理删除博客: uid:" + uid);
+                        updateSearch(map);
+                        if (ESearchModel.ES.equals(searchModel)) {
+                            // 增加ES索引
+                            searchFeignClient.deleteElasticSearchByUid(uid);
+                        } else if (ESearchModel.SOLR.equals(searchModel)) {
+                            // 增加solr索引
+                            searchFeignClient.deleteSolrIndexByUid(uid);
+                        }
+                    }
+                    break;
+                    default: {
+                        log.info("mogu-sms处理博客兜底方法");
+                    }
                 }
-                break;
-                case SysConf.ADD: {
-                    log.info("mogu-sms处理增加博客");
-                    updateSearch(map);
-
-                    // 增加ES索引
-//                    searchFeignClient.addElasticSearchIndexByUid(uid);
-
-                    // 增加solr索引
-//                    searchFeignClient.addSolrIndexByUid(uid);
-                }
-                break;
-
-                case SysConf.EDIT: {
-                    log.info("mogu-sms处理编辑博客");
-                    updateSearch(map);
-
-                    // 更新ES索引
-//                    searchFeignClient.addElasticSearchIndexByUid(uid);
-
-                    // 更新Solr索引
-//                    searchFeignClient.updateSolrIndexByUid(uid);
-                }
-                break;
-
-                case SysConf.DELETE: {
-                    log.info("mogu-sms处理删除博客: uid:" + uid);
-                    updateSearch(map);
-
-                    // 删除ES索引
-//                    searchFeignClient.deleteElasticSearchByUid(uid);
-
-                    // 删除Solr索引
-//                    searchFeignClient.deleteSolrIndexByUid(uid);
-                }
-                break;
-                default: {
-                    log.info("mogu-sms处理博客");
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("【mogu-sms】出现异常，请查看mogu-search是否启动！searchModel: " + searchModel);
             }
         }
     }
-
 
     private void updateSearch(Map<String, String> map) {
         try {

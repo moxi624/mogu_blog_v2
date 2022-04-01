@@ -25,11 +25,11 @@
             :key="item.uid"
             class="blogs"
           >
-            <el-timeline-item :timestamp="item.createTime" placement="top">
+            <el-timeline-item :timestamp="item.blog.createTime" placement="top">
               <el-card>
                 <span class="blogpic" @click="goToInfo(item.blog.uid)">
                   <a href="javascript:void(0);" title>
-                    <img v-if="item.blog && item.blog.photoList.length > 0" :src="item.blog.photoList[0]" alt>
+                    <img v-if="item.blog && item.blog.photoList" :src="item.blog.photoList[0]" alt>
                   </a>
                 </span>
                 <p class="blogtext" style="font-weight: bold; cursor: pointer;" @click="goToInfo(item.blog.uid)">{{item.blog.title}}</p>

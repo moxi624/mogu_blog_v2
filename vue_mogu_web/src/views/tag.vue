@@ -2,11 +2,11 @@
   <div>
     <div class="pagebg tagPage"></div>
     <div class="container">
-      <h1 class="t_nav">
-        <span>内心没有阳光的人温暖不了别人。用心写博客，知识不是高谈阔论，是现实点点滴滴的积累。</span>
-        <a href="/" class="n1">网站首页</a>
-        <a href="javascript:void(0);" class="n2">标签</a>
-      </h1>
+<!--      <h1 class="t_nav">-->
+<!--        <span>内心没有阳光的人温暖不了别人。用心写博客，知识不是高谈阔论，是现实点点滴滴的积累。</span>-->
+<!--        <a href="/" class="n1">网站首页</a>-->
+<!--        <a href="javascript:void(0);" class="n2">标签</a>-->
+<!--      </h1>-->
 
       <div class="sortBox">
         <div class="time">
@@ -55,6 +55,7 @@
                     v-for="tagItem in item.tagList"
                     v-if="tagItem != null"
                     :key="tagItem.uid"
+                    style="margin-left: 3px;"
                     @click="goToList('tag', tagItem)"
                     type="warning"
                   >{{tagItem.content}}</el-tag>

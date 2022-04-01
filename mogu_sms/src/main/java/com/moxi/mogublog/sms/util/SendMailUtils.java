@@ -1,7 +1,6 @@
 package com.moxi.mogublog.sms.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,12 +27,13 @@ public class SendMailUtils {
 
     /**
      * 发送邮件
-     * @param subject 主题
+     *
+     * @param subject  主题
      * @param receiver 接收者
-     * @param text 文本
+     * @param text     文本
      */
     public void sendEmail(String subject, String receiver, String text) {
-        try{
+        try {
             //创建一个复杂的消息邮件
             MimeMessage mimeMessage = mailSender.createMimeMessage();
 

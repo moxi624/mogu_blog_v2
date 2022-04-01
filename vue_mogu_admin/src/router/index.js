@@ -119,9 +119,9 @@ export const constantRouterMap = [
       },
       {
         path: 'button',
-        name: '按钮管理',
-        component: () => import('@/views/authority/button'),
-        meta: { title: '按钮管理', icon: 'authority' }
+        name: '接口管理',
+        component: () => import('@/views/authority/api'),
+        meta: { title: '接口管理', icon: 'authority' }
       }
     ]
   },

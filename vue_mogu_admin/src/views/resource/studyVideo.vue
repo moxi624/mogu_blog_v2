@@ -238,7 +238,7 @@ export default {
       });
     },
     handleFind: function() {
-      console.log(this.keyword);
+      this.currentPage = 1
       this.studyVideoList();
     },
     getFormObject: function() {
@@ -279,9 +279,6 @@ export default {
 
       this.form.photoList = null;
       this.form.fileUid = "";
-    },
-    checkPhoto() {
-      this.photoVisible = true;
     },
     //改变页码
     handleCurrentChange(val) {

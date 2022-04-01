@@ -12,6 +12,7 @@ import com.moxi.mogublog.utils.StringUtils;
 import com.moxi.mogublog.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -55,12 +56,13 @@ public class ElasticSearchRestApi {
         if (StringUtils.isEmpty(keywords)) {
             return ResultUtil.result(SysConf.ERROR, MessageConf.KEYWORD_IS_NOT_EMPTY);
         }
+        keywords = QueryParser.escape(keywords);
         return ResultUtil.result(SysConf.SUCCESS, searchService.search(keywords, currentPage, pageSize));
     }
 
     @ApiOperation(value = "通过uids删除ElasticSearch博客索引", notes = "通过uids删除ElasticSearch博客索引", response = String.class)
     @PostMapping("/deleteElasticSearchByUids")
-    public String deleteElasticSearchByUids(@RequestParam(required = true) String uids) {
+    public String deleteElasticSearchByUids(@RequestParam(required = true, value = "uid") String uids) {
 
         List<String> uidList = StringUtils.changeStringToString(uids, SysConf.FILE_SEGMENTATION);
 

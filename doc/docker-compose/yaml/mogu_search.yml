@@ -13,6 +13,7 @@ services:
       - COMPOSE_PROJECT_NAME=mogu_search
     volumes:
       - ../log/:/logs/
+      - ../config/mogu_search/:/config/
 networks:
   mogu:
     external: true

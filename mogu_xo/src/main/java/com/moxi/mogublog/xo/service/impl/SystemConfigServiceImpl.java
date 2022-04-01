@@ -144,4 +144,10 @@ public class SystemConfigServiceImpl extends SuperServiceImpl<SystemConfigMapper
         redisUtil.delete(RedisConf.SYSTEM_CONFIG);
         return ResultUtil.successWithMessage(MessageConf.UPDATE_SUCCESS);
     }
+
+    @Override
+    public String getSearchModel() {
+        SystemConfig systemConfig = this.getConfig();
+        return systemConfig.getSearchModel();
+    }
 }

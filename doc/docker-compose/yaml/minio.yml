@@ -5,13 +5,18 @@ services:
     container_name: minio
     restart: "always"
     ports:
-      - "9090:9000"
+      - "9000:9000"
+      - "9001:9001"
     environment:
       - "MINIO_ACCESS_KEY=mogu2018"
       - "MINIO_SECRET_KEY=mogu2018"
-    command: server /data
+    command: 
+      server /data
+      --console-address ":9001"
     volumes:
       - ../data/minio_data:/data
+      - ../config/minio/minio:/minio
+      - ../config/minio/config:/root/.minio
     networks:
       - mogu    
 

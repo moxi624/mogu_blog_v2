@@ -246,24 +246,17 @@ export default {
       this.roleList();
     },
     submitForm: function () {
-
       this.$refs.form.validate((valid) => {
         if(!valid) {
           console.log("校验出错")
         } else {
           //得到选中树的UID
-          var categoryMenuUids = this.$refs.tree.getCheckedKeys();
-          // // 得到的半选UID(也就是父级菜单)
-          // var halfCategoryMenuUids = this.$refs.tree.getHalfCheckedKeys();
-          // console.log("半选UID", halfCategoryMenuUids)
-          //
-          // // 合并
-          // categoryMenuUids = categoryMenuUids.concat(halfCategoryMenuUids);
-          // console.log("合并后的", categoryMenuUids)
+          this.form.categoryMenuUids = this.$refs.tree.getCheckedKeys();
+          let data = this.$commonUtil.deepClone(this.form)
+          data.categoryMenuUids = JSON.stringify(data.categoryMenuUids);
 
-          this.form.categoryMenuUids = JSON.stringify(categoryMenuUids);
           if (this.isEditForm) {
-            editRole(this.form).then(response => {
+            editRole(data).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
                 this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;
@@ -273,7 +266,7 @@ export default {
               }
             });
           } else {
-            addRole(this.form).then(response => {
+            addRole(data).then(response => {
               if (response.code == this.$ECode.SUCCESS) {
                 this.$commonUtil.message.success(response.message)
                 this.dialogFormVisible = false;

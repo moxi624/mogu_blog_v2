@@ -119,7 +119,7 @@
       </div>
     </el-dialog>
 
-    <CheckPhoto @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
+    <CheckPhoto v-if="!isFirstPhotoVisible" @choose_data="getChooseData" @cancelModel="cancelModel" :photoVisible="photoVisible" :photos="photoList" :files="fileIds" :limit="1"></CheckPhoto>
 
   </div>
 </template>
@@ -162,6 +162,7 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
+      isFirstPhotoVisible: true, // 图片选择器是否首次显示【用于懒加载】
       rules: {
         fileUid: [
           {required: true, message: '封面图片不能为空', trigger: 'blur'}
@@ -191,6 +192,7 @@ export default {
       });
     },
     handleFind: function() {
+      this.currentPage = 1
       this.subjectList();
     },
     getFormObject: function() {
@@ -233,6 +235,7 @@ export default {
       this.photoList = [];
       this.fileIds = "";
       this.photoVisible = true;
+      this.isFirstPhotoVisible = false
     },
     getChooseData(data) {
       var that = this;

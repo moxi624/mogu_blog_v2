@@ -262,6 +262,7 @@
         });
       },
       handleFind: function() {
+        this.currentPage = 1
         this.feedbackList();
       },
       handleEdit: function(row) {

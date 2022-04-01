@@ -166,4 +166,13 @@ public class SystemConfig extends SuperEntity<SystemConfig> {
      */
     private String openDashboardNotification;
 
+    /**
+     * 是否开启用户邮件激活功能【0 关闭，1 开启】
+     */
+    private String openEmailActivate;
+
+    /**
+     * 搜索模式：0:SQL搜索 、1：全文检索
+     */
+    private String searchModel;
 }

@@ -2,8 +2,8 @@ package com.moxi.mogublog.web.restapi;
 
 
 import com.moxi.mogublog.utils.ResultUtil;
+import com.moxi.mogublog.web.annotion.log.BussinessLog;
 import com.moxi.mogublog.web.global.SysConf;
-import com.moxi.mogublog.web.log.BussinessLog;
 import com.moxi.mogublog.xo.service.AdminService;
 import com.moxi.mogublog.xo.service.WebConfigService;
 import com.moxi.mougblog.base.enums.EBehavior;

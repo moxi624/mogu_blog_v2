@@ -63,7 +63,7 @@
               }
               let request = new XMLHttpRequest()
               // 图片上传路径
-              request.open('POST', process.env.PICTURE_API + '/ckeditor/imgUpload?token=' + getToken())
+              request.open('POST', process.env.PICTURE_API + '/file/ckeditorUploadFile?token=' + getToken())
               request.onload = that.onloadCallback
               request.send(formData)
             }
@@ -100,19 +100,15 @@
         // let text = localStorage.getItem('vditorvditor')
         // 返回的文本
         // return this.$commonUtil.markdownToHtml(text);
-        console.log("获取转换后的文本", this.vditor.getHTML())
         // console.log("获取转换后的文本", this.$commonUtil.markdownToHtml(localStorage.getItem('vditorvditor')))
-
         return this.vditor.getHTML();
       },
       setData: function(data) {
-
         // console.log("将html转", this.vditor.html2md(data))
         var that = this;
         this.$nextTick(() => {
           //DOM现在更新了
           let vditor = that.initVditor()
-          console.log("得到的html", data)
           let markdownText = that.$commonUtil.htmlToMarkdown(data)
           localStorage.setItem('vditorvditor', markdownText)
         });
@@ -122,6 +118,7 @@
         this.$nextTick(() => {
           if(that.vditor.vditor.lute) {
             that.vditor.setValue("")
+            localStorage.setItem('vditorvditor', "")
           }
         });
       }
