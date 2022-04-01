@@ -16,7 +16,7 @@
       ></CommentBox>
 
       <div class="message_infos">
-        <CommentList :comments="comments" :commentInfo="commentInfo"></CommentList>
+        <CommentList :comments="comments" :commentInfo="commentInfo" :maxReplyLevel="5"></CommentList>
         <div class="noComment" v-if="comments.length ==0">还没有评论，快来抢沙发吧！</div>
       </div>
 

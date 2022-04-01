@@ -104,7 +104,7 @@
           ref="form"
         >
           <aside>
-            使用 <a href="http://www.moguit.cn/#/info?blogUid=735ed389c4ad1efd321fed9ac58e646b">七牛云</a> 构建对象存储服务<br/>
+            使用 <a href="https://www.moguit.cn/info/202">七牛云</a> 构建对象存储服务<br/>
           </aside>
 
           <el-form-item label="七牛云文件域名" prop="qiNiuPictureBaseUrl">
@@ -158,7 +158,7 @@
         >
 
           <aside>
-            使用 <a href="http://www.moguit.cn/#/info?blogUid=a1058b2d030310e2c5d7b0584e514f1f">Minio</a> 构建本地对象存储服务<br/>
+            使用 <a href="https://www.moguit.cn/info/278">Minio</a> 构建本地对象存储服务<br/>
           </aside>
 
           <el-form-item label="Minio访问域名" prop="localPictureBaseUrl">

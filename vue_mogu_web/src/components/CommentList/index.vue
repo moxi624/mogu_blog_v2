@@ -18,7 +18,7 @@
           <div class="rightCenter ck-content" v-highlight v-html="$xss(item.content, options)"></div>
 
           <div class="rightBottom">
-            <el-link class="b1" :underline="false" @click="replyTo(item)">回复</el-link>
+            <el-link class="b1" :underline="false" @click="replyTo(item)" v-if="level < maxReplyLevel">回复</el-link>
             <el-link class="b1" :underline="false" @click="report(item)">举报</el-link>
             <el-link class="b1" v-if="$store.state.user.isLogin && $store.state.user.userInfo.uid == item.userUid" :underline="false" @click="delComment(item)">删除</el-link>
           </div>
@@ -27,7 +27,7 @@
             <CommentBox class="comment" :userInfo="userInfo" :toInfo="toInfo" :id="item.uid" :commentInfo="commentInfo"
                         @submit-box="submitBox" @cancel-box="cancelBox"></CommentBox>
 
-            <CommentList class="commentStyle" :id="'commentStyle:' + item.uid" :comments="item.replyList" :commentInfo="commentInfo"></CommentList>
+            <CommentList class="commentStyle" :level="level + 1" :maxReplyLevel="maxReplyLevel" :id="'commentStyle:' + item.uid" :comments="item.replyList" :commentInfo="commentInfo"></CommentList>
           </div>
         </span>
       </div>
@@ -45,7 +45,30 @@
   import {getListByDictTypeList} from "@/api/sysDictData"
   export default {
     name: "CommentList",
-    props: ['comments', 'userInfos', 'commentInfo'],
+    props: {
+      // 父级组件传过来的评论列表
+      comments: {
+        type: Array,
+        default: () => []
+      },
+      userInfos: {
+        type: Object
+      },
+      // 评论主体信息
+      commentInfo: {
+        type: Object
+      },
+      // 递归组件的嵌套层级，递归了1层、2层、3层、4层、5层，在最后一层可以禁止回复，拒绝无休止的评论
+      level: {
+        type: Number,
+        default: 1,
+      },
+      // 控制最大评论层级
+      maxReplyLevel: {
+        type: Number,
+        default: 5,
+      },
+    },
     data() {
       return {
         // xss白名单配置

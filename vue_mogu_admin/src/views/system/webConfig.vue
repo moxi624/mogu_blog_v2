@@ -235,7 +235,7 @@
       <el-tab-pane label="友链申请模板" v-permission="'/webConfig/getWebConfig'">
         <span slot="label"><i class="el-icon-edit"></i> 友链申请模板</span>
         <div class="editor-container">
-          <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.dashboardNotification" :height="500"></CKEditor>
+          <CKEditor ref="editor" v-if="systemConfig.editorModel == '0'" :content="form.linkApplyTemplate" :height="500"></CKEditor>
           <MarkdownEditor ref="editor" v-if="systemConfig.editorModel == '1'" :height="660" style="margin-top: 12px"></MarkdownEditor>
         </div>
         <div style="margin-top: 5px; margin-left: 10px;" >
@@ -430,7 +430,13 @@ export default {
     },
     submitForm: function() {
       let form = this.form;
-      form.linkApplyTemplate = this.$refs.editor.getData();
+      let linkApplyTemplate = this.$refs.editor.getData();
+      if (linkApplyTemplate.length > 2018) {
+        this.$message.error("友链申请模板长度超过2018个字符")
+        return
+      }
+      form.linkApplyTemplate = linkApplyTemplate
+
       form.logo = this.fileIds;
       form.showList = JSON.stringify(this.form.showList)
       form.loginTypeList = JSON.stringify(this.form.loginTypeList)
