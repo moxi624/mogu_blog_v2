@@ -66,7 +66,8 @@ public class MinioUtil {
         try {
             // 获取系统配置
             SystemConfig systemConfig = feignUtil.getSystemConfig();
-            MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
+            MinioClient minioClient = MinioClient.builder().endpoint(systemConfig.getMinioEndPoint()).credentials(systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey()).build();
+
             // Remove object.
             minioClient.removeObject(
                     RemoveObjectArgs.builder().bucket(systemConfig.getMinioBucket()).object(fileName).build());
@@ -86,7 +87,7 @@ public class MinioUtil {
     public String deleteBatchFile(List<String> fileNameList) {
         // 获取系统配置
         SystemConfig systemConfig = feignUtil.getSystemConfig();
-        MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
+        MinioClient minioClient = MinioClient.builder().endpoint(systemConfig.getMinioEndPoint()).credentials(systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey()).build();
         try {
             for (String fileName : fileNameList) {
                 minioClient.removeObject(
@@ -111,7 +112,7 @@ public class MinioUtil {
         try {
             // 使用MinIO服务的URL，端口，Access key和Secret key创建一个MinioClient对象
             SystemConfig systemConfig = feignUtil.getSystemConfig();
-            MinioClient minioClient = new MinioClient(systemConfig.getMinioEndPoint(), systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey());
+            MinioClient minioClient = MinioClient.builder().endpoint(systemConfig.getMinioEndPoint()).credentials(systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey()).build();
             String oldName = multipartFile.getOriginalFilename();
             //获取扩展名，默认是jpg
             String picExpandedName = FileUtils.getPicExpandedName(oldName);
