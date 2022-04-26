@@ -10,6 +10,11 @@ filebeat.inputs:
       project: mogu_web
       from: mogu_web
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-web:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
   - type: log
     enabled: true
     paths:
@@ -19,6 +24,11 @@ filebeat.inputs:
       project: mogu_admin
       from: mogu_admin
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-admin:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
   - type: log
     enabled: true
     paths:
@@ -28,6 +38,11 @@ filebeat.inputs:
       project: mogu_sms
       from: mogu_sms
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-sms:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
   - type: log
     enabled: true
     paths:
@@ -37,6 +52,11 @@ filebeat.inputs:
       project: mogu_picture
       from: mogu_picture
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-picture:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
   - type: log
     enabled: true
     paths:
@@ -46,6 +66,11 @@ filebeat.inputs:
       project: mogu_gateway
       from: mogu_gateway
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-gateway:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
   - type: log
     enabled: true
     paths:
@@ -55,6 +80,11 @@ filebeat.inputs:
       project: mogu_monitor
       from: mogu_monitor
     fields_under_root: true
+    multiline:
+      pattern: '^\[mogu-monitor:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
 
 
 # ============================== Filebeat modules ==============================
