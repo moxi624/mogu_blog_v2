@@ -225,7 +225,7 @@ public class AuthRestApi {
         }
 
         if (user.getLoginCount() == null) {
-            user.setLoginCount(0);
+            user.setLoginCount(1);
         } else {
             user.setLoginCount(user.getLoginCount() + 1);
         }

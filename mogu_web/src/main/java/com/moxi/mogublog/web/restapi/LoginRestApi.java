@@ -101,6 +101,9 @@ public class LoginRestApi {
             user.setOs(userMap.get(SysConf.OS));
             user.setLastLoginIp(ip);
             user.setLastLoginTime(new Date());
+            // 登录成功后，次数+1
+            Integer count = user.getLoginCount() + 1;
+            user.setLoginCount(count);
             user.updateById();
             // 获取用户头像
             if (!StringUtils.isEmpty(user.getAvatar())) {
