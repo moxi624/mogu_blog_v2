@@ -32,7 +32,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/deleteElasticSearchByUids")
-    public String deleteElasticSearchByUids(@RequestParam(required = true) String uids);
+    public String deleteElasticSearchByUids(@RequestParam(value = "uids", required = true) String uids);
 
     /**
      * 初始化ElasticSearch索引
@@ -48,7 +48,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/addElasticSearchIndexByUid")
-    public String addElasticSearchIndexByUid(@RequestParam(required = true) String uid);
+    public String addElasticSearchIndexByUid(@RequestParam(value = "uid", required = true) String uid);
 
 
     /**
@@ -58,7 +58,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/deleteSolrIndexByUid")
-    public String deleteSolrIndexByUid(@RequestParam(required = true) String uid);
+    public String deleteSolrIndexByUid(@RequestParam(value = "uid", required = true) String uid);
 
     /**
      * 通过uids删除Solr博客索引
@@ -67,7 +67,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/deleteSolrIndexByUids")
-    public String deleteSolrIndexByUids(@RequestParam(required = true) String uids);
+    public String deleteSolrIndexByUids(@RequestParam(value = "uids", required = true) String uids);
 
     /**
      * 初始化Solr索引
@@ -83,7 +83,7 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/addSolrIndexByUid")
-    public String addSolrIndexByUid(@RequestParam(required = true) String uid);
+    public String addSolrIndexByUid(@RequestParam(value = "uid", required = true) String uid);
 
     /**
      * 通过uid来更新Solr索引
@@ -91,6 +91,6 @@ public interface SearchFeignClient {
      * @return
      */
     @PostMapping("/search/updateSolrIndexByUid")
-    public String updateSolrIndexByUid(@RequestParam(required = true) String uid);
+    public String updateSolrIndexByUid(@RequestParam(value = "uid", required = true) String uid);
 
 }

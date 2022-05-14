@@ -85,6 +85,21 @@ filebeat.inputs:
       negate: true
       match: after
       timeout: 2s
+  - type: log
+    enabled: true
+    paths:
+      - ../../../log/mogu-search/*.log
+    fields:
+      docType: mogu_search-log
+      project: mogu_search
+      from: mogu_search
+    fields_under_root: true
+    pipeline: mogu-log
+    multiline:
+      pattern: '^\[mogu-search:[\d\.:]+\]'
+      negate: true
+      match: after
+      timeout: 2s
 
 
 # ============================== Filebeat modules ==============================
