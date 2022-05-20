@@ -288,7 +288,7 @@ Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统
 
 ### [推荐] DockerCompose一键部署蘑菇博客(Nacos版)
 
-参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/info/565) ，在 **Linux** 服务器中，一键完成蘑菇博客项目的部署
+参考 [DockerCompose一键部署蘑菇博客(Nacos版)](http://www.moguit.cn/info/1151) ，在 **Linux** 服务器中，一键完成蘑菇博客项目的部署
 
 ### Docker搭建蘑菇博客
 
