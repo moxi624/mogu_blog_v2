@@ -45,7 +45,7 @@ public class HighlightResultHelper implements SearchResultMapper {
             }
         }
         return new AggregatedPageImpl<T>(results, pageable, response.getHits().getTotalHits(), response
-                .getAggregations(), response.getScrollId());
+            .getAggregations(), response.getScrollId());
     }
 
 
@@ -68,7 +68,7 @@ public class HighlightResultHelper implements SearchResultMapper {
     }
 
     private String concat(Text[] texts) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Text text : texts) {
             sb.append(text.toString());
         }

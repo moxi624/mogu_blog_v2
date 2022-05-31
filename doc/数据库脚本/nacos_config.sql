@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 10.1.35-MariaDB : Database - nacos_config
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -37,6 +38,7 @@ CREATE TABLE `config_info` (
   `effect` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `type` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `c_schema` text COLLATE utf8_bin,
+  `encrypted_data_key` text NOT NULL COMMENT '秘钥',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC COMMENT='config_info';
@@ -168,6 +170,7 @@ CREATE TABLE `his_config_info` (
   `src_ip` varchar(20) COLLATE utf8_bin DEFAULT NULL,
   `op_type` char(10) COLLATE utf8_bin DEFAULT NULL,
   `tenant_id` varchar(128) COLLATE utf8_bin DEFAULT '' COMMENT '租户字段',
+  `encrypted_data_key` text NOT NULL COMMENT '秘钥',
   PRIMARY KEY (`nid`),
   KEY `idx_gmt_create` (`gmt_create`),
   KEY `idx_gmt_modified` (`gmt_modified`),
