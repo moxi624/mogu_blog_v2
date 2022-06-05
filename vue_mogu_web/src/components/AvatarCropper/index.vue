@@ -804,6 +804,7 @@ export default {
           this.$emit('crop-upload-success', resData.data)
         })
         .catch(err => {
+          console.log("上传失败:", err)
           if (this.value) {
             this.loading = 3
             this.hasError = true
