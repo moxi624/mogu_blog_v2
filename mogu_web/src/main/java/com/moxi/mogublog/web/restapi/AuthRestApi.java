@@ -26,6 +26,7 @@ import com.moxi.mougblog.base.enums.ELinkStatus;
 import com.moxi.mougblog.base.enums.EOpenStatus;
 import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.exception.ThrowableUtils;
+import com.moxi.mougblog.base.exception.exceptionType.InsertException;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.validator.group.Insert;
 import com.moxi.mougblog.base.vo.FileVO;
@@ -173,6 +174,9 @@ public class AuthRestApi {
             user = userService.getUserBySourceAnduuid(data.get(SysConf.SOURCE).toString(), data.get(SysConf.UUID).toString());
             if (user != null) {
                 exist = true;
+                if (EStatus.DISABLED ==  user.getStatus()) {
+                    throw new InsertException("该账号无法登录，请联系管理员！");
+                }
             } else {
                 user = new User();
             }
@@ -418,6 +422,7 @@ public class AuthRestApi {
                 log.info("向数据库更新用户信息");
                 log.info(JsonUtils.objectToJson(user));
             } else {
+                user.setSummary("");
                 user.setUuid(userInfoMap.get(SysConf.OPEN_ID).toString());
                 user.setSource("QQ");
                 String userName = PROJECT_NAME_EN.concat("_").concat(user.getSource()).concat("_").concat(user.getUuid());
@@ -515,7 +520,11 @@ public class AuthRestApi {
         user.setNickName(userVO.getNickName());
         user.setAvatar(userVO.getAvatar());
         user.setBirthday(userVO.getBirthday());
-        user.setSummary(userVO.getSummary());
+        if (StringUtils.isNotEmpty(userVO.getSummary())) {
+            user.setSummary(userVO.getSummary());
+        } else {
+            user.setSummary("这家伙很懒，什么都没有留下");
+        }
         user.setGender(userVO.getGender());
         user.setQqNumber(userVO.getQqNumber());
         user.setOccupation(userVO.getOccupation());
