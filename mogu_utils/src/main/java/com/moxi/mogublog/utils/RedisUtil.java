@@ -1,6 +1,7 @@
 package com.moxi.mogublog.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2018-02-24 下午03:09:50
  */
 @Component
+@CustomConditionalOnProperty
 public class RedisUtil {
 
     @Autowired

@@ -1,6 +1,7 @@
 package com.moxi.mogublog.utils;
 
 import org.springframework.beans.BeansException;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.Locale;
  * @create: 2020-03-05-9:30
  */
 @Component
+@CustomConditionalOnProperty
 public class SpringUtils implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 

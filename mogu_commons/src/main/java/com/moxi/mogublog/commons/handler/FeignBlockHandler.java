@@ -9,6 +9,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowException;
 import com.alibaba.csp.sentinel.slots.system.SystemBlockException;
 import com.moxi.mogublog.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import java.io.IOException;
  * @date: 2020-10-03-21:56
  */
 @Component
+@CustomConditionalOnProperty
 @Slf4j
 public class FeignBlockHandler implements UrlBlockHandler {
 

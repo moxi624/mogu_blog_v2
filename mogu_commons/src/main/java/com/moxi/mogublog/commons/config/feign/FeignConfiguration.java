@@ -2,6 +2,7 @@ package com.moxi.mogublog.commons.config.feign;
 
 import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2020年10月6日16:21:11
  */
 @Configuration
+@CustomConditionalOnProperty
 public class FeignConfiguration {
 
     @Bean

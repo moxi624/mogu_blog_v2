@@ -1,6 +1,7 @@
 package com.moxi.mogublog.commons.config.log;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @date 2021年5月19日20:44:34
  */
 @Configuration
+@CustomConditionalOnProperty
 public class LogThreadPoolConfig {
 
     @Value("${log.thread.corePoolSize}")

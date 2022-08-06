@@ -1,5 +1,6 @@
 package com.moxi.mogublog.commons.config.jwt;
 
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @ConfigurationProperties(prefix = "audience")
 @Component
+@CustomConditionalOnProperty
 public class Audience {
     private String clientId;
     private String base64Secret;

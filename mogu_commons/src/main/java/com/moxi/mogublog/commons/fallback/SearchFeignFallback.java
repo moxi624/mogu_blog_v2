@@ -3,6 +3,7 @@ package com.moxi.mogublog.commons.fallback;
 import com.moxi.mogublog.commons.feign.SearchFeignClient;
 import com.moxi.mogublog.utils.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @create: 2020年10月6日09:03:19
  */
 @Component
+@CustomConditionalOnProperty
 @Slf4j
 public class SearchFeignFallback implements SearchFeignClient {
 

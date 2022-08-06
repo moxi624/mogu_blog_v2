@@ -3,12 +3,14 @@ package com.moxi.mogublog.commons.config.mybatis;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Slf4j
 @Component
+@CustomConditionalOnProperty
 public class MetaObjectHandlerConfig implements MetaObjectHandler {
 
     @Override

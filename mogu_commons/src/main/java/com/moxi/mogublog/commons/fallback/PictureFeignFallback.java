@@ -5,6 +5,7 @@ import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.CustomConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import java.util.List;
  * @create: 2020-10-03-20:54
  */
 @Component
+@CustomConditionalOnProperty
 @Slf4j
 public class PictureFeignFallback implements PictureFeignClient {
 
