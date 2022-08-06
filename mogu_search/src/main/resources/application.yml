@@ -5,3 +5,9 @@
 spring:
   profiles:
     active: dev
+  bean:
+    register:
+      basePackages:
+        - com.moxi.mogublog.search
+        - com.moxi.mogublog.commons.handler
+        - com.moxi.mogublog.commons.config.feign

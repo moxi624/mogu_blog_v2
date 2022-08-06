@@ -6,3 +6,11 @@ spring:
   profiles:
     #启动dev环境的配置文件
     active: dev
+  bean:
+    register:
+      basePackages:
+        - com.moxi.mogublog.commons.config.feign
+        - com.moxi.mogublog.commons.handler
+        - com.moxi.mogublog.commons.config.redis
+        - com.moxi.mogublog.utils
+        - com.moxi.mogublog.picture

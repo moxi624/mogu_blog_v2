@@ -5,3 +5,10 @@
 spring:
   profiles:
     active: dev
+  bean:
+    register:
+      basePackages:
+        - com.moxi.mogublog.utils
+        - com.moxi.mogublog.commons.config.feign
+        - com.moxi.mogublog.commons.fallback
+        - com.moxi.mogublog.sms
