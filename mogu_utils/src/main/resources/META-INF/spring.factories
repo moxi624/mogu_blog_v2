@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.moxi.mogublog.utils.UtilsBeanRegisterConfigure,\
+com.moxi.mogublog.commons.CommonsBeanRegisterConfigure,\
+com.moxi.mougblog.base.BaseBeanRegisterConfigure
