@@ -3,7 +3,13 @@ from urllib2 import urlopen
 import io
 import re
 # 获取ip地址
-myIp = urlopen('http://ip.42.pl/raw').read()
+
+
+import requests
+import re
+ 
+myIp = requests.get('https://checkip.amazonaws.com').text.strip()
+print "外网IP：", myIp
 
 # 替换ip地址
 def replace(file, newStr):
