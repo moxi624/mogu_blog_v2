@@ -41,7 +41,7 @@
         const that = this
         const options = {
           width: this.isMobile ? '100%' : '100%',
-          height: '0',
+          height: '650',
           tab: '\t',
           counter: '999999',
           typewriterMode: true,
