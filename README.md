@@ -384,7 +384,7 @@ Bilibili一键部署视频：[20分钟部署一个微服务架构的博客系统
 
 **蘑菇博客**起初参考了很多**开源项目**的**解决方案**，**开源不易，感谢分享**
 
-- <img src="./doc/images/gitee/qiniu.jpg" width="80" />感谢 [七牛云](https://portal.qiniu.com/signup?utm_source=kaiyuan&utm_media=mogu) 提供的 **免费云存储** 和 **CDN** 服务
+- [<img src="./doc/images/gitee/qiniu.jpg" width="80" />](https://portal.qiniu.com/signup?utm_source=kaiyuan&utm_media=mogu)感谢 [七牛云](https://portal.qiniu.com/signup?utm_source=kaiyuan&utm_media=mogu) 提供的 **免费云存储** 和 **CDN** 服务
 
 - [<img src="./doc/images/gitee/jetbrains.png" width="40" />](https://www.jetbrains.com/?from=mogu_blog_v2)感谢 **[jetbrains](https://www.jetbrains.com/?from=mogu_blog_v2)** 提供的开源 **License** 
 
