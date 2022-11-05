@@ -15,6 +15,7 @@ import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
@@ -77,8 +78,8 @@ public class QiniuUtil {
      * @return
      */
     public String uploadQiniu(File localFilePath, SystemConfig qiNiuConfig) throws QiniuException {
-        //构造一个带指定Zone对象的配置类
-        Configuration cfg = setQiNiuArea(qiNiuConfig.getQiNiuArea());
+        // 自动选择上传区域
+        Configuration cfg = new Configuration(Region.autoRegion());
         //生成上传凭证，然后准备上传
         String accessKey = qiNiuConfig.getQiNiuAccessKey();
         String secretKey = qiNiuConfig.getQiNiuSecretKey();
