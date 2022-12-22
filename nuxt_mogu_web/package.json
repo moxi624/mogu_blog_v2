@@ -14,7 +14,7 @@
     "element-ui": "^2.12.0",
     "formidable": "^1.1.1",
     "highlight.js": "^9.15.10",
-    "jsonwebtoken": "^8.1.1",
+    "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^2.2.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
