@@ -41,7 +41,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v2/api-docs",
                         "/v3/api-docs",
                         "/webjars/**",
-                        "/actuator/**",
+                        "/actuator/info",
+                        "/actuator/health",
+                        "/actuator/trace",
                         "/druid/**"
                 ).permitAll()
                 // 对于获取token的rest api要允许匿名访问
