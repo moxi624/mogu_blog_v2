@@ -1,6 +1,8 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,8 +26,12 @@ import com.moxi.mougblog.base.enums.EStatus;
 import com.moxi.mougblog.base.global.Constants;
 import com.moxi.mougblog.base.holder.RequestHolder;
 import com.moxi.mougblog.base.serviceImpl.SuperServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +39,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 管理员表 服务实现类
@@ -42,6 +50,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2018-09-04
  */
 @Service
+@Slf4j
 public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> implements AdminService {
 
     @Autowired
@@ -66,19 +75,49 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
 
     @Override
     public String getOnlineAdminList(AdminVO adminVO) {
-        // 获取Redis中匹配的所有key
-        Set<String> keys = redisUtil.keys(RedisConf.LOGIN_TOKEN_KEY + "*");
-        List<String> onlineAdminJsonList = redisUtil.multiGet(keys);
         // 拼装分页信息
         int pageSize = adminVO.getPageSize().intValue();
         int currentPage = adminVO.getCurrentPage().intValue();
-        int total = onlineAdminJsonList.size();
+        AtomicReference<Integer> total = new AtomicReference<Integer>(0);
         int startIndex = Math.max((currentPage - 1) * pageSize, 0);
-        int endIndex = Math.min(currentPage * pageSize, total);
-        //TODO 截取出当前分页下的内容，后面考虑用Redis List做分页
-        List<String> onlineAdminSubList = onlineAdminJsonList.subList(startIndex, endIndex);
+
+        // 获取Redis中匹配的key
+        Set<String> keys = redisUtil.getRedisTemplate().execute((RedisCallback<Set<String>>) connection -> {
+            Set<String> keySetTemp = new ConcurrentSkipListSet<>();
+            int index = 0;
+            try (Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions()
+                    .match(RedisConf.LOGIN_TOKEN_KEY + "*")
+                    .count(100000)
+                    .build())) {
+
+                // 获取登录用户的key
+                while (cursor.hasNext()) {
+                    index ++;
+                    // 先偏移起始位置个数据
+                    if (index<startIndex){
+                        cursor.next();
+                        continue;
+                    }
+                    String key = new String(cursor.next(), CharsetUtil.UTF_8);
+
+                    // 获取需要的key
+                    if (keySetTemp.size() <= pageSize) {
+                        keySetTemp.add(key);
+                    }
+
+                }
+                total.set(index);
+            } catch (Exception e) {
+                log.error("Redis Scan get Exception：{}", ExceptionUtil.stacktraceToOneLineString(e), e);
+                return new ConcurrentSkipListSet<>();
+            }
+            return keySetTemp;
+        });
+
+        // 获取在线用户数据
+        List<String> onlineAdminJsonList = redisUtil.multiGet(keys);
         List<OnlineAdmin> onlineAdminList = new ArrayList<>();
-        for (String item : onlineAdminSubList) {
+        for (String item : onlineAdminJsonList) {
             OnlineAdmin onlineAdmin = JsonUtils.jsonToPojo(item, OnlineAdmin.class);
             // 数据脱敏【移除用户的token令牌】
             onlineAdmin.setToken("");
@@ -86,7 +125,7 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
         }
         Page<OnlineAdmin> page = new Page<>();
         page.setCurrent(currentPage);
-        page.setTotal(total);
+        page.setTotal(total.get());
         page.setSize(pageSize);
         page.setRecords(onlineAdminList);
         return ResultUtil.successWithData(page);
