@@ -1,5 +1,6 @@
 package com.moxi.mogublog.xo.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -68,13 +69,14 @@ public class AdminServiceImpl extends SuperServiceImpl<AdminMapper, Admin> imple
     public String getOnlineAdminList(AdminVO adminVO) {
         // 获取Redis中匹配的所有key
         Set<String> keys = redisUtil.keys(RedisConf.LOGIN_TOKEN_KEY + "*");
-        List<String> onlineAdminJsonList = redisUtil.multiGet(keys);
         // 拼装分页信息
         int pageSize = adminVO.getPageSize().intValue();
         int currentPage = adminVO.getCurrentPage().intValue();
-        int total = onlineAdminJsonList.size();
+        int total = keys.size();
         int startIndex = Math.max((currentPage - 1) * pageSize, 0);
         int endIndex = Math.min(currentPage * pageSize, total);
+        // 获取在线用户数据
+        List<String> onlineAdminJsonList = redisUtil.multiGet(CollUtil.sub(keys,startIndex,endIndex));
         //TODO 截取出当前分页下的内容，后面考虑用Redis List做分页
         List<String> onlineAdminSubList = onlineAdminJsonList.subList(startIndex, endIndex);
         List<OnlineAdmin> onlineAdminList = new ArrayList<>();
