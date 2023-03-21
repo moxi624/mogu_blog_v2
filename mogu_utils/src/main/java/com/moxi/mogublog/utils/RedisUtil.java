@@ -1330,6 +1330,14 @@ public class RedisUtil {
     }
 
     /**
+     * 获取redisTemplate
+     * @return
+     */
+    public StringRedisTemplate getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    /**
      * 获取Redis List 序列化
      *
      * @param key
