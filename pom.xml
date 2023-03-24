@@ -46,6 +46,7 @@
         <spring.mock.version>2.0.8</spring.mock.version>
         <knife4j.version>3.0.2</knife4j.version>
         <spring-cloud-alibaba.version>2.2.4.RELEASE</spring-cloud-alibaba.version>
+        <spring-boot-dependencies.version>2.2.5.RELEASE</spring-boot-dependencies.version>
     </properties>
 
 
@@ -78,7 +79,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.2.5.RELEASE</version>
+                <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
