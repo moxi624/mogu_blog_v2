@@ -5,9 +5,8 @@ import com.moxi.mogublog.picture.global.MessageConf;
 import com.moxi.mogublog.utils.FileUtils;
 import com.moxi.mogublog.utils.ResultUtil;
 import com.moxi.mougblog.base.global.Constants;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
+import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -89,10 +89,11 @@ public class MinioUtil {
         SystemConfig systemConfig = feignUtil.getSystemConfig();
         MinioClient minioClient = MinioClient.builder().endpoint(systemConfig.getMinioEndPoint()).credentials(systemConfig.getMinioAccessKey(), systemConfig.getMinioSecretKey()).build();
         try {
+            List<DeleteObject> objects = new LinkedList<>();
             for (String fileName : fileNameList) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder().bucket(systemConfig.getMinioBucket()).object(fileName).build());
+                objects.add(new DeleteObject(fileName));
             }
+            minioClient.removeObjects(RemoveObjectsArgs.builder().bucket(systemConfig.getMinioBucket()).objects(objects).build());
         } catch (Exception e) {
             log.error("批量删除文件失败, 错误消息: {}", e.getMessage());
             return ResultUtil.errorWithData(MessageConf.DELETE_DEFAULT_ERROR);
