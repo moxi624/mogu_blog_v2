@@ -19,7 +19,7 @@
         <swagger.starter.version>3.0.0</swagger.starter.version>
         <servlet.api.version>3.0-alpha-1</servlet.api.version>
         <net.sf.json.lib.version>2.4</net.sf.json.lib.version>
-        <alibaba.fastjson.version>1.2.31</alibaba.fastjson.version>
+        <alibaba.fastjson.version>1.2.83</alibaba.fastjson.version>
         <jackson.mapper.asl.version>1.9.13</jackson.mapper.asl.version>
         <javax.mail.version>1.4</javax.mail.version>
         <aliyun.java.sdk.dysmsapi.version>1.0.0</aliyun.java.sdk.dysmsapi.version>
