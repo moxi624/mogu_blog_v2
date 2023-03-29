@@ -1,5 +1,7 @@
 package com.moxi.mogublog.picture.util;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.google.gson.Gson;
 import com.moxi.mogublog.commons.entity.SystemConfig;
 import com.moxi.mogublog.picture.global.MessageConf;
@@ -27,9 +29,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 七牛云工具类
@@ -133,6 +133,9 @@ public class QiniuUtil {
      * @return
      */
     public Boolean deleteFileList(List<String> fileNameList, Map<String, String> qiNiuConfig) {
+        if (CollUtil.isEmpty(fileNameList)){
+            return true;
+        }
         //构造一个带指定Zone对象的配置类
         Configuration cfg = setQiNiuArea(qiNiuConfig.get(SysConf.QI_NIU_AREA));
         //获取上传凭证
@@ -140,18 +143,35 @@ public class QiniuUtil {
         String secretKey = qiNiuConfig.get(SysConf.QI_NIU_SECRET_KEY);
         String bucket = qiNiuConfig.get(SysConf.QI_NIU_BUCKET);
         int successCount = 0;
-        for (String fileName : fileNameList) {
-            String key = fileName;
-            Auth auth = Auth.create(accessKey, secretKey);
-            BucketManager bucketManager = new BucketManager(auth, cfg);
-            try {
-                Response delete = bucketManager.delete(bucket, key);
-                log.info("{七牛云文件 {} 删除成功", fileName);
-                successCount += 1;
-            } catch (QiniuException ex) {
-                //如果遇到异常，说明删除失败
-                log.error(ex.getMessage());
+
+        Auth auth = Auth.create(accessKey, secretKey);
+        BucketManager bucketManager = new BucketManager(auth, cfg);
+
+        try {
+            List<String> deleteObjects = new LinkedList<>();
+            for (String fileName:fileNameList){
+                deleteObjects.add(fileName);
+                // 七牛云规定不超过1000
+                if (deleteObjects.size()==999){
+                    // 构建批量删除项
+                    BucketManager.BatchOperations batchOperations = new BucketManager.BatchOperations();
+                    batchOperations.addDeleteOp(bucket, ArrayUtil.toArray(deleteObjects,String.class));
+                    bucketManager.batch(batchOperations);
+                    log.info("{七牛云文件 {} 删除成功", deleteObjects);
+                    deleteObjects = new LinkedList<>();
+                }
             }
+
+            // 删除剩下的部分
+            if (CollUtil.isNotEmpty(deleteObjects)){
+                BucketManager.BatchOperations batchOperations = new BucketManager.BatchOperations();
+                batchOperations.addDeleteOp(bucket, ArrayUtil.toArray(deleteObjects,String.class));
+                bucketManager.batch(batchOperations);
+                log.info("{七牛云文件 {} 删除成功", deleteObjects);
+            }
+        } catch (QiniuException e) {
+            //如果遇到异常，说明删除失败
+            log.error("删除失败:",e);
         }
         return successCount == fileNameList.size();
     }
