@@ -1034,6 +1034,14 @@ export default {
       if (token != undefined) {
         // 设置token七天过期
         setCookie("token", token, 7)
+        // 获取原页面地址，登录后进行跳转到原页面，如果为空或者就是在首页登录，不进行跳转
+        const redirectUrl = getCookie("redirectUrl");
+        if (redirectUrl != undefined && redirectUrl != "" && redirectUrl != "/") {
+          window.location.href = redirectUrl;
+          // 清除缓存的原页面地址
+          delCookie("redirectUrl");
+          return;
+        }
       } else {
         // 从cookie中获取token
         token = getCookie("token")
