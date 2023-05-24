@@ -360,7 +360,8 @@
         });
       },
       goAuth: function (source) {
-
+        // 记录跳转地址，后续登录后做跳转到此页面
+        setCookie("redirectUrl", this.$route.path, 1);
         // 判断是否点击公众号登录
         if(source == "wechat") {
           console.log("点击公众号登录")
