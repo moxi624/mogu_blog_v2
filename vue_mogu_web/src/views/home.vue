@@ -7,7 +7,7 @@
       <nav>
         <div class="logo">
           <router-link to="/">
-            <a href="javascript:void(0);" v-if="info.name">{{info.name}}</a>
+            <a href="javascript:void(0);" v-if="info.name">{{ info.name }}</a>
           </router-link>
         </div>
 
@@ -20,17 +20,18 @@
           <li v-for="webNavbar in webNavbarList" :key="webNavbar.uid">
 
             <!--判断是否有下拉菜单-->
-            <span  v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
-              <el-dropdown  trigger="click">
+            <span v-if="webNavbar.childWebNavbar && webNavbar.childWebNavbar.length > 0">
+              <el-dropdown trigger="click">
               <span class="el-dropdown-link">
-                {{webNavbar.name}}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ webNavbar.name }}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :key="index" v-for="(childWebNavbar, index)  in webNavbar.childWebNavbar">
                   <router-link :to="childWebNavbar.url" v-if="childWebNavbar.isJumpExternalUrl == 0">
                     <a href="javascript:void(0);" @click="openHead">{{ childWebNavbar.name }}</a>
                   </router-link>
-                  <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url" target="_blank">{{ childWebNavbar.name }}</a>
+                  <a v-if="childWebNavbar.isJumpExternalUrl == 1" :href="childWebNavbar.url"
+                     target="_blank">{{ childWebNavbar.name }}</a>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -38,9 +39,11 @@
             <!--没有有下拉菜单-->
             <span v-else>
               <router-link :to="webNavbar.url" v-if="webNavbar.isJumpExternalUrl == 0">
-              <a href="javascript:void(0);" @click="openHead" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+              <a href="javascript:void(0);" @click="openHead"
+                 :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
               </router-link>
-              <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank" :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
+              <a v-if="webNavbar.isJumpExternalUrl == 1" :href="webNavbar.url" target="_blank"
+                 :class="[saveTitle == webNavbar.url ? 'title' : '']">{{ webNavbar.name }}</a>
             </span>
           </li>
 
@@ -119,10 +122,11 @@
 
         <el-dropdown @command="handleCommand" class="userInfoAvatar">
 
-          <span class="el-dropdown-link" >
-            <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+          <span class="el-dropdown-link">
+            <el-badge :value="userReceiveCommentCount" class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
               <img v-if="!isLogin" src="../../static/images/defaultAvatar.png">
-              <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl" onerror="onerror=null;src=defaultAvatar">
+              <img v-if="isLogin&&userInfo.photoUrl!=undefined" :src="userInfo.photoUrl"
+                   onerror="onerror=null;src=defaultAvatar">
               <img v-if="isLogin&&userInfo.photoUrl==undefined"
                    :src="defaultAvatar">
             </el-badge>
@@ -148,15 +152,17 @@
       :size="drawerSize"
       :with-header="false">
 
-      <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"  @tab-click="handleClick">
+      <el-tabs type="border-card" tab-position="left" v-model="activeName" style="margin-top: 50px; height: 100%;"
+               @tab-click="handleClick">
         <el-tab-pane label="个人中心" name="0">
           <span slot="label"><i class="el-icon-user-solid"></i> 个人中心</span>
           <el-form label-position="left" :model="userInfo" label-width="100px" :rules="rules" ref="userInfo">
             <el-form-item label="用户头像" :label-width="labelWidth">
 
               <div class="imgBody" v-if="userInfo.photoUrl">
-                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('user')" @mouseover="icon = true"></i>
-                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl" />
+                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('user')"
+                   @mouseover="icon = true"></i>
+                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="userInfo.photoUrl"/>
               </div>
 
               <div v-else class="uploadImgBody" @click="checkPhoto">
@@ -169,7 +175,9 @@
             </el-form-item>
 
             <el-form-item label="性别" :label-width="labelWidth">
-              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender" :label="gender.dictValue" border size="medium">{{gender.dictLabel}}</el-radio>
+              <el-radio v-for="gender in genderDictList" :key="gender.uid" v-model="userInfo.gender"
+                        :label="gender.dictValue" border size="medium">{{ gender.dictLabel }}
+              </el-radio>
             </el-form-item>
 
             <el-form-item label="生日" :label-width="labelWidth">
@@ -181,7 +189,9 @@
             </el-form-item>
 
             <el-form-item label="评论邮件通知" :label-width="labelWidth">
-              <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification" :label="parseInt(item.dictValue)" border size="medium">{{item.dictLabel}}</el-radio>
+              <el-radio v-for="item in yesNoDictList" :key="item.uid" v-model="userInfo.startEmailNotification"
+                        :label="parseInt(item.dictValue)" border size="medium">{{ item.dictLabel }}
+              </el-radio>
             </el-form-item>
 
             <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
@@ -217,18 +227,21 @@
           <span slot="label"><i class="el-icon-message-solid"></i> 我的评论</span>
           <div style="width: 100%; height: 840px;overflow:auto;">
             <el-timeline>
-              <el-timeline-item v-for="comment in commentList" :key="comment.uid" :timestamp="timeAgo(comment.createTime)" placement="top">
+              <el-timeline-item v-for="comment in commentList" :key="comment.uid"
+                                :timestamp="timeAgo(comment.createTime)" placement="top">
                 <el-card>
                   <div class="commentList">
                   <span class="left p1">
-                    <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
-                    <img v-else :src="defaultAvatar" />
+                    <img v-if="comment.user" :src="comment.user.photoUrl ? comment.user.photoUrl:defaultAvatar"
+                         onerror="onerror=null;src=defaultAvatar"/>
+                    <img v-else :src="defaultAvatar"/>
                   </span>
 
                     <span class="right p1">
                     <div class="rightTop">
-                      <el-link class="userName" :underline="false">{{comment.user.nickName}}</el-link>
-                      <el-tag style="cursor: pointer;"  @click.native="goSource(comment)">{{comment.sourceName}}</el-tag>
+                      <el-link class="userName" :underline="false">{{ comment.user.nickName }}</el-link>
+                      <el-tag style="cursor: pointer;"
+                              @click.native="goSource(comment)">{{ comment.sourceName }}</el-tag>
                     </div>
 
                     <div class="rightCenter ck-content" v-highlight v-html="$xss(comment.content, options)"></div>
@@ -248,25 +261,28 @@
 
         <el-tab-pane label="我的回复" name="2">
           <span slot="label">
-            <el-badge  :value="userReceiveCommentCount"  class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
+            <el-badge :value="userReceiveCommentCount" class="item" :hidden="!isLogin || userReceiveCommentCount == 0">
               <i class="el-icon-s-promotion"></i> 我的回复
             </el-badge>
           </span>
           <div style="width: 100%; height: 840px;overflow:auto">
             <el-timeline>
-              <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)" placement="top">
+              <el-timeline-item v-for="reply in replyList" :key="reply.uid" :timestamp="timeAgo(reply.createTime)"
+                                placement="top">
                 <el-card>
                   <div class="commentList">
                     <span class="left p1">
-                      <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:defaultAvatar" onerror="onerror=null;src=defaultAvatar" />
-                      <img v-else :src="defaultAvatar" />
+                      <img v-if="reply.user" :src="reply.user.photoUrl ? reply.user.photoUrl:defaultAvatar"
+                           onerror="onerror=null;src=defaultAvatar"/>
+                      <img v-else :src="defaultAvatar"/>
                     </span>
 
                     <span class="right p1">
 
                         <div class="rightTop">
-                          <el-link class="userName" :underline="false">{{reply.user.nickName}}</el-link>
-                          <el-tag style="cursor: pointer;"  @click.native="goSource(reply)">{{reply.sourceName}}</el-tag>
+                          <el-link class="userName" :underline="false">{{ reply.user.nickName }}</el-link>
+                          <el-tag style="cursor: pointer;"
+                                  @click.native="goSource(reply)">{{ reply.sourceName }}</el-tag>
                         </div>
 
                         <div class="rightCenter ck-content" v-highlight v-html="$xss(reply.content, options)">
@@ -289,9 +305,13 @@
           <span slot="label"><i class="el-icon-star-on"></i> 我的点赞</span>
           <div style="width: 100%; height: 840px;overflow:auto">
             <el-timeline>
-              <el-timeline-item v-for="praise in praiseList" :key="praise.uid" :timestamp="timeAgo(praise.createTime)" placement="top">
+              <el-timeline-item v-for="praise in praiseList" :key="praise.uid" :timestamp="timeAgo(praise.createTime)"
+                                placement="top">
                 <el-card>
-                  <span>点赞</span><el-tag type="warning" style="cursor: pointer" v-if="praise.blog" @click.native="goToInfo(praise.blog.uid)">{{praise.blog.title}}</el-tag>
+                  <span>点赞</span>
+                  <el-tag type="warning" style="cursor: pointer" v-if="praise.blog"
+                          @click.native="goToInfo(praise.blog.uid)">{{ praise.blog.title }}
+                  </el-tag>
                 </el-card>
               </el-timeline-item>
 
@@ -316,14 +336,15 @@
 
           <div style="width: 100%; height: 450px;overflow:auto">
             <el-timeline>
-              <el-timeline-item v-for="feedbackItem in feedbackList" :key="feedbackItem.uid" :timestamp="timeAgo(feedbackItem.createTime)" placement="top">
+              <el-timeline-item v-for="feedbackItem in feedbackList" :key="feedbackItem.uid"
+                                :timestamp="timeAgo(feedbackItem.createTime)" placement="top">
                 <el-card class="feedbackCard">
                   <div class="item">
                     <span class="title">
                       标题:
                     </span>
                     <span class="content">
-                      {{feedbackItem.title}}
+                      {{ feedbackItem.title }}
                     </span>
                   </div>
 
@@ -332,7 +353,7 @@
                       内容:
                     </span>
                     <span class="content">
-                      {{feedbackItem.content}}
+                      {{ feedbackItem.content }}
                     </span>
                   </div>
 
@@ -341,7 +362,8 @@
                       反馈状态:
                     </span>
                     <span class="content">
-                      <el-tag v-for="item in feedbackDictList" :key="item.uid" :type="item.listClass" v-if="feedbackItem.feedbackStatus == item.dictValue">{{item.dictLabel}}</el-tag>
+                      <el-tag v-for="item in feedbackDictList" :key="item.uid" :type="item.listClass"
+                              v-if="feedbackItem.feedbackStatus == item.dictValue">{{ item.dictLabel }}</el-tag>
                     </span>
                   </div>
 
@@ -350,7 +372,7 @@
                       回复:
                     </span>
                     <span class="content">
-                      {{feedbackItem.reply}}
+                      {{ feedbackItem.reply }}
                     </span>
                   </div>
                 </el-card>
@@ -392,7 +414,7 @@
           <el-form label-position="left" :model="blogLink" label-width="100px" ref="blogLink" :rules="linkRules">
             <el-collapse v-model="activeNames">
               <el-collapse-item title="友链申请需知" name="1">
-                <span v-html="info.linkApplyTemplate">{{info.linkApplyTemplate}}</span>
+                <span v-html="info.linkApplyTemplate">{{ info.linkApplyTemplate }}</span>
               </el-collapse-item>
             </el-collapse>
 
@@ -400,8 +422,9 @@
 
             <el-form-item label="网站图标">
               <div class="imgBody" v-if="blogLink.photoList">
-                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('link')" @mouseover="icon = true"></i>
-                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]" />
+                <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto('link')"
+                   @mouseover="icon = true"></i>
+                <img @mouseover="icon = true" @mouseout="icon = false" v-bind:src="blogLink.photoList[0]"/>
               </div>
 
               <div v-else class="uploadImgBody" @click="checkPhoto">
@@ -438,7 +461,8 @@
               <div>对于第三方登录的账号，无法进行密码修改</div>
             </el-collapse-item>
           </el-collapse>
-          <el-form ref="userInfoForm" label-position="left" :model="userInfo" label-width="100px" :rules="userInfoRules">
+          <el-form ref="userInfoForm" label-position="left" :model="userInfo" label-width="100px"
+                   :rules="userInfoRules">
             <el-form-item label="旧密码" :label-width="labelWidth" prop="oldPwd">
               <el-input type="password" v-model="userInfo.oldPwd" style="width: 100%"></el-input>
             </el-form-item>
@@ -479,7 +503,7 @@
     <footer>
       <p>
         Copyright <a href="https://gitee.com/moxi159753/mogu_blog_v2" @click="goIndex()"> &nbsp;蘑菇博客&nbsp;</a>
-        <a href="https://beian.miit.gov.cn/">{{info.recordNum}}</a>
+        <a href="https://beian.miit.gov.cn/">{{ info.recordNum }}</a>
       </p>
     </footer>
 
@@ -498,8 +522,21 @@
 import AvatarCropper from '@/components/AvatarCropper'
 import {getWebConfig, getWebNavbar} from "../api/index";
 import {delCookie, getCookie, setCookie} from "@/utils/cookieUtils";
-import {authVerify, editUser, updateUserPwd, replyBlogLink, deleteUserAccessToken, getFeedbackList, addFeedback} from "../api/user";
-import {getCommentListByUser, getPraiseListByUser, getUserReceiveCommentCount, readUserReceiveCommentCount} from "../api/comment";
+import {
+  addFeedback,
+  authVerify,
+  deleteUserAccessToken,
+  editUser,
+  getFeedbackList,
+  replyBlogLink,
+  updateUserPwd
+} from "../api/user";
+import {
+  getCommentListByUser,
+  getPraiseListByUser,
+  getUserReceiveCommentCount,
+  readUserReceiveCommentCount
+} from "../api/comment";
 import LoginBox from "../components/LoginBox";
 import {getListByDictTypeList} from "@/api/sysDictData"
 // vuex中有mapState方法，相当于我们能够使用它的getset方法
@@ -516,7 +553,7 @@ export default {
   data() {
     return {
       // xss白名单配置
-      options : {
+      options: {
         whiteList: {
           a: ['href', 'title', 'target'],
           span: ['class'],
@@ -567,7 +604,7 @@ export default {
       browserFlag: 1, // 浏览器标志【默认Chrome】
       rules: {
         qqNumber: [
-          {pattern:  /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
+          {pattern: /[1-9]([0-9]{5,11})/, message: '请输入正确的QQ号码'},
         ],
         email: [
           {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
@@ -587,7 +624,7 @@ export default {
         ],
         url: [
           {required: true, message: '网站地址不能为空', trigger: 'blur'},
-          {pattern:  /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
+          {pattern: /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/, message: '请输入有效的URL'},
         ],
         email: [
           {pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/, message: '请输入正确的邮箱'},
@@ -613,7 +650,7 @@ export default {
     return {
       title: this.info.title,
       link: [
-        { rel: 'icon', href: this.info.logoPhoto }
+        {rel: 'icon', href: this.info.logoPhoto}
       ],
       meta: [
         {
@@ -703,7 +740,7 @@ export default {
     getBlogSearchModel: function () {
       getSearchModel().then(response => {
         console.log("获取搜索模式", response)
-        if(response.code == this.$ECode.SUCCESS) {
+        if (response.code == this.$ECode.SUCCESS) {
           this.searchModel = response.data
         }
       })
@@ -711,13 +748,13 @@ export default {
     setSize() {
       // 屏幕大于950px的时候，显示侧边栏
       let clientWidth = document.body.clientWidth
-      if(clientWidth > 1360) {
+      if (clientWidth > 1360) {
         this.drawerSize = "30%";
         this.showSearch = true
-      }else if(clientWidth < 1360 && clientWidth > 950) {
+      } else if (clientWidth < 1360 && clientWidth > 950) {
         this.drawerSize = "50%";
         this.showSearch = true
-      } else if(clientWidth < 950 && clientWidth > 650) {
+      } else if (clientWidth < 950 && clientWidth > 650) {
         this.drawerSize = "70%";
         this.showSearch = false
       } else {
@@ -739,11 +776,11 @@ export default {
       let params = {};
       params.isShow = 1
       getWebNavbar(params).then(response => {
-        if(response.code == this.$ECode.SUCCESS) {
+        if (response.code == this.$ECode.SUCCESS) {
           let webNavbarList = response.data
           let newWebNavbarList = []
-          for(let a=0; a<webNavbarList.length; a++) {
-            if(webNavbarList[a].isShow == 1) {
+          for (let a = 0; a < webNavbarList.length; a++) {
+            if (webNavbarList[a].isShow == 1) {
               newWebNavbarList.push(webNavbarList[a])
             }
           }
@@ -754,38 +791,44 @@ export default {
     },
 
     // 跳转到资源详情
-    goSource: function(comment) {
+    goSource: function (comment) {
       let source = comment.source
-      switch(source) {
+      switch (source) {
         case "MESSAGE_BOARD": {
           let routeData = this.$router.resolve({
             path: "/messageBoard"
           });
           window.open(routeData.href, '_blank');
-        };break;
+        }
+          ;
+          break;
         case "BLOG_INFO": {
           let routeData = this.$router.resolve({
             path: "/info",
             query: {blogUid: comment.blogUid}
           });
           window.open(routeData.href, '_blank');
-        };break;
+        }
+          ;
+          break;
         case "ABOUT": {
           let routeData = this.$router.resolve({
             path: "/about"
           });
           window.open(routeData.href, '_blank');
-        };break;
+        }
+          ;
+          break;
       }
     },
 
     // 获取评论列表
-    getCommentList: function() {
+    getCommentList: function () {
       let params = {}
       params.pageSize = 10;
       params.currentPage = 1;
       getCommentListByUser(params).then(response => {
-        if(response.code == this.$ECode.SUCCESS) {
+        if (response.code == this.$ECode.SUCCESS) {
           this.commentList = response.data.commentList
           this.replyList = response.data.replyList
         }
@@ -793,22 +836,22 @@ export default {
     },
 
     // 获取反馈列表
-    getFeedback: function() {
+    getFeedback: function () {
       let params = {}
       getFeedbackList(params).then(response => {
-        if(response.code == this.$ECode.SUCCESS) {
+        if (response.code == this.$ECode.SUCCESS) {
           this.feedbackList = response.data.records;
         }
       })
     },
 
     // 获取点赞列表
-    getPraiseList: function() {
+    getPraiseList: function () {
       let params = {}
       params.pageSize = 10;
       params.currentPage = 1;
       getPraiseListByUser(params).then(response => {
-        if(response.code == this.$ECode.SUCCESS) {
+        if (response.code == this.$ECode.SUCCESS) {
           this.praiseList = response.data.records;
         }
       })
@@ -816,38 +859,52 @@ export default {
 
     // 标签选择
     handleClick(tab, event) {
-      switch(tab.index) {
+      switch (tab.index) {
         case "0": {
           console.log("点击个人中心")
-        }; break;
+        }
+          ;
+          break;
         case "1": {
           console.log("点击我的评论")
-        }; break;
+        }
+          ;
+          break;
         case "2": {
           console.log("点击我的回复")
           // 判断用户是否未读的回复
-          if(this.userReceiveCommentCount > 0) {
+          if (this.userReceiveCommentCount > 0) {
             // 设置已阅读
             readUserReceiveCommentCount().then(response => {
-              if(response.code == this.$ECode.SUCCESS) {
+              if (response.code == this.$ECode.SUCCESS) {
                 // 阅读成功
                 this.userReceiveCommentCount = 0
               }
             })
           }
-        }; break;
+        }
+          ;
+          break;
         case "3": {
           console.log("点击我的点赞")
-        }; break;
+        }
+          ;
+          break;
         case "4": {
           console.log("点击我的反馈")
-        }; break;
+        }
+          ;
+          break;
         case "5": {
           console.log("点击申请友链")
-        }; break;
+        }
+          ;
+          break;
         case "6": {
           console.log("点击修改密码")
-        }; break;
+        }
+          ;
+          break;
       }
     },
 
@@ -869,11 +926,11 @@ export default {
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       // 判断当前激活的页面
-      if(this.activeName == "0") {
+      if (this.activeName == "0") {
         // 激活个人中心页面
         this.userInfo.photoUrl = resData[0].url
         this.userInfo.avatar = resData[0].uid
-      } else if(this.activeName == "5") {
+      } else if (this.activeName == "5") {
         let photoList = []
         photoList.push(resData[0].url);
         this.blogLink.photoList = photoList
@@ -881,18 +938,20 @@ export default {
       }
     },
 
-    deletePhoto: function(type) {
+    deletePhoto: function (type) {
       switch (type) {
         case "user": {
           this.userInfo.photoUrl = null;
           this.userInfo.avatar = "";
           this.icon = false;
-        } break;
+        }
+          break;
 
         case "link": {
           this.blogLink.photoList = null;
           this.icon = false;
-        } break;
+        }
+          break;
       }
     },
 
@@ -900,15 +959,15 @@ export default {
       this.imagecropperShow = false
     },
 
-    submitForm: function(type) {
+    submitForm: function (type) {
       switch (type) {
         case "editUser": {
           this.$refs.userInfo.validate((valid) => {
-            if(!valid) {
+            if (!valid) {
               console.log("校验失败")
             } else {
               editUser(this.userInfo).then(response => {
-                if(response.code == this.$ECode.SUCCESS) {
+                if (response.code == this.$ECode.SUCCESS) {
                   this.$message({
                     type: "success",
                     message: response.data
@@ -922,15 +981,17 @@ export default {
               });
             }
           })
-        }; break;
+        }
+          ;
+          break;
 
         case "replyBlogLink": {
           this.$refs.blogLink.validate((valid) => {
-            if(!valid) {
+            if (!valid) {
               console.log("校验失败")
             } else {
               replyBlogLink(this.blogLink).then(response => {
-                if(response.code == this.$ECode.SUCCESS) {
+                if (response.code == this.$ECode.SUCCESS) {
                   this.$message({
                     type: "success",
                     message: response.data
@@ -944,11 +1005,12 @@ export default {
               });
             }
           })
-        } break;
+        }
+          break;
 
         case "feedback": {
           var feedback = this.feedback
-          if(feedback.title == undefined || feedback.title == "" || feedback.content == undefined || feedback.content == "") {
+          if (feedback.title == undefined || feedback.title == "" || feedback.content == undefined || feedback.content == "") {
             this.$message({
               type: "error",
               message: "必填项不能为空"
@@ -956,7 +1018,7 @@ export default {
             return;
           }
           addFeedback(this.feedback).then(response => {
-            if(response.code == this.$ECode.SUCCESS) {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -970,20 +1032,22 @@ export default {
               })
             }
           });
-        }; break;
+        }
+          ;
+          break;
 
         case "changePwd": {
           let newPwd = this.userInfo.newPwd
           let newPwd2 = this.userInfo.newPwd2
           let oldPwd = this.userInfo.oldPwd
-          if(newPwd != newPwd2) {
+          if (newPwd != newPwd2) {
             this.$message({
               type: "error",
               message: "两次密码不一致"
             })
             return
           }
-          if(newPwd == oldPwd) {
+          if (newPwd == oldPwd) {
             this.$message({
               type: "error",
               message: "新旧密码相同"
@@ -994,7 +1058,7 @@ export default {
           params.append("oldPwd", oldPwd)
           params.append("newPwd", newPwd)
           updateUserPwd(params).then(response => {
-            if(response.code == this.$ECode.SUCCESS) {
+            if (response.code == this.$ECode.SUCCESS) {
               this.$message({
                 type: "success",
                 message: response.data
@@ -1008,7 +1072,9 @@ export default {
             // 重置表单
             this.$refs.userInfoForm.resetFields()
           })
-        };break;
+        }
+          ;
+          break;
       }
     },
 
@@ -1016,7 +1082,7 @@ export default {
      * 字典查询
      */
     getDictList: function () {
-      var dictTypeList =  ['sys_yes_no', 'sys_user_sex', 'sys_feedback_status']
+      var dictTypeList = ['sys_yes_no', 'sys_user_sex', 'sys_feedback_status']
 
       getListByDictTypeList(dictTypeList).then(response => {
         if (response.code == this.$ECode.SUCCESS) {
@@ -1028,25 +1094,17 @@ export default {
       });
     },
 
-    getToken: function() {
+    getToken: function () {
       let token = this.getUrlVars()["token"];
       // 判断url中是否含有token
-      if (token != undefined) {
+      if (token) {
         // 设置token七天过期
         setCookie("token", token, 7)
-        // 获取原页面地址，登录后进行跳转到原页面，如果为空或者就是在首页登录，不进行跳转
-        const redirectUrl = getCookie("redirectUrl");
-        if (redirectUrl != undefined && redirectUrl != "" && redirectUrl != "/") {
-          window.location.href = redirectUrl;
-          // 清除缓存的原页面地址
-          delCookie("redirectUrl");
-          return;
-        }
       } else {
         // 从cookie中获取token
         token = getCookie("token")
       }
-      if (token != undefined) {
+      if (token) {
         authVerify(token).then(response => {
           if (response.code == this.$ECode.SUCCESS) {
             this.isLogin = true;
@@ -1059,6 +1117,14 @@ export default {
             delCookie("token");
           }
           this.setLoginState(this.isLogin);
+          // 获取原页面地址，登录后进行跳转到原页面，如果为空或者就是在首页登录，不进行跳转
+          const redirectUrl = getCookie("redirectUrl");
+          if (redirectUrl != undefined && redirectUrl != "" && redirectUrl != "/") {
+            window.location.href = redirectUrl;
+            // 清除缓存的原页面地址
+            delCookie("redirectUrl");
+            return;
+          }
         });
       } else {
         this.isLogin = false;
@@ -1072,7 +1138,7 @@ export default {
         }
       });
     },
-    getKeyword: function() {
+    getKeyword: function () {
       var tempValue = decodeURI(this.getUrlVars()["keyword"]);
       if (
         tempValue == null ||
@@ -1087,7 +1153,7 @@ export default {
      * 获取当前所在页面的标题
      * @returns {{}}
      */
-    getCurrentPageTitle: function() {
+    getCurrentPageTitle: function () {
       var test = window.location.href;
       var start = 0;
       var end = test.length;
@@ -1105,9 +1171,9 @@ export default {
     /**
      * 获取网站配置
      */
-    getWebConfigInfo: function() {
+    getWebConfigInfo: function () {
       let webConfigData = this.$store.state.app.webConfigData
-      if(webConfigData.createTime) {
+      if (webConfigData.createTime) {
         this.contact = webConfigData;
         this.mailto = "mailto:" + this.contact.email;
         this.openComment = webConfigData.openComment
@@ -1137,7 +1203,7 @@ export default {
       return vars;
     },
     clickSearchIco: function () {
-      if(this.keyword != "") {
+      if (this.keyword != "") {
         this.search();
       }
       this.showSearch = !this.showSearch;
@@ -1175,10 +1241,14 @@ export default {
       switch (command) {
         case "logout" : {
           this.userLogout();
-        };break;
+        }
+          ;
+          break;
         case "login" : {
           this.userLogin();
-        };break;
+        }
+          ;
+          break;
         case "goUserInfo" : {
           // 打开抽屉
           this.drawer = true;
@@ -1188,7 +1258,8 @@ export default {
           this.getPraiseList()
           // 获取反馈列表
           this.getFeedback()
-        } break;
+        }
+          break;
       }
     },
     closeLoginBox: function () {
@@ -1214,21 +1285,24 @@ export default {
 
 <style>
 @import "../assets/css/emoji.css";
+
 .emoji-panel-btn:hover {
   cursor: pointer;
   opacity: 0.8;
 }
+
 .emoji-item-common {
   background: url("../assets/img/emoji_sprite.png");
   display: inline-block;
   zoom: 0.3;
 }
+
 .emoji-item-common:hover {
   cursor: pointer;
 }
+
 .emoji-size-small {
-// 表情大小
-zoom: 0.3;
+/ / 表情大小 zoom: 0.3;
 }
 </style>
 
@@ -1238,9 +1312,11 @@ zoom: 0.3;
   line-height: 25px;
   margin-left: 6px;
 }
+
 #starlist li .title {
   color: #00a7eb;
 }
+
 .userInfoAvatar {
   width: 35px;
   height: 35px;
@@ -1278,9 +1354,11 @@ zoom: 0.3;
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -1289,6 +1367,7 @@ zoom: 0.3;
   line-height: 100px;
   text-align: center;
 }
+
 .imgBody {
   width: 100px;
   height: 100px;
@@ -1296,10 +1375,12 @@ zoom: 0.3;
   float: left;
   position: relative;
 }
+
 .imgBody img {
   width: 100px;
   height: 100px;
 }
+
 .uploadImgBody {
   margin-left: 5px;
   width: 100px;
@@ -1308,9 +1389,11 @@ zoom: 0.3;
   float: left;
   position: relative;
 }
+
 .uploadImgBody :hover {
   border: dashed 1px #00ccff;
 }
+
 .inputClass {
   position: absolute;
 }
@@ -1319,38 +1402,46 @@ zoom: 0.3;
   width: 100%;
   margin: 0 auto;
 }
+
 .commentList .p1 {
   float: left;
 }
+
 .commentList .left {
   display: inline-block;
   width: 10%;
   height: 100%;
 }
+
 .commentList .left img {
   margin: 0 auto;
   width: 100%;
   border-radius: 50%;
 }
+
 .commentList .right {
   display: inline-block;
   width: 85%;
   margin-left: 5px;
 }
+
 .commentList .rightTop {
   height: 30px;
 }
+
 .commentList .rightTop .userName {
   color: #303133;
   margin-left: 10px;
   font-size: 16px;
   font-weight: bold;
 }
+
 .commentList .rightTop .timeAgo {
   color: #909399;
   margin-left: 10px;
   font-size: 15px;
 }
+
 .commentList .rightCenter {
   margin-left: 20px;
   line-height: 30px;
@@ -1368,11 +1459,23 @@ zoom: 0.3;
   font-size: 14px;
   font-weight: bold;
 }
+
 .feedbackCard .item .content {
   display: inline-block;
   width: 240px;
   margin-bottom: 5px;
 }
 
-.search_ico2 { width: 60px; height: 60px; display: block; position: absolute; right: 0; top: 15px; padding: 0; margin: 0; line-height: 60px; cursor: pointer; }
+.search_ico2 {
+  width: 60px;
+  height: 60px;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 15px;
+  padding: 0;
+  margin: 0;
+  line-height: 60px;
+  cursor: pointer;
+}
 </style>
