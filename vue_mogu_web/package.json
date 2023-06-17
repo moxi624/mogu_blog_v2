@@ -18,6 +18,7 @@
     "element-ui": "^2.13.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
+    "showdown": "^2.1.0",
     "vue": "^2.5.2",
     "vue-image-crop-upload": "^2.5.0",
     "vue-meta": "^2.4.0",

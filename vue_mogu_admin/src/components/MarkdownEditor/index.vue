@@ -101,7 +101,7 @@
         // 返回的文本
         // return this.$commonUtil.markdownToHtml(text);
         // console.log("获取转换后的文本", this.$commonUtil.markdownToHtml(localStorage.getItem('vditorvditor')))
-        return this.vditor.getHTML();
+        return this.vditor.getValue();
       },
       setData: function(data) {
         // console.log("将html转", this.vditor.html2md(data))
@@ -109,7 +109,7 @@
         this.$nextTick(() => {
           //DOM现在更新了
           let vditor = that.initVditor()
-          let markdownText = that.$commonUtil.htmlToMarkdown(data)
+          let markdownText = data
           localStorage.setItem('vditorvditor', markdownText)
         });
       },
