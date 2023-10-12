@@ -2,7 +2,8 @@
 	<view>
 
 		<!-- <cu-custom bgColor="bg-gradual-blue" :isBack="true" style="height: 45px;"><block slot="backText">返回</block><block slot="content">{{blogData.title}}</block></cu-custom> -->
-		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000" :title="cutText(blogData.title, 24)"></nav-bar>
+		<nav-bar home :bgColor="['#f37402','#0f0']" bgColorAngle="90" :backState="1000" fontColor="#000"
+			:title="cutText(blogData.title, 24)"></nav-bar>
 
 		<scroll-view scroll-y class="DrawerPage page" @scrolltolower="loadData">
 			<view class="cf">
@@ -59,7 +60,8 @@
 			</view>
 
 			<view class="text-gray text-sm flex justify-start">
-				<view class="text-gray text-sm" v-for="(tag, index) in blogData.tagList" :key="tag.uid" style="margin-left: 20px;">
+				<view class="text-gray text-sm" v-for="(tag, index) in blogData.tagList" :key="tag.uid"
+					style="margin-left: 20px;">
 					<view v-if="index%3==0" class="cu-tag bg-red light sm round">{{tag.content}}</view>
 					<view v-if="index%3==1" class="cu-tag bg-green light sm round">{{tag.content}}</view>
 					<view v-if="index%3==2" class="cu-tag bg-brown light sm round">{{tag.content}}</view>
@@ -73,8 +75,11 @@
 
 			<!-- <jyf-parser class="ck-content margin-sm" :html="blogData.content"></jyf-parser> -->
 
-			<jyf-parser class="ck-content" :html="blogData.content" lazy-load ref="article" selectable show-with-animation
-			 use-anchor @error="error" @imgtap="imgtap" @linkpress="linkpress" @ready="ready">加载中...</jyf-parser>
+			<!-- 			<jyf-parser class="ck-content" :html="blogData.content" lazy-load ref="article" selectable
+				show-with-animation use-anchor @error="error" @imgtap="imgtap" @linkpress="linkpress"
+				@ready="ready">加载中...</jyf-parser> -->
+
+			<mpHtml class="ck-content" :content="blogData.content"></mpHtml>
 
 			<view class="box">
 				<view class="cu-bar">
@@ -86,8 +91,10 @@
 			</view>
 
 			<view class="margin-tb-sm text-center">
-				<button class="cu-btn bg-orange round" @click="praiseBlog">很赞哦！<text v-if="praiseCount > 0">({{praiseCount}})</text></button>
-				<button class="cu-btn bg-brown round  margin-lr-xs" v-if="openMobileAdmiration == '1'" @click="goAppreciate">打赏本站</button>
+				<button class="cu-btn bg-orange round" @click="praiseBlog">很赞哦！<text
+						v-if="praiseCount > 0">({{praiseCount}})</text></button>
+				<button class="cu-btn bg-brown round  margin-lr-xs" v-if="openMobileAdmiration == '1'"
+					@click="goAppreciate">打赏本站</button>
 			</view>
 
 			<view class="box" v-if="openMobileComment == '1'">
@@ -99,8 +106,8 @@
 				</view>
 			</view>
 
-			<CommentList v-if="openMobileComment == '1'" :comments="comments" @deleteSuccess="deleteSuccess" @commentSuccess="commentSuccess"
-			 source="BLOG_INFO" :blogUid="blogUid"></CommentList>
+			<CommentList v-if="openMobileComment == '1'" :comments="comments" @deleteSuccess="deleteSuccess"
+				@commentSuccess="commentSuccess" source="BLOG_INFO" :blogUid="blogUid"></CommentList>
 
 			<view class="loadStyle" v-if="!isEnd && !loading">下拉加载</view>
 			<view class="loadStyle" v-if="!isEnd && loading">正在加载中</view>
@@ -114,6 +121,7 @@
 	import {
 		getWebConfig
 	} from "../../api/about.js";
+	import mpHtml from 'mp-html/dist/uni-app/components/mp-html/mp-html'
 	import jyfParser from "../../components/jyf-parser/jyf-parser";
 	import CommentList from "../../components/CommentList/index.vue";
 	import {
@@ -146,6 +154,7 @@
 		components: {
 			jyfParser,
 			CommentList,
+			mpHtml,
 		},
 		onLoad(option) {
 			this.blogUid = option.blogUid
@@ -181,23 +190,23 @@
 			},
 			// 切割字符串【按单双字节计算】
 			cutText(text, count) {
-				if (text.length <= (count/2)) {
+				if (text.length <= (count / 2)) {
 					return text
 				}
 				var len = 0;
 				var result = "";
 				var flag = 0;
-				for (var i=0; i<text.length; i++) {
-					if(len > count) {
+				for (var i = 0; i < text.length; i++) {
+					if (len > count) {
 						break
 					}
 					var c = text.charCodeAt(i);
 					console.log(c.toString())
 					//单字节加1
-					if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
-					  len++;
+					if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+						len++;
 					} else {
-					  len+=2;
+						len += 2;
 					}
 					flag++;
 				}
@@ -316,7 +325,7 @@
 
 
 <style scoped>
-	/* @import '../../static/css/ckeditor.css'; */
+	@import '../../static/css/ckeditor.css';
 
 	.page {
 		height: 100vh;
