@@ -1,5 +1,5 @@
 import { Message } from 'element-ui'
-// import {showdown} from 'showdown'
+import showdown from 'showdown'
 // import {TurndownService} from 'turndown'
 
 /** **********************************************************/
