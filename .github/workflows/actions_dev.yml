@@ -3,7 +3,7 @@ name: mogu CI/CD/DEV
 on: 
   push:
     branches: 
-      - dev
+      - lwl-test
 
 jobs:
   build:
