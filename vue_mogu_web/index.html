@@ -24,6 +24,29 @@
 <!--<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.5.17/vue.js"></script>-->
 <!--<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/index.js"></script>-->
 
+<!--import Mathjax-->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async>
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false, //关闭js加载过程信息
+    messageStyle: "none", //不显示信息
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre','code', 'a', 'annotation', 'annotation-xml'],
+      ignoreClass: 'crayon-.*' // 'crayon-' 开头的类，属于Wordpress代码高亮库，这部分不需要处理，否则会导致显示不正确,这部分是正则式，多条之间用'|'分割
+    },
+    'HTML-CSS': {
+        showMathMenu: false //禁用右键菜单
+    }
+  });
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+</script>
+
 <link rel="stylesheet" href="static/cdn/element-ui.css">
 <script src="static/cdn/vue.js"></script>
 <script src="static/cdn/element-ui.js"></script>

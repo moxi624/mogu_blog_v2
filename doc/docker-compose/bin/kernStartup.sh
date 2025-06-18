@@ -8,7 +8,7 @@ echo '=====mysql正在进行初始化====='
 ./wait-for-it.sh localhost:3306 --timeout=60  -- echo "=====mysql已经准备就绪====="
 
 echo '=====开始部署portainer可视化工具====='
-#docker-compose -f ../yaml/portainer.yml up -d
+docker-compose -f ../yaml/portainer.yml up -d
 
 echo '=====开始运行nacos====='
 docker-compose -f ../yaml/nacos.yml up -d

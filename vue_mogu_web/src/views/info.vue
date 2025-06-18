@@ -231,7 +231,7 @@
               this.getSameBlog()
               this.getCommentDataList();
             }
-            this.blogContent = response.data.content
+            this.blogContent = this.$commonUtil.markdownToHtml(response.data.content);
             this.loadingInstance.close();
           });
 
