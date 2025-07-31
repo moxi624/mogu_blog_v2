@@ -3,12 +3,12 @@ name: mogu CI/CD/DEV
 on: 
   push:
     branches: 
-      - dev
+      - lwl-test
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: centos-7
 
     steps:
     - uses: actions/checkout@master
